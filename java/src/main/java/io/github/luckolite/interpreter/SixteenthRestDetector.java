@@ -315,8 +315,11 @@ final class SixteenthRestDetector {
             int left,int right,int minY,int maxY) {
         float gap=staff.gap(),middle=staff.top()+2*gap;
         int h=maxY-minY+1,w=right-left+1;
+        // The last retained row lies on an integer raster after line-edge removal.
+        // Round its allowed distance up so a fractional staff gap cannot reject
+        // an otherwise complete rectangle by less than one pixel.
         if(h<gap*.25f||h>gap*.65f||minY<middle-gap*.7f
-                ||maxY>middle||middle-maxY>gap*.25f)return false;
+                ||maxY>middle||middle-maxY>Math.ceil(gap*.25f))return false;
         int rows=0;
         for(int y=minY;y<=maxY;y++)if(!line[y-top]) {
             if(ink[y-top]<w*.80f)return false;
