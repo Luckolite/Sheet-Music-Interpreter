@@ -2763,15 +2763,20 @@ final class OmrScoreInterpreter {
         int right=Math.min(width-1,Math.round(head.centerX+gap*1.2f));
         for(int y=Math.max(0,Math.round(head.centerY-gap*.65f));
                 y<=Math.min(height-1,Math.round(head.centerY+gap*.65f));y++) {
-            int run=0;
+            int run=0,strongInRun=0;
             for(int x=left;x<=right;x++) {
-                boolean dark=(gray[y*width+x]&255)<limits[0];
-                if(!dark&&y>0&&y+1<height)dark=(gray[(y-1)*width+x]&255)<limits[0]
+                boolean strong=(gray[y*width+x]&255)<limits[0];
+                if(!strong&&y>0&&y+1<height)strong=(gray[(y-1)*width+x]&255)<limits[0]
                         ||(gray[(y+1)*width+x]&255)<limits[0];
+                boolean dark=strong||(gray[y*width+x]&255)<limits[1];
+                if(!dark&&y>0&&y+1<height)dark=(gray[(y-1)*width+x]&255)<limits[1]
+                        ||(gray[(y+1)*width+x]&255)<limits[1];
                 run=dark?run+1:0;
+                strongInRun=dark?strongInRun+(strong?1:0):0;
                 // A horizontal instruction arrow also ends in a head-like blob.
                 // A stemless ledger note has rule ink on both sides of its oval.
-                if(run>=minimum&&(!stemless&&!reduced||(x-run+1<head.minX&&x>head.maxX)))return true;
+                if(run>=minimum&&strongInRun>=minimum*.6f
+                        &&(!stemless&&!reduced||(x-run+1<head.minX&&x>head.maxX)))return true;
             }
         }
         return false;
@@ -2865,11 +2870,12 @@ final class OmrScoreInterpreter {
         int required=distance>staff.gap*3.5f?2:1;
         int left=Math.max(0,Math.round(head.centerX-staff.gap*1.2f));
         int right=Math.min(width-1,Math.round(head.centerX+staff.gap*1.2f));
+        float totalStrongSupport=0;
         for(int inner=1;inner<=required;inner++) {
             float center=head.centerY+direction*staff.gap*inner;
-            boolean found=false;
+            float bestSupport=0;
             for(int y=Math.max(1,Math.round(center-staff.gap*.55f));
-                    y<=Math.min(height-2,Math.round(center+staff.gap*.55f))&&!found;y++) {
+                    y<=Math.min(height-2,Math.round(center+staff.gap*.55f));y++) {
                 int run=0,strongInRun=0;
                 for(int x=left;x<=right;x++) {
                     boolean strong=(gray[y*width+x]&255)<limits[0]||(gray[(y-1)*width+x]&255)<limits[0]
@@ -2880,15 +2886,17 @@ final class OmrScoreInterpreter {
                     strongInRun=dark?strongInRun+(strong?1:0):0;
                     // Faded portions may complete a printed rule, but pale underlines alone
                     // cannot supply the additional ledger required for a remote note.
-                    if(run>=minimum&&strongInRun>=minimum*.6f&&(!reduced||(x-run+1<head.minX&&x>head.maxX))) {
-                        found=true;
-                        break;
-                    }
+                    if(run>=minimum&&(!reduced||(x-run+1<head.minX&&x>head.maxX)))
+                        bestSupport=Math.max(bestSupport,Math.min(1,strongInRun/minimum));
                 }
             }
-            if(!found)return false;
+            // A faded middle rule can be supported by the next complete rule,
+            // but every required rule must retain a continuous visible span
+            // and its own dark core. One strong underline cannot replace it.
+            if(bestSupport<(inner<required&&!reduced?.4f:.6f))return false;
+            totalStrongSupport+=bestSupport;
         }
-        return true;
+        return totalStrongSupport>=required*.6f;
     }
 
     /** Rejected slur islands must not continue masking a real tie's curve.
