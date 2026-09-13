@@ -5428,6 +5428,8 @@ final class OmrScoreInterpreter {
             for (Component core : findDarkDotComponents(gray, width, height, head, gap, 70))
                 if (core.area >= gap*gap*.06f && core.maxX-core.minX+1 >= gap*.22f
                         && core.maxY-core.minY+1 >= gap*.22f) combined.add(core);
+        if(gray!=null&&gray.length==width*height)
+            combined.addAll(fadedAugmentationDots(gray,width,height,head,gap));
         List<Component> aligned = new ArrayList<>();
         for (Component dot : combined) {
             if (excluded.stream().anyMatch(c->dot.centerX>=c.minX&&dot.centerX<=c.maxX
@@ -5473,6 +5475,31 @@ final class OmrScoreInterpreter {
         float spacing = second.centerX - first.centerX;
         return spacing >= gap * .18f && spacing <= gap * 1.45f
                 && Math.abs(second.centerY - first.centerY) <= gap * .40f ? 2 : 1;
+    }
+
+    /** Faint dots may have no substantial pixels at the normal ink cutoff.
+     * Require an isolated rounded body with a smaller, centered dark core at
+     * a second cutoff; all normal engraving and line-fragment guards still apply. */
+    private static List<Component> fadedAugmentationDots(byte[] gray,int width,int height,
+            Component head,float gap) {
+        List<Component> result=new ArrayList<>();
+        List<Component> cores=findDarkDotComponents(gray,width,height,head,gap,180);
+        for(Component body:findDarkDotComponents(gray,width,height,head,gap,205)) {
+            float w=body.maxX-body.minX+1,h=body.maxY-body.minY+1;
+            if(Math.min(w,h)<gap*.28f||Math.max(w,h)>gap*.68f
+                    ||Math.max(w,h)>Math.min(w,h)*1.5f||body.area<gap*gap*.055f
+                    ||body.area<w*h*.55f||body.area>=w*h)continue;
+            for(Component core:cores) {
+                float cw=core.maxX-core.minX+1,ch=core.maxY-core.minY+1;
+                if(core.minX<body.minX||core.maxX>body.maxX||core.minY<body.minY||core.maxY>body.maxY
+                        ||Math.min(cw,ch)<gap*.18f||Math.max(cw,ch)>Math.min(cw,ch)*1.5f
+                        ||core.area<gap*gap*.025f||core.area<body.area*.25f||core.area>body.area*.85f
+                        ||Math.abs(core.centerX-body.centerX)>gap*.15f
+                        ||Math.abs(core.centerY-body.centerY)>gap*.15f)continue;
+                result.add(body);break;
+            }
+        }
+        return result;
     }
 
     /** Thresholding can isolate the darker crossing of a shaded stem and rule. */
@@ -5780,12 +5807,16 @@ final class OmrScoreInterpreter {
             }
         }
         boolean upward = bestAbove >= bestBelow;
-        if (Math.max(bestAbove, bestBelow) < Math.max(3, Math.round(gap * .75f))) return 0;
+        int[] faintStem=null;
+        if (Math.max(bestAbove, bestBelow) < Math.max(3, Math.round(gap * .75f))) {
+            if(!smallHead)faintStem=fadedStemToDarkBeam(labels,gray,width,height,head,staff);
+            if(faintStem==null)return 0;
+        }
         int stemEnd = findStemEnd(labels, width, bestX, upward,
                 upward ? aboveTop : belowTop, upward ? aboveBottom : belowBottom);
         // Trace the attached ink, not a fixed-height semantic window. In a wide chord the
         // upper head lies inside that window and used to masquerade as the lower head's beam.
-        int[] attached = attachedRawStem(gray, width, height, head, gap);
+        int[] attached = faintStem!=null?faintStem:attachedRawStem(gray, width, height, head, gap);
         attached = stemBelowDetachedBow(gray,width,height,head,gap,attached);
         attached = stemBeforePaperTail(labels,gray,width,height,head,gap,attached);
         attached = stemToReturningFlag(labels,gray,width,height,head,gap,attached);
@@ -5951,6 +5982,36 @@ final class OmrScoreInterpreter {
                     Math.min(width-1,stem[0]+Math.round(gap*2.5f)),stem[0],1,1)<gap*2)return stem;
         }
         return new int[]{stem[0],first,stem[2]};
+    }
+
+    /** A faded stem can still connect its head to an independently dark beam.
+     * Require narrow printed contrast along the stem and thick connected beam
+     * ink at two distances on the same side before trusting the lighter trace. */
+    private static int[] fadedStemToDarkBeam(byte[] labels,byte[] gray,int width,int height,
+            Component head,Staff staff) {
+        float gap=staff.gap;
+        int[] stem=attachedRawStem(gray,width,height,head,gap,Math.max(1,Math.round(gap*.16f)),235);
+        if(stem==null||Math.abs(stem[1]-head.centerY)>gap*5.5f)return null;
+        int flank=Math.max(3,Math.round(gap*.45f)),x=stem[0];
+        if(x-flank<0||x+flank>=width)return null;
+        int first=Math.round(head.centerY)+stem[2]*Math.round(gap*.85f);
+        int last=stem[1]-stem[2]*Math.round(gap*.8f),samples=0,support=0;
+        for(int y=first;(last-y)*stem[2]>=0;y+=stem[2]) {
+            if(y<0||y>=height)return null;
+            int ink=gray[y*width+x]&255;samples++;
+            if(ink<235&&(gray[y*width+x-flank]&255)>=ink+12
+                    &&(gray[y*width+x+flank]&255)>=ink+12)support++;
+        }
+        if(samples<gap||support<samples*.75f)return null;
+        boolean up=stem[2]<0;
+        int top=Math.max(0,stem[1]-Math.round(gap*(up?.2f:1.85f)));
+        int bottom=Math.min(height-1,stem[1]+Math.round(gap*(up?1.85f:.2f)));
+        for(int side:new int[]{-1,1}) {
+            int inner=x+side*Math.round(gap*.4f),outer=x+side*Math.round(gap*.65f);
+            if(thickNonHeadBands(gray,labels,width,height,inner,top,bottom,staff)>0
+                    &&thickNonHeadBands(gray,labels,width,height,outer,top,bottom,staff,inner)>0)return stem;
+        }
+        return null;
     }
 
     /** A slightly leaning stem can leave every fixed column before its flag root.
