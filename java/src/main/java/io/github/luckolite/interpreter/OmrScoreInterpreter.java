@@ -4451,7 +4451,9 @@ final class OmrScoreInterpreter {
     private static boolean fadedEnclosedHeadPocket(byte[] gray,int width,Component head,float gap,
             int left,int right,int top,int bottom) {
         float w=head.maxX-head.minX+1,h=head.maxY-head.minY+1;
-        if(w<gap*1.1f||h<gap*.9f)return false;
+        // An upright numeral can have two open bowls that satisfy four ray
+        // tests. This fallback is for a horizontal note oval, not a tall glyph.
+        if(w<gap*1.1f||h<gap*.9f||h>w*1.05f)return false;
         int enclosed=0,rows=0;
         for(int y=Math.max(head.minY+1,top-2);y<=Math.min(head.maxY-1,bottom+2);y++) {
             int row=0;
