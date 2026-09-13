@@ -45,6 +45,8 @@ final class OmrScoreInterpreter {
                 OmrMeasurePostProcessor.NOTEHEAD);
         List<Component> clefOrKeyComponents = findComponents(labels, width, height,
                 OmrMeasurePostProcessor.CLEF_OR_KEY);
+        List<Component> symbolComponents = findComponents(labels, width, height,
+                OmrMeasurePostProcessor.SYMBOL);
         rawHeadComponents.removeIf(head->isRoundedHeaderMeter(labels,gray,width,height,
                 head,staffs,clefOrKeyComponents));
         rawHeadComponents.removeIf(head -> commonTimeGlyphBounds(labels, gray, width, height,
@@ -54,11 +56,10 @@ final class OmrScoreInterpreter {
         rawHeadComponents.removeIf(head -> isWholeMeasureRestHead(gray,width,height,head,staffs));
         rawHeadComponents.removeIf(head -> isThickBarlineHead(gray,width,height,head,staffs));
         rawHeadComponents.removeIf(head -> isHeaderFlatHead(labels,gray,width,height,head,staffs,clefOrKeyComponents));
+        rawHeadComponents.removeIf(head -> isForteHookHead(gray,width,height,head,staffs,symbolComponents));
         rawHeadComponents.removeIf(head -> isTrebleTailHead(labels,width,height,head,staffs,clefOrKeyComponents));
         List<Component> headComponents = splitStackedHeads(labels, gray, width, height,
                 rawHeadComponents, staffs);
-        List<Component> symbolComponents = findComponents(labels, width, height,
-                OmrMeasurePostProcessor.SYMBOL);
         List<Component> heads = new ArrayList<>();
         List<Component> rejectedSlurHeads = new ArrayList<>();
         for (Component head : headComponents) {
@@ -446,6 +447,7 @@ final class OmrScoreInterpreter {
         List<Staff> staffs = findStaffs(labels, gray, width, height, measures);
         List<Component> heads = findComponents(labels, width, height, OmrMeasurePostProcessor.NOTEHEAD);
         List<Component> glyphs = findComponents(labels, width, height, OmrMeasurePostProcessor.CLEF_OR_KEY);
+        List<Component> symbols = findComponents(labels, width, height, OmrMeasurePostProcessor.SYMBOL);
         byte[] result = labels;
         for (Component head : heads) {
             int[] bounds = commonTimeGlyphBounds(labels, gray, width, height, head, staffs, glyphs);
@@ -456,6 +458,8 @@ final class OmrScoreInterpreter {
             if (bounds == null && isHeavyRestBarFragment(gray, width, height, head, staffs))
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null && isHeaderFlatHead(labels,gray,width,height,head,staffs,glyphs))
+                bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
+            if (bounds == null && isForteHookHead(gray,width,height,head,staffs,symbols))
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null) continue;
             for (int y = bounds[2]; y <= bounds[3]; y++) for (int x = bounds[0]; x <= bounds[1]; x++) {
@@ -679,6 +683,59 @@ final class OmrScoreInterpreter {
                     (joined.centerY*joined.area+part.centerY*part.area)/area);
         }
         return joined;
+    }
+
+    /** A tiny upper hook can belong to an italic forte rather than a note.
+     * Require the descending symbol body, separate cross-stroke and lower hook. */
+    private static boolean isForteHookHead(byte[] gray,int width,int height,Component head,
+            List<Staff> staffs,List<Component> symbols) {
+        if(gray==null||gray.length!=width*height)return false;
+        Staff staff=nearestHeadStaff(staffs,head.centerY);if(staff==null)return false;
+        float gap=staff.pitchGap;
+        if(head.minY<staff.pitchBottom+gap*.75f||head.centerY>staff.pitchBottom+gap*3.5f
+                ||head.maxX-head.minX+1>gap||head.maxY-head.minY+1>gap*.8f
+                ||head.area>gap*gap*.55f||attachedRawStem(gray,width,height,head,gap)!=null)return false;
+        for(Component body:symbols) {
+            if(body.area<head.area*2||body.maxY<head.maxY+gap*1.2f
+                    ||body.minY>head.maxY+gap*.3f||body.maxY>head.maxY+gap*3
+                    ||body.minX>head.minX-gap*.6f||body.maxX<head.minX
+                    ||body.maxX>head.maxX+gap*.5f||body.maxX-body.minX<gap)continue;
+            int margin=Math.max(2,Math.round(gap*.2f));
+            int left=Math.max(0,Math.min(body.minX,head.minX)-margin);
+            int right=Math.min(width-1,Math.max(body.maxX,head.maxX)+margin);
+            int top=Math.max(0,Math.min(body.minY,head.minY)-margin);
+            int bottom=Math.min(height-1,Math.max(body.maxY,head.maxY)+margin);
+            int w=right-left+1,h=bottom-top+1;
+            if(w>gap*3.2f||h>gap*4.2f)continue;
+            byte[] ink=new byte[w*h];
+            for(int y=top;y<=bottom;y++)for(int x=left;x<=right;x++)
+                if((gray[y*width+x]&255)<=205)ink[(y-top)*w+x-left]=5;
+            Component glyph=retainSeedConnectedInk(ink,w,h,head,left,top);
+            if(glyph==null||rawStrokeLeavesCrop(gray,width,height,ink,w,h,left,top,gap))continue;
+            int gh=glyph.maxY-glyph.minY+1,gw=glyph.maxX-glyph.minX+1;
+            if(gh<gap*1.8f||gh>gap*3.8f||gw<gap||gw>gap*3
+                    ||head.centerY>top+glyph.minY+gh*.3f)continue;
+            int[] spans=new int[gh],centers=new int[gh];
+            for(int y=0;y<gh;y++) {
+                int lo=w,hi=-1;
+                for(int x=glyph.minX;x<=glyph.maxX;x++)if(ink[(y+glyph.minY)*w+x]!=0){lo=Math.min(lo,x);hi=x;}
+                if(hi>=lo){spans[y]=hi-lo+1;centers[y]=lo+hi;}
+            }
+            int upper=0,cross=Math.round(gh*.2f),lower=Math.round(gh*.75f);
+            for(int y=1;y<gh*.25f;y++)if(spans[y]>spans[upper])upper=y;
+            for(int y=cross+1;y<gh*.45f;y++)if(spans[y]>spans[cross])cross=y;
+            for(int y=lower+1;y<gh;y++)if(spans[y]>spans[lower])lower=y;
+            int[] middle=java.util.Arrays.copyOfRange(spans,Math.round(gh*.45f),Math.round(gh*.75f));
+            java.util.Arrays.sort(middle);int stem=middle[middle.length/2];
+            if(stem<2||spans[upper]<stem*1.4f||spans[cross]<stem*1.65f||spans[lower]<stem*1.5f
+                    ||cross-upper<gap*.3f||centers[upper]-centers[cross]<gap*.4f
+                    ||centers[cross]-centers[lower]<gap*1.2f)continue;
+            int valley=Integer.MAX_VALUE;
+            for(int y=upper+1;y<cross;y++)valley=Math.min(valley,spans[y]);
+            if(valley>Math.min(spans[upper],spans[cross])*.65f)continue;
+            return true;
+        }
+        return false;
     }
 
     /** A tall detached count above a fully capped multimeasure-rest bar. */
