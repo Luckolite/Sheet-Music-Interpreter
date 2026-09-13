@@ -6088,6 +6088,8 @@ final class OmrScoreInterpreter {
                 // where an actual staff line runs; horizontal shape alone loses inner eighths.
                 boolean onlyStaff=onStaff&&(staffRows==run||(staffRows>=3&&staffRows+1==run))
                         &&run<=gap*.55f;
+                if(onlyStaff&&run>=Math.ceil(gap*.4f)
+                        &&finiteBeamOverRule(gray,width,height,x,y-run,y-1,staff,threshold))onlyStaff=false;
                 boolean rooted=run>=3&&bandReachesInnerProbe(gray,width,height,x,stemwardX,y-run,y-1,threshold);
                 if(run>=Math.max(3,Math.round(gap*.30f))&&!onlyStaff&&rooted)bands++;
                 if(run>=Math.max(3,Math.ceil(gap*.30f))&&!onlyStaff&&rooted)strongBands++;
@@ -6097,6 +6099,43 @@ final class OmrScoreInterpreter {
         // Preserve a single narrow flag. Adding a second beam needs the full
         // thickness threshold so a thinner slur terminal cannot shorten the note.
         return bands > 1 ? Math.max(1,strongBands) : bands;
+    }
+
+    /** Both local side probes can lie inside a beam printed over a staff rule.
+     * Keep that band only when its thick body ends on both sides and a thinner
+     * printed rule continues beyond each end. An unbroken thick rule fails. */
+    private static boolean finiteBeamOverRule(byte[] gray,int width,int height,int x,
+            int first,int last,Staff staff,int threshold) {
+        float gap=staff.gap;
+        float[] origin=staff.pitchTrack==null?null:staff.pitchTrack.at(x);
+        if(origin!=null)gap=origin[1];
+        int thickMinimum=Math.max(3,(int)Math.ceil(gap*.3f));
+        int thinMaximum=Math.max(1,(int)Math.floor(gap*.18f));
+        int witnessLength=Math.max(4,Math.round(gap*.75f));
+        for(int direction:new int[]{-1,1}) {
+            int thickColumns=0,thinColumns=0,taperColumns=0;boolean proven=false;
+            for(int distance=1;distance<=Math.round(gap*12);distance++) {
+                int column=x+direction*distance;
+                if(column<1||column>=width-1)break;
+                int shift=origin==null?0:Math.round(staff.pitchTrack.at(column)[0]-origin[0]);
+                int ink=0;
+                for(int y=first+shift;y<=last+shift;y++) {
+                    if(y<0||y>=height)return false;
+                    if((gray[y*width+column]&255)<threshold)ink++;
+                }
+                if(ink>=thickMinimum) {
+                    if(thinColumns>0||taperColumns>0)break;
+                    thickColumns++;
+                } else if(ink>0&&ink<=thinMaximum&&thickColumns>=Math.round(gap*2)) {
+                    if(++thinColumns>=witnessLength){proven=true;break;}
+                } else if(ink>thinMaximum&&ink<thickMinimum&&thinColumns==0
+                        &&thickColumns>=Math.round(gap*2)&&++taperColumns<=Math.max(1,Math.round(gap*.2f))) {
+                    // Antialiasing can soften the last few columns of a finite beam.
+                } else break;
+            }
+            if(!proven)return false;
+        }
+        return true;
     }
 
     /** Follow a thick ink path toward the stem. Two beams can merge at the
