@@ -5788,6 +5788,7 @@ final class OmrScoreInterpreter {
         int[] attached = attachedRawStem(gray, width, height, head, gap);
         attached = stemBelowDetachedBow(gray,width,height,head,gap,attached);
         attached = stemBeforePaperTail(labels,gray,width,height,head,gap,attached);
+        attached = stemToReturningFlag(labels,gray,width,height,head,gap,attached);
         if (attached != null) {
             bestX = attached[0]; stemEnd = attached[1]; upward = attached[2] < 0;
         }
@@ -5950,6 +5951,33 @@ final class OmrScoreInterpreter {
                     Math.min(width-1,stem[0]+Math.round(gap*2.5f)),stem[0],1,1)<gap*2)return stem;
         }
         return new int[]{stem[0],first,stem[2]};
+    }
+
+    /** A slightly leaning stem can leave every fixed column before its flag root.
+     * Follow only connected ink in a narrow corridor, and require the existing
+     * returning-hook proof at the recovered endpoint before changing the trace. */
+    private static int[] stemToReturningFlag(byte[] labels,byte[] gray,int width,int height,
+            Component head,float gap,int[] stem) {
+        if(stem==null||gray==null||hasCurvedFlag(labels,gray,width,height,head,gap,stem[0],stem[1],stem[2]<0))return stem;
+        int radius=Math.max(1,Math.round(gap*.22f)),x=stem[0],end=stem[1];
+        for(int distance=1;distance<=Math.round(gap*1.8f);distance++) {
+            int y=stem[1]+stem[2]*distance;
+            if(y<0||y>=height||Math.abs(y-head.centerY)>gap*5)break;
+            int next=-1;
+            for(int offset:new int[]{0,-1,1}) {
+                int candidate=x+offset;
+                if(candidate<1||candidate>=width-1||Math.abs(candidate-stem[0])>radius)continue;
+                if((gray[y*width+candidate]&255)<170
+                        &&((gray[y*width+candidate-1]&255)<205||(gray[y*width+candidate+1]&255)<205)) {
+                    next=candidate;break;
+                }
+            }
+            if(next<0)break;
+            x=next;end=y;
+        }
+        if(Math.abs(end-stem[1])<gap*.5f)return stem;
+        return hasCurvedFlag(labels,gray,width,height,head,gap,x,end,stem[2]<0)
+                ?new int[]{x,end,stem[2]}:stem;
     }
 
     private static int[] attachedRawStem(byte[] gray,int width,int height,Component head,float gap) {
