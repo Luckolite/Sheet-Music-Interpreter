@@ -2298,9 +2298,10 @@ final class OmrScoreInterpreter {
                     float error=Math.max(Math.abs(staff.pitchBottom-raw.bottom()),Math.abs(staff.bottom-raw.bottom()));
                     error=Math.max(error,Math.abs(staff.pitchGap-raw.gap())*6);
                     if(error<raw.gap()*.45f) {
-                        // A centered seed can fit while its missing slope loses a rule at the edge.
+                        // A quarter-gap edge displacement reaches half a diatonic step:
+                        // even a centered seed can then round an edge note to the next pitch.
                         // Correct that seed without locking the local reader to a new staff phase.
-                        if(!staff.printedPhase&&Math.abs(staff.pitchSlope-semanticSlope)*width*.5f>=raw.gap()*.45f) {
+                        if(!staff.printedPhase&&Math.abs(staff.pitchSlope-semanticSlope)*width*.5f>=raw.gap()*.25f) {
                             staff.pitchBottom=raw.bottom();staff.pitchGap=raw.gap();
                             staff.pitchSlope=semanticSlope;staff.printedSlope=true;
                         }
