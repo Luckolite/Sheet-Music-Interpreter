@@ -56,6 +56,7 @@ final class OmrScoreInterpreter {
         rawHeadComponents.removeIf(head -> isWholeMeasureRestHead(gray,width,height,head,staffs));
         rawHeadComponents.removeIf(head -> isThickBarlineHead(gray,width,height,head,staffs));
         rawHeadComponents.removeIf(head -> isHeaderFlatHead(labels,gray,width,height,head,staffs,clefOrKeyComponents));
+        rawHeadComponents.removeIf(head -> isOwnedHeaderCrossbar(labels,gray,width,height,head,staffs,rawHeadComponents,clefOrKeyComponents,symbolComponents));
         rawHeadComponents.removeIf(head -> isForteHookHead(gray,width,height,head,staffs,symbolComponents));
         rawHeadComponents.removeIf(head -> isZigzagOrnamentHead(labels,gray,width,height,head,staffs,rawHeadComponents));
         rawHeadComponents.removeIf(head -> isTrebleTailHead(labels,width,height,head,staffs,clefOrKeyComponents));
@@ -469,6 +470,8 @@ final class OmrScoreInterpreter {
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null && isHeaderFlatHead(labels,gray,width,height,head,staffs,glyphs))
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
+            if (bounds == null && isOwnedHeaderCrossbar(labels,gray,width,height,head,staffs,heads,glyphs,symbols))
+                bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null && isForteHookHead(gray,width,height,head,staffs,symbols))
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null && isZigzagOrnamentHead(labels,gray,width,height,head,staffs,heads))
@@ -569,6 +572,74 @@ final class OmrScoreInterpreter {
                     if(labels[yy*width+xx]==OmrMeasurePostProcessor.CLEF_OR_KEY)return true;
                 }
             }
+        }
+        return false;
+    }
+
+    /** Small connected header crossbars belong to a symbolic glyph, not a chord.
+     * This establishes ownership only; it does not infer an accidental value. */
+    private static boolean isOwnedHeaderCrossbar(byte[] labels,byte[] gray,int width,int height,
+            Component head,List<Staff> staffs,List<Component> heads,List<Component> clefs,List<Component> symbols) {
+        if(gray==null)return false;
+        Staff staff=nearestHeadStaff(staffs,head.centerY);if(staff==null)return false;
+        float gap=staff.pitchGap,top=staff.pitchBottom-gap*4;
+        if(head.area>gap*gap*.3f||head.maxX-head.minX+1>gap*.8f||head.maxY-head.minY+1>gap*.65f
+                ||head.centerX>width*.25f||Math.abs(head.centerY-top)>gap*.8f
+                ||attachedRawStem(gray,width,height,head,gap*.65f,2,180)!=null
+                ||hasOpenCenter(labels,gray,width,height,head,gap))return false;
+        boolean clef=false;
+        List<Component> parts=new ArrayList<>(clefs);parts.addAll(symbols);
+        for(Component seed:clefs) {
+            if(seed.area<gap*gap*.6f||seed.maxX>=head.minX-gap*.6f||head.minX-seed.maxX>gap*4
+                    ||Math.abs(seed.centerY-(top+gap*2))>gap*2)continue;
+            Component joined=seed;
+            for(int pass=0;pass<3;pass++)for(Component part:parts) {
+                if(part.minX>=joined.minX&&part.maxX<=joined.maxX&&part.minY>=joined.minY&&part.maxY<=joined.maxY)continue;
+                if(part.area<gap*gap*.025f||part.minX<seed.minX-gap*.8f||part.maxX>head.minX-gap*.6f
+                        ||part.maxX>seed.maxX+gap*1.2f||part.minY<top-gap*3||part.maxY>staff.pitchBottom+gap*1.8f
+                        ||part.minY>joined.maxY+gap*1.2f||part.maxY<joined.minY-gap*1.2f)continue;
+                int area=joined.area+part.area;
+                joined=new Component(area,Math.min(joined.minX,part.minX),Math.max(joined.maxX,part.maxX),
+                        Math.min(joined.minY,part.minY),Math.max(joined.maxY,part.maxY),
+                        (joined.centerX*joined.area+part.centerX*part.area)/area,
+                        (joined.centerY*joined.area+part.centerY*part.area)/area);
+            }
+            if(joined.maxY-joined.minY>=gap*5&&joined.maxY-joined.minY<=gap*8.8f
+                    &&joined.maxX-joined.minX>=gap*1.25f&&joined.maxX-joined.minX<=gap*3.4f
+                    &&joined.area>=gap*gap*3&&joined.minY<top-gap*.6f
+                    &&joined.maxY>staff.pitchBottom+gap*.2f){clef=true;break;}
+        }
+        if(!clef)return false;
+        for(Component other:heads) {
+            if(other==head||other.area>gap*gap*.3f||other.maxX-other.minX+1>gap*.8f
+                    ||other.maxY-other.minY+1>gap*.65f||Math.abs(other.centerX-head.centerX)>gap*.3f
+                    ||Math.abs(other.centerY-head.centerY)<gap*.8f||Math.abs(other.centerY-head.centerY)>gap*1.25f
+                    ||Math.abs((other.centerY+head.centerY)*.5f-top)>gap*.25f
+                    ||attachedRawStem(gray,width,height,other,gap*.65f,2,180)!=null
+                    ||hasOpenCenter(labels,gray,width,height,other,gap))continue;
+            boolean following=false;
+            for(Component main:heads)if(main.area>gap*gap*.65f&&main.minX>Math.max(head.maxX,other.maxX)+gap
+                    &&main.minX<Math.max(head.maxX,other.maxX)+gap*6&&nearestHeadStaff(staffs,main.centerY)==staff){following=true;break;}
+            if(!following)continue;
+            int left=Math.round(Math.min(head.minX,other.minX)-gap*.6f),right=Math.round(Math.max(head.maxX,other.maxX)+gap*.6f);
+            int first=Math.min(head.minY,other.minY),last=Math.max(head.maxY,other.maxY);
+            int y0=Math.round(first-gap*.8f),y1=Math.round(last+gap*.8f);
+            int reach=Math.round(gap*.6f),probe=Math.max(2,Math.round(gap*.16f));
+            if(left<reach||right+reach>=width||y0<probe||y1+probe>=height)continue;
+            int w=right-left+1,h=y1-y0+1;byte[] ink=new byte[w*h];
+            for(int y=0;y<h;y++)for(int x=0;x<w;x++)if((gray[(y0+y)*width+left+x]&255)<235
+                    &&(headerInkContrast(gray,width,left+x,y0+y,reach)>=12
+                        ||(gray[(y0+y-probe)*width+left+x]&255)<235&&(gray[(y0+y+probe)*width+left+x]&255)<235
+                            &&headerInkContrast(gray,width,left+x,y0+y-probe,reach)>=12
+                            &&headerInkContrast(gray,width,left+x,y0+y+probe,reach)>=12))ink[y*w+x]=5;
+            Component glyph=retainSeedConnectedInk(ink,w,h,head,left,y0);if(glyph==null)continue;
+            if(glyph.minX==0||glyph.maxX==w-1||glyph.minY==0||glyph.maxY==h-1
+                    ||glyph.maxY-glyph.minY<gap*2||glyph.maxY-glyph.minY>gap*3.8f
+                    ||glyph.maxX-glyph.minX>gap*1.8f||y0+glyph.minY>first-gap*.3f||y0+glyph.maxY<last+gap*.3f)continue;
+            int shared=0;
+            for(int y=other.minY;y<=other.maxY;y++)for(int x=other.minX;x<=other.maxX;x++)
+                if(ink[(y-y0)*w+x-left]!=0)shared++;
+            if(shared>=other.area*.5f)return true;
         }
         return false;
     }
