@@ -2316,6 +2316,7 @@ final class OmrScoreInterpreter {
                 }
             }
         }
+        recoverFadedStaffAliases(gray,width,height,staffs,measures,semanticSlope);
         staffs.sort(Comparator.comparingDouble(staff -> staff.top));
         for(Staff staff:staffs) {
             if(!staff.printedPhase&&!staff.printedSlope) {
@@ -2333,6 +2334,50 @@ final class OmrScoreInterpreter {
         }
         assignSystemPositions(staffs, measures, height);
         return staffs;
+    }
+
+    /** Pale rules can leave a compressed semantic group. Require three other
+     * systems to confirm its true scale and broad printed support for every rule. */
+    private static void recoverFadedStaffAliases(byte[] gray,int width,int height,
+            List<Staff> staffs,List<MeasureRegion> measures,float slope) {
+        if(gray==null||staffs.size()<4)return;
+        List<Float> gaps=new ArrayList<>();for(Staff s:staffs)gaps.add(s.pitchGap);
+        gaps.sort(Float::compare);float typical=gaps.get(gaps.size()/2);
+        if(staffs.stream().noneMatch(s->s.pitchGap<typical*.8f))return;
+        int[] rows=new int[height];
+        for(int y=0;y<height;y++)for(int x=0;x<width;x++)if((gray[y*width+x]&255)<205) {
+            int row=Math.round(y-slope*(x-width*.5f));if(row>=0&&row<height)rows[row]++;
+        }
+        for(var raw:RawStaffLineDetector.detectFromStrength(rows,Math.max(24,Math.round(width*.25f)),height)) {
+            if(Math.abs(raw.gap()-typical)>typical*.08f)continue;
+            int corroboration=0;for(Staff s:staffs)if(Math.abs(s.pitchGap-raw.gap())<=raw.gap()*.08f)corroboration++;
+            if(corroboration<3||!completeFadedStaff(gray,width,height,raw,slope))continue;
+            for(int i=0;i<staffs.size();i++) {
+                Staff prior=staffs.get(i);
+                if(prior.pitchGap>=raw.gap()*.8f||prior.pitchGap<raw.gap()*.45f
+                        ||prior.top<raw.top()-raw.gap()*.8f||prior.bottom>raw.bottom()+raw.gap()*.8f
+                        ||Math.abs((prior.top+prior.bottom-raw.top()-raw.bottom())*.5f)>raw.gap()*1.75f)continue;
+                Staff recovered=new Staff(raw.top(),raw.bottom(),raw.gap());
+                if(!alignedWithMeasureRow(recovered,measures,height))continue;
+                recovered.pitchSlope=slope;recovered.printedPhase=true;staffs.set(i,recovered);
+            }
+        }
+    }
+
+    private static boolean completeFadedStaff(byte[] gray,int width,int height,
+            RawStaffLineDetector.StaffLines staff,float slope) {
+        int step=Math.max(1,width/512),radius=Math.max(1,Math.round(staff.gap()*.15f));
+        for(int i=0;i<9;i++) {
+            float row=i<5?staff.rows()[i]:(staff.rows()[i-5]+staff.rows()[i-4])*.5f;
+            int dark=0,samples=0;
+            for(int x=0;x<width;x+=step) {
+                int y=Math.round(row+slope*(x-width*.5f));samples++;
+                for(int yy=Math.max(0,y-radius);yy<=Math.min(height-1,y+radius);yy++)
+                    if((gray[yy*width+x]&255)<205){dark++;break;}
+            }
+            if(i<5?dark<samples*.75f:dark>=samples*.4f)return false;
+        }
+        return true;
     }
 
     /** Verify all five sloped rules in the printed page, with clear spaces between them. */
