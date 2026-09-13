@@ -5732,6 +5732,12 @@ final class OmrScoreInterpreter {
             if(b-a<gap*1.3f)continue;
             if(hasContinuousTieArc(labels,gray,width,height,a,b,centerY,gap))return true;
         }
+        // Long ties may leave a little more clearance and fade near the heads.
+        // Keep short-arc limits and require a dark core within the complete curve.
+        if(right-left>=gap*5)for(int first=0;first<=4;first++)for(int last=0;last<=4;last++) {
+            int a=left+first*step,b=right-last*step;
+            if(hasContinuousTieArc(labels,gray,width,height,a,b,centerY,gap,null,205))return true;
+        }
         return false;
     }
 
@@ -5743,18 +5749,23 @@ final class OmrScoreInterpreter {
 
     private static boolean hasContinuousTieArc(byte[] labels, byte[] gray, int width, int height,
             int left, int right, float centerY, float gap,Component target) {
+        return hasContinuousTieArc(labels,gray,width,height,left,right,centerY,gap,target,165);
+    }
+
+    private static boolean hasContinuousTieArc(byte[] labels, byte[] gray, int width, int height,
+            int left, int right, float centerY, float gap,Component target,int inkLimit) {
         int radius=Math.max(1,Math.round(gap*.09f));
         boolean[] straightRows=new boolean[height];
         for(int y=Math.max(0,Math.round(centerY-gap*3.2f));y<=Math.min(height-1,Math.round(centerY+gap*3.2f));y++) {
             int dark=0;
-            for(int x=left;x<=right;x++)if((gray[y*width+x]&255)<=165)dark++;
+            for(int x=left;x<=right;x++)if((gray[y*width+x]&255)<=inkLimit)dark++;
             straightRows[y]=dark>=(right-left+1)*.85f;
         }
         for(int side:new int[]{-1,1}) for(float offset=.2f;offset<=1.15f;offset+=.15f)
             for(float bend=-.75f;bend<=1.8f;bend+=.1f) {
                 if(Math.abs(bend)<.24f || offset+bend<.12f)continue;
                 if(target!=null&&Math.abs(centerY+side*gap*(offset+bend)-target.centerY)>gap*.25f)continue;
-                int hits=0,obscured=0;int[] bins=new int[5],coveredBins=new int[5];
+                int hits=0,obscured=0,strong=0;int[] bins=new int[5],coveredBins=new int[5];
                 float[] centers=new float[50],supportedCenters=new float[50];
                 java.util.Arrays.fill(centers,Float.NaN);
                 java.util.Arrays.fill(supportedCenters,Float.NaN);
@@ -5767,14 +5778,16 @@ final class OmrScoreInterpreter {
                         int dy=(search+1)/2*(search%2==0?1:-1);
                         int yy=y+dy;if(yy<0||yy>=height)continue;
                         int at=yy*width+x;
-                        if((gray[at]&255)>165||labels[at]==OmrMeasurePostProcessor.NOTEHEAD)continue;
+                        if((gray[at]&255)>inkLimit||labels[at]==OmrMeasurePostProcessor.NOTEHEAD)continue;
                         if(straightRows[yy]||labels[at]==OmrMeasurePostProcessor.STAFF) {
                             if(obscuredY<0)obscuredY=yy;
-                        } else {ink=true;centers[sample]=yy;supportedCenters[sample]=yy;break;}
+                        } else {ink=true;centers[sample]=yy;supportedCenters[sample]=yy;
+                            if((gray[at]&255)<=165)strong++;break;}
                     }
                     if(ink){hits++;bins[sample/10]++;coveredBins[sample/10]++;}
                     else if(obscuredY>=0){obscured++;coveredBins[sample/10]++;supportedCenters[sample]=obscuredY;}
                 }
+                if(inkLimit>165&&strong<30)continue;
                 if(hits>=43&&bins[0]>=7&&bins[1]>=7&&bins[2]>=7&&bins[3]>=7&&bins[4]>=7
                         &&arcCurvature(centers,0,0,49)>=Math.max(.8f,gap*.12f))return true;
                 // A short returning arc can cross a staff rule at one end. Treat a
