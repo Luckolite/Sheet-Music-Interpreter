@@ -57,6 +57,7 @@ final class OmrScoreInterpreter {
         rawHeadComponents.removeIf(head -> isThickBarlineHead(gray,width,height,head,staffs));
         rawHeadComponents.removeIf(head -> isHeaderFlatHead(labels,gray,width,height,head,staffs,clefOrKeyComponents));
         rawHeadComponents.removeIf(head -> isForteHookHead(gray,width,height,head,staffs,symbolComponents));
+        rawHeadComponents.removeIf(head -> isZigzagOrnamentHead(labels,gray,width,height,head,staffs,rawHeadComponents));
         rawHeadComponents.removeIf(head -> isTrebleTailHead(labels,width,height,head,staffs,clefOrKeyComponents));
         List<Component> headComponents = splitStackedHeads(labels, gray, width, height,
                 rawHeadComponents, staffs);
@@ -470,6 +471,8 @@ final class OmrScoreInterpreter {
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null && isForteHookHead(gray,width,height,head,staffs,symbols))
                 bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
+            if (bounds == null && isZigzagOrnamentHead(labels,gray,width,height,head,staffs,heads))
+                bounds = new int[]{head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null) continue;
             for (int y = bounds[2]; y <= bounds[3]; y++) for (int x = bounds[0]; x <= bounds[1]; x++) {
                 int at = y * width + x;
@@ -745,6 +748,56 @@ final class OmrScoreInterpreter {
             return true;
         }
         return false;
+    }
+
+    /** A bounded zigzag above a larger note can contain a false semantic oval.
+     * Its dark center must fall, rise, and fall again across four distinct lobes. */
+    private static boolean isZigzagOrnamentHead(byte[] labels,byte[] gray,int width,int height,
+            Component head,List<Staff> staffs,List<Component> heads) {
+        if(gray==null)return false;
+        Staff staff=nearestHeadStaff(staffs,head.centerY);if(staff==null)return false;
+        float gap=staff.pitchGap;
+        if(head.maxY>staff.pitchBottom-gap*4.5f||head.centerY<staff.pitchBottom-gap*8
+                ||head.area>gap*gap*.9f||head.maxX-head.minX+1>gap*1.3f
+                ||head.maxY-head.minY+1>gap||attachedRawStem(gray,width,height,head,gap*.65f,2,180)!=null)return false;
+        boolean owner=false;
+        for(Component main:heads)if(main!=head&&main.area>=head.area*1.4f
+                &&main.maxX-main.minX+1>=gap&&Math.abs(main.centerX-head.centerX)<gap
+                &&main.centerY-head.centerY>=gap*2&&main.centerY-head.centerY<=gap*7
+                &&nearestHeadStaff(staffs,main.centerY)==staff){owner=true;break;}
+        if(!owner)return false;
+        int left=Math.round(head.minX-gap*1.4f),right=Math.round(head.maxX+gap*.8f);
+        int top=Math.round(head.minY-gap*.3f),bottom=Math.round(head.maxY+gap*.3f);
+        if(left<0||right>=width||top<0||bottom>=height)return false;
+        int w=right-left+1,h=bottom-top+1;byte[] ink=new byte[w*h];
+        for(int y=0;y<h;y++)for(int x=0;x<w;x++)if((gray[(top+y)*width+left+x]&255)<205)ink[y*w+x]=5;
+        Component glyph=retainSeedConnectedInk(ink,w,h,head,left,top);if(glyph==null)return false;
+        int span=glyph.maxX-glyph.minX+1,rise=glyph.maxY-glyph.minY+1,symbol=0;
+        if(glyph.minX==0||glyph.maxX==w-1||glyph.minY==0||glyph.maxY==h-1
+                ||span<gap*1.8f||span>gap*3.2f||rise<gap*.6f||rise>gap*1.3f)return false;
+        float[] centers=new float[w];java.util.Arrays.fill(centers,Float.NaN);
+        int first=w,last=-1;
+        for(int x=glyph.minX;x<=glyph.maxX;x++) {
+            int count=0,sum=0,runs=0;boolean previous=false;
+            for(int y=glyph.minY;y<=glyph.maxY;y++) {
+                if(ink[y*w+x]!=0&&labels[(top+y)*width+left+x]==5)symbol++;
+                boolean dark=ink[y*w+x]!=0&&(gray[(top+y)*width+left+x]&255)<165;
+                if(dark){count++;sum+=y;if(!previous)runs++;}previous=dark;
+            }
+            if(runs>1)return false;
+            if(count>0){centers[x]=sum/(float)count;first=Math.min(first,x);last=x;}
+        }
+        if(symbol<glyph.area*.2f||last-first+1<gap*1.4f)return false;
+        float[] extremes={Float.MAX_VALUE,-Float.MAX_VALUE,Float.MAX_VALUE,-Float.MAX_VALUE};int[] at=new int[4];
+        for(int x=first+1;x<last;x++) {
+            if(!Float.isFinite(centers[x-1]+centers[x]+centers[x+1]))return false;
+            float value=(centers[x-1]+centers[x]+centers[x+1])/3;
+            int bin=Math.min(3,(x-first)*4/(last-first+1));
+            if(bin%2==0?value<extremes[bin]:value>extremes[bin]){extremes[bin]=value;at[bin]=x;}
+        }
+        for(int i=1;i<4;i++)if(at[i]-at[i-1]<gap*.3f)return false;
+        return extremes[1]-extremes[0]>=gap*.12f&&extremes[1]-extremes[2]>=gap*.12f
+                &&extremes[3]-extremes[2]>=gap*.12f;
     }
 
     /** A tall detached count above a fully capped multimeasure-rest bar. */
