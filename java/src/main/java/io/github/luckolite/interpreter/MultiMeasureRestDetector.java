@@ -51,9 +51,23 @@ final class MultiMeasureRestDetector {
                 || labels.length != width * height || gray.length != labels.length
                 || measures == null || measures.isEmpty()) return List.of();
         int[] noteheadPixels = new int[measures.size()];
+        List<MeasureRegion> noteRegions = new ArrayList<>();
         List<Integer> writtenCounts = new ArrayList<>();
         for (int index = 0; index < measures.size(); index++) {
-            noteheadPixels[index] = countLabel(labels, width, height, measures.get(index),
+            MeasureRegion parent = measures.get(index);
+            float extent = parent.bottom() - parent.top();
+            float top = Math.max(0, parent.top() - extent * .85f);
+            float bottom = Math.min(1, parent.bottom() + extent * .85f);
+            // Ledger heads belong to the written measure even when its region
+            // contains only the staff. Stop at the gap to an adjacent staff.
+            for (MeasureRegion other : measures) {
+                if (other.right() <= parent.left() || other.left() >= parent.right()) continue;
+                if (other.bottom() < parent.top()) top = Math.max(top, (other.bottom() + parent.top()) * .5f);
+                if (other.top() > parent.bottom()) bottom = Math.min(bottom, (other.top() + parent.bottom()) * .5f);
+            }
+            MeasureRegion noteRegion = new MeasureRegion(parent.left(), parent.right(), top, bottom);
+            noteRegions.add(noteRegion);
+            noteheadPixels[index] = countLabel(labels, width, height, noteRegion,
                     OmrMeasurePostProcessor.NOTEHEAD);
             if (noteheadPixels[index] > 0) writtenCounts.add(noteheadPixels[index]);
         }
@@ -78,7 +92,7 @@ final class MultiMeasureRestDetector {
             // long beam or staff-line segment in one locally empty window, and a nearby time
             // signature/OCR digit then expands that measure several times. Require the complete
             // parent measure to be note-free before treating any local heavy bar as a rest.
-            if (noteheadPixels[index] - countGlyphHeads(countGlyph, labels, width, height, parent) > noteFreeLimit) continue;
+            if (noteheadPixels[index] - countGlyphHeads(countGlyph, labels, width, height, noteRegions.get(index)) > noteFreeLimit) continue;
             int parentLeft = clamp(Math.round(parent.left() * width), 0, width - 1);
             int parentRight = clamp(Math.round(parent.right() * width), parentLeft, width - 1);
             int parentTop = clamp(Math.round(parent.top() * height), 0, height - 1);

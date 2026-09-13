@@ -9,6 +9,40 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public final class MultiMeasureRestDetectorTest {
+    @Test public void ledgerHeadsAboveStaffPreventBeamBecomingRest() {
+        assertLedgerMeasureIsWritten(43);
+    }
+
+    @Test public void ledgerHeadsBelowStaffPreventBeamBecomingRest() {
+        assertLedgerMeasureIsWritten(109);
+    }
+
+    private static void assertLedgerMeasureIsWritten(int headY) {
+        int width = 240, height = 160;
+        byte[] labels = new byte[width * height];
+        byte[] gray = new byte[width * height];
+        java.util.Arrays.fill(gray, (byte) 255);
+        MeasureRegion written = new MeasureRegion(.10f, .90f, .375f, .60f);
+        addHorizontalBar(labels, gray, width, 92, 150, 74, 79);
+        addNotehead(labels, width, 105, headY);
+        addNotehead(labels, width, 135, headY);
+        assertEquals(List.of(), MultiMeasureRestDetector.candidateMeasureIndexes(
+                labels, gray, width, height, List.of(written)));
+    }
+
+    @Test public void adjacentStaffNotesDoNotSuppressSilentStaffRest() {
+        int width = 240, height = 200;
+        byte[] labels = new byte[width * height];
+        byte[] gray = new byte[width * height];
+        java.util.Arrays.fill(gray, (byte) 255);
+        MeasureRegion upper = new MeasureRegion(.10f, .90f, .15f, .35f);
+        MeasureRegion silent = new MeasureRegion(.10f, .90f, .45f, .65f);
+        addNotehead(labels, width, 105, 65);
+        addHorizontalBar(labels, gray, width, 92, 150, 106, 111);
+        assertEquals(List.of(1), MultiMeasureRestDetector.candidateMeasureIndexes(
+                labels, gray, width, height, List.of(upper, silent)));
+    }
+
     @Test public void distinguishesFourMeasureRestFromTripletAndSystemNumber() {
         int width = 200, height = 100;
         byte[] labels = new byte[width * height];
