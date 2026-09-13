@@ -2262,6 +2262,7 @@ final class OmrScoreInterpreter {
                 int row=Math.round(y-semanticSlope*(x-width*.5f));
                 if(row>=0&&row<height)printedRows[row]++;
             }
+            int[] interruptedRows=printedRows.clone();
             for(int row=0;row<height;row++)if(printedRows[row]>=width*.25f) {
                 int run=0,longest=0;
                 for(int x=0;x<width;x++) {
@@ -2316,6 +2317,7 @@ final class OmrScoreInterpreter {
                     missing.pitchSlope=semanticSlope;missing.printedPhase=true;staffs.add(missing);
                 }
             }
+            calibrateInterruptedStaffs(gray,width,height,staffs,interruptedRows,semanticSlope);
         }
         recoverFadedStaffAliases(gray,width,height,staffs,measures,semanticSlope);
         staffs.sort(Comparator.comparingDouble(staff -> staff.top));
@@ -2335,6 +2337,54 @@ final class OmrScoreInterpreter {
         }
         assignSystemPositions(staffs, measures, height);
         return staffs;
+    }
+
+    /** Short breaks in otherwise broad rules must not leave an admitted staff
+     * on the wrong pitch phase. This never admits or removes a staff. */
+    private static void calibrateInterruptedStaffs(byte[] gray,int width,int height,
+            List<Staff> staffs,int[] rows,float slope) {
+        if(staffs.size()<4)return;
+        for(var raw:RawStaffLineDetector.detectFromStrength(rows,Math.max(24,Math.round(width*.25f)),height)) {
+            if(!completeInterruptedStaff(gray,width,height,raw,slope))continue;
+            for(Staff staff:staffs) {
+                if(staff.printedPhase||staff.printedSlope
+                        ||raw.gap()<staff.pitchGap*.85f||raw.gap()>staff.pitchGap*1.18f
+                        ||Math.abs(staff.top-raw.top())>raw.gap()*1.2f
+                        ||Math.abs(staff.bottom-raw.bottom())>raw.gap()*1.2f)continue;
+                int corroboration=0;for(Staff other:staffs)if(other!=staff
+                        &&Math.abs(other.pitchGap-raw.gap())<=raw.gap()*.08f)corroboration++;
+                if(corroboration<3)continue;
+                float error=Math.max(Math.abs(staff.pitchBottom-raw.bottom()),Math.abs(staff.pitchGap-raw.gap())*6);
+                error=Math.max(error,Math.abs(staff.pitchSlope-slope)*width*.5f);
+                if(error<raw.gap()*.45f)continue;
+                staff.pitchBottom=raw.bottom();staff.pitchGap=raw.gap();staff.pitchSlope=slope;staff.printedPhase=true;
+            }
+        }
+    }
+
+    private static boolean completeInterruptedStaff(byte[] gray,int width,int height,
+            RawStaffLineDetector.StaffLines staff,float slope) {
+        int step=Math.max(1,width/512),radius=Math.max(1,Math.round(staff.gap()*.15f));
+        int flank=Math.max(2,Math.round(staff.gap()*.32f));
+        int partialRules=0;
+        for(int i=0;i<9;i++) {
+            float row=i<5?staff.rows()[i]:(staff.rows()[i-5]+staff.rows()[i-4])*.5f;
+            int supported=0,samples=0;
+            for(int x=0;x<width;x+=step) {
+                int y=Math.round(row+slope*(x-width*.5f));samples++;
+                for(int yy=Math.max(flank,y-radius);yy<=Math.min(height-1-flank,y+radius);yy++) {
+                    int ink=gray[yy*width+x]&255;
+                    if(i<5?ink<=205&&(gray[(yy-flank)*width+x]&255)>=ink+12
+                            &&(gray[(yy+flank)*width+x]&255)>=ink+12:ink<=180) {supported++;break;}
+                }
+            }
+            // One rule can cross denser notation, but the other four must
+            // retain the stronger page-wide thin-ink support.
+            if(i<5) {
+                if(supported<samples*.70f||supported<samples*.75f&&++partialRules>1)return false;
+            } else if(supported>=samples*.4f)return false;
+        }
+        return true;
     }
 
     /** Pale rules can leave a compressed semantic group. Require three other
