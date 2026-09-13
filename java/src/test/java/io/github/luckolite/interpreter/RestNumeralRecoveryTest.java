@@ -39,7 +39,8 @@ public class RestNumeralRecoveryTest {
         assertEquals(2,MeasureNumberReconciler.reconcile(List.of(p.region),List.of(),counts).size());
     }
     @Test public void anActualContinuousThreeSpineIsNotATwo() {
-        Page p=new Page(true,true);assertTrue(p.detect(List.of()).isEmpty());
+        Page p=new Page(true,true);var counts=p.detect(List.of());
+        assertEquals(1,counts.size());assertEquals(3,counts.get(0).value());
     }
     @Test public void aCountNeedsTheHeavyRestBar() {
         Page p=new Page(false,false);assertTrue(p.detect(List.of()).isEmpty());

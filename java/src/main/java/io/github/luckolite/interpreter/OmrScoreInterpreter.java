@@ -1694,6 +1694,10 @@ final class OmrScoreInterpreter {
     }
 
     private static boolean fullStaffRule(byte[] gray, int width, int height, int x, Staff staff) {
+        return fullStaffRule(gray,width,height,x,staff,205);
+    }
+
+    private static boolean fullStaffRule(byte[] gray, int width, int height, int x, Staff staff,int threshold) {
         if (gray == null) return false;
         int covered = 0, sampled = 0;
         int margin = Math.max(1, Math.round(staff.gap * .14f));
@@ -1701,7 +1705,7 @@ final class OmrScoreInterpreter {
             int first = Math.max(0, Math.round(staff.top + line * staff.gap) + margin + 1);
             int last = Math.min(height - 1, Math.round(staff.top + (line + 1) * staff.gap) - margin - 1);
             int space = 0;
-            for (int y = first; y <= last; y++) if ((gray[y * width + x] & 255) <= 205) space++;
+            for (int y = first; y <= last; y++) if ((gray[y * width + x] & 255) <= threshold) space++;
             int count = Math.max(0, last - first + 1);
             if (space < count * .55f) return false;
             covered += space;
@@ -1747,7 +1751,20 @@ final class OmrScoreInterpreter {
             if (strong && !previous) groups++;
             previous = strong;
         }
-        return groups >= 2;
+        if(groups>=2)return true;
+        // Thin faded bars can lose their semantic stem labels. Require two
+        // separate raw columns crossing every staff space, not just the rules
+        // or the shorter parallel spines of a sharp.
+        for(int threshold:new int[]{205,225}) {
+            groups=0;previous=false;
+            for(int x=left;x<=right;x++) {
+                boolean strong=fullStaffRule(gray,width,height,x,staff,threshold);
+                if(strong&&!previous)groups++;
+                previous=strong;
+            }
+            if(groups>=2)return true;
+        }
+        return false;
     }
 
     private static void logHeadCoverage(List<Staff> staffs, List<Component> rawComponents,

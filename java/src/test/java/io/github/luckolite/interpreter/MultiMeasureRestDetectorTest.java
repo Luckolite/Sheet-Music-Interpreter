@@ -171,8 +171,8 @@ public final class MultiMeasureRestDetectorTest {
         MultiMeasureRestDetector.RestBarCandidate candidate =
                 new MultiMeasureRestDetector.RestBarCandidate(0, region);
 
-        assertEquals(null,
-                MultiMeasureRestDetector.standaloneCount(gray, width, height, candidate));
+        assertEquals(3,
+                MultiMeasureRestDetector.standaloneCount(gray, width, height, candidate).value());
     }
 
     @Test public void centeredRestTwoWinsOverOpeningTimeSignatureFour() {

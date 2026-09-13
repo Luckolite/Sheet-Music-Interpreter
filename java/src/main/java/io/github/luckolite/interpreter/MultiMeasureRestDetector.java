@@ -130,7 +130,7 @@ final class MultiMeasureRestDetector {
 
     /**
      * ML Kit commonly ignores an isolated one-character OCR crop. Recognize only the distinctive
-     * printed 2/4/8/9 shapes above a heavy bar, including mislabeled count ink.
+     * printed 2/3/4/8/9 shapes above a heavy bar, including mislabeled count ink.
      */
     static MeasureNumberReconciler.NumberToken standaloneCount(byte[] gray, int width, int height,
                                                                  RestBarCandidate candidate) {
@@ -181,6 +181,7 @@ final class MultiMeasureRestDetector {
                     minX, maxX, minY, maxY) ? (looksLikeNine(gray, width, regionHeight,
                     minX, maxX, minY, maxY) ? 9 : 4)
                     : looksLikeNine(gray, width, regionHeight, minX, maxX, minY, maxY) ? 9
+                    : looksLikeThree(gray, width, regionHeight, area, minX, maxX, minY, maxY) ? 3
                     : looksLikeTwo(gray, width, regionHeight, area,
                     minX, maxX, minY, maxY) ? 2 : 0;
             if (value == 0 || !isolatedCountGlyph(gray,width,height,minX,maxX,minY,maxY)) continue;
@@ -347,6 +348,32 @@ final class MultiMeasureRestDetector {
                 && topBar < glyphWidth * .68f
                 && upperLeft >= Math.max(2, Math.round(area * .10f))
                 && lowerLeft <= Math.max(2, Math.round(area * .16f));
+    }
+
+    /** A three has two left-open bowls joined by a continuous right side. */
+    private static boolean looksLikeThree(byte[] gray,int width,int regionHeight,int area,
+                                         int left,int right,int top,int bottom) {
+        int w=right-left+1,h=bottom-top+1;
+        if(h<regionHeight*.13f||h>regionHeight*.48f||w<h*.35f||w>h*.95f
+                ||area<w*h*.16f||area>w*h*.80f)return false;
+        int[] first=new int[h],last=new int[h],columns=new int[w];
+        java.util.Arrays.fill(first,w);java.util.Arrays.fill(last,-1);
+        for(int y=0;y<h;y++)for(int x=0;x<w;x++)if((gray[(top+y)*width+left+x]&255)<=165) {
+            first[y]=Math.min(first[y],x);last[y]=x;columns[x]++;
+        }
+        int upperOpen=0,lowerOpen=0,topSpan=0,middleSpan=0,bottomSpan=0,rightSpine=0;
+        for(int y=0;y<h;y++) {
+            if(y>=h*.25f&&y<=h*.45f&&first[y]>=w*.45f&&last[y]>=w*.75f)upperOpen++;
+            if(y>=h*.55f&&y<=h*.75f&&first[y]>=w*.45f&&last[y]>=w*.75f)lowerOpen++;
+            int span=last[y]-first[y]+1;
+            if(y<h*.20f)topSpan=Math.max(topSpan,span);
+            if(y>=h*.40f&&y<=h*.60f)middleSpan=Math.max(middleSpan,span);
+            if(y>h*.80f)bottomSpan=Math.max(bottomSpan,span);
+        }
+        for(int x=Math.round(w*.70f);x<w;x++)rightSpine=Math.max(rightSpine,columns[x]);
+        return upperOpen>=Math.max(1,h*.06f)&&lowerOpen>=Math.max(1,h*.06f)
+                &&topSpan>=w*.7f&&bottomSpan>=w*.7f&&middleSpan>=w*.45f
+                &&rightSpine>=h*.55f;
     }
 
     private static boolean looksLikeTwo(byte[] gray, int width, int regionHeight, int area,
