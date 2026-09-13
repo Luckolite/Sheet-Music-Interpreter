@@ -53,10 +53,17 @@ final class SixteenthRestDetector {
             boolean[] line = new boolean[bottom - top + 1];
             // Remove only long horizontal ink rows, including a line's antialiased edge.
             for (int y = top; y <= bottom; y++) {
-                int dark = 0;
-                for (int x = 0; x < width; x++) if ((gray[y * width + x] & 255) < 170) dark++;
+                int dark = 0,longest=0,run=0;
+                for (int x = 0; x < width; x++) {
+                    if ((gray[y * width + x] & 255) < 170) { dark++;longest=Math.max(longest,++run); }
+                    else run=0;
+                }
                 float nearestLine = staff.top() + Math.round((y - staff.top()) / gap) * gap;
-                line[y - top] = Math.abs(y - nearestLine) <= gap * .2f && dark > width * .25f;
+                // Rectification can leave only a local antialiased edge of a rule.
+                // A continuous five-gap segment still establishes line ink; rest
+                // bulbs are far narrower and cannot satisfy this support.
+                line[y - top] = Math.abs(y - nearestLine) <= gap * .2f
+                        && (dark > width * .25f || longest >= gap*5);
             }
             int start = -1;
             for (int x = 0; x <= width; x++) {
@@ -180,11 +187,15 @@ final class SixteenthRestDetector {
             }
             List<Integer> lobes = new ArrayList<>();
             int run = 0, runStart = 0;
+            // A single eighth-rest bulb can span three raster rows at a
+            // fractional staff scale. Preserve the stricter paired-bulb test.
+            float bulbWidth=eighth?Math.max(2,Math.round(gap*.58f)):gap*.58f;
+            float bulbRows=Math.max(2,eighth?Math.round(gap*.22f):gap*.22f);
             for (int y = minY; y <= maxY + 1; y++) {
-                if (y <= maxY && ink[y - top] >= gap * .58f) {
+                if (y <= maxY && ink[y - top] >= bulbWidth) {
                     if (run++ == 0) runStart = y;
                 } else {
-                    if (run >= Math.max(2, gap * .22f)) lobes.add((runStart + y - 1) / 2);
+                    if (run >= bulbRows) lobes.add((runStart + y - 1) / 2);
                     run = 0;
                 }
             }

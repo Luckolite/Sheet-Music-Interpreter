@@ -294,9 +294,14 @@ final class OmrScoreInterpreter {
             result.clear();result.addAll(notation);
         }
         List<SixteenthRestDetector.Staff> restStaffs = new ArrayList<>();
-        for (Staff staff : staffs) restStaffs.add(new SixteenthRestDetector.Staff(
+        for (Staff staff : staffs) {
+            StaffPitchTrack restTrack=staff.pitchTrack;
+            if(restTrack==null&&staff.pitchSlope!=0)
+                restTrack=StaffPitchTrack.linear(width,staff.pitchBottom,staff.pitchGap,staff.pitchSlope);
+            restStaffs.add(new SixteenthRestDetector.Staff(
                 staff.pitchBottom - staff.pitchGap * 4, staff.pitchBottom, staff.pitchGap,
-                staff.index, staff.count, staff.pitchTrack));
+                staff.index, staff.count, restTrack));
+        }
         List<ScoreRestEvent> rests = SixteenthRestDetector.detect(gray, width, height, measures, restStaffs, result);
         // Small stemless model heads can be augmentation dots of an independently
         // recognized rest. Re-read those dots without letting the mistaken head

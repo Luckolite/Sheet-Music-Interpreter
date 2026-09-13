@@ -12,6 +12,12 @@ final class StaffPitchTrack {
     private final float[][] points;
     private StaffPitchTrack(List<float[]> points) { this.points=points.toArray(new float[0][]); }
 
+    /** Carry an already established straight staff slope into column rectification. */
+    static StaffPitchTrack linear(int width,float bottom,float gap,float slope) {
+        return new StaffPitchTrack(List.of(new float[]{0,bottom-slope*width*.5f,gap},
+                new float[]{width-1,bottom+slope*(width-1-width*.5f),gap}));
+    }
+
     static StaffPitchTrack detect(byte[] gray,int width,int height,float top,float bottom,float gap) {
         if(gray==null||gap<3)return null;
         if(straightRules(gray,width,height,bottom,gap,true))return null;
