@@ -6647,9 +6647,9 @@ final class OmrScoreInterpreter {
             if(b-a<gap*1.3f)continue;
             if(hasContinuousTieArc(labels,gray,width,height,a,b,centerY,gap))return true;
         }
-        // Long ties may leave a little more clearance and fade near the heads.
+        // Long ties may leave a full staff-space of clearance beside a dot and fade near the heads.
         // Keep short-arc limits and require a dark core within the complete curve.
-        if(right-left>=gap*5)for(int first=0;first<=4;first++)for(int last=0;last<=4;last++) {
+        if(right-left>=gap*5)for(int first=0;first<=5;first++)for(int last=0;last<=5;last++) {
             int a=left+first*step,b=right-last*step;
             if(hasContinuousTieArc(labels,gray,width,height,a,b,centerY,gap,null,205))return true;
         }
