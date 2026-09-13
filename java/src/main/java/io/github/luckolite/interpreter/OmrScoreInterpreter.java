@@ -4837,6 +4837,8 @@ final class OmrScoreInterpreter {
                 :StaffPitchTrack.localPrintedRules(labels,gray,width,height,head.centerX,head.minX,head.maxX,referenceBottom,gap);
         if(complete==null)complete=StaffPitchTrack.localOccludedRules(labels,gray,width,height,head.centerX,
                 head.minX,head.maxX,referenceBottom,gap);
+        if(complete==null)complete=StaffPitchTrack.localFadedRules(labels,gray,width,height,head.centerX,
+                head.minX,head.maxX,referenceBottom,gap);
         if(complete!=null&&(!staff.printedPhase||Math.abs(complete[0]-referenceBottom)<gap*.5f))return complete;
         int radius = Math.max(4, Math.round(gap * 3.5f));
         int left = Math.max(0, Math.round(head.centerX) - radius);

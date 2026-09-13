@@ -217,6 +217,17 @@ final class StaffPitchTrack {
         return null;
     }
 
+    /** A pale local group still needs all five contrasted rules on both sides
+     * and the same semantic staff support as the ordinary printed-rule path. */
+    static float[] localFadedRules(byte[] labels,byte[] gray,int width,int height,float x,int headLeft,int headRight,
+                                  float referenceBottom,float gap) {
+        for(float slope:new float[]{0,.04f,-.04f,.08f,-.08f,.12f,-.12f,.16f,-.16f}) {
+            float[] found=localRulesWithSlope(labels,gray,width,height,x,headLeft,headRight,referenceBottom,gap,slope,true,false,225);
+            if(found!=null)return found;
+        }
+        return null;
+    }
+
     /** A beam may cover one rule beside a head near the printed staff edge.
      * Keep nine independently contrasted side/rule observations and require
      * thick ink plus a staff label at the single covered observation. */
@@ -240,12 +251,19 @@ final class StaffPitchTrack {
     }
     private static float[] localRulesWithSlope(byte[] labels,byte[] gray,int width,int height,float x,int headLeft,int headRight,
                               float referenceBottom,float gap,float slope,boolean bilateral,boolean occluded) {
+        return localRulesWithSlope(labels,gray,width,height,x,headLeft,headRight,referenceBottom,gap,slope,bilateral,occluded,205);
+    }
+    private static float[] localRulesWithSlope(byte[] labels,byte[] gray,int width,int height,float x,int headLeft,int headRight,
+                              float referenceBottom,float gap,float slope,boolean bilateral,boolean occluded,int inkThreshold) {
         if(gray==null)return null;
         int radius=Math.max(4,Math.round(gap*(occluded?2.5f:3.5f))),exclusion=Math.max(1,Math.round(gap*.45f));
         int left=Math.max(0,Math.round(x)-radius),right=Math.min(width-1,Math.round(x)+radius);
         int top=Math.max(0,Math.round(referenceBottom-gap*5.5f)),bottom=Math.min(height-1,Math.round(referenceBottom+gap*1.5f));
         if(bottom<top)return null;
-        int[] strength=new int[bottom-top+1];int samples=0,flank=Math.max(2,Math.round(gap*.32f));
+        int[] strength=new int[bottom-top+1];int samples=0;
+        // At the pale threshold, require a narrower stroke so broad shading
+        // cannot masquerade as five evenly spaced printed rules.
+        int flank=Math.max(2,Math.round(gap*(inkThreshold>205?.22f:.32f)));
         for(int xx=left;xx<=right;xx++) {
             if(xx>=headLeft-exclusion&&xx<=headRight+exclusion)continue;
             samples++;
@@ -253,7 +271,7 @@ final class StaffPitchTrack {
                 int row=y+Math.round((xx-x)*slope);
                 if(row<flank||row+flank>=height)continue;
                 int ink=gray[row*width+xx]&255;
-                if(ink<=205&&(gray[(row-flank)*width+xx]&255)>=ink+12&&(gray[(row+flank)*width+xx]&255)>=ink+12)
+                if(ink<=inkThreshold&&(gray[(row-flank)*width+xx]&255)>=ink+12&&(gray[(row+flank)*width+xx]&255)>=ink+12)
                     strength[y-top]++;
             }
         }
@@ -293,18 +311,18 @@ final class StaffPitchTrack {
                 float outside=base<referenceBottom?base+spacing:base-5*spacing;
                 float expected=base<referenceBottom?referenceBottom:referenceBottom-4*gap;
                 if(Math.abs(outside-expected)<gap*.35f&&printedRuleOnBothSides(gray,width,height,x,
-                        headLeft,headRight,outside,slope,left,right,exclusion,band,flank))continue;
+                        headLeft,headRight,outside,slope,left,right,exclusion,band,flank,inkThreshold))continue;
             }
             if(occluded&&Math.abs(base-referenceBottom)>gap*.45f)continue;
             if(consistent==5&&Math.abs(base-referenceBottom)<=gap*1.5f
                     &&(!bilateral||supportedOnBothSides(labels,gray,width,height,x,headLeft,headRight,
-                            base,spacing,slope,left,right,exclusion,band,flank,occluded)))return new float[]{base,spacing};
+                            base,spacing,slope,left,right,exclusion,band,flank,occluded,inkThreshold)))return new float[]{base,spacing};
         }
         return null;
     }
 
     private static boolean printedRuleOnBothSides(byte[] gray,int width,int height,float x,
-            int headLeft,int headRight,float row,float slope,int left,int right,int exclusion,int band,int flank) {
+            int headLeft,int headRight,float row,float slope,int left,int right,int exclusion,int band,int flank,int inkThreshold) {
         for(int side=0;side<2;side++) {
             int first=side==0?left:headRight+exclusion+1,last=side==0?headLeft-exclusion-1:right;
             int samples=0,supported=0;
@@ -313,7 +331,7 @@ final class StaffPitchTrack {
                 int center=Math.round(row+(xx-x)*slope);
                 for(int y=Math.max(flank,center-band);y<=Math.min(height-1-flank,center+band);y++) {
                     int value=gray[y*width+xx]&255;
-                    if(value<=205&&(gray[(y-flank)*width+xx]&255)>=value+12
+                    if(value<=inkThreshold&&(gray[(y-flank)*width+xx]&255)>=value+12
                             &&(gray[(y+flank)*width+xx]&255)>=value+12){ink=true;break;}
                 }
                 if(ink)supported++;
@@ -325,7 +343,7 @@ final class StaffPitchTrack {
 
     private static boolean supportedOnBothSides(byte[] labels,byte[] gray,int width,int height,
             float x,int headLeft,int headRight,float base,float gap,float slope,
-            int left,int right,int exclusion,int band,int flank,boolean occluded) {
+            int left,int right,int exclusion,int band,int flank,boolean occluded,int inkThreshold) {
         int covered=0;
         for(int side=0;side<2;side++)for(int line=0;line<5;line++) {
             int first=side==0?left:headRight+exclusion+1;
@@ -337,7 +355,7 @@ final class StaffPitchTrack {
                 int center=Math.round(base-line*gap+(xx-x)*slope);
                 for(int yy=Math.max(flank,center-band);yy<=Math.min(height-1-flank,center+band);yy++) {
                     int value=gray[yy*width+xx]&255;
-                    if(value<=205&&(gray[(yy-flank)*width+xx]&255)>=value+12
+                    if(value<=inkThreshold&&(gray[(yy-flank)*width+xx]&255)>=value+12
                             &&(gray[(yy+flank)*width+xx]&255)>=value+12)ink=true;
                     if(labels[yy*width+xx]==4)label=true;
                 }
