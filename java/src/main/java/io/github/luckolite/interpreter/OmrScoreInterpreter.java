@@ -4045,9 +4045,8 @@ final class OmrScoreInterpreter {
             }
         }
         if(area==0)return false;
-        Component whole=new Component(area,minX,maxX,minY,maxY,sx/(float)area,sy/(float)area);
-        if(!rawStrokeLeavesCrop(gray,width,height,ink,w,h,left,top,gap)
-                &&isNaturalGlyph(ink,w,h,new AccidentalCandidate(whole,OmrMeasurePostProcessor.SYMBOL),gap))return true;
+        // Disconnected staff or slur ink cannot extend either natural spine.
+        // Filter to the seeded accidental before checking its endpoint shape.
         Component glyph=retainSeedConnectedInk(ink,w,h,seed,left,top);
         if(glyph==null)return false;
         // A crop through an annotation can give a flat a false lower-right spine.
