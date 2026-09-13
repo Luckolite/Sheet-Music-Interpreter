@@ -2519,6 +2519,7 @@ final class OmrScoreInterpreter {
             calibrateInterruptedStaffs(gray,width,height,staffs,interruptedRows,semanticSlope);
         }
         recoverFadedStaffAliases(gray,width,height,staffs,measures,semanticSlope);
+        calibrateContrastedFadedStaffs(gray,width,height,staffs,semanticSlope);
         staffs.sort(Comparator.comparingDouble(staff -> staff.top));
         for(Staff staff:staffs) {
             if(!staff.printedPhase&&!staff.printedSlope) {
@@ -2612,6 +2613,58 @@ final class OmrScoreInterpreter {
                 recovered.pitchSlope=slope;recovered.printedPhase=true;staffs.set(i,recovered);
             }
         }
+    }
+
+    /** Thin pale rules can establish scale despite a moderately compressed mask.
+     * Three independent systems must corroborate the complete printed group. */
+    private static void calibrateContrastedFadedStaffs(byte[] gray,int width,int height,
+            List<Staff> staffs,float slope) {
+        if(gray==null||staffs.size()<4)return;
+        List<Float> gaps=new ArrayList<>();for(Staff staff:staffs)gaps.add(staff.pitchGap);
+        gaps.sort(Float::compare);float typical=gaps.get(gaps.size()/2);
+        int flank=Math.max(2,Math.round(typical*.22f));
+        int[] rows=new int[height];
+        for(int y=flank;y<height-flank;y++)for(int x=0;x<width;x++) {
+            int ink=gray[y*width+x]&255;
+            if(ink>225||(gray[(y-flank)*width+x]&255)<ink+12
+                    ||(gray[(y+flank)*width+x]&255)<ink+12)continue;
+            int row=Math.round(y-slope*(x-width*.5f));if(row>=0&&row<height)rows[row]++;
+        }
+        for(var raw:RawStaffLineDetector.detectFromStrength(rows,Math.max(24,Math.round(width*.25f)),height)) {
+            if(Math.abs(raw.gap()-typical)>typical*.08f)continue;
+            int corroboration=0;for(float originalGap:gaps)
+                if(Math.abs(originalGap-raw.gap())<=raw.gap()*.08f)corroboration++;
+            if(corroboration<3||!completeContrastedFadedStaff(gray,width,height,raw,slope))continue;
+            for(Staff staff:staffs) {
+                int independent=corroboration-(Math.abs(staff.pitchGap-raw.gap())<=raw.gap()*.08f?1:0);
+                if(independent<3)continue;
+                if(staff.printedPhase||staff.printedSlope||staff.pitchTrack!=null
+                        ||staff.pitchGap<raw.gap()*.8f||staff.pitchGap>raw.gap()*1.2f
+                        ||Math.abs(staff.pitchBottom-raw.bottom())>raw.gap()*.45f
+                        ||Math.abs(staff.pitchGap-raw.gap())<raw.gap()*.035f)continue;
+                staff.pitchBottom=raw.bottom();staff.pitchGap=raw.gap();
+                staff.pitchSlope=slope;staff.printedPhase=true;
+            }
+        }
+    }
+
+    private static boolean completeContrastedFadedStaff(byte[] gray,int width,int height,
+            RawStaffLineDetector.StaffLines staff,float slope) {
+        int radius=Math.max(1,Math.round(staff.gap()*.15f)),flank=Math.max(2,Math.round(staff.gap()*.22f));
+        for(int i=-2;i<=10;i++) {
+            float row=staff.top()+i*staff.gap()*.5f;int supported=0,samples=0;
+            for(int x=Math.round(width*.1f);x<width*.94f;x+=Math.max(1,width/512)) {
+                int center=Math.round(row+slope*(x-width*.5f));samples++;
+                for(int y=Math.max(flank,center-radius);y<=Math.min(height-1-flank,center+radius);y++) {
+                    int ink=gray[y*width+x]&255;
+                    if(ink<=225&&(gray[(y-flank)*width+x]&255)>=ink+12
+                            &&(gray[(y+flank)*width+x]&255)>=ink+12){supported++;break;}
+                }
+            }
+            boolean rule=i>=0&&i<=8&&i%2==0;
+            if(samples<24||(rule?supported<samples*.75f:supported>=samples*.4f))return false;
+        }
+        return true;
     }
 
     private static boolean completeFadedStaff(byte[] gray,int width,int height,
