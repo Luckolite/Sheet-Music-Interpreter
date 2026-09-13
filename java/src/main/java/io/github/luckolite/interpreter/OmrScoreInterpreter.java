@@ -2065,27 +2065,42 @@ final class OmrScoreInterpreter {
                     &&componentHeight<=staff.gap*2.6f&&component.maxX-component.minX+1<=staff.gap*1.7f) {
                 // A semantic bridge can fill the neck between two solid heads.
                 // The printed silhouette must independently contain two lobes.
-                int[] rawRows=new int[rowInk.length];
-                for(int y=component.minY;y<=component.maxY;y++)
-                    for(int x=component.minX;x<=component.maxX;x++)
-                        if((gray[y*width+x]&255)<=165)rawRows[y-component.minY]++;
-                int neck=-1,minimum=Integer.MAX_VALUE;
-                for(int y=firstSplit;y<=lastSplit;y++)if(rawRows[y-component.minY]<minimum) {
-                    minimum=rawRows[y-component.minY];neck=y;
-                }
-                int peakAbove=0,peakBelow=0;
-                for(int y=component.minY;y<neck;y++)peakAbove=Math.max(peakAbove,rawRows[y-component.minY]);
-                for(int y=neck+1;y<=component.maxY;y++)peakBelow=Math.max(peakBelow,rawRows[y-component.minY]);
-                Component a=neck<0?null:componentSlice(labels,width,component,component.minY,neck);
-                Component b=neck<0?null:componentSlice(labels,width,component,neck+1,component.maxY);
-                if(a!=null&&b!=null&&minimum<=Math.min(peakAbove,peakBelow)*.78f
-                        &&peakAbove>=staff.gap*.65f&&peakBelow>=staff.gap*.65f
-                        &&plausibleHead(a,staff.gap)&&plausibleHead(b,staff.gap)
-                        &&!hasOpenCenter(labels,gray,width,height,a,staff.gap)
-                        &&!hasOpenCenter(labels,gray,width,height,b,staff.gap)
-                        &&b.centerY-a.centerY>=staff.gap*.58f&&b.centerY-a.centerY<=staff.gap*2.25f
-                        &&Math.abs(a.centerX-b.centerX)<=staff.gap*1.45f) {
-                    upper=a;lower=b;twoLobes=true;
+                // A darker core can reveal the neck when pale edge ink joins it.
+                for(int inkThreshold:new int[]{165,120}) {
+                    int[] rawRows=new int[rowInk.length];
+                    for(int y=component.minY;y<=component.maxY;y++)
+                        for(int x=component.minX;x<=component.maxX;x++)
+                            if((gray[y*width+x]&255)<=inkThreshold)rawRows[y-component.minY]++;
+                    int neck=-1,minimum=Integer.MAX_VALUE;
+                    for(int y=firstSplit;y<=lastSplit;y++)if(rawRows[y-component.minY]<minimum) {
+                        minimum=rawRows[y-component.minY];neck=y;
+                    }
+                    int peakAbove=0,peakBelow=0;
+                    for(int y=component.minY;y<neck;y++)peakAbove=Math.max(peakAbove,rawRows[y-component.minY]);
+                    for(int y=neck+1;y<=component.maxY;y++)peakBelow=Math.max(peakBelow,rawRows[y-component.minY]);
+                    if(inkThreshold<165) {
+                        int upperCore=0,lowerCore=0,coreRun=0;
+                        for(int y=component.minY;y<neck;y++) {
+                            coreRun=rawRows[y-component.minY]>=peakAbove*.6f?coreRun+1:0;upperCore=Math.max(upperCore,coreRun);
+                        }
+                        coreRun=0;
+                        for(int y=neck+1;y<=component.maxY;y++) {
+                            coreRun=rawRows[y-component.minY]>=peakBelow*.6f?coreRun+1:0;lowerCore=Math.max(lowerCore,coreRun);
+                        }
+                        // Isolated dark rules or strokes cannot supply filled oval cores.
+                        if(upperCore<staff.gap*.35f||lowerCore<staff.gap*.35f)continue;
+                    }
+                    Component a=neck<0?null:componentSlice(labels,width,component,component.minY,neck);
+                    Component b=neck<0?null:componentSlice(labels,width,component,neck+1,component.maxY);
+                    if(a!=null&&b!=null&&minimum<=Math.min(peakAbove,peakBelow)*.78f
+                            &&peakAbove>=staff.gap*.65f&&peakBelow>=staff.gap*.65f
+                            &&plausibleHead(a,staff.gap)&&plausibleHead(b,staff.gap)
+                            &&!hasOpenCenter(labels,gray,width,height,a,staff.gap)
+                            &&!hasOpenCenter(labels,gray,width,height,b,staff.gap)
+                            &&b.centerY-a.centerY>=staff.gap*.58f&&b.centerY-a.centerY<=staff.gap*2.25f
+                            &&Math.abs(a.centerX-b.centerX)<=staff.gap*1.45f) {
+                        upper=a;lower=b;twoLobes=true;break;
+                    }
                 }
             }
             if (!twoLobes && gray != null && componentHeight>=staff.gap*1.7f
