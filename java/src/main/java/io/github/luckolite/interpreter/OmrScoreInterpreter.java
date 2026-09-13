@@ -4441,7 +4441,34 @@ final class OmrScoreInterpreter {
         // Require more enclosed rows before accepting their smaller combined area.
         return pocketRows >= 2 && enclosed >= Math.max(4, Math.round(headWidth * headHeight * .055f))
                 || pocketRows >= Math.max(4, Math.round(gap * .22f))
-                && enclosed >= Math.max(8, Math.round(headWidth * headHeight * .04f));
+                && enclosed >= Math.max(8, Math.round(headWidth * headHeight * .04f))
+                || fadedEnclosedHeadPocket(gray,width,head,gap,left,right,top,bottom);
+    }
+
+    /** Light outlines around a ledger-obscured hollow head can miss the dark
+     * wall cutoff. Require substantial enclosed area over several rows, with
+     * independently darker ink on all four sides of every accepted pixel. */
+    private static boolean fadedEnclosedHeadPocket(byte[] gray,int width,Component head,float gap,
+            int left,int right,int top,int bottom) {
+        float w=head.maxX-head.minX+1,h=head.maxY-head.minY+1;
+        if(w<gap*1.1f||h<gap*.9f)return false;
+        int enclosed=0,rows=0;
+        for(int y=Math.max(head.minY+1,top-2);y<=Math.min(head.maxY-1,bottom+2);y++) {
+            int row=0;
+            for(int x=Math.max(head.minX+1,left-1);x<=Math.min(head.maxX-1,right+1);x++) {
+                int pocket=gray[y*width+x]&255;
+                if(pocket<185)continue;
+                int l=255,r=255,a=255,b=255;
+                for(int xx=head.minX;xx<x;xx++)l=Math.min(l,gray[y*width+xx]&255);
+                for(int xx=x+1;xx<=head.maxX;xx++)r=Math.min(r,gray[y*width+xx]&255);
+                for(int yy=head.minY;yy<y;yy++)a=Math.min(a,gray[yy*width+x]&255);
+                for(int yy=y+1;yy<=head.maxY;yy++)b=Math.min(b,gray[yy*width+x]&255);
+                int wall=Math.max(Math.max(l,r),Math.max(a,b));
+                if(wall<=180&&pocket>=wall+30)row++;
+            }
+            enclosed+=row;if(row>=2)rows++;
+        }
+        return rows>=3&&enclosed>=Math.max(8,Math.round(w*h*.055f));
     }
 
     /** Reconnect narrow cuts in an accidental's semantic mask using the printed ink. */
