@@ -4081,6 +4081,11 @@ final class OmrScoreInterpreter {
 
     private static boolean rawStrokeLeavesCrop(byte[] gray,int width,int height,byte[] ink,
             int w,int h,int left,int top,float gap) {
+        return rawStrokeLeavesCropAtThreshold(gray,width,height,ink,w,h,left,top,gap,224);
+    }
+
+    private static boolean rawStrokeLeavesCropAtThreshold(byte[] gray,int width,int height,byte[] ink,
+            int w,int h,int left,int top,float gap,int threshold) {
         int reach=Math.max(2,Math.round(gap*.16f));
         for(int side:new int[]{-1,1}) {
             int edge=side<0?0:h-1;
@@ -4089,7 +4094,7 @@ final class OmrScoreInterpreter {
                 boolean continues=true;
                 for(int d=1;d<=reach;d++) {
                     int y=top+edge+side*d;
-                    if(y<0||y>=height||(gray[y*width+left+x]&255)>=225){continues=false;break;}
+                    if(y<0||y>=height||(gray[y*width+left+x]&255)>threshold){continues=false;break;}
                 }
                 if(continues)return true;
             }
@@ -4110,6 +4115,14 @@ final class OmrScoreInterpreter {
     /** A flat's bowl can keep its accidental label while its tall spine is labelled as a stem. */
     private static boolean rawFlatFromBowl(byte[] gray,int width,int height,
             List<AccidentalCandidate> candidates,Component head,float gap) {
+        return recoverFlatFromBowl(gray,width,height,candidates,head,gap,180)
+                ||recoverFlatFromBowl(gray,width,height,candidates,head,gap,235);
+    }
+
+    /** Recover faded spines only with a semantic bowl and the complete flat shape.
+     * Disconnected neighboring marks cannot supply strokes or clip the accidental. */
+    private static boolean recoverFlatFromBowl(byte[] gray,int width,int height,
+            List<AccidentalCandidate> candidates,Component head,float gap,int threshold) {
         if(gray==null||gray.length!=width*height)return false;
         for(AccidentalCandidate seed:candidates) {
             if(seed.label!=OmrMeasurePostProcessor.CLEF_OR_KEY&&seed.label!=0)continue;
@@ -4121,26 +4134,26 @@ final class OmrScoreInterpreter {
             int left=Math.max(0,c.minX-margin),right=Math.min(width-1,Math.min(c.maxX+margin,head.minX-2));
             int top=Math.max(0,Math.round(head.centerY-gap*2.7f)),bottom=Math.min(height-1,Math.round(head.centerY+gap*.8f));
             int w=right-left+1,h=bottom-top+1;if(w<=0||h<=0)continue;
-            byte[] ink=new byte[w*h];int area=0,minX=w,maxX=-1,minY=h,maxY=-1;long sx=0,sy=0;
+            byte[] ink=new byte[w*h];
             int reach=Math.max(3,Math.round(gap*.6f)),probe=Math.max(2,Math.round(gap*.2f));
             for(int y=top;y<=bottom;y++) {
                 int outside=0,dark=0;
                 for(int x=Math.max(0,left-reach);x<=Math.min(width-1,right+reach);x++)
-                    if(x<left||x>right){outside++;if((gray[y*width+x]&255)<=180)dark++;}
+                    if(x<left||x>right){outside++;if((gray[y*width+x]&255)<=threshold)dark++;}
                 boolean rule=outside>0&&dark>=outside*.8f;
                 for(int x=left;x<=right;x++) {
-                    if((gray[y*width+x]&255)>180)continue;
-                    if(rule&&(y<probe||y+probe>=height||(gray[(y-probe)*width+x]&255)>180
-                            ||(gray[(y+probe)*width+x]&255)>180))continue;
+                    if((gray[y*width+x]&255)>threshold)continue;
+                    if(rule&&(y<probe||y+probe>=height||(gray[(y-probe)*width+x]&255)>threshold
+                            ||(gray[(y+probe)*width+x]&255)>threshold))continue;
                     int xx=x-left,yy=y-top;ink[yy*w+xx]=OmrMeasurePostProcessor.SYMBOL;
-                    area++;sx+=xx;sy+=yy;minX=Math.min(minX,xx);maxX=Math.max(maxX,xx);
-                    minY=Math.min(minY,yy);maxY=Math.max(maxY,yy);
                 }
             }
             // An arpeggio arrow or another tall mark can resemble a flat when clipped.
             // Its printed stroke must finish inside the inspected column.
-            if(area==0||rawStrokeLeavesCrop(gray,width,height,ink,w,h,left,top,gap))continue;
-            var glyph=new AccidentalCandidate(new Component(area,minX,maxX,minY,maxY,sx/(float)area,sy/(float)area),OmrMeasurePostProcessor.SYMBOL);
+            Component connected=retainSeedConnectedInk(ink,w,h,c,left,top);
+            if(connected==null||rawStrokeLeavesCropAtThreshold(gray,width,height,ink,w,h,left,top,gap,
+                    Math.max(224,threshold)))continue;
+            var glyph=new AccidentalCandidate(connected,OmrMeasurePostProcessor.SYMBOL);
             if(!isNaturalGlyph(ink,w,h,glyph,gap)&&!isSharpGlyph(ink,w,h,glyph,gap)
                     &&isFlatGlyph(ink,w,h,glyph,gap)&&Math.abs(top+flatPitchCenter(ink,w,glyph,gap)-head.centerY)<=gap*.45f)
                 return true;
