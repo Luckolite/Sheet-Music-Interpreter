@@ -173,6 +173,7 @@ class Interpreter:
         result["initialKeyFifths"] = key_fifths
         result["warnings"] = ["Experimental recognition: review pitches, accidentals, ties and timing.",
                               "OCR is caller-supplied; the initial meter is an argument, not an automatic reading."]
+        result["warnings"].extend(result.get("tablatureWarnings", []))
         if not result["events"]:
             result["warnings"].append("No playable notes detected on this page.")
         return result

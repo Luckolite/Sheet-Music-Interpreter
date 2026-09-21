@@ -33,4 +33,12 @@ public class PaleLongBeamStemTest {
     @Test public void oneDarkBandCannotProveTheLongPaleShaft()throws Exception{setup(false,110,false,1,false);assertEquals(0,beams());}
     @Test public void excessiveReachCannotBorrowAnotherGroup()throws Exception{setup(false,65,false,2,false);assertEquals(0,beams());}
     @Test public void inputMasksRemainUnchanged()throws Exception{setup(false,110,false,2,false);var a=gray.clone();var b=labels.clone();beams();assertArrayEquals(a,gray);assertArrayEquals(b,labels);}
+    @Test public void beamEndpointAtLowerEdgeStillCountsFullOuterBand()throws Exception {
+        Arrays.fill(gray,(byte)255);
+        rect(110,111,82,220,0);
+        for(int y=82;y<=220;y++)labels[y*W+110]=1;
+        for(int i=0;i<3;i++)rect(96,180,74+i*13,82+i*13,0);
+        rect(106,114,74,81,255);
+        assertEquals(3,beams());
+    }
 }

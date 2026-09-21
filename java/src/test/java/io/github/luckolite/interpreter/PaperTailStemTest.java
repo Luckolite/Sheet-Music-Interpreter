@@ -48,8 +48,28 @@ public class PaperTailStemTest {
     @Test public void missingSemanticStemDoesNotTrustArtworkEdge()throws Exception {
         setup(false,8);Arrays.fill(labels,(byte)0);assertEquals(240,trim(240)[1]);
     }
-    @Test public void ordinaryLengthStemIsNotShortened()throws Exception {
+    @Test public void shorterTraceKeepsBroadInkThatCouldBeAnotherBeam()throws Exception {
         setup(false,8);assertEquals(155,trim(155)[1]);
+    }
+    private void shortText(boolean up) {
+        this.up=up;Arrays.fill(gray,(byte)255);Arrays.fill(labels,(byte)0);
+        draw(79,81,50,96,1);draw(80,130,89,96,4);draw(79,90,98,125,5);
+    }
+    @Test public void oneWhiteRowSeparatesLetteringAboveBeam()throws Exception {
+        shortText(true);assertArrayEquals(new int[]{80,y(96),-1},trim(125));
+    }
+    @Test public void oneWhiteRowSeparatesLetteringBelowBeam()throws Exception {
+        shortText(false);assertArrayEquals(new int[]{80,96,1},trim(125));
+    }
+    @Test public void grayStemInterruptionDoesNotProveDetachedText()throws Exception {
+        shortText(false);for(int x=79;x<=81;x++)gray[97*W+x]=(byte)190;
+        assertEquals(125,trim(125)[1]);
+    }
+    @Test public void continuingSemanticStemKeepsShortTrace()throws Exception {
+        shortText(false);draw(79,81,104,120,1);assertEquals(125,trim(125)[1]);
+    }
+    @Test public void detachedOuterBeamKeepsShortTrace()throws Exception {
+        shortText(false);draw(80,130,104,112,5);assertEquals(125,trim(125)[1]);
     }
     @Test public void inspectionPreservesTheSourcePixels()throws Exception {
         setup(false,8);byte[] before=gray.clone(),mask=labels.clone();trim(240);

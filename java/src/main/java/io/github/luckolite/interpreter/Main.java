@@ -42,6 +42,14 @@ public final class Main {
                 annotations=new SheetInterpreter.Annotations(numbers,tempos,rests,words,meters);
             }
         }
+        var tabs=TablatureDecoder.withWords(TablatureDecoder.detect(gray,width,height),
+                annotations.words().stream().map(w->new TablatureDecoder.Word(w.text(),w.left(),w.top(),w.right(),w.bottom())).toList(),width,height);
+        var tabWarnings=new ArrayList<String>();
+        if(tabs.stream().anyMatch(t->t.frets().isEmpty()))tabWarnings.add("Tablature detected but no reliable fret OCR supplied; paired notation is retained where available.");
+        tabs=TabNotation.rasterRhythm(tabs,gray,width,height);
+        if(tabs.stream().filter(t->t.standardTop()<0).flatMap(t->t.frets().stream()).anyMatch(f->f.duration()==0&&f.beams()==0))tabWarnings.add("Some standalone tab durations are unknown and playback timing is estimated.");
+        if(!tabs.isEmpty())tabWarnings.add("Guitar effects require explicit OCR symbols; unsupported graphical bend curves, ties or rhythm glyphs are not inferred.");
+        if(!tabs.isEmpty())tabWarnings.add("Tab pitch uses standard six-string guitar tuning unless the Java tuning/capo overload is supplied.");
         var score=SheetInterpreter.analyze(labels,gray,width,height,annotations);
         float[] beats=new float[score.measures().size()];Arrays.fill(beats,initialMeter.quarterBeats());
         for(var change:score.meterChanges().stream().sorted(Comparator.comparingInt(ScoreMeterChange::measureIndex)).toList())
@@ -68,12 +76,14 @@ public final class Main {
             if(note.octaveShift()!=0)event.put("octaveShift",note.octaveShift());event.put("midi",midi);event.put("clefInferred",guessed);
             event.put("startBeat",starts[bar]+ScoreNoteTiming.beatInMeasure(note,score.notes(),beats[bar]));
             if(NoteOrnament.tremoloBeams(note.articulations())>0)event.put("tremoloBeats",NoteOrnament.tremoloBeats(note.articulations()));
+            int guitar=note.articulations()&TabEffect.ALL;
+            if(guitar!=0)event.put("guitarEffect",Map.of("type",TabEffect.name(guitar),"semitones",TabEffect.kind(guitar)==0?0:TabEffect.delta(guitar),"vibrato",(guitar&TabEffect.VIBRATO)!=0,"palmMute",(guitar&TabEffect.PALM_MUTE)!=0));
             event.put("durationBeats",duration);event.put("durationFallback",estimated);event.put("tiedFromPrevious",note.tiedFromPrevious());
             event.put("x",(region.left()+note.positionInMeasure()*(region.right()-region.left()))*width);
             event.put("y",note.pageY()*height);events.add(event);
         }
         var result=new LinkedHashMap<String,Object>();result.put("schemaVersion",1);result.put("width",width);result.put("height",height);
-        result.put("score",score);result.put("events",events);result.put("measureBeats",beats);result.put("totalBeats",starts[beats.length]);
+        result.put("score",score);result.put("events",events);result.put("tablatureWarnings",tabWarnings);result.put("measureBeats",beats);result.put("totalBeats",starts[beats.length]);
         Files.writeString(Path.of(args[1]),json(result)+"\n",StandardCharsets.UTF_8);
     }
     private static int readCount(DataInputStream in)throws IOException {

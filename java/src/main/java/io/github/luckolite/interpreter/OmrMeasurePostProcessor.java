@@ -506,19 +506,20 @@ final class OmrMeasurePostProcessor {
         for (int direction : new int[]{-1, 1}) {
             int start = direction < 0 ? top : bottom;
             int misses = 0;
-            for (int distance = 1; distance <= gap * MAX_HEAD_LEDGER_GAPS; distance++) {
+            for (int distance = 1; distance <= gap * MAX_CONNECTED_STAFF_SEPARATION_GAPS * 2; distance++) {
                 int y = start + direction * distance;
                 if (y < 0 || y >= height) break;
-                boolean stem = false;
+                boolean stem = false, headTouchesStem = false;
                 for (int dx = -2; dx <= 2; dx++) {
                     int xx = x + dx;
                     if (xx < 0 || xx >= width) continue;
                     byte label = labels[y * width + xx];
                     if (isVerticalInk(label) || label == NOTEHEAD || label == STAFF) stem = true;
+                    headTouchesStem |= label == NOTEHEAD;
                 }
                 if (stem) misses = 0;
                 else if (++misses > Math.max(2, gap * .28f)) break;
-                if (distance < gap * 1.4f) continue;
+                if (distance < gap * 1.4f || !headTouchesStem) continue;
                 if (countLabel(labels, width, height, NOTEHEAD,
                         Math.round(x - gap * .88f), Math.round(x + gap * .88f),
                         y - 2, y + 2) >= Math.max(3, Math.round(gap * .65f))) return true;

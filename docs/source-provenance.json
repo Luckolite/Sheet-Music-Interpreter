@@ -37,7 +37,8 @@
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
-      "source_sha256": "c637816c21e75b940104281aa526033a64228ef967d4b7ace3f2938372a1feb5"
+      "source_sha256": "2ad76c150d761f1aa0f4ab62a72549099d86b6b5162bd4024d9156d3dead459f",
+      "reviewed_app_commit": "19ba8a8455b517c23c5aa87f54cfff6bcc1dbfff"
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
@@ -49,12 +50,18 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "46b95b063142b5cd2ce1bcc35896752f16c6ac000774a141830416cb1ffd1798"
+      "source_sha256": "b84c0c61cc18ba97ce3a4b0abdcdde5fe04d204d24298cdf5d45660b7b14bdef",
+      "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c"
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "8f8abf64d04649c3b0b19e25445a922fc794d2a93f8a1d91cb542ca0cf9aab7f",
-      "reviewed_app_commit": "edebae3824b8df22a455eabcdaf471192b404d29"
+      "source_sha256": "f932e96a582b74de8fb49e2f7eb4b8b01e171dc52304709fd99b4bf1e3f63696",
+      "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
+      "flesch_stem_repair": {
+        "app_commit": "8108cb615219d9e76789030fd67775b05f07d4dd",
+        "public_commit": "a35b4462d06b93c30860e14dbc926c8a5b012371",
+        "scope": "Reviewed stemBeforePaperTail change from this app commit: allow short traces separated from lettering by a fully white gap, retaining semantic-stem and long outer-beam guards. Original synthetic regressions. Pre-existing unrelated app decoder drift remains visible; source_sha256 is intentionally unchanged and is not a claim of whole-file parity."
+      }
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -87,7 +94,8 @@
     },
     "ScoreNoteTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteTiming.java",
-      "source_sha256": "8c1e6288be65b4f1eae55278c1d95345dcb5e131bf023a0507f9e4e8168234a4"
+      "source_sha256": "fc622ed7ceeaa4b77cdbb0218a6d9ee59ecc539eae0e970f857950a78a9d931c",
+      "reviewed_app_commit": "85ff84983ca51b825afdb86da0791695e2b72be6"
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
@@ -115,7 +123,8 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "4819e89ac176e764f403aaa2292d6d2363ae8a73f9be0d91c66a4569111a66cc"
+      "source_sha256": "93847aa4b95e751c81b882e4c07ea4f21b1031e3cb12115ebf39dd38ab5386b4",
+      "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -137,7 +146,8 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "3bcb22a83e36233d5b67a3a267e7bb77e4b9f5363dca48f72f22080915e802cc"
+      "source_sha256": "069fdad0d9eca1d718115c0ccb6d4cda57ae92bd6b79625c48db2fe53374a7a5",
+      "reviewed_app_commit": "abec26d68b40ea6043b63265067ee0cf5b533483"
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
@@ -149,7 +159,8 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "1bc3a35119e2e8595ba7a9d360cee7105bda027f814b29272c0daccd447c1c47"
+      "source_sha256": "3d40db613b43bfa589f0a996328bfb820d842b3627b3339788b7947e99d4a187",
+      "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b"
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -166,8 +177,56 @@
     },
     "OctaveClefDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
-      "source_sha256": "9da7d8a5d42e2d0fb3ef5a9b00331ebfcb944482fdb32c41076d029ebc8cdf5d",
-      "reviewed_app_commit": "edebae3824b8df22a455eabcdaf471192b404d29"
+      "source_sha256": "dd2b6c0e7d0ae03d268ac3d4bda38631e9521f3ebe230badb2e04c5c6949753b",
+      "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c"
+    },
+    "AccidentalEnclosure.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalEnclosure.java",
+      "source_sha256": "a078de8aeb1b62c923b6ad4d0d45f7dc05d8e16994cd5db3cbce891f72cc41f5",
+      "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c"
+    },
+    "TablatureDecoder.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
+      "source_sha256": "6d7d1740216e2fdfb53e0339838d52cf0185468504feda18981824d6509e4464",
+      "reviewed_app_commit": "ba5df7748ee841ff79608d46ec65d1aec245d984",
+      "notes": "Reviewed standalone tab repair: tolerate enlarged pale string rules, separate antialiased rule fringes from fret crops, and discard event-free phantom measure shells before decoding unpaired tab frets. Existing notes, rests and paired notation remain authoritative. Original synthetic regressions only; model weights and Android OCR adapter unchanged."
+    },
+    "TabNotation.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
+      "source_sha256": "265903d295fb17c332be51cdf7fccb955dc5c779dac92a6b93757fbb2d118ca2",
+      "reviewed_app_commit": "19ba8a8455b517c23c5aa87f54cfff6bcc1dbfff"
+    },
+    "TabEffect.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabEffect.java",
+      "source_sha256": "bcd6ef53adf16c0bb233854e3a82f21c3f1d580e4997cb2750188ff946dc55ac",
+      "reviewed_app_commit": "19ba8a8455b517c23c5aa87f54cfff6bcc1dbfff"
+    },
+    "ArtificialHarmonics.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
+      "source_sha256": "e9064ed30ef2116698921b550553072d8e829f2428410f3870dff7a56c19b18c",
+      "reviewed_app_commit": "8108cb615219d9e76789030fd67775b05f07d4dd",
+      "notes": "Reviewed shared repair: connected down-stem fourth harmonics for filled stopped heads; reject detached fingerings and ambiguous hollow stopped chords. Original synthetic regressions. Includes equivalent outer-loop braces added concurrently in the app working tree; reviewed and mirrored."
+    },
+    "ParallelBeamTip.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelBeamTip.java",
+      "source_sha256": "9bd0a546b82071aa44adf8a62f016ba6273a6478f87d40b3a0ba57c823bdc5cd",
+      "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b"
+    },
+    "PrintedFlatGlyph.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedFlatGlyph.java",
+      "source_sha256": "a2193f31adeb3e6893f17373d03277cbd76de5de91a9b5784b0bd36a6fc57cb9",
+      "reviewed_app_commit": "85ff84983ca51b825afdb86da0791695e2b72be6"
+    },
+    "SeparateBeamGroups.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeparateBeamGroups.java",
+      "source_sha256": "a6afd5b853cac8ee18741e977276abff43c7e676a10eaadbfcd319ce62aee37a",
+      "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b"
+    },
+    "TabFretRaster.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabFretRaster.java",
+      "source_sha256": "aba91e3a6b16da6c221179eb84ae16fe12c14b08ccf2d9b6f05c0f87047c4936",
+      "reviewed_app_commit": "ba5df7748ee841ff79608d46ec65d1aec245d984",
+      "notes": "Reviewed standalone tab repair: tolerate enlarged pale string rules, separate antialiased rule fringes from fret crops, and discard event-free phantom measure shells before decoding unpaired tab frets. Existing notes, rests and paired notation remain authoritative. Original synthetic regressions only; model weights and Android OCR adapter unchanged."
     }
   },
   "ocr_adapter_review": {
@@ -181,5 +240,54 @@
   "piano_notation_review": {
     "app_commit": "edebae3824b8df22a455eabcdaf471192b404d29",
     "boundary": "Shared folio rejection, compact double-sharp recognition, and octave-clef numeral topology. Standalone Main and app playback both map the double-sharp token to two semitones. Android guide-cache format validation and version invalidation stay app-only. No source scores, phone logs, or private fixtures are distributed; new regressions use original generated geometry. Models and weights unchanged."
+  },
+  "tablature_adapter_review": {
+    "reviewed_app_commit": "19ba8a8455b517c23c5aa87f54cfff6bcc1dbfff",
+    "app_adapter": "app/src/main/java/com/musicsheets/app/pdf/TablatureOcr.java",
+    "boundary": "Android ML Kit OCR remains an app adapter, now includes rhythm lanes. Shared TabNotation decodes explicit duration/rest words and external stems/beams; TabEffect carries numeric effect curves through existing articulation serialization. App OrnamentPerformance applies the shared pitch curve to sampled playback; standalone JSON exposes guitarEffect and MIDI export isolates bend channels. No model weights, private fixtures or external source code imported. Unsupported graphical bend curves, tab ties, tuplets and ambiguous half-note stems remain limitations; missing rhythm remains estimated."
+  },
+  "study_notation_review": {
+    "reviewed_app_commit": "c4a48f86b8a2975bf9bc7af54cbc3d14cc3a0624",
+    "boundary": "Original raster geometry for stopped-note plus fourth-touch artificial harmonics, with conservative diamond and stem evidence. App OmrMeasureAnalyzer and standalone SheetInterpreter invoke the same helper after octave marks. Flat signature recovery accepts ordered spine runs and does not trim a verified clef header as a barline. Only these OmrScoreInterpreter hunks were ported; its previously reported unrelated app drift remains visible. New tests use original generated glyphs. No score scans, library content, logs, model weights or external code are included."
+  },
+  "study_rhythm_review": {
+    "reviewed_app_commit": "85ff84983ca51b825afdb86da0791695e2b72be6",
+    "boundary": "Original generated regressions cover fused beam tips, staff-rule fringe, equal repeated implicit triplets, partial flat signatures and bare octave numerals with dotted spans. Shared helpers ported to the app; guide cache invalidation remains Android-only. OmrScoreInterpreter prior unrelated drift is retained, not hidden by a hash update. No score images, logs, private library or model weights included. These repairs are not a claim of complete score accuracy."
+  },
+  "natural_fringe_review": {
+    "reviewed_app_commit": "e6b9fcabffdadc1520350471d2286bf5897bd811",
+    "boundary": "Shared natural-glyph endpoint check permits only one extra fringe pixel beyond the usual spine tolerance when both endpoints have strong natural offsets. Existing asymmetric sharp regression retained; new original synthetic natural and sharp shapes added. Other OmrScoreInterpreter drift remains visible. No private score or model changes."
+  },
+  "beam_and_header_review": {
+    "reviewed_app_commit": "f2700e49fcd69880ec38ee472fe139abdaa91845",
+    "boundary": "Original raw-ink evidence preserves separate beam groups beneath fingering numerals while honoring explicit brackets. Complete clefs outrank later joined accidental masks, with damaged-clef fallback retained; dense header lookback and regular flat spacing exclude adjacent meter strokes. New synthetic regressions cover beam direction, brackets, dense keys, faded clefs and genuine key changes. Only reviewed shared changes carried over; the three pre-existing app drifts remain visible. No private scores, annotations, phone logs, model weights or external source code included."
+  },
+  "broken_flat_shaft_review": {
+    "reviewed_app_commit": "5de8d786392cee89376aaaf710c8fcfe9e6899d4",
+    "boundary": "Source-ink recovery requires an existing flat family, a substantial vertical shaft and a verified lower-right bowl. Small scan gaps may connect shaft pieces; isolated staff-rule pixels cannot start a recovered shaft. Original semantic spine count remains a lower bound. Synthetic broken-shaft and absent-bowl regressions preserve prior SplitFlatSpineTest coverage. Only this shared OmrScoreInterpreter change was ported; prior unrelated drift remains visible. No model or private fixture changes."
+  },
+  "signature_boundary_spacing_review": {
+    "reviewed_app_commit": "ac1c6b73603df6105db2b3d6c3ac0e42be36fec8",
+    "boundary": "Require adjacent vertical strokes for a double bar, excluding distant accidental shafts. A lone key symbol without a clef must follow its boundary locally; distant clef fragments cannot become key changes. Six original synthetic tests cover source-only bars, separated shafts, and nearby versus distant single-flat changes. Shared decoder change only. No model, private score, or phone-data changes. The three pre-existing unrelated mapped drifts remain visible."
+  },
+  "imported_tab_layout_review": {
+    "reviewed_app_commit": "9fa8d036b1ec28f743893f0ae7220f2e9cbf0e9b",
+    "boundary": "Shared six-rule geometry now checks multiple grayscale thresholds, wider string spacing, pale vertical barlines, and excludes partial tab rows from standard-staff pairing. Dark notation retains strict rule-length agreement; pale interrupted rules additionally require enclosing bars. Nine original synthetic tests cover faint, dashed, enlarged and negative standard-notation cases. No weights, OCR engine or tuning changes; no private fixtures included. Geometry validation is not full fret or timing accuracy."
+  },
+  "damaged_study_notation_review": {
+    "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b",
+    "boundary": "Global printed-ink recovery for fragmented clefs and key symbols, partial repeated sharp signatures, ledger-attached octave numerals, fingerings opposite a longer continuous beam, and tuplets assigned across system boundaries. Single-beam mask islands are rejected only with a larger stem-owning note and a straight beam without a rounded head bulge. Original synthetic regressions cover damaged and genuine key changes, adjacent systems, brackets, octave direction, staff-rule intersections and small chord heads. No model weights, private scores, manual meter annotations, device logs or external code included. Prior unrelated OmrScoreInterpreter drift remains visible; only reviewed hunks were ported. Guide cache invalidation is Android-only. These checks do not constitute complete source-note verification."
+  },
+  "isolated_beam_probe_review": {
+    "reviewed_app_commit": "24dc3bc4e3c2e60599d25f263c58123bb90fb59a",
+    "boundary": "Resolve a conflicting extra beam only when two noteheads share a physical stem and endpoint, the longer trace reads one fewer beam, and adjacent pixel probes corroborate that lower count. Single-note readings and consistent chord beams retain their existing behavior. Six original generated regressions cover scan-fringe cores, a shared chord stem, a narrow supported beam and conservative single-note handling. Existing unrelated OmrScoreInterpreter drift remains reported. No model or private fixtures included."
+  },
+  "isolated_tab_fret_review": {
+    "reviewed_app_commit": "357242b1c6fd96ea3063de213c064cb1876bf96a",
+    "boundary": "Shared raster crops isolate printed frets from rules, barlines, labels, rhythm stems and dense screenshot controls. Cleaned and original OCR readings are reconciled within each crop; a long central enclosed counter corroborates open frets. Confirmed inline effects are retained. Dark and pale barline passes are combined, and unbarred opening/closing tab measures retain their notes. Android ML Kit remains an app adapter: it reads bounded glyph montages with synthetic numeric context, maps symbols back to original crops, and preserves partial results on timeouts. Standalone OCR providers may use TabFretRaster.crops, clean, openFret and reconcile before TablatureDecoder.withWords. The standalone package does not bundle an OCR engine. Synthetic tests only; no private scores, fret transcriptions, phone logs, or fonts are included. Model weights unchanged; printed fret correctness does not establish unwritten rhythm or graphical bend/slur performance."
+  },
+  "regional_staff_continuity_review": {
+    "reviewed_app_state": "Music Sheets 1.18.248 worktree based on 38007cbb6226aedaea567cf64fc76cace4d3297c",
+    "boundary": "Regional pitch recovery now rechecks its fitted rules across the full page and requires four independently continuous staff rules. One rule may remain obscured by ordinary notation; two interrupted rules cannot rephase a semantic staff. The public regression is original generated geometry, and no score image, device data, model weight or Android adapter is included. Existing unrelated mapped drift remains intentionally visible."
   }
 }

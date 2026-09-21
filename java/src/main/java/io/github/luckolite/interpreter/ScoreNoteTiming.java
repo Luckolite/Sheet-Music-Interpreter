@@ -679,6 +679,13 @@ public final class ScoreNoteTiming {
         // eighth-quarter-eighth figures that already fill the bar become six equal eighths.
         if (Double.isFinite(beatsPerMeasure) && Double.isFinite(written)
                 && Math.abs(written - beatsPerMeasure) < .001) return result;
+        // Repeated equal triplets are sometimes engraved without another numeral.
+        // Accept only a complete, uniform beamed lane whose exact 3:2 ratio fills
+        // the selected meter; arbitrary overfull or partly missing bars stay optical.
+        if (implicitTriplets(groups, raw, beatsPerMeasure)) {
+            for(int i=0;i<result.length;i++)result[i]*=2.0/3.0;
+            return result;
+        }
         // A single locally contradicted beam that exactly repairs an overfull bar is stronger
         // evidence than a measure-wide spacing vote. Preserve the opening quarter and mixed
         // eighth/sixteenth groups instead of flattening the entire phrase.
@@ -732,6 +739,22 @@ public final class ScoreNoteTiming {
                     && repairedError >= rawError - .001) return optical;
         }
         return result;
+    }
+
+    private static boolean implicitTriplets(List<RhythmGroup> groups,double[] values,double beats) {
+        if(!Double.isFinite(beats)||beats<2||beats>4||groups.size()<6||groups.size()%3!=0
+                ||groups.get(0).position>.18f||groups.get(groups.size()-1).position<.8f)return false;
+        double unit=values[0];
+        if(unit!=.5&&unit!=.25||Math.abs(unit*groups.size()*2/3-beats)>.001)return false;
+        float smallest=Float.MAX_VALUE,largest=0;
+        for(int i=0;i<groups.size();i++) {
+            var group=groups.get(i);
+            if(values[i]!=unit||group.hasTuplet()||group.augmentationDots()!=0)return false;
+            for(var n:group.notes)if(n.beamCount()<1||n.leadingRestBeats()>0||n.followingRestBeats()>0
+                    ||n.crossStaffBeam()||n.tiedFromPrevious()||grace(n))return false;
+            if(i>0){float distance=group.position-groups.get(i-1).position;smallest=Math.min(smallest,distance);largest=Math.max(largest,distance);}
+        }
+        return smallest>0&&largest<=smallest*2.4f;
     }
 
     private static double openingPickupStart(ScoreNoteEvent target, List<ScoreNoteEvent> notes,

@@ -48,31 +48,57 @@ def write_midi(document, path, bpm=120):
             step = round(subdivision * ppq)
             previous_tone = previous.get(lane)
             if (note["tiedFromPrevious"] and previous_tone is not None
+                    and note.get("guitarEffect", {}) == previous_tone[4]
                     and (step == 0 or previous_tone[3] == step)
                     and abs(previous_tone[1] - start) <= ppq // 8):
                 previous_tone[1] = max(previous_tone[1], end)
             else:
-                tone = [start, end, pitch, step]
+                tone = [start, end, pitch, step, note.get("guitarEffect", {})]
                 tones.append(tone)
                 previous[lane] = tone
         offset += page["totalBeats"]
     active = {}
     performed = []
-    for start, end, pitch, step in tones:
+    for start, end, pitch, step, effect in tones:
         if step:
-            performed.extend((tick, min(end, tick + step), pitch) for tick in range(start, end, step))
+            performed.extend((tick, min(end, tick + step), pitch, effect) for tick in range(start, end, step))
         else:
-            performed.append((start, end, pitch))
-    for start, end, pitch in sorted(performed):
-        # Simultaneous same-pitch voices need separate channels: one note-off must not
-        # cut off another held voice. Other pitches can safely share those channels.
-        channels = active.setdefault(pitch, {})
-        channel = next((c for c in range(16) if c != 9 and channels.get(c, -1) <= start), None)
+            performed.append((start, end, pitch, effect))
+    for start, end, pitch, effect in sorted(performed, key=lambda n: (n[0], n[2])):
+        kind = effect.get("type", "none")
+        delta = effect.get("semitones", 0)
+        if kind not in ("none", "slide", "hammer_on", "pull_off", "bend", "bend_release", "dead", "harmonic") or not isinstance(delta, (int, float)) or not math.isfinite(delta) or abs(delta) > 24:
+            raise ValueError("Unsupported guitar performance effect")
+        expressive = kind in ("slide", "bend", "bend_release") or effect.get("vibrato", False)
+        # Pitch bend is channel-wide. Isolate it from every overlapping note, including other pitches.
+        channel = next((c for c in range(16) if c != 9 and all(
+            stop <= start or (not expressive and not bent and other != pitch)
+            for stop, other, bent in active.get(c, []))), None)
         if channel is None:
-            raise ValueError("MIDI cannot represent more than 15 simultaneous voices of one pitch")
-        channels[channel] = end
-        events.extend([(start, 2, bytes([0x90 | channel, pitch, 80])),
-                       (end, 1, bytes([0x80 | channel, pitch, 0]))])
+            raise ValueError("MIDI channel capacity exceeded by overlapping voices/effects")
+        active[channel] = [(stop, other, bent) for stop, other, bent in active.get(channel, []) if stop > start]
+        active[channel].append((end, pitch, expressive))
+        velocity = 20 if kind == "dead" else 62 if kind in ("hammer_on", "pull_off") else 80
+        sounding_end = start + max(1, round((end-start) * (.12 if kind == "dead" else .45 if effect.get("palmMute") else 1)))
+        if expressive:
+            # RPN 0: +/-24 semitones, confined to this note's exclusive channel.
+            for controller, value in ((101, 0), (100, 0), (6, 24), (38, 0), (101, 127), (100, 127)):
+                events.append((start, 1, bytes([0xB0 | channel, controller, value])))
+            count = max(2, min(256, (end-start)//15))
+            for i in range(count+1):
+                t = i/count
+                smooth = lambda x: x*x*(3-2*x)
+                offset = delta*(1-smooth(min(1, t/.3))) if kind == "slide" else delta*smooth(min(1,t/.4)) if kind == "bend" else delta*(smooth(t/.5) if t<.5 else 1-smooth((t-.5)/.5)) if kind == "bend_release" else 0
+                if effect.get("vibrato"):
+                    age = t*(end-start)/ppq*60/bpm
+                    offset += .18*math.sin(age*math.pi*10)*min(1,t*8)
+                bend = max(0,min(16383,round(8192+offset/24*8192)))
+                tick = start+round((end-start)*t)
+                if tick < sounding_end:
+                    events.append((tick, 2, bytes([0xE0 | channel, bend & 127, bend >> 7])))
+            events.append((end, 1, bytes([0xE0 | channel, 0, 64])))
+        events.extend([(start, 3, bytes([0x90 | channel, pitch, velocity])),
+                       (sounding_end, 0, bytes([0x80 | channel, pitch, 0]))])
     track = bytearray()
     last = 0
     for tick, _, message in sorted(events, key=lambda x: (x[0], x[1])):

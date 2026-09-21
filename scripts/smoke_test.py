@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Check an original scale through the actual model, Java decoder, CLI and MIDI output."""
 import json
+import xml.etree.ElementTree as ET
 import subprocess
 import sys
 import tempfile
@@ -17,9 +18,11 @@ def main():
         for extension in ('png', 'pdf'):
             output = Path(folder) / (extension + '.json')
             midi = Path(folder) / (extension + '.mid')
+            musicxml = Path(folder) / (extension + '.musicxml')
             subprocess.run([sys.executable, '-m', 'sheet_interpreter.cli', str(ROOT / ('examples/scale.' + extension)),
-                            '--output', str(output), '--midi', str(midi), '--meter', '4/4'], check=True)
+                            '--output', str(output), '--midi', str(midi), '--musicxml', str(musicxml), '--meter', '4/4'], check=True)
             page = json.loads(output.read_text())['pages'][0]
+            assert len(ET.parse(musicxml).findall('.//note/pitch')) == 8
             assert [n['midi'] for n in page['events']] == expected['midi'], extension
             assert [n['startBeat'] for n in page['events']] == list(range(8)), extension
             assert [n['durationBeats'] for n in page['events']] == expected['durationsQuarterBeats'], extension

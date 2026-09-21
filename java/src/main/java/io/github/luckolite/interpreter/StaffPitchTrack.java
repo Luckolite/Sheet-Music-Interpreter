@@ -95,7 +95,10 @@ final class StaffPitchTrack {
      * printed groups agree on the same staff. Faded rules need contrast evidence,
      * not a darker global ink threshold. */
     static float[] straightPitch(byte[] labels,byte[] gray,int width,int height,float bottom,float gap) {
-        if(labels==null||gray==null||gap<3||!straightRules(gray,width,height,bottom,gap))return null;
+        if(labels==null||gray==null||gap<3)return null;
+        float[] broad=broadStraightPitch(gray,width,height,bottom,gap);
+        if(broad!=null)return broad;
+        if(!straightRules(gray,width,height,bottom,gap))return null;
         List<float[]> samples=new ArrayList<>();
         for(int i=0;i<13;i++) {
             float x=width*(.15f+i*.06f);
@@ -113,6 +116,44 @@ final class StaffPitchTrack {
         if(Math.abs(base-bottom)>gap*.4f
                 ||Math.max(Math.abs(base-bottom),Math.abs(spacing-gap)*8)<gap*.5f)return null;
         return new float[]{base,spacing};
+    }
+
+    /** Dense beams may block the small probes while each printed rule remains
+     * visible across most of the page. Keep the established phase and require
+     * all five thin, straight rules before correcting accumulated ledger error. */
+    static float[] broadStraightPitch(byte[] gray,int width,int height,float bottom,float gap) {
+        return broadStraightPitch(gray,width,height,bottom,gap,true);
+    }
+    static float[] broadStraightPitch(byte[] gray,int width,int height,float bottom,float gap,boolean correctionOnly) {
+        if(gray==null||gap<8)return null;
+        float[] rows=new float[5];int flank=Math.max(2,Math.round(gap*.3f));
+        int radius=Math.max(2,Math.round(gap*.35f));
+        for(int line=0;line<5;line++) {
+            int center=Math.round(bottom-line*gap),first=center-radius,last=center+radius;
+            if(first<flank||last>=height-flank)return null;
+            int[] support=new int[last-first+1];int peak=0,at=0;
+            for(int y=first;y<=last;y++) {
+                for(int x=0;x<width;x++) {
+                    int ink=gray[y*width+x]&255;
+                    if(ink<170&&(gray[(y-flank)*width+x]&255)>ink+20
+                            &&(gray[(y+flank)*width+x]&255)>ink+20)support[y-first]++;
+                }
+                if(support[y-first]>peak){peak=support[y-first];at=y-first;}
+            }
+            if(peak<width*.55f)return null;
+            int lo=at,hi=at;
+            while(lo>0&&support[lo-1]>=peak*.85f)lo--;
+            while(hi+1<support.length&&support[hi+1]>=peak*.85f)hi++;
+            if(hi-lo>Math.max(2,gap*.25f))return null;
+            double weight=0,total=0;
+            for(int i=lo;i<=hi;i++){weight+=support[i];total+=(first+i)*(double)support[i];}
+            rows[line]=(float)(total/weight);
+        }
+        float spacing=(rows[0]-rows[4])/4;
+        if(correctionOnly&&Math.abs(spacing-gap)<gap*.035f||Math.abs(spacing-gap)>gap*.08f
+                ||Math.abs(rows[0]-bottom)>gap*.3f)return null;
+        for(int i=1;i<5;i++)if(Math.abs(rows[i]-(rows[0]-spacing*i))>gap*.12f)return null;
+        return new float[]{rows[0],spacing};
     }
 
     private static boolean straightRules(byte[] gray,int width,int height,float bottom,float gap) {

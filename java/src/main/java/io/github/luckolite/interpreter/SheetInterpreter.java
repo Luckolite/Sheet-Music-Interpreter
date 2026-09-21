@@ -52,6 +52,11 @@ public final class SheetInterpreter {
             throw new IllegalArgumentException("Expected equally sized masks and grayscale, at most 20 million pixels");
         for(byte label:labels)if(label<0||label>5)throw new IllegalArgumentException("Labels must be in 0..5");
         Objects.requireNonNull(annotations);
+        var tabs=TablatureDecoder.withWords(TablatureDecoder.detect(gray,width,height),
+                annotations.words.stream().map(w->new TablatureDecoder.Word(w.text,w.left,w.top,w.right,w.bottom)).toList(),width,height);
+        tabs=TabNotation.rasterRhythm(tabs,gray,width,height);
+        labels=TablatureDecoder.withoutTabs(labels,width,height,tabs,false);
+        gray=TablatureDecoder.withoutTabs(gray,width,height,tabs,true);
         var measures=OmrMeasurePostProcessor.process(labels,gray,width,height);
         byte[] prepared=OmrScoreInterpreter.normalizeHeaderSymbols(labels,gray,width,height,measures);
         // Removing a header head can move the playable edge and the rest-count OCR crop.
@@ -60,6 +65,7 @@ public final class SheetInterpreter {
             measures=OmrMeasurePostProcessor.process(geometry,gray,width,height,prepared);
             labels=prepared;
         }
+        measures=TablatureDecoder.reconcileMeasures(measures,tabs,width,height);
         var numbers=annotations.measureNumbers.stream().map(NumberToken::internal).toList();
         var rests=MultiMeasureRestDetector.detect(labels,gray,width,height,measures,
                 annotations.restCounts.stream().map(NumberToken::internal).toList());
@@ -74,14 +80,15 @@ public final class SheetInterpreter {
                 OmrScoreInterpreter.techniqueStaffs(labels,gray,width,height,measures),notes,height);
         var words=annotations.words.stream().map(Word::internal).toList();
         notes=OctaveMarkDetector.apply(words,staffs,measures,notes,gray,width,height);
+        notes=ArtificialHarmonics.apply(gray,width,height,measures,notes,staffs);
         for(var meter:annotations.meters)if(meter.measureIndex()>=measures.size())
             throw new IllegalArgumentException("Meter change is outside the detected measure range");
-        return new ScorePageInterpretation(measures,notes,
+        return TablatureDecoder.apply(new ScorePageInterpretation(measures,notes,
                 MeasureNumberReconciler.firstMeasureNumber(measures,numbers),score.keyChanges(),
                 TempoChangeDetector.detect(annotations.tempoNumbers.stream().map(NumberToken::internal).toList(),
                         gray,width,height,measures),
                 annotations.meters,rhythm.rests(),
                 PlayingTechniqueDetector.detect(words,staffs,measures,notes,width,height),
-                ScoreDynamicsDetector.detect(words,staffs,measures,notes,gray,width,height));
+                ScoreDynamicsDetector.detect(words,staffs,measures,notes,gray,width,height)),tabs,width,height);
     }
 }

@@ -158,7 +158,39 @@ final class TripletRhythmDetector {
                 float y2=Math.max(a.bottom(),Math.max(b.bottom(),c.bottom()))*height;
                 Glyph numeral=findPrintedThree(gray,width,height,x1,x3,y1,y2,gap,
                         first.beamCount()>0,Float.NaN,Float.NaN);
-                if(numeral==null)continue;
+                if(numeral==null||insideOtherSystem(numeral,region,measures,width,height))continue;
+                // A finger number must not regroup attacks across two separate beams.
+                // A real tuplet bracket remains authoritative across beam breaks.
+                float x2=(region.left()+b.position()*(region.right()-region.left()))*width;
+                boolean bracket=bracketArm(gray,width,height,Math.round(x1-gap*.3f),
+                        numeral.left()-2,numeral.top(),numeral.bottom(),gap*.25f)
+                        &&bracketArm(gray,width,height,numeral.right()+2,
+                        Math.round(x3+gap*.3f),numeral.top(),numeral.bottom(),gap*.25f);
+                if(first.beamCount()>0&&!bracket
+                        &&(SeparateBeamGroups.between(gray,width,height,x1,a.top()*height,x2,b.top()*height,gap)
+                        ||SeparateBeamGroups.between(gray,width,height,x2,b.top()*height,x3,c.top()*height,gap)))continue;
+                // Finger numbers can sit under a four-note beam, centered on its last
+                // three notes. Require another finger numeral and the larger beam before
+                // rejecting the apparent triplet; an explicit bracket always wins.
+                if(!bracket&&first.beamCount()>0&&a.indices().size()==1&&b.indices().size()==1&&c.indices().size()==1) {
+                    boolean fingering=false;
+                    for(int adjacent:new int[]{i-1,i+3}) {
+                        if(adjacent<0||adjacent>=groups.size())continue;
+                        Onset fourth=matching(groups.get(adjacent),result,first);
+                        if(fourth==null||fourth.indices().size()!=1)continue;
+                        var extra=result.get(fourth.indices().get(0));
+                        if(extra.measureIndex()!=first.measureIndex())continue;
+                        float xx=(region.left()+fourth.position()*(region.right()-region.left()))*width;
+                        float spacing=adjacent<i?x1-xx:xx-x3;
+                        if(spacing<(x3-x1)*.30f||spacing>(x3-x1)*.75f)continue;
+                        float leftX=adjacent<i?xx:x1,leftY=(adjacent<i?fourth.top():a.top())*height;
+                        float rightX=adjacent<i?x3:xx,rightY=(adjacent<i?c.top():fourth.top())*height;
+                        int side=numeral.top()>y2?-1:1;
+                        if(SeparateBeamGroups.connected(gray,width,height,leftX,leftY,rightX,rightY,gap,side)
+                                &&hasNearbyFour(gray,width,height,numeral,gap)){fingering=true;break;}
+                    }
+                    if(fingering)continue;
+                }
                 // Vertically stacked small numbers assign fingers to chord tones.
                 // They do not turn the surrounding three chord attacks into a tuplet.
                 if(a.indices().size()>1&&b.indices().size()>1&&c.indices().size()>1
@@ -212,8 +244,9 @@ final class TripletRhythmDetector {
                 if(lastX-x1<gap*3||lastX-x1>gap*26)continue;
                 float y1=Float.MAX_VALUE,y2=-Float.MAX_VALUE;
                 for(Onset onset:run){y1=Math.min(y1,onset.top()*height);y2=Math.max(y2,onset.bottom()*height);}
-                if(findPrintedNumeral(gray,width,height,x1,lastX,y1,y2,gap,true,
-                        Float.NaN,Float.NaN,divisor)==null)continue;
+                Glyph numeral=findPrintedNumeral(gray,width,height,x1,lastX,y1,y2,gap,true,
+                        Float.NaN,Float.NaN,divisor);
+                if(numeral==null||insideOtherSystem(numeral,bar,measures,width,height))continue;
                 for(Onset onset:run)for(int at:onset.indices()) {
                     ScoreNoteEvent n=result.get(at);
                     result.set(at,new ScoreNoteEvent(n.measureIndex(),n.positionInMeasure(),n.staffStep(),
@@ -260,6 +293,18 @@ final class TripletRhythmDetector {
             }
         }
         return List.copyOf(result);
+    }
+
+    /** A numeral printed inside another system cannot change this row's rhythm. */
+    private static boolean insideOtherSystem(Glyph numeral,MeasureRegion current,
+            List<MeasureRegion> measures,int width,int height) {
+        float x=(numeral.left()+numeral.right())*.5f/width;
+        float y=(numeral.top()+numeral.bottom())*.5f/height;
+        if(y>=current.top()&&y<=current.bottom())return false;
+        for(var other:measures)
+            if((other.top()>current.bottom()||other.bottom()<current.top())
+                    &&x>=other.left()&&x<=other.right()&&y>=other.top()&&y<=other.bottom())return true;
+        return false;
     }
 
     private record Glyph(int left,int top,int right,int bottom) { }
@@ -363,6 +408,71 @@ final class TripletRhythmDetector {
         return false;
     }
 
+    private static boolean hasNearbyFour(byte[] gray,int width,int height,Glyph three,float gap) {
+        float cx=(three.left()+three.right())*.5f;
+        int gh=three.bottom()-three.top()+1;
+        int left=Math.max(0,Math.round(cx-gap*11)),right=Math.min(width-1,Math.round(cx+gap*11));
+        int top=Math.max(0,Math.round(three.top()-gap*.4f));
+        int bottom=Math.min(height-1,Math.round(three.bottom()+gap*.4f));
+        int w=right-left+1,h=bottom-top+1;boolean[] seen=new boolean[w*h];int[] queue=new int[w*h];
+        for(int seed=0;seed<w*h;seed++) {
+            if(seen[seed]||!dark(gray,width,left+seed%w,top+seed/w))continue;
+            int take=0,size=1,minX=width,maxX=-1,minY=height,maxY=-1;
+            queue[0]=seed;seen[seed]=true;
+            while(take<size) {
+                int at=queue[take++],x=at%w,y=at/w;
+                minX=Math.min(minX,left+x);maxX=Math.max(maxX,left+x);
+                minY=Math.min(minY,top+y);maxY=Math.max(maxY,top+y);
+                for(int dy=-1;dy<=1;dy++)for(int dx=-1;dx<=1;dx++) {
+                    int nx=x+dx,ny=y+dy;if(nx<0||nx>=w||ny<0||ny>=h)continue;
+                    int next=ny*w+nx;
+                    if(!seen[next]&&dark(gray,width,left+nx,top+ny)){seen[next]=true;queue[size++]=next;}
+                }
+            }
+            if(minX<=left||maxX>=right||minY<=top||maxY>=bottom)continue;
+            int cw=maxX-minX+1,ch=maxY-minY+1;
+            if(ch<gap*.7f||ch>gap*2.3f||ch<gh*.65f||ch>gh*1.4f
+                    ||cw<ch*.2f||cw>ch*.95f||size<cw*ch*.15f||size>cw*ch*.7f
+                    ||Math.abs((minY+maxY-three.top()-three.bottom())*.5f)>gap*.3f)continue;
+            if(Math.abs((minX+maxX)*.5f-cx)>gap*1.5f
+                    &&looksLikeFingerFour(gray,width,size,minX,maxX,minY,maxY))return true;
+        }
+        return false;
+    }
+
+    private static boolean looksLikeFingerFour(byte[] gray, int width, int area,
+                                         int minX, int maxX, int minY, int maxY) {
+        int glyphWidth = maxX - minX + 1, glyphHeight = maxY - minY + 1;
+        float fill = area / (float) (glyphWidth * glyphHeight);
+        if (fill < .14f || fill > .66f) return false;
+        int[] rows = new int[glyphHeight];
+        int[] columns = new int[glyphWidth];
+        int upperLeft = 0, lowerLeft = 0;
+        for (int y = minY; y <= maxY; y++) for (int x = minX; x <= maxX; x++) {
+            if ((gray[y * width + x] & 0xff) > 165) continue;
+            int localX = x - minX, localY = y - minY;
+            rows[localY]++;
+            columns[localX]++;
+            if (localX < glyphWidth * .55f && localY < glyphHeight * .58f) upperLeft++;
+            if (localX < glyphWidth * .45f && localY > glyphHeight * .72f) lowerLeft++;
+        }
+        int rightSpine = 0;
+        for (int x = Math.max(0, Math.round(glyphWidth * .52f)); x < glyphWidth; x++)
+            rightSpine = Math.max(rightSpine, columns[x]);
+        int middleCrossbar = 0;
+        for (int y = Math.max(0, Math.round(glyphHeight * .36f));
+             y <= Math.min(glyphHeight - 1, Math.round(glyphHeight * .74f)); y++)
+            middleCrossbar = Math.max(middleCrossbar, rows[y]);
+        int topBar = 0;
+        for (int y = 0; y < Math.max(1, Math.round(glyphHeight * .28f)); y++)
+            topBar = Math.max(topBar, rows[y]);
+        return rightSpine >= glyphHeight * .58f
+                && middleCrossbar >= glyphWidth * .50f
+                && topBar < glyphWidth * .68f
+                && upperLeft >= Math.max(2, Math.round(area * .10f))
+                && lowerLeft <= Math.max(2, Math.round(area * .16f));
+    }
+
     private static boolean looksLikeSeven(byte[] gray,int width,int left,int top,int w,int h) {
         // Broad top bar followed by one descending diagonal, without the lower
         // bowl/base of 2, closed counters of 8, or two lobes of 3.
@@ -464,7 +574,10 @@ final class TripletRhythmDetector {
         if (right - left < gap) return false;
         int occupied = 0;
         for (int x = left; x <= right; x++) {
-            for (int y = Math.max(0, top); y <= Math.min(height - 1, bottom); y++)
+            // Sloped brackets can rise above the numeral at their outer ends.
+            // Allow half a staff space while still requiring both long arms.
+            for (int y = Math.max(0, top - Math.round(gap * .5f));
+                    y <= Math.min(height - 1, bottom + Math.round(gap * .5f)); y++)
                 if (dark(gray, width, x, y)) { occupied++; break; }
         }
         return occupied >= (right - left + 1) * .76f;

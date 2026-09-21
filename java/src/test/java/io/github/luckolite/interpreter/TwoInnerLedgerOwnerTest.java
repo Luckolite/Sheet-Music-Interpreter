@@ -34,4 +34,13 @@ public class TwoInnerLedgerOwnerTest {
         p.head(105,112,11,7,false);p.stem(94,112,160);
         var n=p.remote();assertNotNull(n);assertEquals(10,n.staffStep());
     }
+    @Test public void ledgerStemReachingDistantStaffBeatsNearbyStaff() {
+        var p=new RemoteLedgerEvidenceTest.Page(true,false,true,true,false);
+        for(int y=0;y<128;y++)for(int x=0;x<480;x++){p.gray[y*480+x]=(byte)255;p.labels[y*480+x]=0;}
+        for(int y=0;y<=64;y+=16)p.rule(14,465,y,4);
+        p.head(350,32,11,7,false);p.stem(361,32,8);
+        for(int y:new int[]{80,96,112})p.rule(86,124,y,5);
+        p.head(105,112,11,7,false);p.stem(116,112,40);
+        var n=p.remote();assertNotNull(n);assertEquals(-6,n.staffStep());
+    }
 }

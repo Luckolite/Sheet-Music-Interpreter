@@ -85,11 +85,43 @@ public class IndependentPitchAuditTest {
         assertEquals(2,notes.stream().filter(n->n.unbeamedDurationBeats()==2).count());
         assertTrue(notes.stream().filter(n->n.beamCount()>0).allMatch(n->n.augmentationDots()==0));
     }
+
     @Test public void separatedMeterStrokesCannotIncreaseFlatCount()throws Exception {
         Page p=new Page();p.rules(80,16);
         p.rect(100,75,3,32,(byte)3);p.rect(117,51,3,32,(byte)3);
         p.rect(165,80,5,56,(byte)5);
         assertEquals(2,call("countFlatSpines",p.labels,p.gray,p.w,p.h,95f,190f,construct("Staff",80f,144f,16f),false));
+    }
+    @Test public void wholeLowerMeterDigitIsRejectedBeforeSplittingItsBowls()throws Exception {
+        Page p=new Page();p.rules(80,16);p.rect(100,81,4,28,(byte)5);
+        var staff=construct("Staff",80f,144f,16f);
+        var clef=construct("Component",500,35,65,50,170,50f,110f);
+        var digit=construct("Component",300,96,119,112,143,108f,128f);
+        p.rect(96,112,24,32,(byte)2);
+        assertTrue((boolean)call("isHeaderMeterDigit",p.labels,p.gray,p.w,p.h,digit,List.of(staff),List.of(clef)));
+        p.rect(100,88,12,9,(byte)2);
+        assertFalse((boolean)call("isHeaderMeterDigit",p.labels,p.gray,p.w,p.h,digit,List.of(staff),List.of(clef)));
+    }
+    @Test public void smallClefCurlIsRejectedOnlyWithinTheClefExtent()throws Exception {
+        var staff=construct("Staff",80f,144f,16f);
+        var clef=construct("Component",500,35,75,50,174,55f,115f);
+        var curl=construct("Component",30,76,84,155,161,80f,158f);
+        assertTrue((boolean)call("isTrebleCurlFragment",curl,List.of(staff),List.of(clef)));
+        var note=construct("Component",30,100,108,155,161,104f,158f);
+        assertFalse((boolean)call("isTrebleCurlFragment",note,List.of(staff),List.of(clef)));
+    }
+    @Test public void flatSlurFragmentIsRejectedButShortGraceStemProtectsNote()throws Exception {
+        Page p=new Page();var fragment=construct("Component",40,100,111,120,125,105f,122f);
+        p.rect(100,120,12,6,(byte)2);
+        assertTrue((boolean)call("flatStemlessFragment",p.gray,p.w,p.h,fragment,16f));
+        p.rect(111,94,1,31,(byte)1);
+        assertFalse((boolean)call("flatStemlessFragment",p.gray,p.w,p.h,fragment,16f));
+    }
+    @Test public void regionalPrintedRulesRecoverSpacingOnASkewedScan()throws Exception {
+        Page p=new Page();
+        for(int x=20;x<380;x++)for(int line=0;line<5;line++)p.rect(x,80+line*16+x/150,1,2,(byte)4);
+        float[] pitch=(float[])call("regionalStaffPitch",p.gray,p.w,p.h,construct("Staff",96f,148f,13f));
+        assertNotNull(pitch);assertEquals(16,pitch[1],.2);assertEquals(148,pitch[0],3);
     }
     @Test public void localFlatRepeatingAKeyPitchDoesNotExtendTheSignature()throws Exception {
         Page p=new Page();p.rules(80,16);

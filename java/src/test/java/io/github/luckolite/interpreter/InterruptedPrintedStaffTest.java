@@ -43,5 +43,8 @@ public class InterruptedPrintedStaffTest {
     @Test public void generatedTextureCannotRephaseStaff()throws Exception {assertTrue(bottom(.0108f,2)>601);}
     @Test public void broadShadowBandsCannotRephaseStaff()throws Exception {assertTrue(bottom(.0108f,3)>601);}
     @Test public void fourStrongRulesSupportOnePartlyObscuredRule()throws Exception {assertEquals(596.5f,bottom(.0108f,4),1f);}
-    @Test public void twoPartlyObscuredRulesCannotRephaseStaff()throws Exception {assertTrue(bottom(.0108f,5)>601);}
+    @Test public void twoPartlyObscuredRulesCannotRephaseStaff()throws Exception {
+        float detected=bottom(.0108f,5);
+        assertTrue("partly obscured bottom="+detected,detected>601);
+    }
 }
