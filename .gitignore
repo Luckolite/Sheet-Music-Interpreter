@@ -11,3 +11,4 @@ training/corpus*/
 *.log
 .DS_Store
 .idea/
+AGENTS.md

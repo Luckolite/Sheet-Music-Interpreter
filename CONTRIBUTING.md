@@ -21,8 +21,8 @@ claim. Do not replace released weights without updating hashes, lineage and eval
 Closed-source users have no obligation to submit their changes. Bug reports and
 improvements are appreciated when you can share them.
 
-For maintainers carrying fixes from Music Sheets, follow [AGENTS.md](AGENTS.md):
-port applicable interpreting changes and shareable regressions in the same task,
+For maintainers carrying fixes from Music Sheets, port applicable interpreting
+changes and shareable regressions in the same task,
 verify them here, and publish the public commit. Check mapped source drift with
 `python scripts/check_app_drift.py --app <active-app-worktree>`; review new helpers,
 adapters and model changes separately.

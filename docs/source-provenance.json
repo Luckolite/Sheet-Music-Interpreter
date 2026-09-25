@@ -157,6 +157,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
       "source_sha256": "e47dd54c603800c28907a75e6f80f8e0d01db4e31a1994641fc405580287b050"
     },
+    "PrintedPageEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",
+      "source_sha256": "99291b3bbee48c8cb95c9c54e868a91ca0f24cdbccd66e3577b897f19abe9cbc",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd"
+    },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
       "source_sha256": "3d40db613b43bfa589f0a996328bfb820d842b3627b3339788b7947e99d4a187",

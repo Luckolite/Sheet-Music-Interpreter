@@ -83,12 +83,14 @@ public final class SheetInterpreter {
         notes=ArtificialHarmonics.apply(gray,width,height,measures,notes,staffs);
         for(var meter:annotations.meters)if(meter.measureIndex()>=measures.size())
             throw new IllegalArgumentException("Meter change is outside the detected measure range");
-        return TablatureDecoder.apply(new ScorePageInterpretation(measures,notes,
+        return PrintedPageEvidence.rejectStafflessPage(TablatureDecoder.apply(
+                new ScorePageInterpretation(measures,notes,
                 MeasureNumberReconciler.firstMeasureNumber(measures,numbers),score.keyChanges(),
                 TempoChangeDetector.detect(annotations.tempoNumbers.stream().map(NumberToken::internal).toList(),
-                        gray,width,height,measures),
+                         gray,width,height,measures),
                 annotations.meters,rhythm.rests(),
                 PlayingTechniqueDetector.detect(words,staffs,measures,notes,width,height),
-                ScoreDynamicsDetector.detect(words,staffs,measures,notes,gray,width,height)),tabs,width,height);
+                ScoreDynamicsDetector.detect(words,staffs,measures,notes,gray,width,height)),
+                tabs,width,height),gray,width,height,!tabs.isEmpty());
     }
 }
