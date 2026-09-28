@@ -7514,6 +7514,8 @@ final class OmrScoreInterpreter {
 
     private static boolean hasContinuousTieArc(byte[] labels, byte[] gray, int width, int height,
             int left, int right, float centerY, float gap,Component target,int inkLimit,int requiredSide) {
+        // Boundary arc evidence needs raw pixels; semantic-only decoding remains supported.
+        if (gray == null || gray.length != (long) width * height) return false;
         int radius=Math.max(1,Math.round(gap*.09f));
         boolean[] straightRows=new boolean[height];
         for(int y=Math.max(0,Math.round(centerY-gap*3.2f));y<=Math.min(height-1,Math.round(centerY+gap*3.2f));y++) {
