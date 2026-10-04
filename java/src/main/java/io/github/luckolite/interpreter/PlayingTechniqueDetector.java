@@ -6,22 +6,28 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 final class PlayingTechniqueDetector {
     record Staff(float top, float bottom, float gap, int index, int count) {}
 
     record Word(String text, float left, float top, float right, float bottom) {}
 
+    private static final Pattern TOKEN_PUNCTUATION = Pattern.compile("^[.,:;]+|[.,:;]+$");
+    private static final Pattern TOKEN_SPACE = Pattern.compile("\\s+");
+    private static final Pattern DYNAMIC_TOKEN = Pattern.compile("ppp|pp|p|mp|mf|fff|ff|f");
+
     private PlayingTechniqueDetector() {}
 
     static int technique(String word) {
         if (word == null) return -1;
-        String clean = word.trim().toLowerCase(Locale.ROOT).replaceAll("^[.,:;]+|[.,:;]+$", "");
+        String clean =
+                TOKEN_PUNCTUATION.matcher(word.trim().toLowerCase(Locale.ROOT)).replaceAll("");
         // A dynamic and an expression can share one OCR line. Accept only a
         // complete two-token direction, never arbitrary prose or negation.
-        String[] phrase = clean.split("\\s+");
-        if (phrase.length == 2 && phrase[0].matches("ppp|pp|p|mp|mf|fff|ff|f"))
-            clean = phrase[1].replaceAll("^[.,:;]+|[.,:;]+$", "");
+        String[] phrase = TOKEN_SPACE.split(clean);
+        if (phrase.length == 2 && DYNAMIC_TOKEN.matcher(phrase[0]).matches())
+            clean = TOKEN_PUNCTUATION.matcher(phrase[1]).replaceAll("");
         return switch (clean) {
             case "pizz", "pizzicato" -> ScoreTechniqueChange.PIZZICATO;
             case "arco" -> ScoreTechniqueChange.ARCO;

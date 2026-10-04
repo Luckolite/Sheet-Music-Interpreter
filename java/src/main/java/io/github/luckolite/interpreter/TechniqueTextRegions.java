@@ -42,7 +42,7 @@ final class TechniqueTextRegions {
                 if (center < measure.top() - gap / height
                         || center > measure.bottom() + gap / height) continue;
                 List<Point> points = new ArrayList<>();
-                List<Integer> columns = new ArrayList<>();
+                int columnCount = 0, firstColumn = 0, secondColumn = 0;
                 float min = Float.MAX_VALUE, max = -Float.MAX_VALUE, sx = 0, sy = 0;
                 for (var note : notes) {
                     if (note.measureIndex() != m
@@ -60,14 +60,26 @@ final class TechniqueTextRegions {
                                                     * (measure.right() - measure.left()))
                                     * width;
                     points.add(new Point(x, floor));
-                    if (!columns.contains(Math.round(x))) columns.add(Math.round(x));
+                    // Only three distinct rounded columns are needed as slope witnesses.
+                    if (columnCount < 3) {
+                        int column = Math.round(x);
+                        if (columnCount == 0) {
+                            firstColumn = column;
+                            columnCount = 1;
+                        } else if (column != firstColumn) {
+                            if (columnCount == 1) {
+                                secondColumn = column;
+                                columnCount = 2;
+                            } else if (column != secondColumn) columnCount = 3;
+                        }
+                    }
                     min = Math.min(min, x);
                     max = Math.max(max, x);
                     sx += x;
                     sy += floor;
                 }
                 // Chord heads at one column are not independent witnesses of a row's slope.
-                if (points.size() < 3 || columns.size() < 3 || max - min < gap * 4) continue;
+                if (points.size() < 3 || columnCount < 3 || max - min < gap * 4) continue;
                 float mx = sx / points.size(), my = sy / points.size();
                 double spread = 0, covariance = 0;
                 for (var point : points) {

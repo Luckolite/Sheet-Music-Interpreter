@@ -318,15 +318,15 @@
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
-      "source_sha256": "e03fb168e1b5c412d3114bc459f74ca5ffb8b1f9cda7a75a7c539a34d4976809",
-      "source_normalized_sha256": "e03fb168e1b5c412d3114bc459f74ca5ffb8b1f9cda7a75a7c539a34d4976809",
+      "source_sha256": "8dca36a3e0d967b02d9a43e57692597288ff68a21ffd1e8d1b41a226a9357dbe",
+      "source_normalized_sha256": "8dca36a3e0d967b02d9a43e57692597288ff68a21ffd1e8d1b41a226a9357dbe",
       "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
       "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "4d2c98004793d3bb6c75928958d8e9900251812ee1684e4edbeec5c468eec5c4",
-      "source_normalized_sha256": "4d2c98004793d3bb6c75928958d8e9900251812ee1684e4edbeec5c468eec5c4",
+      "source_sha256": "ab820200d111cbc271a088058df71ec06043164dde0735ff9e38d5828bd94013",
+      "source_normalized_sha256": "ab820200d111cbc271a088058df71ec06043164dde0735ff9e38d5828bd94013",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Reviewed app 1.18.375 global printed staff/bar geometry repair. Complete package-only behavior parity; original procedural compressed-staff, connected-stem and independent-cue controls. Pitch tracking retains its strict path. No private pixels, dependencies, weights or record fields changed."
     },
@@ -1143,8 +1143,8 @@
     },
     "TechniqueTextRegions.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TechniqueTextRegions.java",
-      "source_sha256": "a609d2a6c3d46dd6fa4ba2b46d46b72d629d759ff7402449ee36142acbe09c8a",
-      "source_normalized_sha256": "a609d2a6c3d46dd6fa4ba2b46d46b72d629d759ff7402449ee36142acbe09c8a",
+      "source_sha256": "e9bc398a242d22f27fb40e729ef081fa957273691a944242b4e439ff7fab0204",
+      "source_normalized_sha256": "c9f3041ce5777768ccaba2465fa04642a274ee90e4ffff9241ad433196bab23d",
       "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
       "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
     },
@@ -1684,6 +1684,50 @@
       "java/src/test/java/io/github/luckolite/interpreter/TempoChangeDetectorTest.java"
     ],
     "validation": "11 original procedural private HOST tests passed, including full-source differential raw-bit/caller and malformed first-failure controls. Shareable standalone regression compile/run is separately recorded; no phone or elapsed claim.",
+    "model_weights_changed": false,
+    "record_layout_changed": false
+  },
+  "technique_three_column_witness_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/TechniqueTextRegions.java",
+    "source_sha256": "e9bc398a242d22f27fb40e729ef081fa957273691a944242b4e439ff7fab0204",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TechniqueTextRegions.java",
+    "standalone_sha256": "2e2d2d7d2f7bb5699cb167e87fff4c2133f9d56fe607cb12b89825feb8ca095f",
+    "scope": "Bound the internal distinct rounded-column proof at three witnesses; keep every original Point, sum, covariance, residual, output box and note iteration. Integer equality and Math.round remain original; no helper/dependency, model, layout or global cache change.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/TechniqueTextRegionsTest.java"
+    ],
+    "validation": "Evidence at private staging: Nine focused HOST cases passed: seven existing controls and two original full ordered Region primitive/raw-float and local Staff differentials. Two original shareable dense-chord/delayed-third-column golden cases are staged for mandatory standalone gates; they have not yet executed. No elapsed or phone claim. Mandatory app/public batch gates must pass before publication.",
+    "resource_exhaustion_occurrence_order_not_claimed": true,
+    "model_weights_changed": false,
+    "record_layout_changed": false,
+    "review_phase": "PRIVATE_STAGING_SNAPSHOT_REQUIRES_MANDATORY_GATES_BEFORE_PUBLICATION"
+  },
+  "playing_technique_pattern_reuse_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
+    "source_sha256": "8dca36a3e0d967b02d9a43e57692597288ff68a21ffd1e8d1b41a226a9357dbe",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PlayingTechniqueDetector.java",
+    "standalone_sha256": "5477476723c17e0208d39484489f5bd2e7245acffda1e60b61a09285aca37ca2",
+    "scope": "Reuse immutable private Patterns for the three existing regexes; preserve literal strings/default flags, default zero split limit, trim/Locale.ROOT/order/null branch and fresh per-call Matchers. No helper dependency, model, math, event or record layout changes.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/ExpressionTechniqueLineTest.java"
+    ],
+    "validation": "Evidence at private staging: Fourteen app technique/text HOST goldens and ten standalone synthetic goldens passed, including the original punctuation/null/ASCII-versus-Unicode-whitespace case. Mandatory app/public batch gates must pass before publication. No elapsed or phone speed claim.",
+    "cold_class_initialization_allocation_occurrence_not_claimed": true,
+    "model_weights_changed": false,
+    "record_layout_changed": false,
+    "review_phase": "PRIVATE_STAGING_SNAPSHOT_REQUIRES_MANDATORY_GATES_BEFORE_PUBLICATION"
+  },
+  "raw_staff_queried_left_edge_reuse_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
+    "source_sha256": "ab820200d111cbc271a088058df71ec06043164dde0735ff9e38d5828bd94013",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawStaffLineDetector.java",
+    "standalone_sha256": "194e5d9f0802ffa9edc626211eb511cdf09ed82da1a4870ada6046b62105ef85",
+    "scope": "Reuse only the queried staff left-edge result within the read-only connection search. Preserve eager upper-then-lower reads, peer order, raster/row inputs, geometry rejection, connector checks and malformed-read behavior. No helper, model, layout, record, global cache or printed-rule early-exit change.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/RawStaffLineDetectorTest.java"
+    ],
+    "validation": "Evidence at private staging: Seven existing and two original synthetic connection/caller/malformed-read cases passed on both app and standalone sources (18 focused tests). Mandatory app/public batch gates must pass before publication. No elapsed or phone speed claim.",
+    "review_phase": "PRIVATE_STAGING_SNAPSHOT_REQUIRES_MANDATORY_GATES_BEFORE_PUBLICATION",
     "model_weights_changed": false,
     "record_layout_changed": false
   }

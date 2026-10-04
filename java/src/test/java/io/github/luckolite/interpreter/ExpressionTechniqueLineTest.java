@@ -126,4 +126,43 @@ public class ExpressionTechniqueLineTest {
                         1000,
                         1000));
     }
+
+    @Test
+    public void punctuationAndDefaultWhitespaceKeepWholeTokenSemantics() {
+        String[] inputs = {
+            null,
+            "",
+            "\t\r\n",
+            ":;PIZZ.,;",
+            " \tMF\tCANTABILE.\r\n",
+            "f  sostenuto.;",
+            "ppp\narco",
+            "mp\u000barco",
+            "mf\u00a0cantabile",
+            "\u2003arco",
+            " f cantabile \t title ",
+            "ff",
+            "mf\t"
+        };
+        int[] expected = {
+            -1,
+            -1,
+            -1,
+            ScoreTechniqueChange.PIZZICATO,
+            ScoreTechniqueChange.CANTABILE,
+            ScoreTechniqueChange.SOSTENUTO,
+            ScoreTechniqueChange.ARCO,
+            ScoreTechniqueChange.ARCO,
+            -1,
+            -1,
+            -1,
+            -1,
+            -1
+        };
+        for (int i = 0; i < inputs.length; i++)
+            assertEquals(
+                    String.valueOf(inputs[i]),
+                    expected[i],
+                    PlayingTechniqueDetector.technique(inputs[i]));
+    }
 }

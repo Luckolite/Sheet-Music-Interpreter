@@ -168,4 +168,68 @@ public class TechniqueTextRegionsTest {
                                 1000)
                         .isEmpty());
     }
+
+    private static final PlayingTechniqueDetector.Staff COLUMN_STAFF =
+            new PlayingTechniqueDetector.Staff(128, 192, 16, 0, 1);
+    private static final List<MeasureRegion> COLUMN_MEASURES =
+            List.of(new MeasureRegion(.125f, .875f, .125f, .375f));
+
+    private static ScoreNoteEvent horizontalColumnHead(float position) {
+        return new ScoreNoteEvent(
+                0,
+                position,
+                0,
+                0,
+                1,
+                .203125f,
+                false,
+                0,
+                0,
+                ScoreNoteEvent.ACCIDENTAL_FROM_KEY,
+                1,
+                0,
+                0,
+                0,
+                ScoreNoteEvent.CLEF_TREBLE);
+    }
+
+    private static TechniqueTextRegions.Region horizontalColumnRegion() {
+        return new TechniqueTextRegions.Region(
+                0, COLUMN_STAFF, 116, 73, 908, 152, 512, 208, 0, 128, 896);
+    }
+
+    @Test
+    public void manyChordHeadsRetainTheCompleteHorizontalRegion() {
+        var notes = new java.util.ArrayList<ScoreNoteEvent>();
+        for (int i = 0; i < 96; i++)
+            notes.add(horizontalColumnHead(new float[] {0, .5f, 1}[i % 3]));
+        var before = List.copyOf(notes);
+        var regions =
+                TechniqueTextRegions.above(
+                        List.of(COLUMN_STAFF), COLUMN_MEASURES, notes, 1024, 1024);
+        assertEquals(List.of(horizontalColumnRegion()), regions);
+        assertEquals(
+                new PlayingTechniqueDetector.Staff(144, 208, 16, 0, 1),
+                TechniqueTextRegions.local(COLUMN_STAFF, 512, regions));
+        assertEquals(before, notes);
+    }
+
+    @Test
+    public void theLastThirdColumnStillEstablishesTheCompleteRegion() {
+        var notes = new java.util.ArrayList<ScoreNoteEvent>();
+        for (int i = 0; i < 64; i++) notes.add(horizontalColumnHead(i % 2 == 0 ? 0 : 1));
+        var before = List.copyOf(notes);
+        assertTrue(
+                TechniqueTextRegions.above(
+                                List.of(COLUMN_STAFF), COLUMN_MEASURES, notes, 1024, 1024)
+                        .isEmpty());
+        assertEquals(before, notes);
+        notes.add(horizontalColumnHead(.5f));
+        before = List.copyOf(notes);
+        assertEquals(
+                List.of(horizontalColumnRegion()),
+                TechniqueTextRegions.above(
+                        List.of(COLUMN_STAFF), COLUMN_MEASURES, notes, 1024, 1024));
+        assertEquals(before, notes);
+    }
 }

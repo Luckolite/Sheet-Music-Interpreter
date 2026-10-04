@@ -124,4 +124,64 @@ public class RawStaffLineDetectorTest {
         assertEquals(6, staffs.size());
         for (RawStaffLineDetector.StaffLines staff : staffs) assertEquals(8f, staff.gap(), .001f);
     }
+
+    @Test
+    public void connectionSearchReusesOnlyItsCurrentStaffAndRaster() {
+        int width = 120, height = 240;
+        byte[] gray = new byte[width * height];
+        Arrays.fill(gray, (byte) 255);
+        int[] aboveRows = {20, 30, 40, 50, 60};
+        int[] cueRows = {100, 106, 112, 118, 124};
+        int[] belowRows = {160, 170, 180, 190, 200};
+        for (int[] rows : new int[][] {aboveRows, cueRows, belowRows})
+            for (int y : rows) for (int x = 40; x < 100; x++) gray[y * width + x] = 0;
+        var above = new RawStaffLineDetector.StaffLines(aboveRows, 10f);
+        var cue = new RawStaffLineDetector.StaffLines(cueRows, 6f);
+        var below = new RawStaffLineDetector.StaffLines(belowRows, 10f);
+        var candidates = List.of(above, cue, below);
+        byte[] unconnected = gray.clone();
+        org.junit.Assert.assertFalse(
+                RawStaffLineDetector.connectedToStaff(cue, candidates, gray, width, height));
+        assertArrayEquals(unconnected, gray);
+
+        // The first eligible pair has the cue below its peer. Only the second pair, with the
+        // cue above its peer, has a connector; reuse must not exchange either peer's edge.
+        for (int y = 124; y <= 200; y++) gray[y * width + 40] = 0;
+        byte[] connected = gray.clone();
+        org.junit.Assert.assertTrue(
+                RawStaffLineDetector.connectedToStaff(cue, candidates, gray, width, height));
+        assertArrayEquals(connected, gray);
+        assertArrayEquals(new int[] {20, 30, 40, 50, 60}, aboveRows);
+        assertArrayEquals(new int[] {100, 106, 112, 118, 124}, cueRows);
+        assertArrayEquals(new int[] {160, 170, 180, 190, 200}, belowRows);
+        org.junit.Assert.assertSame(cueRows, cue.rows());
+
+        // A later invocation must read its own raster, with no retained missing/positive edge.
+        System.arraycopy(unconnected, 0, gray, 0, gray.length);
+        org.junit.Assert.assertFalse(
+                RawStaffLineDetector.connectedToStaff(cue, candidates, gray, width, height));
+        assertArrayEquals(unconnected, gray);
+    }
+
+    @Test
+    public void connectionSearchStillReadsBothEdgesBeforeReturningAConnection() {
+        int width = 120, height = 240;
+        byte[] gray = new byte[width * 150];
+        Arrays.fill(gray, (byte) 255);
+        var upper = new RawStaffLineDetector.StaffLines(new int[] {20, 30, 40, 50, 60}, 10f);
+        var malformedLower =
+                new RawStaffLineDetector.StaffLines(new int[] {160, 170, 180, 190, 200}, 10f);
+        for (int y : upper.rows()) for (int x = 40; x < 100; x++) gray[y * width + x] = 0;
+        for (int y = 60; y < 150; y++) gray[y * width + 40] = 0;
+        byte[] original = gray.clone();
+        try {
+            RawStaffLineDetector.connectedToStaff(
+                    upper, List.of(upper, malformedLower), gray, width, height);
+            org.junit.Assert.fail("The malformed second edge must retain its array read failure");
+        } catch (ArrayIndexOutOfBoundsException expected) {
+            assertArrayEquals(original, gray);
+            assertArrayEquals(new int[] {20, 30, 40, 50, 60}, upper.rows());
+            assertArrayEquals(new int[] {160, 170, 180, 190, 200}, malformedLower.rows());
+        }
+    }
 }

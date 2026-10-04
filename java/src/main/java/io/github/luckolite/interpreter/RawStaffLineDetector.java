@@ -213,6 +213,7 @@ final class RawStaffLineDetector {
     static boolean connectedToStaff(
             StaffLines staff, List<StaffLines> candidates, byte[] gray, int width, int height) {
         if (gray == null) return false;
+        int staffEdge = Integer.MIN_VALUE;
         for (StaffLines other : candidates) {
             if (other == staff) continue;
             StaffLines upper = staff.top() < other.top() ? staff : other,
@@ -223,10 +224,18 @@ final class RawStaffLineDetector {
             int top = Math.max(0, Math.round(upper.bottom() + gap * .12f));
             int bottom = Math.min(height - 1, Math.round(lower.top() - gap * .12f));
             int radius = Math.max(2, Math.round(gap * 2));
-            for (int edge :
-                    new int[] {
-                        leftEdge(upper, gray, width, height), leftEdge(lower, gray, width, height)
-                    }) {
+            // The queried staff and raster stay unchanged throughout this connection search.
+            // Read both edges in their original order before examining either connector.
+            int upperEdge =
+                    upper == staff && staffEdge != Integer.MIN_VALUE
+                            ? staffEdge
+                            : leftEdge(upper, gray, width, height);
+            int lowerEdge =
+                    lower == staff && staffEdge != Integer.MIN_VALUE
+                            ? staffEdge
+                            : leftEdge(lower, gray, width, height);
+            staffEdge = upper == staff ? upperEdge : lowerEdge;
+            for (int edge : new int[] {upperEdge, lowerEdge}) {
                 if (edge < 0) continue;
                 for (int x = Math.max(0, edge - radius);
                         x <= Math.min(width - 1, edge + radius);
