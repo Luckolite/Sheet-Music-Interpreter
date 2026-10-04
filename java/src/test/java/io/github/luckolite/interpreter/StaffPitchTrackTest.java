@@ -190,4 +190,28 @@ public class StaffPitchTrackTest {
                 "All five faded straight rules outweigh nearby darker beams",
                 StaffPitchTrack.detect(gray, width, height, 100, 140, 10));
     }
+
+    @Test
+    public void successiveStripWindowsPreserveVaryingPaperAndCallerPixels() {
+        int width = 1200, height = 350;
+        byte[] gray = new byte[width * height];
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
+                gray[y * width + x] = (byte) ((x / 90 & 1) == 0 ? 215 : 250);
+        for (int x = 30; x < width - 30; x++)
+            for (int line = 0; line < 5; line++) {
+                int row = Math.round(bottom(x, width) - line * 10);
+                byte ink = (byte) (50 + x / 120 % 4 * 10);
+                gray[row * width + x] = ink;
+                gray[(row + 1) * width + x] = ink;
+            }
+        byte[] original = gray.clone();
+        var track = StaffPitchTrack.detect(gray, width, height, 155, 195, 10);
+        assertNotNull(track);
+        for (int x : new int[] {190, 440, 720, 970}) {
+            assertEquals(bottom(x, width) + .5f, track.at(x)[0], 2f);
+            assertEquals(10, track.at(x)[1], .6f);
+        }
+        assertArrayEquals(original, gray);
+    }
 }

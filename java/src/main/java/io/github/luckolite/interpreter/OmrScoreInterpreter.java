@@ -14,6 +14,12 @@ final class OmrScoreInterpreter {
     /** High piano chord tones can extend eight gaps; emission still requires ledger ink. */
     private static final float MAX_HEAD_LEDGER_GAPS = 8f;
 
+    /** Key-signature order is shared only after an inherited accidental needs it. */
+    private static final class TieKeyOrder {
+        private static final int[] SHARPS = {3, 0, 4, 1, 5, 2, 6};
+        private static final int[] FLATS = {6, 2, 5, 1, 4, 0, 3};
+    }
+
     private OmrScoreInterpreter() {}
 
     static List<PlayingTechniqueDetector.Staff> techniqueStaffs(
@@ -1766,8 +1772,7 @@ final class OmrScoreInterpreter {
             if (key.measureIndex() <= note.measureIndex()) fifths = key.fifths();
         if (fifths == null) return Integer.MIN_VALUE;
         int letter = Math.floorMod(note.diatonicPitchIdentity(), 7);
-        int[] order =
-                fifths >= 0 ? new int[] {3, 0, 4, 1, 5, 2, 6} : new int[] {6, 2, 5, 1, 4, 0, 3};
+        int[] order = fifths >= 0 ? TieKeyOrder.SHARPS : TieKeyOrder.FLATS;
         for (int k = 0; k < Math.min(7, Math.abs(fifths)); k++)
             if (order[k] == letter) return fifths > 0 ? 1 : -1;
         return 0;
@@ -14771,7 +14776,14 @@ final class OmrScoreInterpreter {
             int[] pale = paleStemToDoubleBeam(labels, gray, width, height, head, staff);
             if (pale != null
                     && rootedPaleFlag(
-                            labels, gray, width, height, head, staff.gap, pale[0], pale[1],
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff.gap,
+                            pale[0],
+                            pale[1],
                             pale[2] < 0)) count = 1;
         }
         // A reduced neighboring mask does not invalidate three complete printed rails.

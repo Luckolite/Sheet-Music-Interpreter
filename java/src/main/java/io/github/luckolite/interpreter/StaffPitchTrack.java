@@ -72,6 +72,7 @@ final class StaffPitchTrack {
                 last = Math.min(height, Math.round(bottom + gap * 6));
         if (last <= first) return null;
         List<float[]> samples = new ArrayList<>();
+        byte[] local = new byte[stripWidth * (last - first)];
         // Sample between the broad windows too: beams can obscure one rule
         // across several windows while clear intervening ink still proves a curve.
         for (int strip = 0; strip < 13; strip++) {
@@ -81,7 +82,6 @@ final class StaffPitchTrack {
                             Math.min(
                                     width - stripWidth,
                                     Math.round(width * (.15f + strip * .06f) - stripWidth * .5f)));
-            byte[] local = new byte[stripWidth * (last - first)];
             for (int y = first; y < last; y++)
                 System.arraycopy(
                         gray, y * width + left, local, (y - first) * stripWidth, stripWidth);

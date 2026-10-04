@@ -69,12 +69,14 @@ final class OmrMeasurePostProcessor {
     private static List<StaffRun> findStaffs(byte[] labels, byte[] gray, int width, int height) {
         float slope = estimateStaffSlope(labels, width, height);
         int[] rowStrength = new int[height];
+        int staffPixelCount = 0;
         float centerX = width / 2f;
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
                 if (labels[y * width + x] == STAFF) {
                     int deskewedY = Math.round(y - slope * (x - centerX));
                     if (deskewedY >= 0 && deskewedY < height) rowStrength[deskewedY]++;
+                    staffPixelCount++;
                 }
         int minimumStrength = Math.max(10, width / 80);
         byte[] semanticGray = gray;
@@ -95,6 +97,25 @@ final class OmrMeasurePostProcessor {
                         : RawStaffLineDetector.detectValidatedFromStrength(
                                 rowStrength, minimumStrength, height, semanticGray, width);
 
+        // Reuse only sparse immutable staff evidence across at least three staff ranges.
+        // The row-major order and exact original deskew expression stay unchanged.
+        int[] staffXs = null, staffYs = null;
+        if (semanticStaffs.size() >= 3
+                && width > 0
+                && height > 0
+                && (long) width * height == labels.length
+                && staffPixelCount <= labels.length / 4) {
+            staffXs = new int[staffPixelCount];
+            staffYs = new int[staffPixelCount];
+            int staffIndex = 0;
+            for (int y = 0; y < height; y++)
+                for (int x = 0; x < width; x++)
+                    if (labels[y * width + x] == STAFF) {
+                        staffXs[staffIndex] = x;
+                        staffYs[staffIndex++] = Math.round(y - slope * (x - centerX));
+                    }
+        }
+
         List<StaffRun> result = new ArrayList<>();
         List<StaffRun> shortCandidates = new ArrayList<>();
         for (RawStaffLineDetector.StaffLines semantic : semanticStaffs) {
@@ -105,12 +126,18 @@ final class OmrMeasurePostProcessor {
             int top = Math.max(0, Math.round(rows[0] - gap * 0.65f));
             int bottom = Math.min(height - 1, Math.round(rows[4] + gap * 0.65f));
             int[] columns = new int[width];
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++)
-                    if (labels[y * width + x] == STAFF) {
-                        int deskewedY = Math.round(y - slope * (x - centerX));
-                        if (deskewedY >= top && deskewedY <= bottom) columns[x]++;
-                    }
+            if (staffXs != null) {
+                for (int index = 0; index < staffXs.length; index++)
+                    if (staffYs[index] >= top && staffYs[index] <= bottom)
+                        columns[staffXs[index]]++;
+            } else {
+                for (int y = 0; y < height; y++)
+                    for (int x = 0; x < width; x++)
+                        if (labels[y * width + x] == STAFF) {
+                            int deskewedY = Math.round(y - slope * (x - centerX));
+                            if (deskewedY >= top && deskewedY <= bottom) columns[x]++;
+                        }
+            }
             int total = Arrays.stream(columns).sum();
             int left = percentileColumn(columns, total, 0.012f);
             int right = percentileColumn(columns, total, 0.988f);

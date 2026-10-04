@@ -27,6 +27,9 @@ public final class OcrCtcDecoder {
         var tokens = new ArrayList<Token>();
         int previous = blankIndex;
         float total = 0;
+        String runText = null;
+        int runStart = 0;
+        float runConfidence = 0;
         for (int t = 0; t < probabilities.length; t++) {
             var step = probabilities[t];
             if (step == null || step.length != dictionary.size())
@@ -38,18 +41,21 @@ public final class OcrCtcDecoder {
                 if (step[k] > step[best])
                     best = k; // Stable lowest-index tie break on every platform.
             }
-            if (best != blankIndex) {
-                if (best != previous) {
-                    float confidence = Math.max(0, Math.min(1, step[best]));
-                    tokens.add(new Token(dictionary.get(best), t, t + 1, confidence));
-                    total += confidence;
-                } else {
-                    var old = tokens.remove(tokens.size() - 1);
-                    tokens.add(new Token(old.text(), old.startStep(), t + 1, old.confidence()));
+            if (best != previous) {
+                // Finish the previous span once, after validating the current step.
+                if (previous != blankIndex)
+                    tokens.add(new Token(runText, runStart, t, runConfidence));
+                if (best != blankIndex) {
+                    runConfidence = Math.max(0, Math.min(1, step[best]));
+                    runText = dictionary.get(best);
+                    runStart = t;
+                    total += runConfidence;
                 }
             }
             previous = best;
         }
+        if (previous != blankIndex)
+            tokens.add(new Token(runText, runStart, probabilities.length, runConfidence));
         var text = new StringBuilder();
         for (var token : tokens) text.append(token.text());
         return new Result(text.toString(), tokens, tokens.isEmpty() ? 0 : total / tokens.size());

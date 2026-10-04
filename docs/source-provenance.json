@@ -168,9 +168,10 @@
     },
     "OcrCtcDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrCtcDecoder.java",
-      "source_sha256": "4954924b440560873f5a565ddaef291c8fae39e908d617ac0a9defb2b9e3e107",
+      "source_sha256": "507a7e204d72003a4646d35ae996c0a2ab830a5d8e57df70954e985bb033ba15",
       "reviewed_app_commit": "38007cbb6226aedaea567cf64fc76cace4d3297c",
-      "source_normalized_sha256": "4954924b440560873f5a565ddaef291c8fae39e908d617ac0a9defb2b9e3e107"
+      "source_normalized_sha256": "507a7e204d72003a4646d35ae996c0a2ab830a5d8e57df70954e985bb033ba15",
+      "review_note": "Completed CTC runs emit one immutable token instead of recreating it on every repeated nonblank model step. Exact per-step validation and lowest-index argmax, first-step confidence/clamping, float addition order, Unicode/whitespace, blank separation and spans remain unchanged. Existing five plus one original long-run/direct-transition/late-invalid-probability regression passed on app and standalone candidates (12 focused checks); independent source review passed. Models, dictionary, dependencies and record layouts unchanged."
     },
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
@@ -293,8 +294,8 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "1568bfae6805eb28291ccce03e2fd9ad892a88450b58776d3a1d4c74f2a99bb2",
-      "source_normalized_sha256": "645452e3c4f0bd8d7a71490cda440abc65137c55a14cca4333659ec2e6d2a7d3",
+      "source_sha256": "39bd38c09a0c95ce33197d4e7f0834b9b14cf8baca6e5681a22ed4550a6a7c39",
+      "source_normalized_sha256": "2f8071bf48e5f9ccc3871d8cf9d7440519289f4e4c0eff1f47a8ada8a417b666",
       "review_note": "Reviewed irreversible printed-rule rejection and per-estimate projection scratch preserve accepted arithmetic, angle ordering and strict comparisons; local buffers only. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The slope search skips only already-scored zero steps; all remaining angles, strict tie comparisons, exact arithmetic and private scratch ownership are preserved. The same findStaffs call reuses its existing deskewed grayscale raster for tilted raw staff recovery; the original float mapping, white border fill, original-page coordinates and horizontal path remain unchanged. Original synthetic uphill, downhill and horizontal geometry matches the unchanged baseline in every ordered raw float field while preserving caller raster bytes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
@@ -308,11 +309,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f944f79de4e36a6fce9874b7678375188ea91e84b099ac9a6952458f60f82080",
+      "source_sha256": "801d309d60d8be58ae564bbe0cb924a527e58c4acfc3328a93d90341ebca2a79",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls.",
-      "source_normalized_sha256": "f944f79de4e36a6fce9874b7678375188ea91e84b099ac9a6952458f60f82080",
+      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls. Inherited tie accidental resolution reads private lazily initialized sharp/flat order arrays instead of allocating a seven-element array per lookup. Key iteration, last applicable key selection, explicit/unknown-key early returns, diatonic identity, floorMod/min/abs and sign arithmetic remain in their original order; arrays are only indexed locally and never escape. Four existing tie/courtesy/slur cases plus one original six-case sharp/flat musical and caller-preservation regression passed per app and standalone source (10 focused tests). No model, dependencies, record layout or private score data changed.",
+      "source_normalized_sha256": "801d309d60d8be58ae564bbe0cb924a527e58c4acfc3328a93d90341ebca2a79",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
@@ -449,10 +450,10 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "de59cbace0322593f72848f844a9edeb482be37505dc39e8156e5ffe9224feb4",
-      "source_normalized_sha256": "c01452dabdf80704a869618806ee1fadcd00de5b666e4395123d20b365ebf7e8",
+      "source_sha256": "37fe07327899d9bebb877ef62ad2348c2af08c26a73ffe9ac913d1b934c7293c",
+      "source_normalized_sha256": "bfd0573696e7ab7b4fe95fabaaa8537aab82cd6493e04fbb87753972ea986267",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed column shift hoist retains exact original float operands and Math.round order. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data.",
+      "review_note": "Reviewed column shift hoist retains exact original float operands and Math.round order. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The13 strip samples share one fully overwritten call-local raster. Raw detector and contrast/rule readers are synchronous and retain only geometry; strip order, caller pixels, float math, validation and pitch output remain unchanged. Existing8 plus one original varying-paper/ink curve and caller-preservation regression passed on app and standalone sources (18 focused checks). No models, dependencies, record fields or private inputs changed.",
       "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
     },
     "OpeningMeasureLayout.java": {
@@ -1730,5 +1731,19 @@
     "review_phase": "PRIVATE_STAGING_SNAPSHOT_REQUIRES_MANDATORY_GATES_BEFORE_PUBLICATION",
     "model_weights_changed": false,
     "record_layout_changed": false
+  },
+  "sparse_staff_projection_reuse_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
+    "source_sha256": "39bd38c09a0c95ce33197d4e7f0834b9b14cf8baca6e5681a22ed4550a6a7c39",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OmrMeasurePostProcessor.java",
+    "standalone_sha256": "cfb1b17ec1115cd9e8b5441d8cf8e014c1eab634780a823825ef02510fe9c13d",
+    "scope": "For at least3 semantic staffs with sparse STAFF labels and a complete nonoverflowing raster, reuse call-local row-major STAFF coordinates/unchanged deskew rounding. Keep original dense path on short/dense/malformed inputs, original staff/column order, all float operations and helper/caller ownership. No model, decoder timing or record-layout changes.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/SparseStaffProjectionTest.java"
+    ],
+    "validation": "Fourteen private model-free fixtures/guards passed with complete ordered geometry raw bits and caller preservation. Original explicit numerical goldens cover horizontal/uphill/downhill staff extents and two white-paper/dark-rule grayscale pages. New standalone regression verification is separately recorded; no ART/wholeScore/elapsed claim. The six fixture pages contain 60 ordered measure rectangles and 240 raw float bounds, including 2 real grayscale pages; all label/gray inputs are preserved.",
+    "model_weights_changed": false,
+    "record_layout_changed": false,
+    "resource_exhaustion_occurrence_or_concurrent_caller_mutation_not_claimed": true
   }
 }

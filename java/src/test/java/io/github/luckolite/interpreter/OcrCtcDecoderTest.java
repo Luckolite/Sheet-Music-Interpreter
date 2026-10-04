@@ -62,4 +62,33 @@ public class OcrCtcDecoderTest {
         assertThrows(
                 IllegalArgumentException.class, () -> OcrCtcDecoder.decode(sequence(1), DICT, -1));
     }
+
+    @Test
+    public void longRunsKeepInitialConfidenceAndExactSpanBoundaries() {
+        List<String> dictionary = List.of("", "p", "é", " ");
+        float[][] probabilities = new float[5006][dictionary.size()];
+        for (int t = 0; t < 5000; t++) probabilities[t][1] = t == 0 ? .625f : .875f;
+        probabilities[5000][2] = .75f;
+        probabilities[5001][2] = .95f;
+        probabilities[5002][0] = 1;
+        probabilities[5003][2] = .5f;
+        probabilities[5004][3] = Math.nextUp(1f);
+        probabilities[5005][0] = 1;
+        var result = OcrCtcDecoder.decode(probabilities, dictionary, 0);
+        assertEquals("péé ", result.text());
+        assertEquals(
+                List.of(
+                        new OcrCtcDecoder.Token("p", 0, 5000, .625f),
+                        new OcrCtcDecoder.Token("é", 5000, 5002, .75f),
+                        new OcrCtcDecoder.Token("é", 5003, 5004, .5f),
+                        new OcrCtcDecoder.Token(" ", 5004, 5005, 1f)),
+                result.tokens());
+        assertEquals(
+                Float.floatToRawIntBits(.71875f), Float.floatToRawIntBits(result.confidence()));
+        assertEquals(Math.nextUp(1f), probabilities[5004][3], 0);
+        probabilities[5005][3] = Float.NaN;
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> OcrCtcDecoder.decode(probabilities, dictionary, 0));
+    }
 }
