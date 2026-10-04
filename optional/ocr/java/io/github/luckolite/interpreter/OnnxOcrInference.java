@@ -31,6 +31,7 @@ public final class OnnxOcrInference implements PortableOcr.Inference, AutoClosea
                 options.setInterOpNumThreads(1);
                 options.addConfigEntry("session.force_spinning_stop", "1");
                 openedDetector = environment.createSession(detectorPath, options);
+                options.setIntraOpNumThreads(4);
                 openedRecognizer = environment.createSession(recognizerPath, options);
             }
             dictionary =

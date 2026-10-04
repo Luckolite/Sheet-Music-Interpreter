@@ -74,8 +74,8 @@ class OnnxOcrLifecycleTest(unittest.TestCase):
             self.assertEqual(0, executed.returncode, executed.stdout)
             result = json.loads(result_file.read_text(encoding='utf-8'))
             self.assertEqual('PASS', result['status'])
-            self.assertEqual(27, result['criteria'])
-            self.assertEqual(27, result['criterionPasses'])
+            self.assertEqual(29, result['criteria'])
+            self.assertEqual(29, result['criterionPasses'])
             self.assertEqual(0, result['criterionFailures'])
             self.assertTrue(result['allExpected'])
             for row in result['rows']:

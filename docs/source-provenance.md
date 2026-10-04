@@ -541,3 +541,21 @@ app classes were checked for token parity after the package and diagnostic
 adapter; existing beam/stem helpers were reviewed without new dependencies,
 model changes or record-layout changes. This verification does not establish
 whole-score accuracy or device/playback performance.
+
+The opaque-gray OCR path preserves unsigned pixels and complete normalized tensors while
+sharing interpolation across its three planes. Fresh gray crops transfer through the
+Android queue; opaque ARGB is materialized only for the existing platform/remote boundary.
+The standalone API remains platform independent. Detector threads remain two; recognizer
+threads use four with the same models, settings and session ownership. Original synthetic
+tests record per-model options and preserve inference/lifecycle assertions.
+
+Tablature preparation builds the six ordered row projections in one request-local page
+walk, preserving coverage/threshold/staff/bar selection. Original low-coverage, pale-rule
+and multiple-system fixtures exercise the actual public decoder.
+
+Recognition epoch two invalidates old results for the previously reviewed triplet/rest
+repairs. Guide layout 281 and audio 66 are unchanged. The paired Hub/worker promotes current
+cache metadata, excludes stale guide transfer and preserves rollback payloads and matching
+audio. Only these four actual mapped Java sources are refreshed; the applicable worker
+writer and original regressions are ported explicitly. No commercial score, private log,
+model, binary, signing material or app history is part of this review.

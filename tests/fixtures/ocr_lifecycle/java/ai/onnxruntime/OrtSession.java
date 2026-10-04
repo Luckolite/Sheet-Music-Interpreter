@@ -35,6 +35,9 @@ public final class OrtSession implements AutoCloseable {
     }
 
     public static final class SessionOptions implements AutoCloseable {
+        public int intraThreads, interThreads;
+        public final Map<String, String> configEntries = new LinkedHashMap<>();
+
         public SessionOptions() {
             FakeOrt.events.add("options.new");
             FakeOrt.throwUnchecked(FakeOrt.optionsNewFailure);
@@ -44,14 +47,18 @@ public final class OrtSession implements AutoCloseable {
         public void setIntraOpNumThreads(int n) throws OrtException {
             FakeOrt.events.add("intra:" + n);
             FakeOrt.throwOrt(FakeOrt.configFailure);
+            FakeOrt.throwOrt(n == 4 ? FakeOrt.recognizerConfigFailure : null);
+            intraThreads = n;
         }
 
         public void setInterOpNumThreads(int n) throws OrtException {
             FakeOrt.events.add("inter:" + n);
+            interThreads = n;
         }
 
         public void addConfigEntry(String key, String value) throws OrtException {
             FakeOrt.events.add("config:" + key + "=" + value);
+            configEntries.put(key, value);
         }
 
         public void close() {

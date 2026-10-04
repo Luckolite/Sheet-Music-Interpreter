@@ -217,4 +217,58 @@ public class TablatureDecoderTest {
         assertEquals(.5, score.notes().get(0).followingRestBeats(), 0);
         assertEquals(.5, score.rests().get(0).durationBeats(), 0);
     }
+
+    private static void assertTabProjectionGeometry(
+            TablatureDecoder.Staff row, float top, float standardTop, List<Float> bars) {
+        assertEquals(top, row.top(), 0);
+        assertEquals(20f, row.gap(), 0);
+        assertEquals(top + 100f, row.bottom(), 0);
+        assertEquals(standardTop, row.standardTop(), 0);
+        assertEquals(6, row.stringCount());
+        assertEquals(bars, row.bars());
+        assertTrue(row.frets().isEmpty());
+        assertTrue(row.tuning().isEmpty());
+    }
+
+    @Test
+    public void lowCoverageTabRowsRetainGeometryAndEnclosingBars() {
+        byte[] gray = new byte[W * H];
+        Arrays.fill(gray, (byte) 255);
+        // Fifty pixels exceed the six-percent pass but cannot reach the 55-percent pass.
+        for (int y = 140; y <= 240; y += 20) for (int x = 20; x < 70; x++) gray[y * W + x] = 0;
+        for (int x : new int[] {20, 45, 69}) for (int y = 140; y <= 240; y++) gray[y * W + x] = 0;
+        byte[] original = gray.clone();
+        var rows = TablatureDecoder.detect(gray, W, H);
+        assertEquals(1, rows.size());
+        assertTabProjectionGeometry(rows.get(0), 140f, -1f, List.of(20f, 45f, 69f));
+        assertArrayEquals(original, gray);
+    }
+
+    @Test
+    public void paleTabRulesRespectStrictHighestThreshold() {
+        for (int shade : new int[] {246, 247, 248}) {
+            byte[] gray = page(6, false, false);
+            for (int y = 140; y <= 240; y += 20)
+                Arrays.fill(gray, y * W + 20, y * W + 480, (byte) shade);
+            byte[] original = gray.clone();
+            var rows = TablatureDecoder.detect(gray, W, H);
+            if (shade < 248) {
+                assertEquals(1, rows.size());
+                assertTabProjectionGeometry(rows.get(0), 140f, -1f, List.of(20f, 250f, 479f));
+            } else assertTrue(rows.isEmpty());
+            assertArrayEquals(original, gray);
+        }
+    }
+
+    @Test
+    public void pairedAndMultipleTabSystemsKeepOrderedGeometryAndBars() {
+        byte[] gray = page(6, true, true);
+        for (int x : new int[] {30, 260, 470}) for (int y = 280; y <= 380; y++) gray[y * W + x] = 0;
+        byte[] original = gray.clone();
+        var rows = TablatureDecoder.detect(gray, W, H);
+        assertEquals(2, rows.size());
+        assertTabProjectionGeometry(rows.get(0), 140f, 40f, List.of(20f, 250f, 479f));
+        assertTabProjectionGeometry(rows.get(1), 280f, -1f, List.of(30f, 260f, 470f));
+        assertArrayEquals(original, gray);
+    }
 }

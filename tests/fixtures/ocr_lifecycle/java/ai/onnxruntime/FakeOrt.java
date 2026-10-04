@@ -32,10 +32,27 @@ public final class FakeOrt {
     public static final float[][] recognizerOutput = {{0.1f, 0.7f, 0.2f}, {0.8f, 0.1f, 0.1f}};
     public static int[] lastInputBits;
     public static long[] lastInputShape;
+    public static Throwable recognizerConfigFailure;
+    public static final List<Map<String, Object>> sessionSettings = new ArrayList<>();
+
+    public static void captureSettings(String path, OrtSession.SessionOptions options) {
+        sessionSettings.add(
+                Map.of(
+                        "role",
+                        path,
+                        "intra",
+                        options.intraThreads,
+                        "inter",
+                        options.interThreads,
+                        "config",
+                        Map.copyOf(options.configEntries)));
+    }
 
     public static void reset() {
         events.clear();
         sessions.clear();
+        sessionSettings.clear();
+        recognizerConfigFailure = null;
         verifyFailure =
                 optionsNewFailure =
                         configFailure =

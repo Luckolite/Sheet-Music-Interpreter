@@ -12,6 +12,7 @@ public final class OrtEnvironment {
     public OrtSession createSession(String path, OrtSession.SessionOptions options)
             throws OrtException {
         FakeOrt.events.add("create:" + path);
+        FakeOrt.captureSettings(path, options);
         FakeOrt.throwOrt(
                 path.equals("detector")
                         ? FakeOrt.detectorCreateFailure

@@ -58,6 +58,7 @@ public final class LifecycleFaultControls {
         Throwable failure = null;
         try {
             job.run();
+            capturedSettings();
         } catch (Throwable t) {
             failure = t;
         }
@@ -80,6 +81,8 @@ public final class LifecycleFaultControls {
                         desc(failure),
                         "observed",
                         observation,
+                        "sessionSettings",
+                        new ArrayList<>(FakeOrt.sessionSettings),
                         "events",
                         new ArrayList<>(FakeOrt.events),
                         "sessions",
@@ -94,6 +97,19 @@ public final class LifecycleFaultControls {
                         + (passed == expectedPass ? " [expected]" : " [UNEXPECTED]"));
         if (passed != expectedPass)
             throw new AssertionError("unexpected criterion status for " + name, failure);
+    }
+
+    static void capturedSettings() {
+        for (var settings : FakeOrt.sessionSettings) {
+            String role = (String) settings.get("role");
+            need(
+                    settings.get("intra").equals(role.equals("detector") ? 2 : 4),
+                    "model-specific intra-op snapshot: " + settings);
+            need(settings.get("inter").equals(1), "inter-op changed: " + settings);
+            need(
+                    settings.get("config").equals(Map.of("session.force_spinning_stop", "1")),
+                    "spin-stop changed: " + settings);
+        }
     }
 
     static void closeCounts(int detector, int recognizer, int options) {
@@ -163,10 +179,19 @@ public final class LifecycleFaultControls {
                         "inter:1",
                         "config:session.force_spinning_stop=1",
                         "create:detector",
+                        "intra:4",
                         "create:recognizer",
                         "options.close",
                         "dictionary:recognizer.dictionary:UTF-8");
         need(FakeOrt.events.equals(expected), "success constructor order/config changed");
+        need(
+                FakeOrt.sessionSettings.size() == 2,
+                "Both model-session settings must be captured at creation");
+        need(
+                FakeOrt.sessionSettings.get(0).get("role").equals("detector")
+                        && FakeOrt.sessionSettings.get(1).get("role").equals("recognizer"),
+                "Model settings order changed");
+        capturedSettings();
         need(instance.dictionary().equals(List.of("", "a", "b")), "dictionary contents");
         try {
             instance.dictionary().add("no");
@@ -268,6 +293,20 @@ public final class LifecycleFaultControls {
                     var e = new OrtException("config-primary");
                     FakeOrt.configFailure = e;
                     constructorFailure(e, 0, 0, 1);
+                });
+        run(
+                "recognizer-thread-config-Exception",
+                () -> {
+                    var e = new OrtException("recognizer-thread-primary");
+                    FakeOrt.recognizerConfigFailure = e;
+                    constructorFailure(e, 1, 0, 1);
+                });
+        run(
+                "recognizer-thread-config-Error",
+                () -> {
+                    var e = new AssertionError("recognizer-thread-primary");
+                    FakeOrt.recognizerConfigFailure = e;
+                    constructorFailure(e, 1, 0, 1);
                 });
         run(
                 "detector-constructor-Exception",

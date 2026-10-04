@@ -139,11 +139,11 @@
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
-      "source_sha256": "a1c30a3345bf234da876713dfacebfdfe5e342a5454fa88ab2c69088dd079cd3",
-      "reviewed_app_commit": "38007cbb6226aedaea567cf64fc76cace4d3297c",
-      "source_normalized_sha256": "f057a35444937e9c59a16d21f80ac4f2fa57de6dd67a15d892d89692f5b3758b",
-      "reviewed_source_state": "Reviewed global lifecycle repair on the accepted Music Sheets versionCode 877 working tree",
-      "review_note": "Constructor cleanup now covers Exception and Error after either session opens, including options and dictionary failures. Close attempts both sessions and preserves primary and suppressed failures. Package-only executable-token parity; original 27-case fake ORT regression includes inference raw bits and caller ownership. Existing session options, approved checksums, dictionary, inference API and math remain unchanged. No private images, models, runtime binaries or device data."
+      "source_sha256": "05c8dd18ec8057c400969ae6d3d77e2ca31daeec0250887a9c0b08c8ae42950a",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "source_normalized_sha256": "75af2a10ee6754ac7bfb6d6aeee8983b70c62f214bbe5b7b19387a6a631a7a98",
+      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
+      "review_note": "Detector retains intra-op2; recognizer uses intra-op4. Inter-op1, spin-stop1, weights/checksums/dictionary and all acquisition/closure/error lifetimes retained. Original fake-ORT controls capture model-specific options; 27 existing cases plus two recognizer-setter failure cases."
     },
     "PortableOcrProbe.java": {
       "source_path": "tools/native-worker/PortableOcrProbe.java",
@@ -153,9 +153,11 @@
     },
     "PortableOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
-      "source_sha256": "c88460903ed15176de5a82270f78c04c2e8e8898d1fe6447282f0aeff2b7cdba",
+      "source_sha256": "52f18e14877a4fad0f0dd5c8085157dc76f5c6131ac2b7120c94e00cb0d80a6b",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "aa254ccac1c92647c600961ba4dc49cfe7022f34a281b946d79fb8901d51429e"
+      "source_normalized_sha256": "af19d0e5c7dee6d1f1f7f768a842c3f4b5655028ca205ab94b788380bbdada26",
+      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
+      "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency."
     },
     "OcrText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrText.java",
@@ -518,12 +520,12 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "84f231a34a9c3fc680a36de8fab7e5bf0b2fcc980bf0343ecf63a50db02ee076",
+      "source_sha256": "3bbef83948c1b346a3d9b9a26210b759c583cb93ac887fab33b05a33dbbbac56",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "0b4bfb087da406d2c0f2b321ef7677bf5ce518a38a079f5cbe1d1a56e9ccfe17",
+      "source_normalized_sha256": "a9d6ecd107434d79027cb9c9507cb2f9611f7c914dfae313c274870016853416",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache.",
+      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files."
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
@@ -1340,10 +1342,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8068a702d48413bb4f55f236a1d880294a5686c2162d3e9401f7c4f29b47dc84",
-      "source_normalized_sha256": "8068a702d48413bb4f55f236a1d880294a5686c2162d3e9401f7c4f29b47dc84",
+      "source_sha256": "642cedb8748f8d183463a583108c16cdfb2a0db3cabe20608185cf1f58170fb6",
+      "source_normalized_sha256": "642cedb8748f8d183463a583108c16cdfb2a0db3cabe20608185cf1f58170fb6",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original pure-JDK recognition-revision identities, package-only standalone adaptation. Same guide record layout cannot reuse earlier recognition; original source/cleanup/layout controls. Android cache hydration, metadata transfer and native Hub adapters reviewed separately. No private material or model changes."
+      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions.",
+      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1397,11 +1400,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "2f7252085fbda062360e963ed4c832e9751966f1d154a799ef1de2e3c8147263",
-      "source_normalized_sha256": "ccbf5038f57d803688097adbc9d0618ee0668df561e0ecfc237be22a0bab3dcf",
+      "source_sha256": "87f47eb1e61f8919a6549bd58d55c1ee22a7c37d69ab2f444816aaa3edcadb96",
+      "source_normalized_sha256": "4d150d588a3172815beceabd6dd2f83fed9315ee77ad5c6f09ed06118b44a44c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed exact native encoder with package-relative semantic import and Apache-2.0 notice. Guide281 appends the actual signed stem field; explicit older formats retain their bytes and reject data they cannot represent. Original synthetic fixtures only."
+      "reviewed_source_state": "Reviewed current worktree; actual native writer port and original revision regressions passed.",
+      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed."
     }
   },
   "interpreter_speedup_review": {
@@ -1594,5 +1597,20 @@
     "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
     "reviewed_app_state": "Current worktree based on the recorded commit; selected PortableOcr source is identified by its actual mapped SHA-256.",
     "boundary": "Horizontal half-pixel coordinates and source-color loads are reused per crop. Alpha composition, interpolation order, rounding, BGR CHW normalization and zero padding are unchanged. One original generated crop regression checks both modes by raw float bits and caller preservation. No weights, record layout, private score or new dependency is included."
+  },
+  "phone_first_gray_projection_epoch_review": {
+    "base_public_commit": "413e7efc3767c77fe24a80f6ce62c09e73590d6b",
+    "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+    "mapped_sources": [
+      "PortableOcr.java",
+      "OnnxOcrInference.java",
+      "TablatureDecoder.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "guide_format": 281,
+    "recognition_revision": 2,
+    "record_layout_changed": false,
+    "additional_review": "Android-only fresh gray crop/queue/capability adapters retain opaque ARGB native-wire and ML Kit fallback. Matching worker writer and Hub planning/capability/cache high-water promotion were reviewed separately; old guide data and compatible audio retained. No new models, weights, runtime binaries, private score/device/log/library/signing data or app history are included."
   }
 }

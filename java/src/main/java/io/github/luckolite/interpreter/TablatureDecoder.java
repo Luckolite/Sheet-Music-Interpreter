@@ -87,9 +87,11 @@ public final class TablatureDecoder {
         // Imported screenshots often use pale rules or enlarged string spacing.
         // Keep the darkest complete geometry first, then fill in missing systems.
         var found = new ArrayList<Staff>();
+        int[][] rowCounts = countRowProjections(gray, w, h);
         for (float coverage : new float[] {.55f, .06f})
             for (int threshold : new int[] {180, 200, 220, 235, 245, 248})
-                for (var staff : detectAtThreshold(gray, w, h, threshold, coverage)) {
+                for (var staff :
+                        detectAtThreshold(gray, w, h, threshold, coverage, rowCounts[threshold])) {
                     int match = -1;
                     for (int i = 0; i < found.size(); i++)
                         if (Math.abs(found.get(i).top - staff.top)
@@ -143,15 +145,63 @@ public final class TablatureDecoder {
         return List.copyOf(result);
     }
 
+    private static int[][] countRowProjections(byte[] gray, int w, int h) {
+        int[][] result = new int[256][];
+        int[] a = new int[h], b = new int[h], c = new int[h];
+        int[] d = new int[h], e = new int[h], f = new int[h];
+        result[180] = a;
+        result[200] = b;
+        result[220] = c;
+        result[235] = d;
+        result[245] = e;
+        result[248] = f;
+        for (int y = 0; y < h; y++) {
+            int n180 = 0, n200 = 0, n220 = 0, n235 = 0, n245 = 0, n248 = 0;
+            int offset = y * w;
+            for (int x = 0; x < w; x++) {
+                int value = gray[offset + x] & 255;
+                if (value >= 248) continue;
+                n248++;
+                if (value < 180) {
+                    n180++;
+                    n200++;
+                    n220++;
+                    n235++;
+                    n245++;
+                } else if (value < 200) {
+                    n200++;
+                    n220++;
+                    n235++;
+                    n245++;
+                } else if (value < 220) {
+                    n220++;
+                    n235++;
+                    n245++;
+                } else if (value < 235) {
+                    n235++;
+                    n245++;
+                } else if (value < 245) {
+                    n245++;
+                }
+            }
+            a[y] = n180;
+            b[y] = n200;
+            c[y] = n220;
+            d[y] = n235;
+            e[y] = n245;
+            f[y] = n248;
+        }
+        return result;
+    }
+
     private static List<Staff> detectAtThreshold(
-            byte[] gray, int w, int h, int threshold, float coverage) {
+            byte[] gray, int w, int h, int threshold, float coverage, int[] rowCounts) {
         var lines = new ArrayList<Integer>();
         var thickness = new ArrayList<Integer>();
         var strength = new ArrayList<Integer>();
         int start = -1, peak = 0;
         for (int y = 0; y <= h; y++) {
-            int ink = 0;
-            if (y < h) for (int x = 0; x < w; x++) if ((gray[y * w + x] & 255) < threshold) ink++;
+            int ink = y < h ? rowCounts[y] : 0;
             if (ink > w * coverage) {
                 if (start < 0) {
                     start = y;
