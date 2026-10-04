@@ -921,6 +921,9 @@ final class SixteenthRestDetector {
         }
         if (eighth
                 && deepLowered
+                && ForteRestGuard.owns(gray, width, height, left, right, minY, maxY, gap)) return;
+        if (eighth
+                && deepLowered
                 && eighthRestLetterRow(gray, width, height, left, right, minY, maxY, gap)) return;
         float centerX = (left + right) * .5f / width;
         float centerY = (minY + maxY) * .5f / height;

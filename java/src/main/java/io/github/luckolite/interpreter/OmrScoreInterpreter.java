@@ -2469,39 +2469,8 @@ final class OmrScoreInterpreter {
                     || gw < gap
                     || gw > gap * 3
                     || head.centerY > top + glyph.minY + gh * .3f) continue;
-            int[] spans = new int[gh], centers = new int[gh];
-            for (int y = 0; y < gh; y++) {
-                int lo = w, hi = -1;
-                for (int x = glyph.minX; x <= glyph.maxX; x++)
-                    if (ink[(y + glyph.minY) * w + x] != 0) {
-                        lo = Math.min(lo, x);
-                        hi = x;
-                    }
-                if (hi >= lo) {
-                    spans[y] = hi - lo + 1;
-                    centers[y] = lo + hi;
-                }
-            }
-            int upper = 0, cross = Math.round(gh * .2f), lower = Math.round(gh * .75f);
-            for (int y = 1; y < gh * .25f; y++) if (spans[y] > spans[upper]) upper = y;
-            for (int y = cross + 1; y < gh * .45f; y++) if (spans[y] > spans[cross]) cross = y;
-            for (int y = lower + 1; y < gh; y++) if (spans[y] > spans[lower]) lower = y;
-            int[] middle =
-                    java.util.Arrays.copyOfRange(
-                            spans, Math.round(gh * .45f), Math.round(gh * .75f));
-            java.util.Arrays.sort(middle);
-            int stem = middle[middle.length / 2];
-            if (stem < 2
-                    || spans[upper] < stem * 1.4f
-                    || spans[cross] < stem * 1.65f
-                    || spans[lower] < stem * 1.5f
-                    || cross - upper < gap * .3f
-                    || centers[upper] - centers[cross] < gap * .4f
-                    || centers[cross] - centers[lower] < gap * 1.2f) continue;
-            int valley = Integer.MAX_VALUE;
-            for (int y = upper + 1; y < cross; y++) valley = Math.min(valley, spans[y]);
-            if (valley > Math.min(spans[upper], spans[cross]) * .65f) continue;
-            return true;
+            if (ForteInkShape.matches(ink, w, glyph.minX, glyph.maxX, glyph.minY, glyph.maxY, gap))
+                return true;
         }
         return false;
     }
@@ -12901,6 +12870,60 @@ final class OmrScoreInterpreter {
         return labels;
     }
 
+    static boolean provesNaturalMeterInk(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float noteY,
+            float gap,
+            int firstLine) {
+        if (gray == null
+                || gray.length != width * height
+                || gap < 6
+                || !Float.isFinite(gap)
+                || right < left
+                || right - left > gap * 1.8f) return false;
+        left = Math.max(0, left);
+        right = Math.min(width - 1, right);
+        int top = Math.max(0, Math.round(noteY - gap * 1.9f));
+        int bottom = Math.min(height - 1, Math.round(noteY + gap * 1.9f));
+        int w = right - left + 1, h = bottom - top + 1;
+        if (w <= 0 || h <= 0) return false;
+        // Staff suppression leaves spine endpoints and the two separated connectors.
+        // Retain antialiased glyph edges as a second independent raw-ink reading.
+        for (int threshold : new int[] {155, 200}) {
+            byte[] ink = new byte[w * h];
+            int area = 0, minX = w, maxX = -1, minY = h, maxY = -1;
+            long sx = 0, sy = 0;
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++) {
+                    boolean rule = false;
+                    for (int row = 0; row < 5; row++)
+                        if (Math.abs(top + y - (firstLine + row * gap))
+                                <= Math.max(1, Math.round(gap * .12f))) rule = true;
+                    if (rule || (gray[(top + y) * width + left + x] & 255) >= threshold) continue;
+                    ink[y * w + x] = OmrMeasurePostProcessor.SYMBOL;
+                    area++;
+                    sx += x;
+                    sy += y;
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            if (area == 0) continue;
+            var glyph =
+                    new Component(
+                            area, minX, maxX, minY, maxY, sx / (float) area, sy / (float) area);
+            if (isNaturalGlyphCore(
+                    ink, w, h, new AccidentalCandidate(glyph, OmrMeasurePostProcessor.SYMBOL), gap))
+                return true;
+        }
+        return false;
+    }
+
     private static boolean isNaturalGlyphCore(
             byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
         Component glyph = candidate.component;
@@ -14566,7 +14589,14 @@ final class OmrScoreInterpreter {
             int[] pale = paleStemToDoubleBeam(labels, gray, width, height, head, staff);
             if (pale != null
                     && rootedPaleFlag(
-                            labels, gray, width, height, head, staff.gap, pale[0], pale[1],
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff.gap,
+                            pale[0],
+                            pale[1],
                             pale[2] < 0)) count = 1;
         }
         // A reduced neighboring mask does not invalidate three complete printed rails.
@@ -17018,7 +17048,9 @@ final class OmrScoreInterpreter {
                     beamShift = 0,
                     tailInterruption = 0;
             boolean proven = false, tailStarted = false;
-            for (int distance = 1; distance <= Math.round(gap * 32); distance++) {
+            // A written beam can span most of a system. Keep its two-end proof bounded
+            // by actual page columns rather than truncating a long finite body.
+            for (int distance = 1; distance < width; distance++) {
                 int column = x + direction * distance;
                 if (column < 1 || column >= width - 1) break;
                 int shift =

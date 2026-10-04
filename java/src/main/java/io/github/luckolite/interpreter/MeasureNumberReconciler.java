@@ -200,6 +200,28 @@ final class MeasureNumberReconciler {
         if (anchors.size() < 2)
             return singleAnchorProvingMeasureOne(layout, tokens == null ? List.of() : tokens);
         assignAnchors(layout, anchors);
+        // Several independent system starts can reject one plausible-looking leading glyph.
+        // Derive every candidate start from actual reconciled preceding bars, not OCR magnitude.
+        java.util.Map<Integer, Integer> votes = new java.util.HashMap<>();
+        int preceding = 0;
+        for (Row row : layout) {
+            if (row.anchor != null) {
+                int candidate = row.anchor.value - preceding;
+                if (candidate >= 1 && candidate <= row.anchor.value)
+                    votes.merge(candidate, 1, Integer::sum);
+            }
+            preceding += row.measures.size();
+        }
+        int supported = 0, support = 1;
+        boolean tied = false;
+        for (var vote : votes.entrySet()) {
+            if (vote.getValue() > support) {
+                supported = vote.getKey();
+                support = vote.getValue();
+                tied = false;
+            } else if (vote.getValue() == support) tied = true;
+        }
+        if (support >= 2 && !tied) return supported;
         int precedingMeasures = 0;
         for (Row row : layout) {
             if (row.anchor != null) {

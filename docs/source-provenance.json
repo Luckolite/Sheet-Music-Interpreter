@@ -228,9 +228,11 @@
     },
     "MeasureNumberReconciler.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeasureNumberReconciler.java",
-      "source_sha256": "5d3d93e1c3d86d1967b6b9624ead0dbb12434a759d92c14f28c2aa757acbd5b1",
+      "source_sha256": "6f4db86e76883b219246c6d68b2353db934152fb0643568145d8fb3e5e20f66d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "5d3d93e1c3d86d1967b6b9624ead0dbb12434a759d92c14f28c2aa757acbd5b1"
+      "source_normalized_sha256": "95fc8756d96b8674eb9a27456a1974d2381c6c1f5b42bbaa1d93bfcfa5b7304f",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
     },
     "MeasureRegion.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeasureRegion.java",
@@ -239,10 +241,11 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "10c5ffffa0ffb57e740f7156bb113b0f9c777d73af8ec44e7a4ce52c838cafde",
+      "source_sha256": "bf6dac78706a9ac355f16771c69229a4ab1b5da8127e5587b996439688c4c456",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed one-beat OCR meter rejection against the stated app base: 1/4 requires the existing two complete contradictory written bars, with genuine, unknown, single-bar and later-change controls. Standalone port only changes this bounded predicate and comment; no new helpers, dependencies, weights or private score evidence.",
-      "source_normalized_sha256": "8c92aa28713e169b72870247b56820860e272ca302129394d630555dda16e1db"
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
+      "source_normalized_sha256": "bf6dac78706a9ac355f16771c69229a4ab1b5da8127e5587b996439688c4c456",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit."
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -298,13 +301,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c426fd150d2bcf0b15beb775e6e22a09033625a0855b44e652481484044354a6",
+      "source_sha256": "0fdb12c898c53c444d08541e085930ae673503a09e94f45bd548d9841e094ffe",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "source_normalized_sha256": "5510b5b56559d44644fde8a4fa1e014425116205be5d833d838dbd1109baafc1",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
+      "source_normalized_sha256": "0fdb12c898c53c444d08541e085930ae673503a09e94f45bd548d9841e094ffe",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -393,12 +396,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "030e50c5c7d720208a1d10020f4cb6b788a6e0c2458a4e5f2396828f1d8747fa",
+      "source_sha256": "199a1f71ec0a46ab40ad619637a05f58fce040345eb965bda0e4755ddd906045",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "source_normalized_sha256": "c9e9072e0123529fb7d092cc21cf921c67baab8705c1833efb4ee19f474b4db1",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
+      "source_normalized_sha256": "199a1f71ec0a46ab40ad619637a05f58fce040345eb965bda0e4755ddd906045",
       "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
     },
     "TempoChangeDetector.java": {
@@ -935,11 +938,11 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "82db5211cd83f813b076f67e814a05db1c719a12ecdd71abff2a4e9fd855d846",
+      "source_sha256": "e50a9b373609edf6cd91457ee32fae947795f97acbf1b3d33ae044e8d54840d8",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "9a829435809e21c09cffe25aca69438951190afdcfdf519e41f7d735539f0e3d",
-      "reviewed_source_state": "Expressive candidate on frozen871; existing caller-owned standalone OCR adapter retained",
-      "review_note": "Reviewed two additions carry accepted expressive whole words before and after dynamic glyph refinement; identical additions ported to MusicalOcr.dynamics. Existing standalone caller-owned inference and supplement method adapters retained. Compound expression token rules shared in MusicalOcrEvidence. No model or new inference dependency."
+      "source_normalized_sha256": "e50a9b373609edf6cd91457ee32fae947795f97acbf1b3d33ae044e8d54840d8",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1299,6 +1302,30 @@
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Isolated source gain successor to frozen Music Sheets 1.18.401",
       "review_note": "Package-only JDK source gain projection port. Authoritative source meter and active tempo are explicit inputs; original synthetic partial-bar/repeat/tempo/rejection tests. No model or dependency changes."
+    },
+    "ForteInkShape.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ForteInkShape.java",
+      "source_sha256": "7c568804896ce940cfee4af1044e17f5095ab795a47c856fcd5ea44f382d02d0",
+      "source_normalized_sha256": "7c568804896ce940cfee4af1044e17f5095ab795a47c856fcd5ea44f382d02d0",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+    },
+    "ForteRestGuard.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ForteRestGuard.java",
+      "source_sha256": "7f1571b681c3c571a3d09911114e2385890725bc151680e235fe2bbf7fad9413",
+      "source_normalized_sha256": "7f1571b681c3c571a3d09911114e2385890725bc151680e235fe2bbf7fad9413",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+    },
+    "MeterHeaderInkGuard.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterHeaderInkGuard.java",
+      "source_sha256": "fe8647fc2f9e077092022e87d6f58ca3beee0338f5f702d593b07159aee52ef2",
+      "source_normalized_sha256": "fe8647fc2f9e077092022e87d6f58ca3beee0338f5f702d593b07159aee52ef2",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
     }
   },
   "interpreter_speedup_review": {
@@ -1418,5 +1445,72 @@
       "app/src/main/java/com/musicsheets/app/playback/ScoreDynamicsEnvelope.java": "b546c69013004a472a40ad0ae5cafe649412cce25385557c00bf431339cdfaa0"
     },
     "boundary": "The recorded-instrument adapters resolve source curves using an explicit clock retaining proved partial boundaries and active tempo, then call the newly shared ScoreGainProjection. They no longer manufacture a performed timing record without a performed grid. Validation of performed note schedules is unchanged. The public JDK API projects resolved source curves and is independently tested; CLI MIDI/MP3 does not yet consume continuous dynamic curves. No Android renderer, private score, phone data, library, signing material or app history is distributed."
+  },
+  "printed_header_and_finite_beam_review": {
+    "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+    "reviewed_source_state": "Isolated Music Sheets 880 successor to accepted 879",
+    "shared_files": [
+      {
+        "file": "MeasureNumberReconciler.java",
+        "sourceSha256": "6f4db86e76883b219246c6d68b2353db934152fb0643568145d8fb3e5e20f66d",
+        "publicSha256": "884fd26c0cfb20dabb95b64136c14b26be29074061e37f905bed43e0420ee4cc",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "MeterChangeDetector.java",
+        "sourceSha256": "bf6dac78706a9ac355f16771c69229a4ab1b5da8127e5587b996439688c4c456",
+        "publicSha256": "07de0394a10971c1569eaa526666e24780b4ef8b1802b396876586e6027779f4",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "OmrScoreInterpreter.java",
+        "sourceSha256": "0fdb12c898c53c444d08541e085930ae673503a09e94f45bd548d9841e094ffe",
+        "publicSha256": "4ca551810f99bf124c21addab4c3a112ec88889a94a971b0b497c7496e2c4345",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "SixteenthRestDetector.java",
+        "sourceSha256": "199a1f71ec0a46ab40ad619637a05f58fce040345eb965bda0e4755ddd906045",
+        "publicSha256": "27facd48910b33bd99f660cc1bdc113c5d9b0d53626295ce916d23896d1f23e5",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "ForteInkShape.java",
+        "sourceSha256": "7c568804896ce940cfee4af1044e17f5095ab795a47c856fcd5ea44f382d02d0",
+        "publicSha256": "5c117e3235d60256a5ed0ba1fda11cc11b6e11b5116ad351f6d1e8a5bf3e1499",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "ForteRestGuard.java",
+        "sourceSha256": "7f1571b681c3c571a3d09911114e2385890725bc151680e235fe2bbf7fad9413",
+        "publicSha256": "344c0bd3821944f97463899af62d2dfda99fb9015f8f350be94e332cc8de92a2",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "MeterHeaderInkGuard.java",
+        "sourceSha256": "fe8647fc2f9e077092022e87d6f58ca3beee0338f5f702d593b07159aee52ef2",
+        "publicSha256": "58974f986ac11859736b034d3abbb84cbb6faeba5e5f9b340b647ffd03588f99",
+        "executableTokenParity": true,
+        "scopedAdapterParity": false
+      },
+      {
+        "file": "MusicalOcr.java",
+        "sourceSha256": "e50a9b373609edf6cd91457ee32fae947795f97acbf1b3d33ae044e8d54840d8",
+        "publicSha256": "45de67215942e2753ed45916e3da4201486705dbca78deda4007b017748520de",
+        "executableTokenParity": false,
+        "scopedAdapterParity": true
+      }
+    ],
+    "app_only_sources": {
+      "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java": "973a393e954296659c711b2fd52370cf88a7aa58c007cdc7868ff630f335b91b",
+      "tools/native-worker/decoder-sources.txt": "a7a9652763f982e3d4ba5648de9f90b22a15f290059d7b935583494a13c6a5df"
+    },
+    "boundary": "Android and native meter OCR callers pass the actual label and raw-gray arrays to the same bounded ownership proof. The standalone caller preserves caller-owned inference. The decoder source manifest includes all three reviewed JDK-only helpers. Six synthetic regressions use original geometry and bundled Bravura U+E522 and U+E050 glyphs under SIL-OFL-1.1; existing font notice is retained. Models and record layouts are unchanged. No commercial score scans, device logs, library, signing material or app history are distributed."
   }
 }

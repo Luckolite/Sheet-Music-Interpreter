@@ -37,8 +37,8 @@ public final class MeterChangeDetector {
                 var crop = reading.crop();
                 int measure = followingMeasure(crop, width, height, measures);
                 if (measure < 0
-                        || !precedesNotes(crop, width, height, measure, measures, notes)
-                        || overlapsRecognizedNote(crop, width, height, measure, measures, notes))
+                        || !precedesNotes(
+                                crop, labels, gray, width, height, measure, measures, notes))
                     continue;
                 readings.computeIfAbsent(measure, ignored -> new java.util.HashSet<>())
                         .add(reading.numerator());
@@ -651,6 +651,67 @@ public final class MeterChangeDetector {
     }
 
     /** A pair of chord heads and their shared stem can resemble an open C. */
+    public static boolean precedesNotes(
+            Crop crop,
+            byte[] gray,
+            int width,
+            int height,
+            int measure,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        return measure >= 0
+                && measure < measures.size()
+                && precedesNotes(crop, width, height, measure, measures, notes)
+                && !overlapsRecognizedNote(crop, width, height, measure, measures, notes)
+                && !belongsToNoteAccidental(crop, gray, width, height, measure, measures, notes);
+    }
+
+    public static boolean precedesNotes(
+            Crop crop,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int measure,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        return crop != null
+                && precedesNotes(crop, gray, width, height, measure, measures, notes)
+                && !MeterHeaderInkGuard.owns(crop, labels, gray, width, height);
+    }
+
+    public static boolean belongsToNoteAccidental(
+            Crop crop,
+            byte[] gray,
+            int width,
+            int height,
+            int measure,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        if (measure < 0 || measure >= measures.size() || crop == null) return false;
+        MeasureRegion region = measures.get(measure);
+        for (var note : notes) {
+            if (note.measureIndex() != measure
+                    || note.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_NATURAL) continue;
+            float y = note.pageY() * height;
+            if (y < crop.top() - crop.gap() || y > crop.bottom() + crop.gap()) continue;
+            float x =
+                    (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            if (crop.right() >= x || x - crop.right() > crop.gap() * 2f) continue;
+            if (OmrScoreInterpreter.provesNaturalMeterInk(
+                    gray,
+                    width,
+                    height,
+                    crop.left(),
+                    crop.right(),
+                    y,
+                    crop.gap(),
+                    crop.firstLine())) return true;
+        }
+        return false;
+    }
+
     static boolean overlapsRecognizedNote(
             Crop crop,
             int width,

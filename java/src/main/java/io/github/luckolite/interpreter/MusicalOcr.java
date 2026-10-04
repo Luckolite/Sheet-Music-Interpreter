@@ -44,7 +44,7 @@ public final class MusicalOcr {
             int measure = MeterChangeDetector.followingMeasure(crop, width, height, measures);
             if (measure < 0
                     || !MeterChangeDetector.precedesNotes(
-                            crop, width, height, measure, measures, notes)) continue;
+                            crop, labels, gray, width, height, measure, measures, notes)) continue;
             MeterReading reading = meter(gray, width, height, crop);
             if (TRACE)
                 System.err.println(

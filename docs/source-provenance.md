@@ -471,3 +471,19 @@ parity and seven original generated controls. Android clef, octave, pedal and
 glissando engraving helpers are presentation adapters reviewed separately; they
 do not change interpreter input or output. No model, dependency, record layout,
 private score or device material is included.
+
+
+Printed measure starts now require a unique consensus from independent system
+anchors before overriding an isolated leading glyph. Numeric meter crops exclude
+owned noteheads, proved natural signs, complete clefs and grand-staff braces using
+the actual raw ink and semantic mask. Independent signatures remain eligible.
+Whole connected forte topology prevents a faded lower foot from becoming an
+eighth rest. Finite beam proofs retain both ends and thin-rule witnesses while
+scanning within page columns, including long written beams.
+
+The shared core has complete executable-token parity after package and logging
+adaptation. Android and native OCR callers pass the same evidence; the standalone
+adapter retains caller-owned inference. Original generated positive and rejection
+controls include bundled Bravura forte and clef glyphs under SIL-OFL-1.1. Existing
+font notices, model bytes, dependencies and record layouts are unchanged. No
+commercial score, device log, library or signing material is included.
