@@ -293,9 +293,9 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "c682a7190535da2b7fcceab9e593f940e31d7d757835d59f467f1c806afb919e",
-      "source_normalized_sha256": "9a771d44924c5e07aa71553f44238232073edf5fed58b103ee367c3db4027517",
-      "review_note": "Reviewed irreversible printed-rule rejection and per-estimate projection scratch preserve accepted arithmetic, angle ordering and strict comparisons; local buffers only. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The slope search skips only already-scored zero steps; all remaining angles, strict tie comparisons, exact arithmetic and private scratch ownership are preserved.",
+      "source_sha256": "1568bfae6805eb28291ccce03e2fd9ad892a88450b58776d3a1d4c74f2a99bb2",
+      "source_normalized_sha256": "645452e3c4f0bd8d7a71490cda440abc65137c55a14cca4333659ec2e6d2a7d3",
+      "review_note": "Reviewed irreversible printed-rule rejection and per-estimate projection scratch preserve accepted arithmetic, angle ordering and strict comparisons; local buffers only. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The slope search skips only already-scored zero steps; all remaining angles, strict tie comparisons, exact arithmetic and private scratch ownership are preserved. The same findStaffs call reuses its existing deskewed grayscale raster for tilted raw staff recovery; the original float mapping, white border fill, original-page coordinates and horizontal path remain unchanged. Original synthetic uphill, downhill and horizontal geometry matches the unchanged baseline in every ordered raw float field while preserving caller raster bytes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
     },
@@ -807,11 +807,11 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "22711a467d2fc8163cf6937d0c728caa6f7c4abfbf6d27b2c807b5baf5ef2204",
+      "source_sha256": "8e1868caacdefe89c8a40b14da468199a815902095662ad01c39f647a167e699",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "22711a467d2fc8163cf6937d0c728caa6f7c4abfbf6d27b2c807b5baf5ef2204",
+      "source_normalized_sha256": "8e1868caacdefe89c8a40b14da468199a815902095662ad01c39f647a167e699",
       "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889",
-      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "FaintSharpInk.java": {
@@ -1308,12 +1308,12 @@
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
-      "source_sha256": "87213151f7111b1293d1399ec73ee09024086193540c099bd63c234730cd5841",
-      "source_normalized_sha256": "27a07b83947ad44e130833c14f19a993ac66a49ff4990a064041733909857504",
-      "reviewed_source_snapshot": "Accepted app874/1.18.401 native-only threadcap update; exactsame tested helper from872",
-      "review_note": "The optional adapter retains only actual shape/class-validated white prediction for its final session, clearing on prediction failure/close and preventing late promotion after close. Tile starts are computed once per axis; tensor packing, output stitch/class rules, iteration order and session settings are preserved. Matching Android model-identity/reset implementation and shared eligibility rule reviewed. Model-free controls and original synthetic native parity evidence remain separate. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
-      "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
+      "source_sha256": "fec137a54196233f509f267b3e5685b71b2d790ba8d689302cd505fc7f0dafdb",
+      "source_normalized_sha256": "fec137a54196233f509f267b3e5685b71b2d790ba8d689302cd505fc7f0dafdb",
+      "reviewed_source_snapshot": "Reviewed native edge-weight table successor to accepted app891",
+      "review_note": "The optional adapter computes the unchanged four-border distance once per class and reads unsigned byte weights in both cached-white and native-output paths. The existing >= overlap tie rule, class validation/read/cast/write order, clipping, model options and cache/session lifetime are unchanged. An original independent border-distance regression verifies all102400 weights, including signed-byte centers; original10 tile raster controls retained. No model, dependency, format, private score, device or signing data changed.",
+      "reviewed_app_state": "Reviewed uncommitted native source; recorded app commit remains the origin base.",
+      "reviewed_source_state": "Global precomputed tile-edge geometry with identical unsigned weights, class validation and stitch order"
     },
     "ScoreGainProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreGainProjection.java",
@@ -1633,5 +1633,31 @@
       "review": "Successful whole-segment promotion retains only the existing cloned actual white output for the same CompiledModel; new-model publication, failure and close clear it. Model readiness remains last and analyzer operations remain synchronized. Shared standalone eligibility and optional session lifecycle were ported. Tile starts/channel size are reused locally; six immutable-note diagnostic traversals are fused without changing values. Model, packing, stitch, caller bytes and musical decoder unchanged."
     },
     "scope": "Global output-preserving work reuse with original generated regressions. No private score data, weights, dependencies, guide/audio format or recognition revision changes. No new elapsed phone-speed claim."
+  },
+  "native_tile_edge_weight_review": {
+    "base_public_commit": "c3923cfe106286fd75bff28b92c2418661c3f126",
+    "source_path": "tools/native-worker/NativeSegmentation.java",
+    "source_sha256": "fec137a54196233f509f267b3e5685b71b2d790ba8d689302cd505fc7f0dafdb",
+    "scope": "Global native adapter geometry reuse; Android already uses its own unchanged precomputed edge scores. No elapsed phone or desktop speed claim. Original model-free controls cover every320x320 weight and existing clipped/clamped tile sequences; packaged worker smoke is still required before rollout.",
+    "model_weights_changed": false,
+    "record_layout_changed": false
+  },
+  "android_prepared_ornament_staff_review": {
+    "base_public_commit": "7222bce39f1ecf427928c946d44d7a21f9fa9ac2",
+    "sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteOrnamentDetector.java",
+        "source_sha256": "83514e79e680bb474a49adb33ce2eb5e451a015b7a1c610f9c5258c2d2954938"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "1b237d482c5ade4c60fc1d95eb2211af1ef74a2b6d85815fd1cb242d32c4b532"
+      }
+    ],
+    "shared_core": "PortableNoteOrnaments.java",
+    "scope": "The Android ornament reader forwards its already computed ordered aligned staff records for the same page rasters, dimensions, measures and unmodified notes. Staff records remain read-only and method-local; no global cache or new public API.",
+    "validation": "98 original synthetic app/public ornament tests passed, including full ordered-note, raster and staff-record identity parity; the full Android analyzer caller and adapter compiled against cached accepted APIs. Full Score/guide and retained-analyzer composition remain separately gated; no phone elapsed claim.",
+    "models_changed": false,
+    "record_layout_changed": false
   }
 }

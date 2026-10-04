@@ -110,4 +110,43 @@ public class LedgerCrossingSlideTest {
                 NoteSlideDetector.detectWithRemovedStaffLines(gray, W, H, staffs, heads, prepared));
         assertArrayEquals(original, gray);
     }
+
+    /** The OCR stage's aligned geometry can be borrowed without altering its owner. */
+    @Test
+    public void preparedStaffsPreserveLedgerOrnamentAndCaller() {
+        byte[] gray = page(false, true, false, 2), labels = new byte[W * H];
+        for (int y : new int[] {120, 132, 144, 156, 168})
+            for (int x = 20; x < W - 20; x++) {
+                gray[y * W + x] = 0;
+                labels[y * W + x] = OmrMeasurePostProcessor.STAFF;
+            }
+        byte[] grayBefore = gray.clone(), labelsBefore = labels.clone();
+        var measures = List.of(new MeasureRegion(0, 1, 70f / H, 205f / H));
+        var notes =
+                List.of(
+                        new ScoreNoteEvent(
+                                0, 100f / W, 13, 0, 1, 90f / H, false, 0, 0, 2, 1, 1, 0, 0),
+                        new ScoreNoteEvent(
+                                0, 145f / W, 8, 0, 1, 120f / H, false, 0, 0, 2, 1, 1, 0, 0));
+        var staffs =
+                ScoreDynamicsDetector.alignStaffs(
+                        OmrScoreInterpreter.techniqueStaffs(labels, gray, W, H, measures),
+                        notes,
+                        H);
+        assertFalse(staffs.isEmpty());
+        var before = List.copyOf(staffs);
+        var glyphs = new PortableOrnamentGlyphs();
+        var expected =
+                PortableNoteOrnaments.apply(glyphs, labels, gray, W, H, measures, notes, List.of());
+        var actual =
+                PortableNoteOrnaments.applyWithAlignedStaffs(
+                        glyphs, gray, W, H, measures, notes, List.of(), staffs);
+        assertEquals(expected, actual);
+        assertEquals(2, actual.size());
+        assertEquals(NoteOrnament.SLIDE, NoteOrnament.type(actual.get(1).articulations()));
+        assertEquals(before, staffs);
+        for (int i = 0; i < staffs.size(); i++) assertSame(before.get(i), staffs.get(i));
+        assertArrayEquals(grayBefore, gray);
+        assertArrayEquals(labelsBefore, labels);
+    }
 }

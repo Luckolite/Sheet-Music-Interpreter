@@ -47,8 +47,26 @@ public final class NativeSegmentationTileStartsParity {
                 })
             if (!visits(size[0], size[1], false).equals(visits(size[0], size[1], true)))
                 throw new AssertionError("Raster sequence changed: " + size[0] + "x" + size[1]);
+        var field = NativeSegmentation.class.getDeclaredField("TILE_EDGE_WEIGHTS");
+        field.setAccessible(true);
+        byte[] weights = (byte[]) field.get(null);
+        if (weights.length != 320 * 320)
+            throw new AssertionError("Unexpected edge-weight geometry");
+        // Distance to the four independently enumerated borders is the legacy definition.
+        for (int y = 0; y < 320; y++)
+            for (int x = 0; x < 320; x++) {
+                int expected = 1;
+                while (x >= expected && y >= expected && x < 320 - expected && y < 320 - expected)
+                    expected++;
+                if ((weights[y * 320 + x] & 255) != expected)
+                    throw new AssertionError("Edge ownership changed at " + x + ":" + y);
+            }
+        if ((weights[159 * 320 + 159] & 255) != 160
+                || (weights[160 * 320 + 160] & 255) != 160
+                || (weights[128 * 320 + 192] & 255) != 128)
+            throw new AssertionError("Unsigned center or overlap weight changed");
         System.out.println(
-                "PASS original tile-start enumeration goldens and10raster sequences; models0");
+                "PASS tile-start goldens,10raster sequences and102400 edge-weight controls; models0");
     }
 
     private static List<String> visits(int width, int height, boolean reuse) throws Exception {

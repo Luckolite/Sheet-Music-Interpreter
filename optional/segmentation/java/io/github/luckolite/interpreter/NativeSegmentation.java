@@ -20,6 +20,7 @@ import java.util.Map;
 public final class NativeSegmentation implements AutoCloseable {
     private static final int WINDOW = 320;
     private static final int STEP = 192;
+    private static final byte[] TILE_EDGE_WEIGHTS = tileEdgeWeights();
     public static final String MODEL_SHA256 =
             "e436efe12ddc598add9540378d6772622a2ad9d7bdb1f9d4c0ab87e3144402a7";
     private final OrtEnvironment environment = OrtEnvironment.getEnvironment();
@@ -86,11 +87,7 @@ public final class NativeSegmentation implements AutoCloseable {
                     for (int y = 0; y < rows; y++)
                         for (int x = 0; x < columns; x++) {
                             int destination = (top + y) * width + left + x;
-                            int edge =
-                                    Math.min(
-                                                    Math.min(x, WINDOW - 1 - x),
-                                                    Math.min(y, WINDOW - 1 - y))
-                                            + 1;
+                            int edge = TILE_EDGE_WEIGHTS[y * WINDOW + x] & 255;
                             if (edge >= (confidence[destination] & 255)) {
                                 long value = whitePrediction[y * WINDOW + x];
                                 if (value < 0 || value > 5)
@@ -118,11 +115,7 @@ public final class NativeSegmentation implements AutoCloseable {
                     for (int y = 0; y < rows; y++)
                         for (int x = 0; x < columns; x++) {
                             int destination = (top + y) * width + left + x;
-                            int edge =
-                                    Math.min(
-                                                    Math.min(x, WINDOW - 1 - x),
-                                                    Math.min(y, WINDOW - 1 - y))
-                                            + 1;
+                            int edge = TILE_EDGE_WEIGHTS[y * WINDOW + x] & 255;
                             if (edge >= (confidence[destination] & 255)) {
                                 long value = prediction.get(y * WINDOW + x);
                                 if (value < 0 || value > 5)
@@ -147,6 +140,18 @@ public final class NativeSegmentation implements AutoCloseable {
             if (current == closedWhitePrediction) return;
             if (cachedWhitePrediction.compareAndSet(current, null)) return;
         }
+    }
+
+    // Identical geometry for every tile; retain unsigned weights when read.
+    private static byte[] tileEdgeWeights() {
+        byte[] weights = new byte[WINDOW * WINDOW];
+        for (int y = 0; y < WINDOW; y++)
+            for (int x = 0; x < WINDOW; x++)
+                weights[y * WINDOW + x] =
+                        (byte)
+                                (Math.min(Math.min(x, WINDOW - 1 - x), Math.min(y, WINDOW - 1 - y))
+                                        + 1);
+        return weights;
     }
 
     private static List<Integer> tileStarts(int size) {

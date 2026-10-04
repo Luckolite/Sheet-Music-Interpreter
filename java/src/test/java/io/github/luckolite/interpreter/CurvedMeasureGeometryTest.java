@@ -92,9 +92,10 @@ public class CurvedMeasureGeometryTest {
                         int.class,
                         int.class,
                         List.class,
-                        float.class);
+                        float.class,
+                        byte[].class);
         recover.setAccessible(true);
-        recover.invoke(null, labels, gray, w, h, runs, 0f);
+        recover.invoke(null, labels, gray, w, h, runs, 0f, gray);
         assertEquals(1, runs.size());
     }
 

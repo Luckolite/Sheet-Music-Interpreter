@@ -70,4 +70,55 @@ public class TiltedRawStaffRecoveryTest {
     public void broadDarkBandsDoNotInventAnEndingStaff() {
         assertEquals(9, page(.012f, 5, true).notes().size());
     }
+
+    @Test
+    public void tiltedRawRecoveryPreservesCallerRastersAndCompleteRepeatedGeometry() {
+        for (float slope : new float[] {.012f, -.012f, 0f}) {
+            byte[] gray = new byte[W * H], labels = new byte[W * H];
+            Arrays.fill(gray, (byte) 255);
+            for (int system = 0; system < 4; system++) {
+                int top = 120 + system * 240, bottom = top + 4 * GAP;
+                for (int line = 0; line < 5; line++)
+                    for (int x = 180; x < 1450; x++)
+                        for (int dy = 0; dy < 2; dy++)
+                            ink(gray, labels, x, top + line * GAP + dy, slope, system == 3 ? 5 : 4);
+                for (int x : new int[] {180, 750, 1449})
+                    for (int y = top; y <= bottom; y++) ink(gray, labels, x, y, slope, 1);
+            }
+            // Border pixels exercise clipped deskew reads and white padding without staff evidence.
+            gray[0] = 31;
+            gray[gray.length - 1] = 47;
+            float estimated = OmrMeasurePostProcessor.estimateStaffSlope(labels, W, H);
+            if (slope == 0f) assertEquals(0f, estimated, 0f);
+            else {
+                assertTrue("Tilted recovery branch must execute", Math.abs(estimated) > .001f);
+                assertEquals(Math.signum(slope), Math.signum(estimated), 0f);
+            }
+            byte[] originalGray = gray.clone(), originalLabels = labels.clone();
+            var measures = OmrMeasurePostProcessor.process(labels, gray, W, H);
+            assertEquals("Four printed systems with two measures each", 8, measures.size());
+            assertArrayEquals("Original grayscale must remain unchanged", originalGray, gray);
+            assertArrayEquals(
+                    "Original semantic mask must remain unchanged", originalLabels, labels);
+            var repeated = OmrMeasurePostProcessor.process(labels, gray, W, H);
+            assertArrayEquals(
+                    "Every ordered measure field must retain its raw bits",
+                    regionBits(measures),
+                    regionBits(repeated));
+            assertArrayEquals(originalGray, gray);
+            assertArrayEquals(originalLabels, labels);
+        }
+    }
+
+    private static int[] regionBits(java.util.List<MeasureRegion> regions) {
+        int[] bits = new int[regions.size() * 4];
+        for (int index = 0; index < regions.size(); index++) {
+            var region = regions.get(index);
+            bits[index * 4] = Float.floatToRawIntBits(region.left());
+            bits[index * 4 + 1] = Float.floatToRawIntBits(region.right());
+            bits[index * 4 + 2] = Float.floatToRawIntBits(region.top());
+            bits[index * 4 + 3] = Float.floatToRawIntBits(region.bottom());
+        }
+        return bits;
+    }
 }

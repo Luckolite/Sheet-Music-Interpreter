@@ -79,6 +79,19 @@ final class PortableNoteOrnaments {
                         OmrScoreInterpreter.techniqueStaffs(labels, gray, w, h, measures),
                         notes,
                         h);
+        return applyWithAlignedStaffs(recognizer, gray, w, h, measures, notes, trills, staffs);
+    }
+
+    /** Reuse only geometry computed for these same rasters, measures and unmodified notes. */
+    static List<ScoreNoteEvent> applyWithAlignedStaffs(
+            PortableOrnamentGlyphs recognizer,
+            byte[] gray,
+            int w,
+            int h,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            List<PlayingTechniqueDetector.Word> trills,
+            List<PlayingTechniqueDetector.Staff> staffs) {
         List<Anchor> anchors = new ArrayList<>();
         for (var note : notes) {
             var region = measures.get(note.measureIndex());

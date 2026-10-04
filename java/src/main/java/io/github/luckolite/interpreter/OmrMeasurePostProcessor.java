@@ -170,10 +170,10 @@ final class OmrMeasurePostProcessor {
                                     rows[0], rows[4], gap, left, right, boundaries, slope, track));
             }
         }
-        recoverRawStaffs(labels, gray, width, height, result, 0f);
+        recoverRawStaffs(labels, gray, width, height, result, 0f, gray);
         // A tilted system may lose every staff label while retaining clear printed rules.
         if (gray != null && Math.abs(slope) > .001f)
-            recoverRawStaffs(labels, gray, width, height, result, slope);
+            recoverRawStaffs(labels, gray, width, height, result, slope, semanticGray);
         for (StaffRun cue : shortCandidates) {
             boolean partner = false;
             for (StaffRun full : result)
@@ -277,23 +277,18 @@ final class OmrMeasurePostProcessor {
      * leaving the semantic result in charge wherever it already found the system.
      */
     private static void recoverRawStaffs(
-            byte[] labels, byte[] gray, int width, int height, List<StaffRun> result, float slope) {
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<StaffRun> result,
+            float slope,
+            byte[] detectionGray) {
         List<Float> semanticCenters = new ArrayList<>();
         for (StaffRun staff : result) semanticCenters.add((staff.top + staff.bottom) * .5f);
         semanticCenters.sort(Float::compare);
         float semanticSystemStep = typicalSystemStep(semanticCenters);
-        byte[] detectionGray = gray;
         // Deskew detection only; boundaries and note coordinates stay on the original page.
-        if (slope != 0f) {
-            detectionGray = new byte[gray.length];
-            Arrays.fill(detectionGray, (byte) 255);
-            for (int y = 0; y < height; y++)
-                for (int x = 0; x < width; x++) {
-                    int originalY = y + Math.round(slope * (x - width * .5f));
-                    if (originalY >= 0 && originalY < height)
-                        detectionGray[y * width + x] = gray[originalY * width + x];
-                }
-        }
         List<RawStaffLineDetector.StaffLines> rawStaffs =
                 RawStaffLineDetector.detect(detectionGray, width, height);
         for (RawStaffLineDetector.StaffLines raw : rawStaffs) {
