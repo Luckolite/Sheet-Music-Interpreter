@@ -20,9 +20,10 @@
     },
     "ScoreNavigationPerformance.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationPerformance.java",
-      "source_sha256": "6d00161f01f8300e275815bc175b0273705c6648b8ad384ec88762ef92157799",
+      "source_sha256": "bd95185e673fa75a3d02a237eeda45f956592f77645fdcffcacf038738ab0bc1",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6d00161f01f8300e275815bc175b0273705c6648b8ad384ec88762ef92157799"
+      "source_normalized_sha256": "bd95185e673fa75a3d02a237eeda45f956592f77645fdcffcacf038738ab0bc1",
+      "review_note": "Global immutable sorted-hold range selection uses primitive comparisons, preserving signed-zero endpoint ownership, callback order, validation and projected timeline arithmetic. Package-only standalone port with original synthetic repeat/endpoint regression; no new dependency or private score data."
     },
     "ScoreNavigationTraversal.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationTraversal.java",
@@ -153,11 +154,11 @@
     },
     "PortableOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
-      "source_sha256": "52f18e14877a4fad0f0dd5c8085157dc76f5c6131ac2b7120c94e00cb0d80a6b",
+      "source_sha256": "c7256f762029450a010005695d5dee3bee3447079c2038799b3f089bd9fd5ddc",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "af19d0e5c7dee6d1f1f7f768a842c3f4b5655028ca205ab94b788380bbdada26",
+      "source_normalized_sha256": "f229cae25689108fb33dfc9669fba38f17bdc0bfe38b27b850be9836b94209bb",
       "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
-      "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency."
+      "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency. read(int[]) now validates and snapshots fully opaque equal-channel input in one pass before the existing gray path; three probes only reject and never establish eligibility. Original synthetic regressions preserve full raw tensor bits, nested OCR, color/alpha fallback, caller arrays and cancellation. No models, weights, thresholds or platform dependency change."
     },
     "OcrText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrText.java",
@@ -292,9 +293,9 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "bbb05db411bcb6241fff40ea36d4966394aca8d8d5c521fa1ca690e8e70e6032",
-      "source_normalized_sha256": "cabbfb8007c815356f0240bf3d276dec18c810d4fe89cdecd964748a5bbde8c8",
-      "review_note": "Reviewed irreversible printed-rule rejection and per-estimate projection scratch preserve accepted arithmetic, angle ordering and strict comparisons; local buffers only. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data.",
+      "source_sha256": "c682a7190535da2b7fcceab9e593f940e31d7d757835d59f467f1c806afb919e",
+      "source_normalized_sha256": "9a771d44924c5e07aa71553f44238232073edf5fed58b103ee367c3db4027517",
+      "review_note": "Reviewed irreversible printed-rule rejection and per-estimate projection scratch preserve accepted arithmetic, angle ordering and strict comparisons; local buffers only. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The slope search skips only already-scored zero steps; all remaining angles, strict tie comparisons, exact arithmetic and private scratch ownership are preserved.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
     },

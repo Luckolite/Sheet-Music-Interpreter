@@ -617,6 +617,7 @@ final class OmrMeasurePostProcessor {
         long bestScore = horizontalScore;
         // Camera angles and book gutters can exceed the old roughly three-degree range.
         for (int step = -24; step <= 24; step++) {
+            if (step == 0) continue; // Horizontal score was computed above.
             float slope = step * 0.006f;
             long score = staffProjectionScore(xs, ys, height, centerX, slope, projection);
             if (score > bestScore) {
@@ -628,6 +629,7 @@ final class OmrMeasurePostProcessor {
         // At page width it still moves a rule by several pixels and can hide a row.
         float coarseSlope = bestSlope;
         for (int step = -5; step <= 5; step++) {
+            if (step == 0) continue; // The coarse winner was already scored.
             float slope = coarseSlope + step * .0006f;
             long score = staffProjectionScore(xs, ys, height, centerX, slope, projection);
             if (score > bestScore) {

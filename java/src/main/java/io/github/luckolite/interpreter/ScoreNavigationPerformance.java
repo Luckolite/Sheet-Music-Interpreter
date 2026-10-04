@@ -156,7 +156,11 @@ public final class ScoreNavigationPerformance {
                             > 1e-8)
                 throw new IllegalArgumentException("Navigation route and source meter disagree");
             appendCurves(source, from, to, performedEnd, occurrence.performanceEndBeat(), curves);
-            for (var hold : source.holds()) {
+            // The source timeline owns finite holds in immutable ascending beat order.
+            var sourceHolds = source.holds();
+            for (int h = firstHoldAtOrAfter(sourceHolds, from); h < sourceHolds.size(); h++) {
+                var hold = sourceHolds.get(h);
+                if (hold.beat() > to) break;
                 var side = ownership.get(hold.occurrenceId());
                 boolean owns =
                         side == Boundary.BEFORE
@@ -213,6 +217,16 @@ public final class ScoreNavigationPerformance {
     public static Result project(
             ScorePerformanceTimeline source, ScoreNavigationPlan plan, ScoreMeterMap meter) {
         return project(source, plan, meter, Map.of(), (target, occurrence) -> Optional.empty());
+    }
+
+    private static int firstHoldAtOrAfter(List<Hold> holds, double beat) {
+        int low = 0, high = holds.size();
+        while (low < high) {
+            int middle = low + ((high - low) >>> 1);
+            if (holds.get(middle).beat() < beat) low = middle + 1;
+            else high = middle;
+        }
+        return low;
     }
 
     private static void appendCurves(

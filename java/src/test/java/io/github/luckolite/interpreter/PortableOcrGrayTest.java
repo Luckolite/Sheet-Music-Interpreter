@@ -247,9 +247,14 @@ public class PortableOcrGrayTest {
             int mode = fixture == 4 ? 1 : fixture == 5 ? 2 : 0;
             byte[] before = input.clone();
             int[] argb = referenceArgb(input), argbBefore = argb.clone();
-            Mock original = new Mock(map, mode), candidate = new Mock(map, mode);
-            OcrText expected = new PortableOcr(original).read(argb, width, height);
+            Mock original = new Mock(map, mode),
+                    candidate = new Mock(map, mode),
+                    automatic = new Mock(map, mode);
+            OcrText expected = readArgbReference(original, argb, width, height);
             OcrText actual = new PortableOcr(candidate).readGray(input, width, height);
+            assertEquals(expected, new PortableOcr(automatic).read(argb, width, height));
+            assertCallsEqual(original, automatic);
+            automatic.assertOutputsPreserved();
             assertEquals("all nested text, boxes and order", expected, actual);
             assertEquals(original.calls.size(), candidate.calls.size());
             for (int call = 0; call < original.calls.size(); call++) {
@@ -343,6 +348,61 @@ public class PortableOcrGrayTest {
             } finally {
                 Thread.interrupted();
             }
+        }
+    }
+
+    private static OcrText readArgbReference(Mock inference, int[] input, int width, int height)
+            throws Exception {
+        var method =
+                PortableOcr.class.getDeclaredMethod(
+                        "readPixels", int[].class, byte[].class, int.class, int.class);
+        method.setAccessible(true);
+        return (OcrText) method.invoke(new PortableOcr(inference), input, null, width, height);
+    }
+
+    private static void assertCallsEqual(Mock expected, Mock actual) {
+        assertEquals(expected.calls.size(), actual.calls.size());
+        for (int call = 0; call < expected.calls.size(); call++) {
+            Call a = expected.calls.get(call), b = actual.calls.get(call);
+            assertEquals(a.kind, b.kind);
+            assertEquals(a.width, b.width);
+            assertEquals(a.height, b.height);
+            bits(a.input, b.input);
+        }
+    }
+
+    @Test
+    public void anyColoredOrTranslucentPixelKeepsTheArgbPipeline() throws Exception {
+        float[][] map = new float[8][8];
+        for (float[] row : map) Arrays.fill(row, .9f);
+        for (int index = 0; index < 9; index++) {
+            for (int pixel : new int[] {0xff7f807f, 0x7f808080}) {
+                int[] input = referenceArgb(gray(3, 3, index + 17));
+                input[index] = pixel;
+                int[] before = input.clone();
+                Mock original = new Mock(map, 0), automatic = new Mock(map, 0);
+                OcrText expected = readArgbReference(original, input, 3, 3);
+                assertEquals(expected, new PortableOcr(automatic).read(input, 3, 3));
+                assertCallsEqual(original, automatic);
+                original.assertOutputsPreserved();
+                automatic.assertOutputsPreserved();
+                assertArrayEquals(before, input);
+            }
+        }
+    }
+
+    @Test
+    public void incomingInterruptStopsAutomaticGrayReadWithoutClearingIt() {
+        Mock mock = new Mock(new float[8][8], 0);
+        Thread.currentThread().interrupt();
+        try {
+            assertThrows(
+                    CancellationException.class,
+                    () -> new PortableOcr(mock).read(new int[] {-1, -1, -1, -1}, 2, 2));
+            assertTrue(Thread.currentThread().isInterrupted());
+            assertTrue(mock.calls.isEmpty());
+        } finally {
+            Thread.interrupted();
         }
     }
 }

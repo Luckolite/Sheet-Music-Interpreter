@@ -270,4 +270,67 @@ public class ScoreNavigationPerformanceTest {
                                 Map.of("h", Boundary.BEFORE),
                                 (target, occurrence) -> Optional.of("same")));
     }
+
+    @Test
+    public void sortedHoldRangeKeepsEndpointOwnershipAndTargetMappingOrder() {
+        var input =
+                List.of(
+                        new Hold("end", 12, .25, Set.of("end")),
+                        new Hold("inside", 5, .25, Set.of("inside")),
+                        new Hold("start", -0.0, .25, Set.of("start")),
+                        new Hold("loopEnd", 8, .25, Set.of("loopEnd")),
+                        new Hold("tail", 10, .25, Set.of("tail")),
+                        new Hold("loopStart", 4, .25, Set.of("loopStart")));
+        var source = new ScorePerformanceTimeline(120, List.of(), input);
+        assertEquals(
+                Double.doubleToRawLongBits(-0.0),
+                Double.doubleToRawLongBits(source.holds().get(0).beat()));
+        var mapped = new ArrayList<String>();
+        var result =
+                ScoreNavigationPerformance.project(
+                        source,
+                        repeat(3, 1, 2),
+                        meter,
+                        Map.of(
+                                "start",
+                                Boundary.AFTER,
+                                "loopStart",
+                                Boundary.BEFORE,
+                                "inside",
+                                Boundary.AFTER,
+                                "loopEnd",
+                                Boundary.BEFORE,
+                                "tail",
+                                Boundary.AFTER,
+                                "end",
+                                Boundary.BEFORE),
+                        (target, occurrence) -> {
+                            mapped.add(target);
+                            return Optional.of(target + "@" + occurrence.occurrenceId());
+                        });
+        var expected =
+                List.of(
+                        "start",
+                        "loopStart",
+                        "inside",
+                        "loopEnd",
+                        "inside",
+                        "loopEnd",
+                        "tail",
+                        "end");
+        assertEquals(expected, mapped);
+        assertEquals(
+                expected,
+                result.holdOccurrences().stream()
+                        .map(ScoreNavigationPerformance.HoldOccurrence::sourceHoldId)
+                        .toList());
+        assertEquals(
+                List.of(0.0, 4.0, 5.0, 8.0, 9.0, 12.0, 14.0, 16.0),
+                result.timeline().holds().stream().map(Hold::beat).toList());
+        assertEquals(16, result.performedBeats(), 0);
+        assertEquals(10, result.durationSeconds(), 0);
+        assertEquals(
+                List.of("end", "inside", "start", "loopEnd", "tail", "loopStart"),
+                input.stream().map(Hold::occurrenceId).toList());
+    }
 }

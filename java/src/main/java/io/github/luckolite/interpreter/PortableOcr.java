@@ -29,7 +29,31 @@ public final class PortableOcr {
                 || (long) width * height > 20_000_000
                 || argb.length != (long) width * height)
             throw new IllegalArgumentException("Invalid OCR raster");
-        return readPixels(argb, null, width, height);
+        byte[] gray = opaqueGrayCopy(argb, width, height);
+        return readPixels(gray == null ? argb : null, gray, width, height);
+    }
+
+    /** Snapshot only opaque equal-channel input; all other rasters retain the ARGB path. */
+    private static byte[] opaqueGrayCopy(int[] pixels, int width, int height) {
+        // Cheap rejection only; the copy still validates every pixel before gray dispatch.
+        if (Thread.currentThread().isInterrupted()) return null;
+        for (int sample = 0; sample < 3; sample++) {
+            int index = sample == 0 ? 0 : sample == 1 ? pixels.length - 1 : pixels.length / 2;
+            int pixel = pixels[index], value = pixel & 255;
+            if (pixel != (0xff000000 | value * 0x00010101)) return null;
+        }
+        byte[] gray = new byte[pixels.length];
+        for (int y = 0; y < height; y++) {
+            // Leave cancellation and its exception type to the original normalization path.
+            if (Thread.currentThread().isInterrupted()) return null;
+            int end = (y + 1) * width;
+            for (int i = y * width; i < end; i++) {
+                int pixel = pixels[i], value = pixel & 255;
+                if (pixel != (0xff000000 | value * 0x00010101)) return null;
+                gray[i] = (byte) value;
+            }
+        }
+        return gray;
     }
 
     /** Opaque unsigned grayscale; no ARGB storage or alpha composition is required. */
