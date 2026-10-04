@@ -93,6 +93,43 @@ final class PrintedTupletBeamOwner {
         return nearest;
     }
 
+    /** Both shafts must join the same uninterrupted thick beam. */
+    static boolean connectedHeads(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int direction) {
+        if (gray == null
+                || width < 1
+                || height < 1
+                || gray.length != width * height
+                || !Float.isFinite(gap)
+                || gap < 4
+                || Math.abs(direction) != 1
+                || lastX - firstX < gap * .8f
+                || lastX - firstX > gap * 26) return false;
+        for (var a : tips(gray, width, height, firstX, firstY, gap, direction, 1))
+            for (var b : tips(gray, width, height, lastX, lastY, gap, direction, -1)) {
+                if (b.x - a.x < gap * .5f || Math.abs(b.y - a.y) > gap * 3) continue;
+                int covered = 0, total = 0;
+                for (int x = a.x + 2; x < b.x - 1; x++) {
+                    int y = Math.round(a.y + (b.y - a.y) * (x - a.x) / (float) (b.x - a.x));
+                    total++;
+                    if (core(gray, width, height, x, y, gap)) covered++;
+                }
+                if (total > 0
+                        && covered >= total * .94f
+                        && BeamInkConnectivity.connected(
+                                gray, width, height, a.x, a.y, b.x, b.y, gap)) return true;
+            }
+        return false;
+    }
+
     private static List<Tip> tips(
             byte[] gray,
             int width,

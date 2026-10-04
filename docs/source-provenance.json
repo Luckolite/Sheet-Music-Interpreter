@@ -305,12 +305,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "b5ff77cb710e890179276cb3f9ca1426d3939c77d036b6c348e1bc96c9b06c8c",
+      "source_sha256": "f944f79de4e36a6fce9874b7678375188ea91e84b099ac9a6952458f60f82080",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "source_normalized_sha256": "85463f71577a56db5724e14a5b92e120518fe6ec4f831c21da8697ad92052c4b",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls.",
+      "source_normalized_sha256": "f944f79de4e36a6fce9874b7678375188ea91e84b099ac9a6952458f60f82080",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "PlayingTechniqueDetector.java": {
@@ -371,11 +371,11 @@
     },
     "ScoreNoteTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteTiming.java",
-      "source_sha256": "d111be84764cfcd97933b3c228bc7623ae04a114605d18fb008c5b8b6873db94",
+      "source_sha256": "6e9f561f653e184f407db3945f497034de72195354311a63cc227c1d89a4c8df",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "source_normalized_sha256": "5676efb436dae50a7d8614dc1d8d55376205a88926e0c3c6c424faecb8f9493a",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "review_note": "Reviewed exact-meter continuation of an unnumbered beamed tail after two complete printed triplet groups and a held opening. Original positive and rejection controls; standalone API preserved.",
+      "source_normalized_sha256": "6e9f561f653e184f407db3945f497034de72195354311a63cc227c1d89a4c8df",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "ScorePageInterpretation.java": {
@@ -402,13 +402,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "9da1f5cbde69171f6ac8488aa7b86480ed21ac07a20abb0bce3ae2d1be45beff",
+      "source_sha256": "c62d433adb80f9db4cbf7e1a36423e06a63932723d572979513b70ac942439bd",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "source_normalized_sha256": "e52ab4eae1581e1e6e737a9c2a65b6ec6c211f69ec8886b8b891af41daa361d5",
+      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry.",
+      "source_normalized_sha256": "c62d433adb80f9db4cbf7e1a36423e06a63932723d572979513b70ac942439bd",
       "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -419,11 +419,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "8715fbf113e000cb28c08c8ce991f9f5c31a861291b9a7a87de1e9fda50cb21f",
+      "source_sha256": "070de13394794aecfdaa8a8399cb896a2d86dc9283524b5c2d1c5298b5bf2413",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "4ba857ff1b6718763350499fc897d0461026090f3dbad5072fe097c2f281ec55",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "source_normalized_sha256": "070de13394794aecfdaa8a8399cb896a2d86dc9283524b5c2d1c5298b5bf2413",
+      "review_note": "Reviewed physical beam/numeral ownership across adjacent systems and uneven printed groups, plus rest-only displaced attack-column tolerance. Original procedural geometry controls; sounding-only grouping remains unchanged.",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "training/model.py": {
@@ -1363,11 +1363,12 @@
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
-      "source_sha256": "627508ac8812e20e83d9bf0ce5a6c21dbcfc1894d02f47e1fd65ed25d09416cd",
-      "source_normalized_sha256": "7d94d674af2bac6b707bae73831737ef98f204fad2e8c29107ff5c40e753fa8d",
+      "source_sha256": "0b0496190c3fc4f6f4e3e4552412684ead6925f63f59de5f2e40d1e6d8eee86c",
+      "source_normalized_sha256": "0b0496190c3fc4f6f4e3e4552412684ead6925f63f59de5f2e40d1e6d8eee86c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+      "review_note": "Reviewed complete printed clocks across changing stem directions and genuine rest slots beside independent quarter voices. Unknown shafts, incomplete ratios and inconsistent rest/meter evidence remain ambiguous; original controls.",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "PrintedCClef.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
@@ -1387,11 +1388,12 @@
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "9b58e339a29e28706a829814bae856d8ad964dc7c0516ca5ba6ce6307f6d11d9",
-      "source_normalized_sha256": "e743c5a3ad0be541d18b994b7fb615dca545473d7624621b848e695fd9237636",
+      "source_sha256": "046eefe790091851e9637e65bdaedb522e41b061e2b2007178c3be69172becf7",
+      "source_normalized_sha256": "046eefe790091851e9637e65bdaedb522e41b061e2b2007178c3be69172becf7",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+      "review_note": "Reviewed uninterrupted attached-beam connectivity helper, shared by triplet and rest ownership. Existing standalone beam connectivity dependency; original synthetic controls.",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",

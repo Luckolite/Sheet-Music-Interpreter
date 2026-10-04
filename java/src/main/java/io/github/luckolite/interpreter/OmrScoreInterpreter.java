@@ -997,7 +997,8 @@ final class OmrScoreInterpreter {
                                 beamCount,
                                 beamsBeyondTremolo(gray, beamLabels, width, height, head, staff));
             float unbeamedDuration =
-                    detectUnbeamedDuration(labels, gray, width, height, head, staff.gap, beamCount);
+                    detectUnbeamedDuration(
+                            labels, gray, width, height, head, staff.gap, beamCount, heads);
             if (recoveredPaleChordHeads.contains(head)
                     || recoveredFilledFragmentHeads.contains(head))
                 unbeamedDuration = beamCount == 0 ? 1f : 0f;
@@ -1449,7 +1450,15 @@ final class OmrScoreInterpreter {
                                 rest.pageY() * height, restMiddle, note.staffGap, voiceDirection)
                         && rest.positionInMeasure() > event.positionInMeasure()
                         && rest.positionInMeasure() < next
-                        && restIsSeparateAttack(rest, event)) {
+                        && restIsSeparateAttack(
+                                rest,
+                                event,
+                                result,
+                                measures.get(event.measureIndex()),
+                                gray,
+                                width,
+                                height,
+                                note.staffGap)) {
                     silence += (float) rest.durationBeats();
                     hasSixteenthRest |= rest.durationBeats() == .25;
                 }
@@ -1474,8 +1483,15 @@ final class OmrScoreInterpreter {
                                     note.staffGap,
                                     voiceDirection)
                             && rest.positionInMeasure() < event.positionInMeasure()
-                            && restIsSeparateAttack(rest, event))
-                        leading += (float) rest.durationBeats();
+                            && restIsSeparateAttack(
+                                    rest,
+                                    event,
+                                    result,
+                                    measures.get(event.measureIndex()),
+                                    gray,
+                                    width,
+                                    height,
+                                    note.staffGap)) leading += (float) rest.durationBeats();
             // The first moving attack can follow a printed rest while another voice
             // already holds a half note in that rest's column.
             if (!first
@@ -1500,6 +1516,15 @@ final class OmrScoreInterpreter {
                                     note.staffGap,
                                     voiceDirection)
                             && rest.positionInMeasure() < event.positionInMeasure() - .018f
+                            && restIsSeparateAttack(
+                                    rest,
+                                    event,
+                                    result,
+                                    measures.get(event.measureIndex()),
+                                    gray,
+                                    width,
+                                    height,
+                                    note.staffGap)
                             && result.stream()
                                     .anyMatch(
                                             other ->
@@ -1622,13 +1647,16 @@ final class OmrScoreInterpreter {
                     tiedNotes
                             .get(i)
                             .withStemDirection(
-                                    PrintedStemDirection.detect(
-                                            gray,
-                                            width,
-                                            height,
-                                            printed.head.centerX,
-                                            printed.head.centerY,
-                                            printed.staffGap)));
+                                    tiedNotes.get(i).unbeamedDurationBeats()
+                                                    == ScoreNoteEvent.DURATION_WHOLE
+                                            ? 0
+                                            : PrintedStemDirection.detect(
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    printed.head.centerX,
+                                                    printed.head.centerY,
+                                                    printed.staffGap)));
         }
         return new Analysis(voicedNotes, keyChanges, rests);
     }
@@ -10717,6 +10745,18 @@ final class OmrScoreInterpreter {
             Component head,
             float gap,
             int beamCount) {
+        return detectUnbeamedDuration(labels, gray, width, height, head, gap, beamCount, List.of());
+    }
+
+    private static float detectUnbeamedDuration(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float gap,
+            int beamCount,
+            List<Component> heads) {
         boolean open = hasOpenCenter(labels, gray, width, height, head, gap);
         if (open
                 && beamCount > 0
@@ -10738,7 +10778,7 @@ final class OmrScoreInterpreter {
                 && stem
                 && gray != null
                 && head.maxX - head.minX + 1 >= gap * 1.7f
-                && head.maxY - head.minY + 1 <= gap * 1.1f
+                && head.maxY - head.minY + 1 <= gap * 1.25f
                 && attachedRawStem(
                                 gray,
                                 width,
@@ -10751,6 +10791,11 @@ final class OmrScoreInterpreter {
         if (open
                 && stem
                 && gray != null
+                && wideOpenChordHasNoExteriorShaft(labels, gray, width, height, head, heads, gap))
+            stem = false;
+        if (open
+                && stem
+                && gray != null
                 && !hasStemAtHead(labels, width, height, head, gap)
                 && attachedRawStem(gray, width, height, head, gap) == null) stem = false;
         if (open) return stem ? ScoreNoteEvent.DURATION_HALF : ScoreNoteEvent.DURATION_WHOLE;
@@ -10758,6 +10803,49 @@ final class OmrScoreInterpreter {
         // A filled head is a quarter even when a thin stem was missed by segmentation. Treating it
         // as unknown would send the renderer back to noisy horizontal spacing.
         return ScoreNoteEvent.DURATION_QUARTER;
+    }
+
+    /** An aligned open chord needs a shaft beyond its outer ovals, not just their walls. */
+    private static boolean wideOpenChordHasNoExteriorShaft(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            List<Component> heads,
+            float gap) {
+        List<Component> chord = new ArrayList<>();
+        boolean wide = false;
+        int top = Integer.MAX_VALUE, bottom = Integer.MIN_VALUE;
+        for (var other : heads) {
+            if (Math.abs(other.centerX - head.centerX) > gap * .45f
+                    || Math.abs(other.centerY - head.centerY) > gap * 3.5f
+                    || other.maxX - other.minX + 1 < gap * 1.4f
+                    || other.maxY - other.minY + 1 > gap * 1.25f
+                    || other.maxX - other.minX + 1 < gap * 1.7f
+                            && other.maxY - other.minY + 1 > gap * 1.1f
+                    || !hasOpenCenter(labels, gray, width, height, other, gap)) continue;
+            chord.add(other);
+            wide |= other.maxX - other.minX + 1 >= gap * 1.7f;
+            top = Math.min(top, other.minY);
+            bottom = Math.max(bottom, other.maxY);
+        }
+        if (chord.size() < 2 || !wide || !chord.contains(head)) return false;
+        for (var other : chord) {
+            int[] shaft =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            205);
+            if (shaft != null
+                    && (shaft[2] < 0 ? shaft[1] < top - gap * .4f : shaft[1] > bottom + gap * .4f))
+                return false;
+        }
+        return true;
     }
 
     private static boolean hasOpenCenter(
@@ -13772,6 +13860,98 @@ final class OmrScoreInterpreter {
         return Math.abs(rest.positionInMeasure() - note.positionInMeasure()) > .018f;
     }
 
+    /** An attack in the same beamed voice occupies its column, even beside another voice's rest. */
+    static boolean restIsSeparateAttack(
+            ScoreRestEvent rest,
+            ScoreNoteEvent note,
+            List<ScoreNoteEvent> notes,
+            MeasureRegion region,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        if (!restIsSeparateAttack(rest, note)) return false;
+        if (rest.durationBeats() < 1
+                || rest.durationBeats() > 1.75
+                || note.beamCount() < 1
+                || note.beamCount() > 2
+                || note.crossStaffBeam()
+                || (note.articulations() & NoteOrnament.GRACE) != 0) return true;
+        int direction = restVoiceDirection(note, region, gray, width, height, gap);
+        if (direction == 0
+                || !restAttachedBeam(note, notes, region, gray, width, height, gap, direction))
+            return true;
+        for (var other : notes) {
+            if (other == note
+                    || other.measureIndex() != note.measureIndex()
+                    || other.staffIndex() != note.staffIndex()
+                    || other.staffCount() != note.staffCount()
+                    || other.beamCount() != note.beamCount()
+                    || other.crossStaffBeam()
+                    || (other.articulations() & NoteOrnament.GRACE) != 0
+                    || Math.abs(other.positionInMeasure() - rest.positionInMeasure()) > .018f
+                    || Math.abs(other.pageY() - rest.pageY()) * height <= gap * .65f) continue;
+            if (restVoiceDirection(other, region, gray, width, height, gap) == direction
+                    && restAttachedBeam(other, notes, region, gray, width, height, gap, direction))
+                return false;
+        }
+        return true;
+    }
+
+    private static int restVoiceDirection(
+            ScoreNoteEvent note,
+            MeasureRegion region,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        if (note.stemDirection() != 0) return note.stemDirection();
+        float x =
+                (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                        * width;
+        return PrintedStemDirection.detect(gray, width, height, x, note.pageY() * height, gap);
+    }
+
+    private static boolean restAttachedBeam(
+            ScoreNoteEvent note,
+            List<ScoreNoteEvent> notes,
+            MeasureRegion region,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            int direction) {
+        float x =
+                (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                        * width;
+        for (var other : notes) {
+            if (other == note
+                    || other.measureIndex() != note.measureIndex()
+                    || other.staffIndex() != note.staffIndex()
+                    || other.staffCount() != note.staffCount()
+                    || other.beamCount() != note.beamCount()
+                    || other.crossStaffBeam()
+                    || (other.articulations() & NoteOrnament.GRACE) != 0
+                    || restVoiceDirection(other, region, gray, width, height, gap) != direction)
+                continue;
+            float ox =
+                    (region.left() + other.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            if (Math.abs(ox - x) < gap * .8f || Math.abs(ox - x) > gap * 26) continue;
+            if (PrintedTupletBeamOwner.connectedHeads(
+                    gray,
+                    width,
+                    height,
+                    Math.min(x, ox),
+                    (x < ox ? note.pageY() : other.pageY()) * height,
+                    Math.max(x, ox),
+                    (x < ox ? other.pageY() : note.pageY()) * height,
+                    gap,
+                    direction)) return true;
+        }
+        return false;
+    }
+
     static boolean restSharesStemVoice(
             float restY, float staffMiddle, float gap, int stemDirection) {
         if (stemDirection < 0 && restY > staffMiddle + gap * 1.25f) return false;
@@ -15769,6 +15949,7 @@ final class OmrScoreInterpreter {
             boolean[] reachable = new boolean[radius * 2 + 1];
             for (int dy = -inner; dy <= inner; dy++) reachable[radius + dy] = true;
             boolean complete = true;
+            int narrow = 0, samples = 0;
             for (int step = inner; step <= distance; step++) {
                 boolean[] next = new boolean[reachable.length];
                 boolean any = false;
@@ -15785,9 +15966,19 @@ final class OmrScoreInterpreter {
                     complete = false;
                     break;
                 }
+                if (step >= radius) {
+                    int first = -1, last = -1;
+                    for (int row = 0; row < next.length; row++)
+                        if (next[row]) {
+                            if (first < 0) first = row;
+                            last = row;
+                        }
+                    samples++;
+                    if (last - first + 1 <= Math.max(2, Math.round(gap * .18f))) narrow++;
+                }
                 reachable = next;
             }
-            if (complete) return true;
+            if (complete && samples >= 3 && narrow >= samples * .6f) return true;
         }
         return false;
     }

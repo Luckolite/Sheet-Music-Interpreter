@@ -14,7 +14,11 @@ final class ParallelTripletClock {
         if (target == null || bar == null || !Double.isFinite(beats) || beats < 2 || beats > 4)
             return null;
         Clock bridged = findCrossStaff(target, bar, beats);
-        return bridged != null ? bridged : findSameStaff(target, bar, beats);
+        if (bridged != null) return bridged;
+        Clock restLane = findPrintedRestLane(target, bar, beats);
+        if (restLane != null) return restLane;
+        Clock printed = findPrintedChangingStem(target, bar, beats);
+        return printed != null ? printed : findSameStaff(target, bar, beats);
     }
 
     private static Clock findCrossStaff(
@@ -165,6 +169,197 @@ final class ParallelTripletClock {
         return null;
     }
 
+    /** Independent quarter attacks can own real rest slots of a complete printed triplet voice, including quarters with the same stem direction. */
+    private static Clock findPrintedRestLane(
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        for (int direction : new int[] {-1, 1})
+            for (int beams : new int[] {1, 2}) {
+                var members = new ArrayList<ScoreNoteEvent>();
+                var opposition = new ArrayList<ScoreNoteEvent>();
+                boolean ambiguous = false;
+                for (var n : bar) {
+                    if (n.staffIndex() != target.staffIndex()) continue;
+                    if (n.stemDirection() == 0
+                            || n.crossStaffBeam()
+                            || (n.articulations() & NoteOrnament.GRACE) != 0) {
+                        ambiguous = true;
+                        break;
+                    }
+                    if (n.stemDirection() != direction
+                            || n.beamCount() == 0
+                                    && n.augmentationDots() == 0
+                                    && n.tupletDivisor() == 1
+                                    && Math.abs(ScoreNoteTiming.writtenDurationBeats(n) - 1)
+                                            < .001) {
+                        opposition.add(n);
+                        continue;
+                    }
+                    if (n.beamCount() != beams
+                            || n.augmentationDots() != 0
+                            || n.unbeamedDurationBeats() != 0
+                            || n.tupletDivisor() != 3
+                            || n.tupletNormalNotes() != 2
+                            || n.leadingRestBeats() > 0) {
+                        ambiguous = true;
+                        break;
+                    }
+                    members.add(n);
+                }
+                if (ambiguous || opposition.isEmpty()) continue;
+                var groups = columns(members);
+                if (groups.size() < 6
+                        || groups.get(0).get(0).positionInMeasure() > .18f
+                        || groups.get(groups.size() - 1).get(0).positionInMeasure() < .8f) continue;
+                double unit = (beams == 1 ? .5 : .25) * 2 / 3, cursor = 0;
+                var attacks = new ArrayList<Attack>();
+                var rests = new ArrayList<RestGap>();
+                float smallest = Float.MAX_VALUE, largest = 0;
+                for (int i = 0; i < groups.size(); i++) {
+                    var column = groups.get(i);
+                    double after = column.get(0).followingRestBeats();
+                    if (after < 0 || after > 0 && Math.abs(after - unit) > .001) ambiguous = true;
+                    for (var n : column) {
+                        if (Math.abs(n.followingRestBeats() - after) > .001) ambiguous = true;
+                        attacks.add(new Attack(n, cursor));
+                    }
+                    cursor += unit;
+                    if (after > 0) {
+                        if (i + 1 == groups.size()) ambiguous = true;
+                        else
+                            rests.add(
+                                    new RestGap(
+                                            column.get(0).positionInMeasure(),
+                                            groups.get(i + 1).get(0).positionInMeasure(),
+                                            cursor));
+                        cursor += after;
+                    }
+                    if (i > 0) {
+                        float gap =
+                                column.get(0).positionInMeasure()
+                                        - groups.get(i - 1).get(0).positionInMeasure();
+                        smallest = Math.min(smallest, gap);
+                        largest = Math.max(largest, gap);
+                    }
+                }
+                if (ambiguous
+                        || rests.isEmpty()
+                        || (groups.size() + rests.size()) % 3 != 0
+                        || Math.abs(cursor - beats) > .001
+                        || smallest <= SAME
+                        || largest > smallest * 3) continue;
+                var counter = columns(opposition);
+                if (counter.size() != rests.size()) continue;
+                cursor = rests.get(0).onset;
+                for (int i = 0; i < counter.size(); i++) {
+                    var column = counter.get(i);
+                    var rest = rests.get(i);
+                    if (Math.abs(cursor - rest.onset) > .001) ambiguous = true;
+                    for (var n : column) {
+                        if (n.positionInMeasure() <= rest.left + SAME
+                                || n.positionInMeasure() >= rest.right - SAME
+                                || n.beamCount() != 0
+                                || n.augmentationDots() != 0
+                                || n.tupletDivisor() != 1
+                                || Math.abs(ScoreNoteTiming.writtenDurationBeats(n) - 1) > .001
+                                || n.followingRestBeats() > 0
+                                || n.leadingRestBeats() > 0
+                                        && Math.abs(n.leadingRestBeats() - cursor) > .001)
+                            ambiguous = true;
+                        attacks.add(new Attack(n, cursor));
+                    }
+                    cursor += 1;
+                }
+                if (!ambiguous && Math.abs(cursor - beats) < .001)
+                    return new Clock(
+                            List.copyOf(members), groups, unit, beats, List.copyOf(attacks));
+            }
+        return null;
+    }
+
+    private record RestGap(float left, float right, double onset) {}
+
+    /** Explicit triplets may reverse stems at beam-group boundaries beneath a held voice. */
+    private static Clock findPrintedChangingStem(
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        int staff = target.staffIndex();
+        for (int beams : new int[] {1, 2}) {
+            var members = new ArrayList<ScoreNoteEvent>();
+            var melody = new ArrayList<ScoreNoteEvent>();
+            boolean ambiguous = false;
+            for (var n : bar) {
+                if (n.staffIndex() != staff) continue;
+                if (n.crossStaffBeam()
+                        || (n.articulations() & NoteOrnament.GRACE) != 0
+                        || n.leadingRestBeats() > 0
+                        || n.followingRestBeats() > 0) {
+                    ambiguous = true;
+                    break;
+                }
+                if (n.beamCount() == beams
+                        && n.augmentationDots() == 0
+                        && n.unbeamedDurationBeats() == 0
+                        && n.tupletDivisor() == 3
+                        && n.tupletNormalNotes() == 2) members.add(n);
+                else melody.add(n);
+            }
+            if (ambiguous || melody.isEmpty()) continue;
+            var groups = columns(members);
+            double unit = (beams == 1 ? .5 : .25) * 2 / 3;
+            if (groups.size() < 6
+                    || groups.size() % 3 != 0
+                    || Math.abs(groups.size() * unit - beats) > .001
+                    || groups.get(0).get(0).positionInMeasure() > .18f
+                    || groups.get(groups.size() - 1).get(0).positionInMeasure() < .8f) continue;
+            int previous = 0, directions = 0;
+            for (int i = 0; i < groups.size(); i++) {
+                int direction = 0;
+                for (var n : groups.get(i)) {
+                    if (n.stemDirection() == 0) continue;
+                    if (direction != 0 && direction != n.stemDirection()) ambiguous = true;
+                    direction = n.stemDirection();
+                }
+                if (direction == 0 || (i % 3 != 0 && direction != previous)) ambiguous = true;
+                directions |= direction < 0 ? 1 : 2;
+                previous = direction;
+            }
+            if (ambiguous || directions != 3) continue;
+            var melodyGroups = columns(melody);
+            var clock = new Clock(List.copyOf(members), groups, unit, beats);
+            double cursor = clock.column(melodyGroups.get(0).get(0).positionInMeasure());
+            if (!Double.isFinite(cursor)) continue;
+            var attacks = new ArrayList<Attack>();
+            int opposing = 0;
+            for (var column : melodyGroups) {
+                var first = column.get(0);
+                double duration = ScoreNoteTiming.writtenDurationBeats(first);
+                if (!Double.isFinite(duration)
+                        || duration <= 0
+                        || !clock.positionFits(first.positionInMeasure(), cursor)) ambiguous = true;
+                int nearest =
+                        Math.min(groups.size() - 1, Math.max(0, (int) Math.round(cursor / unit)));
+                int direction =
+                        groups.get(nearest).stream()
+                                .mapToInt(ScoreNoteEvent::stemDirection)
+                                .filter(x -> x != 0)
+                                .findFirst()
+                                .orElse(0);
+                for (var n : column) {
+                    if (n.stemDirection() == 0
+                            || Math.abs(ScoreNoteTiming.writtenDurationBeats(n) - duration) > .001)
+                        ambiguous = true;
+                    if (n.stemDirection() == -direction) opposing++;
+                    attacks.add(new Attack(n, cursor));
+                }
+                cursor += duration;
+            }
+            if (!ambiguous && opposing >= 2 && Math.abs(cursor - beats) < .001)
+                return new Clock(List.copyOf(members), groups, unit, beats, List.copyOf(attacks));
+        }
+        return null;
+    }
+
+    private record Attack(ScoreNoteEvent note, double onset) {}
+
     private static List<List<ScoreNoteEvent>> columns(List<ScoreNoteEvent> notes) {
         notes.sort(Comparator.comparingDouble(ScoreNoteEvent::positionInMeasure));
         var groups = new ArrayList<List<ScoreNoteEvent>>();
@@ -182,7 +377,34 @@ final class ParallelTripletClock {
             List<ScoreNoteEvent> members,
             List<List<ScoreNoteEvent>> groups,
             double unit,
-            double beats) {
+            double beats,
+            List<Attack> attacks) {
+        Clock(
+                List<ScoreNoteEvent> members,
+                List<List<ScoreNoteEvent>> groups,
+                double unit,
+                double beats) {
+            this(members, groups, unit, beats, List.of());
+        }
+
+        private boolean positionFits(float position, double onset) {
+            double index = onset / unit;
+            int nearest = Math.min(groups.size() - 1, Math.max(0, (int) Math.round(index)));
+            double left =
+                    nearest == 0
+                            ? 0
+                            : (groups.get(nearest - 1).get(0).positionInMeasure()
+                                            + groups.get(nearest).get(0).positionInMeasure())
+                                    * .5;
+            double right =
+                    nearest == groups.size() - 1
+                            ? 1
+                            : (groups.get(nearest).get(0).positionInMeasure()
+                                            + groups.get(nearest + 1).get(0).positionInMeasure())
+                                    * .5;
+            return position >= left && position <= right;
+        }
+
         double duration(ScoreNoteEvent target) {
             return members.contains(target) ? unit : ScoreNoteTiming.writtenDurationBeats(target);
         }
@@ -195,6 +417,7 @@ final class ParallelTripletClock {
         }
 
         double onset(ScoreNoteEvent target, List<ScoreNoteEvent> bar) {
+            for (var attack : attacks) if (attack.note().equals(target)) return attack.onset();
             double aligned = column(target.positionInMeasure());
             if (Double.isFinite(aligned)) return aligned;
             if (target.stemDirection() == 0) return Double.NaN;

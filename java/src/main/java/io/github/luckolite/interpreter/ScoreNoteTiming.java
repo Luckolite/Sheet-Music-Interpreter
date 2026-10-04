@@ -1382,6 +1382,8 @@ public final class ScoreNoteTiming {
         if (Double.isFinite(beatsPerMeasure)
                 && Double.isFinite(written)
                 && Math.abs(written - noteBudget) < .001) return result;
+        double[] continued = continuedPrintedTuplets(groups, raw, beatsPerMeasure);
+        if (continued != null) return continued;
         // Repeated equal triplets are sometimes engraved without another numeral.
         // Accept only a complete, uniform beamed lane whose exact 3:2 ratio fills
         // the selected meter; arbitrary overfull or partly missing bars stay optical.
@@ -1451,6 +1453,88 @@ public final class ScoreNoteTiming {
                     && repairedError >= rawError - .001) return optical;
         }
         return result;
+    }
+
+    /** Two complete printed groups can establish a repeated, unnumbered beamed tail. */
+    private static double[] continuedPrintedTuplets(
+            List<RhythmGroup> groups, double[] raw, double beats) {
+        if (!Double.isFinite(beats)
+                || beats < 2
+                || beats > 8
+                || groups.size() < 10
+                || groups.get(0).position > .18f
+                || groups.get(groups.size() - 1).position < .8f) return null;
+        int start = 0;
+        double prefix = 0;
+        while (start < groups.size() && groups.get(start).beamCount() == 0) {
+            var group = groups.get(start);
+            if (group.hasTuplet()
+                    || group.augmentationDots() != 0
+                    || raw[start] < 1
+                    || raw[start] > 4) return null;
+            for (var n : group.notes)
+                if (n.leadingRestBeats() > 0
+                        || n.followingRestBeats() > 0
+                        || n.crossStaffBeam()
+                        || grace(n)
+                        || n.tiedFromPrevious()
+                        || Math.abs(writtenDurationBeats(n) - raw[start]) > .001) return null;
+            prefix += raw[start++];
+        }
+        int count = groups.size() - start;
+        if (start == 0 || count < 9 || count % 3 != 0) return null;
+        int beams = groups.get(start).beamCount();
+        if (beams != 1 && beams != 2) return null;
+        double unit = beams == 1 ? .5 : .25;
+        if (Math.abs(prefix + count * unit * 2 / 3 - beats) > .001) return null;
+        int printed = 0;
+        boolean tail = false;
+        float smallest = Float.MAX_VALUE, largest = 0;
+        double[] result = raw.clone();
+        for (int i = start; i < groups.size(); i++) {
+            var group = groups.get(i);
+            int ratio = 0, direction = 0;
+            if (group.beamCount() != beams || group.augmentationDots() != 0) return null;
+            for (var n : group.notes) {
+                int thisRatio =
+                        n.tupletDivisor() == 3 && n.tupletNormalNotes() == 2
+                                ? 3
+                                : n.tupletDivisor() == 1 && n.tupletNormalNotes() == 1 ? 1 : 0;
+                if (thisRatio == 0
+                        || ratio != 0 && ratio != thisRatio
+                        || n.beamCount() != beams
+                        || n.unbeamedDurationBeats() != 0
+                        || n.augmentationDots() != 0
+                        || n.leadingRestBeats() > 0
+                        || n.followingRestBeats() > 0
+                        || n.crossStaffBeam()
+                        || grace(n)
+                        || n.tiedFromPrevious()
+                        || n.stemDirection() == 0
+                        || direction != 0 && direction != n.stemDirection()) return null;
+                ratio = thisRatio;
+                direction = n.stemDirection();
+            }
+            if ((i - start) % 3 != 0) {
+                var previous = groups.get(i - 1).notes.get(0);
+                if (previous.stemDirection() != direction || previous.tupletDivisor() != ratio)
+                    return null;
+            }
+            if (ratio == 3) {
+                if (tail) return null;
+                printed++;
+            } else {
+                if (printed < 6 || printed % 3 != 0) return null;
+                tail = true;
+                result[i] = unit * 2 / 3;
+            }
+            if (i > start) {
+                float gap = group.position - groups.get(i - 1).position;
+                smallest = Math.min(smallest, gap);
+                largest = Math.max(largest, gap);
+            }
+        }
+        return tail && smallest > SAME_ONSET_POSITION && largest <= smallest * 2.4f ? result : null;
     }
 
     private static boolean implicitTriplets(

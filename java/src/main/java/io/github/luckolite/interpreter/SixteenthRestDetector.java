@@ -39,6 +39,12 @@ final class SixteenthRestDetector {
             List<Staff> staffs,
             List<ScoreNoteEvent> notes) {
         Detection original = detectWithDots(gray, width, height, measures, staffs, notes, true);
+        var joined = joinedEighthRests(gray, width, height, measures, staffs, notes);
+        if (!joined.isEmpty()) {
+            var combined = new ArrayList<>(original.rests());
+            combined.addAll(joined);
+            original = collected(combined, original.dots());
+        }
         byte[] contrasted = contrastedRestInk(gray, width, height, staffs);
         Detection additional =
                 contrasted == gray
@@ -145,6 +151,218 @@ final class SixteenthRestDetector {
             for (RestDot dot : recovered.dots()) if (dot.rest().equals(rest)) dots.add(dot);
         }
         return collected(rests, dots);
+    }
+
+    /** Recover an occluded eighth-rest bulb only from its separate diagonal tail,
+     * a continuing quarter shaft, and an owned printed rest-plus-two-note triplet. */
+    private static List<ScoreRestEvent> joinedEighthRests(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
+        var result = new ArrayList<ScoreRestEvent>();
+        if (gray == null || (long) width * height != gray.length || notes == null) return result;
+        for (var owner : notes) {
+            if (owner.beamCount() != 0
+                    || owner.unbeamedDurationBeats() != 1
+                    || owner.augmentationDots() != 0
+                    || owner.crossStaffBeam()
+                    || (owner.articulations() & NoteOrnament.GRACE) != 0
+                    || owner.measureIndex() < 0
+                    || owner.measureIndex() >= measures.size()) continue;
+            var region = measures.get(owner.measureIndex());
+            float hx =
+                    (region.left() + owner.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            float hy = owner.pageY() * height;
+            for (var staff : staffs) {
+                if (staff.index() != owner.staffIndex() || staff.count() != owner.staffCount())
+                    continue;
+                float[] frame =
+                        staff.pitchTrack() == null
+                                ? new float[] {staff.bottom(), staff.gap()}
+                                : staff.pitchTrack().at(hx);
+                float gap = frame[1], top = frame[0] - gap * 4;
+                if (gap < 4 || !Float.isFinite(gap)) continue;
+                for (int level = 0; level <= 4; level++) {
+                    int foot = Math.round(top + level * gap);
+                    if (foot - hy < gap * .8f || foot - hy > gap * 2.3f) continue;
+                    int start = Math.max(Math.round(hy + gap * .5f), foot - Math.round(gap * .9f)),
+                            end = foot - 2;
+                    if (start < 0 || end >= height || end - start < gap * .7f) continue;
+                    float tail = joinedRestTail(gray, width, height, hx, start, end, gap);
+                    if (!Float.isFinite(tail)
+                            || !continuingQuarterShaft(
+                                    gray, width, height, hx, hy, tail, foot, gap)) continue;
+                    float x = tail / width,
+                            pos = (x - region.left()) / (region.right() - region.left());
+                    if (pos < 0 || pos > 1) continue;
+                    var candidate =
+                            new ScoreRestEvent(
+                                    owner.measureIndex(),
+                                    pos,
+                                    (foot - gap * .925f) / height,
+                                    gap * 1.85f / height,
+                                    owner.staffIndex(),
+                                    owner.staffCount(),
+                                    .5);
+                    boolean duplicate =
+                            result.stream()
+                                    .anyMatch(
+                                            r ->
+                                                    r.measureIndex() == candidate.measureIndex()
+                                                            && r.staffIndex()
+                                                                    == candidate.staffIndex()
+                                                            && r.staffCount()
+                                                                    == candidate.staffCount()
+                                                            && Math.abs(r.positionInMeasure() - pos)
+                                                                    < .018f);
+                    if (duplicate) continue;
+                    var rhythm =
+                            TripletRhythmDetector.withRests(
+                                    notes, List.of(candidate), measures, gray, width, height);
+                    if (Math.abs(rhythm.rests().get(0).durationBeats() - 1. / 3) > .00001) continue;
+                    var following = new ArrayList<ScoreNoteEvent>();
+                    for (int i = 0; i < notes.size(); i++) {
+                        var n = notes.get(i);
+                        var marked = rhythm.notes().get(i);
+                        if (n.measureIndex() == owner.measureIndex()
+                                && n.staffIndex() == owner.staffIndex()
+                                && n.staffCount() == owner.staffCount()
+                                && n.beamCount() == 1
+                                && n.positionInMeasure() > pos + .018f
+                                && marked.tupletDivisor() == 3
+                                && marked.tupletNormalNotes() == 2) following.add(n);
+                        if (n.measureIndex() == owner.measureIndex()
+                                && n.staffIndex() == owner.staffIndex()
+                                && n.staffCount() == owner.staffCount()
+                                && n.beamCount() == 0
+                                && Math.abs(n.positionInMeasure() - pos) < .018f
+                                && marked.tupletDivisor() != n.tupletDivisor()) {
+                            following.clear();
+                            break;
+                        }
+                    }
+                    following.sort(
+                            java.util.Comparator.comparingDouble(
+                                    ScoreNoteEvent::positionInMeasure));
+                    ScoreNoteEvent a = null, b = null;
+                    for (var n : following)
+                        if (a == null) a = n;
+                        else if (n.positionInMeasure() > a.positionInMeasure() + .012f) {
+                            b = n;
+                            break;
+                        }
+                    if (a == null || b == null) continue;
+                    float ax =
+                            (region.left()
+                                            + a.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width;
+                    float bx =
+                            (region.left()
+                                            + b.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width;
+                    int direction =
+                            PrintedStemDirection.detect(
+                                    gray, width, height, ax, a.pageY() * height, gap);
+                    if (direction == 0
+                            || PrintedStemDirection.detect(
+                                            gray, width, height, bx, b.pageY() * height, gap)
+                                    != direction
+                            || !PrintedTupletBeamOwner.connectedHeads(
+                                    gray,
+                                    width,
+                                    height,
+                                    ax,
+                                    a.pageY() * height,
+                                    bx,
+                                    b.pageY() * height,
+                                    gap,
+                                    direction)) continue;
+                    result.add(candidate);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static float joinedRestTail(
+            byte[] gray, int width, int height, float hx, int start, int end, float gap) {
+        int left = Math.max(1, Math.round(hx - gap * 1.25f)),
+                right = Math.min(width - 2, Math.round(hx + gap * .4f));
+        for (int x = left; x <= right; x++) {
+            if ((gray[start * width + x] & 255) >= 170 || (gray[start * width + x - 1] & 255) < 170)
+                continue;
+            int last = x;
+            while (last + 1 <= right && (gray[start * width + last + 1] & 255) < 170) last++;
+            if (last - x + 1 < 2 || last - x + 1 > gap * .34f) continue;
+            float initial = (x + last) * .5f, previous = initial;
+            boolean complete = true;
+            for (int y = start + 1; y <= end; y++) {
+                int seed = Math.round(previous);
+                int lo = seed - 2, hi = seed + 2, found = -1;
+                for (int px = Math.max(left, lo); px <= Math.min(right, hi); px++)
+                    if ((gray[y * width + px] & 255) < 170) {
+                        found = px;
+                        break;
+                    }
+                if (found < 0) {
+                    complete = false;
+                    break;
+                }
+                int a = found, b = found;
+                while (a > left && (gray[y * width + a - 1] & 255) < 170) a--;
+                while (b < right && (gray[y * width + b + 1] & 255) < 170) b++;
+                float middle = (a + b) * .5f;
+                if (b - a + 1 < 2 || b - a + 1 > gap * .34f || Math.abs(middle - previous) > 1.1f) {
+                    complete = false;
+                    break;
+                }
+                previous = middle;
+            }
+            if (complete && initial - previous >= gap * .2f && initial - previous <= gap * .65f) {
+                int continued = 0;
+                for (int y = end + 5; y <= Math.min(height - 1, end + Math.round(gap * .6f)); y++) {
+                    boolean ink = false;
+                    for (int px = Math.max(left, Math.round(previous - gap * .18f));
+                            px <= Math.min(right, Math.round(previous + gap * .18f));
+                            px++) ink |= (gray[y * width + px] & 255) < 170;
+                    if (ink) continued++;
+                }
+                if (continued <= 1) return (initial + previous) * .5f;
+            }
+        }
+        return Float.NaN;
+    }
+
+    private static boolean continuingQuarterShaft(
+            byte[] gray,
+            int width,
+            int height,
+            float hx,
+            float hy,
+            float tail,
+            int foot,
+            float gap) {
+        int start = Math.max(0, Math.round(hy + gap * .55f)),
+                end = Math.min(height - 1, Math.round(foot + gap));
+        if (end - start < gap * 1.4f) return false;
+        for (int x = Math.max(1, Math.round(hx - gap * 1.35f));
+                x <= Math.min(width - 2, Math.round(hx + gap * .1f));
+                x++) {
+            if (tail - x < gap * .25f || tail - x > gap * 1.2f) continue;
+            int ink = 0;
+            for (int y = start; y <= end; y++)
+                if ((gray[y * width + x] & 255) < 170
+                        && ((gray[y * width + x - 1] & 255) < 170
+                                || (gray[y * width + x + 1] & 255) < 170)) ink++;
+            if (ink >= (end - start + 1) * .85f) return true;
+        }
+        return false;
     }
 
     /** A cropped crossed head must retain the connected stem below its putative foot. */
@@ -944,8 +1162,11 @@ final class SixteenthRestDetector {
                             && note.staffCount() == staff.count()
                             && (ScoreNoteTiming.hasIndependentSustain(note)
                                     || quarter
-                                            && movingVoiceBelow(
-                                                    gray, width, height, region, note, gap))
+                                            && (movingVoiceBelow(
+                                                            gray, width, height, region, note, gap)
+                                                    || connectedUpStemVoice(
+                                                            gray, width, height, region, notes,
+                                                            note, gap)))
                             && note.pageY() * height > maxY + gap * .65f
                             && Math.abs(
                                             (region.left()
@@ -1034,11 +1255,21 @@ final class SixteenthRestDetector {
                                                 && (lowered
                                                         || movingVoiceBelow(
                                                                 gray, width, height, region, note,
-                                                                gap))
+                                                                gap)
+                                                        || quarter
+                                                                && noteY > maxY + gap * .65f
+                                                                && connectedUpStemVoice(
+                                                                        gray, width, height, region,
+                                                                        notes, note, gap))
                                         || ordinary
                                                 && noteY > maxY + gap * .65f
-                                                && movingVoiceBelow(
-                                                        gray, width, height, region, note, gap);
+                                                && (movingVoiceBelow(
+                                                                gray, width, height, region, note,
+                                                                gap)
+                                                        || quarter
+                                                                && connectedUpStemVoice(
+                                                                        gray, width, height, region,
+                                                                        notes, note, gap));
                         if (!ScoreNoteTiming.hasIndependentSustain(note) && !independentMovingVoice
                                 || noteY >= minY - gap * .65f && noteY <= maxY + gap * .65f) return;
                     }
@@ -1486,6 +1717,63 @@ final class SixteenthRestDetector {
             ScoreNoteEvent note,
             float gap) {
         return movingVoiceStem(gray, width, height, region, note, gap, true);
+    }
+
+    /** A full attached beam independently identifies a moving voice below a separate rest. */
+    private static boolean connectedUpStemVoice(
+            byte[] gray,
+            int width,
+            int height,
+            MeasureRegion region,
+            List<ScoreNoteEvent> notes,
+            ScoreNoteEvent note,
+            float gap) {
+        float nx =
+                (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                        * width;
+        int direction =
+                note.stemDirection() != 0
+                        ? note.stemDirection()
+                        : PrintedStemDirection.detect(
+                                gray, width, height, nx, note.pageY() * height, gap);
+        if (direction != 1
+                || note.beamCount() < 1
+                || note.beamCount() > 2
+                || note.crossStaffBeam()
+                || (note.articulations() & NoteOrnament.GRACE) != 0) return false;
+        float x =
+                (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                        * width;
+        for (var other : notes) {
+            if (other == note
+                    || other.measureIndex() != note.measureIndex()
+                    || other.staffIndex() != note.staffIndex()
+                    || other.staffCount() != note.staffCount()
+                    || other.beamCount() != note.beamCount()
+                    || other.crossStaffBeam()
+                    || (other.articulations() & NoteOrnament.GRACE) != 0) continue;
+            float ox =
+                    (region.left() + other.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            int otherDirection =
+                    other.stemDirection() != 0
+                            ? other.stemDirection()
+                            : PrintedStemDirection.detect(
+                                    gray, width, height, ox, other.pageY() * height, gap);
+            if (otherDirection != 1) continue;
+            if (Math.abs(ox - x) < gap * .8f || Math.abs(ox - x) > gap * 26) continue;
+            if (PrintedTupletBeamOwner.connectedHeads(
+                    gray,
+                    width,
+                    height,
+                    Math.min(x, ox),
+                    (x < ox ? note.pageY() : other.pageY()) * height,
+                    Math.max(x, ox),
+                    (x < ox ? other.pageY() : note.pageY()) * height,
+                    gap,
+                    1)) return true;
+        }
+        return false;
     }
 
     private static boolean movingVoiceBelow(

@@ -145,6 +145,10 @@ final class TripletRhythmDetector {
     private record Onset(List<Integer> indices, float position, float top, float bottom) {}
 
     private static List<Onset> onsets(List<ScoreNoteEvent> notes) {
+        return onsets(notes, Integer.MAX_VALUE);
+    }
+
+    private static List<Onset> onsets(List<ScoreNoteEvent> notes, int virtualStart) {
         List<Integer> order = new ArrayList<>();
         for (int i = 0; i < notes.size(); i++) order.add(i);
         order.sort(
@@ -158,10 +162,16 @@ final class TripletRhythmDetector {
             List<Integer> members = new ArrayList<>();
             float top = first.pageY(), bottom = top;
             int j = i;
+            boolean includesRest = order.get(i) >= virtualStart;
             while (j < order.size()) {
                 ScoreNoteEvent n = notes.get(order.get(j));
+                boolean nextRest = order.get(j) >= virtualStart;
+                // A rest beside a displaced head shares its attack column. Sounding-only
+                // groups retain their narrower tolerance and cannot skip a different attack.
+                float tolerance = includesRest || nextRest ? .018f : .012f;
                 if (!sameVoice(first, n)
-                        || n.positionInMeasure() - first.positionInMeasure() > .012f) break;
+                        || n.positionInMeasure() - first.positionInMeasure() > tolerance) break;
+                includesRest |= nextRest;
                 members.add(order.get(j));
                 top = Math.min(top, n.pageY());
                 bottom = Math.max(bottom, n.pageY());
@@ -210,7 +220,8 @@ final class TripletRhythmDetector {
             Onset a, Onset b, Onset c, List<ScoreNoteEvent> notes, boolean beamed) {
         List<List<Onset>> result = new ArrayList<>();
         float ab = b.position() - a.position(), bc = c.position() - b.position();
-        if (ab <= .012f || bc <= .012f || Math.max(ab, bc) > Math.min(ab, bc) * 1.5f) return result;
+        if (ab <= .012f || bc <= .012f || (beamed && Math.max(ab, bc) > Math.min(ab, bc) * 1.5f))
+            return result;
         for (int index : a.indices()) {
             ScoreNoteEvent first = notes.get(index);
             if (beamed && first.beamCount() < 1) continue;
@@ -253,7 +264,7 @@ final class TripletRhythmDetector {
                 || height < 1
                 || gray.length != width * height) return notes;
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
-        List<Onset> groups = onsets(notes);
+        List<Onset> groups = onsets(notes, virtualStart);
         for (int i = 0; i + 2 < groups.size(); i++) {
             boolean marked = false;
             for (List<Onset> group :
@@ -339,6 +350,51 @@ final class TripletRhythmDetector {
                 // A real tuplet bracket remains authoritative across beam breaks.
                 float x2 =
                         (region.left() + b.position() * (region.right() - region.left())) * width;
+                float ab = b.position() - a.position(), bc = c.position() - b.position();
+                if (Math.max(ab, bc) > Math.min(ab, bc) * 1.5f) {
+                    var middle = result.get(b.indices().get(0));
+                    var last = result.get(c.indices().get(0));
+                    boolean sharedDirection = true;
+                    for (var onset : List.of(a, b, c))
+                        for (int index : onset.indices())
+                            if (result.get(index).stemDirection() != first.stemDirection())
+                                sharedDirection = false;
+                    if (!sharedDirection
+                            || first.stemDirection() == 0
+                            || middle.stemDirection() != first.stemDirection()
+                            || last.stemDirection() != first.stemDirection()
+                            || !beamOwnsNumeral(
+                                    numeral,
+                                    first,
+                                    result.subList(0, Math.min(virtualStart, result.size())),
+                                    region,
+                                    gray,
+                                    width,
+                                    height,
+                                    x1,
+                                    x3,
+                                    gap)
+                            || !PrintedTupletBeamOwner.connectedHeads(
+                                    gray,
+                                    width,
+                                    height,
+                                    x1,
+                                    first.pageY() * height,
+                                    x2,
+                                    middle.pageY() * height,
+                                    gap,
+                                    first.stemDirection())
+                            || !PrintedTupletBeamOwner.connectedHeads(
+                                    gray,
+                                    width,
+                                    height,
+                                    x2,
+                                    middle.pageY() * height,
+                                    x3,
+                                    last.pageY() * height,
+                                    gap,
+                                    first.stemDirection())) continue;
+                }
                 boolean bracket =
                         bracketArm(
                                         gray,
@@ -1013,27 +1069,49 @@ final class TripletRhythmDetector {
             MeasureRegion bar,
             List<MeasureRegion> measures) {
         java.util.function.Predicate<Glyph> ownership =
-                glyph ->
-                        !insideOtherSystem(glyph, bar, measures, width, height)
-                                && (ownsNumeral(
-                                                glyph,
-                                                first,
-                                                soundingHeads,
-                                                bar,
-                                                gap,
-                                                width,
-                                                height)
-                                        || beamOwnsNumeral(
-                                                glyph,
-                                                first,
-                                                soundingHeads,
-                                                bar,
-                                                gray,
-                                                width,
-                                                height,
-                                                firstX,
-                                                lastX,
-                                                gap));
+                glyph -> {
+                    if (insideOtherSystem(glyph, bar, measures, width, height)) return false;
+                    boolean physical =
+                            beamOwnsNumeral(
+                                    glyph,
+                                    first,
+                                    soundingHeads,
+                                    bar,
+                                    gray,
+                                    width,
+                                    height,
+                                    firstX,
+                                    lastX,
+                                    gap);
+                    if (!physical
+                            && !ownsNumeral(glyph, first, soundingHeads, bar, gap, width, height))
+                        return false;
+                    float ownDistance =
+                            physical
+                                    ? attachedBeamDistance(
+                                            glyph,
+                                            first,
+                                            soundingHeads,
+                                            bar,
+                                            gray,
+                                            width,
+                                            height,
+                                            firstX,
+                                            lastX,
+                                            gap)
+                                    : Float.POSITIVE_INFINITY;
+                    return !otherSystemBeamOwns(
+                            glyph,
+                            first,
+                            soundingHeads,
+                            bar,
+                            measures,
+                            gray,
+                            width,
+                            height,
+                            gap,
+                            ownDistance);
+                };
         return contrasted
                 ? findContrastedNumeral(
                         gray,
@@ -1158,7 +1236,109 @@ final class TripletRhythmDetector {
                                 glyph.top(),
                                 glyph.right(),
                                 glyph.bottom());
-                if (other <= ownDistance + gap * .1f) return true;
+                if (Float.isFinite(other) && other <= ownDistance + gap * .1f) return true;
+            }
+        }
+        return false;
+    }
+
+    private static float attachedBeamDistance(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap) {
+        float x = (bar.left() + first.positionInMeasure() * (bar.right() - bar.left())) * width;
+        if (first.beamCount() < 1 || first.stemDirection() == 0 || Math.abs(x - firstX) > gap * .4f)
+            return Float.POSITIVE_INFINITY;
+        float nearest = Float.POSITIVE_INFINITY;
+        for (var last : heads) {
+            if (last.measureIndex() != first.measureIndex()
+                    || last.staffIndex() != first.staffIndex()
+                    || last.staffCount() != first.staffCount()
+                    || last.beamCount() < 1
+                    || last.stemDirection() != first.stemDirection()) continue;
+            float lx = (bar.left() + last.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (Math.abs(lx - lastX) > gap * .4f) continue;
+            nearest =
+                    Math.min(
+                            nearest,
+                            PrintedTupletBeamOwner.distance(
+                                    gray,
+                                    width,
+                                    height,
+                                    x,
+                                    first.pageY() * height,
+                                    lx,
+                                    last.pageY() * height,
+                                    gap,
+                                    first.stemDirection(),
+                                    glyph.left(),
+                                    glyph.top(),
+                                    glyph.right(),
+                                    glyph.bottom()));
+        }
+        return nearest;
+    }
+
+    /** A next-system numeral may sit outside its staff box but still own a physical beam. */
+    private static boolean otherSystemBeamOwns(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion current,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            float ownDistance) {
+        float numeralX = (glyph.left() + glyph.right()) * .5f;
+        for (var a : heads) {
+            if (a.measureIndex() == first.measureIndex()
+                    || a.measureIndex() < 0
+                    || a.measureIndex() >= measures.size()
+                    || a.beamCount() < 1
+                    || a.stemDirection() == 0
+                    || a.crossStaffBeam()) continue;
+            var region = measures.get(a.measureIndex());
+            if (!(region.top() > current.bottom() || region.bottom() < current.top())) continue;
+            float ax =
+                    (region.left() + a.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            if (ax >= numeralX || numeralX - ax > gap * 26) continue;
+            for (var b : heads) {
+                if (b.measureIndex() != a.measureIndex()
+                        || b.staffIndex() != a.staffIndex()
+                        || b.staffCount() != a.staffCount()
+                        || b.beamCount() != a.beamCount()
+                        || b.stemDirection() != a.stemDirection()
+                        || b.crossStaffBeam()) continue;
+                float bx =
+                        (region.left() + b.positionInMeasure() * (region.right() - region.left()))
+                                * width;
+                if (bx <= numeralX || bx - ax > gap * 26) continue;
+                float other =
+                        PrintedTupletBeamOwner.distance(
+                                gray,
+                                width,
+                                height,
+                                ax,
+                                a.pageY() * height,
+                                bx,
+                                b.pageY() * height,
+                                gap,
+                                a.stemDirection(),
+                                glyph.left(),
+                                glyph.top(),
+                                glyph.right(),
+                                glyph.bottom());
+                if (Float.isFinite(other) && other + gap * .1f < ownDistance) return true;
             }
         }
         return false;

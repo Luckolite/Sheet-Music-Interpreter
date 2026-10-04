@@ -520,3 +520,24 @@ preserved. A compact original synthetic crop checks complete raw float bits for
 detector and recognizer inputs and unchanged caller pixels; existing validation
 and cancellation tests remain. No score scans, model weights, new dependencies or
 record layouts are included.
+
+Open chord ovals require an exterior shaft before receiving a half-note value.
+Thick beam ink cannot supply a thin dot-to-head connection. Physically attached
+beams retain numeral ownership across system edges and uneven printed groups.
+Original generated controls cover these recognition guards.
+
+Real quarter rests above a connected moving voice remain in the score without
+pausing simultaneous attacks in that voice. A fused eighth-rest bulb can be
+recovered only with a separate diagonal tail, continuing independent quarter
+shaft, owned printed triplet and connected following beams. Rest columns allow
+small displaced-head alignment while sounding-only columns keep their existing
+tolerance. Complete printed voices supply clocks across stem changes or genuine
+rest slots; independent closing quarters keep their printed values. An unnumbered
+beamed tail requires two complete preceding printed groups and exact meter.
+
+Thirteen original procedural regression classes cover positive and rejection
+cases for this port. Private source review remains outside the package. All six
+app classes were checked for token parity after the package and diagnostic
+adapter; existing beam/stem helpers were reviewed without new dependencies,
+model changes or record-layout changes. This verification does not establish
+whole-score accuracy or device/playback performance.
