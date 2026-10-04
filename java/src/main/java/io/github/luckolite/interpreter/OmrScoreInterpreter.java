@@ -1568,6 +1568,7 @@ final class OmrScoreInterpreter {
                                     silence,
                                     event.articulations(),
                                     event.clefBottomDiatonic())
+                            .withStemDirection(event.stemDirection())
                             .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes())
                             .withLeadingRest(leading));
         }
@@ -1597,43 +1598,12 @@ final class OmrScoreInterpreter {
                             .get(i)
                             .withArticulations(withRests.get(i).articulations() | marks[i]));
         markGraceHeads(labels, gray, width, height, joined, withRests);
-        for (int i = 1; i < joined.size(); i++) {
-            int prior = i - 1;
-            while (prior >= 0 && ScoreNoteTiming.hasIndependentSustain(joined.get(prior).event))
-                prior--;
-            if (prior < 0) continue;
-            DetectedNote a = joined.get(prior), b = joined.get(i);
-            if (a.event.measureIndex() != b.event.measureIndex()
-                    || a.event.staffCount() != 2
-                    || b.event.staffCount() != 2
-                    || a.event.staffIndex() == b.event.staffIndex()
-                    || ScoreNoteTiming.hasIndependentSustain(a.event)
-                    || ScoreNoteTiming.hasIndependentSustain(b.event)) continue;
-            // Prove the printed bridge even when another voice overlaps later in the bar.
-            // The rhythm reader separately requires a complete shared attack clock.
-            boolean interrupted = false;
-            for (ScoreNoteEvent n : withRests)
-                if (n.measureIndex() == a.event.measureIndex()) {
-                    if (ScoreNoteTiming.hasIndependentSustain(n)) continue;
-                    if (n.followingRestBeats() > 0 || n.leadingRestBeats() > 0) {
-                        interrupted = true;
-                        break;
-                    }
-                }
-            if (interrupted) continue;
-            if (CrossStaffBeamDetector.connected(
-                    gray,
-                    width,
-                    height,
-                    a.head.centerX,
-                    a.head.centerY,
-                    b.head.centerX,
-                    b.head.centerY,
-                    (a.staffGap + b.staffGap) / 2)) {
-                withRests.set(prior, withRests.get(prior).withCrossStaffBeam());
-                withRests.set(i, withRests.get(i).withCrossStaffBeam());
-            }
-        }
+        List<CrossStaffBeamDetector.Head> beamHeads = new ArrayList<>();
+        for (DetectedNote note : joined)
+            beamHeads.add(
+                    new CrossStaffBeamDetector.Head(
+                            note.head.centerX, note.head.centerY, note.staffGap));
+        withRests = CrossStaffBeamDetector.mark(withRests, beamHeads, gray, width, height);
         boolean[] printedAccidental = new boolean[joined.size()];
         for (int i = 0; i < joined.size(); i++)
             printedAccidental[i] = printedAccidentalHeads.contains(joined.get(i).head);
@@ -1642,11 +1612,25 @@ final class OmrScoreInterpreter {
                         OpeningMeasureLayout.mark(withRests, rests, measures),
                         keyChanges,
                         printedAccidental);
-        return new Analysis(
+        List<ScoreNoteEvent> tiedNotes =
                 markBoundaryTieEvidence(
-                        tieLabels, tieGray, width, height, joined, finalNotes, measures.size()),
-                keyChanges,
-                rests);
+                        tieLabels, tieGray, width, height, joined, finalNotes, measures.size());
+        List<ScoreNoteEvent> voicedNotes = new ArrayList<>();
+        for (int i = 0; i < tiedNotes.size(); i++) {
+            DetectedNote printed = joined.get(i);
+            voicedNotes.add(
+                    tiedNotes
+                            .get(i)
+                            .withStemDirection(
+                                    PrintedStemDirection.detect(
+                                            gray,
+                                            width,
+                                            height,
+                                            printed.head.centerX,
+                                            printed.head.centerY,
+                                            printed.staffGap)));
+        }
+        return new Analysis(voicedNotes, keyChanges, rests);
     }
 
     /** Keep both page-edge shoulders as evidence; assembly must still match pitch and continuity. */
@@ -1720,27 +1704,28 @@ final class OmrScoreInterpreter {
             result.set(
                     i,
                     new ScoreNoteEvent(
-                            current.measureIndex(),
-                            current.positionInMeasure(),
-                            current.staffStep(),
-                            current.staffIndex(),
-                            current.staffCount(),
-                            current.pageY(),
-                            false,
-                            current.augmentationDots(),
-                            current.beamCount(),
-                            current.writtenAccidental(),
-                            current.unbeamedDurationBeats(),
-                            current.tupletDivisor(),
-                            current.followingRestBeats(),
-                            current.articulations(),
-                            current.clefBottomDiatonic(),
-                            current.crossStaffBeam(),
-                            current.leadingRestBeats(),
-                            current.compactOpening(),
-                            current.octaveShift(),
-                            current.boundaryTies(),
-                            current.tupletNormalNotes()));
+                                    current.measureIndex(),
+                                    current.positionInMeasure(),
+                                    current.staffStep(),
+                                    current.staffIndex(),
+                                    current.staffCount(),
+                                    current.pageY(),
+                                    false,
+                                    current.augmentationDots(),
+                                    current.beamCount(),
+                                    current.writtenAccidental(),
+                                    current.unbeamedDurationBeats(),
+                                    current.tupletDivisor(),
+                                    current.followingRestBeats(),
+                                    current.articulations(),
+                                    current.clefBottomDiatonic(),
+                                    current.crossStaffBeam(),
+                                    current.leadingRestBeats(),
+                                    current.compactOpening(),
+                                    current.octaveShift(),
+                                    current.boundaryTies(),
+                                    current.tupletNormalNotes())
+                            .withStemDirection(current.stemDirection()));
         }
         return result;
     }
@@ -3977,27 +3962,28 @@ final class OmrScoreInterpreter {
                             index,
                             new DetectedNote(
                                     new ScoreNoteEvent(
-                                            e.measureIndex(),
-                                            position,
-                                            e.staffStep(),
-                                            e.staffIndex(),
-                                            e.staffCount(),
-                                            e.pageY(),
-                                            e.tiedFromPrevious(),
-                                            e.augmentationDots(),
-                                            e.beamCount(),
-                                            e.writtenAccidental(),
-                                            e.unbeamedDurationBeats(),
-                                            e.tupletDivisor(),
-                                            e.followingRestBeats(),
-                                            e.articulations(),
-                                            e.clefBottomDiatonic(),
-                                            e.crossStaffBeam(),
-                                            e.leadingRestBeats(),
-                                            e.compactOpening(),
-                                            e.octaveShift(),
-                                            e.boundaryTies(),
-                                            e.tupletNormalNotes()),
+                                                    e.measureIndex(),
+                                                    position,
+                                                    e.staffStep(),
+                                                    e.staffIndex(),
+                                                    e.staffCount(),
+                                                    e.pageY(),
+                                                    e.tiedFromPrevious(),
+                                                    e.augmentationDots(),
+                                                    e.beamCount(),
+                                                    e.writtenAccidental(),
+                                                    e.unbeamedDurationBeats(),
+                                                    e.tupletDivisor(),
+                                                    e.followingRestBeats(),
+                                                    e.articulations(),
+                                                    e.clefBottomDiatonic(),
+                                                    e.crossStaffBeam(),
+                                                    e.leadingRestBeats(),
+                                                    e.compactOpening(),
+                                                    e.octaveShift(),
+                                                    e.boundaryTies(),
+                                                    e.tupletNormalNotes())
+                                            .withStemDirection(e.stemDirection()),
                                     n.head,
                                     n.staffGap));
                 }
@@ -4056,6 +4042,20 @@ final class OmrScoreInterpreter {
                         below |= Math.abs(dot.centerY - (staff.top + gap * 1.5f)) < gap * .3f;
                     }
                     if (above && below) clef = ScoreNoteEvent.CLEF_BASS;
+                }
+                if (clef == ScoreNoteEvent.CLEF_UNKNOWN) {
+                    int cClef =
+                            PrintedCClef.detect(
+                                    gray,
+                                    width,
+                                    height,
+                                    original.minX,
+                                    original.maxX,
+                                    original.minY,
+                                    original.maxY,
+                                    staff.pitchBottom,
+                                    staff.pitchGap);
+                    if (cClef != ScoreNoteEvent.CLEF_UNKNOWN) clef = cClef;
                 }
                 if (clef == ScoreNoteEvent.CLEF_UNKNOWN
                         && rawBassClef(original, labels, gray, width, height, staff))
@@ -5726,7 +5726,7 @@ final class OmrScoreInterpreter {
                             + " maxHeight="
                             + java.util.Arrays.toString(maxHeightByStaff));
         } catch (RuntimeException ignored) {
-            // Optional diagnostics may be unavailable in a standalone caller.
+            // Logging may be unavailable in a plain JVM test environment.
         }
     }
 
@@ -10087,27 +10087,28 @@ final class OmrScoreInterpreter {
 
     private static ScoreNoteEvent asEngravedGrace(ScoreNoteEvent e, int beams) {
         return new ScoreNoteEvent(
-                e.measureIndex(),
-                e.positionInMeasure(),
-                e.staffStep(),
-                e.staffIndex(),
-                e.staffCount(),
-                e.pageY(),
-                e.tiedFromPrevious(),
-                e.augmentationDots(),
-                beams,
-                e.writtenAccidental(),
-                0,
-                e.tupletDivisor(),
-                e.followingRestBeats(),
-                e.articulations() | NoteOrnament.GRACE,
-                e.clefBottomDiatonic(),
-                e.crossStaffBeam(),
-                e.leadingRestBeats(),
-                e.compactOpening(),
-                e.octaveShift(),
-                e.boundaryTies(),
-                e.tupletNormalNotes());
+                        e.measureIndex(),
+                        e.positionInMeasure(),
+                        e.staffStep(),
+                        e.staffIndex(),
+                        e.staffCount(),
+                        e.pageY(),
+                        e.tiedFromPrevious(),
+                        e.augmentationDots(),
+                        beams,
+                        e.writtenAccidental(),
+                        0,
+                        e.tupletDivisor(),
+                        e.followingRestBeats(),
+                        e.articulations() | NoteOrnament.GRACE,
+                        e.clefBottomDiatonic(),
+                        e.crossStaffBeam(),
+                        e.leadingRestBeats(),
+                        e.compactOpening(),
+                        e.octaveShift(),
+                        e.boundaryTies(),
+                        e.tupletNormalNotes())
+                .withStemDirection(e.stemDirection());
     }
 
     private static boolean sameGraceVoice(DetectedNote a, DetectedNote b) {
@@ -12870,6 +12871,7 @@ final class OmrScoreInterpreter {
         return labels;
     }
 
+    /** Reuses natural-sign topology to distinguish note accidentals from stacked meter digits. */
     static boolean provesNaturalMeterInk(
             byte[] gray,
             int width,
@@ -14589,14 +14591,7 @@ final class OmrScoreInterpreter {
             int[] pale = paleStemToDoubleBeam(labels, gray, width, height, head, staff);
             if (pale != null
                     && rootedPaleFlag(
-                            labels,
-                            gray,
-                            width,
-                            height,
-                            head,
-                            staff.gap,
-                            pale[0],
-                            pale[1],
+                            labels, gray, width, height, head, staff.gap, pale[0], pale[1],
                             pale[2] < 0)) count = 1;
         }
         // A reduced neighboring mask does not invalidate three complete printed rails.
@@ -15374,6 +15369,8 @@ final class OmrScoreInterpreter {
                             paleStemToSupportedBeam(
                                     labels, gray, width, height, head, staff, allowSinglePale);
                 if (pale != null
+                        && !PaleBeamRecovery.crossesBlankCap(
+                                gray, width, height, attached, pale, gap)
                         && pale[2] == attached[2]
                         && (pale[1] - attached[1]) * pale[2] >= -gap * .2f
                         && (thick == 0
@@ -16520,6 +16517,34 @@ final class OmrScoreInterpreter {
                                 < .002f
                         && Math.abs(n.head.centerX - seed.head.centerX) < gap * 1.8f) group.add(j);
             }
+            int seedDirection =
+                    PrintedStemDirection.detect(
+                            gray, width, height, seed.head.centerX, seed.head.centerY, gap);
+            boolean opposing = false;
+            if (seedDirection != 0)
+                for (int j : group) {
+                    var n = source.get(j);
+                    int d =
+                            PrintedStemDirection.detect(
+                                    gray, width, height, n.head.centerX, n.head.centerY, gap);
+                    opposing |= d != 0 && d != seedDirection;
+                }
+            if (opposing)
+                opposing = provedOpposingChordVoices(group, source, gray, width, height, gap);
+            if (opposing)
+                group.removeIf(
+                        j -> {
+                            var n = source.get(j);
+                            int d =
+                                    PrintedStemDirection.detect(
+                                            gray,
+                                            width,
+                                            height,
+                                            n.head.centerX,
+                                            n.head.centerY,
+                                            gap);
+                            return d != 0 && d != seedDirection;
+                        });
             if (group.size() < 2 || group.size() > 6) continue;
             boolean filled = true;
             int left = width, right = 0, top = height, bottom = 0;
@@ -16588,7 +16613,7 @@ final class OmrScoreInterpreter {
                             blank = 0;
                         } else if (++blank > Math.max(1, Math.round(gap * .15f))) break;
                     }
-                    if (Math.abs(end - start) >= gap * 1.5f
+                    if (Math.abs(end - start) >= gap * (opposing ? 1.35f : 1.5f)
                             && thinShaftRun(
                                     gray, width, height, bounds, x, end, direction, gap, 170)) {
                         directions |= direction < 0 ? 1 : 2;
@@ -16627,31 +16652,58 @@ final class OmrScoreInterpreter {
                 if (e.beamCount() == common && e.augmentationDots() == dots) continue;
                 var corrected =
                         new ScoreNoteEvent(
-                                e.measureIndex(),
-                                e.positionInMeasure(),
-                                e.staffStep(),
-                                e.staffIndex(),
-                                e.staffCount(),
-                                e.pageY(),
-                                e.tiedFromPrevious(),
-                                dots,
-                                common,
-                                e.writtenAccidental(),
-                                common > 0 ? 0 : 1,
-                                e.tupletDivisor(),
-                                e.followingRestBeats(),
-                                e.articulations(),
-                                e.clefBottomDiatonic(),
-                                e.crossStaffBeam(),
-                                e.leadingRestBeats(),
-                                e.compactOpening(),
-                                e.octaveShift(),
-                                e.boundaryTies(),
-                                e.tupletNormalNotes());
+                                        e.measureIndex(),
+                                        e.positionInMeasure(),
+                                        e.staffStep(),
+                                        e.staffIndex(),
+                                        e.staffCount(),
+                                        e.pageY(),
+                                        e.tiedFromPrevious(),
+                                        dots,
+                                        common,
+                                        e.writtenAccidental(),
+                                        common > 0 ? 0 : 1,
+                                        e.tupletDivisor(),
+                                        e.followingRestBeats(),
+                                        e.articulations(),
+                                        e.clefBottomDiatonic(),
+                                        e.crossStaffBeam(),
+                                        e.leadingRestBeats(),
+                                        e.compactOpening(),
+                                        e.octaveShift(),
+                                        e.boundaryTies(),
+                                        e.tupletNormalNotes())
+                                .withStemDirection(e.stemDirection());
                 result.set(j, new DetectedNote(corrected, n.head, n.staffGap));
             }
         }
         return result;
+    }
+
+    /** Opposite apparent directions inside one chord are not separate voices.
+     * Both thin shafts must extend beyond all ovals on distinct sides. */
+    private static boolean provedOpposingChordVoices(
+            List<Integer> group,
+            List<DetectedNote> source,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        int top = height, bottom = 0;
+        int[] up = null, down = null;
+        for (int j : group) {
+            var h = source.get(j).head;
+            top = Math.min(top, h.minY);
+            bottom = Math.max(bottom, h.maxY);
+        }
+        for (int j : group) {
+            var h = source.get(j).head;
+            int[] a = directionalVoiceShaft(gray, width, height, h, gap, -1);
+            int[] b = directionalVoiceShaft(gray, width, height, h, gap, 1);
+            if (a != null && a[1] < top - gap * .9f) up = a;
+            if (b != null && b[1] > bottom + gap * .9f) down = b;
+        }
+        return up != null && down != null && up[0] - down[0] > gap * .6f;
     }
 
     /** Aligned close heads can belong to independent voices. Prove both outer
@@ -17570,6 +17622,7 @@ final class OmrScoreInterpreter {
                                         event.followingRestBeats(),
                                         event.articulations(),
                                         event.clefBottomDiatonic())
+                                .withStemDirection(event.stemDirection())
                                 .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes());
                 note = new DetectedNote(event, note.head, note.staffGap);
             }
@@ -17678,6 +17731,7 @@ final class OmrScoreInterpreter {
                                             event.leadingRestBeats(),
                                             event.compactOpening(),
                                             event.octaveShift())
+                                    .withStemDirection(event.stemDirection())
                                     .withTupletRatio(
                                             event.tupletDivisor(), event.tupletNormalNotes()),
                             current.head,

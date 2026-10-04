@@ -115,27 +115,28 @@ final class TripletRhythmDetector {
             }
             result.add(
                     new ScoreNoteEvent(
-                            note.measureIndex(),
-                            note.positionInMeasure(),
-                            note.staffStep(),
-                            note.staffIndex(),
-                            note.staffCount(),
-                            note.pageY(),
-                            note.tiedFromPrevious(),
-                            note.augmentationDots(),
-                            note.beamCount(),
-                            note.writtenAccidental(),
-                            note.unbeamedDurationBeats(),
-                            note.tupletDivisor(),
-                            (float) Math.max(0, note.followingRestBeats() - after),
-                            note.articulations(),
-                            note.clefBottomDiatonic(),
-                            note.crossStaffBeam(),
-                            (float) Math.max(0, note.leadingRestBeats() - before),
-                            note.compactOpening(),
-                            note.octaveShift(),
-                            note.boundaryTies(),
-                            note.tupletNormalNotes()));
+                                    note.measureIndex(),
+                                    note.positionInMeasure(),
+                                    note.staffStep(),
+                                    note.staffIndex(),
+                                    note.staffCount(),
+                                    note.pageY(),
+                                    note.tiedFromPrevious(),
+                                    note.augmentationDots(),
+                                    note.beamCount(),
+                                    note.writtenAccidental(),
+                                    note.unbeamedDurationBeats(),
+                                    note.tupletDivisor(),
+                                    (float) Math.max(0, note.followingRestBeats() - after),
+                                    note.articulations(),
+                                    note.clefBottomDiatonic(),
+                                    note.crossStaffBeam(),
+                                    (float) Math.max(0, note.leadingRestBeats() - before),
+                                    note.compactOpening(),
+                                    note.octaveShift(),
+                                    note.boundaryTies(),
+                                    note.tupletNormalNotes())
+                            .withStemDirection(note.stemDirection()));
         }
         return new Rhythm(List.copyOf(result), List.copyOf(scaled));
     }
@@ -275,7 +276,7 @@ final class TripletRhythmDetector {
                 float y1 = Math.min(a.top(), Math.min(b.top(), c.top())) * height;
                 float y2 = Math.max(a.bottom(), Math.max(b.bottom(), c.bottom())) * height;
                 Glyph numeral =
-                        findPrintedThree(
+                        findOwnedNumeral(
                                 gray,
                                 width,
                                 height,
@@ -286,7 +287,14 @@ final class TripletRhythmDetector {
                                 gap,
                                 first.beamCount() > 0,
                                 Float.NaN,
-                                Float.NaN);
+                                Float.NaN,
+                                3,
+                                true,
+                                false,
+                                first,
+                                result.subList(0, Math.min(virtualStart, result.size())),
+                                region,
+                                measures);
                 if (numeral == null
                         && a.indices().size() == 1
                         && b.indices().size() == 1
@@ -305,13 +313,27 @@ final class TripletRhythmDetector {
                             new float[] {a.top() * height, b.top() * height, c.top() * height},
                             gap))
                         numeral =
-                                findContrastedNumeral(
-                                        gray, width, height, x1, x3, y1, y2, gap, true, Float.NaN,
-                                        Float.NaN, 3, true);
+                                findOwnedNumeral(
+                                        gray,
+                                        width,
+                                        height,
+                                        x1,
+                                        x3,
+                                        y1,
+                                        y2,
+                                        gap,
+                                        true,
+                                        Float.NaN,
+                                        Float.NaN,
+                                        3,
+                                        true,
+                                        true,
+                                        first,
+                                        result.subList(0, Math.min(virtualStart, result.size())),
+                                        region,
+                                        measures);
                 }
-                if (numeral == null
-                        || insideOtherSystem(numeral, region, measures, width, height)
-                        || !ownsNumeral(numeral, first, result, region, gap, width, height))
+                if (numeral == null || insideOtherSystem(numeral, region, measures, width, height))
                     continue;
                 // A finger number must not regroup attacks across two separate beams.
                 // A real tuplet bracket remains authoritative across beam breaks.
@@ -405,48 +427,51 @@ final class TripletRhythmDetector {
                         result.set(
                                 index,
                                 new ScoreNoteEvent(
-                                        n.measureIndex(),
-                                        n.positionInMeasure(),
-                                        n.staffStep(),
-                                        n.staffIndex(),
-                                        n.staffCount(),
-                                        n.pageY(),
-                                        n.tiedFromPrevious(),
-                                        n.augmentationDots(),
-                                        n.beamCount(),
-                                        n.writtenAccidental(),
-                                        n.unbeamedDurationBeats(),
-                                        3,
-                                        n.followingRestBeats(),
-                                        n.articulations(),
-                                        n.clefBottomDiatonic(),
-                                        n.crossStaffBeam(),
-                                        n.leadingRestBeats(),
-                                        n.compactOpening(),
-                                        n.octaveShift(),
-                                        n.boundaryTies()));
+                                                n.measureIndex(),
+                                                n.positionInMeasure(),
+                                                n.staffStep(),
+                                                n.staffIndex(),
+                                                n.staffCount(),
+                                                n.pageY(),
+                                                n.tiedFromPrevious(),
+                                                n.augmentationDots(),
+                                                n.beamCount(),
+                                                n.writtenAccidental(),
+                                                n.unbeamedDurationBeats(),
+                                                3,
+                                                n.followingRestBeats(),
+                                                n.articulations(),
+                                                n.clefBottomDiatonic(),
+                                                n.crossStaffBeam(),
+                                                n.leadingRestBeats(),
+                                                n.compactOpening(),
+                                                n.octaveShift(),
+                                                n.boundaryTies())
+                                        .withStemDirection(n.stemDirection()));
                     }
                 marked = true;
             }
             if (marked) i += 2;
         }
         result = mixedBracketPairs(result, measures, gray, width, height);
-        result = mixedBeamedTuplets(result, measures, gray, width, height, 5);
-        result = mixedBeamedTuplets(result, measures, gray, width, height, 7);
+        result = mixedBeamedTuplets(result, measures, gray, width, height, 5, virtualStart);
+        result = mixedBeamedTuplets(result, measures, gray, width, height, 7, virtualStart);
         result = boundedQuintuplets(result, measures, gray, width, height, virtualStart);
         return beamedTuplets(
                 beamedTuplets(
-                        beamedTuplets(result, measures, gray, width, height, 7),
+                        beamedTuplets(result, measures, gray, width, height, 7, virtualStart),
                         measures,
                         gray,
                         width,
                         height,
-                        5),
+                        5,
+                        virtualStart),
                 measures,
                 gray,
                 width,
                 height,
-                6);
+                6,
+                virtualStart);
     }
 
     private static List<ScoreNoteEvent> mixedBracketPairs(
@@ -505,26 +530,27 @@ final class TripletRhythmDetector {
                 result.set(
                         index,
                         new ScoreNoteEvent(
-                                n.measureIndex(),
-                                n.positionInMeasure(),
-                                n.staffStep(),
-                                n.staffIndex(),
-                                n.staffCount(),
-                                n.pageY(),
-                                n.tiedFromPrevious(),
-                                n.augmentationDots(),
-                                n.beamCount(),
-                                n.writtenAccidental(),
-                                n.unbeamedDurationBeats(),
-                                3,
-                                n.followingRestBeats(),
-                                n.articulations(),
-                                n.clefBottomDiatonic(),
-                                n.crossStaffBeam(),
-                                n.leadingRestBeats(),
-                                n.compactOpening(),
-                                n.octaveShift(),
-                                n.boundaryTies()));
+                                        n.measureIndex(),
+                                        n.positionInMeasure(),
+                                        n.staffStep(),
+                                        n.staffIndex(),
+                                        n.staffCount(),
+                                        n.pageY(),
+                                        n.tiedFromPrevious(),
+                                        n.augmentationDots(),
+                                        n.beamCount(),
+                                        n.writtenAccidental(),
+                                        n.unbeamedDurationBeats(),
+                                        3,
+                                        n.followingRestBeats(),
+                                        n.articulations(),
+                                        n.clefBottomDiatonic(),
+                                        n.crossStaffBeam(),
+                                        n.leadingRestBeats(),
+                                        n.compactOpening(),
+                                        n.octaveShift(),
+                                        n.boundaryTies())
+                                .withStemDirection(n.stemDirection()));
             }
             i++;
         }
@@ -537,7 +563,8 @@ final class TripletRhythmDetector {
             byte[] gray,
             int width,
             int height,
-            int divisor) {
+            int divisor,
+            int virtualStart) {
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         List<Onset> groups = onsets(notes);
         for (int i = 0; i + divisor - 1 < groups.size(); i++) {
@@ -622,42 +649,54 @@ final class TripletRhythmDetector {
                     if (separated) continue;
                 }
                 Glyph numeral =
-                        divisor == 6
-                                ? findContrastedNumeral(
-                                        gray, width, height, x1, lastX, y1, y2, gap, true,
-                                        Float.NaN, Float.NaN, 6)
-                                : findPrintedNumeral(
-                                        gray, width, height, x1, lastX, y1, y2, gap, true,
-                                        Float.NaN, Float.NaN, divisor);
-                if (numeral == null
-                        || insideOtherSystem(numeral, bar, measures, width, height)
-                        || !ownsNumeral(numeral, first, result, bar, gap, width, height)) continue;
+                        findOwnedNumeral(
+                                gray,
+                                width,
+                                height,
+                                x1,
+                                lastX,
+                                y1,
+                                y2,
+                                gap,
+                                true,
+                                Float.NaN,
+                                Float.NaN,
+                                divisor,
+                                divisor == 6,
+                                false,
+                                first,
+                                result.subList(0, Math.min(virtualStart, result.size())),
+                                bar,
+                                measures);
+                if (numeral == null || insideOtherSystem(numeral, bar, measures, width, height))
+                    continue;
                 for (Onset onset : run)
                     for (int at : onset.indices()) {
                         ScoreNoteEvent n = result.get(at);
                         result.set(
                                 at,
                                 new ScoreNoteEvent(
-                                        n.measureIndex(),
-                                        n.positionInMeasure(),
-                                        n.staffStep(),
-                                        n.staffIndex(),
-                                        n.staffCount(),
-                                        n.pageY(),
-                                        n.tiedFromPrevious(),
-                                        n.augmentationDots(),
-                                        n.beamCount(),
-                                        n.writtenAccidental(),
-                                        n.unbeamedDurationBeats(),
-                                        divisor,
-                                        n.followingRestBeats(),
-                                        n.articulations(),
-                                        n.clefBottomDiatonic(),
-                                        n.crossStaffBeam(),
-                                        n.leadingRestBeats(),
-                                        n.compactOpening(),
-                                        n.octaveShift(),
-                                        n.boundaryTies()));
+                                                n.measureIndex(),
+                                                n.positionInMeasure(),
+                                                n.staffStep(),
+                                                n.staffIndex(),
+                                                n.staffCount(),
+                                                n.pageY(),
+                                                n.tiedFromPrevious(),
+                                                n.augmentationDots(),
+                                                n.beamCount(),
+                                                n.writtenAccidental(),
+                                                n.unbeamedDurationBeats(),
+                                                divisor,
+                                                n.followingRestBeats(),
+                                                n.articulations(),
+                                                n.clefBottomDiatonic(),
+                                                n.crossStaffBeam(),
+                                                n.leadingRestBeats(),
+                                                n.compactOpening(),
+                                                n.octaveShift(),
+                                                n.boundaryTies())
+                                        .withStemDirection(n.stemDirection()));
                     }
             }
         }
@@ -730,12 +769,27 @@ final class TripletRhythmDetector {
                     bottom = Math.max(bottom, onset.bottom() * height);
                 }
                 Glyph glyph =
-                        findPrintedNumeral(
-                                gray, width, height, x1, x2, top, bottom, gap, true, Float.NaN,
-                                Float.NaN, 5);
+                        findOwnedNumeral(
+                                gray,
+                                width,
+                                height,
+                                x1,
+                                x2,
+                                top,
+                                bottom,
+                                gap,
+                                true,
+                                Float.NaN,
+                                Float.NaN,
+                                5,
+                                false,
+                                false,
+                                first,
+                                result.subList(0, Math.min(virtualStart, result.size())),
+                                bar,
+                                measures);
                 if (glyph == null
                         || insideOtherSystem(glyph, bar, measures, width, height)
-                        || !ownsNumeral(glyph, first, result, bar, gap, width, height)
                         || !BoundedTupletBeam.five(
                                 gray,
                                 width,
@@ -806,7 +860,8 @@ final class TripletRhythmDetector {
             byte[] gray,
             int width,
             int height,
-            int divisor) {
+            int divisor,
+            int virtualStart) {
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         List<Onset> groups = onsets(notes);
         for (int i = 0; i < groups.size(); i++) {
@@ -881,38 +936,54 @@ final class TripletRhythmDetector {
                     y2 = Math.max(y2, slot.bottom() * height);
                 }
                 Glyph numeral =
-                        findContrastedNumeral(
-                                gray, width, height, x1, x2, y1, y2, gap, true, Float.NaN,
-                                Float.NaN, divisor);
-                if (numeral == null
-                        || insideOtherSystem(numeral, bar, measures, width, height)
-                        || !ownsNumeral(numeral, first, result, bar, gap, width, height)) break;
+                        findOwnedNumeral(
+                                gray,
+                                width,
+                                height,
+                                x1,
+                                x2,
+                                y1,
+                                y2,
+                                gap,
+                                true,
+                                Float.NaN,
+                                Float.NaN,
+                                divisor,
+                                true,
+                                false,
+                                first,
+                                result.subList(0, Math.min(virtualStart, result.size())),
+                                bar,
+                                measures);
+                if (numeral == null || insideOtherSystem(numeral, bar, measures, width, height))
+                    break;
                 for (Onset slot : run)
                     for (int index : slot.indices()) {
                         ScoreNoteEvent n = result.get(index);
                         result.set(
                                 index,
                                 new ScoreNoteEvent(
-                                        n.measureIndex(),
-                                        n.positionInMeasure(),
-                                        n.staffStep(),
-                                        n.staffIndex(),
-                                        n.staffCount(),
-                                        n.pageY(),
-                                        n.tiedFromPrevious(),
-                                        n.augmentationDots(),
-                                        n.beamCount(),
-                                        n.writtenAccidental(),
-                                        n.unbeamedDurationBeats(),
-                                        divisor,
-                                        n.followingRestBeats(),
-                                        n.articulations(),
-                                        n.clefBottomDiatonic(),
-                                        n.crossStaffBeam(),
-                                        n.leadingRestBeats(),
-                                        n.compactOpening(),
-                                        n.octaveShift(),
-                                        n.boundaryTies()));
+                                                n.measureIndex(),
+                                                n.positionInMeasure(),
+                                                n.staffStep(),
+                                                n.staffIndex(),
+                                                n.staffCount(),
+                                                n.pageY(),
+                                                n.tiedFromPrevious(),
+                                                n.augmentationDots(),
+                                                n.beamCount(),
+                                                n.writtenAccidental(),
+                                                n.unbeamedDurationBeats(),
+                                                divisor,
+                                                n.followingRestBeats(),
+                                                n.articulations(),
+                                                n.clefBottomDiatonic(),
+                                                n.crossStaffBeam(),
+                                                n.leadingRestBeats(),
+                                                n.compactOpening(),
+                                                n.octaveShift(),
+                                                n.boundaryTies())
+                                        .withStemDirection(n.stemDirection()));
                     }
                 break;
             }
@@ -922,6 +993,177 @@ final class TripletRhythmDetector {
 
     /** Between piano staves a single numeral belongs to the nearer staff.
      * Explicit cross-staff beams keep their existing grouping authority. */
+    private static Glyph findOwnedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean contrasted,
+            boolean boundedSecondary,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> soundingHeads,
+            MeasureRegion bar,
+            List<MeasureRegion> measures) {
+        java.util.function.Predicate<Glyph> ownership =
+                glyph ->
+                        !insideOtherSystem(glyph, bar, measures, width, height)
+                                && (ownsNumeral(
+                                                glyph,
+                                                first,
+                                                soundingHeads,
+                                                bar,
+                                                gap,
+                                                width,
+                                                height)
+                                        || beamOwnsNumeral(
+                                                glyph,
+                                                first,
+                                                soundingHeads,
+                                                bar,
+                                                gray,
+                                                width,
+                                                height,
+                                                firstX,
+                                                lastX,
+                                                gap));
+        return contrasted
+                ? findContrastedNumeral(
+                        gray,
+                        width,
+                        height,
+                        firstX,
+                        lastX,
+                        firstY,
+                        lastY,
+                        gap,
+                        shortNotes,
+                        headX,
+                        headY,
+                        number,
+                        boundedSecondary,
+                        ownership)
+                : findPrintedNumeral(
+                        gray,
+                        width,
+                        height,
+                        firstX,
+                        lastX,
+                        firstY,
+                        lastY,
+                        gap,
+                        shortNotes,
+                        headX,
+                        headY,
+                        number,
+                        boundedSecondary,
+                        ownership);
+    }
+
+    private static boolean beamOwnsNumeral(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap) {
+        if (first.beamCount() < 1 || first.stemDirection() == 0 || !heads.contains(first))
+            return false;
+        float firstHeadX =
+                (bar.left() + first.positionInMeasure() * (bar.right() - bar.left())) * width;
+        if (Math.abs(firstHeadX - firstX) > gap * .4f) return false;
+        for (var last : heads) {
+            if (last.measureIndex() != first.measureIndex()
+                    || last.staffCount() != first.staffCount()
+                    || last.staffIndex() != first.staffIndex()
+                    || last.beamCount() < 1
+                    || last.stemDirection() != first.stemDirection()) continue;
+            float lastHeadX =
+                    (bar.left() + last.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (Math.abs(lastHeadX - lastX) > gap * .4f) continue;
+            float ownDistance =
+                    PrintedTupletBeamOwner.distance(
+                            gray,
+                            width,
+                            height,
+                            firstHeadX,
+                            first.pageY() * height,
+                            lastHeadX,
+                            last.pageY() * height,
+                            gap,
+                            first.stemDirection(),
+                            glyph.left(),
+                            glyph.top(),
+                            glyph.right(),
+                            glyph.bottom());
+            if (!Float.isFinite(ownDistance)) continue;
+            if (!hasCompetingBeamOwner(
+                    glyph, first, heads, bar, gray, width, height, gap, ownDistance)) return true;
+        }
+        return false;
+    }
+
+    /** A nearer foreign beam prevents borrowing its numeral across piano staves. */
+    private static boolean hasCompetingBeamOwner(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            float ownDistance) {
+        float numeralX = (glyph.left() + glyph.right()) * .5f;
+        for (var a : heads) {
+            if (a.measureIndex() != first.measureIndex()
+                    || a.staffCount() != first.staffCount()
+                    || a.staffIndex() == first.staffIndex()
+                    || a.beamCount() < 1
+                    || a.stemDirection() == 0) continue;
+            float ax = (bar.left() + a.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (ax >= numeralX || numeralX - ax > gap * 26) continue;
+            for (var b : heads) {
+                if (b.measureIndex() != a.measureIndex()
+                        || b.staffIndex() != a.staffIndex()
+                        || b.staffCount() != a.staffCount()
+                        || b.beamCount() != a.beamCount()
+                        || b.stemDirection() != a.stemDirection()) continue;
+                float bx =
+                        (bar.left() + b.positionInMeasure() * (bar.right() - bar.left())) * width;
+                if (bx <= numeralX || bx - ax > gap * 26) continue;
+                float other =
+                        PrintedTupletBeamOwner.distance(
+                                gray,
+                                width,
+                                height,
+                                ax,
+                                a.pageY() * height,
+                                bx,
+                                b.pageY() * height,
+                                gap,
+                                a.stemDirection(),
+                                glyph.left(),
+                                glyph.top(),
+                                glyph.right(),
+                                glyph.bottom());
+                if (other <= ownDistance + gap * .1f) return true;
+            }
+        }
+        return false;
+    }
+
     private static boolean ownsNumeral(
             Glyph glyph,
             ScoreNoteEvent first,
@@ -1182,6 +1424,38 @@ final class TripletRhythmDetector {
             float headY,
             int number,
             boolean boundedSecondary) {
+        return findContrastedNumeral(
+                gray,
+                width,
+                height,
+                firstX,
+                lastX,
+                firstY,
+                lastY,
+                gap,
+                shortNotes,
+                headX,
+                headY,
+                number,
+                boundedSecondary,
+                glyph -> true);
+    }
+
+    private static Glyph findContrastedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean boundedSecondary,
+            java.util.function.Predicate<Glyph> ownership) {
         Glyph normal =
                 findPrintedNumeral(
                         gray,
@@ -1196,7 +1470,8 @@ final class TripletRhythmDetector {
                         headX,
                         headY,
                         number,
-                        boundedSecondary);
+                        boundedSecondary,
+                        ownership);
         if (normal != null
                 && TupletNumeralInk.hasGlyphContrast(
                         gray,
@@ -1238,7 +1513,14 @@ final class TripletRhythmDetector {
                                 headX - local.left(),
                                 headY - local.top(),
                                 number,
-                                boundedSecondary);
+                                boundedSecondary,
+                                glyph ->
+                                        ownership.test(
+                                                new Glyph(
+                                                        glyph.left() + local.left(),
+                                                                glyph.top() + local.top(),
+                                                        glyph.right() + local.left(),
+                                                                glyph.bottom() + local.top())));
                 if (retry != null
                         && TupletNumeralInk.hasGlyphContrast(
                                 gray,
@@ -1321,6 +1603,38 @@ final class TripletRhythmDetector {
             float headY,
             int number,
             boolean boundedSecondary) {
+        return findPrintedNumeral(
+                gray,
+                width,
+                height,
+                firstX,
+                lastX,
+                firstY,
+                lastY,
+                gap,
+                shortNotes,
+                headX,
+                headY,
+                number,
+                boundedSecondary,
+                glyph -> true);
+    }
+
+    private static Glyph findPrintedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean boundedSecondary,
+            java.util.function.Predicate<Glyph> ownership) {
         float centerX = (firstX + lastX) * .5f;
         // Numerals align with the beam/stems, which can sit to one side of the
         // oval centres. Include that offset without clipping an italic 3.
@@ -1414,7 +1728,10 @@ final class TripletRhythmDetector {
                     && !bracket
                     && insideFiveLineStaff(gray, width, height, minX, minY, maxX, maxY, gap))
                 continue;
-            if (shortNotes || bracket) return new Glyph(minX, minY, maxX, maxY);
+            if (shortNotes || bracket) {
+                Glyph glyph = new Glyph(minX, minY, maxX, maxY);
+                if (ownership.test(glyph)) return glyph;
+            }
         }
         return null;
     }

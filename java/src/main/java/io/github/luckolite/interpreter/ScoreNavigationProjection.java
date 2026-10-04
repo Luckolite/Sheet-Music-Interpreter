@@ -321,27 +321,28 @@ public final class ScoreNavigationProjection {
 
     private static ScoreNoteEvent noteAt(ScoreNoteEvent n, int m, boolean tied) {
         return new ScoreNoteEvent(
-                m,
-                n.positionInMeasure(),
-                n.staffStep(),
-                n.staffIndex(),
-                n.staffCount(),
-                n.pageY(),
-                tied,
-                n.augmentationDots(),
-                n.beamCount(),
-                n.writtenAccidental(),
-                n.unbeamedDurationBeats(),
-                n.tupletDivisor(),
-                n.followingRestBeats(),
-                n.articulations(),
-                n.clefBottomDiatonic(),
-                n.crossStaffBeam(),
-                n.leadingRestBeats(),
-                n.compactOpening(),
-                n.octaveShift(),
-                n.boundaryTies(),
-                n.tupletNormalNotes());
+                        m,
+                        n.positionInMeasure(),
+                        n.staffStep(),
+                        n.staffIndex(),
+                        n.staffCount(),
+                        n.pageY(),
+                        tied,
+                        n.augmentationDots(),
+                        n.beamCount(),
+                        n.writtenAccidental(),
+                        n.unbeamedDurationBeats(),
+                        n.tupletDivisor(),
+                        n.followingRestBeats(),
+                        n.articulations(),
+                        n.clefBottomDiatonic(),
+                        n.crossStaffBeam(),
+                        n.leadingRestBeats(),
+                        n.compactOpening(),
+                        n.octaveShift(),
+                        n.boundaryTies(),
+                        n.tupletNormalNotes())
+                .withStemDirection(n.stemDirection());
     }
 
     // Source dynamics are evaluated below in musical time, not page distance or bar count.

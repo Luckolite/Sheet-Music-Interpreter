@@ -11,6 +11,9 @@ public final class NativeDecoderWire {
     public static final int MAX_PACKET = 45_000_000, MAX_MEASURES = 4000, MAX_EVENTS = 100_000;
     public static final int ANALYZE = 1, GEOMETRY = 2;
 
+    /** Negative marker distinguishes the 22-field analysis from legacy 21-field counts. */
+    static final int ANALYSIS_STEM_FORMAT = -22;
+
     public record Request(
             byte[] labels,
             byte[] gray,
@@ -217,6 +220,7 @@ public final class NativeDecoderWire {
                 || score.rests().size() > MAX_EVENTS
                 || score.keyChanges().size() > MAX_MEASURES)
             throw new IOException("Decoder event limit");
+        out.writeInt(ANALYSIS_STEM_FORMAT);
         out.writeInt(score.notes().size());
         for (var n : score.notes()) {
             out.writeInt(n.measureIndex());
@@ -240,6 +244,7 @@ public final class NativeDecoderWire {
             out.writeInt(n.octaveShift());
             out.writeInt(n.boundaryTies());
             out.writeInt(n.tupletNormalNotes());
+            out.writeInt(n.stemDirection());
         }
         out.writeInt(score.keyChanges().size());
         for (var k : score.keyChanges()) {
@@ -260,7 +265,10 @@ public final class NativeDecoderWire {
 
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
-        int count = count(in, MAX_EVENTS);
+        int marker = in.readInt();
+        boolean stems = marker == ANALYSIS_STEM_FORMAT;
+        int count = stems ? count(in, MAX_EVENTS) : marker;
+        if (count < 0 || count > MAX_EVENTS) throw new IOException("Decoder analysis format/count");
         var notes = new ArrayList<ScoreNoteEvent>(count);
         for (int i = 0; i < count; i++)
             notes.add(
@@ -285,7 +293,8 @@ public final class NativeDecoderWire {
                             in.readBoolean(),
                             in.readInt(),
                             count(in, ScoreNoteEvent.BOUNDARY_TIES_ALL),
-                            normalCount(in)));
+                            normalCount(in),
+                            stems ? stemDirection(in) : 0));
         count = count(in, MAX_MEASURES);
         var keys = new ArrayList<ScoreKeyChange>(count);
         for (int i = 0; i < count; i++) {
@@ -312,6 +321,12 @@ public final class NativeDecoderWire {
         int index = in.readInt();
         if (index < 0 || index >= measures) throw new IOException("Decoder measure index");
         return index;
+    }
+
+    private static int stemDirection(DataInputStream in) throws IOException {
+        int direction = in.readInt();
+        if (direction < -1 || direction > 1) throw new IOException("Decoder stem direction");
+        return direction;
     }
 
     private static int normalCount(DataInputStream in) throws IOException {

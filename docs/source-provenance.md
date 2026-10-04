@@ -494,3 +494,21 @@ controls for unchanged layouts, revised recognition, source, cleanup and page
 identity. Android local/portable hydration and native Hub high-water metadata
 are application adapters reviewed separately. No record layout, model, private
 score, library or device log is included.
+
+Printed C-clef geometry distinguishes alto and tenor positions from the original
+raster. Connected shaft and beam evidence preserve printed stem ownership, reject
+white-separated beam fragments, and assign tuplets to their physical beam rather
+than a neighboring numeral. A complete proved triplet voice supplies an independent
+clock for an opposite sustained voice; fabricated rests do not supply beam ownership.
+Original generated positive and rejection controls cover the standalone port.
+
+Printed stems survive note copies and timing/navigation transformations. The native
+analysis frame explicitly distinguishes its appended twenty-second field from the
+legacy twenty-one-field count. Guide281 appends a signed stem field to its actual
+note record; the standalone Python encoder uses the same native writer. Legacy
+records preserve unknown direction, and older guide headers reject stems or C-clefs
+they cannot represent. Synthetic legacy bytes, both stem directions, C-clefs, invalid
+values and truncated/trailing frames cover these layouts. Android conversion, guide
+persistence, Hub validation and audio adapters are reviewed separately; the three
+deliberately fabricated rest/MIDI probe paths keep unknown direction. No private
+score, device log, app history, weight or new production dependency is distributed.

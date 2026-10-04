@@ -523,6 +523,12 @@ public final class ScoreNoteTiming {
                                                         < target.positionInMeasure()
                                                                 - SAME_ONSET_POSITION))
                 && Math.abs(writtenDurationBeats(target) - safeBeats) < .001) return 0;
+        var parallelTriplets =
+                ParallelTripletClock.find(target, measureNotes(target, notes), safeBeats);
+        if (parallelTriplets != null) {
+            double onset = parallelTriplets.onset(target, measureNotes(target, notes));
+            if (Double.isFinite(onset)) return onset;
+        }
         List<ScoreNoteEvent> crossStaff = crossStaffPhrase(target, notes, safeBeats);
         if (!crossStaff.isEmpty()) {
             double onset = 0;
@@ -935,6 +941,11 @@ public final class ScoreNoteTiming {
                             - budget * (grace.bothSides ? 2 : 1)
                     : budget / grace.count;
         }
+        if (target != null && notes != null && Float.isFinite(beatsPerMeasure)) {
+            var parallelTriplets =
+                    ParallelTripletClock.find(target, measureNotes(target, notes), beatsPerMeasure);
+            if (parallelTriplets != null) return parallelTriplets.duration(target);
+        }
         // A hollow notehead may share an onset/staff with a faster independent voice.
         // Group rhythm repairs describe the attack clock, not that note's sounding length.
         if (hasIndependentDuration(target, notes)) return writtenDurationBeats(target);
@@ -1100,6 +1111,7 @@ public final class ScoreNoteTiming {
         if (phrase.get(0).positionInMeasure() > .22f) return List.of();
         double sum = crossStaffClockBeats(phrase);
         if (Double.isFinite(sum) && Math.abs(sum - beats) < .03125) return phrase;
+        if (implicitCrossStaffTriplets(phrase, beats)) return phrase;
         // An overlapping dotted held head can contaminate the first moving head's dot/beam.
         // Accept exactly one repair only when the beam, adjacent slots, and total bar agree.
         ScoreNoteEvent first = phrase.get(0), next = phrase.get(1);
@@ -1137,10 +1149,18 @@ public final class ScoreNoteTiming {
 
     private static double crossStaffDuration(
             ScoreNoteEvent note, List<ScoreNoteEvent> phrase, double beats) {
+        if (implicitCrossStaffTriplets(phrase, beats)) return writtenDurationBeats(note) * 2 / 3;
         double sum = crossStaffClockBeats(phrase);
         if (note.equals(phrase.get(0)) && Math.abs(sum - beats) >= .03125)
             return writtenDurationBeats(note) + beats - sum;
         return writtenDurationBeats(note);
+    }
+
+    private static boolean implicitCrossStaffTriplets(List<ScoreNoteEvent> phrase, double beats) {
+        List<RhythmGroup> groups = rhythmGroups(phrase);
+        double[] values = new double[groups.size()];
+        for (int i = 0; i < values.length; i++) values[i] = groups.get(i).writtenDuration();
+        return implicitTriplets(groups, values, beats, true);
     }
 
     public static double absoluteBeat(
@@ -1435,6 +1455,11 @@ public final class ScoreNoteTiming {
 
     private static boolean implicitTriplets(
             List<RhythmGroup> groups, double[] values, double beats) {
+        return implicitTriplets(groups, values, beats, false);
+    }
+
+    private static boolean implicitTriplets(
+            List<RhythmGroup> groups, double[] values, double beats, boolean sharedPhrase) {
         if (!Double.isFinite(beats)
                 || beats < 2
                 || beats > 4
@@ -1454,7 +1479,7 @@ public final class ScoreNoteTiming {
                 if (n.beamCount() < 1
                         || n.leadingRestBeats() > 0
                         || n.followingRestBeats() > 0
-                        || n.crossStaffBeam()
+                        || n.crossStaffBeam() && !sharedPhrase
                         || n.tiedFromPrevious()
                         || grace(n)) return false;
             if (i > 0) {

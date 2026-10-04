@@ -651,6 +651,7 @@ final class SixteenthRestDetector {
                                     n.crossStaffBeam(),
                                     n.leadingRestBeats(),
                                     n.compactOpening())
+                            .withStemDirection(n.stemDirection())
                             .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes()));
         }
         Staff rectified =

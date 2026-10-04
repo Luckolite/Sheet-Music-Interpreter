@@ -706,27 +706,28 @@ public final class TablatureDecoder {
 
     private static ScoreNoteEvent withRestAfter(ScoreNoteEvent n, float beats) {
         return new ScoreNoteEvent(
-                n.measureIndex(),
-                n.positionInMeasure(),
-                n.staffStep(),
-                n.staffIndex(),
-                n.staffCount(),
-                n.pageY(),
-                n.tiedFromPrevious(),
-                n.augmentationDots(),
-                n.beamCount(),
-                n.writtenAccidental(),
-                n.unbeamedDurationBeats(),
-                n.tupletDivisor(),
-                n.followingRestBeats() + beats,
-                n.articulations(),
-                n.clefBottomDiatonic(),
-                n.crossStaffBeam(),
-                n.leadingRestBeats(),
-                n.compactOpening(),
-                n.octaveShift(),
-                n.boundaryTies(),
-                n.tupletNormalNotes());
+                        n.measureIndex(),
+                        n.positionInMeasure(),
+                        n.staffStep(),
+                        n.staffIndex(),
+                        n.staffCount(),
+                        n.pageY(),
+                        n.tiedFromPrevious(),
+                        n.augmentationDots(),
+                        n.beamCount(),
+                        n.writtenAccidental(),
+                        n.unbeamedDurationBeats(),
+                        n.tupletDivisor(),
+                        n.followingRestBeats() + beats,
+                        n.articulations(),
+                        n.clefBottomDiatonic(),
+                        n.crossStaffBeam(),
+                        n.leadingRestBeats(),
+                        n.compactOpening(),
+                        n.octaveShift(),
+                        n.boundaryTies(),
+                        n.tupletNormalNotes())
+                .withStemDirection(n.stemDirection());
     }
 
     private static int printedMidi(ScoreNoteEvent n, ScorePageInterpretation score) {
@@ -774,6 +775,7 @@ public final class TablatureDecoder {
                         n.leadingRestBeats(),
                         n.compactOpening(),
                         0)
+                .withStemDirection(n.stemDirection())
                 .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes());
     }
 }

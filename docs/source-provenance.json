@@ -171,11 +171,12 @@
     },
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
-      "source_sha256": "43d780236c5e7946907626de25a4ebc821e61855d63d4f51fa9b0d7893317e47",
+      "source_sha256": "c13b2c13ff708bac4e79024928cee8ac8914ff8eef7e0dd6e7ac42560460ba30",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "43d780236c5e7946907626de25a4ebc821e61855d63d4f51fa9b0d7893317e47",
+      "source_normalized_sha256": "2578ad568029b4a25be1aceae24e367c7e101833cecfa0634aa337045d703750",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "NativeDecoderStages.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderStages.java",
@@ -215,8 +216,11 @@
     },
     "CrossStaffBeamDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossStaffBeamDetector.java",
-      "source_sha256": "274268e667a42ba2c417d2ba9f5e22cac2d6c9545b21e37d9b10c0fc35d085e9",
-      "source_normalized_sha256": "274268e667a42ba2c417d2ba9f5e22cac2d6c9545b21e37d9b10c0fc35d085e9"
+      "source_sha256": "37a0a6da78198254737f11e001b6e7eb237e51a55757d3e3b71f143f0f4478a6",
+      "source_normalized_sha256": "1aa0fa46772e8dd4b1f09300a0906fef609d85b65ea9d6e92dfc6999a0cb16cd",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
     },
     "GrandStaffDynamics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GrandStaffDynamics.java",
@@ -301,13 +305,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "0fdb12c898c53c444d08541e085930ae673503a09e94f45bd548d9841e094ffe",
+      "source_sha256": "b5ff77cb710e890179276cb3f9ca1426d3939c77d036b6c348e1bc96c9b06c8c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
-      "source_normalized_sha256": "0fdb12c898c53c444d08541e085930ae673503a09e94f45bd548d9841e094ffe",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "source_normalized_sha256": "85463f71577a56db5724e14a5b92e120518fe6ec4f831c21da8697ad92052c4b",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit."
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -358,19 +362,21 @@
     },
     "ScoreNoteEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteEvent.java",
-      "source_sha256": "b8eda1ccafcd135256c06f4ee76c664f5cb672f12a13ecb8b1afda9e04556211",
+      "source_sha256": "e782847f5660895a759c5ea27b7071b665d339733dd04f150dd1c080fdb7038b",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "b8eda1ccafcd135256c06f4ee76c664f5cb672f12a13ecb8b1afda9e04556211",
+      "source_normalized_sha256": "f860e81dffad7ce8ec2aeb92492525d4ddd81413bd336bdcc6e635d9ca7c58c8",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "ScoreNoteTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteTiming.java",
-      "source_sha256": "4cc10004350f2c8ce3deadb84fba3f821122b07ddd92f41af267394a16030cf3",
+      "source_sha256": "d111be84764cfcd97933b3c228bc7623ae04a114605d18fb008c5b8b6873db94",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "source_normalized_sha256": "9fce40720437f0eaae57ae9187ebd44f6b40e6ba51134deb0d58b1801484f0d6",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "source_normalized_sha256": "5676efb436dae50a7d8614dc1d8d55376205a88926e0c3c6c424faecb8f9493a",
+      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
@@ -396,12 +402,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "199a1f71ec0a46ab40ad619637a05f58fce040345eb965bda0e4755ddd906045",
+      "source_sha256": "9da1f5cbde69171f6ac8488aa7b86480ed21ac07a20abb0bce3ae2d1be45beff",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
-      "source_normalized_sha256": "199a1f71ec0a46ab40ad619637a05f58fce040345eb965bda0e4755ddd906045",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "source_normalized_sha256": "e52ab4eae1581e1e6e737a9c2a65b6ec6c211f69ec8886b8b891af41daa361d5",
       "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
     },
     "TempoChangeDetector.java": {
@@ -413,11 +419,12 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "f3a91fa766f19cbe95d96caa867695806d9d683ba86904100df960970e9f6aea",
+      "source_sha256": "8715fbf113e000cb28c08c8ce991f9f5c31a861291b9a7a87de1e9fda50cb21f",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "7c4c091e0870746352f56037e84f4ee2aba83515969766baa95104f0d5f718fe",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
+      "source_normalized_sha256": "4ba857ff1b6718763350499fc897d0461026090f3dbad5072fe097c2f281ec55",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -511,11 +518,12 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "5e3bfe0429ef4ec0a4a17c97cef841ed9b442e5230f243462c63d859bf583621",
+      "source_sha256": "84f231a34a9c3fc680a36de8fab7e5bf0b2fcc980bf0343ecf63a50db02ee076",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "e5bab506d9c152ad19645c18640f5f38cfe7ce84c4f6581db7342148ff03bbfe",
+      "source_normalized_sha256": "0b4bfb087da406d2c0f2b321ef7677bf5ce518a38a079f5cbe1d1a56e9ccfe17",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
@@ -597,11 +605,12 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "73a0b257ba15152613c571105573e3cd81a9999bb690b4924d83be18409368f6",
+      "source_sha256": "93bf0a747a2a6bb5f9d43215e7d4d79373d40e18361e1bbd0176a0cb40d345e5",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a9fdac2222ed5a5a24d1c8f1bbefc86e1a7eb025a414a26ca93833fdb5fc0681",
+      "source_normalized_sha256": "ca0e3a89d119269386d35bc5db931c3aa9c0d3e83d5ea2e8601b0896daa62cea",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "ScoreTempoSelection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/playback/ScoreTempoSelection.java",
@@ -888,11 +897,12 @@
     },
     "ScoreNavigationProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationProjection.java",
-      "source_sha256": "a1d54b061e064bd87f3e57645a3783842c5193b16fcb9abe0a0e4bcf6299976d",
+      "source_sha256": "5b6ef07f50b6a8be4bd200fee8817147830c04d0240e11a84c324250e2ab5f6d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "58125aa62c5b8742baee17e84e282e17b57c94b8112f3c034b7c136c8ef7dcaa",
+      "source_normalized_sha256": "a9797c55126d4babb13cfa6438e5171fa462dc90c7240c00522a51a09283920c",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
@@ -980,11 +990,12 @@
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
-      "source_sha256": "c8c3b6e2c2066e957050952c80f725fd091505bc4b8c51674cd341260a91c45c",
+      "source_sha256": "b8d164a5f631ec528418e4e82ce9efd3a82ac08eebf5d61c04c04b3138b75670",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "7ab677176e369471ca46f0226395b0e999f08fdbc8463e00e3542fcc4d75be64",
+      "source_normalized_sha256": "29b07011f9971456a96008a510a7fd8e63c993cde353ea2855763aa634c1ad06",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "DynamicStemCrop.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicStemCrop.java",
@@ -1333,6 +1344,62 @@
       "source_normalized_sha256": "8068a702d48413bb4f55f236a1d880294a5686c2162d3e9401f7c4f29b47dc84",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Original pure-JDK recognition-revision identities, package-only standalone adaptation. Same guide record layout cannot reuse earlier recognition; original source/cleanup/layout controls. Android cache hydration, metadata transfer and native Hub adapters reviewed separately. No private material or model changes."
+    },
+    "BeamInkConnectivity.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
+      "source_sha256": "604e8bc95623261f6905d3df0fd6066bb1d3a3f973846f7d221b7d979c8959b6",
+      "source_normalized_sha256": "ac97114780a2181cc14861a0ecbd91cf03a2153c5a7afd0941b049ad8c47cf77",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "PaleBeamRecovery.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleBeamRecovery.java",
+      "source_sha256": "95b11c55320381eaa62629d64ea525bf43efb10a2c6b1cfa88d0ab3e54aa0382",
+      "source_normalized_sha256": "ea08e00888925abe35dbe938bb5326ef737cd12dd468644ded81b8b837ba05a4",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "ParallelTripletClock.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
+      "source_sha256": "8615d4fe8c0042430f730e046865d935ee782b07d08ecbdbe391b24369e535ca",
+      "source_normalized_sha256": "f61ff6d6d7efb8686e8a679ad2c28b57460ccfe4d7af8b94714a71e3cb20b3ef",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "PrintedCClef.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
+      "source_sha256": "55576a4f1be609396f2f6d2f8da3294a6a347b8e23ff25123da0da11e07ebde9",
+      "source_normalized_sha256": "a0b529158147bcfe672a7a3710d1c7b50e5b24f7c43166d58e048f79fd7046cc",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "PrintedStemDirection.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStemDirection.java",
+      "source_sha256": "009893f3ce5c6ff42e39c7dd48035a68b4b9b897478a595ee03d1629d06a9503",
+      "source_normalized_sha256": "fa62adbce9e5e549dc491cbc9aade77bdaeb75ecc26f5c3669de85726033c91d",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "PrintedTupletBeamOwner.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
+      "source_sha256": "9b58e339a29e28706a829814bae856d8ad964dc7c0516ca5ba6ce6307f6d11d9",
+      "source_normalized_sha256": "e743c5a3ad0be541d18b994b7fb615dca545473d7624621b848e695fd9237636",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+    },
+    "guide_writer.py": {
+      "source_path": "tools/native-worker/guide_writer.py",
+      "source_sha256": "2f7252085fbda062360e963ed4c832e9751966f1d154a799ef1de2e3c8147263",
+      "source_normalized_sha256": "ccbf5038f57d803688097adbc9d0618ee0668df561e0ecfc237be22a0bab3dcf",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "review_note": "Reviewed exact native encoder with package-relative semantic import and Apache-2.0 notice. Guide281 appends the actual signed stem field; explicit older formats retain their bytes and reject data they cannot represent. Original synthetic fixtures only."
     }
   },
   "interpreter_speedup_review": {

@@ -25,7 +25,82 @@ public record ScoreNoteEvent(
         boolean compactOpening,
         int octaveShift,
         int boundaryTies,
-        int tupletNormalNotes) {
+        int tupletNormalNotes,
+        int stemDirection) {
+
+    /** Existing callers without printed shaft evidence keep an unknown direction. */
+    public ScoreNoteEvent(
+            int measureIndex,
+            float positionInMeasure,
+            int staffStep,
+            int staffIndex,
+            int staffCount,
+            float pageY,
+            boolean tiedFromPrevious,
+            int augmentationDots,
+            int beamCount,
+            int writtenAccidental,
+            float unbeamedDurationBeats,
+            int tupletDivisor,
+            float followingRestBeats,
+            int articulations,
+            int clefBottomDiatonic,
+            boolean crossStaffBeam,
+            float leadingRestBeats,
+            boolean compactOpening,
+            int octaveShift,
+            int boundaryTies,
+            int tupletNormalNotes) {
+        this(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                0);
+    }
+
+    public ScoreNoteEvent withStemDirection(int direction) {
+        return new ScoreNoteEvent(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                direction);
+    }
 
     /** Legacy tuplets retain their former ratios; explicit normal counts preserve 5:3 and other ratios. */
     public ScoreNoteEvent(
@@ -105,7 +180,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 boundaryTies,
-                normal);
+                normal,
+                stemDirection);
     }
 
     /** Optical evidence only: incoming above/below, then outgoing above/below. */
@@ -176,7 +252,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 evidence,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     /** Compatibility constructor: notes without an octave mark keep their written register. */
@@ -245,7 +322,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 shift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     /** Source-compatible constructor for callers without opening-measure geometry. */
@@ -310,7 +388,8 @@ public record ScoreNoteEvent(
                 true,
                 octaveShift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     public ScoreNoteEvent(
@@ -372,7 +451,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     public ScoreNoteEvent(
@@ -432,11 +512,14 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     public static final int CLEF_UNKNOWN = -1;
     public static final int CLEF_TREBLE = 30; // E4, C=0 diatonic numbering
+    public static final int CLEF_ALTO = 24; // F3; middle C on the third line
+    public static final int CLEF_TENOR = 22; // D3; middle C on the fourth line
     public static final int CLEF_TREBLE_OTTAVA = 37; // E5, treble clef with 8 above
     public static final int CLEF_BASS = 18; // G2
 
@@ -495,7 +578,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     public int diatonicPitchIdentity() {
@@ -555,7 +639,8 @@ public record ScoreNoteEvent(
                 compactOpening,
                 octaveShift,
                 boundaryTies,
-                tupletNormalNotes);
+                tupletNormalNotes,
+                stemDirection);
     }
 
     public ScoreNoteEvent(
@@ -754,6 +839,8 @@ public record ScoreNoteEvent(
     }
 
     public ScoreNoteEvent {
+        if (stemDirection < -1 || stemDirection > 1)
+            throw new IllegalArgumentException("Invalid printed stem direction");
         if ((boundaryTies & ~BOUNDARY_TIES_ALL) != 0)
             throw new IllegalArgumentException("Invalid boundary tie evidence");
         if (octaveShift < -2 || octaveShift > 2)
@@ -762,7 +849,9 @@ public record ScoreNoteEvent(
             leadingRestBeats = 0;
         if (clefBottomDiatonic != CLEF_TREBLE
                 && clefBottomDiatonic != CLEF_BASS
-                && clefBottomDiatonic != CLEF_TREBLE_OTTAVA) clefBottomDiatonic = CLEF_UNKNOWN;
+                && clefBottomDiatonic != CLEF_TREBLE_OTTAVA
+                && clefBottomDiatonic != CLEF_ALTO
+                && clefBottomDiatonic != CLEF_TENOR) clefBottomDiatonic = CLEF_UNKNOWN;
         articulations &= NoteArticulation.ALL;
         if (!Float.isFinite(followingRestBeats)
                 || followingRestBeats < 0
