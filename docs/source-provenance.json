@@ -1363,8 +1363,8 @@
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
-      "source_sha256": "8615d4fe8c0042430f730e046865d935ee782b07d08ecbdbe391b24369e535ca",
-      "source_normalized_sha256": "f61ff6d6d7efb8686e8a679ad2c28b57460ccfe4d7af8b94714a71e3cb20b3ef",
+      "source_sha256": "627508ac8812e20e83d9bf0ce5a6c21dbcfc1894d02f47e1fd65ed25d09416cd",
+      "source_normalized_sha256": "7d94d674af2bac6b707bae73831737ef98f204fad2e8c29107ff5c40e753fa8d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
