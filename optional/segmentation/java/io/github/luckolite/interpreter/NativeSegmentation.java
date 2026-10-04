@@ -25,6 +25,10 @@ public final class NativeSegmentation implements AutoCloseable {
     private final OrtEnvironment environment = OrtEnvironment.getEnvironment();
     private final OrtSession session;
     private final String inputName;
+    // Each bank belongs only to this final session; close atomically prevents late publication.
+    private final long[] closedWhitePrediction = new long[0];
+    private final java.util.concurrent.atomic.AtomicReference<long[]> cachedWhitePrediction =
+            new java.util.concurrent.atomic.AtomicReference<>();
 
     public NativeSegmentation(Path model) throws OrtException, IOException {
         if (!Files.isRegularFile(model)) throw new IOException("Segmentation model is missing");
@@ -47,6 +51,16 @@ public final class NativeSegmentation implements AutoCloseable {
     }
 
     public byte[] predict(byte[] gray, int width, int height) throws OrtException {
+        try {
+            return predictWithWhitePrediction(gray, width, height);
+        } catch (OrtException | RuntimeException | Error failure) {
+            clearWhitePredictionAfterFailure();
+            throw failure;
+        }
+    }
+
+    private byte[] predictWithWhitePrediction(byte[] gray, int width, int height)
+            throws OrtException {
         long size = (long) width * height;
         if (width < 1 || height < 1 || size > 20_000_000 || gray.length != size)
             throw new IllegalArgumentException("Invalid grayscale page");
@@ -54,9 +68,12 @@ public final class NativeSegmentation implements AutoCloseable {
         var confidence = new byte[gray.length];
         var input = new float[3 * WINDOW * WINDOW];
         int plane = WINDOW * WINDOW;
-        long[] whitePrediction = null;
-        for (int top : tileStarts(height))
-            for (int left : tileStarts(width)) {
+        long[] whitePrediction = cachedWhitePrediction.get();
+        if (whitePrediction == closedWhitePrediction) whitePrediction = null;
+        List<Integer> yStarts = tileStarts(height);
+        List<Integer> xStarts = tileStarts(width);
+        for (int top : yStarts)
+            for (int left : xStarts) {
                 java.util.Arrays.fill(input, 0, plane, 255f);
                 int rows = Math.min(WINDOW, height - top), columns = Math.min(WINDOW, width - left);
                 for (int y = 0; y < rows; y++)
@@ -116,7 +133,20 @@ public final class NativeSegmentation implements AutoCloseable {
                         }
                 }
             }
+        // Promote only after every tile and all tensor/result closes have succeeded.
+        if (cachedWhitePrediction.get() != whitePrediction
+                && !Thread.currentThread().isInterrupted()
+                && ExactWhiteTileInput.cacheablePrediction(whitePrediction, plane))
+            cachedWhitePrediction.compareAndSet(null, whitePrediction);
         return labels;
+    }
+
+    private void clearWhitePredictionAfterFailure() {
+        for (; ; ) {
+            long[] current = cachedWhitePrediction.get();
+            if (current == closedWhitePrediction) return;
+            if (cachedWhitePrediction.compareAndSet(current, null)) return;
+        }
     }
 
     private static List<Integer> tileStarts(int size) {
@@ -133,6 +163,7 @@ public final class NativeSegmentation implements AutoCloseable {
 
     @Override
     public void close() throws OrtException {
+        cachedWhitePrediction.set(closedWhitePrediction);
         session.close();
     }
 

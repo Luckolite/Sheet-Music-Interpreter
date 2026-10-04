@@ -22,4 +22,11 @@ final class ExactWhiteTileInput {
         for (int i = 0; i < planeSize; i++) if (input[i] != 255f) return false;
         return true;
     }
+
+    /** Validates a complete actual model output for reuse without narrowing class IDs. */
+    static boolean cacheablePrediction(long[] prediction, int planeSize) {
+        if (prediction == null || prediction.length != planeSize) return false;
+        for (long value : prediction) if (value < 0 || value > 5) return false;
+        return true;
+    }
 }

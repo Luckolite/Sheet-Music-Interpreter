@@ -1164,10 +1164,11 @@
     },
     "ExactWhiteTileInput.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
-      "source_sha256": "df353b4cc6bcd2719ccab48e4d86d91324c52b2472fffee3501b1ea50b6ec9f2",
-      "source_normalized_sha256": "1bf4533301f8f1569fc0a7fe1d3c43b2631558926c24e72a9384547f2d279977",
-      "review_note": "Complete-input matches remains unchanged. A separate replicated-first-plane predicate requires exact three-plane shape and immediately preceding owned arraycopies. Original full-channel tests plus copied-plane raw-float, padding, nonfinite and input-ownership regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
+      "source_sha256": "63fd124fe76502bd7426deac944366dfc89e03048e535c4e2b7e2abe8a87d7c1",
+      "source_normalized_sha256": "1bd70774fbc02d0f03833f8c2041e2d1a0ee5934c833817fa5fa9b60f9c1d6ec",
+      "review_note": "The replicated-input checks remain unchanged. Shared cache eligibility reads the complete INT64 prediction, requires exact plane size and classes0..5, and never narrows values or writes caller arrays. Both Android and optional/native promotion use this production rule; two original full-shape, padding and INT64 regression methods are included in the mandatory Java suite. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
+      "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
     },
     "ScoreTempoMark.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTempoMark.java",
@@ -1242,12 +1243,12 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "0894eb26c76ed7309f59bbf89e207e4e5ff9411ab5cdfd8a4d1368317ec1136b",
-      "source_normalized_sha256": "fe75d5ae3326931854f547c2725c81832e93d403f3cc3c01dc538897a63e46f2",
+      "source_sha256": "d6d556c05752882d98c70ce7899bee72e795490064b27b636d2abb7e7b0800e0",
+      "source_normalized_sha256": "15e2b6d4be72e0d5c7c654def02f3857e848c137f296b1d2a93d472d03ed2fbc",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889",
-      "review_note": "Resolve reuses its already validated immutable column for target lookup. Public validation and original ordered note scan, evidence ownership and timing remain unchanged; original synthetic resolved/malformed/unowned regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
+      "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890",
+      "review_note": "Resolve retains original first/small-query note scans and indexes ordered note lanes only for five or more owned directions. Cached parser results are consumed once. Measure, staff, count, original note order, raw float membership, musical timing and evidence ownership remain unchanged; original complete-realization and boundary regressions. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -1307,11 +1308,12 @@
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
-      "source_sha256": "111de37bc070b68ba218b4942257dacc8e7b870a2cabf843aa8b5d3ff85fb4c2",
-      "source_normalized_sha256": "1211e0a706bd1e0d36d2898a96b16e9b36c37d825e0c6376891c9e2a526a23fd",
+      "source_sha256": "87213151f7111b1293d1399ec73ee09024086193540c099bd63c234730cd5841",
+      "source_normalized_sha256": "27a07b83947ad44e130833c14f19a993ac66a49ff4990a064041733909857504",
       "reviewed_source_snapshot": "Accepted app874/1.18.401 native-only threadcap update; exactsame tested helper from872",
-      "review_note": "Optional Java adapter checks the replicated first plane immediately after copying it into both other channels. Exact model input, original white-output cache, merge order, class validation and session settings remain unchanged; reviewed with the matching Android call site. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
+      "review_note": "The optional adapter retains only actual shape/class-validated white prediction for its final session, clearing on prediction failure/close and preventing late promotion after close. Tile starts are computed once per axis; tensor packing, output stitch/class rules, iteration order and session settings are preserved. Matching Android model-identity/reset implementation and shared eligibility rule reviewed. Model-free controls and original synthetic native parity evidence remain separate. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
+      "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
     },
     "ScoreGainProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreGainProjection.java",
@@ -1619,22 +1621,17 @@
     "additional_review": "Android-only fresh gray crop/queue/capability adapters retain opaque ARGB native-wire and ML Kit fallback. Matching worker writer and Hub planning/capability/cache high-water promotion were reviewed separately; old guide data and compatible audio retained. No new models, weights, runtime binaries, private score/device/log/library/signing data or app history are included."
   },
   "interpreter_owned_work_reuse_review": {
-    "source_state": "Reviewed uncommitted app890 source on accepted app889",
+    "source_state": "Reviewed uncommitted app891 source on accepted app890",
     "changes": [
-      "ScoreDynamicsDetector.java",
-      "OctaveMarkDetector.java",
       "ScoreExpressionDetector.java",
-      "ExactWhiteTileInput.java",
       "NativeSegmentation.java",
-      "PortableNoteOrnaments.java",
-      "NoteSlideDetector.java",
-      "WaveGlissDetector.java"
+      "ExactWhiteTileInput.java"
     ],
     "android_segmentation_adapter": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
-      "source_sha256": "84efbcd0d626184dc3c9b890a31379620edf8d054796b44a49e6299be2f67351",
-      "review": "Only exact-white check call changes after packTileInput copies the owned first plane into the other two. Matching standalone/native optional adapter and shared predicate were ported. Tensor packing, original prediction cache and merge loops remain unchanged."
+      "source_sha256": "9fcd0082c03fb22781d6cb2bfce8857fa46ca1de4fd7faf42e1275decf0b375a",
+      "review": "Successful whole-segment promotion retains only the existing cloned actual white output for the same CompiledModel; new-model publication, failure and close clear it. Model readiness remains last and analyzer operations remain synchronized. Shared standalone eligibility and optional session lifecycle were ported. Tile starts/channel size are reused locally; six immutable-note diagnostic traversals are fused without changing values. Model, packing, stitch, caller bytes and musical decoder unchanged."
     },
-    "scope": "Global output-preserving work reuse; original generated regressions only; no elapsed phone-speed claim, private score data, weights, dependencies, guide/audio format or recognition revision changes."
+    "scope": "Global output-preserving work reuse with original generated regressions. No private score data, weights, dependencies, guide/audio format or recognition revision changes. No new elapsed phone-speed claim."
   }
 }

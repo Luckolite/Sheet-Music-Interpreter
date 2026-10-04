@@ -30,12 +30,14 @@ def main():
     classes.mkdir(parents=True, exist_ok=True)
     classpath = os.pathsep.join(map(str, [ROOT / "build/classes", args.onnx_jar.resolve()]))
     sources = sorted((ROOT / "optional/segmentation/java").rglob("*.java"))
-    if args.model is not None:
-        sources += sorted((ROOT / "optional/segmentation/test").rglob("*.java"))
+    sources += sorted((ROOT / "optional/segmentation/test").rglob("*.java"))
     subprocess.run([jdk_tool("javac"), "--release", "17", "-encoding", "UTF-8", "-cp", classpath,
                     "-d", str(classes), *map(str, sources)], check=True)
     classpath = str(classes) + os.pathsep + classpath
     print("Segmentation classpath: " + classpath, flush=True)
+    subprocess.run([str(args.java.resolve()) if args.java else jdk_tool("java"),
+                    "-cp", classpath, "io.github.luckolite.interpreter.NativeSegmentationTileStartsParity"],
+                   check=True, timeout=30)
     if args.model is not None:
         subprocess.run([str(args.java.resolve()) if args.java else jdk_tool("java"),
                         "-cp", classpath, "io.github.luckolite.interpreter.NativeSegmentationThreadParity",

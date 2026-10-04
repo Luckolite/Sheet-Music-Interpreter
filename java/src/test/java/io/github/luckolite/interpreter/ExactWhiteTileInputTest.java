@@ -95,4 +95,36 @@ public final class ExactWhiteTileInputTest {
                         ExactWhiteTileInput.matchesReplicatedFirstPlane(
                                 new float[3], Integer.MAX_VALUE));
     }
+
+    @Test
+    public void whitePredictionRequiresCompleteOutputAndRetainsAllValidClasses() {
+        int plane = 320 * 320;
+        assertFalse(ExactWhiteTileInput.cacheablePrediction(null, plane));
+        assertFalse(ExactWhiteTileInput.cacheablePrediction(new long[plane - 1], plane));
+        assertFalse(ExactWhiteTileInput.cacheablePrediction(new long[plane + 1], plane));
+        long[] labels = new long[plane];
+        for (int i = 0; i < plane; i++) labels[i] = i % 6;
+        long[] before = labels.clone();
+        assertTrue(ExactWhiteTileInput.cacheablePrediction(labels, plane));
+        assertArrayEquals(before, labels);
+    }
+
+    @Test
+    public void whitePredictionChecksPaddedPositionsAndFullInt64WithoutMutation() {
+        int plane = 320 * 320;
+        int[] positions = {0, 319, 320, plane / 2, plane - 1};
+        // 256/261 truncate to valid byte classes; reuse must reject their complete INT64 values.
+        long[] values = {-1, 6, 256, 261, Long.MIN_VALUE, Long.MAX_VALUE};
+        for (int position : positions)
+            for (long value : values) {
+                long[] labels = new long[plane];
+                Arrays.fill(labels, 5);
+                labels[position] = value;
+                long[] before = labels.clone();
+                assertFalse(
+                        "position=" + position + " value=" + value,
+                        ExactWhiteTileInput.cacheablePrediction(labels, plane));
+                assertArrayEquals(before, labels);
+            }
+    }
 }
