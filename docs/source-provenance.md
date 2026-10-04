@@ -487,3 +487,10 @@ adapter retains caller-owned inference. Original generated positive and rejectio
 controls include bundled Bravura forte and clef glyphs under SIL-OFL-1.1. Existing
 font notices, model bytes, dependencies and record layouts are unchanged. No
 commercial score, device log, library or signing material is included.
+
+Guide cache identity separates recognition revision from the physical guide record
+format. The pure-JDK identity helper has package-only app parity and original
+controls for unchanged layouts, revised recognition, source, cleanup and page
+identity. Android local/portable hydration and native Hub high-water metadata
+are application adapters reviewed separately. No record layout, model, private
+score, library or device log is included.

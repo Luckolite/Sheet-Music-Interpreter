@@ -1326,6 +1326,13 @@
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
       "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+    },
+    "GuideCacheIdentity.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+      "source_sha256": "8068a702d48413bb4f55f236a1d880294a5686c2162d3e9401f7c4f29b47dc84",
+      "source_normalized_sha256": "8068a702d48413bb4f55f236a1d880294a5686c2162d3e9401f7c4f29b47dc84",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "review_note": "Original pure-JDK recognition-revision identities, package-only standalone adaptation. Same guide record layout cannot reuse earlier recognition; original source/cleanup/layout controls. Android cache hydration, metadata transfer and native Hub adapters reviewed separately. No private material or model changes."
     }
   },
   "interpreter_speedup_review": {
