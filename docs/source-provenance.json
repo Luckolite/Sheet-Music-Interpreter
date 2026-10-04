@@ -415,9 +415,9 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "22bc1d9b6b75622069f271b62d74ed08e1ebdeb7250e91ec4ab582d0db23c9f5",
+      "source_sha256": "4f3e9a5360c3665f2a472842596d94dba3754860d75767c67b979dc8fcb4e440",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "22bc1d9b6b75622069f271b62d74ed08e1ebdeb7250e91ec4ab582d0db23c9f5",
+      "source_normalized_sha256": "4f3e9a5360c3665f2a472842596d94dba3754860d75767c67b979dc8fcb4e440",
       "review_note": "Package-only code/literal parity. Isolated OCR digits require printed equals and independently recognized beat unit; Python numeric-only rejection unchanged. NativePageGuide and standalone SheetInterpreter share the helper; original synthetic controls, no new dependencies."
     },
     "TripletRhythmDetector.java": {
@@ -608,9 +608,9 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "93bf0a747a2a6bb5f9d43215e7d4d79373d40e18361e1bbd0176a0cb40d345e5",
+      "source_sha256": "04625b352d374b6e51a80ac552a4dffc2b4ec41ef02e6e998e06f31d5754b5c1",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ca0e3a89d119269386d35bc5db931c3aa9c0d3e83d5ea2e8601b0896daa62cea",
+      "source_normalized_sha256": "c26d526b717d3a092ef63e06ef9e6884bdac408d919d89dc51e4983846dd85a9",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
@@ -1641,7 +1641,7 @@
     "scope": "Global native adapter geometry reuse; Android already uses its own unchanged precomputed edge scores. No elapsed phone or desktop speed claim. Original model-free controls cover every320x320 weight and existing clipped/clamped tile sequences; packaged worker smoke is still required before rollout.",
     "model_weights_changed": false,
     "record_layout_changed": false
-  },
+  },
   "android_prepared_ornament_staff_review": {
     "base_public_commit": "7222bce39f1ecf427928c946d44d7a21f9fa9ac2",
     "sources": [
@@ -1658,6 +1658,33 @@
     "scope": "The Android ornament reader forwards its already computed ordered aligned staff records for the same page rasters, dimensions, measures and unmodified notes. Staff records remain read-only and method-local; no global cache or new public API.",
     "validation": "98 original synthetic app/public ornament tests passed, including full ordered-note, raster and staff-record identity parity; the full Android analyzer caller and adapter compiled against cached accepted APIs. Full Score/guide and retained-analyzer composition remain separately gated; no phone elapsed claim.",
     "models_changed": false,
+    "record_layout_changed": false
+  },
+  "invocation_local_tie_pitch_reuse_review": {
+    "base_public_commit": "481f9f5eb7063b2cfca808e7cfa6b58acb2fc2d7",
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
+    "source_sha256": "04625b352d374b6e51a80ac552a4dffc2b4ec41ef02e6e998e06f31d5754b5c1",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreTiePitchGuard.java",
+    "standalone_unformatted_sha256": "00decca4962fadabfd3cac9e6918b523d16dd88808d6cc83b42496cc7a2af027",
+    "scope": "Invocation-local lazy MIDI memo of original immutable note indices and stable key records. Backward note order, staff/accidental predicates, last-applicable-key list order, MIDI arithmetic, copies, and result identity unchanged. Three class-private read-only seven-value pitch/key-order tables have exact original contents and indexing, eliminating repeated small array allocations. No cross-page/global cache or new external helper.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/ScoreTiePitchGuardTest.java"
+    ],
+    "validation": "35 focused original synthetic HOST JUnit regressions pass, including two added key-context isolation and lazy error controls. No commercial fixtures, model or phone elapsed claim.",
+    "model_weights_changed": false,
+    "record_layout_changed": false
+  },
+  "deferred_tempo_staff_ownership_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
+    "source_sha256": "4f3e9a5360c3665f2a472842596d94dba3754860d75767c67b979dc8fcb4e440",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TempoChangeDetector.java",
+    "standalone_sha256": "d198c4d63991f17edac28486caac4868054c9b11fc62ec048b62008ca153a348",
+    "scope": "On full-size page rasters and expected nonnull record entries, defer the unchanged verified-staff ownership scan until the original BPM-range and printed-equals proof succeeds. Complete tempo order, float/beat-unit math, deduplication, caller bytes and legacy malformed eager route are preserved. No cross-page/global cache or new helper dependency.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/TempoChangeDetectorTest.java"
+    ],
+    "validation": "11 original procedural private HOST tests passed, including full-source differential raw-bit/caller and malformed first-failure controls. Shareable standalone regression compile/run is separately recorded; no phone or elapsed claim.",
+    "model_weights_changed": false,
     "record_layout_changed": false
   }
 }

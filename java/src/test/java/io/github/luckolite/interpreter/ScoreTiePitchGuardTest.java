@@ -82,4 +82,52 @@ public class ScoreTiePitchGuardTest {
                         .get(1)
                         .tiedFromPrevious());
     }
+
+    @Test
+    public void repeatedTiesUseTheLastApplicableKeyAndSeparateEachInvocation() {
+        var first = note(3, .1f, 1, false);
+        var sharp = explicit(3, .3f, 1, true, ScoreNoteEvent.ACCIDENTAL_SHARP);
+        var repeated = explicit(3, .6f, 1, true, ScoreNoteEvent.ACCIDENTAL_SHARP);
+        var input = List.of(first, sharp, repeated);
+        // Printed list order wins even when a future entry lies between applicable entries.
+        var naturalKeys =
+                List.of(
+                        new ScoreKeyChange(0, 1),
+                        new ScoreKeyChange(10, -1),
+                        new ScoreKeyChange(0, 0));
+        var natural = ScoreTiePitchGuard.apply(input, naturalKeys);
+        assertEquals(
+                List.of(
+                        first,
+                        explicit(3, .3f, 1, false, ScoreNoteEvent.ACCIDENTAL_SHARP),
+                        repeated),
+                natural);
+        assertSame(first, natural.get(0));
+        assertSame(repeated, natural.get(2));
+        var sharpKeys = List.of(new ScoreKeyChange(0, 0), new ScoreKeyChange(0, 1));
+        assertEquals(input, ScoreTiePitchGuard.apply(input, sharpKeys));
+        assertEquals(natural, ScoreTiePitchGuard.apply(input, naturalKeys));
+        assertTrue(sharp.tiedFromPrevious());
+        assertTrue(repeated.tiedFromPrevious());
+        assertEquals(
+                List.of(
+                        new ScoreKeyChange(0, 1),
+                        new ScoreKeyChange(10, -1),
+                        new ScoreKeyChange(0, 0)),
+                naturalKeys);
+    }
+
+    @Test
+    public void unreachedPitchContextRemainsLazyAndKnownPitchErrorsStillPropagate() {
+        var untied = note(3, .2f, 1, false);
+        assertEquals(List.of(untied), ScoreTiePitchGuard.apply(List.of(untied), null));
+        var unknown = note(3, .2f, 1, true).withClef(ScoreNoteEvent.CLEF_UNKNOWN);
+        var unknownLater = note(3, .6f, 1, true).withClef(ScoreNoteEvent.CLEF_UNKNOWN);
+        assertEquals(
+                List.of(unknown, unknownLater),
+                ScoreTiePitchGuard.apply(List.of(unknown, unknownLater), null));
+        assertThrows(
+                NullPointerException.class,
+                () -> ScoreTiePitchGuard.apply(List.of(note(3, .2f, 1, true)), null));
+    }
 }

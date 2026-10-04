@@ -62,11 +62,18 @@ final class TempoChangeDetector {
         List<ScoreTempoChange> result = new ArrayList<>();
         // Measure boxes include clefs and ledger ink above the actual staff.
         // Use a verified five-line top for direction ownership, never for score geometry.
-        List<MeasureRegion> directionMeasures = directionMeasures(measures, gray, width, height);
+        // The verified staff top is needed only after a token has an actual tempo equation.
+        // Keep the original eager failure route for malformed lists or overflow-sized rasters.
+        List<MeasureRegion> directionMeasures =
+                canDeferStaffSearch(tokens, gray, width, height, measures)
+                        ? null
+                        : directionMeasures(measures, gray, width, height);
         for (MeasureNumberReconciler.NumberToken token : tokens) {
             if (token.value() < 30 || token.value() > 400) continue;
             int equalsLeft = equalsSignLeft(token, gray, width, height);
             if (equalsLeft < 0) continue;
+            if (directionMeasures == null)
+                directionMeasures = directionMeasures(measures, gray, width, height);
             token = printedDigitBounds(token, gray, width, height);
             // A direction such as "Lento, poco rubato (quarter = c. 88)" starts at the
             // change; the digits can extend to the next bar. Keep their ink box for symbol
@@ -114,6 +121,19 @@ final class TempoChangeDetector {
             deduplicated.add(change);
         }
         return List.copyOf(deduplicated);
+    }
+
+    private static boolean canDeferStaffSearch(
+            List<MeasureNumberReconciler.NumberToken> tokens,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures) {
+        if ((long) width * height != gray.length) return false;
+        for (Object measure : measures) if (!(measure instanceof MeasureRegion)) return false;
+        for (Object token : tokens)
+            if (!(token instanceof MeasureNumberReconciler.NumberToken)) return false;
+        return true;
     }
 
     private static List<MeasureRegion> directionMeasures(

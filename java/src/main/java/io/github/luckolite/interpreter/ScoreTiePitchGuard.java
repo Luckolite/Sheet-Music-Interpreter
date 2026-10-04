@@ -7,6 +7,10 @@ import java.util.List;
 
 /** Keeps a decoded tie only when its earlier same-pitch note is present. */
 final class ScoreTiePitchGuard {
+    private static final int[] SHARP_ORDER = {3, 0, 4, 1, 5, 2, 6};
+    private static final int[] FLAT_ORDER = {6, 2, 5, 1, 4, 0, 3};
+    private static final int[] LETTER_SEMITONES = {0, 2, 4, 5, 7, 9, 11};
+
     private ScoreTiePitchGuard() {}
 
     static List<ScoreNoteEvent> apply(List<ScoreNoteEvent> notes, List<ScoreKeyChange> keys) {
@@ -46,13 +50,15 @@ final class ScoreTiePitchGuard {
     private static List<ScoreNoteEvent> apply(
             List<ScoreNoteEvent> notes, List<ScoreKeyChange> keys, boolean contextOnly) {
         List<ScoreNoteEvent> result = contextOnly ? null : new ArrayList<>(notes);
+        PitchCache pitches = null;
         for (int i = 0; i < notes.size(); i++) {
             ScoreNoteEvent current = notes.get(i);
             if (!current.tiedFromPrevious()) continue;
-            boolean changed = explicitPitchChange(notes, i, keys);
+            if (pitches == null) pitches = new PitchCache(keys, notes.size());
+            boolean changed = explicitPitchChange(notes, i, pitches);
             if (contextOnly && !changed) continue;
             if (current.measureIndex() == 0 && !changed) continue;
-            int pitch = midi(current, keys);
+            int pitch = pitches.get(i, current);
             if (pitch == Integer.MIN_VALUE && !changed) continue;
             boolean prior = false;
             for (int j = i - 1; !changed && pitch != Integer.MIN_VALUE && j >= 0; j--) {
@@ -62,7 +68,7 @@ final class ScoreTiePitchGuard {
                 if (earlier.measureIndex() == current.measureIndex()
                         && earlier.positionInMeasure() >= current.positionInMeasure() - .018f)
                     continue;
-                if (midi(earlier, keys) == pitch) {
+                if (pitches.get(j, earlier) == pitch) {
                     prior = true;
                     break;
                 }
@@ -101,7 +107,7 @@ final class ScoreTiePitchGuard {
     /** Two different printed accidentals on one staff position cannot form a tie.
      * An inherited accidental is compared only with known key and clef evidence. */
     private static boolean explicitPitchChange(
-            List<ScoreNoteEvent> notes, int index, List<ScoreKeyChange> keys) {
+            List<ScoreNoteEvent> notes, int index, PitchCache pitches) {
         ScoreNoteEvent current = notes.get(index);
         if (current.writtenAccidental() == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) return false;
         for (int j = index - 1; j >= 0; j--) {
@@ -113,7 +119,7 @@ final class ScoreTiePitchGuard {
                     && earlier.positionInMeasure() >= current.positionInMeasure() - .018f) continue;
             if (earlier.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY)
                 return earlier.writtenAccidental() != current.writtenAccidental();
-            int prior = midi(earlier, keys), pitch = midi(current, keys);
+            int prior = pitches.get(j, earlier), pitch = pitches.get(index, current);
             return prior != Integer.MIN_VALUE && pitch != Integer.MIN_VALUE && prior != pitch;
         }
         return false;
@@ -135,6 +141,31 @@ final class ScoreTiePitchGuard {
                 && earlier.clefBottomDiatonic() == current.clefBottomDiatonic();
     }
 
+    /** Invocation-local memo: notes and key records remain immutable throughout the pass. */
+    private static final class PitchCache {
+        private final List<ScoreKeyChange> keys;
+        private final int size;
+        private int[] values;
+        private boolean[] computed;
+
+        PitchCache(List<ScoreKeyChange> keys, int size) {
+            this.keys = keys;
+            this.size = size;
+        }
+
+        int get(int index, ScoreNoteEvent note) {
+            if (computed != null && computed[index]) return values[index];
+            int pitch = midi(note, keys);
+            if (computed == null) {
+                values = new int[size];
+                computed = new boolean[size];
+            }
+            values[index] = pitch;
+            computed[index] = true;
+            return pitch;
+        }
+    }
+
     private static int midi(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
         if (note.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN) return Integer.MIN_VALUE;
         int fifths = Integer.MIN_VALUE;
@@ -146,13 +177,12 @@ final class ScoreTiePitchGuard {
         int accidental = note.writtenAccidental();
         if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) {
             accidental = 0;
-            int[] order =
-                    fifths >= 0 ? new int[] {3, 0, 4, 1, 5, 2, 6} : new int[] {6, 2, 5, 1, 4, 0, 3};
+            int[] order = fifths >= 0 ? SHARP_ORDER : FLAT_ORDER;
             for (int k = 0; k < Math.abs(fifths); k++)
                 if (order[k] == letter) accidental = fifths > 0 ? 1 : -1;
         }
         return (octave + 1 + note.octaveShift()) * 12
-                + new int[] {0, 2, 4, 5, 7, 9, 11}[letter]
+                + LETTER_SEMITONES[letter]
                 + ScoreNoteEvent.accidentalSemitones(accidental);
     }
 }

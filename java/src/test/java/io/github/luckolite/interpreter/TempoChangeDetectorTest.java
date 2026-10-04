@@ -9,6 +9,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 
 public final class TempoChangeDetectorTest {
     @Test
@@ -202,5 +203,80 @@ public final class TempoChangeDetectorTest {
                                 new MeasureRegion(.2f, .9f, .27f, .40f),
                                 new MeasureRegion(.2f, .9f, .45f, .60f)));
         assertTrue("Clef-like OCR must not override the selected tempo", changes.isEmpty());
+    }
+
+    private static byte[] numberedTempoPage(int width, int height, boolean equation) {
+        byte[] gray = new byte[width * height];
+        Arrays.fill(gray, (byte) 255);
+        for (int y : new int[] {90, 99, 108, 117, 126})
+            for (int x = 30; x < width - 20; x++) gray[y * width + x] = 0;
+        if (equation)
+            for (int x = 104; x <= 116; x++) {
+                gray[48 * width + x] = 0;
+                gray[54 * width + x] = 0;
+            }
+        return gray;
+    }
+
+    @Test
+    public void numberedStaffPageWithoutTempoEquationsRetainsEmptyResultAndPixels() {
+        for (int width : new int[] {300, 600}) {
+            byte[] gray = numberedTempoPage(width, 240, false), before = gray.clone();
+            var tokens =
+                    List.of(
+                            new MeasureNumberReconciler.NumberToken(3, .18f, .20f, .22f, .25f),
+                            new MeasureNumberReconciler.NumberToken(85, .35f, .20f, .39f, .25f),
+                            new MeasureNumberReconciler.NumberToken(401, .58f, .20f, .62f, .25f));
+            assertEquals(
+                    List.of(),
+                    TempoChangeDetector.detect(
+                            tokens,
+                            gray,
+                            width,
+                            240,
+                            List.of(new MeasureRegion(.1f, .93f, .375f, .6f))));
+            assertArrayEquals(before, gray);
+        }
+    }
+
+    @Test
+    public void delayedFirstTempoEquationRetainsOrderDeduplicationBitsAndPixels() {
+        int width = 300, height = 240;
+        byte[] gray = numberedTempoPage(width, height, true), before = gray.clone();
+        var first =
+                new MeasureNumberReconciler.NumberToken(
+                        120, 120f / width, 42f / height, 150f / width, 60f / height, 65f / width);
+        var second =
+                new MeasureNumberReconciler.NumberToken(
+                        136, 120f / width, 42f / height, 150f / width, 60f / height, 65f / width);
+        var tokens =
+                List.of(
+                        new MeasureNumberReconciler.NumberToken(7, .2f, .2f, .3f, .3f),
+                        new MeasureNumberReconciler.NumberToken(85, .7f, .03f, .8f, .1f),
+                        first,
+                        first,
+                        second,
+                        new MeasureNumberReconciler.NumberToken(401, .2f, .2f, .3f, .3f));
+        var expected = List.of(new ScoreTempoChange(0, 0, 120), new ScoreTempoChange(0, 0, 136));
+        var actual =
+                TempoChangeDetector.detect(
+                        tokens,
+                        gray,
+                        width,
+                        height,
+                        List.of(new MeasureRegion(.4f, .9f, .27f, .6f)));
+        assertEquals(expected, actual);
+        assertArrayEquals(before, gray);
+        for (int i = 0; i < expected.size(); i++) {
+            assertEquals(
+                    Float.floatToRawIntBits(expected.get(i).positionInMeasure()),
+                    Float.floatToRawIntBits(actual.get(i).positionInMeasure()));
+            assertEquals(
+                    Double.doubleToRawLongBits(expected.get(i).bpm()),
+                    Double.doubleToRawLongBits(actual.get(i).bpm()));
+            assertEquals(
+                    Double.doubleToRawLongBits(expected.get(i).beatUnit()),
+                    Double.doubleToRawLongBits(actual.get(i).beatUnit()));
+        }
     }
 }
