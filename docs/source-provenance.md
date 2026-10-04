@@ -209,6 +209,12 @@ New dependencies and adapters require separate review.
   cross-page endpoints. The Python helper uses only the standard library.
 
 Public regressions use original procedural drawings and shareable examples.
+The Android native layout helper, generated ELF regressions and LiteRT SONAME
+patch were reviewed from app commit `0433fce2566bbe584b13f2474abd75047f22394b`.
+See [Android native runtime provenance](android-native-runtime.md). This port
+changes no mapped Java decoder source or model. Before and after app drift
+checks report the same eleven existing mapped differences; their hashes have
+not been changed by this platform fix.
 Commercial scores, user libraries, device logs, internal checkpoints and private
 source-review fixtures are not distributed. Passing tests does not certify every
 pitch, rhythm, symbol or expressive playback behavior on arbitrary scores.

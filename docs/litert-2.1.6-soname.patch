@@ -1,0 +1,17 @@
+diff --git a/litert/kotlin/BUILD b/litert/kotlin/BUILD
+index a76e66d..c291fee 100644
+--- a/litert/kotlin/BUILD
++++ b/litert/kotlin/BUILD
+@@ -170,0 +171 @@ tflite_jni_binary(
++    soname = "liblitert_jni.so",
+@@ -188,0 +190 @@ tflite_jni_binary(
++    soname = "libLiteRt.so",
+diff --git a/tflite/build_def.bzl b/tflite/build_def.bzl
+index 7d46b14..14ca8ba 100644
+--- a/tflite/build_def.bzl
++++ b/tflite/build_def.bzl
+@@ -229,0 +230 @@ def tflite_jni_binary(
++        soname = None,
+@@ -241 +242 @@ def tflite_jni_binary(
+-            "-Wl,-soname," + name,
++            "-Wl,-soname," + (soname if soname != None else name),
