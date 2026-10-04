@@ -85,4 +85,29 @@ public class LedgerCrossingSlideTest {
     public void thickHorizontalShapeIsNotALedgerRule() {
         assertTrue(detect(false, true, false, 6, 0).isEmpty());
     }
+
+    /** The wave flood may consume its copy without erasing the later slide evidence. */
+    @Test
+    public void preparedRasterSeparatesWaveAndSlideWorkingPixels() {
+        var gray = page(false, true, false, 2);
+        byte[] original = gray.clone();
+        var staffs = List.of(new NoteSlideDetector.Staff(120, 168, 12));
+        var heads =
+                List.of(
+                        new NoteSlideDetector.Head(100, 90, 12, 0, 0),
+                        new NoteSlideDetector.Head(145, 120, 12, 0, 0));
+        var expectedWave = WaveGlissDetector.detect(gray, W, H, staffs, heads);
+        var expectedSlide = NoteSlideDetector.detect(gray, W, H, staffs, heads);
+        assertEquals(1, expectedSlide.size());
+        byte[] prepared = NoteSlideDetector.removeStaffLines(gray, W, H, staffs);
+        byte[] preserved = prepared.clone();
+        assertEquals(
+                expectedWave,
+                WaveGlissDetector.detectWithRemovedStaffLines(W, H, heads, prepared.clone()));
+        assertArrayEquals(preserved, prepared);
+        assertEquals(
+                expectedSlide,
+                NoteSlideDetector.detectWithRemovedStaffLines(gray, W, H, staffs, heads, prepared));
+        assertArrayEquals(original, gray);
+    }
 }

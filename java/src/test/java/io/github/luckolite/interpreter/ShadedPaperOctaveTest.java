@@ -69,4 +69,40 @@ public class ShadedPaperOctaveTest {
         apply(gray);
         assertTrue(Arrays.equals(before, gray));
     }
+
+    /** Original synthetic full/partial tiles with dark, boundary, and white paper. */
+    @Test
+    public void contrastBytesAreIdempotentAcrossPartialTiles() throws Exception {
+        int width = 65, height = 67;
+        byte[] gray = new byte[width * height], expected = new byte[gray.length];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int value = y < 64 ? (x < 64 ? 0 : 188) : (x < 64 ? 189 : 255);
+                gray[y * width + x] = (byte) value;
+                expected[y * width + x] = (byte) (value < 189 ? 189 : value);
+            }
+        }
+        // High outliers saturate without changing the dark tile's percentile.
+        gray[0] = (byte) 255;
+        expected[0] = (byte) 255;
+        gray[64] = (byte) 255;
+        expected[64] = (byte) 255;
+        // Ink survives unchanged when the partial tile's paper is already >=189.
+        gray[64 * width] = 0;
+        expected[64 * width] = 0;
+        gray[64 * width + 64] = 0;
+        expected[64 * width + 64] = 0;
+        byte[] before = gray.clone();
+        var contrast =
+                OctaveMarkDetector.class.getDeclaredMethod(
+                        "contrastedInk", byte[].class, int.class, int.class);
+        contrast.setAccessible(true);
+        byte[] once = (byte[]) contrast.invoke(null, gray, width, height);
+        byte[] twice = (byte[]) contrast.invoke(null, once, width, height);
+        assertArrayEquals(expected, once);
+        assertArrayEquals(once, twice);
+        assertArrayEquals(before, gray);
+        assertNotSame(gray, once);
+        assertNotSame(once, twice);
+    }
 }

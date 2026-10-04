@@ -22,7 +22,16 @@ final class WaveGlissDetector {
                 || gray.length != (long) width * height
                 || heads == null
                 || heads.size() < 2) return List.of();
-        byte[] clean = NoteSlideDetector.removeStaffLines(gray, width, height, staffs);
+        return detectWithRemovedStaffLines(
+                width,
+                height,
+                heads,
+                NoteSlideDetector.removeStaffLines(gray, width, height, staffs));
+    }
+
+    /** Consumes an owned raster: flood traversal replaces its ink with white. */
+    static List<Link> detectWithRemovedStaffLines(
+            int width, int height, List<NoteSlideDetector.Head> heads, byte[] clean) {
         int[] queue = new int[clean.length];
         List<Link> result = new ArrayList<>();
         for (int origin = 0; origin < clean.length; origin++) {

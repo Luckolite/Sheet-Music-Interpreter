@@ -92,4 +92,48 @@ public final class ScoreExpressionDetectorTest {
         assertEquals(Kind.RITARDANDO, ExpressiveDirectionText.parse("rit.").get(0).kind());
         assertTrue(ExpressiveDirectionText.parse("writer and ritual").isEmpty());
     }
+
+    @Test
+    public void resolvedColumnReuseKeepsPublicLookupAndUnownedEvidence() {
+        var detected = detect("sfz", true, rails());
+        var event = detected.expressiveEvents().get(0);
+        assertEquals(List.of(1), ScoreExpressionDetector.targetIndices(detected, event));
+        var foreign =
+                new ScoreExpressiveEvent(
+                        "foreign-expression",
+                        event.kind(),
+                        Optional.empty(),
+                        Optional.empty(),
+                        Scope.UNRESOLVED,
+                        event.staffIndex(),
+                        event.staffCount(),
+                        event.targetEventId(),
+                        event.strength(),
+                        event.qualifierText(),
+                        List.of(new Evidence("synthetic-manual", 0, .27f, 0, 1, "sfz")));
+        var malformed =
+                new ScoreExpressiveEvent(
+                        "malformed-expression",
+                        event.kind(),
+                        Optional.empty(),
+                        Optional.empty(),
+                        Scope.UNRESOLVED,
+                        event.staffIndex(),
+                        event.staffCount(),
+                        Optional.of("expression-column:0:0:1:not-an-int"),
+                        event.strength(),
+                        event.qualifierText(),
+                        event.evidence());
+        var inputEvents = List.of(event, foreign, malformed);
+        var input = detected.withExpressiveEvents(inputEvents);
+        var resolved = ScoreExpressionDetector.resolve(input, 4);
+        assertEquals(event, resolved.expressiveEvents().get(0));
+        assertSame(foreign, resolved.expressiveEvents().get(1));
+        assertSame(malformed, resolved.expressiveEvents().get(2));
+        assertEquals(List.of(1), ScoreExpressionDetector.targetIndices(resolved, event));
+        assertTrue(ScoreExpressionDetector.targetIndices(resolved, foreign).isEmpty());
+        assertTrue(ScoreExpressionDetector.targetIndices(resolved, malformed).isEmpty());
+        assertEquals(inputEvents, input.expressiveEvents());
+        assertEquals(input.notes(), resolved.notes());
+    }
 }

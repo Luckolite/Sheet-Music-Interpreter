@@ -64,7 +64,7 @@ public final class NativeSegmentation implements AutoCloseable {
                         input[y * WINDOW + x] = gray[(top + y) * width + left + x] & 255;
                 System.arraycopy(input, 0, input, plane, plane);
                 System.arraycopy(input, 0, input, plane * 2, plane);
-                boolean exactWhite = ExactWhiteTileInput.matches(input);
+                boolean exactWhite = ExactWhiteTileInput.matchesReplicatedFirstPlane(input, plane);
                 if (exactWhite && whitePrediction != null) {
                     for (int y = 0; y < rows; y++)
                         for (int x = 0; x < columns; x++) {

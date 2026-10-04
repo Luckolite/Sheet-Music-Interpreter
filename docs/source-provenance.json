@@ -338,13 +338,13 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "fc9b85ff511ccdcd279b733b6b6278a83d808fe3cc0d9437801d0f6c5b71e7e9",
-      "source_normalized_sha256": "fc9b85ff511ccdcd279b733b6b6278a83d808fe3cc0d9437801d0f6c5b71e7e9",
-      "review_note": "Full package-only executable parity. A short literal level snaps to one unambiguous note column inside its glyph body and established bar/staff owner; wide, ambiguous and sudden levels retain their established rules. Seven original generated regressions. No song rules, private fixtures, model, dependency or record layout changes.",
+      "source_sha256": "8bc836bb953d44620b11509058ea4e9f242e001fe74c0e92d590bca9070902ae",
+      "source_normalized_sha256": "8bc836bb953d44620b11509058ea4e9f242e001fe74c0e92d590bca9070902ae",
+      "review_note": "Reuse each note-to-staff distance and per-staff votes; retain original float comparisons, every tied nearest staff, HashMap insertion/winner order and note metadata. Original synthetic staff/tie/nonfinite/caller regressions. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_state": "Reviewed isolated app877 candidate based on exact frozen876 source; working source is uncommitted",
-      "reviewed_source_state": "Isolated literal-attack successor to frozen876"
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
+      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889"
     },
     "HairpinContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinContinuation.java",
@@ -474,12 +474,12 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "ac1ac67cfdb3c6cfb72d06a556bdeaf09d0f43b2e8d91bdf2c034fa3d3cc4fdc",
+      "source_sha256": "6d20c1fbd35b1e603264d9029fcfc5d71234eb2bfd8414929568d5ef1f87d2f3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "23a580ff43a01c55f1e32dfb6381239304444b4076a178a2f4ad67d9d06fa5de",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
+      "source_normalized_sha256": "9da463d5055d390196293933468a37996c28768deb6356287873c93de4fb27b6",
+      "review_note": "Apply reuses its already contrasted raster in printed-word detection; raw printedWords still prepares input. Tile contrast is pixel-idempotent and the detection closure is read-only. Existing octave tests plus original partial-edge byte golden. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
+      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889"
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -760,10 +760,11 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "53231d6a454e86e7165a827e9037f83c1d51594cd3f0cb3d7f5bea723642ef9a",
+      "source_sha256": "d9beebc05495248aa427649ab8720b2ff40e0b9b600a51993651653f5f6edafa",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ea8a7555cd5ead34ab97111a8bfcf8969519e663aae902c33bcf38a5823436a6",
-      "review_note": "Reviewed package-only standalone port. Bounded straight fragments may rejoin only at an assigned physical staff-rule crossing with95percent original gap ink, combined residual/correlation and unique immediate same-staff same-measure source proof. Existing results preserved; recursion limited to one staff-free recheck. Original9 generated tests. No private source, model, dependency or layout change."
+      "source_normalized_sha256": "ad22f3224c4b0ffcab9cabb95e99e6f300fc1d924cde39f646356521fa6282bd",
+      "review_note": "Original raw detector retains preparation and routes to an owned prepared-raster implementation with unchanged ledger removal, fragments, proof thresholds, recursion and ordering. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "OutlinedBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
@@ -806,12 +807,12 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "76fd44d2639f51a21f9267365af4fc27a9a412977e8537e4a816f0556c754944",
+      "source_sha256": "22711a467d2fc8163cf6937d0c728caa6f7c4abfbf6d27b2c807b5baf5ef2204",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "76fd44d2639f51a21f9267365af4fc27a9a412977e8537e4a816f0556c754944",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit.",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation."
+      "source_normalized_sha256": "22711a467d2fc8163cf6937d0c728caa6f7c4abfbf6d27b2c807b5baf5ef2204",
+      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889",
+      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "FaintSharpInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
@@ -1163,9 +1164,10 @@
     },
     "ExactWhiteTileInput.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
-      "source_sha256": "ccf6589a12e568b7a19a89472b085d297940ce79d11a42f9c0873b3b52ba8107",
-      "source_normalized_sha256": "ae52d748c567a79c250b9672f406169e4b5552ca3e09e93bbbf776a8055648ce",
-      "review_note": "Original Apache-2.0 JDK-only complete-input exact-white predicate. Package/format-only port; synthetic near-white, all-plane, padding and input-ownership tests. Reviewed app adapters and Python predict cache actual owned output only for fixed deterministic approved weights."
+      "source_sha256": "df353b4cc6bcd2719ccab48e4d86d91324c52b2472fffee3501b1ea50b6ec9f2",
+      "source_normalized_sha256": "1bf4533301f8f1569fc0a7fe1d3c43b2631558926c24e72a9384547f2d279977",
+      "review_note": "Complete-input matches remains unchanged. A separate replicated-first-plane predicate requires exact three-plane shape and immediately preceding owned arraycopies. Original full-channel tests plus copied-plane raw-float, padding, nonfinite and input-ownership regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "ScoreTempoMark.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTempoMark.java",
@@ -1216,11 +1218,11 @@
     },
     "WaveGlissDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WaveGlissDetector.java",
-      "source_sha256": "93eeb2523cd6970bd68900ffce771559798bb899661fc000d80df431b118ec1d",
-      "source_normalized_sha256": "93eeb2523cd6970bd68900ffce771559798bb899661fc000d80df431b118ec1d",
+      "source_sha256": "3f22babbc6cf21e5666066b1c079ce9713e9ef1c4a67b517f09c0a1f23afe020",
+      "source_normalized_sha256": "3f22babbc6cf21e5666066b1c079ce9713e9ef1c4a67b517f09c0a1f23afe020",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
+      "review_note": "Original raw guard and staff preparation retained; prepared entry consumes a separate owned clone. Original flood, moments, thresholds and candidate order remain unchanged. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed."
     },
     "MetricModulationText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MetricModulationText.java",
@@ -1240,11 +1242,12 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "4206ea33b5d18d0fde47365bd40eb5e486c9be682b52072c1bbcf335e0ea466b",
-      "source_normalized_sha256": "b5782006ccf90079e2d50ca5434fe807586deadeb71b537cdf7cc8657830bbf4",
+      "source_sha256": "0894eb26c76ed7309f59bbf89e207e4e5ff9411ab5cdfd8a4d1368317ec1136b",
+      "source_normalized_sha256": "fe75d5ae3326931854f547c2725c81832e93d403f3cc3c01dc538897a63e46f2",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data."
+      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889",
+      "review_note": "Resolve reuses its already validated immutable column for target lookup. Public validation and original ordered note scan, evidence ownership and timing remain unchanged; original synthetic resolved/malformed/unowned regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -1304,10 +1307,11 @@
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
-      "source_sha256": "867011982a4472f9583fe2598e7ff7f7072a11d87bf4c9ea20b2cf203f53b50f",
-      "source_normalized_sha256": "867011982a4472f9583fe2598e7ff7f7072a11d87bf4c9ea20b2cf203f53b50f",
+      "source_sha256": "111de37bc070b68ba218b4942257dacc8e7b870a2cabf843aa8b5d3ff85fb4c2",
+      "source_normalized_sha256": "1211e0a706bd1e0d36d2898a96b16e9b36c37d825e0c6376891c9e2a526a23fd",
       "reviewed_source_snapshot": "Accepted app874/1.18.401 native-only threadcap update; exactsame tested helper from872",
-      "review_note": "Full optional Java17 standalone port, executable tokens identical after package/license/format adaptation. Existing ExactWhiteTileInput dependency182mappedcheck reviewed separately. Six original generated fullmodel/repeat/caller controls use the previous two-thread source; no private pixels, weights/runtime changes or mandatory dependencies."
+      "review_note": "Optional Java adapter checks the replicated first plane immediately after copying it into both other channels. Exact model input, original white-output cache, merge order, class validation and session settings remain unchanged; reviewed with the matching Android call site. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "ScoreGainProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreGainProjection.java",
@@ -1613,5 +1617,24 @@
     "recognition_revision": 2,
     "record_layout_changed": false,
     "additional_review": "Android-only fresh gray crop/queue/capability adapters retain opaque ARGB native-wire and ML Kit fallback. Matching worker writer and Hub planning/capability/cache high-water promotion were reviewed separately; old guide data and compatible audio retained. No new models, weights, runtime binaries, private score/device/log/library/signing data or app history are included."
+  },
+  "interpreter_owned_work_reuse_review": {
+    "source_state": "Reviewed uncommitted app890 source on accepted app889",
+    "changes": [
+      "ScoreDynamicsDetector.java",
+      "OctaveMarkDetector.java",
+      "ScoreExpressionDetector.java",
+      "ExactWhiteTileInput.java",
+      "NativeSegmentation.java",
+      "PortableNoteOrnaments.java",
+      "NoteSlideDetector.java",
+      "WaveGlissDetector.java"
+    ],
+    "android_segmentation_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "source_sha256": "84efbcd0d626184dc3c9b890a31379620edf8d054796b44a49e6299be2f67351",
+      "review": "Only exact-white check call changes after packTileInput copies the owned first plane into the other two. Matching standalone/native optional adapter and shared predicate were ported. Tensor packing, original prediction cache and merge loops remain unchanged."
+    },
+    "scope": "Global output-preserving work reuse; original generated regressions only; no elapsed phone-speed claim, private score data, weights, dependencies, guide/audio format or recognition revision changes."
   }
 }

@@ -233,7 +233,7 @@ public final class ScoreExpressionDetector {
                     events.add(event);
                     continue;
                 }
-                var indices = targetIndices(score, event);
+                var indices = targetIndicesForColumn(score, c.get());
                 double start = -1, release = -1;
                 boolean proved = !indices.isEmpty();
                 for (int index : indices) {
@@ -289,7 +289,10 @@ public final class ScoreExpressionDetector {
             ScorePageInterpretation score, ScoreExpressiveEvent event) {
         var c = column(event);
         if (c.isEmpty()) return List.of();
-        var a = c.get();
+        return targetIndicesForColumn(score, c.get());
+    }
+
+    private static List<Integer> targetIndicesForColumn(ScorePageInterpretation score, Column a) {
         var result = new ArrayList<Integer>();
         for (int i = 0; i < score.notes().size(); i++) {
             var note = score.notes().get(i);

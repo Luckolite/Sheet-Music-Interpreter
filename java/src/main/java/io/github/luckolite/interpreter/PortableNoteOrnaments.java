@@ -107,37 +107,32 @@ final class PortableNoteOrnaments {
         int[] marks = new int[notes.size()];
         for (var found : detect(recognizer, gray, w, h, staffs, anchors, trills))
             marks[found.noteIndex()] |= found.marks();
+        var slideStaffs =
+                staffs.stream()
+                        .map(s -> new NoteSlideDetector.Staff(s.top(), s.bottom(), s.gap()))
+                        .toList();
+        var slideHeads =
+                anchors.stream()
+                        .map(n -> new NoteSlideDetector.Head(n.x, n.y, n.gap, n.staff, n.measure))
+                        .toList();
+        // Share only preparation; the two detectors own separate mutable working rasters.
+        byte[] sharedClean =
+                gray != null && gray.length == (long) w * h && slideHeads.size() >= 2
+                        ? NoteSlideDetector.removeStaffLines(gray, w, h, slideStaffs)
+                        : null;
         for (var gliss :
-                WaveGlissDetector.detect(
-                        gray,
-                        w,
-                        h,
-                        staffs.stream()
-                                .map(s -> new NoteSlideDetector.Staff(s.top(), s.bottom(), s.gap()))
-                                .toList(),
-                        anchors.stream()
-                                .map(
-                                        n ->
-                                                new NoteSlideDetector.Head(
-                                                        n.x, n.y, n.gap, n.staff, n.measure))
-                                .toList()))
+                sharedClean == null
+                        ? WaveGlissDetector.detect(gray, w, h, slideStaffs, slideHeads)
+                        : WaveGlissDetector.detectWithRemovedStaffLines(
+                                w, h, slideHeads, sharedClean.clone()))
             if (marks[gliss.sourceIndex()] == 0
                     && NoteOrnament.type(notes.get(gliss.sourceIndex()).articulations()) == 0)
                 marks[gliss.sourceIndex()] = NoteOrnament.GLISSANDO;
         for (var slide :
-                NoteSlideDetector.detect(
-                        gray,
-                        w,
-                        h,
-                        staffs.stream()
-                                .map(s -> new NoteSlideDetector.Staff(s.top(), s.bottom(), s.gap()))
-                                .collect(java.util.stream.Collectors.toList()),
-                        anchors.stream()
-                                .map(
-                                        n ->
-                                                new NoteSlideDetector.Head(
-                                                        n.x, n.y, n.gap, n.staff, n.measure))
-                                .collect(java.util.stream.Collectors.toList())))
+                sharedClean == null
+                        ? NoteSlideDetector.detect(gray, w, h, slideStaffs, slideHeads)
+                        : NoteSlideDetector.detectWithRemovedStaffLines(
+                                gray, w, h, slideStaffs, slideHeads, sharedClean))
             if (marks[slide.noteIndex()] == 0)
                 marks[slide.noteIndex()] =
                         NoteOrnament.SLIDE

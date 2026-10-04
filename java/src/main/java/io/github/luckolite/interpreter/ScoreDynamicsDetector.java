@@ -11,18 +11,34 @@ final class ScoreDynamicsDetector {
     static List<PlayingTechniqueDetector.Staff> alignStaffs(
             List<PlayingTechniqueDetector.Staff> staffs, List<ScoreNoteEvent> notes, int height) {
         List<PlayingTechniqueDetector.Staff> result = new ArrayList<>();
+        if (staffs.isEmpty()) return result;
+        // Staff geometry is immutable; reuse each note's distances without picking one tie owner.
+        float[] centers = new float[staffs.size()], distances = new float[staffs.size()];
+        List<Map<Integer, Integer>> allVotes = new ArrayList<>();
+        int index = 0;
         for (var staff : staffs) {
-            Map<Integer, Integer> votes = new HashMap<>();
-            for (var note : notes) {
-                float y = note.pageY() * height, center = (staff.top() + staff.bottom()) * .5f;
-                if (Math.abs(y - center) > staff.gap() * 5) continue;
-                boolean nearest = true;
-                for (var other : staffs)
-                    if (Math.abs(y - (other.top() + other.bottom()) * .5f) < Math.abs(y - center))
-                        nearest = false;
-                if (nearest)
-                    votes.merge(note.staffCount() * 16 + note.staffIndex(), 1, Integer::sum);
+            centers[index++] = (staff.top() + staff.bottom()) * .5f;
+            allVotes.add(new HashMap<>());
+        }
+        for (var note : notes) {
+            float y = note.pageY() * height, nearest = Float.POSITIVE_INFINITY;
+            for (int s = 0; s < centers.length; s++) {
+                float distance = Math.abs(y - centers[s]);
+                distances[s] = distance;
+                if (distance < nearest) nearest = distance;
             }
+            index = 0;
+            for (var staff : staffs) {
+                float distance = distances[index];
+                if (!(distance > staff.gap() * 5) && !(nearest < distance))
+                    allVotes.get(index)
+                            .merge(note.staffCount() * 16 + note.staffIndex(), 1, Integer::sum);
+                index++;
+            }
+        }
+        index = 0;
+        for (var staff : staffs) {
+            Map<Integer, Integer> votes = allVotes.get(index++);
             int lane = staff.count() * 16 + staff.index(), best = 0;
             for (var vote : votes.entrySet())
                 if (vote.getValue() > best) {

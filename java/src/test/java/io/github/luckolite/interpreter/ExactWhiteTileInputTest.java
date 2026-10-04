@@ -51,4 +51,48 @@ public final class ExactWhiteTileInputTest {
         for (int i = 0; i < bits.length; i++)
             assertEquals(bits[i], Float.floatToRawIntBits(input[i]));
     }
+
+    @Test
+    public void copiedPlanesMatchTheAllChannelCheckAndPreserveCallerBits() {
+        int plane = 4 * 4;
+        // A 3-by-2 crop leaves the fourth column and last two rows as padding.
+        int[] positions = {0, 1, 6, 7, 11, plane - 1};
+        float[] values = {
+            255f,
+            0f,
+            -0f,
+            254f,
+            Math.nextDown(255f),
+            Math.nextUp(255f),
+            Float.intBitsToFloat(0x7fc00425),
+            Float.NEGATIVE_INFINITY,
+            Float.POSITIVE_INFINITY,
+            Float.MIN_VALUE
+        };
+        for (int position : positions)
+            for (float value : values) {
+                float[] input = new float[3 * plane];
+                Arrays.fill(input, 255f);
+                input[position] = value;
+                System.arraycopy(input, 0, input, plane, plane);
+                System.arraycopy(input, 0, input, 2 * plane, plane);
+                int[] bits = new int[input.length];
+                for (int i = 0; i < bits.length; i++) bits[i] = Float.floatToRawIntBits(input[i]);
+                assertEquals(
+                        ExactWhiteTileInput.matches(input),
+                        ExactWhiteTileInput.matchesReplicatedFirstPlane(input, plane));
+                for (int i = 0; i < bits.length; i++)
+                    assertEquals(bits[i], Float.floatToRawIntBits(input[i]));
+            }
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                        ExactWhiteTileInput.matchesReplicatedFirstPlane(
+                                new float[3 * plane + 1], plane));
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                        ExactWhiteTileInput.matchesReplicatedFirstPlane(
+                                new float[3], Integer.MAX_VALUE));
+    }
 }

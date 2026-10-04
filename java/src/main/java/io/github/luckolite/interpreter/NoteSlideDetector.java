@@ -52,7 +52,13 @@ final class NoteSlideDetector {
     }
 
     static List<Stroke> detect(byte[] gray, int w, int h, List<Staff> staffs, List<Head> heads) {
-        byte[] clean = removeStaffLines(gray, w, h, staffs);
+        return detectWithRemovedStaffLines(
+                gray, w, h, staffs, heads, removeStaffLines(gray, w, h, staffs));
+    }
+
+    /** Consumes an owned staff-cleaned raster; original gray remains read-only. */
+    static List<Stroke> detectWithRemovedStaffLines(
+            byte[] gray, int w, int h, List<Staff> staffs, List<Head> heads, byte[] clean) {
         removeHeadLedgerLines(clean, gray, w, h, staffs, heads);
         boolean[] ink = new boolean[gray.length];
         for (int i = 0; i < ink.length; i++) ink[i] = (clean[i] & 255) < 150;

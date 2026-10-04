@@ -39,7 +39,7 @@ final class OctaveMarkDetector {
         gray = contrastedInk(gray, width, height);
         List<PlayingTechniqueDetector.Word> combined =
                 new ArrayList<>(words == null ? List.of() : words);
-        combined.addAll(printedWords(gray, width, height, staffs));
+        combined.addAll(printedWords(gray, width, height, staffs, true));
         if (combined.isEmpty()) return notes;
         List<Span> spans = new ArrayList<>();
         for (var sourceWord : combined) {
@@ -189,9 +189,18 @@ final class OctaveMarkDetector {
 
     static List<PlayingTechniqueDetector.Word> printedWords(
             byte[] gray, int width, int height, List<PlayingTechniqueDetector.Staff> staffs) {
+        return printedWords(gray, width, height, staffs, false);
+    }
+
+    private static List<PlayingTechniqueDetector.Word> printedWords(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            boolean alreadyContrasted) {
         List<PlayingTechniqueDetector.Word> words = new ArrayList<>();
         if (gray == null || gray.length != width * height) return words;
-        gray = contrastedInk(gray, width, height);
+        if (!alreadyContrasted) gray = contrastedInk(gray, width, height);
         for (var staff : staffs)
             for (boolean below : new boolean[] {false, true}) {
                 float gap = staff.gap();
