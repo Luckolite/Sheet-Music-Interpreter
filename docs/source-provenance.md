@@ -512,3 +512,11 @@ values and truncated/trailing frames cover these layouts. Android conversion, gu
 persistence, Hub validation and audio adapters are reviewed separately; the three
 deliberately fabricated rest/MIDI probe paths keep unknown direction. No private
 score, device log, app history, weight or new production dependency is distributed.
+
+OCR input resizing computes horizontal half-pixel coordinates once per crop and
+reuses the four source colors across its BGR channel planes. Alpha composition,
+interpolation evaluation order, rounding, CHW normalization and zero padding are
+preserved. A compact original synthetic crop checks complete raw float bits for
+detector and recognizer inputs and unchanged caller pixels; existing validation
+and cancellation tests remain. No score scans, model weights, new dependencies or
+record layouts are included.

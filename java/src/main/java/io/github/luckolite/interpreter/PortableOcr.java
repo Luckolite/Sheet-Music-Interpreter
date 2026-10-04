@@ -119,6 +119,17 @@ public final class PortableOcr {
             throw new IllegalArgumentException("Invalid OCR resize");
         float[] output = new float[paddedWidth * outHeight * 3];
         float[] mean = {.485f, .456f, .406f}, std = {.229f, .224f, .225f};
+        int[] xs0 = new int[outWidth], xs1 = new int[outWidth];
+        float[] fractions = new float[outWidth];
+        for (int x = 0; x < outWidth; x++) {
+            double sx =
+                    Math.max(
+                            left,
+                            Math.min(right - 1, left + (x + .5) * (right - left) / outWidth - .5));
+            xs0[x] = (int) sx;
+            xs1[x] = Math.min(right - 1, xs0[x] + 1);
+            fractions[x] = (float) (sx - xs0[x]);
+        }
         for (int y = 0; y < outHeight; y++) {
             if (Thread.currentThread().isInterrupted())
                 throw new java.util.concurrent.CancellationException();
@@ -128,22 +139,19 @@ public final class PortableOcr {
                             Math.min(bottom - 1, top + (y + .5) * (bottom - top) / outHeight - .5));
             int y0 = (int) sy, y1 = Math.min(bottom - 1, y0 + 1);
             float fy = (float) (sy - y0);
+            int row0 = y0 * width, row1 = y1 * width;
             for (int x = 0; x < outWidth; x++) {
-                double sx =
-                        Math.max(
-                                left,
-                                Math.min(
-                                        right - 1,
-                                        left + (x + .5) * (right - left) / outWidth - .5));
-                int x0 = (int) sx, x1 = Math.min(right - 1, x0 + 1);
-                float fx = (float) (sx - x0);
+                int x0 = xs0[x], x1 = xs1[x];
+                float fx = fractions[x];
+                int p00 = pixels[row0 + x0],
+                        p01 = pixels[row0 + x1],
+                        p10 = pixels[row1 + x0],
+                        p11 = pixels[row1 + x1];
                 for (int c = 0; c < 3; c++) {
                     // Paddle OCR's reference reader supplies BGR, not RGB.
                     int shift = c * 8;
-                    float a = channel(pixels[y0 * width + x0], shift),
-                            b = channel(pixels[y0 * width + x1], shift);
-                    float d = channel(pixels[y1 * width + x0], shift),
-                            e = channel(pixels[y1 * width + x1], shift);
+                    float a = channel(p00, shift), b = channel(p01, shift);
+                    float d = channel(p10, shift), e = channel(p11, shift);
                     float value =
                             Math.round((a + (b - a) * fx) * (1 - fy) + (d + (e - d) * fx) * fy)
                                     / 255f;
