@@ -22,13 +22,6 @@ You do not need to publish your own code. Follow the [license and notice require
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing in notation software.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 
-Explicit tuplets expose `tupletActualNotes` and `tupletNormalNotes` on derived JSON
-events and retain both counts in the raw score notes. A proved wavy connector
-adds `glissando: {"style": "white_keys", "targetMidi": ...}` to its source event.
-Preview playback holds that source for two thirds of its duration, then plays
-the intervening white keys; the target retains its ordinary pitch and onset.
-MusicXML exports paired wavy endpoints and explicit tuplet time modifications.
-
 - MusicXML reconstructs a concert-pitch score, not the original layout or tab placement.
   Guitar effects are text annotations in MusicXML.
 
