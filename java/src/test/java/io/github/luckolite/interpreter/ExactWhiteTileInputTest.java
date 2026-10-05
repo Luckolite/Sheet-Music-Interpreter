@@ -211,4 +211,117 @@ public final class ExactWhiteTileInputTest {
             return failure.getClass();
         }
     }
+
+    @Test
+    public void fusedPackingPreservesUnsignedValuesAndWhitePrefixBoundaries() {
+        int plane = 320 * 320;
+        byte[] everyValue = new byte[256];
+        for (int i = 0; i < everyValue.length; i++) everyValue[i] = (byte) i;
+        assertFusedPacking(everyValue, 16, 16, 0, 0, 0);
+        byte[] gray = new byte[plane];
+        Arrays.fill(gray, (byte) 255);
+        assertFusedPacking(gray, 320, 320, 0, 0, 0);
+        for (int position : new int[] {0, 319, 320, plane - 1}) {
+            for (int value : new int[] {0, 254}) {
+                gray[position] = (byte) value;
+                assertFusedPacking(gray, 320, 320, 0, 0, 0);
+                gray[position] = (byte) 255;
+            }
+        }
+    }
+
+    @Test
+    public void fusedPackingRetainsPaddingOrderedFailuresAndExtraCells() {
+        int[][] shapes = {
+            {320, 320, 0, 0}, {513, 384, 193, 64}, {32, 19, 0, 0},
+            {319, 320, 0, 0}, {320, 319, 0, 0}, {513, 384, 384, 192},
+            {320, 320, 320, 320}, {0, 0, 0, 0}, {-1, -1, 0, 0},
+            {320, 320, -1, 0}, {320, 320, 0, -1}
+        };
+        for (int[] shape : shapes) {
+            byte[] gray = new byte[Math.max(0, shape[0] * shape[1])];
+            for (int i = 0; i < gray.length; i++) gray[i] = (byte) (i * 37 + (i >>> 9));
+            assertFusedPacking(gray, shape[0], shape[1], shape[2], shape[3], 13);
+        }
+        assertFusedPacking(null, 320, 320, 0, 0, 13);
+        assertFusedPacking(null, 0, 0, 0, 0, 0);
+        assertFusedPacking(new byte[17], 320, 320, 0, 0, 13);
+        assertFusedPacking(
+                new byte[0],
+                Integer.MAX_VALUE,
+                Integer.MAX_VALUE,
+                Integer.MAX_VALUE,
+                Integer.MAX_VALUE,
+                13);
+        assertFusedPacking(new byte[0], Integer.MIN_VALUE, 1, Integer.MAX_VALUE, 0, 13);
+        assertThrows(
+                NullPointerException.class,
+                () -> ExactWhiteTileInput.packReplicatedTile(null, null, 320, 320, 0, 0, 320));
+        float[] shortInput = {Float.intBitsToFloat(0x7fc00425), -0f};
+        int[] before = {
+            Float.floatToRawIntBits(shortInput[0]), Float.floatToRawIntBits(shortInput[1])
+        };
+        assertThrows(
+                IllegalArgumentException.class,
+                () ->
+                        ExactWhiteTileInput.packReplicatedTile(
+                                shortInput, null, 320, 320, 0, 0, 320));
+        for (int i = 0; i < before.length; i++)
+            assertEquals(before[i], Float.floatToRawIntBits(shortInput[i]));
+    }
+
+    @Test
+    public void fusedPackingObservesCallerChangesAndReplacesDirtyReusedPlanes() {
+        int plane = 320 * 320;
+        float[] input = new float[3 * plane];
+        Arrays.fill(input, Float.intBitsToFloat(0x7fc00425));
+        byte[] gray = new byte[plane];
+        Arrays.fill(gray, (byte) 255);
+        for (int value : new int[] {255, 254, 255, 0, 255}) {
+            gray[plane - 1] = (byte) value;
+            byte[] caller = gray.clone();
+            assertEquals(
+                    value == 255,
+                    ExactWhiteTileInput.packReplicatedTile(input, gray, 320, 320, 0, 0, 320));
+            assertEquals(
+                    value == 255, ExactWhiteTileInput.matchesReplicatedFirstPlane(input, plane));
+            assertArrayEquals(caller, gray);
+            for (int channel = 0; channel < 3; channel++)
+                for (int i = 0; i < plane; i++)
+                    assertEquals(
+                            Float.floatToRawIntBits(i == plane - 1 ? value : 255f),
+                            Float.floatToRawIntBits(input[channel * plane + i]));
+        }
+        byte[] crop = {(byte) 255};
+        assertTrue(ExactWhiteTileInput.packReplicatedTile(input, crop, 1, 1, 0, 0, 320));
+        assertTrue(ExactWhiteTileInput.matches(input));
+    }
+
+    private static void assertFusedPacking(
+            byte[] gray, int width, int height, int left, int top, int extra) {
+        int plane = 320 * 320;
+        float[] original = new float[3 * plane + extra];
+        int[] dirty = {0, 0x80000000, 0x7fc00425, 0x7f800000, 0xff800000, 0x3f123456};
+        for (int i = 0; i < original.length; i++)
+            original[i] = Float.intBitsToFloat(dirty[i % dirty.length]);
+        float[] actual = original.clone();
+        byte[] caller = gray == null ? null : gray.clone();
+        // Retain the existing original packing oracle, while invoking the actual production method.
+        Class<?> expectedFailure = packedFailure(original, gray, width, height, left, top, false);
+        Class<?> actualFailure = null;
+        boolean white = false;
+        try {
+            white =
+                    ExactWhiteTileInput.packReplicatedTile(
+                            actual, gray, width, height, left, top, 320);
+        } catch (RuntimeException | Error failure) {
+            actualFailure = failure.getClass();
+        }
+        assertEquals(expectedFailure, actualFailure);
+        assertArrayEquals(caller, gray);
+        for (int i = 0; i < original.length; i++)
+            assertEquals(Float.floatToRawIntBits(original[i]), Float.floatToRawIntBits(actual[i]));
+        if (expectedFailure == null && extra == 0)
+            assertEquals(ExactWhiteTileInput.matchesReplicatedFirstPlane(original, plane), white);
+    }
 }

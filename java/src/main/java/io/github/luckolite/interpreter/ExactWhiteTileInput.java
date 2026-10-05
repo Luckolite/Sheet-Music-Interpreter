@@ -41,6 +41,50 @@ final class ExactWhiteTileInput {
                 && (long) width * height == gray.length;
     }
 
+    /**
+     * Packs the first plane in raster order, then replicates it into the other two planes.
+     * Only an owned, exactly three-plane tensor may use the returned white result. The ordinary
+     * packing API accepts longer arrays; their trailing cells are not part of this result.
+     */
+    static boolean packReplicatedTile(
+            float[] input, byte[] gray, int width, int height, int left, int top, int window) {
+        int plane = window * window;
+        if (input.length < plane * 3)
+            throw new IllegalArgumentException("Input tensor is too small");
+        if (!fullTileOverwritesPlane(gray, width, height, left, top, window))
+            java.util.Arrays.fill(input, 0, plane, 255f);
+        int rows = Math.max(0, Math.min(window, height - top));
+        int columns = Math.max(0, Math.min(window, width - left));
+        int y = 0, x = 0, source = 0, destination = 0;
+        boolean exactWhite = true;
+        whitePrefix:
+        for (; y < rows; y++) {
+            source = (top + y) * width + left;
+            destination = y * window;
+            for (x = 0; x < columns; x++) {
+                int value = gray[source + x] & 255;
+                input[destination + x] = value;
+                if (value != 255) {
+                    exactWhite = false;
+                    x++;
+                    break whitePrefix;
+                }
+            }
+        }
+        if (!exactWhite) {
+            // The first non-white sample is already written; the dense tail needs no white checks.
+            for (; x < columns; x++) input[destination + x] = gray[source + x] & 255;
+            for (y++; y < rows; y++) {
+                source = (top + y) * width + left;
+                destination = y * window;
+                for (x = 0; x < columns; x++) input[destination + x] = gray[source + x] & 255;
+            }
+        }
+        System.arraycopy(input, 0, input, plane, plane);
+        System.arraycopy(input, 0, input, plane * 2, plane);
+        return exactWhite;
+    }
+
     /** Validates a complete actual model output for reuse without narrowing class IDs. */
     static boolean cacheablePrediction(long[] prediction, int planeSize) {
         if (prediction == null || prediction.length != planeSize) return false;

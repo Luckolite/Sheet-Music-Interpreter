@@ -160,6 +160,49 @@ public class PageTrillEvidenceTest {
         assertArrayEquals(changed, page);
     }
 
+    @Test
+    public void alignedMaskRetainsAllUnsignedPixelsAndRereadsItsCaller() throws Exception {
+        var mask =
+                PortableOrnamentGlyphs.class.getDeclaredMethod(
+                        "mask",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class);
+        mask.setAccessible(true);
+        int width = 52;
+        byte[] raster = new byte[width * 46];
+        Arrays.fill(raster, (byte) 255);
+        for (int y = 0; y < 40; y++)
+            for (int x = 0; x < 48; x++)
+                raster[(y + 3) * width + x + 2] = (byte) ((y * 48 + x) * 73 + 19);
+        byte[] before = raster.clone();
+        float[] first = (float[]) mask.invoke(null, raster, width, 2, 3, 50, 43);
+        assertEquals(48 * 40, first.length);
+        for (int y = 0; y < 40; y++)
+            for (int x = 0; x < 48; x++) {
+                float expected = 1 - (before[(y + 3) * width + x + 2] & 255) / 255f;
+                assertEquals(
+                        Float.floatToRawIntBits(expected),
+                        Float.floatToRawIntBits(first[y * 48 + x]));
+            }
+        assertArrayEquals(before, raster);
+        raster[0] = 0;
+        float[] outside = (float[]) mask.invoke(null, raster, width, 2, 3, 50, 43);
+        assertNotSame(first, outside);
+        for (int i = 0; i < first.length; i++)
+            assertEquals(Float.floatToRawIntBits(first[i]), Float.floatToRawIntBits(outside[i]));
+        for (int y = 3; y < 43; y++) Arrays.fill(raster, y * width + 2, y * width + 50, (byte) 0);
+        byte[] changed = raster.clone();
+        first[0] = -91;
+        float[] black = (float[]) mask.invoke(null, raster, width, 2, 3, 50, 43);
+        for (float value : black)
+            assertEquals(Float.floatToRawIntBits(1f), Float.floatToRawIntBits(value));
+        assertArrayEquals(changed, raster);
+    }
+
     private static void assertMatchBits(
             PortableOrnamentGlyphs.Match expected, PortableOrnamentGlyphs.Match actual) {
         assertEquals(expected.kind(), actual.kind());

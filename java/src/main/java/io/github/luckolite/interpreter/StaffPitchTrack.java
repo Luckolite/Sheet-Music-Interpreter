@@ -806,11 +806,12 @@ final class StaffPitchTrack {
         // At the pale threshold, require a narrower stroke so broad shading
         // cannot masquerade as five evenly spaced printed rules.
         int flank = Math.max(2, Math.round(gap * (inkThreshold > 205 ? .22f : .32f)));
+        int firstScanY = Math.max(flank, top), lastScanY = Math.min(height - 1 - flank, bottom);
         for (int xx = left; xx <= right; xx++) {
             if (xx >= headLeft - exclusion && xx <= headRight + exclusion) continue;
             samples++;
             int columnShift = Math.round((xx - x) * slope);
-            for (int y = Math.max(flank, top); y <= Math.min(height - 1 - flank, bottom); y++) {
+            for (int y = firstScanY; y <= lastScanY; y++) {
                 int row = y + columnShift;
                 if (row < flank || row + flank >= height) continue;
                 int ink = gray[row * width + xx] & 255;
@@ -978,6 +979,7 @@ final class StaffPitchTrack {
             boolean occluded,
             int inkThreshold) {
         int covered = 0;
+        int thick = Math.max(2, Math.round(gap * .25f));
         for (int side = 0; side < 2; side++)
             for (int line = 0; line < 5; line++) {
                 int first = side == 0 ? left : headRight + exclusion + 1;
@@ -1000,7 +1002,6 @@ final class StaffPitchTrack {
                     }
                     if (ink) inkColumns++;
                     if (label) labelColumns++;
-                    int thick = Math.max(2, Math.round(gap * .25f));
                     for (int yy = Math.max(thick, center - band);
                             yy <= Math.min(height - 1 - thick, center + band);
                             yy++) {

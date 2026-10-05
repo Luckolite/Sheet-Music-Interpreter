@@ -156,4 +156,46 @@ public final class PortableNoteOrnamentsTest {
         detect(p, List.of(new PortableNoteOrnaments.Anchor(180, 179, 16, 0, 0)));
         assertArrayEquals(before, p);
     }
+
+    @Test
+    public void disconnectedAuxiliarySignsFillBothSidesAndRereadMutableInk() {
+        byte[] upper = new byte[12 * 16], lower = new byte[12 * 16];
+        Arrays.fill(upper, (byte) 255);
+        Arrays.fill(lower, (byte) 255);
+        for (int y : new int[] {0, 1, 14, 15})
+            for (int x = 0; x < 12; x++) {
+                upper[y * 12 + x] = 0;
+                if (y >= 14 || x < 6) lower[y * 12 + x] = 0;
+            }
+        var r = recognizer();
+        r.add(upper, 12, 16, 3, true);
+        r.add(lower, 12, 16, 1, true);
+        byte[] raster = page(168, 110);
+        for (int y = 0; y < 16; y++) {
+            System.arraycopy(upper, y * 12, raster, (84 + y) * W + 174, 12);
+            System.arraycopy(lower, y * 12, raster, (125 + y) * W + 174, 12);
+        }
+        var anchors = List.of(new PortableNoteOrnaments.Anchor(180, 179, 16, 0, 0));
+        byte[] before = raster.clone();
+        var both = PortableNoteOrnaments.detect(r, raster, W, H, staffs(), anchors);
+        assertEquals(1, both.size());
+        assertEquals(0, both.get(0).noteIndex());
+        assertEquals(168, both.get(0).bounds().left);
+        assertEquals(110, both.get(0).bounds().top);
+        assertEquals(193, both.get(0).bounds().right);
+        assertEquals(119, both.get(0).bounds().bottom);
+        assertEquals(
+                NoteOrnament.withAccidental(
+                        NoteOrnament.withAccidental(NoteOrnament.TURN, true, 1), false, -1),
+                both.get(0).marks());
+        assertArrayEquals(before, raster);
+        for (int y = 84; y < 100; y++) Arrays.fill(raster, y * W + 174, y * W + 186, (byte) 255);
+        byte[] changed = raster.clone();
+        var lowerOnly = PortableNoteOrnaments.detect(r, raster, W, H, staffs(), anchors);
+        assertEquals(1, lowerOnly.size());
+        assertEquals(
+                NoteOrnament.withAccidental(NoteOrnament.TURN, false, -1),
+                lowerOnly.get(0).marks());
+        assertArrayEquals(changed, raster);
+    }
 }

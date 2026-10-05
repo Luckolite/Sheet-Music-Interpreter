@@ -56,9 +56,9 @@
     },
     "TupletSixGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
-      "source_sha256": "213b971939bdc3751fcdd30a4dc8ef196650c27922b4900aad3abbdda429c27b",
+      "source_sha256": "198b4a0e4a3be7b1db976aa95735a9dc47f5d153940a4f42faaddc4951d0eee8",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "213b971939bdc3751fcdd30a4dc8ef196650c27922b4900aad3abbdda429c27b"
+      "source_normalized_sha256": "198b4a0e4a3be7b1db976aa95735a9dc47f5d153940a4f42faaddc4951d0eee8"
     },
     "ShadedChordHeadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedChordHeadRecovery.java",
@@ -456,8 +456,8 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "37fe07327899d9bebb877ef62ad2348c2af08c26a73ffe9ac913d1b934c7293c",
-      "source_normalized_sha256": "bfd0573696e7ab7b4fe95fabaaa8537aab82cd6493e04fbb87753972ea986267",
+      "source_sha256": "822bae71374e853783471dcd9e4c758400f02db612a6584a8899f55253bbf551",
+      "source_normalized_sha256": "e9d2a0d98f8ee12fe9b44a1c9e97eab13c438c1cad3a22d136a481e1ffd01ccb",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Reviewed column shift hoist retains exact original float operands and Math.round order. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The13 strip samples share one fully overwritten call-local raster. Raw detector and contrast/rule readers are synchronous and retain only geometry; strip order, caller pixels, float math, validation and pitch output remain unchanged. Existing8 plus one original varying-paper/ink curve and caller-preservation regression passed on app and standalone sources (18 focused checks). No models, dependencies, record fields or private inputs changed.",
       "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
@@ -834,9 +834,9 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
+      "source_sha256": "92d8dce1f03500aa2a644032deeaf0efa1dfae5de1543e24fa4bf14a3bbcfff7",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
+      "source_normalized_sha256": "92d8dce1f03500aa2a644032deeaf0efa1dfae5de1543e24fa4bf14a3bbcfff7",
       "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
       "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
@@ -850,10 +850,10 @@
     },
     "PortableOrnamentGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
-      "source_sha256": "f129faf40729d964e062f2247667985e33e7d7ddb927d2745e644246942f3939",
+      "source_sha256": "6a04197f026787f5664ecff8c7a11f85c37e63e619dd834ce3419783088c95e7",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Private held global PageTrill call-local query mask reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
-      "source_normalized_sha256": "a6e36e8d4ed7c4db3093897443ddbc4230ece5dcc2060652c656117705df715d",
+      "source_normalized_sha256": "58ff0ceac3b18eca3cbce1028f096c24b46dda7e58632ad802c319d64b5b969a",
       "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
@@ -1208,8 +1208,8 @@
     },
     "ExactWhiteTileInput.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
-      "source_sha256": "1ed4cb01a21434e0833bb5d471923c6b60ade57084aaabc339ca22cd6f7fd4e6",
-      "source_normalized_sha256": "06fb143f32d14bc9326fc1cc4e4ab0d82e6ec5a43ad15a4030f6c2924f2d5558",
+      "source_sha256": "dc1f3c2bfc85df303c241b5f1b02234818578a6c24bdf9c9fcff6428d6c75fae",
+      "source_normalized_sha256": "40eaeedac312583c5c6611949b20f3e4ca1d5dc986bde606764b6903121980cd",
       "review_note": "The replicated-input checks remain unchanged. Shared cache eligibility reads the complete INT64 prediction, requires exact plane size and classes0..5, and never narrows values or writes caller arrays. Both Android and optional/native promotion use this production rule; two original full-shape, padding and INT64 regression methods are included in the mandatory Java suite. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
       "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
@@ -1353,8 +1353,8 @@
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
-      "source_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
-      "source_normalized_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
+      "source_sha256": "457279f71333699f932211dd9f49307c856f1e51a43306df28a16279c82b14d8",
+      "source_normalized_sha256": "457279f71333699f932211dd9f49307c856f1e51a43306df28a16279c82b14d8",
       "reviewed_source_snapshot": "Reviewed native edge-weight table successor to accepted app891",
       "review_note": "The optional adapter computes the unchanged four-border distance once per class and reads unsigned byte weights in both cached-white and native-output paths. The existing >= overlap tie rule, class validation/read/cast/write order, clipping, model options and cache/session lifetime are unchanged. An original independent border-distance regression verifies all102400 weights, including signed-byte centers; original10 tile raster controls retained. No model, dependency, format, private score, device or signing data changed.",
       "reviewed_app_state": "Reviewed uncommitted native source; recorded app commit remains the origin base.",
@@ -2300,5 +2300,131 @@
     "phone_elapsed_claim": false,
     "whole_score_parity_claim": false,
     "failure_boundary": "Out-of-memory and failed lazy holder initialization equivalence are not claimed."
+  },
+  "fused_tile_packing_and_optical_primitive_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "a177ce8d95b913b7c4a1001f85be61f015a7037a",
+    "reviewed_source_state": "Private functional candidate from accepted app905; release metadata not yet selected",
+    "paired_sources": [
+      {
+        "name": "ExactWhiteTileInput.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
+        "app_sha256": "dc1f3c2bfc85df303c241b5f1b02234818578a6c24bdf9c9fcff6428d6c75fae",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExactWhiteTileInput.java",
+        "standalone_sha256": "aad2df206f03d916eb26907a12996364c02e4d5fda4bb9c5c03725e60f479455"
+      },
+      {
+        "name": "NativeSegmentation.java",
+        "app_path": "tools/native-worker/NativeSegmentation.java",
+        "app_sha256": "457279f71333699f932211dd9f49307c856f1e51a43306df28a16279c82b14d8",
+        "standalone_path": "optional/segmentation/java/io/github/luckolite/interpreter/NativeSegmentation.java",
+        "standalone_sha256": "6834046ab552108522cfc74fd6af4ccf7486009e8875b3bf788985dd52bbb7c9"
+      },
+      {
+        "name": "PortableOrnamentGlyphs.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
+        "app_sha256": "6a04197f026787f5664ecff8c7a11f85c37e63e619dd834ce3419783088c95e7",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PortableOrnamentGlyphs.java",
+        "standalone_sha256": "c6455ff232df2d353cff9ad05d0ba9462d28225a6e7c69bf9808db95fc3c7d02"
+      },
+      {
+        "name": "PortableNoteOrnaments.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
+        "app_sha256": "92d8dce1f03500aa2a644032deeaf0efa1dfae5de1543e24fa4bf14a3bbcfff7",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PortableNoteOrnaments.java",
+        "standalone_sha256": "ff0b01f3ea078b74241b0c5a5fd8999028d3484b8e4748c2d58404fe08db1521"
+      },
+      {
+        "name": "TupletSixGlyph.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
+        "app_sha256": "198b4a0e4a3be7b1db976aa95735a9dc47f5d153940a4f42faaddc4951d0eee8",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TupletSixGlyph.java",
+        "standalone_sha256": "841a68ecae8d1f70744694bf0c137606d80c1ff6e59036bff384c0a0a3c1a984"
+      },
+      {
+        "name": "StaffPitchTrack.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
+        "app_sha256": "822bae71374e853783471dcd9e4c758400f02db612a6584a8899f55253bbf551",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/StaffPitchTrack.java",
+        "standalone_sha256": "82e003d57df7ab03fce3180b573b26c4cbe4f6a647c5301e6ccee6db7d9a668a"
+      }
+    ],
+    "historical_origin_preserved": {
+      "ExactWhiteTileInput.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
+        "source_sha256": "1ed4cb01a21434e0833bb5d471923c6b60ade57084aaabc339ca22cd6f7fd4e6",
+        "source_normalized_sha256": "06fb143f32d14bc9326fc1cc4e4ab0d82e6ec5a43ad15a4030f6c2924f2d5558",
+        "review_note": "The replicated-input checks remain unchanged. Shared cache eligibility reads the complete INT64 prediction, requires exact plane size and classes0..5, and never narrows values or writes caller arrays. Both Android and optional/native promotion use this production rule; two original full-shape, padding and INT64 regression methods are included in the mandatory Java suite. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
+        "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
+        "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
+      },
+      "NativeSegmentation.java": {
+        "source_path": "tools/native-worker/NativeSegmentation.java",
+        "source_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
+        "source_normalized_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
+        "reviewed_source_snapshot": "Reviewed native edge-weight table successor to accepted app891",
+        "review_note": "The optional adapter computes the unchanged four-border distance once per class and reads unsigned byte weights in both cached-white and native-output paths. The existing >= overlap tie rule, class validation/read/cast/write order, clipping, model options and cache/session lifetime are unchanged. An original independent border-distance regression verifies all102400 weights, including signed-byte centers; original10 tile raster controls retained. No model, dependency, format, private score, device or signing data changed.",
+        "reviewed_app_state": "Reviewed uncommitted native source; recorded app commit remains the origin base.",
+        "reviewed_source_state": "Global precomputed tile-edge geometry with identical unsigned weights, class validation and stitch order"
+      },
+      "PortableOrnamentGlyphs.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
+        "source_sha256": "f129faf40729d964e062f2247667985e33e7d7ddb927d2745e644246942f3939",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Private held global PageTrill call-local query mask reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+        "source_normalized_sha256": "a6e36e8d4ed7c4db3093897443ddbc4230ece5dcc2060652c656117705df715d",
+        "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+        "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
+      },
+      "PortableNoteOrnaments.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
+        "source_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
+        "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+        "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+        "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
+      },
+      "TupletSixGlyph.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
+        "source_sha256": "213b971939bdc3751fcdd30a4dc8ef196650c27922b4900aad3abbdda429c27b",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "213b971939bdc3751fcdd30a4dc8ef196650c27922b4900aad3abbdda429c27b"
+      },
+      "StaffPitchTrack.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
+        "source_sha256": "37fe07327899d9bebb877ef62ad2348c2af08c26a73ffe9ac913d1b934c7293c",
+        "source_normalized_sha256": "bfd0573696e7ab7b4fe95fabaaa8537aab82cd6493e04fbb87753972ea986267",
+        "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Reviewed column shift hoist retains exact original float operands and Math.round order. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The13 strip samples share one fully overwritten call-local raster. Raw detector and contrast/rule readers are synchronous and retain only geometry; strip order, caller pixels, float math, validation and pitch output remain unchanged. Existing8 plus one original varying-paper/ink curve and caller-preservation regression passed on app and standalone sources (18 focused checks). No models, dependencies, record fields or private inputs changed.",
+        "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
+      }
+    },
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "source_sha256": "bc8d808d52f241f566d03f3a0bdfb4d03dcfddb504dabc8d8f057950f795d107"
+    },
+    "scope": "Fuse exact320 white-prefix detection into unchanged replicated tensor packing; hoist primitive ornament row geometry, staff scan bounds/thickness and printed-six row bases/pocket width; retain ordered auxiliary upper/lower updates without a temporary boolean array.",
+    "validation": {
+      "packing_original_and_new_methods": 20,
+      "ornament_original_and_new_methods": 52,
+      "tuplet_original_and_new_methods": 40,
+      "staff_distinct_methods": 38,
+      "four_way_desktop_onnx_full_tensor_labels_stitch_cache_trace": true,
+      "four_way_ornament_mask_match_found_error_bits": true
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/ExactWhiteTileInputTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/PageTrillEvidenceTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/PortableNoteOrnamentsTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/TupletSixScanParityTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/StaffPitchLoopEvidenceTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Focused pure JVM/Desktop ONNX parity only; Android caller and required release/worker gates remain pending. Exception source lines and removed temporary-array OOM boundary are not claimed equivalent."
   }
 }

@@ -382,7 +382,8 @@ final class PortableNoteOrnaments {
             // At small print sizes a sharp's stems/crossbars can rasterize as
             // separate components, each too narrow to be a standalone symbol.
             // Verify their combined shape in the bounded auxiliary-sign slot.
-            for (boolean upper : new boolean[] {true, false})
+            for (int side = 0; side < 2; side++) {
+                boolean upper = side == 0;
                 if (NoteOrnament.accidental(marks, upper) == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) {
                     float gap = anchor.gap;
                     var staff = staffs.get(anchor.staff);
@@ -409,6 +410,7 @@ final class PortableNoteOrnaments {
                     if (accidental.accepted())
                         marks = NoteOrnament.withAccidental(marks, upper, accidental.kind() - 2);
                 }
+            }
             boolean duplicate = false;
             for (var prior : found) if (prior.noteIndex() == owner) duplicate = true;
             if (!duplicate) found.add(new Found(box, marks, owner));
