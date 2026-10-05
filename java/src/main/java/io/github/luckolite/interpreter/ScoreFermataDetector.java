@@ -178,7 +178,7 @@ public final class ScoreFermataDetector {
                     continue;
                 }
                 var a = attack.get();
-                var indices = targetIndices(score, event);
+                var indices = targetIndices(score, a);
                 double start = -1, end = -1;
                 boolean proved = !indices.isEmpty();
                 for (int index : indices) {
@@ -234,7 +234,10 @@ public final class ScoreFermataDetector {
             ScorePageInterpretation score, ScoreExpressiveEvent event) {
         var attack = attack(event);
         if (attack.isEmpty()) return List.of();
-        var a = attack.get();
+        return targetIndices(score, attack.get());
+    }
+
+    private static List<Integer> targetIndices(ScorePageInterpretation score, Attack a) {
         var indices = new ArrayList<Integer>();
         for (int i = 0; i < score.notes().size(); i++) {
             var note = score.notes().get(i);

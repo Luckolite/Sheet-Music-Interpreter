@@ -681,9 +681,9 @@
     },
     "DynamicGlyphEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphEvidence.java",
-      "source_sha256": "6c95a0a3e0786d1186f4096bd93ce8f5e72bd2d9725596eb6f0f99f833d87ea1",
+      "source_sha256": "79066bfe44e635d862e22e47da454fee8234d382cac49d368ea2d05b9b67699c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6c95a0a3e0786d1186f4096bd93ce8f5e72bd2d9725596eb6f0f99f833d87ea1"
+      "source_normalized_sha256": "79066bfe44e635d862e22e47da454fee8234d382cac49d368ea2d05b9b67699c"
     },
     "DynamicOcrBounds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicOcrBounds.java",
@@ -1036,10 +1036,10 @@
     },
     "ScoreFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataDetector.java",
-      "source_sha256": "04ce0a9208d38d17aef3994c37b76da7678e41b57c931e55bef3508da6e8ba1e",
-      "source_normalized_sha256": "092cc466db37200bddec83a1da354113b437f5b21ad945acc3ca36ac788e2b5e",
+      "source_sha256": "655b64af843c44359875721dc3f0459cf90b2383620ba5707fc96ec58320fc6c",
+      "source_normalized_sha256": "0bcd0c8c01e5f77254aac4f49f4b77fcc8863361cef64899cc527c690be1f3d9",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data.",
+      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. The existing immutable detector-owned Attack is forwarded to the unchanged ordered target-note scan during resolve, eliminating duplicate target parsing; public entry validation and meter/timing arithmetic remain intact. Added an original synthetic repeated-resolution/chord/caller-preservation regression; focused execution is pending the release batch.",
       "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension"
     },
     "ScoreFermataNotation.java": {
@@ -1165,8 +1165,8 @@
     },
     "ExactWhiteTileInput.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
-      "source_sha256": "63fd124fe76502bd7426deac944366dfc89e03048e535c4e2b7e2abe8a87d7c1",
-      "source_normalized_sha256": "1bd70774fbc02d0f03833f8c2041e2d1a0ee5934c833817fa5fa9b60f9c1d6ec",
+      "source_sha256": "1ed4cb01a21434e0833bb5d471923c6b60ade57084aaabc339ca22cd6f7fd4e6",
+      "source_normalized_sha256": "06fb143f32d14bc9326fc1cc4e4ab0d82e6ec5a43ad15a4030f6c2924f2d5558",
       "review_note": "The replicated-input checks remain unchanged. Shared cache eligibility reads the complete INT64 prediction, requires exact plane size and classes0..5, and never narrows values or writes caller arrays. Both Android and optional/native promotion use this production rule; two original full-shape, padding and INT64 regression methods are included in the mandatory Java suite. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
       "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890"
@@ -1309,8 +1309,8 @@
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
-      "source_sha256": "fec137a54196233f509f267b3e5685b71b2d790ba8d689302cd505fc7f0dafdb",
-      "source_normalized_sha256": "fec137a54196233f509f267b3e5685b71b2d790ba8d689302cd505fc7f0dafdb",
+      "source_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
+      "source_normalized_sha256": "85229a9035ccb3b29a07ecf8ffa8dff742e60866c327955817ca93fbabb5a81e",
       "reviewed_source_snapshot": "Reviewed native edge-weight table successor to accepted app891",
       "review_note": "The optional adapter computes the unchanged four-border distance once per class and reads unsigned byte weights in both cached-white and native-output paths. The existing >= overlap tie rule, class validation/read/cast/write order, clipping, model options and cache/session lifetime are unchanged. An original independent border-distance regression verifies all102400 weights, including signed-byte centers; original10 tile raster controls retained. No model, dependency, format, private score, device or signing data changed.",
       "reviewed_app_state": "Reviewed uncommitted native source; recorded app commit remains the origin base.",
@@ -1745,5 +1745,74 @@
     "model_weights_changed": false,
     "record_layout_changed": false,
     "resource_exhaustion_occurrence_or_concurrent_caller_mutation_not_claimed": true
+  },
+  "full_tile_padding_write_reuse_review": {
+    "changes": [
+      "ExactWhiteTileInput.java",
+      "NativeSegmentation.java"
+    ],
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "source_sha256": "236d3e057954974f267305ff11db954e4b338bbe0e59b165b9c8dd30d3b2aea0"
+    },
+    "scope": "The shared fill predicate proves full in-bounds320x320 overwrite only on an exact complete raster. All3 packing loops/copies retain original byte conversion, iteration, padding, malformed-input failure side effects and oversized tensor tails. Native options/model/input/output/stitch/cache ownership are unchanged.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/ExactWhiteTileInputTest.java"
+    ],
+    "validation": "The BASELINE app packing body is text-exact to the oracle used by the previously passed89 model-free raw-bit/caller/partial-failure controls. The candidate changes the fill predicate; prior guard evidence is reused, not re-executed on these new sources. Two new shared-rule procedural regressions are prepared and unrun. No measured Android, whole-page or inference gain is claimed.",
+    "model_weights_changed": false,
+    "record_layout_changed": false,
+    "phone_elapsed_claim": false,
+    "concurrent_caller_mutation_or_resource_exhaustion_occurrence_not_claimed": true,
+    "standalone_sources": [
+      {
+        "path": "optional/segmentation/java/io/github/luckolite/interpreter/NativeSegmentation.java",
+        "sha256": "5610ef1518568d601d711e5a298b8c3880ca38df4d50a2420d1653495ad627ad"
+      },
+      {
+        "path": "java/src/main/java/io/github/luckolite/interpreter/ExactWhiteTileInput.java",
+        "sha256": "8252dcbc5889d64208b5dabfce753b4e785994aa6385231bcb40ff6ffbbbce49"
+      }
+    ],
+    "public_formatting": "Google Java Format1.24.0 AOSP; imports, strings and Javadoc preserved; private copies only."
+  },
+  "immutable_dynamic_template_bank_reuse_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphEvidence.java",
+    "source_sha256": "79066bfe44e635d862e22e47da454fee8234d382cac49d368ea2d05b9b67699c",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DynamicGlyphEvidence.java",
+    "standalone_sha256": "2918b6f2b8543bad5aa39104b91a30f04842a1e95af142ac56520fd8a26a95e7",
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphRecognizer.java",
+      "source_sha256": "aab7ae1aeaef30e195fbf89a07f575891a4a9101dfba7cd0f596739ac68e0971"
+    },
+    "scope": "A pure synchronized single-bank policy retains only a complete immutable bank. Android keys exact AssetManager identity, an owned Configuration snapshot, and both actual serif-style Typeface identities. Failed/partial asset loads and configuration/font changes retain original fallback templates and are not cached. Original43-template order, Android bitmap rendering/mask arithmetic, scoring/ties and fresh per-match state remain unchanged. An unavailable optional resource-metadata probe chooses the original uncached constructor path; failed post-load metadata prevents publication. Typeface creation remains outside the metadata Exception catch and propagates its original failures.",
+    "native_boundary": "NativeDynamicGlyphs already retains its9 immutable asset templates for a NativeMusicalOcr job and has no Android font fallback. Its file loading/scoring/ownership remain unchanged; no filesystem cache or Android dependency is added to the standalone worker.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/DynamicGlyphEvidenceTest.java"
+    ],
+    "validation": "Four original synthetic cache-policy regressions are prepared, not executed: exact ordered43-value reuse, independent resource/config/font invalidation, partial-result retry, and primary Exception/Error identity with successful retry. These tests do not validate Android raster/Typeface/asset output. Android compilation and actual template raw-bit/output parity remain required before selection.",
+    "model_weights_changed": false,
+    "record_layout_changed": false,
+    "phone_elapsed_claim": false,
+    "concurrent_external_asset_mutation_or_resource_exhaustion_occurrence_not_claimed": true,
+    "standalone_sources": [
+      {
+        "path": "java/src/main/java/io/github/luckolite/interpreter/DynamicGlyphEvidence.java",
+        "sha256": "2918b6f2b8543bad5aa39104b91a30f04842a1e95af142ac56520fd8a26a95e7"
+      }
+    ],
+    "public_formatting": "Google Java Format1.24.0 AOSP; imports, strings and Javadoc preserved; private copies only.",
+    "android_runtime_validation": {
+      "scope": "Actual Android template-only original/candidate comparison; no full Score, OCR/model or elapsed claim.",
+      "complete_templates": 43,
+      "masks_compared": 244,
+      "raw_float_values_compared": 374784,
+      "ordered_text_aspect_mask_bits": true,
+      "cache_identity_and_config_font_key_invalidation": true,
+      "partial_and_null_fallback_retry": true,
+      "procedural_match_packed_caller_cases": 3,
+      "source_scoped_model_calls": 0,
+      "phone_elapsed_claim": false
+    }
   }
 }

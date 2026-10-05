@@ -305,4 +305,24 @@ public class ScoreFermataDetectorTest {
         assertTrue(event.start().isEmpty());
         assertTrue(event.end().isEmpty());
     }
+
+    @Test
+    public void repeatedResolutionRetainsOrderedChordTargetsAndCaller() throws Exception {
+        var score = detected(false, true);
+        var originalNotes = List.copyOf(score.notes());
+        var originalEvents = List.copyOf(score.expressiveEvents());
+        var resolved = resolve(score, 3);
+        assertEquals(
+                List.of(1),
+                ScoreFermataDetector.targetIndices(resolved, resolved.expressiveEvents().get(0)));
+        assertEquals(
+                List.of(3, 5),
+                ScoreFermataDetector.targetIndices(resolved, resolved.expressiveEvents().get(1)));
+        assertEquals(
+                new ScoreAnchor(0, 1.5), resolved.expressiveEvents().get(1).start().orElseThrow());
+        assertEquals(new ScoreAnchor(1, 0), resolved.expressiveEvents().get(1).end().orElseThrow());
+        assertEquals(resolved, resolve(resolved, 3));
+        assertEquals(originalNotes, score.notes());
+        assertEquals(originalEvents, score.expressiveEvents());
+    }
 }

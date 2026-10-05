@@ -23,6 +23,24 @@ final class ExactWhiteTileInput {
         return true;
     }
 
+    /**
+     * Proves that the ordinary packing loop overwrites every first-plane cell.
+     * A complete, nonoverflowing raster and full in-bounds tile are required.
+     * Otherwise callers retain the original white fill before any pixel access.
+     */
+    static boolean fullTileOverwritesPlane(
+            byte[] gray, int width, int height, int left, int top, int window) {
+        return window > 0
+                && width >= window
+                && height >= window
+                && left >= 0
+                && top >= 0
+                && width - left >= window
+                && height - top >= window
+                && gray != null
+                && (long) width * height == gray.length;
+    }
+
     /** Validates a complete actual model output for reuse without narrowing class IDs. */
     static boolean cacheablePrediction(long[] prediction, int planeSize) {
         if (prediction == null || prediction.length != planeSize) return false;

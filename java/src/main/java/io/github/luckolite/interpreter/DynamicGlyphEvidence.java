@@ -35,4 +35,50 @@ final class DynamicGlyphEvidence {
                                 && wordRight - glyphRight > .25f * width
                                 && Math.abs(wordLeft - glyphLeft) < .5f * width);
     }
+
+    /**
+     * One process-local immutable bank. Configuration is an owned immutable snapshot;
+     * resource and font tokens use identity because equal replacements may render differently.
+     */
+    static final class TemplateKey {
+        final Object assets;
+        final Object configuration;
+        final Object italic;
+        final Object boldItalic;
+
+        TemplateKey(Object assets, Object configuration, Object italic, Object boldItalic) {
+            this.assets = java.util.Objects.requireNonNull(assets);
+            this.configuration = java.util.Objects.requireNonNull(configuration);
+            this.italic = java.util.Objects.requireNonNull(italic);
+            this.boldItalic = java.util.Objects.requireNonNull(boldItalic);
+        }
+
+        boolean matches(TemplateKey other) {
+            return assets == other.assets
+                    && configuration.equals(other.configuration)
+                    && italic == other.italic
+                    && boldItalic == other.boldItalic;
+        }
+    }
+
+    /** An incomplete or unstable build still supplies its original uncached fallback bank. */
+    record TemplateLoad<T>(T bank, boolean reusable) {}
+
+    static final class TemplateBankCache<T> {
+        private TemplateKey key;
+        private T bank;
+
+        synchronized T resolve(
+                TemplateKey requested, java.util.function.Supplier<TemplateLoad<T>> loader) {
+            if (bank != null && key.matches(requested)) return bank;
+            TemplateLoad<T> loaded = loader.get();
+            T result = java.util.Objects.requireNonNull(loaded.bank());
+            // Publish last. A partial result or thrown Exception/Error cannot poison reuse.
+            if (loaded.reusable()) {
+                key = requested;
+                bank = result;
+            }
+            return result;
+        }
+    }
 }

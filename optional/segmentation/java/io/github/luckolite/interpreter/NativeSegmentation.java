@@ -75,7 +75,9 @@ public final class NativeSegmentation implements AutoCloseable {
         List<Integer> xStarts = tileStarts(width);
         for (int top : yStarts)
             for (int left : xStarts) {
-                java.util.Arrays.fill(input, 0, plane, 255f);
+                if (!ExactWhiteTileInput.fullTileOverwritesPlane(
+                        gray, width, height, left, top, WINDOW))
+                    java.util.Arrays.fill(input, 0, plane, 255f);
                 int rows = Math.min(WINDOW, height - top), columns = Math.min(WINDOW, width - left);
                 for (int y = 0; y < rows; y++)
                     for (int x = 0; x < columns; x++)
