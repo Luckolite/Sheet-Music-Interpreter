@@ -15,10 +15,12 @@ final class AccidentalDotInk {
         int first = Math.max(1, left - pad),
                 last = Math.min(w - 2, right + pad),
                 cy = (top + bottom) / 2;
+        int lower = Math.max(0, cy - reach), upper = Math.min(h - 1, cy + reach);
+        int flank = Math.max(2, Math.round(gap * .25f));
         List<Shaft> shafts = new ArrayList<>();
         for (int x = first; x <= last; x++) {
             int a = cy, b = cy, blank = 0;
-            while (a > Math.max(0, cy - reach)) {
+            while (a > lower) {
                 a--;
                 if (ink(gray, w, x, a)) {
                     blank = 0;
@@ -28,7 +30,7 @@ final class AccidentalDotInk {
                 }
             }
             blank = 0;
-            while (b < Math.min(h - 1, cy + reach)) {
+            while (b < upper) {
                 b++;
                 if (ink(gray, w, x, b)) {
                     blank = 0;
@@ -38,12 +40,12 @@ final class AccidentalDotInk {
                 }
             }
             if (b - a < gap * 1.65f || a > top || b < bottom) continue;
-            int hits = 0, contrasted = 0, flank = Math.max(2, Math.round(gap * .25f));
+            int hits = 0, contrasted = 0;
+            boolean canContrast = x >= flank && x + flank < w;
             for (int y = a; y <= b; y++)
                 if (ink(gray, w, x, y)) {
                     hits++;
-                    if (x >= flank
-                            && x + flank < w
+                    if (canContrast
                             && Math.max(
                                             gray[y * w + x - flank] & 255,
                                             gray[y * w + x + flank] & 255)

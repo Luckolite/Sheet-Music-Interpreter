@@ -4,6 +4,20 @@ package io.github.luckolite.interpreter;
 
 /** Raw, closed oval evidence around a narrow semantic accidental. */
 final class AccidentalEnclosure {
+    // Only the first reached angular probe initializes these private read-only samples.
+    private static final class UnitRing {
+        private static final float[] COS = new float[40];
+        private static final float[] SIN = new float[40];
+
+        static {
+            for (int n = 0; n < 40; n++) {
+                double angle = n * Math.PI / 20;
+                COS[n] = (float) Math.cos(angle);
+                SIN[n] = (float) Math.sin(angle);
+            }
+        }
+    }
+
     static float[] find(byte[] gray, int w, int h, int l, int t, int r, int b, float gap) {
         if (gray == null) return null;
         float cx = (l + r) * .5f, cy = (t + b) * .5f;
@@ -15,9 +29,8 @@ final class AccidentalEnclosure {
                             || cy + gap * (dy - ry) > t + gap * .3f) continue;
                     int hits = 0;
                     for (int n = 0; n < 40; n++) {
-                        double angle = n * Math.PI / 20;
-                        int x = Math.round(cx + gap * rx * (float) Math.cos(angle));
-                        int y = Math.round(cy + gap * (dy + ry * (float) Math.sin(angle)));
+                        int x = Math.round(cx + gap * rx * UnitRing.COS[n]);
+                        int y = Math.round(cy + gap * (dy + ry * UnitRing.SIN[n]));
                         boolean ink = false;
                         for (int yy = Math.max(0, y - tolerance);
                                 yy <= Math.min(h - 1, y + tolerance);

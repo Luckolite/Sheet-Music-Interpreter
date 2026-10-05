@@ -13,10 +13,11 @@
   "files": {
     "AccidentalDotInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalDotInk.java",
-      "source_sha256": "fca2b908fb31936c55a0e8ca047246c6c75c5259769a6281c5acf28488d0cfa5",
+      "source_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original raw-ink connected-paired-shaft proof with local contrast; package-only standalone port and generated positive/negative regressions. No private source imagery or new dependencies.",
-      "source_normalized_sha256": "fca2b908fb31936c55a0e8ca047246c6c75c5259769a6281c5acf28488d0cfa5"
+      "review_note": "Original raw-ink connected-paired-shaft proof with local contrast; package-only standalone port and generated positive/negative regressions. No private source imagery or new dependencies. App904 reuses invariant per-call raw-ink contrast work without changing threshold, geometry or traversal semantics. Paired helper outputs and existing original synthetic controls remain exact. No private score, model, dependency or measured speed claim is included.",
+      "source_normalized_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
+      "reviewed_source_state": "Reviewed app904 initial carry/two-helper selection on preserved app903H and standalone e26aed0; historical origin commit retained."
     },
     "ScoreNavigationPerformance.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationPerformance.java",
@@ -522,9 +523,11 @@
     },
     "AccidentalEnclosure.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalEnclosure.java",
-      "source_sha256": "a078de8aeb1b62c923b6ad4d0d45f7dc05d8e16994cd5db3cbce891f72cc41f5",
+      "source_sha256": "51b8199eb8130911849c403bc9a156b4fe5899d91138d62963bd29418c9d9718",
       "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
-      "source_normalized_sha256": "a078de8aeb1b62c923b6ad4d0d45f7dc05d8e16994cd5db3cbce891f72cc41f5"
+      "source_normalized_sha256": "8142bfb62c6b1ecc3e97358c7b8d71ea52ddb71b2a726023993918ed30eec9bf",
+      "review_note": " App904 reuses the40 immutable angular samples only after the first reached probe. Thresholds, ordered probes and float evaluation remain unchanged; the paired standalone helper and original procedural controls preserve exact outputs. No model, layout, dependency or measured speed claim is included.",
+      "reviewed_source_state": "Reviewed app904 initial carry/two-helper selection on preserved app903H and standalone e26aed0; historical origin commit retained."
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
@@ -1020,12 +1023,12 @@
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
-      "source_sha256": "3241e848eeeab9252ddf3ba4f6883c0df09935a4992cdadffa040495eb72efc6",
+      "source_sha256": "e5087f2f589f85f32e26efd7c91f345ca6b3047410236d2f9a8436d4bcfcbf13",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "fe089fb5017708a371cffc600f8af98592c0ab2c455beee998b14857eece6bd2",
+      "source_normalized_sha256": "dc062c3cfa29ae73eff4066e6d4c2a0cc59c759e3c7a367fcad6eddaa0f41f69",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged. App904 resolves a proven predecessor's accidental from the already-resolved source occurrence, so a three-page true-tie chain preserves sharp/flat inheritance. Endpoint/rest/register/staff/kind checks and all23 components remain unchanged outside the correction. An original eighteen-case scalar regression covers true boundaries, breaks, explicit contradictions, key changes, input immutability and prior-field parity; no private score is included.",
+      "reviewed_source_state": "Reviewed app904 initial carry/two-helper selection on preserved app903H and standalone e26aed0; historical origin commit retained."
     },
     "DynamicStemCrop.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicStemCrop.java",

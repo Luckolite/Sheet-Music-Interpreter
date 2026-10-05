@@ -614,3 +614,22 @@ dependencies. Original scalar/raster/byte controls and full prior-field/source-i
 fixtures cover these ports; no model, dependency or private score is included.
 See [typed event APIs](unpitched-events.md) and
 [regression input provenance](typed-unpitched-test-provenance.md).
+
+### Boundary accidental carry and fixed-work reuse in app904
+
+The global boundary-tie resolver reads accidental inheritance from the already
+resolved predecessor occurrence. Three-page sharp and flat true-tie chains retain
+their inherited accidental; explicit contradictions, broken links, independent
+attacks, rests, key changes and unpitched heads retain the existing guards. The
+original `ScoreBoundaryTieCarryChainTest` checks eighteen scalar cases and all23
+record fields. Saved retained sources require a separately reviewed source-bound
+recovery; this patch does not silently rewrite explicit edits.
+
+`AccidentalEnclosure` and `AccidentalDotInk` reuse invariant angular/per-call work.
+The app and standalone helpers preserve token/literal behavior after package and
+comment adaptation; original procedural controls retain exact outputs. Historical
+origin commits and all other mapped rows remain unchanged. The source baseline is
+preserved app903H and public commit `e26aed0`. Guide282, record23, recognition4 and
+protocol1 are unchanged; the paired processing release uses audio69. No model,
+dependency, private score, phone-performance or whole-library accuracy claim is
+included. Fresh standalone/release gates are recorded separately.

@@ -32,7 +32,8 @@ final class ScoreBoundaryTies {
                     || !boundaries.contains(current.measureIndex())
                     || current.leadingRestBeats() > 0
                     || current.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN) continue;
-            for (var earlier : notes) {
+            for (int j = 0; j < notes.size(); j++) {
+                var earlier = notes.get(j);
                 if (earlier.kind() != ScoreNoteEvent.Kind.PITCHED
                         || earlier.measureIndex() + 1 != current.measureIndex()
                         || earlier.staffIndex() != current.staffIndex()
@@ -56,7 +57,8 @@ final class ScoreBoundaryTies {
                         break;
                     }
                 if (interrupted) continue;
-                int accidental = accidental(earlier, keys);
+                // An earlier boundary may already have carried an accidental into this source slot.
+                int accidental = accidental(result.get(j), keys);
                 if (accidental == Integer.MIN_VALUE) continue;
                 if (current.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY
                         && ScoreNoteEvent.accidentalSemitones(current.writtenAccidental())
