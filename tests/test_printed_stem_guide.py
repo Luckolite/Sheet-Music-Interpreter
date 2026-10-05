@@ -3,6 +3,7 @@
 import copy
 import struct
 import unittest
+from unittest.mock import patch
 from sheet_interpreter import guide_writer as wire
 
 def original_score():
@@ -42,11 +43,14 @@ class PrintedStemGuideTests(unittest.TestCase):
     def test_unknown_future_layout_is_rejected(self):
         with self.assertRaises(ValueError):wire.encode(original_score(),282)
 
-    def test_recognition_epoch_two_keeps_existing_layout_281(self):
-        self.assertEqual(2,wire.RECOGNITION_REVISION)
+    def test_recognition_epoch_three_keeps_existing_layout_281(self):
+        self.assertEqual(3,wire.RECOGNITION_REVISION)
         self.assertEqual(281,wire.GUIDE_VERSION)
         score=original_score();score['notes'][0]['stemDirection']=1
         encoded=wire.encode(score)
+        with patch.object(wire, "RECOGNITION_REVISION", 2):
+            stale_epoch_bytes = wire.encode(score)
+        self.assertEqual(stale_epoch_bytes, encoded)
         self.assertEqual(wire.encode(score,281),encoded)
         self.assertEqual(281,struct.unpack('>i',encoded[:4])[0])
 

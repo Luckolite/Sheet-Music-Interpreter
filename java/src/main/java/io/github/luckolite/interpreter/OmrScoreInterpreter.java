@@ -1598,7 +1598,13 @@ final class OmrScoreInterpreter {
                                     event.tupletDivisor(),
                                     silence,
                                     event.articulations(),
-                                    event.clefBottomDiatonic())
+                                    event.clefBottomDiatonic(),
+                                    event.crossStaffBeam(),
+                                    event.leadingRestBeats(),
+                                    event.compactOpening(),
+                                    event.octaveShift(),
+                                    event.boundaryTies(),
+                                    event.tupletNormalNotes())
                             .withStemDirection(event.stemDirection())
                             .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes())
                             .withLeadingRest(leading));
@@ -17824,7 +17830,13 @@ final class OmrScoreInterpreter {
                                         event.tupletDivisor(),
                                         event.followingRestBeats(),
                                         event.articulations(),
-                                        event.clefBottomDiatonic())
+                                        event.clefBottomDiatonic(),
+                                        event.crossStaffBeam(),
+                                        event.leadingRestBeats(),
+                                        event.compactOpening(),
+                                        event.octaveShift(),
+                                        event.boundaryTies(),
+                                        event.tupletNormalNotes())
                                 .withStemDirection(event.stemDirection())
                                 .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes());
                 note = new DetectedNote(event, note.head, note.staffGap);
@@ -17933,7 +17945,9 @@ final class OmrScoreInterpreter {
                                             event.crossStaffBeam(),
                                             event.leadingRestBeats(),
                                             event.compactOpening(),
-                                            event.octaveShift())
+                                            event.octaveShift(),
+                                            event.boundaryTies(),
+                                            event.tupletNormalNotes())
                                     .withStemDirection(event.stemDirection())
                                     .withTupletRatio(
                                             event.tupletDivisor(), event.tupletNormalNotes()),

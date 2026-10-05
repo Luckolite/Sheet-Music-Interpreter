@@ -868,7 +868,10 @@ final class SixteenthRestDetector {
                                     n.clefBottomDiatonic(),
                                     n.crossStaffBeam(),
                                     n.leadingRestBeats(),
-                                    n.compactOpening())
+                                    n.compactOpening(),
+                                    n.octaveShift(),
+                                    n.boundaryTies(),
+                                    n.tupletNormalNotes())
                             .withStemDirection(n.stemDirection())
                             .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes()));
         }

@@ -309,13 +309,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "801d309d60d8be58ae564bbe0cb924a527e58c4acfc3328a93d90341ebca2a79",
+      "source_sha256": "261f54b40e201a8c66c756ef6eb36ae6f37c69c5923887318b7125c9a654cdb8",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls. Inherited tie accidental resolution reads private lazily initialized sharp/flat order arrays instead of allocating a seven-element array per lookup. Key iteration, last applicable key selection, explicit/unknown-key early returns, diatonic identity, floorMod/min/abs and sign arithmetic remain in their original order; arrays are only indexed locally and never escape. Four existing tie/courtesy/slur cases plus one original six-case sharp/flat musical and caller-preservation regression passed per app and standalone source (10 focused tests). No model, dependencies, record layout or private score data changed.",
-      "source_normalized_sha256": "801d309d60d8be58ae564bbe0cb924a527e58c4acfc3328a93d90341ebca2a79",
+      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls. Inherited tie accidental resolution reads private lazily initialized sharp/flat order arrays instead of allocating a seven-element array per lookup. Key iteration, last applicable key selection, explicit/unknown-key early returns, diatonic identity, floorMod/min/abs and sign arithmetic remain in their original order; arrays are only indexed locally and never escape. Four existing tie/courtesy/slur cases plus one original six-case sharp/flat musical and caller-preservation regression passed per app and standalone source (10 focused tests). No model, dependencies, record layout or private score data changed. Metadata-only reconstructions preserve every unchanged current note field through final-rest, accidental-carry and tie copies. Original synthetic actual accidental/grace method controls; recognition and pitch/tie decisions remain unchanged.",
+      "source_normalized_sha256": "261f54b40e201a8c66c756ef6eb36ae6f37c69c5923887318b7125c9a654cdb8",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -406,12 +406,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "c62d433adb80f9db4cbf7e1a36423e06a63932723d572979513b70ac942439bd",
+      "source_sha256": "66a8e43832fd8ae58e67538451c4c57da2338dfe53e1dea51a51a0a43c410e8d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry.",
-      "source_normalized_sha256": "c62d433adb80f9db4cbf7e1a36423e06a63932723d572979513b70ac942439bd",
+      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry. Rest staff-position reconstruction preserves octave shift and boundary-tie evidence while retaining the existing rhythm, stem and tuplet metadata. No new rest or pitch decisions; unchanged detector controls remain in the full regression suite.",
+      "source_normalized_sha256": "66a8e43832fd8ae58e67538451c4c57da2338dfe53e1dea51a51a0a43c410e8d",
       "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "TempoChangeDetector.java": {
@@ -1353,11 +1353,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "642cedb8748f8d183463a583108c16cdfb2a0db3cabe20608185cf1f58170fb6",
-      "source_normalized_sha256": "642cedb8748f8d183463a583108c16cdfb2a0db3cabe20608185cf1f58170fb6",
+      "source_sha256": "fa23ee18f5e9b0005d4d2eaab8616ebb4272304cdb8c3a62b9c7b3792a17991b",
+      "source_normalized_sha256": "fa23ee18f5e9b0005d4d2eaab8616ebb4272304cdb8c3a62b9c7b3792a17991b",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions.",
-      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files."
+      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change.",
+      "reviewed_source_state": "Reviewed integrated recognition epoch3 on the recorded app base; guide281 record layout and protocol1 are unchanged."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1411,11 +1411,51 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "87f47eb1e61f8919a6549bd58d55c1ee22a7c37d69ab2f444816aaa3edcadb96",
-      "source_normalized_sha256": "4d150d588a3172815beceabd6dd2f83fed9315ee77ad5c6f09ed06118b44a44c",
+      "source_sha256": "661d52d5232b6b536725430aee6c84e89233af37271b942087927337e0780740",
+      "source_normalized_sha256": "48739455db7d530d1a8e309d85f3ed9750d73b84459b4f45ce53535f97c15a39",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed current worktree; actual native writer port and original revision regressions passed.",
-      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed."
+      "reviewed_source_state": "Reviewed integrated recognition epoch3 on the recorded app base; guide281 record layout and protocol1 are unchanged.",
+      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change."
+    },
+    "ScorePlacementMap.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
+      "source_sha256": "8195d4cb0d321a511712e5d2d50bea22f297ecbe4c05c75cb38b7dbcfa3915d9",
+      "source_normalized_sha256": "8195d4cb0d321a511712e5d2d50bea22f297ecbe4c05c75cb38b7dbcfa3915d9",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Pure-JDK package-only retained playback/written owner maps, explicit grace principals and per-measure edit invalidation. Original synthetic ownership, selection, grace deletion and malformed-clock controls; no coordinate-based reassignment or note/wire layout change."
+    },
+    "ScoreBoundaryClock.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryClock.java",
+      "source_sha256": "afd9c73fec60dc055ba85daf16985872c17b5847876b7bc4076e0d36c0d3e3ed",
+      "source_normalized_sha256": "afd9c73fec60dc055ba85daf16985872c17b5847876b7bc4076e0d36c0d3e3ed",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Pure-JDK package-only capture of proved opening/closing spans before part selection, retaining printed meter changes. Original synthetic full-bar, pickup, closing-rest, changing-meter and invalid-boundary controls; no inferred meter or note/wire layout change."
+    },
+    "ScoreTechniqueSelection.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTechniqueSelection.java",
+      "source_sha256": "0cfed8bf81cdd7ea9b04d58ba253bf2fa39eaea4c2b612a455106f1aeda4fcc4",
+      "source_normalized_sha256": "0fc94db236fb8d94fb36121783e930e280214a9c3d99b4a0888551eed3338c0f",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Pure-JDK package-only upper-staff technique selection preserves order and original ownership. Original synthetic retained/omitted instruction controls; no reassignment to surviving notes or new dependency."
+    },
+    "ScoreTabPitchFitting.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTabPitchFitting.java",
+      "source_sha256": "db504e04c67e7a00ad58e4cc4a68be634a2331712ede8cf68a4454fadb7dc716",
+      "source_normalized_sha256": "1741c46c48b24656ed0699ce9235b7040b66a14e77434f4dcfcd87c158687a82",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Pure-JDK package-only exact-pitch then nearest octave up/down tablature fitting, exposing the octave-only diatonic delta shared by display and playback. Original synthetic tuning/range/parity/rejection controls; no chromatic pitch guessing or dependency change."
+    },
+    "MusicXmlDivisionGrid.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicXmlDivisionGrid.java",
+      "source_sha256": "0a668fd7390be385c9aca46d704b7ceb6f82f83441c975842dbe39a9c870160e",
+      "source_normalized_sha256": "0a668fd7390be385c9aca46d704b7ceb6f82f83441c975842dbe39a9c870160e",
+      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Pure-JDK package-only recovery of wholly absent MusicXML division metadata from consistent exact ordinary typed durations and direct dots. Tuplet-only, missing, conflicting and nonintegral evidence rejects; explicit metadata and existing duration validation remain caller-controlled. Thirteen original synthetic controls; no private renderer artifact, model, dependency or wire-layout change."
     }
   },
   "interpreter_speedup_review": {
@@ -1951,5 +1991,19 @@
     ],
     "models_changed": false,
     "phone_elapsed_gain_claimed": false
+  },
+  "retained_conversion_metadata_epoch_review": {
+    "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+    "mapped_sources": [
+      "OmrScoreInterpreter.java",
+      "SixteenthRestDetector.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "guide_format": 281,
+    "native_protocol": 1,
+    "recognition_revision": 3,
+    "record_layout_changed": false,
+    "boundary": "Recognition epoch3 salts derived identities after note-reconstruction metadata fixes; stale epoch2 keys differ while all existing guide record bytes remain unchanged. Original current/stale identity and actual writer byte-parity controls. No model, private score, app history or native/runtime binary is included."
   }
 }

@@ -40,6 +40,16 @@ playback tempo, print the same pulse in Canvas and MusicXML, and refresh older
 generated presentations losslessly. These Android presentation adapters are not
 part of the standalone API. No model, dependency or guide record layout changed.
 
+Retained conversion helpers carry proved boundary spans and explicit written/playback
+note owners through selection and edits. Grace deletion recomputes stealing from
+the retained written principal. Upper-staff techniques keep their original owners;
+tablature fitting shares its octave-only result with display and playback. Current
+note metadata survives accidental, grace, tie and rest-position reconstructions.
+Recognition epoch3 separates derived identities from stale epoch2 reconstruction
+metadata while guide281 records and protocol1 stay unchanged. Original synthetic
+ownership, clock, fitting, current/stale identity, writer-byte and actual-method
+controls cover these pure-JDK ports. Models and dependencies are unchanged.
+
 Paper shading normalization reuses horizontal interpolants while their two grid
 rows remain the same. Float expressions and evaluation order, histogram thresholds,
 input ownership and unshaded reference identity are preserved. Unusually wide images
@@ -71,6 +81,13 @@ durations on exact grids are preserved. The pure-JDK helper has package-only app
 parity and original procedural regressions; the app layout adapter still checks
 full source identity, pitch, voice and timing coverage. No private score, external
 dependency, model or wire-layout change is included.
+
+A wholly absent exporter division grid requires consistent exact ordinary typed
+durations and augmentation dots. Tuplets, grace events, untyped full-bar rests and
+clock moves cannot establish that grid. Conflicting or unrepresentable evidence
+fails; explicit metadata and rounded-tuplet validation keep their prior semantics.
+The pure-JDK helper has package-only app parity and thirteen original procedural
+controls. No private renderer output, dependency, model or record change is included.
 
 Octave text and its dotted span use the same local paper contrast. Shallow
 texture on shaded paper cannot supply numeral counters or a dotted-line chain;
