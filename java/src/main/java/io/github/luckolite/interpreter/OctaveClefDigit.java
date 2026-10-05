@@ -94,6 +94,7 @@ final class OctaveClefDigit {
         boolean[] seen = new boolean[w * h];
         int[] queue = new int[w * h];
         int holes = 0;
+        int[] offsets = null;
         for (int origin = 0; origin < w * h; origin++) {
             if (seen[origin]
                     || (gray[(top + origin / w) * stride + left + origin % w] & 255) <= 175)
@@ -105,7 +106,8 @@ final class OctaveClefDigit {
             while (at < count) {
                 int n = queue[at++], x = n % w, y = n / w;
                 edge |= x == 0 || y == 0 || x == w - 1 || y == h - 1;
-                for (int d : new int[] {-1, 1, -w, w}) {
+                if (offsets == null) offsets = new int[] {-1, 1, -w, w};
+                for (int d : offsets) {
                     int next = n + d;
                     if (next < 0
                             || next >= w * h

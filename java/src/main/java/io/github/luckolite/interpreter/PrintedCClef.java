@@ -51,22 +51,29 @@ final class PrintedCClef {
         }
         if (first < 7 || second < 7 || separation < 6) return false;
         int strokes = 0, holes = 0;
-        for (int sign : new int[] {-1, 1}) {
-            for (float[] p :
-                    new float[][] {
-                        {.95f, .25f},
-                        {1.5f, .25f},
-                        {2.1f, .5f},
-                        {2.3f, .75f},
-                        {2.3f, 1.25f},
-                        {2.1f, 1.5f},
-                        {1.9f, 1.75f}
-                    })
+        for (int sign : Probes.SIGNS) {
+            for (float[] p : Probes.BOWLS)
                 if (ink(gray, w, h, x + p[0] * sx, y + sign * p[1] * sy, sx * .12f)) strokes++;
-            for (float dy : new float[] {.5f, .75f, 1.25f, 1.5f})
+            for (float dy : Probes.HOLE_ROWS)
                 if (!ink(gray, w, h, x + sx * 1.6f, y + sign * dy * sy, sx * .10f)) holes++;
         }
         return strokes >= 11 && holes >= 7;
+    }
+
+    private static final class Probes {
+        private static final int[] SIGNS = {-1, 1};
+        private static final float[][] BOWLS = {
+            {.95f, .25f},
+            {1.5f, .25f},
+            {2.1f, .5f},
+            {2.3f, .75f},
+            {2.3f, 1.25f},
+            {2.1f, 1.5f},
+            {1.9f, 1.75f}
+        };
+        private static final float[] HOLE_ROWS = {.5f, .75f, 1.25f, 1.5f};
+
+        private Probes() {}
     }
 
     private static boolean ink(byte[] gray, int w, int h, float x, float y, float radius) {

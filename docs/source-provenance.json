@@ -511,9 +511,9 @@
     },
     "OctaveClefDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
-      "source_sha256": "dd2b6c0e7d0ae03d268ac3d4bda38631e9521f3ebe230badb2e04c5c6949753b",
+      "source_sha256": "38a074d84d193bb51488af9f47613f18b3d5bd4a71511b45216f733faf306b83",
       "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
-      "source_normalized_sha256": "dd2b6c0e7d0ae03d268ac3d4bda38631e9521f3ebe230badb2e04c5c6949753b"
+      "source_normalized_sha256": "c40b7036300e700170876ec6f06458015763ab46e2f69234f71b54ac795cc6b4"
     },
     "ScorePageTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageTimeline.java",
@@ -1427,8 +1427,8 @@
     },
     "PrintedCClef.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
-      "source_sha256": "55576a4f1be609396f2f6d2f8da3294a6a347b8e23ff25123da0da11e07ebde9",
-      "source_normalized_sha256": "a0b529158147bcfe672a7a3710d1c7b50e5b24f7c43166d58e048f79fd7046cc",
+      "source_sha256": "c329b33a6a63b2db10dbf89307b92a1b853615e133933f0ff74aa1e923b759db",
+      "source_normalized_sha256": "8030e8f7c9267b7b7f7144b7edae42ccf74d8e0c15a5e64e21336f08fb11eb5e",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
@@ -2249,5 +2249,56 @@
     "licensing": "Original synthetic tests and authored source under Apache-2.0; no private scores, phone logs, signing material or model change.",
     "unownedGracePolicy": "Reject raw U grace or an unpitched borrowed principal before timing/export/audio realization. Pitched grace clocks and session behavior remain unchanged.",
     "sourceOwners": "Explicit kind/display/source-index selection; equal U records cannot establish another source occurrence or grace owner."
+  },
+  "clef_allocation_reuse905_review": {
+    "license": "Apache-2.0",
+    "source": "Original Luckolite geometry helpers and synthetic clef regressions; Bravura fixture font is SIL OFL 1.1.",
+    "base_public_commit": "b6b07d4b55e7a424fee06093a6f841227499f453",
+    "reviewed_app_version": 905,
+    "paired_sources": [
+      {
+        "name": "OctaveClefDigit.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
+        "app_sha256": "38a074d84d193bb51488af9f47613f18b3d5bd4a71511b45216f733faf306b83",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OctaveClefDigit.java",
+        "standalone_sha256": "4747c7fff5ca5626d86fd047bc7f727cc10b495890a188accbee2bf6544a0261",
+        "historical_origin_preserved": {
+          "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
+          "source_sha256": "dd2b6c0e7d0ae03d268ac3d4bda38631e9521f3ebe230badb2e04c5c6949753b",
+          "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
+          "source_normalized_sha256": "dd2b6c0e7d0ae03d268ac3d4bda38631e9521f3ebe230badb2e04c5c6949753b"
+        }
+      },
+      {
+        "name": "PrintedCClef.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
+        "app_sha256": "c329b33a6a63b2db10dbf89307b92a1b853615e133933f0ff74aa1e923b759db",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedCClef.java",
+        "standalone_sha256": "3a14a4ce843a3991a49278a958b4c7ed2641d0628cd78d59d08bcfc3b7ca55b1",
+        "historical_origin_preserved": {
+          "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
+          "source_sha256": "55576a4f1be609396f2f6d2f8da3294a6a347b8e23ff25123da0da11e07ebde9",
+          "source_normalized_sha256": "a0b529158147bcfe672a7a3710d1c7b50e5b24f7c43166d58e048f79fd7046cc",
+          "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+          "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
+          "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+        }
+      }
+    ],
+    "review": "Reuse call-local flood neighbor offsets at their first original evaluation and private C-clef probe arrays after the spine guard. Preserve float literals, arithmetic, probe and raster read order. No input caching or exposed arrays.",
+    "functional_validation": {
+      "existing_original_method_invocations": 16,
+      "same_input_generated_glyphs": 50,
+      "whole_helper_calls": 712,
+      "app_public_baseline_candidate_results_equal": true,
+      "caller_rasters_unchanged": true,
+      "ordered_exception_classes_checked": true
+    },
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layouts_changed": false,
+    "phone_elapsed_claim": false,
+    "whole_score_parity_claim": false,
+    "failure_boundary": "Out-of-memory and failed lazy holder initialization equivalence are not claimed."
   }
 }
