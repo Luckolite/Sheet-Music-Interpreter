@@ -420,18 +420,12 @@ final class ScoreDynamicsDetector {
                 maximumGap = Math.max(maximumGap, staff.gap());
             }
         var shared = GrandStaffDynamics.bracedPairs(staffs, measures, gray, width, height);
+        var directionFloors = new DirectionFloors(staffs, notes, measures, height);
         for (var word : words) {
             float db = level(word.text());
             if (!Float.isFinite(db)) continue;
             if (PrintedDynamicNoteOwnership.containsBeamedHead(word, measures, notes)) continue;
-            var owner =
-                    directionOwner(
-                            staffs,
-                            word.top() * height,
-                            word.bottom() * height,
-                            notes,
-                            measures,
-                            height);
+            var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
             if (owner == null)
                 owner =
                         PrintedDirectionStaff.at(
@@ -491,7 +485,7 @@ final class ScoreDynamicsDetector {
                             }
                         }
                 }
-                var owner = directionOwner(staffs, top, bottom, notes, measures, height);
+                var owner = directionFloors.owner(top, bottom);
                 if (owner == null
                         && right - left + 1 >= minimumGap * 3
                         && bottom - top + 1 <= maximumGap * 3
@@ -543,14 +537,7 @@ final class ScoreDynamicsDetector {
                                     gray, width, height, queue[0], left, right, top, bottom, upper,
                                     lower, gap);
                     if (faint != null) {
-                        var recoveredOwner =
-                                directionOwner(
-                                        staffs,
-                                        faint.top(),
-                                        faint.bottom(),
-                                        notes,
-                                        measures,
-                                        height);
+                        var recoveredOwner = directionFloors.owner(faint.top(), faint.bottom());
                         if (recoveredOwner == null)
                             recoveredOwner =
                                     PrintedDirectionStaff.at(
@@ -693,14 +680,7 @@ final class ScoreDynamicsDetector {
             for (var word : words) {
                 int direction = textDirection(word.text());
                 if (direction == 0) continue;
-                var owner =
-                        directionOwner(
-                                staffs,
-                                word.top() * height,
-                                word.bottom() * height,
-                                notes,
-                                measures,
-                                height);
+                var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
                 if (owner == null) continue;
                 var common =
                         GrandStaffDynamics.directionPart(
@@ -957,6 +937,73 @@ final class ScoreDynamicsDetector {
             }
         }
         return best;
+    }
+
+    /** Call-local floors: detection reads these immutable records without modifying its lists. */
+    private static final class DirectionFloors {
+        private final List<PlayingTechniqueDetector.Staff> staffs;
+        private final List<ScoreNoteEvent> notes;
+        private final List<MeasureRegion> measures;
+        private final int height;
+        private PlayingTechniqueDetector.Staff[] keys;
+        private float[] floors;
+
+        DirectionFloors(
+                List<PlayingTechniqueDetector.Staff> staffs,
+                List<ScoreNoteEvent> notes,
+                List<MeasureRegion> measures,
+                int height) {
+            this.staffs = staffs;
+            this.notes = notes;
+            this.measures = measures;
+            this.height = height;
+        }
+
+        PlayingTechniqueDetector.Staff owner(float top, float bottom) {
+            var best = ScoreDynamicsDetector.owner(staffs, top, bottom);
+            float score = Float.MAX_VALUE;
+            int position = 0;
+            for (var staff : staffs) {
+                float floor = floor(position++, staff);
+                float distance;
+                if (top >= Math.round(staff.bottom() + staff.gap() * .25f)) {
+                    distance = Math.max(0, (top - floor) / staff.gap());
+                } else if (bottom <= Math.round(staff.top() - staff.gap() * .25f))
+                    distance = (staff.top() - bottom) / staff.gap() + .75f;
+                else continue;
+                if (distance <= 4.5f && distance < score) {
+                    score = distance;
+                    best = staff;
+                }
+            }
+            return best;
+        }
+
+        private float floor(int position, PlayingTechniqueDetector.Staff staff) {
+            if (keys != null && position < keys.length && keys[position] == staff)
+                return floors[position];
+            float center = (staff.top() + staff.bottom()) * .5f / height, floor = staff.bottom();
+            for (var note : notes) {
+                if (note.staffIndex() != staff.index()
+                        || note.staffCount() != staff.count()
+                        || note.measureIndex() < 0
+                        || note.measureIndex() >= measures.size()) continue;
+                var measure = measures.get(note.measureIndex());
+                if (center < measure.top() || center > measure.bottom()) continue;
+                floor = Math.max(floor, note.pageY() * height + staff.gap() * 1.5f);
+            }
+            if (floor <= staff.bottom() + staff.gap() * 2) floor = staff.bottom();
+            if (keys == null) {
+                keys = new PlayingTechniqueDetector.Staff[staffs.size()];
+                floors = new float[keys.length];
+            }
+            // Position and object identity keep equal staff records in separate original slots.
+            if (position < keys.length) {
+                floors[position] = floor;
+                keys[position] = staff;
+            }
+            return floor;
+        }
     }
 
     // Italic dynamic marks can overhang the preceding bar while their body belongs to the next.

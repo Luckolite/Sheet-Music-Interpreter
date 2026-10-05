@@ -270,9 +270,9 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "65e179a0e357c1cc4d608dfa0e918efa203f1b7fc8a9ec4a319f309bc4581147",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change.",
-      "source_normalized_sha256": "65e179a0e357c1cc4d608dfa0e918efa203f1b7fc8a9ec4a319f309bc4581147",
+      "source_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Lazily reuse printed body contrast at its original first eligible note within each glyph. Keep immutable raster ownership, classification, note order, thresholds and all other note-dependent predicates unchanged; reset for every glyph and detection call. Original synthetic multi-owner/glyph/page/caller regression; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
+      "source_normalized_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
       "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02"
@@ -339,9 +339,9 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "8bc836bb953d44620b11509058ea4e9f242e001fe74c0e92d590bca9070902ae",
-      "source_normalized_sha256": "8bc836bb953d44620b11509058ea4e9f242e001fe74c0e92d590bca9070902ae",
-      "review_note": "Reuse each note-to-staff distance and per-staff votes; retain original float comparisons, every tied nearest staff, HashMap insertion/winner order and note metadata. Original synthetic staff/tie/nonfinite/caller regressions. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
+      "source_sha256": "e2506a15d5ddda7f3ebde0f7ea95bd459243438f9a292c947fe15c2ec67d2b07",
+      "source_normalized_sha256": "e2506a15d5ddda7f3ebde0f7ea95bd459243438f9a292c947fe15c2ec67d2b07",
+      "review_note": "Reuse each note-to-staff distance and per-staff votes; retain original float comparisons, every tied nearest staff, HashMap insertion/winner order and note metadata. Original synthetic staff/tie/nonfinite/caller regressions. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Lazily reuse ledger floors within one direction detection call, keyed by original staff position and immutable staff identity. Retain preliminary owner traversal, original notes/measures/height, float/NaN/tie semantics and the unchanged direct mutable-input API. Original synthetic ownership/threshold regressions; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
@@ -416,10 +416,10 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "4f3e9a5360c3665f2a472842596d94dba3754860d75767c67b979dc8fcb4e440",
+      "source_sha256": "f2eaf1716d5f6ab65ce4b2da47f861608505f79f602edf53c26c02c92bf255f0",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "4f3e9a5360c3665f2a472842596d94dba3754860d75767c67b979dc8fcb4e440",
-      "review_note": "Package-only code/literal parity. Isolated OCR digits require printed equals and independently recognized beat unit; Python numeric-only rejection unchanged. NativePageGuide and standalone SheetInterpreter share the helper; original synthetic controls, no new dependencies."
+      "source_normalized_sha256": "f2eaf1716d5f6ab65ce4b2da47f861608505f79f602edf53c26c02c92bf255f0",
+      "review_note": "Package-only code/literal parity. Isolated OCR digits require printed equals and independently recognized beat unit; Python numeric-only rejection unchanged. NativePageGuide and standalone SheetInterpreter share the helper; original synthetic controls, no new dependencies. Reuse the already measured digit-box height for its unchanged padded recognition threshold decision. Retain printed equals/unit evidence, original pixel traversal, thresholds, ordered complete tempo results and caller pixels. Original synthetic ownership/threshold regressions; Apache-2.0/JDK-only, no model/dependency/record-layout changes."
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -1848,5 +1848,38 @@
     "scope": "Global gain pieces retain endpoint seconds already computed during the existing validation loop. Piece interpolation reuses those exact values while raw Curve.db, ordering and the precision guard remain unchanged. Original complete-curve and endpoint procedural regressions; no dependency, model or record-layout change.",
     "evidence": "Independent source review passed; original procedural regressions await the combined mandatory app/public gates. No elapsed or actual whole-page interpretation claim.",
     "private_material_included": false
+  },
+  "direction_floor_reuse899_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
+    "source_sha256": "e2506a15d5ddda7f3ebde0f7ea95bd459243438f9a292c947fe15c2ec67d2b07",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicsDetector.java",
+    "standalone_sha256": "a91103243e1b60800e94893e2aeb51bc20ca24a4463e2e869dada1cfeadd2cde",
+    "scope": "Lazily reuse ledger floors within one direction detection call, keyed by original staff position and immutable staff identity. Retain preliminary owner traversal, original notes/measures/height, float/NaN/tie semantics and the unchanged direct mutable-input API.",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/ScoreDynamicsDetectorTest.java",
+    "phone_elapsed_gain_claimed": false,
+    "models_changed": false,
+    "record_layout_changed": false
+  },
+  "tempo_digit_height_reuse899_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
+    "source_sha256": "f2eaf1716d5f6ab65ce4b2da47f861608505f79f602edf53c26c02c92bf255f0",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TempoChangeDetector.java",
+    "standalone_sha256": "c23d515721b489cee0fb714aacaad20270da04ae4dc21e7648fc187a52d48f73",
+    "scope": "Reuse the already measured digit-box height for its unchanged padded recognition threshold decision. Retain printed equals/unit evidence, original pixel traversal, thresholds, ordered complete tempo results and caller pixels.",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/TempoSlurPaddingTest.java",
+    "phone_elapsed_gain_claimed": false,
+    "models_changed": false,
+    "record_layout_changed": false
+  },
+  "articulation_body_contrast_reuse899_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
+    "source_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
+    "standalone_sha256": "03bdb8c952ef9e1441885d400e0ac6f3043761bfb12f33735e4a8dc1578576ce",
+    "scope": "Lazily reuse printed body contrast at its original first eligible note within each glyph. Keep immutable raster ownership, classification, note order, thresholds and all other note-dependent predicates unchanged; reset for every glyph and detection call.",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/PrintedArticulationContrastTest.java",
+    "phone_elapsed_gain_claimed": false,
+    "models_changed": false,
+    "record_layout_changed": false
   }
 }

@@ -102,4 +102,28 @@ public class TempoSlurPaddingTest {
         var b = (MeasureNumberReconciler.NumberToken) bounds();
         assertEquals(115f / H, b.bottom(), .00001f);
     }
+
+    @Test
+    public void paddedDigitThresholdRetainsCompleteTempoAndCallerPixels() {
+        for (int shade : new int[] {125, 126}) {
+            for (int y = 129; y <= 132; y++)
+                for (int x = 148; x <= 168; x++) gray[y * W + x] = (byte) shade;
+            byte[] original = gray.clone();
+            var expected = List.of(new ScoreTempoChange(0, 0, 90, 1.5));
+            var actual = detect();
+            assertEquals(expected, actual);
+            assertArrayEquals(original, gray);
+            assertEquals(
+                    Float.floatToRawIntBits(0f),
+                    Float.floatToRawIntBits(actual.get(0).positionInMeasure()));
+            assertEquals(
+                    Double.doubleToRawLongBits(90d),
+                    Double.doubleToRawLongBits(actual.get(0).bpm()));
+            assertEquals(
+                    Double.doubleToRawLongBits(1.5d),
+                    Double.doubleToRawLongBits(actual.get(0).beatUnit()));
+            assertEquals(actual, detect());
+            assertArrayEquals(original, gray);
+        }
+    }
 }

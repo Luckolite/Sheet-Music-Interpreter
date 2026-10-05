@@ -133,4 +133,32 @@ public class PrintedArticulationContrastTest {
         assertArrayEquals(g, gray);
         assertArrayEquals(l, labels);
     }
+
+    @Test
+    public void contrastIsLocalToEachGlyphAndEachPageWithMultipleOwners() {
+        var first = new NoteArticulationDetector.Anchor(480, 260, 12, 0);
+        var second = new NoteArticulationDetector.Anchor(480, 280, 14, 0);
+        var other = new NoteArticulationDetector.Anchor(680, 260, 12, 1);
+        var notes = List.of(first, second, other);
+        page(160);
+        dot(30);
+        for (int y = 220; y < 224; y++) for (int x = 678; x < 683; x++) pixel(x, y, 148);
+        byte[] originalGray = gray.clone(), originalLabels = labels.clone();
+        int[] expected = {NoteArticulation.STACCATO, NoteArticulation.STACCATO, 0};
+        assertArrayEquals(expected, NoteArticulationDetector.detect(labels, gray, W, H, notes));
+        assertArrayEquals(
+                expected,
+                NoteArticulationDetector.detect(labels, gray, W, H, List.of(second, first, other)));
+        assertArrayEquals(originalGray, gray);
+        assertArrayEquals(originalLabels, labels);
+
+        page(160);
+        dot(148);
+        originalGray = gray.clone();
+        originalLabels = labels.clone();
+        assertArrayEquals(new int[3], NoteArticulationDetector.detect(labels, gray, W, H, notes));
+        assertArrayEquals(expected, NoteArticulationDetector.detect(labels, null, W, H, notes));
+        assertArrayEquals(originalGray, gray);
+        assertArrayEquals(originalLabels, labels);
+    }
 }

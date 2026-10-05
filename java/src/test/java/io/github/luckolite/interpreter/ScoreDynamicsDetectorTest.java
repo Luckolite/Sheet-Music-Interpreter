@@ -247,4 +247,178 @@ public class ScoreDynamicsDetectorTest {
                                 Arrays.asList((ScoreNoteEvent) null),
                                 1000));
     }
+
+    @Test
+    public void directionFloorsReuseNotesAndRetainOwnerIdentityAndNonfiniteBounds()
+            throws Exception {
+        var first = new PlayingTechniqueDetector.Staff(80, 120, 10, 0, 2);
+        var equal = new PlayingTechniqueDetector.Staff(80, 120, 10, 0, 2);
+        var lower = new PlayingTechniqueDetector.Staff(220, 260, 10, 1, 2);
+        var staffs = new ArrayList<>(List.of(first, equal, lower));
+        var bars = List.of(new MeasureRegion(.1f, .9f, .2f, .7f));
+        var notes =
+                List.of(
+                        new ScoreNoteEvent(0, .1f, 0, 0, 2, .4375f, false),
+                        new ScoreNoteEvent(0, .2f, 0, 1, 2, .75f, false),
+                        new ScoreNoteEvent(-1, .3f, 0, 0, 2, .9f, false),
+                        new ScoreNoteEvent(2, .4f, 0, 0, 2, .9f, false),
+                        new ScoreNoteEvent(0, .5f, 0, 0, 3, .9f, false),
+                        new ScoreNoteEvent(0, .6f, 0, 0, 2, -0.0f, false));
+        var staffSnapshot = List.copyOf(staffs);
+        var noteSnapshot = List.copyOf(notes);
+        var barSnapshot = List.copyOf(bars);
+        int[] noteBits = notes.stream().mapToInt(n -> Float.floatToRawIntBits(n.pageY())).toArray();
+        var counted = new DirectionCountingNotes(notes);
+        Object cache = directionFloorCache(staffs, counted, bars, 400);
+        assertEquals(0, counted.reads);
+        float[][] boxes = {
+            {180, 184}, {319, 324}, {124, 128}, {79, 77},
+            {Float.NaN, Float.NaN}, {Float.NEGATIVE_INFINITY, -5}, {120, -0.0f}, {125, 126}
+        };
+        for (float[] box : boxes) {
+            assertSame(
+                    ScoreDynamicsDetector.directionOwner(staffs, box[0], box[1], notes, bars, 400),
+                    cachedDirectionOwner(cache, box[0], box[1]));
+            assertEquals(staffs.size() * notes.size(), counted.reads);
+        }
+        assertSame(first, cachedDirectionOwner(cache, 180, 184));
+        assertSame(lower, cachedDirectionOwner(cache, 319, 324));
+        var field = cache.getClass().getDeclaredField("floors");
+        field.setAccessible(true);
+        float[] floors = (float[]) field.get(cache);
+        assertEquals(Float.floatToRawIntBits(190f), Float.floatToRawIntBits(floors[0]));
+        assertEquals(Float.floatToRawIntBits(190f), Float.floatToRawIntBits(floors[1]));
+        assertEquals(Float.floatToRawIntBits(315f), Float.floatToRawIntBits(floors[2]));
+        assertEquals(staffSnapshot, staffs);
+        assertEquals(noteSnapshot, notes);
+        assertEquals(barSnapshot, bars);
+        assertArrayEquals(
+                noteBits,
+                notes.stream().mapToInt(n -> Float.floatToRawIntBits(n.pageY())).toArray());
+
+        // An equal record replacing a slot must not inherit the previous object's key.
+        var replacement = new PlayingTechniqueDetector.Staff(80, 120, 10, 0, 2);
+        staffs.set(0, replacement);
+        assertSame(replacement, cachedDirectionOwner(cache, 180, 184));
+        assertEquals((staffs.size() + 1) * notes.size(), counted.reads);
+
+        float payloadNaN = Float.intBitsToFloat(0x7fc00123);
+        var unusual =
+                List.of(
+                        new ScoreNoteEvent(0, .1f, 0, 0, 2, payloadNaN, false),
+                        new ScoreNoteEvent(0, .2f, 0, 1, 2, Float.POSITIVE_INFINITY, false));
+        var unusualCounted = new DirectionCountingNotes(unusual);
+        Object unusualCache = directionFloorCache(staffs, unusualCounted, bars, 400);
+        for (float[] box : boxes) {
+            assertSame(
+                    ScoreDynamicsDetector.directionOwner(
+                            staffs, box[0], box[1], unusual, bars, 400),
+                    cachedDirectionOwner(unusualCache, box[0], box[1]));
+            assertEquals(staffs.size() * unusual.size(), unusualCounted.reads);
+        }
+    }
+
+    @Test
+    public void directionFloorsStayLazyAndPreserveDirectMutationAndFailureOrder() throws Exception {
+        var staff = new PlayingTechniqueDetector.Staff(80, 120, 10, 0, 1);
+        var staffs = List.of(staff);
+        var bars = List.of(new MeasureRegion(.1f, .9f, .2f, .7f));
+        var ordinary = List.of(new PlayingTechniqueDetector.Word("allegro", .1f, .1f, .2f, .2f));
+        var empty =
+                ScoreDynamicsDetector.detectDirectionCore(
+                        ordinary, staffs, bars, null, null, 100, 400, null, false);
+        assertTrue(empty.changes().isEmpty());
+        assertTrue(empty.events().isEmpty());
+        Object emptyCache = directionFloorCache(List.of(), null, null, 400);
+        assertNull(cachedDirectionOwner(emptyCache, 180, 184));
+
+        var mutable = new ArrayList<>(List.of(new ScoreNoteEvent(0, .1f, 0, 0, 1, .4375f, false)));
+        assertSame(
+                staff, ScoreDynamicsDetector.directionOwner(staffs, 180, 184, mutable, bars, 400));
+        assertSame(
+                staff,
+                cachedDirectionOwner(directionFloorCache(staffs, mutable, bars, 400), 180, 184));
+        mutable.clear();
+        assertNull(ScoreDynamicsDetector.directionOwner(staffs, 180, 184, mutable, bars, 400));
+        assertNull(cachedDirectionOwner(directionFloorCache(staffs, mutable, bars, 400), 180, 184));
+
+        var counted =
+                new DirectionCountingNotes(
+                        List.of(new ScoreNoteEvent(0, .1f, 0, 0, 1, .4375f, false)));
+        var invalidStaffs = Arrays.asList(staff, (PlayingTechniqueDetector.Staff) null);
+        Object invalidCache = directionFloorCache(invalidStaffs, counted, bars, 400);
+        assertThrows(
+                NullPointerException.class, () -> cachedDirectionOwner(invalidCache, 180, 184));
+        assertEquals(0, counted.reads);
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        ScoreDynamicsDetector.directionOwner(
+                                invalidStaffs, 180, 184, counted, bars, 400));
+        assertEquals(0, counted.reads);
+
+        var nullNotes = Arrays.asList((ScoreNoteEvent) null);
+        Object nullCache = directionFloorCache(staffs, nullNotes, bars, 400);
+        assertThrows(NullPointerException.class, () -> cachedDirectionOwner(nullCache, 180, 184));
+        assertThrows(
+                NullPointerException.class,
+                () -> ScoreDynamicsDetector.directionOwner(staffs, 180, 184, nullNotes, bars, 400));
+        var matching = List.of(new ScoreNoteEvent(0, .1f, 0, 0, 1, .4375f, false));
+        var nullBars = Arrays.asList((MeasureRegion) null);
+        Object nullBarCache = directionFloorCache(staffs, matching, nullBars, 400);
+        assertThrows(
+                NullPointerException.class, () -> cachedDirectionOwner(nullBarCache, 180, 184));
+        assertThrows(
+                NullPointerException.class,
+                () ->
+                        ScoreDynamicsDetector.directionOwner(
+                                staffs, 180, 184, matching, nullBars, 400));
+    }
+
+    private static final class DirectionCountingNotes extends AbstractList<ScoreNoteEvent> {
+        private final List<ScoreNoteEvent> values;
+        int reads;
+
+        DirectionCountingNotes(List<ScoreNoteEvent> values) {
+            this.values = values;
+        }
+
+        @Override
+        public ScoreNoteEvent get(int index) {
+            reads++;
+            return values.get(index);
+        }
+
+        @Override
+        public int size() {
+            return values.size();
+        }
+    }
+
+    private static Object directionFloorCache(
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<MeasureRegion> bars,
+            int height)
+            throws Exception {
+        Class<?> type = Class.forName(ScoreDynamicsDetector.class.getName() + "$DirectionFloors");
+        var constructor =
+                type.getDeclaredConstructor(List.class, List.class, List.class, int.class);
+        constructor.setAccessible(true);
+        return constructor.newInstance(staffs, notes, bars, height);
+    }
+
+    private static PlayingTechniqueDetector.Staff cachedDirectionOwner(
+            Object cache, float top, float bottom) throws Exception {
+        var method = cache.getClass().getDeclaredMethod("owner", float.class, float.class);
+        method.setAccessible(true);
+        try {
+            return (PlayingTechniqueDetector.Staff) method.invoke(cache, top, bottom);
+        } catch (java.lang.reflect.InvocationTargetException wrapper) {
+            Throwable cause = wrapper.getCause();
+            if (cause instanceof Error) throw (Error) cause;
+            if (cause instanceof Exception) throw (Exception) cause;
+            throw wrapper;
+        }
+    }
 }

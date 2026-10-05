@@ -378,8 +378,13 @@ final class TempoChangeDetector {
             int width,
             int height,
             int equalsLeft) {
-        double normal = printedBeatUnit(token, gray, width, height, equalsLeft, 200);
-        double core = printedBeatUnit(token, gray, width, height, equalsLeft, 165);
+        int digitHeight = printedDigitHeight(token, gray, width, height);
+        double normal =
+                printedBeatUnitWithDigitHeight(
+                        token, gray, width, height, equalsLeft, 200, digitHeight);
+        double core =
+                printedBeatUnitWithDigitHeight(
+                        token, gray, width, height, equalsLeft, 165, digitHeight);
         if (!Double.isFinite(normal)) normal = Double.isFinite(core) ? core : 1;
         if (!Double.isFinite(core)) core = normal;
         // A light scan bridge can attach the dot to its notehead. Only use the
@@ -394,6 +399,18 @@ final class TempoChangeDetector {
             int height,
             int equalsLeft,
             int inkLimit) {
+        return printedBeatUnitWithDigitHeight(
+                token,
+                gray,
+                width,
+                height,
+                equalsLeft,
+                inkLimit,
+                printedDigitHeight(token, gray, width, height));
+    }
+
+    private static int printedDigitHeight(
+            MeasureNumberReconciler.NumberToken token, byte[] gray, int width, int height) {
         int unit = Math.max(3, Math.round((token.bottom() - token.top()) * height));
         // OCR boxes may include generous vertical padding (ML Kit's 38px box surrounds
         // 23px digits here). Measure the printed ink before comparing note/dot geometry.
@@ -409,6 +426,17 @@ final class TempoChangeDetector {
                     inkBottom = Math.max(inkBottom, y);
                 }
         if (inkBottom >= inkTop) unit = Math.max(3, inkBottom - inkTop + 1);
+        return unit;
+    }
+
+    private static double printedBeatUnitWithDigitHeight(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int equalsLeft,
+            int inkLimit,
+            int unit) {
         int left = Math.max(0, equalsLeft - unit * 3), right = equalsLeft - 1;
         int top = Math.max(0, Math.round(token.top() * height) - unit);
         int bottom = Math.min(height - 1, Math.round(token.bottom() * height) + unit / 3);

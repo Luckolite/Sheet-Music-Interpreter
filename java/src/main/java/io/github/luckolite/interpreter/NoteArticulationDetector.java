@@ -423,6 +423,8 @@ final class NoteArticulationDetector {
             }
             boolean semanticNotation = notation > glyph.count * .25f;
             Glyph printedCore = raw ? printedCore(glyph, gray, width, height) : null;
+            // Contrast belongs to the glyph, not the candidate note.
+            int bodyContrast = -1;
             int best = -1, mark = 0;
             double distance = Double.MAX_VALUE;
             for (int n = 0; n < notes.size(); n++) {
@@ -469,10 +471,11 @@ final class NoteArticulationDetector {
                                     || interiorCrossbar(glyph, width, .45f))) candidate = 0;
                     recoveredCore = candidate != 0;
                 }
-                if (raw
-                        && !faint
-                        && candidate != 0
-                        && !printedBodyContrast(glyph, gray, width, height)) continue;
+                if (raw && !faint && candidate != 0) {
+                    if (bodyContrast < 0)
+                        bodyContrast = printedBodyContrast(glyph, gray, width, height) ? 1 : 0;
+                    if (bodyContrast == 0) continue;
+                }
                 if (recoveredCore
                         && candidate == NoteArticulation.TENUTO
                         && continuedPrintedCurve(
