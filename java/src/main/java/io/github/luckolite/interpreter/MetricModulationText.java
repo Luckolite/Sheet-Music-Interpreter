@@ -10,6 +10,11 @@ public final class MetricModulationText {
 
     private MetricModulationText() {}
 
+    private static final class SupportedPulses {
+        private static final double[] BASES = {.125, .25, .5, 1, 2, 4};
+        private static final double[] FACTORS = {1, 1.5, 1.75};
+    }
+
     public record Pulses(double leftQuarterBeats, double rightQuarterBeats) {
         public Pulses {
             if (!supported(leftQuarterBeats) || !supported(rightQuarterBeats))
@@ -27,9 +32,8 @@ public final class MetricModulationText {
 
     private static boolean supported(double value) {
         if (!Double.isFinite(value)) return false;
-        for (double base : new double[] {.125, .25, .5, 1, 2, 4})
-            for (double factor : new double[] {1, 1.5, 1.75})
-                if (value == base * factor) return true;
+        for (double base : SupportedPulses.BASES)
+            for (double factor : SupportedPulses.FACTORS) if (value == base * factor) return true;
         return false;
     }
 

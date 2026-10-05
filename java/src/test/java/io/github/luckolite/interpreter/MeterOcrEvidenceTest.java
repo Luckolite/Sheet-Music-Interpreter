@@ -210,4 +210,64 @@ public class MeterOcrEvidenceTest {
         assertFalse(MeterOcrEvidence.ink(135));
         assertFalse(MeterOcrEvidence.ink(255));
     }
+
+    @Test
+    public void wholeAsciiTokensKeepTrimAndSlotBoundaries() {
+        assertEquals(
+                "4/4",
+                MeterOcrEvidence.horizontalFraction(List.of(token("\t04|04\n", 0, 0, 100, 80))));
+        assertEquals("", MeterOcrEvidence.singleReading(List.of("4/4\n")));
+        assertEquals("", MeterOcrEvidence.singleReading(List.of(" 4/4 ")));
+        for (String bad : List.of("\uFF14/\uFF14", "\u0664/\u0664", "4/4\nx", "4/4\u00A0")) {
+            assertEquals(bad, "", MeterOcrEvidence.singleReading(List.of(bad)));
+            assertEquals(
+                    bad,
+                    "",
+                    MeterOcrEvidence.horizontalFraction(List.of(token(bad, 0, 0, 100, 80))));
+        }
+        assertEquals(
+                "12/8",
+                MeterOcrEvidence.reflowedFraction(
+                        List.of(
+                                token("\t12\n", 20, 10, 40, 30),
+                                token("|.,:", 90, 10, 10, 30),
+                                token("/8\t", 130, 10, 20, 30)),
+                        80,
+                        110));
+        assertEquals(
+                "",
+                MeterOcrEvidence.reflowedFraction(
+                        List.of(token("12", 20, 10, 40, 30), token("\uFF18", 130, 10, 20, 30)),
+                        80,
+                        110));
+    }
+
+    @Test
+    public void invalidEvidenceKeepsCallerOrderAndNullEntrySemantics() {
+        var last = token("/8", 70, 14, 70, 78);
+        var first = token("3", 10, 12, 30, 80);
+        var tokens =
+                java.util.Arrays.asList(
+                        last,
+                        null,
+                        token(null, 0, 0, 10, 10),
+                        token("not a meter", 20, 10, 0, 30),
+                        first);
+        var original = new java.util.ArrayList<>(tokens);
+        assertEquals("3/8", MeterOcrEvidence.horizontalFraction(tokens));
+        assertEquals(original, tokens);
+        assertSame(last, tokens.get(0));
+        assertSame(first, tokens.get(4));
+        assertEquals("", MeterOcrEvidence.reflowedFraction(null, 80, 110));
+        assertEquals(
+                "",
+                MeterOcrEvidence.reflowedFraction(
+                        java.util.Collections.singletonList(token(null, 10, 10, 20, 30)), 80, 110));
+        try {
+            MeterOcrEvidence.horizontalFraction(null);
+            fail("The established null-list failure must remain");
+        } catch (NullPointerException expected) {
+            // horizontalFraction retains its existing non-null input contract.
+        }
+    }
 }

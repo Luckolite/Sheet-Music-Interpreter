@@ -6,9 +6,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /** Conservative evidence from OCR of a verified, horizontally reflowed signature crop. */
 public final class MeterOcrEvidence {
+    private static final Pattern FRACTION_TOKEN = Pattern.compile("[0-9/|]+");
+    private static final Pattern COMPLETE_FRACTION = Pattern.compile("[0-9]{1,2}[/|][0-9]{1,2}");
+    private static final Pattern PUNCTUATION_TOKEN = Pattern.compile("[/|.,:]+");
+    private static final Pattern ATTACHED_DENOMINATOR = Pattern.compile("[/|][0-9]{1,2}");
+    private static final Pattern DIGITS = Pattern.compile("[0-9]{1,2}");
+    private static final Pattern FRACTION_SEPARATOR = Pattern.compile("[/|]");
+
     private MeterOcrEvidence() {}
 
     public record Token(String text, int left, int top, int right, int bottom) {}
@@ -25,7 +33,7 @@ public final class MeterOcrEvidence {
                     && token.text() != null
                     && token.right() > token.left()
                     && token.bottom() > token.top()
-                    && token.text().trim().matches("[0-9/|]+")) tokens.add(token);
+                    && FRACTION_TOKEN.matcher(token.text().trim()).matches()) tokens.add(token);
         tokens.sort(Comparator.comparingInt(Token::left));
         var choices = new HashSet<String>();
         for (int i = 0; i < tokens.size(); i++) {
@@ -52,8 +60,8 @@ public final class MeterOcrEvidence {
 
     private static void addFraction(HashSet<String> choices, String text) {
         // Never guess a slash from a '1', or turn arbitrary letters into digits.
-        if (!text.matches("[0-9]{1,2}[/|][0-9]{1,2}")) return;
-        String[] parts = text.split("[/|]");
+        if (!COMPLETE_FRACTION.matcher(text).matches()) return;
+        String[] parts = FRACTION_SEPARATOR.split(text, 0);
         int numerator = Integer.parseInt(parts[0]), denominator = Integer.parseInt(parts[1]);
         if (numerator >= 1
                 && numerator <= 32
@@ -75,12 +83,12 @@ public final class MeterOcrEvidence {
                     || token.right() <= token.left()
                     || token.bottom() <= token.top()) continue;
             String text = token.text().trim();
-            if (text.matches("[/|.,:]+")) continue;
+            if (PUNCTUATION_TOKEN.matcher(text).matches()) continue;
             float center = token.left() * .5f + token.right() * .5f;
             // OCR may attach the drawn separator to the denominator, e.g. '/8'.
-            if (center > denominatorStart && text.matches("[/|][0-9]{1,2}"))
+            if (center > denominatorStart && ATTACHED_DENOMINATOR.matcher(text).matches())
                 text = text.substring(1);
-            if (!text.matches("[0-9]{1,2}")) return "";
+            if (!DIGITS.matcher(text).matches()) return "";
             if (center < numeratorEnd) upper.add(text);
             else if (center > denominatorStart) lower.add(text);
             else return "";

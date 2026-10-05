@@ -89,4 +89,68 @@ public class ExpressiveDirectionTextTest {
         assertTrue(ExpressiveDirectionText.parse("riddle saffron pedalboard").isEmpty());
         assertTrue(ExpressiveDirectionText.parse(null).isEmpty());
     }
+
+    @Test
+    public void multipleRulesReuseProgressionWithoutLeakingIntoLaterCalls() {
+        String plain = "molto rall. e poco cresc. e Ped.";
+        var expected =
+                List.of(
+                        new ExpressiveDirectionText.Direction(
+                                Kind.RALLENTANDO,
+                                Strength.MOLTO,
+                                plain,
+                                "molto   e poco cresc. e ped."),
+                        new ExpressiveDirectionText.Direction(
+                                Kind.CRESCENDO,
+                                Strength.POCO,
+                                plain,
+                                "molto rall. e poco   e ped."),
+                        new ExpressiveDirectionText.Direction(
+                                Kind.PEDAL_DOWN,
+                                Strength.UNSPECIFIED,
+                                plain,
+                                "molto rall. e poco cresc. e"));
+        assertEquals(expected, ExpressiveDirectionText.parse(plain));
+        String progression = "molto rall. e poco cresc. a poco a poco";
+        assertEquals(
+                List.of(
+                        new ExpressiveDirectionText.Direction(
+                                Kind.RALLENTANDO,
+                                Strength.UNSPECIFIED,
+                                progression,
+                                "molto   e poco cresc. a poco a poco"),
+                        new ExpressiveDirectionText.Direction(
+                                Kind.CRESCENDO,
+                                Strength.UNSPECIFIED,
+                                progression,
+                                "molto rall. e poco   a poco a poco")),
+                ExpressiveDirectionText.parse(progression));
+        assertTrue(ExpressiveDirectionText.parse("artist a poco a poco").isEmpty());
+        assertTrue(ExpressiveDirectionText.parse(null).isEmpty());
+        assertTrue(ExpressiveDirectionText.parse(" \t\n").isEmpty());
+        assertEquals(expected, ExpressiveDirectionText.parse(plain));
+    }
+
+    @Test
+    public void composedAndDecomposedMarksRetainCompleteDirectionsAndPrintedText() {
+        for (String printed :
+                List.of(
+                        "Mólto räll. e póco crésc.",
+                        "Mo\u0301lto ra\u0308ll. e po\u0301co cre\u0301sc.")) {
+            var values = ExpressiveDirectionText.parse(printed);
+            assertEquals(
+                    List.of(
+                            new ExpressiveDirectionText.Direction(
+                                    Kind.RALLENTANDO,
+                                    Strength.MOLTO,
+                                    printed,
+                                    "molto   e poco cresc."),
+                            new ExpressiveDirectionText.Direction(
+                                    Kind.CRESCENDO, Strength.POCO, printed, "molto rall. e poco")),
+                    values);
+            for (var value : values) assertSame(printed, value.printedText());
+        }
+        assertEquals(Strength.POCO, one("poco rall.", Kind.RALLENTANDO).strength());
+        assertEquals(Strength.MOLTO, one("molto rall.", Kind.RALLENTANDO).strength());
+    }
 }

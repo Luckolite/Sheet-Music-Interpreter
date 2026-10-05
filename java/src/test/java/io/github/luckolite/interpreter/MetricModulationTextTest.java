@@ -104,4 +104,59 @@ public final class MetricModulationTextTest {
         assertEquals(48, result.timeline().activeSecondsAtBeat(12), 1e-9);
         assertEquals(1, result.diagnostics().size());
     }
+
+    @Test
+    public void allPulseValuesRetainExactRoundTripsAndRejectionEdges() {
+        assertTrue(MetricModulationText.parse(null).isEmpty());
+        assertTrue(MetricModulationText.decode(null).isEmpty());
+        assertTrue(MetricModulationText.parse("quarter").isEmpty());
+        double[] accepted = {
+            .125, .1875, .21875, .25, .375, .4375, .5, .75, .875, 1, 1.5, 1.75, 2, 3, 3.5, 4, 6, 7
+        };
+        for (int pass = 0; pass < 2; pass++) {
+            for (int i = 0; i < accepted.length; i++) {
+                double value = accepted[pass == 0 ? i : accepted.length - 1 - i];
+                var left = new MetricModulationText.Pulses(value, 1);
+                var right = new MetricModulationText.Pulses(1, value);
+                assertEquals(
+                        Double.doubleToRawLongBits(value),
+                        Double.doubleToRawLongBits(left.leftQuarterBeats()));
+                assertEquals(
+                        Double.doubleToRawLongBits(1 / value),
+                        Double.doubleToRawLongBits(left.ratio()));
+                assertEquals(
+                        Double.doubleToRawLongBits(value),
+                        Double.doubleToRawLongBits(right.ratio()));
+                assertEquals(left, MetricModulationText.decode(left.encode()).orElseThrow());
+                assertEquals(right, MetricModulationText.decode(right.encode()).orElseThrow());
+                for (double invalid : new double[] {Math.nextDown(value), Math.nextUp(value)}) {
+                    assertThrows(
+                            IllegalArgumentException.class,
+                            () -> new MetricModulationText.Pulses(invalid, 1));
+                    assertTrue(
+                            MetricModulationText.decode("metric-pulse-v1:" + invalid + ":1")
+                                    .isEmpty());
+                }
+            }
+        }
+        assertEquals(
+                new MetricModulationText.Pulses(.21875, 7),
+                MetricModulationText.parse("double dotted 32nd = double dotted whole")
+                        .orElseThrow());
+        for (double invalid :
+                new double[] {
+                    0,
+                    -0.0,
+                    -1,
+                    Double.MIN_VALUE,
+                    Double.NaN,
+                    Double.NEGATIVE_INFINITY,
+                    Double.POSITIVE_INFINITY
+                }) {
+            assertThrows(
+                    IllegalArgumentException.class,
+                    () -> new MetricModulationText.Pulses(invalid, 1));
+            assertTrue(MetricModulationText.decode("metric-pulse-v1:1:" + invalid).isEmpty());
+        }
+    }
 }

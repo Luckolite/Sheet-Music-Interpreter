@@ -9,6 +9,14 @@ import java.util.List;
 final class ScoreBoundaryTies {
     private ScoreBoundaryTies() {}
 
+    private static final class SharpOrder {
+        private static final int[] VALUES = {3, 0, 4, 1, 5, 2, 6};
+    }
+
+    private static final class FlatOrder {
+        private static final int[] VALUES = {6, 2, 5, 1, 4, 0, 3};
+    }
+
     static List<ScoreNoteEvent> resolve(
             List<ScoreNoteEvent> notes, List<ScoreKeyChange> keys, List<Integer> boundaries) {
         var result = new ArrayList<>(notes);
@@ -84,8 +92,7 @@ final class ScoreBoundaryTies {
         for (var key : keys) if (key.measureIndex() <= note.measureIndex()) fifths = key.fifths();
         if (fifths == null) return Integer.MIN_VALUE;
         int letter = Math.floorMod(note.diatonicPitchIdentity(), 7);
-        int[] order =
-                fifths >= 0 ? new int[] {3, 0, 4, 1, 5, 2, 6} : new int[] {6, 2, 5, 1, 4, 0, 3};
+        int[] order = fifths >= 0 ? SharpOrder.VALUES : FlatOrder.VALUES;
         for (int k = 0; k < Math.min(7, Math.abs(fifths)); k++)
             if (order[k] == letter) return fifths > 0 ? 1 : -1;
         return ScoreNoteEvent.ACCIDENTAL_NATURAL;

@@ -44,4 +44,25 @@ public class MusicalOcrEvidenceTest {
         for (String s : new String[] {"triplet", "portrait", "portamento", "forte", "t", "3"})
             assertEquals("", MusicalOcrEvidence.ornamentToken(s));
     }
+
+    @Test
+    public void meterKeepsWholeAsciiTokenAndLazyEvidenceGuards() {
+        assertEquals(
+                "00/32", MusicalOcrEvidence.fontMeter("00/32", .84f, .84f, Set.of(), Set.of()));
+        for (String token : new String[] {"123/4", "\uFF14/4", "1/4\n", " 1/4", "1/4 "})
+            assertEquals("", MusicalOcrEvidence.fontMeter(token, 1, 1, null, null));
+        assertEquals("", MusicalOcrEvidence.fontMeter(null, 1, 1, null, null));
+        assertEquals("", MusicalOcrEvidence.fontMeter("2/4", .83f, 1, null, null));
+        assertEquals(
+                "2/4",
+                MusicalOcrEvidence.fontMeter("2/4", Float.NaN, Float.NaN, Set.of(), Set.of()));
+    }
+
+    @Test
+    public void ornamentsKeepWholeTokenAndPunctuationBoundariesAcrossCalls() {
+        String[] inputs = {" Tr. ", "por,,", "DOR", "tr\n.", null, "PORT,", "trill", "tr"};
+        String[] expected = {"tr", "", "port", "", "", "port", "", "tr"};
+        for (int i = 0; i < inputs.length; i++)
+            assertEquals(expected[i], MusicalOcrEvidence.ornamentToken(inputs[i]));
+    }
 }

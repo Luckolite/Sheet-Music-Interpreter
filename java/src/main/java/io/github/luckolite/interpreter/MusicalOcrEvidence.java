@@ -4,15 +4,21 @@ package io.github.luckolite.interpreter;
 
 import java.util.Locale;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 /** Agreement checks shared by platform-independent musical OCR consumers. */
 final class MusicalOcrEvidence {
+    private static final Pattern FONT_METER = Pattern.compile("[0-9]{1,2}/(?:2|4|8|16|32)");
+    private static final Pattern ORNAMENT_TOKEN = Pattern.compile("(?:tr|[pd]ort?)[.,]?");
+    private static final Pattern NEGATED_DIRECTION = Pattern.compile(".*\\b(non|senza)\\b.*");
+    private static final Pattern COMPOUND_DIRECTION = Pattern.compile(".*\\s+.*");
+
     private MusicalOcrEvidence() {}
 
     static String fontMeter(
             String text, float upperScore, float lowerScore, Set<String> upper, Set<String> lower) {
         if (text == null
-                || !text.matches("[0-9]{1,2}/(?:2|4|8|16|32)")
+                || !FONT_METER.matcher(text).matches()
                 || upperScore < .84f
                 || lowerScore < .84f) return "";
         String[] parts = text.split("/");
@@ -25,7 +31,7 @@ final class MusicalOcrEvidence {
     static String ornamentToken(String value) {
         if (value == null) return "";
         String token = value.trim().toLowerCase(Locale.ROOT);
-        return token.matches("(?:tr|[pd]ort?)[.,]?")
+        return ORNAMENT_TOKEN.matcher(token).matches()
                 ? (token.startsWith("tr") ? "tr" : "port")
                 : "";
     }
@@ -39,9 +45,9 @@ final class MusicalOcrEvidence {
             int height) {
         for (var block : text.getTextBlocks())
             for (var line : block.getLines()) {
-                if (line.getText()
-                        .toLowerCase(java.util.Locale.ROOT)
-                        .matches(".*\\b(non|senza)\\b.*")) continue;
+                if (NEGATED_DIRECTION
+                        .matcher(line.getText().toLowerCase(java.util.Locale.ROOT))
+                        .matches()) continue;
                 if (ScoreNavigationDetector.kind(line.getText()) != null) {
                     var box = line.getBoundingBox();
                     if (box != null)
@@ -68,7 +74,7 @@ final class MusicalOcrEvidence {
                 // Keep a compound dynamic/expression line at its printed starting slot.
                 // The expression element alone begins farther right than the affected head.
                 if (PlayingTechniqueDetector.technique(line.getText()) >= 0
-                        && line.getText().trim().matches(".*\\s+.*")) {
+                        && COMPOUND_DIRECTION.matcher(line.getText().trim()).matches()) {
                     var box = line.getBoundingBox();
                     if (box != null)
                         words.add(

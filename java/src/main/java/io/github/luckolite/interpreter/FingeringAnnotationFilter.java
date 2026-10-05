@@ -3,9 +3,15 @@
 package io.github.luckolite.interpreter;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 /** Cross-checks above-staff false heads against independently recognized fingering text. */
 final class FingeringAnnotationFilter {
+    private static final Pattern SINGLE_DIGIT = Pattern.compile("[1-5]");
+    private static final Pattern HAND_OR_DIGIT = Pattern.compile("[LH]?[1-5]");
+    private static final Pattern HAND_SEQUENCE = Pattern.compile("[LRH]{2,3}");
+    private static final Pattern WHITESPACE = Pattern.compile("\\s+");
+
     private FingeringAnnotationFilter() {}
 
     static List<ScoreNoteEvent> apply(
@@ -64,7 +70,7 @@ final class FingeringAnnotationFilter {
                         || b - t > gap * 5.5f
                         || r - l < gap * .45f
                         || r - l > gap * 7) continue;
-                if (word.text().trim().matches("[1-5]")
+                if (SINGLE_DIGIT.matcher(word.text().trim()).matches()
                         && printedStemBeyondWord(gray, width, height, x, y, t, b, gap)) continue;
                 if (note.staffStep() >= 10
                         && printedLedgerAcrossWord(gray, width, height, l, r, y, gap)) continue;
@@ -78,8 +84,8 @@ final class FingeringAnnotationFilter {
 
     static boolean isFingering(String text) {
         if (text == null) return false;
-        String compact = text.trim().replaceAll("\\s+", "").toUpperCase(Locale.ROOT);
-        return compact.matches("[LH]?[1-5]") || compact.matches("[LRH]{2,3}");
+        String compact = WHITESPACE.matcher(text.trim()).replaceAll("").toUpperCase(Locale.ROOT);
+        return HAND_OR_DIGIT.matcher(compact).matches() || HAND_SEQUENCE.matcher(compact).matches();
     }
 
     /** OCR can call a notehead and its short ledger a digit. An attached shaft

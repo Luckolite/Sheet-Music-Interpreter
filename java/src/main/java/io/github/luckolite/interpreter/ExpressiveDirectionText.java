@@ -20,6 +20,9 @@ public final class ExpressiveDirectionText {
 
     private static final Rule PEDAL_RELEASE = rule(Kind.PEDAL_UP, "senza\\s+(?:pedale|ped\\.?)");
     private static final Pattern PROGRESSION = Pattern.compile("\\b(?:a\\s+)?poco\\s+a\\s+poco\\b");
+    private static final Pattern COMBINING_MARKS = Pattern.compile("\\p{M}+");
+    private static final Pattern LEADING_STRENGTH = Pattern.compile("\\b(poco|molto)\\s*$");
+    private static final Pattern TRAILING_STRENGTH = Pattern.compile("^\\s*(poco|molto)\\b");
     private static final List<Rule> RULES =
             List.of(
                     rule(Kind.RITARDANDO, "ritardando|ritard\\.?|rit\\.?"),
@@ -47,11 +50,13 @@ public final class ExpressiveDirectionText {
     public static List<Direction> parse(String printed) {
         if (printed == null || printed.isBlank()) return List.of();
         String normalized =
-                Normalizer.normalize(printed, Normalizer.Form.NFD)
-                        .replaceAll("\\p{M}+", "")
+                COMBINING_MARKS
+                        .matcher(Normalizer.normalize(printed, Normalizer.Form.NFD))
+                        .replaceAll("")
                         .toLowerCase(Locale.ROOT)
                         .replace('’', '\'');
         var result = new ArrayList<Direction>();
+        int progression = -1;
         for (var rule : RULES) {
             var match = rule.pattern().matcher(normalized);
             if (!match.find()) continue;
@@ -61,9 +66,10 @@ public final class ExpressiveDirectionText {
                     after = normalized.substring(match.end());
             // a poco a poco describes progression; its raw phrase remains available to policy.
             Strength strength = Strength.UNSPECIFIED;
-            if (!PROGRESSION.matcher(normalized).find()) {
-                var leading = Pattern.compile("\\b(poco|molto)\\s*$").matcher(before);
-                var trailing = Pattern.compile("^\\s*(poco|molto)\\b").matcher(after);
+            if (progression < 0) progression = PROGRESSION.matcher(normalized).find() ? 1 : 0;
+            if (progression == 0) {
+                var leading = LEADING_STRENGTH.matcher(before);
+                var trailing = TRAILING_STRENGTH.matcher(after);
                 String modifier =
                         leading.find()
                                 ? leading.group(1)

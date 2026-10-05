@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /** Anchors explicit navigation words and already-verified glyphs to printed bar boundaries. */
 final class ScoreNavigationDetector {
+    private static final Pattern NAVIGATION_SEPARATORS = Pattern.compile("[\\s.,:;]");
+
     record Glyph(ScorePlaybackDirection.Kind kind, float centerX, float top, float bottom) {}
 
     private record Phrase(
@@ -24,7 +27,7 @@ final class ScoreNavigationDetector {
         if (text == null) return null;
         if (text.trim().equals("𝄋")) return ScorePlaybackDirection.Kind.SEGNO;
         if (text.trim().equals("𝄌")) return ScorePlaybackDirection.Kind.CODA;
-        String clean = text.toLowerCase(Locale.ROOT).replaceAll("[\\s.,:;]", "");
+        String clean = NAVIGATION_SEPARATORS.matcher(text.toLowerCase(Locale.ROOT)).replaceAll("");
         return switch (clean) {
             case "dsalcoda", "dalsegnoalcoda" -> ScorePlaybackDirection.Kind.DAL_SEGNO_AL_CODA;
             case "dc", "dacapo" -> ScorePlaybackDirection.Kind.DA_CAPO;

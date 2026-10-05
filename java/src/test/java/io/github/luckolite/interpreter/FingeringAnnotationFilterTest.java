@@ -126,4 +126,43 @@ public class FingeringAnnotationFilterTest {
         for (int y = 42; y <= 100; y++) gray[y * W + 210] = 0;
         assertTrue(apply("L2", 80, 105, note(8, 100)).isEmpty());
     }
+
+    @Test
+    public void fullTokensRetainAsciiWhitespaceAndUnicodeBoundaries() {
+        for (String text : List.of("1", " 5\n", "L\t2", "h4", "L\r\nR", "H L"))
+            assertTrue(text, FingeringAnnotationFilter.isFingering(text));
+        for (String text :
+                List.of(
+                        "",
+                        "R2",
+                        "L22",
+                        "L2x",
+                        "\uFF2C2",
+                        "\uFF12",
+                        "L\u00A02",
+                        "L\u20032",
+                        "L2\nx")) assertFalse(text, FingeringAnnotationFilter.isFingering(text));
+        assertFalse(FingeringAnnotationFilter.isFingering(null));
+        assertTrue(FingeringAnnotationFilter.isFingering("L2"));
+    }
+
+    @Test
+    public void digitStemAndHandLabelKeepWholeInputAndCallerPixels() {
+        for (int y = 42; y <= 100; y++) gray[y * W + 210] = 0;
+        var originalPixels = gray.clone();
+        var n = note(8, 100);
+        var notes = List.of(n);
+        var digits = List.of(word(" 3\n", 80, 105));
+        assertSame(
+                notes,
+                FingeringAnnotationFilter.apply(digits, staffs, measures, notes, gray, W, H));
+        var hand = List.of(word("H\n3", 80, 105));
+        assertEquals(
+                List.of(),
+                FingeringAnnotationFilter.apply(hand, staffs, measures, notes, gray, W, H));
+        assertArrayEquals(originalPixels, gray);
+        assertSame(n, notes.get(0));
+        assertEquals(" 3\n", digits.get(0).text());
+        assertEquals("H\n3", hand.get(0).text());
+    }
 }

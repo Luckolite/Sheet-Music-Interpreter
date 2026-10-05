@@ -492,9 +492,10 @@
     },
     "MeterOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOcrEvidence.java",
-      "source_sha256": "a562eed52542fad4154faac5e6f45b17319027c1509aa9dcd3157d1acdc7991f",
+      "source_sha256": "dcc33c2f1bf1e838f082bf026bf4fbe8e98d78c67ff37c59e623e1994e90618f",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f715830afffb2fb2cdd672ac5393a95cad79e065e3e2766fecb5d18bf18e4c12"
+      "source_normalized_sha256": "743138a6e6a08e6d1fc28e389dfc92a5c5e5b1e73f58774b007877ada9971d26",
+      "review_note": "Reuse five immutable fixed regex Patterns with fresh whole-input Matchers at the original OCR token/slot branches. Preserve ASCII digit and separator domains, trimming only at original sites, null/geometry short-circuits, fraction parsing, caller token order and consensus policy. Original Unicode/newline/slot/caller regressions; Apache-2.0/JDK only. Also reuse the original default-flags [/|] separator Pattern in addFraction with explicit split limit 0, at the original position after whole-token validation. No single-character MusicalOcrEvidence split change."
     },
     "DoubleSharpGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DoubleSharpGlyph.java",
@@ -699,9 +700,10 @@
     },
     "FingeringAnnotationFilter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FingeringAnnotationFilter.java",
-      "source_sha256": "f00cc0c5a57f8a98ad57584726ecfafea3c3fdb2e7312d03d79559a025bb6d9d",
+      "source_sha256": "13db66be6c8bf35df8673762fb52f902f868941c9ad8cf3efd476b92cbba898c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f00cc0c5a57f8a98ad57584726ecfafea3c3fdb2e7312d03d79559a025bb6d9d"
+      "source_normalized_sha256": "13db66be6c8bf35df8673762fb52f902f868941c9ad8cf3efd476b92cbba898c",
+      "review_note": "Reuse three immutable fixed regex Patterns with fresh whole-input Matchers at the original fingering/printed-stem branches. Preserve trim, existing ASCII whitespace removal, Locale.ROOT, short-circuit order, note/staff geometry, list identity and source pixels. Original Unicode/newline/whole-token and independent stem/hand-label regressions; Apache-2.0/JDK only. Also reuse the original default-flags \\s+ Pattern with a fresh local Matcher.replaceAll at the original trim-to-Locale.ROOT position. ASCII whitespace, NBSP/Unicode boundaries, short-circuits and replacement text stay unchanged."
     },
     "GlyphInkContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlyphInkContrast.java",
@@ -735,11 +737,11 @@
     },
     "MusicalOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicalOcrEvidence.java",
-      "source_sha256": "63e8edc25a484dbe50f8978a5f99fefa8c378c3932406acf2f3cabe687343186",
+      "source_sha256": "d695492c51eea39ed165019dab600c9556a89bed2a06f2a14853cb0839c194fe",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "2242fa4079cf889e90ce5db6efd9767d5f1000ad16a4049d909129790c49b391",
+      "source_normalized_sha256": "fa5d30c6692d369001c4ef4a16c874c3b57e4ed4323c9150b427c5db9068446f",
       "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data."
+      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Reuse four immutable default-flags OCR meter/ornament/negation Patterns with fresh local whole-input Matchers at the original branches. Preserve trim, null/NaN short-circuits, geometry, fallback/order, and the existing single-character split fast path; original synthetic token/line boundary regressions, Apache-2.0/JDK only."
     },
     "NavigationSegnoGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NavigationSegnoGlyphs.java",
@@ -845,10 +847,10 @@
     },
     "ScoreNavigationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationDetector.java",
-      "source_sha256": "d7f8c4a68b40a4827d4ad25c2223211d11700c842124fcbc96fc28d59434f35a",
+      "source_sha256": "b4f42c4898570fb5ff1d8de93e16ec5573045a949ae1f4f3269f07a03de0605d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "d7f8c4a68b40a4827d4ad25c2223211d11700c842124fcbc96fc28d59434f35a",
-      "review_note": "Global original geometric repair ported with reviewed token parity and synthetic positive and rejection regressions; no new dependencies or private source imagery."
+      "source_normalized_sha256": "b4f42c4898570fb5ff1d8de93e16ec5573045a949ae1f4f3269f07a03de0605d",
+      "review_note": "Global original geometric repair ported with reviewed token parity and synthetic positive and rejection regressions; no new dependencies or private source imagery. Reuse the immutable default-flags [\\s.,:;] Pattern with fresh local Matcher.replaceAll at the existing Locale.ROOT-lowercase position. Preserve null and trimmed Unicode glyph early returns, ASCII whitespace versus NBSP/Unicode behavior, whole cleaned-token switch, phrase containment/geometry, target ordering and caller words. Original synthetic normalization and complete ordered navigation/caller regressions; Apache-2.0/JDK only."
     },
     "ScoreNavigationPlan.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationPlan.java",
@@ -925,11 +927,11 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "55ce678dca2ffa0860ce46a517a43a6c3126654a40bed7326b566de38882a71a",
+      "source_sha256": "78568326fd846f698928b049e773180078c70d06277ce8a00d4c0d97c4d8488f",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "625ccc40bb91b656f83bb1e40c93a29a26bc7a89e22912e29895ad6578190a08",
+      "source_normalized_sha256": "5cf6da5b56f23d22a49db65ec73d97323a1d93e3652976dcb79d94c60c47f74e",
       "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data."
+      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Reuse fixed combining-mark and strength regex Patterns with fresh Matchers, and lazily compute progression once per parse at its original first matched-rule boundary. Preserve normalization, rule order, modifiers, qualifiers and printed text; original composed/decomposed and multi-rule progression regressions. Apache-2.0/JDK-only; no model/dependency/record-layout changes."
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
@@ -996,11 +998,11 @@
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
-      "source_sha256": "b8d164a5f631ec528418e4e82ce9efd3a82ac08eebf5d61c04c04b3138b75670",
+      "source_sha256": "5d87cc2291c783406c20cf5e06b5cac33ae1c952eec9540bdcc7398fa5a7eb80",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "29b07011f9971456a96008a510a7fd8e63c993cde353ea2855763aa634c1ad06",
+      "source_normalized_sha256": "9e8384421d33302a72be37ce607c9a7544303bf24d242a0f8e23675142973e65",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes.",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
     },
     "DynamicStemCrop.java": {
@@ -1229,11 +1231,11 @@
     },
     "MetricModulationText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MetricModulationText.java",
-      "source_sha256": "94419215a7870cff54535567af68239be305f486721f88f43012ff6c8af6ca17",
-      "source_normalized_sha256": "94419215a7870cff54535567af68239be305f486721f88f43012ff6c8af6ca17",
+      "source_sha256": "3fb75578e42a558da5b644d1b07ce1bf47d6ef887d24838df28fc4c2350db90f",
+      "source_normalized_sha256": "3fb75578e42a558da5b644d1b07ce1bf47d6ef887d24838df28fc4c2350db90f",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data."
+      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Reuse private lazy read-only supported-pulse base/factor tables; preserve finite guard, nested multiplication/equality order, parsing and pulse record validation. Original synthetic accepted-value and adjacent-rejection regression. Apache-2.0/JDK-only; no model or record-layout changes."
     },
     "PrintedExpressionGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedExpressionGlyphs.java",
@@ -1881,5 +1883,73 @@
     "phone_elapsed_gain_claimed": false,
     "models_changed": false,
     "record_layout_changed": false
+  },
+  "seven_family_reuse_review_ExpressiveDirectionText": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
+    "source_sha256": "78568326fd846f698928b049e773180078c70d06277ce8a00d4c0d97c4d8488f",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExpressiveDirectionText.java",
+    "standalone_sha256": "e197290bbfa0e01f884492ab7afd6f38eb9ec1822cf1da80a0913210a719c894",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/ExpressiveDirectionTextTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false
+  },
+  "seven_family_reuse_review_MetricModulationText": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/MetricModulationText.java",
+    "source_sha256": "3fb75578e42a558da5b644d1b07ce1bf47d6ef887d24838df28fc4c2350db90f",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MetricModulationText.java",
+    "standalone_sha256": "497cd52d6b7b7c492d95a5376a30221686164d5371832818f226d03bbaa56a60",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/MetricModulationTextTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false
+  },
+  "seven_family_reuse_review_ScoreBoundaryTies": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
+    "source_sha256": "5d87cc2291c783406c20cf5e06b5cac33ae1c952eec9540bdcc7398fa5a7eb80",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreBoundaryTies.java",
+    "standalone_sha256": "ecbbf66f53fdd1e1caefc8a8e2917b168e2939d865eb0a6c50f1562c5d2f19cc",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/ScoreBoundaryTiesTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false
+  },
+  "seven_family_reuse_review_MeterOcrEvidence": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOcrEvidence.java",
+    "source_sha256": "dcc33c2f1bf1e838f082bf026bf4fbe8e98d78c67ff37c59e623e1994e90618f",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterOcrEvidence.java",
+    "standalone_sha256": "12b54607b9f488906c2388dd953bc4dd7ddec3dd157019e1201ecd64a22df471",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/MeterOcrEvidenceTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false,
+    "revision_b_review": "Also reuse the original default-flags [/|] separator Pattern in addFraction with explicit split limit 0, at the original position after whole-token validation. No single-character MusicalOcrEvidence split change."
+  },
+  "seven_family_reuse_review_FingeringAnnotationFilter": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/FingeringAnnotationFilter.java",
+    "source_sha256": "13db66be6c8bf35df8673762fb52f902f868941c9ad8cf3efd476b92cbba898c",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FingeringAnnotationFilter.java",
+    "standalone_sha256": "f5b4d881220d63adb0fbeb70f2d5a6599b456a38613f708e34a8451a8d227f3c",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/FingeringAnnotationFilterTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false,
+    "revision_b_review": "Also reuse the original default-flags \\s+ Pattern with a fresh local Matcher.replaceAll at the original trim-to-Locale.ROOT position. ASCII whitespace, NBSP/Unicode boundaries, short-circuits and replacement text stay unchanged."
+  },
+  "seven_family_reuse_review_ScoreNavigationDetector": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationDetector.java",
+    "source_sha256": "b4f42c4898570fb5ff1d8de93e16ec5573045a949ae1f4f3269f07a03de0605d",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreNavigationDetector.java",
+    "standalone_sha256": "6967373f023f84f2097e73c77e0b7cf8ee7344af299922f1c32e1e510159b1be",
+    "shareable_regression": "java/src/test/java/io/github/luckolite/interpreter/ScoreNavigationDetectorTest.java",
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false
+  },
+  "seven_family_reuse_review_MusicalOcrEvidence": {
+    "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicalOcrEvidence.java",
+    "source_sha256": "d695492c51eea39ed165019dab600c9556a89bed2a06f2a14853cb0839c194fe",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MusicalOcrEvidence.java",
+    "standalone_sha256": "9e79bf037eab80c168680e255c90322245559f12bd018705506fc433296770c4",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/MusicalOcrEvidenceTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/MusicalOcrExpressionEvidenceTest.java"
+    ],
+    "models_changed": false,
+    "phone_elapsed_gain_claimed": false
   }
 }

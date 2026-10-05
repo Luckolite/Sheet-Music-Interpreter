@@ -192,4 +192,42 @@ public class ScoreNavigationDetectorTest {
     public void emptyInputsStayEmpty() {
         assertEquals(List.of(), detect(List.of(), List.of()));
     }
+
+    @Test
+    public void normalizationKeepsAsciiSeparatorsAndWholeUnicodeBoundaries() {
+        assertEquals(DA_CAPO_AL_FINE, ScoreNavigationDetector.kind("\tD.,\nC:\ral;\fFine\u000b"));
+        assertEquals(SEGNO, ScoreNavigationDetector.kind(" \t𝄋\n"));
+        assertEquals(CODA, ScoreNavigationDetector.kind(" \t𝄌\n"));
+        assertNull(ScoreNavigationDetector.kind(null));
+        for (String text :
+                List.of(
+                        "D\u00a0C",
+                        "D\u2003C",
+                        "Ｄ.C.",
+                        "fine-tuning",
+                        "\u00a0𝄋",
+                        "D.C. al Fine suffix")) {
+            assertNull(text, ScoreNavigationDetector.kind(text));
+        }
+        assertEquals(DA_CAPO, ScoreNavigationDetector.kind("D.C."));
+    }
+
+    @Test
+    public void punctuatedPhraseKeepsIndependentDestinationAndCallerOrder() {
+        var jump = word("D, C; al: Coda.", .77f, .9f);
+        var destination = word("Coda", .715f, .755f);
+        var words = List.of(jump, destination);
+        assertEquals(
+                List.of(
+                        new ScorePlaybackDirection(3, CODA),
+                        new ScorePlaybackDirection(4, DA_CAPO_AL_CODA)),
+                detect(words, List.of()));
+        assertSame(jump, words.get(0));
+        assertSame(destination, words.get(1));
+        assertEquals("D, C; al: Coda.", jump.text());
+        assertEquals("Coda", destination.text());
+        assertEquals(
+                List.of(new ScorePlaybackDirection(4, DA_CAPO)),
+                detect(List.of(word("D.C.", .77f, .9f)), List.of()));
+    }
 }
