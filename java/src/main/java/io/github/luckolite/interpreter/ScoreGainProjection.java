@@ -37,7 +37,17 @@ public final class ScoreGainProjection {
             double fraction = (clock.activeSecondsAtBeat(beat) - start) / (end - start);
             return fromDb + (toDb - fromDb) * Math.max(0, Math.min(1, fraction));
         }
+
+        private double db(double beat, ScorePerformanceTimeline clock, ClockRange range) {
+            if (beat >= endBeat) return toDb;
+            double fraction =
+                    (clock.activeSecondsAtBeat(beat) - range.start())
+                            / (range.end() - range.start());
+            return fromDb + (toDb - fromDb) * Math.max(0, Math.min(1, fraction));
+        }
     }
+
+    private record ClockRange(double start, double end) {}
 
     public record Piece(
             String sourceCurveId,
@@ -79,6 +89,7 @@ public final class ScoreGainProjection {
             throw new IllegalArgumentException("Incomplete gain route");
         var lanes = new TreeMap<Integer, List<Curve>>();
         var ids = new HashSet<String>();
+        var clockRanges = new HashMap<String, ClockRange>();
         double sourceEnd = meter.startBeat(plan.sourceMeasureCount());
         for (var curve : curves) {
             if (!ids.add(curve.id()) || curve.startBeat() > sourceEnd)
@@ -89,6 +100,7 @@ public final class ScoreGainProjection {
                     || !Double.isFinite(activeEnd)
                     || activeEnd <= activeStart)
                 throw new IllegalArgumentException("Gain curve loses source clock precision");
+            clockRanges.put(curve.id(), new ClockRange(activeStart, activeEnd));
             lanes.computeIfAbsent(curve.lane(), ignored -> new ArrayList<>()).add(curve);
         }
         for (var lane : lanes.values()) lane.sort(Comparator.comparingDouble(Curve::startBeat));
@@ -136,6 +148,7 @@ public final class ScoreGainProjection {
                     while (cursor + 1 < entry.getValue().size()
                             && entry.getValue().get(cursor + 1).startBeat() <= from) cursor++;
                     Curve active = cursor < 0 ? null : entry.getValue().get(cursor);
+                    var range = active == null ? null : clockRanges.get(active.id());
                     result.add(
                             new Piece(
                                     active == null ? "" : active.id(),
@@ -145,8 +158,8 @@ public final class ScoreGainProjection {
                                     run.performanceStart + to - run.from,
                                     from,
                                     to,
-                                    active == null ? 0 : active.db(from, sourceClock),
-                                    active == null ? 0 : active.db(to, sourceClock)));
+                                    active == null ? 0 : active.db(from, sourceClock, range),
+                                    active == null ? 0 : active.db(to, sourceClock, range)));
                 }
             }
         result.sort(Comparator.comparingDouble(Piece::startBeat).thenComparingInt(Piece::lane));

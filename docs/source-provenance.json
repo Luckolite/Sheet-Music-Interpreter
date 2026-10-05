@@ -933,9 +933,10 @@
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
-      "source_sha256": "d3f8673f7b3876d95aa6bdd0eee7cd8642b9ca4e2e146be92773ea7c0632557d",
+      "source_sha256": "44eb697f05b7abb9a46986b3e627cf8ad4e55c51cf684194e73b14495e13fe39",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "cc34d83cb501ea251b19647fa2e287e83eb55bb27886229440d72b5fb7c430bc"
+      "source_normalized_sha256": "cd2a9172e4c9e4e544fe57757d1a511ff9ca2d3eb00d3e9b75434ccc23c26c1c",
+      "review_note": "Global immutable timeline segments retain their original full-segment seconds integral and slope. Complete-span queries reuse the same value; partial spans preserve the original formulas and accumulation order. Original boundary, gap, changing-tempo and signed-zero regressions; no model or record-layout change."
     },
     "ScoreOpeningDuration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningDuration.java",
@@ -1269,11 +1270,11 @@
     },
     "ScoreRestFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestFermataDetector.java",
-      "source_sha256": "c71f9b14488f757971645d979f5e9d0ec2f24b47e0da303b418a3edd2ff8d0c5",
-      "source_normalized_sha256": "af5a76fa20216d69f01e58e37639b271aa10013206baad90d6391b4a5fb90e48",
+      "source_sha256": "645287498f9908457ada8af5dddb17dcb22e1ce4469679c1f0666ff259dd4f38",
+      "source_normalized_sha256": "b6c1dcbb6d013b35444a6327b03ac8a2c7a86f84e41d86dfe89cfce91f548a22",
       "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb",
       "reviewed_source_state": "Isolated pedal candidate on accepted872 manifest ede2c2383426167237cb4da5d19afeb2f923d5daa581726e930c37b4b710ec45",
-      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data."
+      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data. Global rest-fermata resolution forwards the already validated immutable Ref into the unchanged ordered rest-target scan, removing a duplicate parse. Original repeated-resolution, malformed-event and caller-preservation regression retained; no dependency, model or record-layout change. The first unchanged onset scan also captures matching immutable note-lane witnesses in original order for the remaining two scans; timing APIs keep the original full note list and the raw entry point retains its full-scan behavior."
     },
     "PedalBracketDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PedalBracketDetector.java",
@@ -1301,11 +1302,11 @@
     },
     "ScorePedalDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePedalDetector.java",
-      "source_sha256": "82f49e5d544c9debee743432e2ec7ba5d79ecce9e422764126a93264d8123497",
-      "source_normalized_sha256": "82f49e5d544c9debee743432e2ec7ba5d79ecce9e422764126a93264d8123497",
+      "source_sha256": "80f0eeffdefe0c08fd3f52840aa2f55ecb3e694494f4c1ed7880fd594570c5a7",
+      "source_normalized_sha256": "80f0eeffdefe0c08fd3f52840aa2f55ecb3e694494f4c1ed7880fd594570c5a7",
       "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb",
       "reviewed_source_state": "Isolated pedal candidate on accepted872 manifest ede2c2383426167237cb4da5d19afeb2f923d5daa581726e930c37b4b710ec45",
-      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data."
+      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data. Global pedal resolution forwards the validated immutable Columns instead of decoding its target twice and reuses only the immediately previous complete paired-hook anchors in the same immutable score/meter call. Original malformed/mismatched ownership, ordered-complete-event and caller-preservation regressions retained; no dependency, model or record-layout change."
     },
     "NativeSegmentation.java": {
       "source_path": "tools/native-worker/NativeSegmentation.java",
@@ -1318,11 +1319,11 @@
     },
     "ScoreGainProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreGainProjection.java",
-      "source_sha256": "6b0a28cb42e6bff9edcb84cadc78e6880bda6edc97056814e468b0e87e90fc22",
-      "source_normalized_sha256": "6b0a28cb42e6bff9edcb84cadc78e6880bda6edc97056814e468b0e87e90fc22",
+      "source_sha256": "c17a42fa9ccbfbd86c6a5155b49304a3af8e4cfb0a4d19b366e3a3d12414514e",
+      "source_normalized_sha256": "47fb8f8deca533bd3be88fb5e42b63f562448764ee8f50375a0e6730da6aeba4",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Isolated source gain successor to frozen Music Sheets 1.18.401",
-      "review_note": "Package-only JDK source gain projection port. Authoritative source meter and active tempo are explicit inputs; original synthetic partial-bar/repeat/tempo/rejection tests. No model or dependency changes."
+      "review_note": "Package-only JDK source gain projection port. Authoritative source meter and active tempo are explicit inputs; original synthetic partial-bar/repeat/tempo/rejection tests. No model or dependency changes. Global gain pieces retain endpoint seconds already computed during the existing validation loop. Piece interpolation reuses those exact values while raw Curve.db, ordering and the precision guard remain unchanged. Original complete-curve and endpoint procedural regressions; no dependency, model or record-layout change."
     },
     "ForteInkShape.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ForteInkShape.java",
@@ -1814,5 +1815,38 @@
       "source_scoped_model_calls": 0,
       "phone_elapsed_claim": false
     }
+  },
+  "rest_pedal_resolution_input_reuse_review": {
+    "source_scope": [
+      "app/src/main/java/com/musicsheets/app/pdf/ScoreRestFermataDetector.java",
+      "app/src/main/java/com/musicsheets/app/pdf/ScorePedalDetector.java"
+    ],
+    "scope": "Invocation-local immutable parsed input and paired-anchor reuse; validation, null failures, target iteration and complete output order preserved.",
+    "evidence": "Independent source review; original synthetic regressions are pending the selected mandatory release gates. No elapsed or full score/guide claim.",
+    "private_material_included": false
+  },
+  "rest_fermata_ordered_lane_witness_reuse_review": {
+    "source_scope": [
+      "app/src/main/java/com/musicsheets/app/pdf/ScoreRestFermataDetector.java"
+    ],
+    "scope": "Reuse ordered witnesses captured during the original first onset scan, preserving exact lane predicates, timing calls, target ordering and raw entry-point behavior.",
+    "evidence": "Independent source review passed; synthetic original and added regressions await the combined mandatory release gates. No elapsed claim.",
+    "private_material_included": false
+  },
+  "timeline_segment_integral_slope_reuse_review": {
+    "source_scope": [
+      "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java"
+    ],
+    "scope": "Global immutable timeline segments retain their original full-segment seconds integral and slope. Complete-span queries reuse the same value; partial spans preserve the original formulas and accumulation order. Original boundary, gap, changing-tempo and signed-zero regressions; no model or record-layout change.",
+    "evidence": "Independent source review passed; original procedural regressions await the combined mandatory app/public gates. No elapsed or actual whole-page interpretation claim.",
+    "private_material_included": false
+  },
+  "gain_curve_endpoint_seconds_reuse_review": {
+    "source_scope": [
+      "app/src/main/java/com/musicsheets/app/pdf/ScoreGainProjection.java"
+    ],
+    "scope": "Global gain pieces retain endpoint seconds already computed during the existing validation loop. Piece interpolation reuses those exact values while raw Curve.db, ordering and the precision guard remain unchanged. Original complete-curve and endpoint procedural regressions; no dependency, model or record-layout change.",
+    "evidence": "Independent source review passed; original procedural regressions await the combined mandatory app/public gates. No elapsed or actual whole-page interpretation claim.",
+    "private_material_included": false
   }
 }

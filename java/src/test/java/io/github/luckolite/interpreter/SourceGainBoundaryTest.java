@@ -119,4 +119,53 @@ public class SourceGainBoundaryTest {
                 IllegalArgumentException.class,
                 () -> new ScoreGainProjection.Curve("bad", 17, 0, 1, 0, 0));
     }
+
+    @Test
+    public void repeatedClippedCurvePiecesKeepOriginalEndpointArithmeticExactly() {
+        var grid = ScoreMeterMap.fromPerformedDurations(List.of(1.0, 4.0, 1.0));
+        var clock =
+                new ScorePerformanceTimeline(
+                        60,
+                        List.of(
+                                new ScorePerformanceTimeline.TempoSegment(0, 2, 60, 90),
+                                new ScorePerformanceTimeline.TempoSegment(2, 4, 90, 45),
+                                new ScorePerformanceTimeline.TempoSegment(4, 6, 45, 120),
+                                new ScorePerformanceTimeline.TempoSegment(6, 8, 120, 120)),
+                        List.of(new ScorePerformanceTimeline.Hold("hold", 2, .3, Set.of())));
+        var source =
+                List.of(
+                        new ScoreGainProjection.Curve("ramp", 32, 0, 8, -12, 6),
+                        new ScoreGainProjection.Curve("later", 32, 3, 6, 6, -3),
+                        new ScoreGainProjection.Curve("quiet", 33, 1, 5, -6, -6),
+                        new ScoreGainProjection.Curve("tail", 33, 5, 9, -6, 2));
+        for (boolean repeat : new boolean[] {false, true}) {
+            var directions =
+                    repeat
+                            ? List.of(
+                                    new ScorePlaybackDirection(
+                                            0, ScorePlaybackDirection.Kind.REPEAT_START),
+                                    new ScorePlaybackDirection(
+                                            3, ScorePlaybackDirection.Kind.REPEAT_END))
+                            : List.<ScorePlaybackDirection>of();
+            var route = ScoreNavigationPlan.create(3, directions, grid);
+            var result = ScoreGainProjection.project(source, route, grid, clock);
+            assertEquals(repeat ? 12 : 6, result.performedBeats(), 0);
+            assertFalse(result.pieces().isEmpty());
+            for (var piece : result.pieces()) {
+                var curve =
+                        source.stream()
+                                .filter(c -> c.id().equals(piece.sourceCurveId()))
+                                .findFirst()
+                                .orElse(null);
+                double from = curve == null ? 0 : curve.db(piece.sourceStartBeat(), clock);
+                double to = curve == null ? 0 : curve.db(piece.sourceEndBeat(), clock);
+                assertEquals(
+                        Double.doubleToRawLongBits(from),
+                        Double.doubleToRawLongBits(piece.fromDb()));
+                assertEquals(
+                        Double.doubleToRawLongBits(to), Double.doubleToRawLongBits(piece.toDb()));
+            }
+            assertEquals(result, ScoreGainProjection.project(source, route, grid, clock));
+        }
+    }
 }

@@ -50,6 +50,8 @@ public final class ScorePerformanceTimeline {
 
     private final double openingBpm;
     private final List<TempoSegment> segments;
+    private final double[] segmentSpans;
+    private final double[] segmentSlopes;
     private final List<Hold> holds;
     private final List<TimedHold> timedHolds;
 
@@ -63,6 +65,16 @@ public final class ScorePerformanceTimeline {
             if (segment.startBeat() != end)
                 throw new IllegalArgumentException("Tempo segments must be contiguous from zero");
             end = segment.endBeat();
+        }
+        // Source curves are immutable; reuse full integrals without regrouping elapsed sums.
+        this.segmentSpans = new double[this.segments.size()];
+        this.segmentSlopes = new double[this.segments.size()];
+        for (int index = 0; index < this.segments.size(); index++) {
+            var segment = this.segments.get(index);
+            double slope = slope(segment);
+            this.segmentSlopes[index] = slope;
+            this.segmentSpans[index] =
+                    integral(segment, segment.endBeat() - segment.startBeat(), slope);
         }
         // Multiple depictions of one occurrence union their sustain targets, never their delay.
         var unique = new LinkedHashMap<String, Hold>();
@@ -181,10 +193,14 @@ public final class ScorePerformanceTimeline {
     public double activeSecondsAtBeat(double target) {
         beat(target);
         double seconds = 0, end = 0, current = openingBpm;
-        for (var segment : segments) {
+        for (int index = 0; index < segments.size(); index++) {
+            var segment = segments.get(index);
             double length = Math.min(target, segment.endBeat()) - segment.startBeat();
             if (length <= 0) break;
-            seconds += integral(segment, length);
+            seconds +=
+                    length == segment.endBeat() - segment.startBeat()
+                            ? segmentSpans[index]
+                            : integral(segment, length, segmentSlopes[index]);
             end = segment.endBeat();
             current = segment.endBpm();
             if (target <= end) return seconds;
@@ -194,10 +210,11 @@ public final class ScorePerformanceTimeline {
 
     private double beatAtActiveSeconds(double seconds) {
         double elapsed = 0, end = 0, current = openingBpm;
-        for (var segment : segments) {
-            double span = integral(segment, segment.endBeat() - segment.startBeat());
+        for (int index = 0; index < segments.size(); index++) {
+            var segment = segments.get(index);
+            double span = segmentSpans[index];
             if (seconds < elapsed + span) {
-                double slope = slope(segment), time = seconds - elapsed;
+                double slope = segmentSlopes[index], time = seconds - elapsed;
                 double offset =
                         slope == 0
                                 ? time * segment.startBpm() / 60
@@ -211,8 +228,7 @@ public final class ScorePerformanceTimeline {
         return end + Math.max(0, seconds - elapsed) * current / 60;
     }
 
-    private static double integral(TempoSegment segment, double length) {
-        double slope = slope(segment);
+    private static double integral(TempoSegment segment, double length, double slope) {
         return slope == 0
                 ? length * 60 / segment.startBpm()
                 : 60 * Math.log1p(slope * length / segment.startBpm()) / slope;

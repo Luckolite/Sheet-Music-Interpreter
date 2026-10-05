@@ -81,4 +81,106 @@ public final class ScoreRestFermataDetectorTest {
     public void bareDotIsNotARestFermata() {
         assertTrue(detect(page(4, true), false).expressiveEvents().isEmpty());
     }
+
+    @Test
+    public void repeatedResolutionKeepsRestTargetAndMalformedEventUnchanged() {
+        var source = detect(page(4, false), true);
+        var owned = source.expressiveEvents().get(0);
+        var malformed =
+                new ScoreExpressiveEvent(
+                        "malformed-rest-target",
+                        owned.kind(),
+                        Optional.empty(),
+                        Optional.empty(),
+                        Scope.UNRESOLVED,
+                        owned.staffIndex(),
+                        owned.staffCount(),
+                        Optional.of("printed-rest:0:0:2:NaN"),
+                        owned.strength(),
+                        owned.qualifierText(),
+                        owned.evidence());
+        source = source.withExpressiveEvents(List.of(owned, malformed));
+        var originalRests = List.copyOf(source.rests());
+        var originalEvents = List.copyOf(source.expressiveEvents());
+        var resolved = ScoreRestFermataDetector.resolve(source, 4);
+        assertEquals(
+                List.of(0),
+                ScoreRestFermataDetector.targetIndices(
+                        resolved, resolved.expressiveEvents().get(0)));
+        assertEquals(
+                new ScoreAnchor(0, 0), resolved.expressiveEvents().get(0).start().orElseThrow());
+        assertEquals(new ScoreAnchor(1, 0), resolved.expressiveEvents().get(0).end().orElseThrow());
+        assertSame(malformed, resolved.expressiveEvents().get(1));
+        assertTrue(ScoreRestFermataDetector.targetIndices(null, malformed).isEmpty());
+        assertEquals(resolved, ScoreRestFermataDetector.resolve(resolved, 4));
+        assertEquals(originalRests, source.rests());
+        assertEquals(originalEvents, source.expressiveEvents());
+    }
+
+    @Test
+    public void mixedLaneRestWitnessesKeepFullTimingContextAndOriginalClocks() {
+        var fixture = detect(page(4, true), true);
+        var rest = fixture.rests().get(0);
+        var foreign =
+                List.of(
+                        new ScoreNoteEvent(0, .2f, 0, 1, 2),
+                        new ScoreNoteEvent(1, .8f, 0, 0, 2),
+                        new ScoreNoteEvent(0, .5f, 0, 0, 3));
+        for (int scenario = 0; scenario < 4; scenario++) {
+            var notes = new ArrayList<ScoreNoteEvent>(foreign);
+            if (scenario > 0)
+                notes.add(
+                        new ScoreNoteEvent(
+                                0,
+                                scenario == 1 ? .5f : scenario == 2 ? .2f : .8f,
+                                0,
+                                0,
+                                2,
+                                .5f,
+                                false,
+                                0,
+                                0,
+                                ScoreNoteEvent.ACCIDENTAL_FROM_KEY,
+                                1));
+            var source =
+                    new ScorePageInterpretation(
+                            fixture.measures(),
+                            notes,
+                            fixture.firstMeasureNumber(),
+                            fixture.keyChanges(),
+                            fixture.tempoChanges(),
+                            fixture.meterChanges(),
+                            fixture.rests(),
+                            fixture.techniqueChanges(),
+                            fixture.dynamicChanges(),
+                            fixture.playbackDirections(),
+                            fixture.expressiveEvents());
+            double reference;
+            try (var timing = ScoreNoteTiming.beginTimingSession()) {
+                reference =
+                        ScoreRestFermataDetector.provedOnset(
+                                rest, source.rests(), source.notes(), 4);
+            }
+            var resolved = ScoreRestFermataDetector.resolve(source, 4);
+            var event = resolved.expressiveEvents().get(0);
+            if (Double.isFinite(reference)) {
+                assertEquals(Scope.REST, event.scope());
+                assertEquals(new ScoreAnchor(0, reference), event.start().orElseThrow());
+                assertEquals(
+                        new ScoreAnchor(0, reference + rest.durationBeats())
+                                .canonical(
+                                        new ScoreMeterMap(4, List.of()), source.measures().size()),
+                        event.end().orElseThrow());
+            } else {
+                assertEquals(Scope.UNRESOLVED, event.scope());
+                assertTrue(event.start().isEmpty());
+                assertTrue(event.end().isEmpty());
+            }
+            if (scenario == 0) assertEquals(0, reference, 0);
+            if (scenario == 1) assertTrue(Double.isNaN(reference));
+            assertEquals(source.notes(), resolved.notes());
+            assertEquals(source.rests(), resolved.rests());
+            assertEquals(resolved, ScoreRestFermataDetector.resolve(resolved, 4));
+        }
+    }
 }

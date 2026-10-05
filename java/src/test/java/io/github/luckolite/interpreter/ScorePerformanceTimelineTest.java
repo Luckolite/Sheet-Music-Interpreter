@@ -207,4 +207,126 @@ public class ScorePerformanceTimelineTest {
         rejects(() -> new Hold("bad", 4, Double.NaN, Set.of()));
         rejects(() -> ramp(120, List.of()).secondsAtBeat(Double.NaN, Boundary.AFTER));
     }
+
+    @Test
+    public void repeatedForwardAndInverseQueriesPreserveExactSegmentsHoldsAndCallerCurves() {
+        var curves =
+                new ArrayList<>(
+                        List.of(
+                                new TempoSegment(0, 4, 120, 120),
+                                new TempoSegment(4, 8, 120, 60),
+                                new TempoSegment(8, 12, 90, 90)));
+        var original = List.copyOf(curves);
+        var clock = new ScorePerformanceTimeline(120, curves, List.of());
+        // Explicit original constant/ramp integrals; no prefix sum or cached-array oracle.
+        double rampSpan = 60 * Math.log1p(-15.0 * 4 / 120) / -15;
+        double rampHalf = 60 * Math.log1p(-15.0 * 2 / 120) / -15;
+        double rampEnd = 2 + rampSpan;
+        double curveEnd = rampEnd + 4.0 * 60 / 90;
+        double partial = 2 + rampHalf, tail = curveEnd + 2;
+        double partialBeat = 4 + 120 * Math.expm1((partial - 2) * -15 / 60) / -15;
+        double tailBeat = 12 + Math.max(0, tail - curveEnd) * 90 / 60;
+        double[] forwardBeats = {0, 2, 4, 6, 8, 12, 14, 6, 4};
+        double[] forwardSeconds = {
+            0,
+            1,
+            2,
+            partial,
+            rampEnd,
+            curveEnd,
+            curveEnd + Math.max(0, 14.0 - 12) * 60 / 90,
+            partial,
+            2
+        };
+        double[] seconds = {0, 1, 2, partial, rampEnd, curveEnd, tail, 2, 1, tail};
+        double[] expected = {0, 2, 4, partialBeat, 8, 12, tailBeat, 4, 2, tailBeat};
+        for (int repeat = 0; repeat < 3; repeat++) {
+            for (int index = 0; index < forwardBeats.length; index++) {
+                assertEquals(
+                        Double.doubleToRawLongBits(forwardSeconds[index]),
+                        Double.doubleToRawLongBits(clock.activeSecondsAtBeat(forwardBeats[index])));
+                assertEquals(
+                        Double.doubleToRawLongBits(forwardSeconds[index]),
+                        Double.doubleToRawLongBits(
+                                clock.secondsAtBeat(forwardBeats[index], Boundary.AFTER)));
+            }
+            for (int index = 0; index < seconds.length; index++) {
+                var position = clock.positionAtSeconds(seconds[index]);
+                assertEquals(
+                        Double.doubleToRawLongBits(expected[index]),
+                        Double.doubleToRawLongBits(position.beat()));
+                assertEquals(Optional.empty(), position.holdId());
+                assertEquals(
+                        Double.doubleToRawLongBits(0),
+                        Double.doubleToRawLongBits(position.holdProgress()));
+            }
+        }
+        assertEquals(original, curves);
+        assertEquals(original, clock.tempoSegments());
+        curves.clear();
+        assertEquals(original, clock.tempoSegments());
+        assertEquals(
+                Double.doubleToRawLongBits(tailBeat),
+                Double.doubleToRawLongBits(clock.positionAtSeconds(tail).beat()));
+
+        var held =
+                new ScorePerformanceTimeline(
+                        120,
+                        original,
+                        List.of(new Hold("original-pause", 6, 1.25, Set.of("original-sound"))));
+        double before = held.secondsAtBeat(6, Boundary.BEFORE);
+        assertEquals(Double.doubleToRawLongBits(partial), Double.doubleToRawLongBits(before));
+        assertEquals(
+                Double.doubleToRawLongBits(partial + 1.25),
+                Double.doubleToRawLongBits(held.secondsAtBeat(6, Boundary.AFTER)));
+        assertEquals(
+                Double.doubleToRawLongBits(rampEnd + 1.25),
+                Double.doubleToRawLongBits(held.secondsAtBeat(8, Boundary.AFTER)));
+        assertEquals(
+                new Position(6, Optional.of("original-pause"), 0), held.positionAtSeconds(before));
+        assertEquals(
+                new Position(
+                        6,
+                        Optional.of("original-pause"),
+                        Math.min(
+                                Math.nextDown(1.0),
+                                ((before + .625) - before) / ((before + 1.25) - before))),
+                held.positionAtSeconds(before + .625));
+        assertEquals(
+                new Position(6, Optional.empty(), 0),
+                held.positionAtSeconds(held.secondsAtBeat(6, Boundary.AFTER)));
+    }
+
+    @Test
+    public void fullSpanReuseRetainsEmptyOverflowAndInvalidCoordinateBehavior() {
+        var empty = new ScorePerformanceTimeline(120, List.of(), List.of());
+        assertEquals(new Position(2, Optional.empty(), 0), empty.positionAtSeconds(1));
+        var huge =
+                new ScorePerformanceTimeline(
+                        15, List.of(new TempoSegment(0, Double.MAX_VALUE, 15, 15)), List.of());
+        assertEquals(new Position(.25, Optional.empty(), 0), huge.positionAtSeconds(1));
+        assertEquals(
+                Double.doubleToRawLongBits(4),
+                Double.doubleToRawLongBits(huge.activeSecondsAtBeat(1)));
+        assertEquals(
+                Double.doubleToRawLongBits(0),
+                Double.doubleToRawLongBits(huge.positionAtSeconds(-0.0).beat()));
+        var signed =
+                new ScorePerformanceTimeline(
+                        120, List.of(new TempoSegment(-0.0, 4, 120, 120)), List.of());
+        assertEquals(
+                Double.doubleToRawLongBits(-0.0),
+                Double.doubleToRawLongBits(signed.positionAtSeconds(-0.0).beat()));
+        var tiny =
+                new ScorePerformanceTimeline(
+                        120, List.of(new TempoSegment(0, Double.MIN_VALUE, 120, 60)), List.of());
+        assertEquals(
+                Double.doubleToRawLongBits(0),
+                Double.doubleToRawLongBits(tiny.activeSecondsAtBeat(0)));
+        assertTrue(Double.isNaN(tiny.activeSecondsAtBeat(Double.MIN_VALUE)));
+        rejects(() -> tiny.positionAtSeconds(0));
+        rejects(() -> huge.positionAtSeconds(Double.NaN));
+        rejects(() -> huge.positionAtSeconds(Double.POSITIVE_INFINITY));
+        rejects(() -> huge.positionAtSeconds(-1));
+    }
 }

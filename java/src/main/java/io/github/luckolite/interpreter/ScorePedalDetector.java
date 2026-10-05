@@ -81,18 +81,24 @@ public final class ScorePedalDetector {
     }
 
     static boolean owns(ScoreExpressiveEvent event) {
+        return ownedColumns(event) != null;
+    }
+
+    private static Columns ownedColumns(ScoreExpressiveEvent event) {
         var columns = event.targetEventId().map(ScorePedalDetector::decode).orElse(null);
         return columns != null
-                && (event.kind() == ScoreExpressiveEvent.Kind.PEDAL_DOWN
-                        || event.kind() == ScoreExpressiveEvent.Kind.PEDAL_UP)
-                && columns.staff() == event.staffIndex()
-                && columns.count() == event.staffCount()
-                && event.evidence().stream()
-                        .anyMatch(
-                                e ->
-                                        e.sourceId().equals(SOURCE)
-                                                && e.staffIndex() == event.staffIndex()
-                                                && e.staffCount() == event.staffCount());
+                        && (event.kind() == ScoreExpressiveEvent.Kind.PEDAL_DOWN
+                                || event.kind() == ScoreExpressiveEvent.Kind.PEDAL_UP)
+                        && columns.staff() == event.staffIndex()
+                        && columns.count() == event.staffCount()
+                        && event.evidence().stream()
+                                .anyMatch(
+                                        e ->
+                                                e.sourceId().equals(SOURCE)
+                                                        && e.staffIndex() == event.staffIndex()
+                                                        && e.staffCount() == event.staffCount())
+                ? columns
+                : null;
     }
 
     static ScorePageInterpretation apply(
@@ -207,30 +213,43 @@ public final class ScorePedalDetector {
         Objects.requireNonNull(score);
         var events = new ArrayList<ScoreExpressiveEvent>();
         try (var session = ScoreNoteTiming.beginTimingSession()) {
+            Columns previousColumns = null;
+            Optional<ScoreAnchor> previousStart = Optional.empty();
+            Optional<ScoreAnchor> previousEnd = Optional.empty();
             for (var event : score.expressiveEvents()) {
-                if (!owns(event)) {
+                var columns = ownedColumns(event);
+                if (columns == null) {
                     events.add(event);
                     continue;
                 }
-                var columns = decode(event.targetEventId().orElseThrow());
-                var start =
-                        meter == null
-                                ? Optional.<ScoreAnchor>empty()
-                                : PedalBracketAnchors.anchor(
-                                        columns.start(),
-                                        score,
-                                        columns.staff(),
-                                        columns.count(),
-                                        meter);
-                var end =
-                        meter == null
-                                ? Optional.<ScoreAnchor>empty()
-                                : PedalBracketAnchors.anchor(
-                                        columns.end(),
-                                        score,
-                                        columns.staff(),
-                                        columns.count(),
-                                        meter);
+                Optional<ScoreAnchor> start;
+                Optional<ScoreAnchor> end;
+                if (meter != null && columns.equals(previousColumns)) {
+                    start = previousStart;
+                    end = previousEnd;
+                } else {
+                    start =
+                            meter == null
+                                    ? Optional.<ScoreAnchor>empty()
+                                    : PedalBracketAnchors.anchor(
+                                            columns.start(),
+                                            score,
+                                            columns.staff(),
+                                            columns.count(),
+                                            meter);
+                    end =
+                            meter == null
+                                    ? Optional.<ScoreAnchor>empty()
+                                    : PedalBracketAnchors.anchor(
+                                            columns.end(),
+                                            score,
+                                            columns.staff(),
+                                            columns.count(),
+                                            meter);
+                    previousColumns = columns;
+                    previousStart = start;
+                    previousEnd = end;
+                }
                 boolean proved =
                         start.isPresent()
                                 && end.isPresent()

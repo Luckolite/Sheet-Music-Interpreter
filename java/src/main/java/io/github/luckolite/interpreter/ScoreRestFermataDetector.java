@@ -162,7 +162,10 @@ public final class ScoreRestFermataDetector {
             ScorePageInterpretation score, ScoreExpressiveEvent event) {
         var r = ref(event);
         if (r.isEmpty()) return List.of();
-        var a = r.get();
+        return targetIndices(score, r.get());
+    }
+
+    private static List<Integer> targetIndices(ScorePageInterpretation score, Ref a) {
         var indices = new ArrayList<Integer>();
         for (int i = 0; i < score.rests().size(); i++) {
             var rest = score.rests().get(i);
@@ -184,7 +187,7 @@ public final class ScoreRestFermataDetector {
                     result.add(e);
                     continue;
                 }
-                var indices = targetIndices(score, e);
+                var indices = targetIndices(score, r.get());
                 double onset = Double.NaN, finish = Double.NaN;
                 if (indices.size() == 1 && r.get().measure < score.measures().size()) {
                     var rest = score.rests().get(indices.get(0));
@@ -193,7 +196,8 @@ public final class ScoreRestFermataDetector {
                                     rest,
                                     score.rests(),
                                     score.notes(),
-                                    meter.beatsInMeasure(rest.measureIndex()));
+                                    meter.beatsInMeasure(rest.measureIndex()),
+                                    true);
                     finish = onset + rest.durationBeats();
                 }
                 boolean proved =
@@ -230,22 +234,34 @@ public final class ScoreRestFermataDetector {
             List<ScoreRestEvent> rests,
             List<ScoreNoteEvent> notes,
             float beats) {
+        return provedOnset(target, rests, notes, beats, false);
+    }
+
+    private static double provedOnset(
+            ScoreRestEvent target,
+            List<ScoreRestEvent> rests,
+            List<ScoreNoteEvent> notes,
+            float beats,
+            boolean captureLane) {
         if (!Double.isFinite(target.durationBeats())
                 || target.durationBeats() <= 0
                 || target.durationBeats() > beats) return Double.NaN;
+        var witnesses = captureLane ? new ArrayList<ScoreNoteEvent>() : null;
         float before = -1, after = 2;
         for (var note : notes)
             if (note.measureIndex() == target.measureIndex()
                     && note.staffIndex() == target.staffIndex()
                     && note.staffCount() == target.staffCount()) {
+                if (witnesses != null) witnesses.add(note);
                 if (Math.abs(note.positionInMeasure() - target.positionInMeasure()) <= .018f)
                     return Double.NaN;
                 if (note.positionInMeasure() < target.positionInMeasure())
                     before = Math.max(before, note.positionInMeasure());
                 else after = Math.min(after, note.positionInMeasure());
             }
+        var scanNotes = witnesses == null ? notes : witnesses;
         double start = 0, end = beats;
-        for (var note : notes)
+        for (var note : scanNotes)
             if (note.measureIndex() == target.measureIndex()
                     && note.staffIndex() == target.staffIndex()
                     && note.staffCount() == target.staffCount()) {
@@ -269,7 +285,7 @@ public final class ScoreRestFermataDetector {
                     prior += rest.durationBeats();
             }
         if (Math.abs(end - start - total) > 1e-7) return Double.NaN;
-        for (var note : notes)
+        for (var note : scanNotes)
             if (note.measureIndex() == target.measureIndex()
                     && note.staffIndex() == target.staffIndex()
                     && note.staffCount() == target.staffCount()) {
