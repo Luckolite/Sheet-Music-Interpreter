@@ -153,7 +153,8 @@ public final class Main {
         for (int i = 0; i < beats.length; i++) starts[i + 1] = starts[i] + beats[i];
         var events = new ArrayList<Map<String, Object>>();
         try (var timing = ScoreNoteTiming.beginTimingSession()) {
-            for (var note : score.notes()) {
+            for (int noteIndex = 0; noteIndex < score.notes().size(); noteIndex++) {
+                var note = score.notes().get(noteIndex);
                 int bar = note.measureIndex();
                 var region = score.measures().get(bar);
                 int key = initialKey;
@@ -197,7 +198,7 @@ public final class Main {
                     event.put(
                             "boundaryPitch", note.diatonicPitchIdentity() + note.octaveShift() * 7);
                     event.put("boundaryAccidental", note.writtenAccidental());
-                    event.put("sourceNoteIndex", score.notes().indexOf(note));
+                    event.put("sourceNoteIndex", noteIndex);
                 }
                 event.put("midi", midi);
                 event.put("clefInferred", guessed);

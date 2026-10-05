@@ -8,6 +8,14 @@ import java.util.*;
 final class ArtificialHarmonics {
     private ArtificialHarmonics() {}
 
+    private static final class ProbeSigns {
+        private static final int[] VALUES = {-1, 1};
+    }
+
+    private static final class DiamondSizes {
+        private static final float[] VALUES = {.5f, .6f, .7f, .8f};
+    }
+
     static List<ScoreNoteEvent> apply(
             byte[] gray,
             int w,
@@ -96,7 +104,7 @@ final class ArtificialHarmonics {
     private static boolean stem(
             byte[] g, int w, int h, float x, float y, float gap, boolean filledStoppedHead) {
         // Both conventional stem directions occur in artificial harmonics.
-        for (int direction : new int[] {-1, 1}) {
+        for (int direction : ProbeSigns.VALUES) {
             for (int offset = Math.round(gap * .3f); offset <= Math.round(gap * .95f); offset++) {
                 // Hollow stopped heads need stronger shape evidence: ordinary open
                 // fourths can otherwise resemble a diamond pair in low-resolution scans.
@@ -138,7 +146,7 @@ final class ArtificialHarmonics {
         int horizontal = Math.round(gap * .4f), vertical = Math.round(gap * .25f);
         for (int dx = -horizontal; dx <= horizontal; dx++)
             for (int dy = -vertical; dy <= vertical; dy++)
-                for (float size : new float[] {.5f, .6f, .7f, .8f}) {
+                for (float size : DiamondSizes.VALUES) {
                     float cx = x + dx, cy = y + dy, r = gap * size;
                     int hit = 0, total = 0;
                     for (int side = 0; side < 4; side++)
@@ -162,7 +170,7 @@ final class ArtificialHarmonics {
                     // Side samples alone also fit a tilted oval at small staff sizes.
                     // A touch diamond has four actual vertices, including its high and low tips.
                     boolean vertices = true;
-                    for (int sign : new int[] {-1, 1}) {
+                    for (int sign : ProbeSigns.VALUES) {
                         int vx = Math.round(cx + sign * r), vy = Math.round(cy + sign * r);
                         vertices &=
                                 dark(g, w, h, vx, Math.round(cy))
@@ -188,8 +196,8 @@ final class ArtificialHarmonics {
                     }
                     if (inside < 4 || (!crowded && clear < inside * .65)) continue;
                     int outside = 0;
-                    for (int a : new int[] {-1, 1})
-                        for (int b : new int[] {-1, 1})
+                    for (int a : ProbeSigns.VALUES)
+                        for (int b : ProbeSigns.VALUES)
                             if (!dark(
                                     g,
                                     w,

@@ -7,6 +7,11 @@ import java.util.Locale;
 
 /** Complete-word OCR agreement for independently located printed dynamic bodies. */
 final class PaperDynamicWord {
+    private static final class LiteralPattern {
+        private static final java.util.regex.Pattern LEVEL =
+                java.util.regex.Pattern.compile("ppp|pp|p|mp|mf|fff|ff|f");
+    }
+
     private PaperDynamicWord() {}
 
     record Crop(int left, int top, int right, int bottom) {}
@@ -60,7 +65,7 @@ final class PaperDynamicWord {
             OcrText text, Crop crop, int scale, int width, int height) {
         if (text == null) return null;
         String literal = text.text().trim().toLowerCase(Locale.ROOT);
-        if (!literal.matches("ppp|pp|p|mp|mf|fff|ff|f")) return null;
+        if (!LiteralPattern.LEVEL.matcher(literal).matches()) return null;
         PlayingTechniqueDetector.Word result = null;
         for (var block : text.blocks())
             for (var line : block.lines())

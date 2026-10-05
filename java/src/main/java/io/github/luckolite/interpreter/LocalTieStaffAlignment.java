@@ -93,15 +93,16 @@ final class LocalTieStaffAlignment {
         int left = Math.max(0, Math.round(x - gap * 3)),
                 right = Math.min(width - 1, Math.round(x + gap * 3));
         int exclusion = Math.max(1, Math.round(gap * .45f)), supported = 0;
+        int excludedLeft = headLeft - exclusion, excludedRight = headRight + exclusion;
         for (int rule = 0; rule < 5; rule++) {
             int hits = 0, samples = 0;
             float y = rules[0] - rule * rules[1];
+            int top = Math.max(0, Math.round(y - gap * .35f)),
+                    bottom = Math.min(height - 1, Math.round(y + gap * .35f));
             for (int xx = left; xx <= right; xx++) {
-                if (xx >= headLeft - exclusion && xx <= headRight + exclusion) continue;
+                if (xx >= excludedLeft && xx <= excludedRight) continue;
                 samples++;
-                for (int yy = Math.max(0, Math.round(y - gap * .35f));
-                        yy <= Math.min(height - 1, Math.round(y + gap * .35f));
-                        yy++)
+                for (int yy = top; yy <= bottom; yy++)
                     if (labels[yy * width + xx] == 4) {
                         hits++;
                         break;
@@ -119,10 +120,10 @@ final class LocalTieStaffAlignment {
                 flank = Math.max(2, Math.round(rules[1] * .32f));
         for (float outside : new float[] {rules[0] + rules[1], rules[0] - 5 * rules[1]}) {
             int columns = 0;
+            int top = Math.max(flank, Math.round(outside) - radius),
+                    bottom = Math.min(height - 1 - flank, Math.round(outside) + radius);
             for (int xx = left; xx <= right; xx++)
-                for (int y = Math.max(flank, Math.round(outside) - radius);
-                        y <= Math.min(height - 1 - flank, Math.round(outside) + radius);
-                        y++) {
+                for (int y = top; y <= bottom; y++) {
                     int value = gray[y * width + xx] & 255;
                     if (value <= 205
                             && (gray[(y - flank) * width + xx] & 255) >= value + 12

@@ -56,15 +56,10 @@ final class DynamicStemCrop {
                     }
                     if (hits >= (span + 2) * .9f) clipped = true;
                 }
-                for (int next : new int[] {at - 1, at + 1, at - cw, at + cw}) {
-                    if (next < 0
-                            || next >= seen.length
-                            || Math.abs(next % cw - x) + Math.abs(next / cw - y) != 1
-                            || seen[next]) continue;
-                    if ((gray[(top + next / cw) * width + left + next % cw] & 255) >= 145) continue;
-                    seen[next] = true;
-                    queue[size++] = next;
-                }
+                size = visitNeighbor(at - 1, x, y, cw, width, top, left, seen, gray, queue, size);
+                size = visitNeighbor(at + 1, x, y, cw, width, top, left, seen, gray, queue, size);
+                size = visitNeighbor(at - cw, x, y, cw, width, top, left, seen, gray, queue, size);
+                size = visitNeighbor(at + cw, x, y, cw, width, top, left, seen, gray, queue, size);
             }
             if (clipped) {
                 removed = true;
@@ -128,5 +123,27 @@ final class DynamicStemCrop {
                 result,
                 gw,
                 gh);
+    }
+
+    private static int visitNeighbor(
+            int next,
+            int x,
+            int y,
+            int cw,
+            int width,
+            int top,
+            int left,
+            boolean[] seen,
+            byte[] gray,
+            int[] queue,
+            int size) {
+        if (next < 0
+                || next >= seen.length
+                || Math.abs(next % cw - x) + Math.abs(next / cw - y) != 1
+                || seen[next]) return size;
+        if ((gray[(top + next / cw) * width + left + next % cw] & 255) >= 145) return size;
+        seen[next] = true;
+        queue[size++] = next;
+        return size;
     }
 }

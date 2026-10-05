@@ -8,6 +8,14 @@ import java.util.*;
 final class BeamOccludedStaffPhase {
     private BeamOccludedStaffPhase() {}
 
+    private static final class ProbeSlopes {
+        private static final float[] VALUES = {0, -.04f, .04f, -.08f, .08f, -.12f, .12f};
+    }
+
+    private static final class ProbeScales {
+        private static final float[] VALUES = {.96f, 1f, 1.04f};
+    }
+
     static float[] resolve(
             byte[] labels,
             byte[] gray,
@@ -36,11 +44,10 @@ final class BeamOccludedStaffPhase {
         int exclusion = Math.max(2, Math.round(gap * .45f));
         if (headLeft - exclusion - left < 8 || right - headRight - exclusion < 8) return null;
         var candidates = new ArrayList<float[]>();
-        for (float slope : new float[] {0, -.04f, .04f, -.08f, .08f, -.12f, .12f}) {
-            for (float scale : new float[] {.96f, 1f, 1.04f}) {
-                for (int shift = -Math.round(gap * 2.6f);
-                        shift <= Math.round(gap * 2.6f);
-                        shift++) {
+        int shiftLimit = Math.round(gap * 2.6f);
+        for (float slope : ProbeSlopes.VALUES) {
+            for (float scale : ProbeScales.VALUES) {
+                for (int shift = -shiftLimit; shift <= shiftLimit; shift++) {
                     float base = referenceBottom + shift * .5f;
                     float[] rows = new float[5];
                     int missing = -1;
@@ -148,7 +155,7 @@ final class BeamOccludedStaffPhase {
         // The fourth-to-fifth-rule extrapolation amplifies small fitted slope and
         // spacing errors. Search that uncertainty before accepting an outer edge.
         int uncertainty = Math.max(1, Math.round(gap * .3f));
-        for (float slope : new float[] {0, -.04f, .04f, -.08f, .08f, -.12f, .12f})
+        for (float slope : ProbeSlopes.VALUES)
             for (int offset = -uncertainty; offset <= uncertainty; offset++)
                 if (Float.isFinite(
                         thinCenter(
@@ -182,7 +189,8 @@ final class BeamOccludedStaffPhase {
             float row,
             float slope,
             float gap) {
-        int band = Math.max(1, Math.round(gap * .14f)), flank = Math.max(2, Math.round(gap * .28f));
+        int band = Math.max(1, Math.round(gap * .14f)), roundedFlank = Math.round(gap * .28f);
+        int flank = Math.max(2, roundedFlank), semanticBand = Math.max(band, roundedFlank);
         var centers = new ArrayList<Float>();
         for (int side = 0; side < 2; side++) {
             int first = side == 0 ? left : headRight + exclusion + 1,
@@ -206,7 +214,6 @@ final class BeamOccludedStaffPhase {
                 if (best >= 0) {
                     hits++;
                     centers.add(best - slope * (xx - x));
-                    int semanticBand = Math.max(band, Math.round(gap * .28f));
                     for (int y = Math.max(0, best - semanticBand);
                             y <= Math.min(h - 1, best + semanticBand);
                             y++)

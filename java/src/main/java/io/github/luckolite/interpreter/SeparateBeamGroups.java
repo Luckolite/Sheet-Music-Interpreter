@@ -64,11 +64,12 @@ final class SeparateBeamGroups {
             byte[] g, int w, int h, float hx, float hy, float gap, int direction, int outward) {
         int best = 0;
         Tip found = null;
-        for (int x = Math.round(hx - gap * .65f); x <= Math.round(hx + gap * .65f); x++) {
+        int lastX = Math.round(hx + gap * .65f), headY = Math.round(hy);
+        for (int x = Math.round(hx - gap * .65f); x <= lastX; x++) {
             if (x < 0 || x >= w) continue;
             int run = 0, blanks = 0;
             for (int d = 0; d <= gap * 5; d++) {
-                int y = Math.round(hy) + direction * d;
+                int y = headY + direction * d;
                 if (y < 0 || y >= h) break;
                 if ((g[y * w + x] & 255) < 165) {
                     run++;
@@ -85,10 +86,11 @@ final class SeparateBeamGroups {
     }
 
     private static boolean outwardBeam(byte[] g, int w, int h, int x, int y, float gap, int side) {
+        int firstD = Math.round(gap * .25f), lastD = Math.round(gap * 1.35f);
         for (int angle = -10; angle <= 10; angle++) {
             int count = 0, total = 0;
             float slope = angle * .06f;
-            for (int d = Math.round(gap * .25f); d <= Math.round(gap * 1.35f); d++) {
+            for (int d = firstD; d <= lastD; d++) {
                 total++;
                 if (core(g, w, h, x + side * d, Math.round(y + slope * d), gap)) count++;
             }

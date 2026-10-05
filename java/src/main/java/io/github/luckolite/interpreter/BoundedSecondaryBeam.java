@@ -8,6 +8,10 @@ final class BoundedSecondaryBeam {
 
     private record Rail(float y, float slope) {}
 
+    private static final class ProbeSigns {
+        private static final int[] VALUES = {-1, 1};
+    }
+
     static boolean proves(byte[] gray, int width, int height, float[] xs, float[] ys, float gap) {
         if (gray == null
                 || width < 1
@@ -30,7 +34,7 @@ final class BoundedSecondaryBeam {
                 || xs[2] - xs[1] < gap * .8f
                 || xs[2] - xs[0] < gap * 2
                 || xs[2] - xs[0] > gap * 12) return false;
-        for (int direction : new int[] {-1, 1}) {
+        for (int direction : ProbeSigns.VALUES) {
             Stem[] stems = new Stem[3];
             for (int i = 0; i < 3; i++)
                 stems[i] = stem(gray, width, height, xs[i], ys[i], gap, direction);
@@ -82,10 +86,11 @@ final class BoundedSecondaryBeam {
     private static boolean rail(byte[] g, int w, int h, Stem[] stems, Rail rail, float gap) {
         int a = stems[0].x(), b = stems[2].x();
         if (b - a < gap * 2) return false;
+        int radius = Math.max(1, Math.round(gap * .08f));
         int covered = 0, total = 0;
         for (int x = a + 2; x <= b - 2; x++) {
             total++;
-            if (core(g, w, h, x, rail.y() + (x - a) * rail.slope(), gap)) covered++;
+            if (core(g, w, h, x, rail.y() + (x - a) * rail.slope(), radius)) covered++;
         }
         if (total == 0 || covered < total * .94f) return false;
         for (Stem stem : stems) {
@@ -104,13 +109,15 @@ final class BoundedSecondaryBeam {
     }
 
     private static boolean stops(byte[] g, int w, int h, Stem[] stems, Rail rail, float gap) {
-        for (int side : new int[] {-1, 1}) {
+        int radius = Math.max(1, Math.round(gap * .08f));
+        for (int side : ProbeSigns.VALUES) {
             int edge = stems[side < 0 ? 0 : 2].x(), covered = 0, total = 0;
             for (int d = Math.round(gap * .35f); d <= gap; d++) {
                 int x = edge + side * d;
                 if (x < 0 || x >= w) return false;
                 total++;
-                if (core(g, w, h, x, rail.y() + (x - stems[0].x()) * rail.slope(), gap)) covered++;
+                if (core(g, w, h, x, rail.y() + (x - stems[0].x()) * rail.slope(), radius))
+                    covered++;
             }
             if (total == 0 || covered > total * .25f) return false;
         }
@@ -130,21 +137,23 @@ final class BoundedSecondaryBeam {
     }
 
     private static boolean continues(byte[] g, int w, int h, Stem[] stems, Rail main, float gap) {
-        for (int side : new int[] {-1, 1}) {
+        int radius = Math.max(1, Math.round(gap * .08f));
+        for (int side : ProbeSigns.VALUES) {
             int edge = stems[side < 0 ? 0 : 2].x(), covered = 0, total = 0;
             for (int d = Math.round(gap * .35f); d <= gap; d++) {
                 int x = edge + side * d;
                 if (x < 0 || x >= w) break;
                 total++;
-                if (core(g, w, h, x, main.y() + (x - stems[0].x()) * main.slope(), gap)) covered++;
+                if (core(g, w, h, x, main.y() + (x - stems[0].x()) * main.slope(), radius))
+                    covered++;
             }
             if (total > gap * .5f && covered >= total * .94f) return true;
         }
         return false;
     }
 
-    private static boolean core(byte[] g, int w, int h, int x, float y, float gap) {
-        int center = Math.round(y), radius = Math.max(1, Math.round(gap * .08f));
+    private static boolean core(byte[] g, int w, int h, int x, float y, int radius) {
+        int center = Math.round(y);
         for (int d = -radius; d <= radius; d++) if (!dark(g, w, h, x, center + d)) return false;
         return true;
     }

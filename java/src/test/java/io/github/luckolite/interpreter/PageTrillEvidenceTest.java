@@ -121,4 +121,52 @@ public class PageTrillEvidenceTest {
                                                 "turn", w.left(), w.top(), w.right(), w.bottom())))
                         .confirmed(boxes.get(0)));
     }
+
+    @Test
+    public void callLocalQueryPreservesCompleteMatchBitsAndMutableBounds() {
+        var alternative = new PortableOrnamentGlyphs();
+        byte[] alternate = glyph.clone();
+        for (int y = 0; y < 16; y++) alternate[y * 12 + 2] = 0;
+        alternative.add(alternate, 12, 16, NoteOrnament.TRILL, false);
+        alternative.add(glyph, 12, 16, NoteOrnament.TURN, false);
+        var query = new PortableOrnamentGlyphs.Query();
+        var box = new PortableNoteOrnaments.Bounds(boxes.get(2));
+        byte[] before = page.clone();
+        for (var sample : List.of(recognizer, alternative))
+            assertMatchBits(sample.match(page, W, box), sample.match(page, W, box, query));
+        box.left++;
+        box.right++;
+        for (var sample : List.of(recognizer, alternative))
+            assertMatchBits(sample.match(page, W, box), sample.match(page, W, box, query));
+        var invalid = new PortableNoteOrnaments.Bounds(-1, 20, 12, 36);
+        assertMatchBits(
+                recognizer.match(page, W, invalid), recognizer.match(page, W, invalid, query));
+        assertMatchBits(recognizer.match(null, 0, null), recognizer.match(null, 0, null, query));
+        assertArrayEquals(before, page);
+    }
+
+    @Test
+    public void repeatedRecognitionRereadsRasterAndSelfOnlyRemainsLazy() {
+        var selfOnly = evidence(words.subList(0, 1));
+        assertFalse(selfOnly.recognizes(null, 0, boxes.get(0), weak));
+        var independent = evidence(words);
+        assertTrue(independent.recognizes(page, W, boxes.get(2), weak));
+        byte[] before = page.clone();
+        assertTrue(independent.recognizes(page, W, boxes.get(2), weak));
+        assertArrayEquals(before, page);
+        for (int y = 20; y < 36; y++) for (int x = 140; x < 152; x++) page[y * W + x] = 0;
+        byte[] changed = page.clone();
+        assertFalse(independent.recognizes(page, W, boxes.get(2), weak));
+        assertArrayEquals(changed, page);
+    }
+
+    private static void assertMatchBits(
+            PortableOrnamentGlyphs.Match expected, PortableOrnamentGlyphs.Match actual) {
+        assertEquals(expected.kind(), actual.kind());
+        assertEquals(
+                Float.floatToRawIntBits(expected.score()), Float.floatToRawIntBits(actual.score()));
+        assertEquals(
+                Float.floatToRawIntBits(expected.margin()),
+                Float.floatToRawIntBits(actual.margin()));
+    }
 }

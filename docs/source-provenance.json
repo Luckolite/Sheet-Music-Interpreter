@@ -73,10 +73,12 @@
     },
     "LocalTieStaffAlignment.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalTieStaffAlignment.java",
-      "source_sha256": "6d4a4b96e511b93cf572d4509c27a5708d12717b2ee36d375430f5122df4353f",
+      "source_sha256": "daf6e0bfd1e4b4d8594e546ccb0c4f9d44252c739763429f151e6752ca536b88",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "9e18b8193b88bcb76ca5e06259a1d728da2f6365dfd7613f7a4811145b624e32",
-      "review_note": "Reviewed fragmented semantic staff tie alignment and actual stroke-center curvature. Complete independent printed five-rule endpoint evidence with majority semantic support; sloping straight rules rejected by fitted stroke-center residual. Full executable token parity after package/logging adaptation; original generated Apache-2.0 controls. Existing processing optimizations, weights, dependencies and record layout retained."
+      "source_normalized_sha256": "6b6c526494a4f16e55db9d4c8234ea9e65d379d045b714ef670770fb7d88b871",
+      "review_note": "Reviewed fragmented semantic staff tie alignment and actual stroke-center curvature. Complete independent printed five-rule endpoint evidence with majority semantic support; sloping straight rules rejected by fitted stroke-center residual. Full executable token parity after package/logging adaptation; original generated Apache-2.0 controls. Existing processing optimizations, weights, dependencies and record layout retained. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "CreaseBeamAttachment.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CreaseBeamAttachment.java",
@@ -249,18 +251,21 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "bf6dac78706a9ac355f16771c69229a4ab1b5da8127e5587b996439688c4c456",
+      "source_sha256": "7f9fb7c548420745d396218ae93c65115578691d3cda2532fff69d0127616e65",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency.",
-      "source_normalized_sha256": "bf6dac78706a9ac355f16771c69229a4ab1b5da8127e5587b996439688c4c456",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit."
+      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "source_normalized_sha256": "7f9fb7c548420745d396218ae93c65115578691d3cda2532fff69d0127616e65",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
-      "source_sha256": "b92d3c4dd1bda52720ead29cfb048b19d6ae64fe83a0e83327b8069bcd545e37",
+      "source_sha256": "bf269ff2d3fd48f11aacb40167e4c1c3acd220c58fffbe00d55f7bd3d2855b93",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "1246b328878f7544f425be3663cd048d463bcd6827a3f994b4232b4a9908ca1b",
-      "review_note": "Global original geometric repair ported with reviewed token parity and synthetic positive and rejection regressions; no new dependencies or private source imagery."
+      "source_normalized_sha256": "7102428f7bd29c7d8857794a0b64daa6ff712b5b9f19702516bb8c0680e478e5",
+      "review_note": "Global original geometric repair ported with reviewed token parity and synthetic positive and rejection regressions; no new dependencies or private source imagery. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
@@ -475,12 +480,12 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "6d20c1fbd35b1e603264d9029fcfc5d71234eb2bfd8414929568d5ef1f87d2f3",
+      "source_sha256": "d904174f2593bcabbcc749168121596b5009d36521b00c3893c970ca05a858e3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "9da463d5055d390196293933468a37996c28768deb6356287873c93de4fb27b6",
-      "review_note": "Apply reuses its already contrasted raster in printed-word detection; raw printedWords still prepares input. Tile contrast is pixel-idempotent and the detection closure is read-only. Existing octave tests plus original partial-edge byte golden. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
-      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889"
+      "source_normalized_sha256": "63d7f5cf429679386812282c6be20ec3e9f5d74dc581614c4fa19d6aee48fb05",
+      "review_note": "Apply reuses its already contrasted raster in printed-word detection; raw printedWords still prepares input. Tile contrast is pixel-idempotent and the detection closure is read-only. Existing octave tests plus original partial-edge byte golden. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -544,9 +549,12 @@
     },
     "ArtificialHarmonics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
-      "source_sha256": "6922873b6e6441ddd5fd5b10857a976c3f1d6c2deba7acf0005aefdbc59f63bf",
+      "source_sha256": "fcbecdae245c148d0400c51eda6e56fed8cd97eccb65b68305973bcc0e871d44",
       "reviewed_app_commit": "abdad95ab53c8481049a8f1c7b25442779a46404",
-      "source_normalized_sha256": "25a6e9831fe5c7e879c36d9d7c1270ed56189456c73c8030488a1fc4071a8b32"
+      "source_normalized_sha256": "394ebbbeee4744898214d4137f45b0495d952a094a55ce61fea6ca9093fded75",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global Artificial harmonics fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "ParallelBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelBeamTip.java",
@@ -562,9 +570,12 @@
     },
     "SeparateBeamGroups.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeparateBeamGroups.java",
-      "source_sha256": "a6afd5b853cac8ee18741e977276abff43c7e676a10eaadbfcd319ce62aee37a",
+      "source_sha256": "1a4f217c1f3fbaa8c33ef142ff06ec717ed3fb2a85c2c7f694abe76991bc4d3a",
       "reviewed_app_commit": "830bc4fc56948b131ec0b46957f1c8c065ac496b",
-      "source_normalized_sha256": "a6afd5b853cac8ee18741e977276abff43c7e676a10eaadbfcd319ce62aee37a"
+      "source_normalized_sha256": "7381067417b4b24f5370d2248adf51ad1915905965f781bae40b5d8bf61c69d1",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held output-preserving SeparateBeam work reuse candidate. Paired app/standalone source and rollback pins retained; the exact standalone candidate passed the reused model-free focused functional gate. No Android elapsed, NN, full Score/guide, production or release claim; fresh final correctness-lane source/commit and normal public/app/pair gates are required before integration/publication. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "TabFretRaster.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabFretRaster.java",
@@ -626,9 +637,12 @@
     },
     "AttachedTremoloInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AttachedTremoloInk.java",
-      "source_sha256": "eceedd890bad317abd5f48e6d818e6940c7cc903ccc725026a35220432cdad33",
+      "source_sha256": "6a2ece8a51f638a4bb845e19615166be9eff7f7cfe1726bbe3cf6573d3a664a9",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "eceedd890bad317abd5f48e6d818e6940c7cc903ccc725026a35220432cdad33"
+      "source_normalized_sha256": "6a2ece8a51f638a4bb845e19615166be9eff7f7cfe1726bbe3cf6573d3a664a9",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held output-preserving AttachedTremolo work reuse candidate. Paired app/standalone source and rollback pins retained; the exact standalone candidate passed the reused model-free focused functional gate. No Android elapsed, NN, full Score/guide, production or release claim; fresh final correctness-lane source/commit and normal public/app/pair gates are required before integration/publication. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "BeamInkThreshold.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkThreshold.java",
@@ -682,9 +696,12 @@
     },
     "DynamicGlyphEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphEvidence.java",
-      "source_sha256": "79066bfe44e635d862e22e47da454fee8234d382cac49d368ea2d05b9b67699c",
+      "source_sha256": "22bf6651999a05f4647e00d73397fc329410b638964ed5d87016b66e5ea48cd3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "79066bfe44e635d862e22e47da454fee8234d382cac49d368ea2d05b9b67699c"
+      "source_normalized_sha256": "22bf6651999a05f4647e00d73397fc329410b638964ed5d87016b66e5ea48cd3",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global DynamicGlyphEvidence fixed pattern reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "DynamicOcrBounds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicOcrBounds.java",
@@ -751,9 +768,12 @@
     },
     "BeamOccludedStaffPhase.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamOccludedStaffPhase.java",
-      "source_sha256": "74d738c90c640788eece18496866665122943e4489eb3605b907c0f1ac537036",
+      "source_sha256": "d2113fcebe6a2d119c2db25b3f70befaad25b30290826e733232f5b4c7bf1fa2",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "52d4f7ba66fb1f89d176d92c1f08fc8c219ce9b1f03867ee617e39c8c307cdaf"
+      "source_normalized_sha256": "f29d482563783b2abcf7560a4be9752655aa4c4e98c30939d81c2eefcb5f17f8",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global BeamOccludedStaff fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "NeighboringStaffPhase.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NeighboringStaffPhase.java",
@@ -763,11 +783,12 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "d9beebc05495248aa427649ab8720b2ff40e0b9b600a51993651653f5f6edafa",
+      "source_sha256": "51ab5423ea4d9d41e6c9c48b9c60f2caa4a434941bb37c86a84300270200fb13",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ad22f3224c4b0ffcab9cabb95e99e6f300fc1d924cde39f646356521fa6282bd",
-      "review_note": "Original raw detector retains preparation and routes to an owned prepared-raster implementation with unchanged ledger removal, fragments, proof thresholds, recursion and ordering. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
+      "source_normalized_sha256": "fb93ac05037a62abae4ad45923105eb7d77cb6a13d1a0ac77c49d0c5becfca4e",
+      "review_note": "Original raw detector retains preparation and routes to an owned prepared-raster implementation with unchanged ledger removal, fragments, proof thresholds, recursion and ordering. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "OutlinedBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
@@ -826,11 +847,12 @@
     },
     "PortableOrnamentGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
-      "source_sha256": "93d88af01b2e976877b2b8771dae6119054b88b3506007c2eccec91d2485f80c",
+      "source_sha256": "f129faf40729d964e062f2247667985e33e7d7ddb927d2745e644246942f3939",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data.",
-      "source_normalized_sha256": "ef1cab2ecde2ff716c21242c2ce822f7266470acdb21b363836b222aab33dd97",
-      "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension"
+      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Private held global PageTrill call-local query mask reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "source_normalized_sha256": "a6e36e8d4ed7c4db3093897443ddbc4230ece5dcc2060652c656117705df715d",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "MordentContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MordentContour.java",
@@ -1007,15 +1029,21 @@
     },
     "DynamicStemCrop.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicStemCrop.java",
-      "source_sha256": "db41f9a68015596d1a24f55aa01ccb137d2c5ad48e7f5c3260301370668a1efe",
+      "source_sha256": "233b00a4e431dfaa08a617c9d6c56276b042b4edb51162527392490e6a347af5",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "db41f9a68015596d1a24f55aa01ccb137d2c5ad48e7f5c3260301370668a1efe"
+      "source_normalized_sha256": "233b00a4e431dfaa08a617c9d6c56276b042b4edb51162527392490e6a347af5",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global DynamicStem neighbor visits reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "DynamicBarlineCrop.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicBarlineCrop.java",
-      "source_sha256": "a2402cb1c9db983d5bfc1f2bea822ddb66866ac1a26965d848bcb89f62b56c8c",
+      "source_sha256": "c2dd76a4ebbb067e4b9f461591b93dcf48fad97c5fe4b8bbdb61d6e341de1726",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a2402cb1c9db983d5bfc1f2bea822ddb66866ac1a26965d848bcb89f62b56c8c"
+      "source_normalized_sha256": "c2dd76a4ebbb067e4b9f461591b93dcf48fad97c5fe4b8bbdb61d6e341de1726",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global DynamicBarlineCrop row work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "ScoreNavigationNoteProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationNoteProjection.java",
@@ -1025,9 +1053,12 @@
     },
     "PageTrillEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PageTrillEvidence.java",
-      "source_sha256": "76db58e5ba1eef7b085edc0673562b060f81e890940f283e159421894d4d4124",
+      "source_sha256": "105eb2373b2036e1353fc433f514c9b3729f40d630d1db08bb19c45fbf56b358",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "76db58e5ba1eef7b085edc0673562b060f81e890940f283e159421894d4d4124"
+      "source_normalized_sha256": "105eb2373b2036e1353fc433f514c9b3729f40d630d1db08bb19c45fbf56b358",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Private held global PageTrill call-local query mask reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
     },
     "ScoreDynamicContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicContinuation.java",
@@ -1061,17 +1092,21 @@
     },
     "ClosedStaffBarPhase.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedStaffBarPhase.java",
-      "source_sha256": "543a7ce399186d91111f68dcbac9314ad5f91ddea722dab0c1776020627029e5",
-      "source_normalized_sha256": "b6e9f1f380a9bc00d1a6d8808b4cf3214c6ec484e1adbfcf8e409bf093e45c0a",
+      "source_sha256": "60abe50457cb7564fabf96f485c445804718f8e31325f8284e368c928511914f",
+      "source_normalized_sha256": "f1b9dedd0b0e9deba1cc84601bbaead43b56dc53fbb96b23aa9b951904ec40f3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original pure-JDK raw five-rule phase proof at an isolated staff-height closing bar. Both sides of the head must supply every thin rule, five rules must join the bar, outside stroke extension and a sixth joined rule reject ambiguous groups. Local line centers refine spacing and slope; near-best fits must agree on pitch. Package-only app parity. Original procedural positive, rejection, real decoder path, bounds and pixel preservation tests; no score imagery, dependencies, model or wire changes."
+      "review_note": "Original pure-JDK raw five-rule phase proof at an isolated staff-height closing bar. Both sides of the head must supply every thin rule, five rules must join the bar, outside stroke extension and a sixth joined rule reject ambiguous groups. Local line centers refine spacing and slope; near-best fits must agree on pitch. Package-only app parity. Original procedural positive, rejection, real decoder path, bounds and pixel preservation tests; no score imagery, dependencies, model or wire changes. Private held global ClosedStaff rule-row reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "BoundedSecondaryBeam.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoundedSecondaryBeam.java",
-      "source_sha256": "1aa8e4546bff741d97970dfbedbfd890263befe65b88b07af0f83f9e54653e71",
-      "source_normalized_sha256": "1aa8e4546bff741d97970dfbedbfd890263befe65b88b07af0f83f9e54653e71",
+      "source_sha256": "385f19ec64d172842c46ef8c3d1305a3e15c643d634b3eea6701b6c6e9480828",
+      "source_normalized_sha256": "385f19ec64d172842c46ef8c3d1305a3e15c643d634b3eea6701b6c6e9480828",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original global three-attack secondary-beam context proof on untouched pixels. Requires distinct matching stems, two separated thick connected rails, secondary termination at both group edges and main continuation outside the group. Only three equal double-beamed attacks may use this additional in-staff numeral context; shape, contrast consistency, voice/system ownership and rest/fingering guards remain. Pure-JDK package-only parity and fourteen original procedural regressions. No score imagery, song rules, models, dependencies or wire-layout changes."
+      "review_note": "Original global three-attack secondary-beam context proof on untouched pixels. Requires distinct matching stems, two separated thick connected rails, secondary termination at both group edges and main continuation outside the group. Only three equal double-beamed attacks may use this additional in-staff numeral context; shape, contrast consistency, voice/system ownership and rest/fingering guards remain. Pure-JDK package-only parity and fourteen original procedural regressions. No score imagery, song rules, models, dependencies or wire-layout changes. Private held global BoundedSecondaryBeam fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
     },
     "FaintHairpinArms.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintHairpinArms.java",
@@ -1104,10 +1139,11 @@
     },
     "CrossRowPortamento.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossRowPortamento.java",
-      "source_sha256": "693a5bea4691b82645411a588e52495d78139ff477ce56f598b45eaa6c5e8d92",
-      "source_normalized_sha256": "693a5bea4691b82645411a588e52495d78139ff477ce56f598b45eaa6c5e8d92",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "2ba9a604531727f2e7f49b99cb062ac20bad0e566a91b690df80487f7113d0d3",
+      "source_normalized_sha256": "2ba9a604531727f2e7f49b99cb062ac20bad0e566a91b690df80487f7113d0d3",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "CurvedExitInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurvedExitInk.java",
@@ -1118,10 +1154,11 @@
     },
     "PaperDynamicWord.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaperDynamicWord.java",
-      "source_sha256": "d60d17be0c93ddbebfcada69cea4ef1bf9dbe6c43df0df75adb0351f738ba6fd",
-      "source_normalized_sha256": "d60d17be0c93ddbebfcada69cea4ef1bf9dbe6c43df0df75adb0351f738ba6fd",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "cffe4e3be1711337011044ea785706cc266eb29222cda4a53ba4e939cac3d036",
+      "source_normalized_sha256": "cffe4e3be1711337011044ea785706cc266eb29222cda4a53ba4e939cac3d036",
+      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Private held global PaperDynamicWord fixed pattern reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
@@ -1456,6 +1493,13 @@
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
       "review_note": "Pure-JDK package-only recovery of wholly absent MusicXML division metadata from consistent exact ordinary typed durations and direct dots. Tuplet-only, missing, conflicting and nonintegral evidence rejects; explicit metadata and existing duration validation remain caller-controlled. Thirteen original synthetic controls; no private renderer artifact, model, dependency or wire-layout change."
+    },
+    "TwoLaneTileExecutor.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+      "source_sha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
+      "source_normalized_sha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
+      "reviewed_source_state": "Original Apache-2.0 JDK owner executor in app902",
+      "review_note": "Package-only equivalents acquire two independent owners concurrently, bound outstanding work to one request per owner, retain ordered consumption and exception precedence, and retire each owner on its creator thread after real completion. JUnit entry points exercise 7 startup, 12 lifecycle and 7 shutdown-fault groups using original synthetic owners and no native or Android dependencies."
     }
   },
   "interpreter_speedup_review": {
@@ -2005,5 +2049,163 @@
     "recognition_revision": 3,
     "record_layout_changed": false,
     "boundary": "Recognition epoch3 salts derived identities after note-reconstruction metadata fixes; stale epoch2 keys differ while all existing guide record bytes remain unchanged. Original current/stale identity and actual writer byte-parity controls. No model, private score, app history or native/runtime binary is included."
+  },
+  "seventeen_family_fixed_work_reuse902_review": {
+    "public_parent_commit": "751e894707f3fe10a85c076369e1d8f45a3471c4",
+    "app_baseline_version": 901,
+    "families": 17,
+    "production_helpers": 18,
+    "focused_method_invocations": 503,
+    "phone_elapsed_claim": false,
+    "source": "Original Apache-2.0 geometry and synthetic regressions; no private score or device evidence included.",
+    "paired_sources": [
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
+        "app_sha256": "fcbecdae245c148d0400c51eda6e56fed8cd97eccb65b68305973bcc0e871d44",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ArtificialHarmonics.java",
+        "standalone_sha256": "5ef7a9facd865d566aaadce6eec392eecdf9f138e1ddc25b2fa71e911e274650"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/AttachedTremoloInk.java",
+        "app_sha256": "6a2ece8a51f638a4bb845e19615166be9eff7f7cfe1726bbe3cf6573d3a664a9",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AttachedTremoloInk.java",
+        "standalone_sha256": "888a53bd2e49c131af1eab3af1882de87dd2e2b9c824cb37e8392b1efa7b597f"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/BeamOccludedStaffPhase.java",
+        "app_sha256": "d2113fcebe6a2d119c2db25b3f70befaad25b30290826e733232f5b4c7bf1fa2",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BeamOccludedStaffPhase.java",
+        "standalone_sha256": "3b7ce164ad15537a9a03a3c191829feea8394b4078607740463f795f4c1eb60e"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/BoundedSecondaryBeam.java",
+        "app_sha256": "385f19ec64d172842c46ef8c3d1305a3e15c643d634b3eea6701b6c6e9480828",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BoundedSecondaryBeam.java",
+        "standalone_sha256": "0ecdbcf78526d202869e55836167e598921c77e74ee58c2aed51531de5e1ffd5"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedStaffBarPhase.java",
+        "app_sha256": "60abe50457cb7564fabf96f485c445804718f8e31325f8284e368c928511914f",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedStaffBarPhase.java",
+        "standalone_sha256": "647cf3955106e3d943c204424d1b4aa273f21a7d73a45441b83dd50b0b976f02"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/CrossRowPortamento.java",
+        "app_sha256": "2ba9a604531727f2e7f49b99cb062ac20bad0e566a91b690df80487f7113d0d3",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CrossRowPortamento.java",
+        "standalone_sha256": "c96e828a37eee0baf28e9315c2626881d26d9e825471a6e4e282b2461b2d88a6"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicBarlineCrop.java",
+        "app_sha256": "c2dd76a4ebbb067e4b9f461591b93dcf48fad97c5fe4b8bbdb61d6e341de1726",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DynamicBarlineCrop.java",
+        "standalone_sha256": "be09412e5c3634f401b59faaffa302fa58812eb81c983672d43636050f3873b3"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphEvidence.java",
+        "app_sha256": "22bf6651999a05f4647e00d73397fc329410b638964ed5d87016b66e5ea48cd3",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DynamicGlyphEvidence.java",
+        "standalone_sha256": "aa4615b6623a9a1adca038e74eed75a57e084e987be2739249f86a795d4a1144"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicStemCrop.java",
+        "app_sha256": "233b00a4e431dfaa08a617c9d6c56276b042b4edb51162527392490e6a347af5",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DynamicStemCrop.java",
+        "standalone_sha256": "1e2fc25228ac00b0208282168f5f637b5bcbc57907914fa6fa8fc44552d92435"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/LocalTieStaffAlignment.java",
+        "app_sha256": "daf6e0bfd1e4b4d8594e546ccb0c4f9d44252c739763429f151e6752ca536b88",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LocalTieStaffAlignment.java",
+        "standalone_sha256": "836c421d2a5db7dc414019b1b3dd9532d712daae57ecc35d1dced2ae58ce1dd6"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
+        "app_sha256": "7f9fb7c548420745d396218ae93c65115578691d3cda2532fff69d0127616e65",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterChangeDetector.java",
+        "standalone_sha256": "ae9ff82c254c1726fe6caa90c3c8a99b3514df214ddfa8ade240f42da7cfc0c7"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
+        "app_sha256": "bf269ff2d3fd48f11aacb40167e4c1c3acd220c58fffbe00d55f7bd3d2855b93",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MultiMeasureRestDetector.java",
+        "standalone_sha256": "d752e3d9ec73088ff74b3d3300fb3fb5e594dd03654e1ed72c3b962770e8bce4"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
+        "app_sha256": "51ab5423ea4d9d41e6c9c48b9c60f2caa4a434941bb37c86a84300270200fb13",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteSlideDetector.java",
+        "standalone_sha256": "bc2926f7bfd50c9d58cb894f4c208b8f2ad797ee143b4155fa144bcefc0637c6"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
+        "app_sha256": "d904174f2593bcabbcc749168121596b5009d36521b00c3893c970ca05a858e3",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OctaveMarkDetector.java",
+        "standalone_sha256": "5988a43a9de168a0a1a53812c9ef3649a36d828b0747094a87d97260d197d61c"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PageTrillEvidence.java",
+        "app_sha256": "105eb2373b2036e1353fc433f514c9b3729f40d630d1db08bb19c45fbf56b358",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PageTrillEvidence.java",
+        "standalone_sha256": "96e20348985a79d81360916b54249a5834193242396b34f8001dc1e18223d822"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PaperDynamicWord.java",
+        "app_sha256": "cffe4e3be1711337011044ea785706cc266eb29222cda4a53ba4e939cac3d036",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PaperDynamicWord.java",
+        "standalone_sha256": "7f94f038b3ae3fe3321ade7d20dd63ed261a8d21e9c2d14c1586688d3f304cc9"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
+        "app_sha256": "f129faf40729d964e062f2247667985e33e7d7ddb927d2745e644246942f3939",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PortableOrnamentGlyphs.java",
+        "standalone_sha256": "bfdb41d4a52358e8a013ac2701ad5ce0e0c878d7f80666c43d7aa69962cb0dfc"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/SeparateBeamGroups.java",
+        "app_sha256": "1a4f217c1f3fbaa8c33ef142ff06ec717ed3fb2a85c2c7f694abe76991bc4d3a",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SeparateBeamGroups.java",
+        "standalone_sha256": "b51e2a8408252155901235fcb6347c8cfb8dbf526445cb7c6d859f87acf0eb2b"
+      },
+      {
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+        "app_sha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TwoLaneTileExecutor.java",
+        "standalone_sha256": "67308ef48103645a8483368640fc25348925ed42c3dafe19b54e86aa7e0e6b2e"
+      }
+    ]
+  },
+  "two_lane_inference902_review": {
+    "helper": {
+      "appRelative": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+      "appSha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
+      "publicRelative": "java/src/main/java/io/github/luckolite/interpreter/TwoLaneTileExecutor.java",
+      "publicSha256": "67308ef48103645a8483368640fc25348925ed42c3dafe19b54e86aa7e0e6b2e",
+      "license": "Apache-2.0",
+      "sourceOrigin": "Original Java-only serial-owner concurrency implementation, Copyright 2026 Luckolite.",
+      "review": "Package-only equivalents acquire two independent owners concurrently, bound outstanding work to one request per owner, retain ordered consumption and exception precedence, and retire each owner on its creator thread after real completion. JUnit entry points exercise 7 startup, 12 lifecycle and 7 shutdown-fault groups using original synthetic owners and no native or Android dependencies."
+    },
+    "android_adapter": {
+      "relative": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "beforeSha256": "236d3e057954974f267305ff11db954e4b338bbe0e59b165b9c8dd30d3b2aea0",
+      "candidateSha256": "6aa58b7790751506b66e13e4b540565500bdd224cc43d56ed50585c163562c49",
+      "review": "Android LiteRT lanes retain separate models, tensor collections and validated white outputs. Tile packing, class checks, stitching, options and model bytes retain the reviewed implementation. Standalone native ONNX remains its existing adapter; this review does not replace its execution policy.",
+      "validationBoundary": "Existing model-free concurrency controls and original synthetic full OCR/score/guide parity were executed against the preceding analyzer snapshot. The later app snapshot has identical analyzer bytes; no native or whole-pipeline test is claimed for that later snapshot. Normal public/app/pair release gates remain required."
+    },
+    "guide_version": 281,
+    "recognition_revision": 3,
+    "audio_version": 67,
+    "render_version": 35,
+    "protocol": 1,
+    "model_weights_changed": false
+  },
+  "main_source_occurrence_index902_review": {
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/Main.java",
+    "standalone_sha256": "8c699325110dfea415f7e0e5458980196468549ff0a86e0591fda2565c41614a",
+    "source": "Original Apache-2.0 standalone adapter and scalar CLI fixtures",
+    "review": "Explicit occurrence traversal preserves distinct source indices for equal-valued records and repeated object references; all other event fields retain their prior behavior. No mapped app analogue, model, dependency, guide or cache epoch change.",
+    "regression_path": "tests/test_source_note_index.py",
+    "regression_methods": 6,
+    "regression_sha256": "dc0280cef353124bdd0abcdb3543acb0d59feeaca2effee2cfb54e3f79c05820"
   }
 }

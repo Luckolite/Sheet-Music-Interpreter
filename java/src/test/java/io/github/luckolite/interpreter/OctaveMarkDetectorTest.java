@@ -197,4 +197,15 @@ public class OctaveMarkDetectorTest {
         var n = apply(g, words, List.of(note(150, 0)));
         assertEquals(1, apply(g, words, n).get(0).octaveShift());
     }
+
+    @Test
+    public void shiftPreservesPrintedSeparatorsAndUnicodeBoundaries() {
+        assertEquals(1, OctaveMarkDetector.shift("\t[8 V.A]_–—┘┐」"));
+        assertEquals(-2, OctaveMarkDetector.shift("(15 M.B)┘"));
+        assertEquals(0, OctaveMarkDetector.shift(null));
+        for (String text : List.of("8\u00a0va", "8\u2003va", "８va", "8va┘tail", "8va suffix")) {
+            assertEquals(text, 0, OctaveMarkDetector.shift(text));
+        }
+        assertEquals(2, OctaveMarkDetector.shift("15MA"));
+    }
 }

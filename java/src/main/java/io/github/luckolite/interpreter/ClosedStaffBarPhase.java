@@ -8,6 +8,10 @@ import java.util.List;
 
 /** Raw five-rule phase anchored by an isolated staff-height closing bar. */
 final class ClosedStaffBarPhase {
+    private static final class OuterRules {
+        private static final int[] VALUES = {-1, 5};
+    }
+
     private ClosedStaffBarPhase() {}
 
     private record Bar(int x, int top, int bottom, int hits) {}
@@ -247,15 +251,15 @@ final class ClosedStaffBarPhase {
         if (to - from < 4) return false;
         for (int line = 0; line < 5; line++) {
             int hits = 0;
-            for (int xx = from; xx <= to; xx++)
-                if (thin(gray, w, h, xx, Math.round(bottom - line * gap), flank)) hits++;
+            int row = Math.round(bottom - line * gap);
+            for (int xx = from; xx <= to; xx++) if (thin(gray, w, h, xx, row, flank)) hits++;
             if (hits < (to - from + 1) * .65f) return false;
         }
         // A sixth rule joined to the same stroke leaves the group ambiguous.
-        for (int line : new int[] {-1, 5}) {
+        for (int line : OuterRules.VALUES) {
             int hits = 0;
-            for (int xx = from; xx <= to; xx++)
-                if (thin(gray, w, h, xx, Math.round(bottom - line * gap), flank)) hits++;
+            int row = Math.round(bottom - line * gap);
+            for (int xx = from; xx <= to; xx++) if (thin(gray, w, h, xx, row, flank)) hits++;
             if (hits > (to - from + 1) * .4f) return false;
         }
         return true;

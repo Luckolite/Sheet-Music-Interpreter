@@ -140,4 +140,43 @@ public class WideConnectedSlideTest {
     public void UnboundedLengthIsRejected() {
         assertTrue(detect(272, .27, false, List.of(source(0, 0), target(272, .27))).isEmpty());
     }
+
+    @Test
+    public void extendedSourceProofDoesNotConnectLaterIsolatedApproach() {
+        byte[] gray = ink(188, .27, false);
+        for (int x = 300; x <= 318; x++) {
+            int y = (int) Math.round(170 + (x - 300) * .65);
+            gray[y * W + x] = 0;
+            gray[(y + 1) * W + x] = 0;
+        }
+        byte[] original = gray.clone();
+        var approach = new NoteSlideDetector.Head(330, 189.5f, GAP, 1, 0);
+        var heads = List.of(source(0, 0), target(188, .27), approach);
+        var found = NoteSlideDetector.detect(gray, W, H, List.of(), heads);
+        assertEquals(2, found.size());
+        assertEquals(1, found.get(0).noteIndex());
+        assertEquals(-1, found.get(0).direction());
+        assertTrue(found.get(0).connected());
+        assertEquals(2, found.get(1).noteIndex());
+        assertEquals(-1, found.get(1).direction());
+        assertFalse(found.get(1).connected());
+        assertArrayEquals(original, gray);
+        assertEquals(List.of(source(0, 0), target(188, .27), approach), heads);
+
+        // A fresh call cannot retain a component's earlier source witness.
+        var isolated = NoteSlideDetector.detect(gray, W, H, List.of(), List.of(approach));
+        assertEquals(1, isolated.size());
+        var expected = found.get(1);
+        assertEquals(
+                new NoteSlideDetector.Stroke(
+                        expected.left(),
+                        expected.leftY(),
+                        expected.right(),
+                        expected.rightY(),
+                        expected.direction(),
+                        0,
+                        false),
+                isolated.get(0));
+        assertArrayEquals(original, gray);
+    }
 }

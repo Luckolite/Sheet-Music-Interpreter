@@ -35,11 +35,12 @@ final class DynamicBarlineCrop {
                 int top = Math.max(0, Math.round(upper.top())),
                         bottom = Math.min(height - 1, Math.round(lower.bottom()));
                 if (bottom - top < g * 8 || bottom - top > g * 24) continue;
+                float requiredBarlineHits = (bottom - top + 1) * .92f;
                 for (int x = l; x < r; x++) {
                     int hits = 0;
                     for (int y = top; y <= bottom; y++)
                         if ((gray[y * width + x] & 255) < 145) hits++;
-                    if (hits >= (bottom - top + 1) * .92f) {
+                    if (hits >= requiredBarlineHits) {
                         line[x - l] = true;
                         gap = g;
                     }
@@ -56,17 +57,20 @@ final class DynamicBarlineCrop {
             for (int x = 0; x < cw; x++)
                 if (!line[x]) clean[y * cw + x] = gray[(t + y) * width + l + x];
         int minX = cw, maxX = -1, minY = ch, maxY = -1;
+        int minimumRowInk = Math.max(3, Math.round(gap * .35f));
         for (int y = 0; y < ch; y++) {
-            int ink = 0;
-            for (int x = 0; x < cw; x++) if ((clean[y * cw + x] & 255) < 145) ink++;
-            if (ink < Math.max(3, Math.round(gap * .35f))) continue;
-            minY = Math.min(minY, y);
-            maxY = Math.max(maxY, y);
+            int ink = 0, rowMinX = cw, rowMaxX = -1;
             for (int x = 0; x < cw; x++)
                 if ((clean[y * cw + x] & 255) < 145) {
-                    minX = Math.min(minX, x);
-                    maxX = Math.max(maxX, x);
+                    ink++;
+                    rowMinX = Math.min(rowMinX, x);
+                    rowMaxX = Math.max(rowMaxX, x);
                 }
+            if (ink < minimumRowInk) continue;
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+            minX = Math.min(minX, rowMinX);
+            maxX = Math.max(maxX, rowMaxX);
         }
         int gw = maxX - minX + 1, gh = maxY - minY + 1;
         if (gw < gap * .8f || gh < gap * .65f || gh > gap * 3 || gw > gap * 6) return null;

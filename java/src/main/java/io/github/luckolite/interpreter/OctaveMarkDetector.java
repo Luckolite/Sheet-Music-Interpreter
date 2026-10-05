@@ -6,16 +6,32 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /** Applies octave directions to sounding pitch while preserving written staff geometry. */
 final class OctaveMarkDetector {
+    private static final Pattern TEXT_SEPARATORS = Pattern.compile("[\\s()\\[\\].,:;_\\-–—]");
+    private static final Pattern TERMINAL_HOOKS = Pattern.compile("[┘┐」]+$");
+    private static final Pattern MEASURE_CONTINUATION =
+            Pattern.compile(
+                    "^\\s*\\d{1,4}\\s+(\\((?:8v[ab]|15m[ab])\\)[.\\s_\\-–—]*)$",
+                    Pattern.CASE_INSENSITIVE);
+
+    private static final class StaffSides {
+        private static final boolean[] VALUES = {false, true};
+    }
+
+    private static final class DashSkewOffsets {
+        private static final int[] VALUES = {-1, 1};
+    }
+
     private OctaveMarkDetector() {}
 
     static int shift(String text) {
         if (text == null) return 0;
-        String s = text.toLowerCase(Locale.ROOT).replaceAll("[\\s()\\[\\].,:;_\\-–—]", "");
+        String s = TEXT_SEPARATORS.matcher(text.toLowerCase(Locale.ROOT)).replaceAll("");
         // OCR can append the printed octave-line end hook to its direction.
-        s = s.replaceAll("[┘┐」]+$", "");
+        s = TERMINAL_HOOKS.matcher(s).replaceAll("");
         return switch (s) {
             case "8va", "8vaa", "8vaalta", "ottava" -> 1;
             case "8vb", "8vab", "8vabassa" -> -1;
@@ -175,11 +191,7 @@ final class OctaveMarkDetector {
     private static PlayingTechniqueDetector.Word directionAfterMeasureNumber(
             PlayingTechniqueDetector.Word word) {
         if (word.text() == null) return word;
-        var match =
-                java.util.regex.Pattern.compile(
-                                "^\\s*\\d{1,4}\\s+(\\((?:8v[ab]|15m[ab])\\)[.\\s_\\-–—]*)$",
-                                java.util.regex.Pattern.CASE_INSENSITIVE)
-                        .matcher(word.text());
+        var match = MEASURE_CONTINUATION.matcher(word.text());
         if (!match.matches()) return word;
         float left =
                 word.left() + (word.right() - word.left()) * match.start(1) / word.text().length();
@@ -202,7 +214,7 @@ final class OctaveMarkDetector {
         if (gray == null || gray.length != width * height) return words;
         if (!alreadyContrasted) gray = contrastedInk(gray, width, height);
         for (var staff : staffs)
-            for (boolean below : new boolean[] {false, true}) {
+            for (boolean below : StaffSides.VALUES) {
                 float gap = staff.gap();
                 int top =
                         Math.max(
@@ -629,7 +641,7 @@ final class OctaveMarkDetector {
                     // scan skew between dashes instead of dropping the octave mid-line.
                     boolean found = false;
                     if (count >= 3)
-                        for (int offset : new int[] {-1, 1}) {
+                        for (int offset : DashSkewOffsets.VALUES) {
                             int yy = scanY + offset;
                             if (yy >= 0
                                     && yy < height

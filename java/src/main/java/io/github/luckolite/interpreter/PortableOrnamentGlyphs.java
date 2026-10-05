@@ -17,6 +17,14 @@ final class PortableOrnamentGlyphs {
         }
     }
 
+    /** One internal read-only raster query; never retain it across a caller operation. */
+    static final class Query {
+        private byte[] gray;
+        private int width, left, top, right, bottom;
+        private float[] pixels;
+        private float aspect;
+    }
+
     private final List<Template> ornaments = new ArrayList<>(), accidentals = new ArrayList<>();
 
     void add(byte[] gray, int width, int height, int kind, boolean accidental) {
@@ -32,7 +40,12 @@ final class PortableOrnamentGlyphs {
     }
 
     Match match(byte[] gray, int width, PortableNoteOrnaments.Bounds bounds) {
-        Match original = match(gray, width, bounds, ornaments);
+        return match(gray, width, bounds, (Query) null);
+    }
+
+    /** Internal single-call sharing; ornament recovery still evaluates each sample normally. */
+    Match match(byte[] gray, int width, PortableNoteOrnaments.Bounds bounds, Query query) {
+        Match original = match(gray, width, bounds, ornaments, query);
         if (original.accepted()
                 || ornaments.isEmpty()
                 || !MordentContour.matches(gray, width, bounds)) return original;
@@ -106,6 +119,15 @@ final class PortableOrnamentGlyphs {
 
     private Match match(
             byte[] gray, int width, PortableNoteOrnaments.Bounds bounds, List<Template> choices) {
+        return match(gray, width, bounds, choices, null);
+    }
+
+    private Match match(
+            byte[] gray,
+            int width,
+            PortableNoteOrnaments.Bounds bounds,
+            List<Template> choices,
+            Query query) {
         if (gray == null
                 || width < 1
                 || bounds.left < 0
@@ -114,8 +136,32 @@ final class PortableOrnamentGlyphs {
                 || bounds.bottom > gray.length / width
                 || bounds.width() < 1
                 || bounds.height() < 1) return new Match(0, 0, 0);
-        float[] candidate = mask(gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
-        float aspect = bounds.width() / (float) bounds.height();
+        float[] candidate;
+        float aspect;
+        if (query != null) {
+            if (query.pixels == null
+                    || query.gray != gray
+                    || query.width != width
+                    || query.left != bounds.left
+                    || query.top != bounds.top
+                    || query.right != bounds.right
+                    || query.bottom != bounds.bottom) {
+                query.pixels =
+                        mask(gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
+                query.aspect = bounds.width() / (float) bounds.height();
+                query.gray = gray;
+                query.width = width;
+                query.left = bounds.left;
+                query.top = bounds.top;
+                query.right = bounds.right;
+                query.bottom = bounds.bottom;
+            }
+            candidate = query.pixels;
+            aspect = query.aspect;
+        } else {
+            candidate = mask(gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
+            aspect = bounds.width() / (float) bounds.height();
+        }
         Map<Integer, Float> scores = new HashMap<>();
         for (var t : choices) {
             double ratio = Math.abs(Math.log(aspect / t.aspect));

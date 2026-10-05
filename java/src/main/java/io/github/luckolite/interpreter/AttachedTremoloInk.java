@@ -9,6 +9,18 @@ import java.util.List;
 final class AttachedTremoloInk {
     private AttachedTremoloInk() {}
 
+    private static final class StemDirections {
+        private static final int[] VALUES = {1, -1};
+    }
+
+    private static final class StrokeThresholds {
+        private static final int[] VALUES = {150, 185, 210};
+    }
+
+    private static final class EdgeSigns {
+        private static final int[] VALUES = {-1, 1};
+    }
+
     record Mark(int left, int top, int right, int bottom, int beams) {}
 
     static Mark fadedStem(
@@ -20,7 +32,7 @@ final class AttachedTremoloInk {
                 || gap < 5
                 || !Float.isFinite(gap)) return null;
         int margin = Math.max(2, Math.round(gap * .25f)), cy = (top + bottom) / 2;
-        for (int direction : new int[] {1, -1}) {
+        for (int direction : StemDirections.VALUES) {
             int edge = direction > 0 ? left : right;
             for (int x = Math.max(1, edge - margin); x <= Math.min(w - 2, edge + margin); x++) {
                 int ink = 0, last = cy, blank = 0;
@@ -65,7 +77,7 @@ final class AttachedTremoloInk {
                 b = stemEnd - direction * Math.round(gap * .1f);
         int first = Math.max(1, Math.min(a, b)), last = Math.min(h - 2, Math.max(a, b));
         if ((stemEnd - headEdge) * direction < gap * 2.5f) return null;
-        for (int threshold : new int[] {150, 185, 210}) {
+        for (int threshold : StrokeThresholds.VALUES) {
             List<float[]> strokes = new ArrayList<>();
             for (int y = first; y <= last; y++) {
                 float[] left =
@@ -80,7 +92,7 @@ final class AttachedTremoloInk {
                 if (!strokes.isEmpty() && center - strokes.get(strokes.size() - 1)[0] < gap * .3f)
                     continue;
                 boolean bounded = true;
-                for (int sign : new int[] {-1, 1}) {
+                for (int sign : EdgeSigns.VALUES) {
                     int x = stemX + sign * far, yy = Math.round(center - sign * far * .3f);
                     int consecutive = 0;
                     for (int row = Math.max(0, Math.round(yy - gap * .45f));

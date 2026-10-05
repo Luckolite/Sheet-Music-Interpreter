@@ -210,22 +210,22 @@ public final class MeterChangeDetector {
             float gap = staff.gap();
             int top = Math.max(0, staff.top()), bottom = Math.min(height - 1, staff.bottom());
             int radius = Math.max(1, Math.round(gap * .12f));
+            int gapPixels = Math.round(gap);
+            int headTop = Math.max(0, top - gapPixels),
+                    headBottom = Math.min(height - 1, bottom + gapPixels);
+            int minimumHeads = Math.max(7, Math.round(gap * .48f));
             int firstHead = width, firstSemanticHead = width;
             for (int xx = 0; xx < width; xx++) {
                 int heads = 0;
-                for (int yy = Math.max(0, top - Math.round(gap));
-                        yy <= Math.min(height - 1, bottom + Math.round(gap));
-                        yy++)
+                for (int yy = headTop; yy <= headBottom; yy++)
                     if (labels[yy * width + xx] == OmrMeasurePostProcessor.NOTEHEAD) heads++;
-                if (heads >= Math.max(7, Math.round(gap * .48f))) {
+                if (heads >= minimumHeads) {
                     if (firstHead == width) firstHead = xx;
                     int key = 0;
-                    for (int x = Math.max(0, xx - Math.round(gap));
-                            x <= Math.min(width - 1, xx + Math.round(gap));
+                    for (int x = Math.max(0, xx - gapPixels);
+                            x <= Math.min(width - 1, xx + gapPixels);
                             x++)
-                        for (int yy = Math.max(0, top - Math.round(gap));
-                                yy <= Math.min(height - 1, bottom + Math.round(gap));
-                                yy++)
+                        for (int yy = headTop; yy <= headBottom; yy++)
                             if (labels[yy * width + x] == OmrMeasurePostProcessor.CLEF_OR_KEY)
                                 key++;
                     if (key < gap * gap * .35f) {
@@ -269,10 +269,8 @@ public final class MeterChangeDetector {
                         if (!OmrMeasurePostProcessor.stackedFourCounters(
                                 gray, width, height, xx, top + shift, bottom + shift, gap))
                             continue;
-                        int end = xx;
-                        for (int next = xx + 1;
-                                next <= Math.min(last, xx + Math.round(gap * .8f));
-                                next++) {
+                        int end = xx, counterRight = Math.min(last, xx + Math.round(gap * .8f));
+                        for (int next = xx + 1; next <= counterRight; next++) {
                             int offset = Math.round(slope * (next - width * .5f));
                             if (OmrMeasurePostProcessor.stackedFourCounters(
                                     gray, width, height, next, top + offset, bottom + offset, gap))
@@ -290,7 +288,7 @@ public final class MeterChangeDetector {
                                         localTop,
                                         gap));
                         if (result.size() >= 48) return List.copyOf(result);
-                        xx = end + Math.round(gap);
+                        xx = end + gapPixels;
                     }
                     if (left < firstHead - gap * .35f)
                         result.addAll(
@@ -590,12 +588,14 @@ public final class MeterChangeDetector {
             float slope) {
         int radius = Math.max(1, Math.round(staff.gap() * .15f));
         int flank = Math.max(2, Math.round(staff.gap() * .35f)), supported = 0;
+        int supportBottom = height - 1 - flank,
+                minimumSupport = Math.max(24, Math.round(width * .2f));
         for (int row : staff.rows()) {
             int hits = 0;
             for (int x = 0; x < width; x++) {
                 int center = row + Math.round(slope * (x - width * .5f));
                 for (int y = Math.max(flank, center - radius);
-                        y <= Math.min(height - 1 - flank, center + radius);
+                        y <= Math.min(supportBottom, center + radius);
                         y++) {
                     int ink = gray[y * width + x] & 255;
                     if (ink <= 225
@@ -606,7 +606,7 @@ public final class MeterChangeDetector {
                     }
                 }
             }
-            if (hits >= Math.max(24, Math.round(width * .2f))) supported++;
+            if (hits >= minimumSupport) supported++;
         }
         return supported >= 3;
     }

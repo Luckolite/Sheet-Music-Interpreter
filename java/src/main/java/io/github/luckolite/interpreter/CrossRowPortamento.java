@@ -10,6 +10,10 @@ import java.util.Locale;
 final class CrossRowPortamento {
     private CrossRowPortamento() {}
 
+    private static final class ArmRowOffsets {
+        private static final int[] VALUES = {0, -1, 1};
+    }
+
     record Region(
             int sourceIndex,
             int targetIndex,
@@ -267,7 +271,7 @@ final class CrossRowPortamento {
                     boolean hit = false;
                     int hitY = 0;
                     if (x >= 1 && x < width - 1 && y >= flank + 2 && y < height - flank - 2) {
-                        for (int dy : new int[] {0, -1, 1}) {
+                        for (int dy : ArmRowOffsets.VALUES) {
                             int yy = y + dy;
                             int center = raw[yy * width + x] & 255;
                             if ((plane[yy * width + x] & 255) < 145

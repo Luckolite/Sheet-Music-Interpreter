@@ -67,10 +67,12 @@ final class PageTrillEvidence {
             PortableOrnamentGlyphs.Match weak) {
         if (weak.kind() != NoteOrnament.TRILL || weak.score() < .30f) return false;
         int agreements = 0;
+        PortableOrnamentGlyphs.Query query = null;
         for (var sample : samples) {
             // The same OCR hit seen in two crop passes is not independent evidence.
             if (sample.bounds.equals(box)) continue;
-            if (sample.glyph.match(gray, width, box).score() >= .82f && ++agreements >= 2)
+            if (query == null) query = new PortableOrnamentGlyphs.Query();
+            if (sample.glyph.match(gray, width, box, query).score() >= .82f && ++agreements >= 2)
                 return true;
         }
         return false;

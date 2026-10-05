@@ -584,3 +584,19 @@ cache metadata, excludes stale guide transfer and preserves rollback payloads an
 audio. Only these four actual mapped Java sources are refreshed; the applicable worker
 writer and original regressions are ported explicitly. No commercial score, private log,
 model, binary, signing material or app history is part of this review.
+
+### Fixed-work reuse in app902
+
+Eighteen helpers reuse invariant geometry, ordered neighbor visits, compiled patterns and call-local ornament query masks. The matching app and standalone sources preserve thresholds, float evaluation, traversal order and mutable-input behavior. Five original regression methods and 503 focused method invocations cover the private preparation; these counts do not imply a phone speed or whole-library accuracy result. Models, dependencies and guide record layouts are unchanged. The source baseline is released app901 and public commit `751e894`.
+
+### Two independent inference owners
+
+The Java-only executor keeps one pending operation per owner, consumes results in tile order, preserves failure precedence and closes each owner on its creating thread after accepted work returns. Three original JUnit entry points cover 26 startup, lifecycle and shutdown-fault groups. Android supplies independent LiteRT environments, models and tensor buffers; the standalone ONNX adapter retains its existing policy. The synthetic full OCR, score and guide comparison used the preceding analyzer source, whose input baseline is byte-identical in app901. Guide281, recognition revision3, audio67, render35, protocol1 and model weights remain unchanged.
+
+The standalone file bridge emits each boundary note's source occurrence index from
+its explicit traversal position. Equal-valued note records and repeated references
+retain distinct indices. Boundary evidence and known-clef conditions remain unchanged.
+Original scalar CLI controls exercise a child-process-isolated analysis backend,
+production parsing/timing/serialization, unique-record byte parity and unchanged real
+backend source/classes. Main is a standalone adapter without a mapped app analogue;
+no app provenance hashes, note records, guide layout, epoch, model or dependency change.

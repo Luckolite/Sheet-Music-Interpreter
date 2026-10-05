@@ -4,6 +4,11 @@ package io.github.luckolite.interpreter;
 
 /** Independent literal OCR can corroborate, but never replace, a bounded glyph comparison. */
 final class DynamicGlyphEvidence {
+    private static final class LiteralPattern {
+        private static final java.util.regex.Pattern COMPOUND =
+                java.util.regex.Pattern.compile("(?:m[fp]|f{2,3}|p{2,3})");
+    }
+
     private DynamicGlyphEvidence() {}
 
     static boolean corroborated(String glyph, float score, float margin, String literal) {
@@ -23,7 +28,7 @@ final class DynamicGlyphEvidence {
             float wordRight) {
         if (glyph.isEmpty()
                 || literal == null
-                || !literal.matches("(?:m[fp]|f{2,3}|p{2,3})")
+                || !LiteralPattern.COMPOUND.matcher(literal).matches()
                 || literal.length() <= glyph.length()) return false;
         float width = glyphRight - glyphLeft;
         return width > 0

@@ -495,13 +495,39 @@ final class MultiMeasureRestDetector {
                 area++;
                 sumY += y;
                 edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
-                for (int next : new int[] {current - 1, current + 1, current - w, current + w}) {
-                    if (next < 0
-                            || next >= visited.length
-                            || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
-                            || visited[next]
-                            || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)
-                        continue;
+                int next = current - 1;
+                if (!(next < 0
+                        || next >= visited.length
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || visited[next]
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    visited[next] = true;
+                    stack[size++] = next;
+                }
+                next = current + 1;
+                if (!(next < 0
+                        || next >= visited.length
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || visited[next]
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    visited[next] = true;
+                    stack[size++] = next;
+                }
+                next = current - w;
+                if (!(next < 0
+                        || next >= visited.length
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || visited[next]
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    visited[next] = true;
+                    stack[size++] = next;
+                }
+                next = current + w;
+                if (!(next < 0
+                        || next >= visited.length
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || visited[next]
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
                     visited[next] = true;
                     stack[size++] = next;
                 }
@@ -548,13 +574,39 @@ final class MultiMeasureRestDetector {
                 area++;
                 sumY += y;
                 edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
-                for (int next : new int[] {at - 1, at + 1, at - w, at + w}) {
-                    if (next < 0
-                            || next >= seen.length
-                            || seen[next]
-                            || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
-                            || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)
-                        continue;
+                int next = at - 1;
+                if (!(next < 0
+                        || next >= seen.length
+                        || seen[next]
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    seen[next] = true;
+                    queue[size++] = next;
+                }
+                next = at + 1;
+                if (!(next < 0
+                        || next >= seen.length
+                        || seen[next]
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    seen[next] = true;
+                    queue[size++] = next;
+                }
+                next = at - w;
+                if (!(next < 0
+                        || next >= seen.length
+                        || seen[next]
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
+                    seen[next] = true;
+                    queue[size++] = next;
+                }
+                next = at + w;
+                if (!(next < 0
+                        || next >= seen.length
+                        || seen[next]
+                        || Math.abs(next % w - x) + Math.abs(next / w - y) != 1
+                        || (gray[(top + next / w) * width + left + next % w] & 255) <= 165)) {
                     seen[next] = true;
                     queue[size++] = next;
                 }

@@ -136,6 +136,7 @@ final class NoteSlideDetector {
                     || Math.abs(slope) > 5) continue;
             double rightY = cy + (r - cx) * slope;
             int owner = -1;
+            boolean ownerSourceProved = false;
             double best = Double.MAX_VALUE;
             for (int i = 0; i < heads.size(); i++) {
                 var n = heads.get(i);
@@ -187,6 +188,8 @@ final class NoteSlideDetector {
                 if (distance < best) {
                     best = distance;
                     owner = i;
+                    // Extended candidates already proved this exact immutable source lane.
+                    ownerSourceProved = extended;
                 }
             }
             if (owner >= 0)
@@ -198,8 +201,13 @@ final class NoteSlideDetector {
                                 (float) rightY,
                                 slope < 0 ? 1 : -1,
                                 owner,
-                                immediateSource(
-                                        heads, heads.get(owner), l, cy + (l - cx) * slope, slope)));
+                                ownerSourceProved
+                                        || immediateSource(
+                                                heads,
+                                                heads.get(owner),
+                                                l,
+                                                cy + (l - cx) * slope,
+                                                slope)));
         }
         if (!staffs.isEmpty()) {
             byte[] joined = joinStaffCrossings(clean, gray, w, h, staffs, heads, fragments, result);
