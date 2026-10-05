@@ -43,6 +43,14 @@ public final class ScorePlacementMap {
                     || p.stealPercent() > 100)
                 throw new IllegalArgumentException("Invalid retained written rhythm");
             boolean grace = (notes.get(index).articulations() & NoteOrnament.GRACE) != 0;
+            if (p.grace()
+                    && (notes.get(index).kind() == ScoreNoteEvent.Kind.UNPITCHED
+                            || p.principalIndex() >= 0
+                                    && p.principalIndex() < notes.size()
+                                    && notes.get(p.principalIndex()).kind()
+                                            == ScoreNoteEvent.Kind.UNPITCHED))
+                throw new IllegalArgumentException(
+                        "Unpitched grace ownership requires an explicit realization");
             if (grace != p.grace()
                     || p.principalIndex() >= notes.size()
                     || p.grace()
@@ -220,11 +228,17 @@ public final class ScorePlacementMap {
             int owner = slots.removeFirst();
             var expected = projected.get(owner);
             int a =
-                    expected.staffStep()
-                            + expected.clefBottomDiatonic()
-                            + expected.octaveShift() * 7;
-            int b = note.staffStep() + note.clefBottomDiatonic() + note.octaveShift() * 7;
-            if (a != b
+                    expected.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                            ? expected.staffStep()
+                            : expected.staffStep()
+                                    + expected.clefBottomDiatonic()
+                                    + expected.octaveShift() * 7;
+            int b =
+                    note.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                            ? note.staffStep()
+                            : note.staffStep() + note.clefBottomDiatonic() + note.octaveShift() * 7;
+            if (expected.kind() != note.kind()
+                    || a != b
                     || !sameWrittenClock(expected, note)
                     || expected.writtenAccidental() != note.writtenAccidental()
                     || expected.tiedFromPrevious() != note.tiedFromPrevious()
@@ -250,11 +264,17 @@ public final class ScorePlacementMap {
             ScoreNoteEvent note = selected.get(i);
             ScoreRhythmProjection.Placement found = null;
             boolean owned = false;
+            int matches = 0;
             for (int j = 0; j < source.size(); j++)
                 if (source.get(j).equals(note)) {
+                    if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED && ++matches > 1)
+                        throw new IllegalArgumentException(
+                                "Selected unpitched note needs its stable source index");
                     var candidate = checked.get(j);
                     if (candidate == null) continue;
-                    if (owned && !Objects.equals(found, candidate))
+                    if (owned
+                            && (note.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                                    || !Objects.equals(found, candidate)))
                         throw new IllegalArgumentException(
                                 "Selected note has ambiguous source rhythm");
                     found = candidate;
@@ -420,18 +440,22 @@ public final class ScorePlacementMap {
     }
 
     private static boolean sameEditIdentity(ScoreNoteEvent a, ScoreNoteEvent b) {
-        return a.measureIndex() == b.measureIndex()
+        return a.kind() == b.kind()
+                && a.measureIndex() == b.measureIndex()
                 && a.positionInMeasure() == b.positionInMeasure()
                 && a.staffIndex() == b.staffIndex()
                 && a.staffCount() == b.staffCount()
                 && a.pageY() == b.pageY()
-                && Math.floorMod(a.staffStep(), 7) == Math.floorMod(b.staffStep(), 7)
+                && (a.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                        ? a.staffStep() == b.staffStep()
+                        : Math.floorMod(a.staffStep(), 7) == Math.floorMod(b.staffStep(), 7))
                 && a.writtenAccidental() == b.writtenAccidental()
                 && sameWrittenClock(a, b);
     }
 
     private static boolean sameWrittenClock(ScoreNoteEvent a, ScoreNoteEvent b) {
-        return a.measureIndex() == b.measureIndex()
+        return a.kind() == b.kind()
+                && a.measureIndex() == b.measureIndex()
                 && a.positionInMeasure() == b.positionInMeasure()
                 && a.augmentationDots() == b.augmentationDots()
                 && a.beamCount() == b.beamCount()

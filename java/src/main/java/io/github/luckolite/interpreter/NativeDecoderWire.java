@@ -1,3 +1,5 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 import java.io.*;
@@ -11,8 +13,11 @@ public final class NativeDecoderWire {
     public static final int MAX_PACKET = 45_000_000, MAX_MEASURES = 4000, MAX_EVENTS = 100_000;
     public static final int ANALYZE = 1, GEOMETRY = 2;
 
-    /** Negative marker distinguishes the 22-field analysis from legacy 21-field counts. */
+    /** Legacy stem records retain the complete 22-field layout. */
     static final int ANALYSIS_STEM_FORMAT = -22;
+
+    /** Typed records append one bounded kind byte to the unchanged 22 fields. */
+    static final int ANALYSIS_KIND_FORMAT = -23;
 
     public record Request(
             byte[] labels,
@@ -220,7 +225,7 @@ public final class NativeDecoderWire {
                 || score.rests().size() > MAX_EVENTS
                 || score.keyChanges().size() > MAX_MEASURES)
             throw new IOException("Decoder event limit");
-        out.writeInt(ANALYSIS_STEM_FORMAT);
+        out.writeInt(ANALYSIS_KIND_FORMAT);
         out.writeInt(score.notes().size());
         for (var n : score.notes()) {
             out.writeInt(n.measureIndex());
@@ -245,6 +250,7 @@ public final class NativeDecoderWire {
             out.writeInt(n.boundaryTies());
             out.writeInt(n.tupletNormalNotes());
             out.writeInt(n.stemDirection());
+            out.writeByte(noteKindId(n.kind()));
         }
         out.writeInt(score.keyChanges().size());
         for (var k : score.keyChanges()) {
@@ -266,7 +272,8 @@ public final class NativeDecoderWire {
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
         int marker = in.readInt();
-        boolean stems = marker == ANALYSIS_STEM_FORMAT;
+        boolean typed = marker == ANALYSIS_KIND_FORMAT;
+        boolean stems = typed || marker == ANALYSIS_STEM_FORMAT;
         int count = stems ? count(in, MAX_EVENTS) : marker;
         if (count < 0 || count > MAX_EVENTS) throw new IOException("Decoder analysis format/count");
         var notes = new ArrayList<ScoreNoteEvent>(count);
@@ -294,7 +301,8 @@ public final class NativeDecoderWire {
                             in.readInt(),
                             count(in, ScoreNoteEvent.BOUNDARY_TIES_ALL),
                             normalCount(in),
-                            stems ? stemDirection(in) : 0));
+                            stems ? stemDirection(in) : 0,
+                            typed ? noteKind(in) : ScoreNoteEvent.Kind.PITCHED));
         count = count(in, MAX_MEASURES);
         var keys = new ArrayList<ScoreKeyChange>(count);
         for (int i = 0; i < count; i++) {
@@ -327,6 +335,20 @@ public final class NativeDecoderWire {
         int direction = in.readInt();
         if (direction < -1 || direction > 1) throw new IOException("Decoder stem direction");
         return direction;
+    }
+
+    private static int noteKindId(ScoreNoteEvent.Kind kind) throws IOException {
+        if (kind == ScoreNoteEvent.Kind.PITCHED) return 0;
+        if (kind == ScoreNoteEvent.Kind.UNPITCHED) return 1;
+        throw new IOException("Decoder note kind");
+    }
+
+    private static ScoreNoteEvent.Kind noteKind(DataInputStream in) throws IOException {
+        return switch (in.readUnsignedByte()) {
+            case 0 -> ScoreNoteEvent.Kind.PITCHED;
+            case 1 -> ScoreNoteEvent.Kind.UNPITCHED;
+            default -> throw new IOException("Decoder note kind");
+        };
     }
 
     private static int normalCount(DataInputStream in) throws IOException {

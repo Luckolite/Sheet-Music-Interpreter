@@ -3,7 +3,6 @@
 import copy
 import struct
 import unittest
-from unittest.mock import patch
 from sheet_interpreter import guide_writer as wire
 
 def original_score():
@@ -41,17 +40,17 @@ class PrintedStemGuideTests(unittest.TestCase):
             score=original_score();score['notes'][0]['stemDirection']=value
             with self.assertRaises(ValueError):wire.encode(score,281)
     def test_unknown_future_layout_is_rejected(self):
-        with self.assertRaises(ValueError):wire.encode(original_score(),282)
+        with self.assertRaises(ValueError):wire.encode(original_score(),283)
 
-    def test_recognition_epoch_three_keeps_existing_layout_281(self):
-        self.assertEqual(3,wire.RECOGNITION_REVISION)
-        self.assertEqual(281,wire.GUIDE_VERSION)
+    def test_current_layout282_appends_kind_after_legacy281_signed_stem(self):
+        self.assertEqual(4,wire.RECOGNITION_REVISION)
+        self.assertEqual(282,wire.GUIDE_VERSION)
         score=original_score();score['notes'][0]['stemDirection']=1
-        encoded=wire.encode(score)
-        with patch.object(wire, "RECOGNITION_REVISION", 2):
-            stale_epoch_bytes = wire.encode(score)
-        self.assertEqual(stale_epoch_bytes, encoded)
-        self.assertEqual(wire.encode(score,281),encoded)
-        self.assertEqual(281,struct.unpack('>i',encoded[:4])[0])
+        legacy=wire.encode(score,281);encoded=wire.encode(score)
+        self.assertEqual(282,struct.unpack('>i',encoded[:4])[0])
+        self.assertEqual(len(legacy)+1,len(encoded))
+        self.assertEqual(legacy[4:111],encoded[4:111])
+        self.assertEqual(0,encoded[111])
+        self.assertEqual(legacy[111:],encoded[112:])
 
 if __name__=='__main__':unittest.main()

@@ -10,6 +10,7 @@ public final class GlissPitchTarget {
 
     public static ScoreNoteEvent next(ScoreNoteEvent source, List<ScoreNoteEvent> notes) {
         if (source == null
+                || source.kind() != ScoreNoteEvent.Kind.PITCHED
                 || notes == null
                 || NoteOrnament.type(source.articulations()) != NoteOrnament.GLISSANDO
                 || source.followingRestBeats() > 0) return null;
@@ -22,7 +23,9 @@ public final class GlissPitchTarget {
                     || note.positionInMeasure() <= source.positionInMeasure() + .018f) continue;
             if (first == null || note.positionInMeasure() < first.positionInMeasure()) first = note;
         }
-        if (first == null || first.leadingRestBeats() > 0) return null;
+        if (first == null
+                || first.kind() != ScoreNoteEvent.Kind.PITCHED
+                || first.leadingRestBeats() > 0) return null;
         for (var note : notes)
             if (note != first
                     && note.measureIndex() == first.measureIndex()

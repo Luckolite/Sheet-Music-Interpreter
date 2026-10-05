@@ -20,6 +20,7 @@ You do not need to publish your own code. Follow the [license and notice require
 - Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Graphical bends, quarter-tone bends, whammy-bar directions and strum direction aren't supported.
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing in notation software.
+- Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 
 Explicit tuplets expose `tupletActualNotes` and `tupletNormalNotes` on derived JSON
 events and retain both counts in the raw score notes. A proved wavy connector

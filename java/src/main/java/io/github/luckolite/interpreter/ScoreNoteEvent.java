@@ -26,7 +26,92 @@ public record ScoreNoteEvent(
         int octaveShift,
         int boundaryTies,
         int tupletNormalNotes,
-        int stemDirection) {
+        int stemDirection,
+        Kind kind) {
+
+    /** Pitch classification is explicit; a cross-shaped head alone does not imply percussion. */
+    public enum Kind {
+        PITCHED,
+        UNPITCHED
+    }
+
+    /** Preserve the former complete constructor and all shorter legacy constructor chains. */
+    public ScoreNoteEvent(
+            int measureIndex,
+            float positionInMeasure,
+            int staffStep,
+            int staffIndex,
+            int staffCount,
+            float pageY,
+            boolean tiedFromPrevious,
+            int augmentationDots,
+            int beamCount,
+            int writtenAccidental,
+            float unbeamedDurationBeats,
+            int tupletDivisor,
+            float followingRestBeats,
+            int articulations,
+            int clefBottomDiatonic,
+            boolean crossStaffBeam,
+            float leadingRestBeats,
+            boolean compactOpening,
+            int octaveShift,
+            int boundaryTies,
+            int tupletNormalNotes,
+            int stemDirection) {
+        this(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                stemDirection,
+                Kind.PITCHED);
+    }
+
+    /** Change classification explicitly while retaining written rhythm and optical evidence. */
+    public ScoreNoteEvent withKind(Kind value) {
+        return new ScoreNoteEvent(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                stemDirection,
+                value);
+    }
 
     /** Existing callers without printed shaft evidence keep an unknown direction. */
     public ScoreNoteEvent(
@@ -99,7 +184,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                direction);
+                direction,
+                kind);
     }
 
     /** Legacy tuplets retain their former ratios; explicit normal counts preserve 5:3 and other ratios. */
@@ -181,7 +267,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 normal,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     /** Optical evidence only: incoming above/below, then outgoing above/below. */
@@ -253,7 +340,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 evidence,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     /** Compatibility constructor: notes without an octave mark keep their written register. */
@@ -323,7 +411,8 @@ public record ScoreNoteEvent(
                 shift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     /** Source-compatible constructor for callers without opening-measure geometry. */
@@ -389,7 +478,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     public ScoreNoteEvent(
@@ -452,7 +542,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     public ScoreNoteEvent(
@@ -513,7 +604,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     public static final int CLEF_UNKNOWN = -1;
@@ -579,10 +671,13 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     public int diatonicPitchIdentity() {
+        if (kind == Kind.UNPITCHED)
+            throw new IllegalStateException("An unpitched event has no diatonic pitch");
         return staffStep + (clefBottomDiatonic == CLEF_UNKNOWN ? 0 : clefBottomDiatonic);
     }
 
@@ -640,7 +735,8 @@ public record ScoreNoteEvent(
                 octaveShift,
                 boundaryTies,
                 tupletNormalNotes,
-                stemDirection);
+                stemDirection,
+                kind);
     }
 
     public ScoreNoteEvent(
@@ -839,6 +935,7 @@ public record ScoreNoteEvent(
     }
 
     public ScoreNoteEvent {
+        if (kind == null) throw new IllegalArgumentException("A note kind is required");
         if (stemDirection < -1 || stemDirection > 1)
             throw new IllegalArgumentException("Invalid printed stem direction");
         if ((boundaryTies & ~BOUNDARY_TIES_ALL) != 0)

@@ -600,3 +600,17 @@ Original scalar CLI controls exercise a child-process-isolated analysis backend,
 production parsing/timing/serialization, unique-record byte parity and unchanged real
 backend source/classes. Main is a standalone adapter without a mapped app analogue;
 no app provenance hashes, note records, guide layout, epoch, model or dependency change.
+
+Typed unpitched heads retain explicit written display position and independent
+source occurrences. The record keeps its22 prior fields and legacy constructors;
+copy, navigation, accidental, rest and grace passes preserve kind. Tonal helpers
+exclude unpitched heads and retain them as physical endpoint barriers. Analysis
+marker-23 and guide282 encode bounded kind values; guide282 appends one byte to
+the prior79-byte note. Legacy layouts decode pitched and unsupported kinds reject.
+Recognition revision4 and the unchanged protocol1 use the matching actual layout.
+The standalone writer changes only its relative import and license notice from the
+native writer. Python typed helpers use the standard library and existing audio
+dependencies. Original scalar/raster/byte controls and full prior-field/source-index
+fixtures cover these ports; no model, dependency or private score is included.
+See [typed event APIs](unpitched-events.md) and
+[regression input provenance](typed-unpitched-test-provenance.md).

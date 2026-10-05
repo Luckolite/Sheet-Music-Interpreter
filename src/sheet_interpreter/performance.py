@@ -10,6 +10,7 @@ import tempfile
 from pathlib import Path
 from .runtime import java_executable
 from .semantic_wire import encode
+from .typed_events import event_kind, validate_unpitched
 
 SUPPORTED = {'RITARDANDO', 'RALLENTANDO', 'RITENUTO', 'ACCELERANDO', 'A_TEMPO',
              'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA', 'BREATH', 'CAESURA',
@@ -226,6 +227,14 @@ def _perform_one(pages, bpm):
             start, end = offset+note['startBeat'], offset+note['startBeat']+note['durationBeats']
             if not math.isfinite(start) or not math.isfinite(end) or start < offset or end <= start or end > offset+starts[-1]+1e-6:
                 raise ValueError('Invalid expressive note span')
+            validate_unpitched(note)
+            if event_kind(note) == 'UNPITCHED':
+                old = len(sounds)
+                sounds.append(dict(id=identifier, start=start, end=end,
+                    staff=note['staffIndex'], count=note['staffCount']))
+                payloads.append(dict(note, sourceEventId=identifier))
+                aliases[identifier] = old
+                continue
             lane = (note['staffCount'], note['staffIndex'], note['midi'])
             old = previous.get(lane)
             if note.get('tiedFromPrevious') and lane[1] == 0 and lane[0] in (1, 2):
@@ -302,6 +311,10 @@ def _perform_one(pages, bpm):
             note.update(startBeat=start_seconds*2, durationBeats=(end_seconds-start_seconds)*2,
                         tiedFromPrevious=False, measureIndex=0,
                         performanceId=identifier if not subdivision else identifier+f'/tremolo:{ordinal}')
+            if event_kind(note) == 'UNPITCHED':
+                note['_unpitchedAttackId'] = identifier
+                note['_unpitchedContinuation'] = False
+                note['clippedEntry'] = interval['clippedEntry']
             if subdivision:
                 note['tremoloBeats'] = 0
             attacks = [attack for attack in result['attacks'] if attack['staffIndex'] == note['staffIndex']
@@ -318,6 +331,9 @@ def _perform_one(pages, bpm):
 def perform_expressions(document, bpm):
     """Return a fixed-tempo performance document only when supported printed evidence exists."""
     pages = document['pages']
+    for page in pages:
+        for note in page['events']:
+            validate_unpitched(note)
     if not any(e['kind'] in SUPPORTED for page in pages for e in page.get('score', {}).get('expressiveEvents', [])):
         return None
     # Use the same arrangement boundaries as ordinary navigation export.

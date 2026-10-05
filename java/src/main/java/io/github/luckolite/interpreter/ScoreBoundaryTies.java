@@ -19,15 +19,22 @@ final class ScoreBoundaryTies {
 
     static List<ScoreNoteEvent> resolve(
             List<ScoreNoteEvent> notes, List<ScoreKeyChange> keys, List<Integer> boundaries) {
+        for (var note : notes)
+            if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                    && (note.tiedFromPrevious() || note.boundaryTies() != 0))
+                throw new IllegalArgumentException(
+                        "Unpitched source tie flags do not prove shared instrument ownership");
         var result = new ArrayList<>(notes);
         for (int i = 0; i < notes.size(); i++) {
             var current = notes.get(i);
-            if ((current.boundaryTies() & 3) == 0
+            if (current.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || (current.boundaryTies() & 3) == 0
                     || !boundaries.contains(current.measureIndex())
                     || current.leadingRestBeats() > 0
                     || current.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN) continue;
             for (var earlier : notes) {
-                if (earlier.measureIndex() + 1 != current.measureIndex()
+                if (earlier.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || earlier.measureIndex() + 1 != current.measureIndex()
                         || earlier.staffIndex() != current.staffIndex()
                         || earlier.staffCount() != current.staffCount()
                         || ((earlier.boundaryTies() >> 2) & current.boundaryTies() & 3) == 0
@@ -78,7 +85,8 @@ final class ScoreBoundaryTies {
                                         current.octaveShift(),
                                         current.boundaryTies(),
                                         current.tupletNormalNotes())
-                                .withStemDirection(current.stemDirection()));
+                                .withStemDirection(current.stemDirection())
+                                .withKind(current.kind()));
                 break;
             }
         }

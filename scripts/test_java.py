@@ -23,7 +23,8 @@ def main():
         if hashlib.sha256(path.read_bytes()).hexdigest() != info['sha256']:
             raise SystemExit('Test dependency checksum mismatch: ' + name)
         jars.append(path)
-    sources = sorted((ROOT / 'java/src/test/java').rglob('*Test.java'))
+    sources = sorted((ROOT / 'java/src/test/java').rglob('*.java'))
+    tests = [source for source in sources if source.name.endswith('Test.java')]
     classes = ROOT / 'build/test-classes'
     # Old implicit production classes can shadow the newly built core because
     # the runner places test output first. Always compile into a fresh directory.
@@ -32,6 +33,9 @@ def main():
             raise SystemExit('Refusing to clear test classes outside the build directory')
         shutil.rmtree(classes)
     classes.mkdir(exist_ok=True)
+    resources = ROOT / 'java/src/test/resources'
+    if resources.is_dir():
+        shutil.copytree(resources, classes, dirs_exist_ok=True)
     cp = os.pathsep.join(map(str, [ROOT / 'build/classes', *jars]))
     source_list = ROOT / 'build/test-sources.txt'
     source_list.write_text('\n'.join('"' + p.relative_to(ROOT).as_posix() + '"' for p in sources),
@@ -42,7 +46,7 @@ def main():
     # reads the same arguments from a file without splitting or omitting tests.
     arguments = ['-cp', os.pathsep.join([str(classes), cp]),
                  'org.junit.runner.JUnitCore',
-                 *['io.github.luckolite.interpreter.' + p.stem for p in sources]]
+                 *['io.github.luckolite.interpreter.' + p.stem for p in tests]]
     runner_list = ROOT / 'build/test-runner-args.txt'
     runner_list.write_text('\n'.join('"' + argument.replace('\\', '\\\\').replace('"', '\\"') + '"'
                                     for argument in arguments), encoding='utf-8')

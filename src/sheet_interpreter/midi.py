@@ -3,9 +3,61 @@
 """Standard MIDI preview writer; no synthesizer, sound bank or external dependency."""
 import math
 import struct
+from dataclasses import dataclass
 from pathlib import Path
 from .boundary_ties import resolve_boundary_ties
 from .navigation import project_navigation
+from .typed_events import event_kind, validate_unpitched
+from .typed_performance import unpitched_intervals
+
+
+@dataclass(frozen=True)
+class UnpitchedMidiPreview:
+    """Explicit caller choice of percussion address, velocity and maximum gate in quarter beats.
+
+    Channel 10 is reserved for this preview. Its note number is a percussion
+    address, not the source note's pitch or a recovered instrument identity.
+    No default mapping is provided. Written notation and score time stay intact.
+    """
+    percussion_note: int
+    velocity: int
+    gate_beats: float
+
+    def __post_init__(self):
+        if type(self.percussion_note) is not int or not 0 <= self.percussion_note <= 127:
+            raise ValueError('Percussion preview address must be an integer 0..127')
+        if type(self.velocity) is not int or not 1 <= self.velocity <= 127:
+            raise ValueError('Percussion preview velocity must be an integer 1..127')
+        if (type(self.gate_beats) not in (int, float) or not math.isfinite(self.gate_beats)
+                or not 0 < self.gate_beats <= 128):
+            raise ValueError('Percussion preview gate must be finite and positive, at most 128 quarter beats')
+
+
+def _check_unpitched_clock(document, policy):
+    unpitched = False
+    for page in document['pages']:
+        for note in page['events']:
+            event_kind(note)
+            validate_unpitched(note)
+            if event_kind(note) != 'UNPITCHED':
+                continue
+            unpitched = True
+            start, duration, extent = note['startBeat'], note['durationBeats'], page['totalBeats']
+            if (any(type(value) not in (int, float) or not math.isfinite(value)
+                    for value in (start, duration, extent)) or start < 0 or duration <= 0
+                    or start + duration > extent + 1e-6):
+                raise ValueError('An unpitched MIDI preview needs a finite span inside its page timeline')
+    if unpitched:
+        if not isinstance(policy, UnpitchedMidiPreview):
+            raise ValueError('Unpitched MIDI export needs an explicit UnpitchedMidiPreview policy')
+        for page in document['pages']:
+            beats, extent = page['measureBeats'], page['totalBeats']
+            if (any(type(value) not in (int, float) or not math.isfinite(value)
+                    or not 0 < value <= 128 for value in beats)
+                    or type(extent) not in (int, float) or not math.isfinite(extent)
+                    or not math.isclose(sum(beats), extent, abs_tol=1e-6)):
+                raise ValueError('Unpitched MIDI page extent must agree with finite written measures')
+    return unpitched
 
 
 def variable_length(value):
@@ -19,8 +71,9 @@ def variable_length(value):
     return bytes(out)
 
 
-def performance_events(document, bpm=120):
-    """Shared MIDI-performance clock/messages for notation and audio previews."""
+def performed_document(document, bpm=120):
+    """Resolve the existing source/Java clocks without assigning a backend identity."""
+    unpitched_intervals(document)
     document = resolve_boundary_ties(document)
     if not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError("Initial BPM must be 15..400 quarter notes per minute")
@@ -30,11 +83,36 @@ def performance_events(document, bpm=120):
         document = project_navigation(document, bpm)
     else:
         document, bpm = expressive_document, 120
+    return document, bpm, expressive_document is not None
+
+
+def performance_events(document, bpm=120, *, unpitched_preview=None):
+    """Shared MIDI-performance clock/messages for notation and audio previews."""
+    _check_unpitched_clock(document, unpitched_preview)
+    document, bpm, expressive_document = performed_document(document, bpm)
+    return _performance_events_prepared(document, bpm, expressive_document, unpitched_preview)
+
+
+def _performance_events_prepared(document, bpm, expressive_document, unpitched_preview=None):
     ppq = 480
     tempo = round(60_000_000 / bpm)
     events = [(0, 0, b"\xff\x51\x03" + tempo.to_bytes(3, "big"))]
     offset = 0.0
     tones = []
+    percussion = []
+    for interval in unpitched_intervals(document):
+        note = interval['note']
+        start = max(0, round(interval['startBeat']*ppq))
+        written_end = max(start+1, round(interval['endBeat']*ppq))
+        dead = (note.get('guitarEffect') or {}).get('type') == 'dead'
+        gate = min(unpitched_preview.gate_beats, (interval['endBeat']-interval['startBeat'])*(.12 if dead else 1))
+        end = min(written_end, start+max(1, round(gate*ppq)))
+        attack = note.get('performanceAttack')
+        reference = max(attack['gain'], attack['settledGain']) if attack else 1.
+        gain = reference*(.25 if dead else 1)
+        velocity = 0 if gain == 0 else max(1, min(127, round(unpitched_preview.velocity*gain)))
+        if velocity:
+            percussion.append((start, end, unpitched_preview.percussion_note, velocity, attack, reference))
     previous = {}
     for page in document["pages"]:
         starts = [0.0]
@@ -46,6 +124,8 @@ def performance_events(document, bpm=120):
             micros = round(60_000_000 / change["bpm"])
             events.append((round(beat * ppq), 0, b"\xff\x51\x03" + micros.to_bytes(3, "big")))
         for note in sorted(page["events"], key=lambda n: n["startBeat"]):
+            if event_kind(note) == 'UNPITCHED':
+                continue
             pitch = note["midi"]
             if not 0 <= pitch <= 127:
                 continue
@@ -137,7 +217,7 @@ def performance_events(document, bpm=120):
                 gain = attack['gain']+(attack['settledGain']-attack['gain'])*index/6
                 expression = max(0, min(127, round(127*gain/attack['gain'])))
                 events.append((tick, 2, bytes([0xB0 | channel, 11, expression])))
-        elif expressive_document is not None:
+        elif expressive_document:
             # Exclusive attack channels may be reused after their release.
             events.append((start, 2, bytes([0xB0 | channel, 11, 127])))
         sounding_end = start + max(1, round((end-start) * (.12 if kind == "dead" else .45 if effect.get("palmMute") else 1)))
@@ -172,6 +252,29 @@ def performance_events(document, bpm=120):
             if part == control['staffCount']:
                 events.append((control['tick'], 1 if control['value'] == 0 else 2,
                                bytes([0xb0 | channel, 64, control['value']])))
+    # The selected percussion address is fixed. Overlap cannot retain independent
+    # attacks reliably on one MIDI channel/address, so require a routing decision.
+    previous_end = -1
+    percussion_expression = 127
+    for start, end, address, velocity, attack, reference in sorted(percussion, key=lambda value: value[:4]):
+        if start < previous_end:
+            raise ValueError('Overlapping unpitched attacks require an explicit multi-address percussion routing policy')
+        previous_end = end
+        if attack is None:
+            if percussion_expression != 127:
+                events.append((start, 2, bytes([0xb9, 11, 127])))
+                percussion_expression = 127
+        else:
+            ramp = max(1, round(attack['seconds']*ppq*bpm/60))
+            for index in range(7):
+                tick = start+round(ramp*index/6)
+                if tick >= end:
+                    break
+                gain = attack['gain']+(attack['settledGain']-attack['gain'])*index/6
+                percussion_expression = max(0,min(127,round(127*gain/reference)))
+                events.append((tick, 2, bytes([0xb9, 11, percussion_expression])))
+        events.extend([(start, 3, bytes([0x99, address, velocity])),
+                       (end, 0, bytes([0x89, address, 0]))])
     ordered = sorted(events, key=lambda x: (x[0], x[1]))
     return ppq, ordered, max(ordered[-1][0], round(offset * ppq))
 
@@ -193,8 +296,8 @@ def white_key_gliss(start, end, source, target):
     return result
 
 
-def write_midi(document, path, bpm=120):
-    ppq, events, end_tick = performance_events(document, bpm)
+def write_midi(document, path, bpm=120, *, unpitched_preview=None):
+    ppq, events, end_tick = performance_events(document, bpm, unpitched_preview=unpitched_preview)
     track = bytearray()
     last = 0
     for tick, _, message in events:

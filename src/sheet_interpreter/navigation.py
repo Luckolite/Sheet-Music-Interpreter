@@ -12,6 +12,7 @@ from bisect import bisect_left, bisect_right
 from pathlib import Path
 from .runtime import java_executable
 from .semantic_wire import encode
+from .typed_events import event_kind, validate_unpitched
 
 
 def _bridge(data):
@@ -39,6 +40,9 @@ def _route(beats, directions):
 
 def project_navigation(document, bpm=120):
     pages=document['pages']
+    for page in pages:
+        for note in page['events']:
+            validate_unpitched(note)
     if not any(page.get('score', {}).get('playbackDirections') for page in pages):
         return document
     if len(pages)<=1:
@@ -77,6 +81,7 @@ def _project_one(document, bpm=120, source_page_offset=0):
                 row['details']['end']['measureIndex'] += len(beats)
             directions.append(row)
         for index, note in enumerate(page['events']):
+            validate_unpitched(note)
             physical_page=page.get('sourcePage',page_index+source_page_offset)
             row = dict(note, startBeat=offset+note['startBeat'], sourceEventId=f'note:{physical_page}:{index}')
             if (not math.isfinite(row['startBeat']) or not math.isfinite(row['durationBeats'])
@@ -114,6 +119,8 @@ def _project_one(document, bpm=120, source_page_offset=0):
     output_notes, output_tempos, spans = [], [], []
     prior_end = None
     run_predecessors = {}
+    unpitched_visits = {}
+    run_visit = None
     for occurrence in route['occurrences']:
         first, last = occurrence['start'], occurrence['end']
         source_start = starts[first['measureIndex']]+first['quarterBeatOffset']
@@ -123,10 +130,22 @@ def _project_one(document, bpm=120, source_page_offset=0):
         contiguous = prior_end is not None and math.isclose(prior_end, source_start, abs_tol=1e-8)
         if not contiguous:
             run_predecessors.clear()
+            unpitched_visits.clear()
+            run_visit = occurrence["occurrenceId"]
         for note in sorted(note_buckets[first['measureIndex']], key=lambda row: row['startBeat']):
             onset, finish = note['startBeat'], note['startBeat']+note['durationBeats']
             a, b = max(onset, source_start), min(finish, source_end)
             if b <= a: continue
+            if event_kind(note) == 'UNPITCHED':
+                owner = note['sourceEventId'] + '@' + str(run_visit)
+                previous_end = unpitched_visits.get(owner)
+                continuation = contiguous and previous_end is not None and math.isclose(previous_end, a, abs_tol=1e-8)
+                output_notes.append(dict(note, measureIndex=index, startBeat=performed+a-source_start,
+                    durationBeats=b-a, tiedFromPrevious=False, boundaryTies=0,
+                    occurrenceId=occurrence['occurrenceId'], _unpitchedAttackId=owner,
+                    _unpitchedContinuation=continuation, clippedEntry=onset < a))
+                unpitched_visits[owner] = b
+                continue
             tied = bool(note['tiedFromPrevious'])
             if onset < source_start: tied = contiguous
             elif tied:

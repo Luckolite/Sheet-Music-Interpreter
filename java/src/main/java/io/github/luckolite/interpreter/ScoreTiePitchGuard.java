@@ -53,7 +53,8 @@ final class ScoreTiePitchGuard {
         PitchCache pitches = null;
         for (int i = 0; i < notes.size(); i++) {
             ScoreNoteEvent current = notes.get(i);
-            if (!current.tiedFromPrevious()) continue;
+            if (current.kind() != ScoreNoteEvent.Kind.PITCHED || !current.tiedFromPrevious())
+                continue;
             if (pitches == null) pitches = new PitchCache(keys, notes.size());
             boolean changed = explicitPitchChange(notes, i, pitches);
             if (contextOnly && !changed) continue;
@@ -64,7 +65,8 @@ final class ScoreTiePitchGuard {
             for (int j = i - 1; !changed && pitch != Integer.MIN_VALUE && j >= 0; j--) {
                 ScoreNoteEvent earlier = notes.get(j);
                 if (current.measureIndex() - earlier.measureIndex() > 1) break;
-                if (!sameContinuingStaff(earlier, current)) continue;
+                if (earlier.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || !sameContinuingStaff(earlier, current)) continue;
                 if (earlier.measureIndex() == current.measureIndex()
                         && earlier.positionInMeasure() >= current.positionInMeasure() - .018f)
                     continue;
@@ -99,7 +101,8 @@ final class ScoreTiePitchGuard {
                                     current.octaveShift(),
                                     current.boundaryTies(),
                                     current.tupletNormalNotes())
-                            .withStemDirection(current.stemDirection()));
+                            .withStemDirection(current.stemDirection())
+                            .withKind(current.kind()));
         }
         return result == null ? notes : result;
     }
@@ -113,7 +116,8 @@ final class ScoreTiePitchGuard {
         for (int j = index - 1; j >= 0; j--) {
             ScoreNoteEvent earlier = notes.get(j);
             if (current.measureIndex() - earlier.measureIndex() > 1) break;
-            if (!sameContinuingStaff(earlier, current)
+            if (earlier.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || !sameContinuingStaff(earlier, current)
                     || earlier.diatonicPitchIdentity() != current.diatonicPitchIdentity()) continue;
             if (earlier.measureIndex() == current.measureIndex()
                     && earlier.positionInMeasure() >= current.positionInMeasure() - .018f) continue;
@@ -167,7 +171,9 @@ final class ScoreTiePitchGuard {
     }
 
     private static int midi(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
-        if (note.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN) return Integer.MIN_VALUE;
+        if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                || note.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN)
+            return Integer.MIN_VALUE;
         int fifths = Integer.MIN_VALUE;
         for (ScoreKeyChange key : keys)
             if (key.measureIndex() <= note.measureIndex()) fifths = key.fifths();

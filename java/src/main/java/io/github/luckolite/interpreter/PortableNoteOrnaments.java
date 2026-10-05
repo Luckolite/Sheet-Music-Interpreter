@@ -119,7 +119,8 @@ final class PortableNoteOrnaments {
         }
         int[] marks = new int[notes.size()];
         for (var found : detect(recognizer, gray, w, h, staffs, anchors, trills))
-            marks[found.noteIndex()] |= found.marks();
+            if (notes.get(found.noteIndex()).kind() == ScoreNoteEvent.Kind.PITCHED)
+                marks[found.noteIndex()] |= found.marks();
         var slideStaffs =
                 staffs.stream()
                         .map(s -> new NoteSlideDetector.Staff(s.top(), s.bottom(), s.gap()))
@@ -138,7 +139,9 @@ final class PortableNoteOrnaments {
                         ? WaveGlissDetector.detect(gray, w, h, slideStaffs, slideHeads)
                         : WaveGlissDetector.detectWithRemovedStaffLines(
                                 w, h, slideHeads, sharedClean.clone()))
-            if (marks[gliss.sourceIndex()] == 0
+            if (notes.get(gliss.sourceIndex()).kind() == ScoreNoteEvent.Kind.PITCHED
+                    && notes.get(gliss.targetIndex()).kind() == ScoreNoteEvent.Kind.PITCHED
+                    && marks[gliss.sourceIndex()] == 0
                     && NoteOrnament.type(notes.get(gliss.sourceIndex()).articulations()) == 0)
                 marks[gliss.sourceIndex()] = NoteOrnament.GLISSANDO;
         for (var slide :
@@ -146,7 +149,10 @@ final class PortableNoteOrnaments {
                         ? NoteSlideDetector.detect(gray, w, h, slideStaffs, slideHeads)
                         : NoteSlideDetector.detectWithRemovedStaffLines(
                                 gray, w, h, slideStaffs, slideHeads, sharedClean))
-            if (marks[slide.noteIndex()] == 0)
+            if (notes.get(slide.noteIndex()).kind() == ScoreNoteEvent.Kind.PITCHED
+                    && (!slide.connected()
+                            || pitchedPreviousAnchor(anchors, notes, slide.noteIndex()))
+                    && marks[slide.noteIndex()] == 0)
                 marks[slide.noteIndex()] =
                         NoteOrnament.SLIDE
                                 | (slide.direction() < 0 ? NoteOrnament.FROM_ABOVE : 0)
@@ -171,7 +177,7 @@ final class PortableNoteOrnaments {
                         owner = i;
                     }
                 }
-                if (owner < 0) continue;
+                if (owner < 0 || notes.get(owner).kind() != ScoreNoteEvent.Kind.PITCHED) continue;
                 var n = anchors.get(owner);
                 Anchor prior = null;
                 for (var a : anchors)
@@ -181,6 +187,7 @@ final class PortableNoteOrnaments {
                             && a.x < n.x - n.gap
                             && (prior == null || a.x > prior.x)) prior = a;
                 if (prior != null
+                        && notes.get(anchors.indexOf(prior)).kind() == ScoreNoteEvent.Kind.PITCHED
                         && Math.abs(prior.y - n.y) > n.gap * .25f
                         && marks[owner] == 0
                         && NoteSlideDetector.connection(
@@ -198,7 +205,8 @@ final class PortableNoteOrnaments {
                     // Remove only heads inside this confirmed, note-owned instruction word.
                     for (int i = 0; i < anchors.size(); i++) {
                         var a = anchors.get(i);
-                        if (i != owner
+                        if (notes.get(i).kind() == ScoreNoteEvent.Kind.PITCHED
+                                && i != owner
                                 && a.staff == n.staff
                                 && a.x > left
                                 && a.x < right
@@ -221,6 +229,28 @@ final class PortableNoteOrnaments {
             if (!textHeads[i])
                 result.add(notes.get(i).withArticulations(notes.get(i).articulations() | marks[i]));
         return List.copyOf(result);
+    }
+
+    private static boolean pitchedPreviousAnchor(
+            List<Anchor> anchors, List<ScoreNoteEvent> notes, int targetIndex) {
+        Anchor target = anchors.get(targetIndex);
+        float latest = -Float.MAX_VALUE;
+        for (var head : anchors)
+            if (head.staff == target.staff
+                    && head.measure == target.measure
+                    && head.x < target.x - target.gap * .35f) latest = Math.max(latest, head.x);
+        int source = -1;
+        for (int i = 0; i < anchors.size(); i++) {
+            var head = anchors.get(i);
+            if (head.staff == target.staff
+                    && head.measure == target.measure
+                    && head.x < target.x - target.gap * .35f
+                    && latest - head.x <= target.gap * .35f) {
+                if (source >= 0) return false;
+                source = i;
+            }
+        }
+        return source >= 0 && notes.get(source).kind() == ScoreNoteEvent.Kind.PITCHED;
     }
 
     static List<Found> detect(

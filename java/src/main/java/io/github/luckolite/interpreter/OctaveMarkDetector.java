@@ -84,7 +84,8 @@ final class OctaveMarkDetector {
                 // An isolated octave direction applies to the nearest attack or chord only.
                 float first = Float.POSITIVE_INFINITY;
                 for (var note : notes)
-                    if (onStaff(note, owner, staffs, height)) {
+                    if (note.kind() == ScoreNoteEvent.Kind.PITCHED
+                            && onStaff(note, owner, staffs, height)) {
                         float x = x(note, measures, width);
                         if (x >= left && x <= textRight + gap * 1.5f) first = Math.min(first, x);
                     }
@@ -119,6 +120,10 @@ final class OctaveMarkDetector {
         }
         List<ScoreNoteEvent> result = new ArrayList<>(notes.size());
         for (var note : notes) {
+            if (note.kind() != ScoreNoteEvent.Kind.PITCHED) {
+                result.add(note);
+                continue;
+            }
             float x = x(note, measures, width);
             Span selected = null;
             for (var span : spans)

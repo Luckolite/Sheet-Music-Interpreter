@@ -177,12 +177,12 @@
     },
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
-      "source_sha256": "c13b2c13ff708bac4e79024928cee8ac8914ff8eef7e0dd6e7ac42560460ba30",
+      "source_sha256": "d3e140badce5b48ae7896872f6a1bff381ec98e308284128276d17c7496a3748",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "2578ad568029b4a25be1aceae24e367c7e101833cecfa0634aa337045d703750",
+      "source_normalized_sha256": "605d829e945b97e721e9e57435ac7e0d3c24d62f69e6f7c91f3b561ca5412914",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "NativeDecoderStages.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderStages.java",
@@ -314,13 +314,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "261f54b40e201a8c66c756ef6eb36ae6f37c69c5923887318b7125c9a654cdb8",
+      "source_sha256": "21b209e4edce09c9a01b883fac35efd5c4aebaf7725a676614f76f22c5503985",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls. Inherited tie accidental resolution reads private lazily initialized sharp/flat order arrays instead of allocating a seven-element array per lookup. Key iteration, last applicable key selection, explicit/unknown-key early returns, diatonic identity, floorMod/min/abs and sign arithmetic remain in their original order; arrays are only indexed locally and never escape. Four existing tie/courtesy/slur cases plus one original six-case sharp/flat musical and caller-preservation regression passed per app and standalone source (10 focused tests). No model, dependencies, record layout or private score data changed. Metadata-only reconstructions preserve every unchanged current note field through final-rest, accidental-carry and tie copies. Original synthetic actual accidental/grace method controls; recognition and pitch/tie decisions remain unchanged.",
-      "source_normalized_sha256": "261f54b40e201a8c66c756ef6eb36ae6f37c69c5923887318b7125c9a654cdb8",
+      "review_note": "Reviewed global open-chord shaft and thick-beam dot guards, and physical attached-voice ownership of real quarter rests. Package and diagnostic adapter only; original procedural positive/negative controls. Inherited tie accidental resolution reads private lazily initialized sharp/flat order arrays instead of allocating a seven-element array per lookup. Key iteration, last applicable key selection, explicit/unknown-key early returns, diatonic identity, floorMod/min/abs and sign arithmetic remain in their original order; arrays are only indexed locally and never escape. Four existing tie/courtesy/slur cases plus one original six-case sharp/flat musical and caller-preservation regression passed per app and standalone source (10 focused tests). No model, dependencies, record layout or private score data changed. Metadata-only reconstructions preserve every unchanged current note field through final-rest, accidental-carry and tie copies. Original synthetic actual accidental/grace method controls; recognition and pitch/tie decisions remain unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "source_normalized_sha256": "21b209e4edce09c9a01b883fac35efd5c4aebaf7725a676614f76f22c5503985",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes."
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -371,21 +371,21 @@
     },
     "ScoreNoteEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteEvent.java",
-      "source_sha256": "e782847f5660895a759c5ea27b7071b665d339733dd04f150dd1c080fdb7038b",
+      "source_sha256": "65d7be027336fbad40a36c8703aab00ac52a60741398160b4eb74b3617738889",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f860e81dffad7ce8ec2aeb92492525d4ddd81413bd336bdcc6e635d9ca7c58c8",
+      "source_normalized_sha256": "0d19ffec5dcfa6cea428d9c44df94e981f13a0fa638e09375c8143e76abc7b07",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "ScoreNoteTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteTiming.java",
-      "source_sha256": "6e9f561f653e184f407db3945f497034de72195354311a63cc227c1d89a4c8df",
+      "source_sha256": "0ff456b30ae29946bda84a6cc08cfc468551ec4155b6ac2dbd727434ea34814a",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Reviewed exact-meter continuation of an unnumbered beamed tail after two complete printed triplet groups and a held opening. Original positive and rejection controls; standalone API preserved.",
-      "source_normalized_sha256": "6e9f561f653e184f407db3945f497034de72195354311a63cc227c1d89a4c8df",
+      "source_normalized_sha256": "0ff456b30ae29946bda84a6cc08cfc468551ec4155b6ac2dbd727434ea34814a",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
@@ -411,12 +411,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "66a8e43832fd8ae58e67538451c4c57da2338dfe53e1dea51a51a0a43c410e8d",
+      "source_sha256": "c0185fcdc16acb1a701c40137641ef06efada2a275f7504d168f1232ceb7fe36",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry. Rest staff-position reconstruction preserves octave shift and boundary-tie evidence while retaining the existing rhythm, stem and tuplet metadata. No new rest or pitch decisions; unchanged detector controls remain in the full regression suite.",
-      "source_normalized_sha256": "66a8e43832fd8ae58e67538451c4c57da2338dfe53e1dea51a51a0a43c410e8d",
-      "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source",
-      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
+      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry. Rest staff-position reconstruction preserves octave shift and boundary-tie evidence while retaining the existing rhythm, stem and tuplet metadata. No new rest or pitch decisions; unchanged detector controls remain in the full regression suite. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "source_normalized_sha256": "c0185fcdc16acb1a701c40137641ef06efada2a275f7504d168f1232ceb7fe36",
+      "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "TempoChangeDetector.java": {
@@ -428,12 +428,12 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "070de13394794aecfdaa8a8399cb896a2d86dc9283524b5c2d1c5298b5bf2413",
+      "source_sha256": "328a2df98a97abb98e984cb1cccdcae744293d4c508daf8781dbea13ea5ba9e3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "070de13394794aecfdaa8a8399cb896a2d86dc9283524b5c2d1c5298b5bf2413",
-      "review_note": "Reviewed physical beam/numeral ownership across adjacent systems and uneven printed groups, plus rest-only displaced attack-column tolerance. Original procedural geometry controls; sounding-only grouping remains unchanged.",
+      "source_normalized_sha256": "328a2df98a97abb98e984cb1cccdcae744293d4c508daf8781dbea13ea5ba9e3",
+      "review_note": "Reviewed physical beam/numeral ownership across adjacent systems and uneven printed groups, plus rest-only displaced attack-column tolerance. Original procedural geometry controls; sounding-only grouping remains unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -480,12 +480,12 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "d904174f2593bcabbcc749168121596b5009d36521b00c3893c970ca05a858e3",
+      "source_sha256": "2be16953636a4b29006177c2afc48136e15afd4c2aac2be2a6d3c1cc0bacd474",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "63d7f5cf429679386812282c6be20ec3e9f5d74dc581614c4fa19d6aee48fb05",
-      "review_note": "Apply reuses its already contrasted raster in printed-word detection; raw printedWords still prepares input. Tile contrast is pixel-idempotent and the detection closure is read-only. Existing octave tests plus original partial-edge byte golden. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "source_normalized_sha256": "e66d5ac1eb5542ef928f789320e80ea88b7ccff2dfcc850939db54d1b91571fb",
+      "review_note": "Apply reuses its already contrasted raster in printed-word detection; raw printedWords still prepares input. Tile contrast is pixel-idempotent and the detection closure is read-only. Existing octave tests plus original partial-edge byte golden. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -493,7 +493,7 @@
       "source_normalized_sha256": "818aef8c0321ce8689808cefa469103237312cf1b59d6a26c50b8e9de5c81848",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Original rendered templates packed once into immutable long words; per-window bilinear/nearest masks and exact intersection/union counts use Long.bitCount. Raster thresholds, ratio penalties, score order and rejection margins unchanged. Original generated224-case regression and700-case differential benchmark, no private images, model change, or dependencies.",
-      "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-word-bank-842-source"
+      "reviewed_app_snapshot": "music-sheets-word-bank-842-source (retained provenance: public4af945db, 2026-10-05)"
     },
     "MeterOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOcrEvidence.java",
@@ -528,12 +528,12 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "3bbef83948c1b346a3d9b9a26210b759c583cb93ac887fab33b05a33dbbbac56",
+      "source_sha256": "49c6e9c567c614686c53205307bab9d541b9191abb7fc2eeca265e39a1e9d05c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a9d6ecd107434d79027cb9c9507cb2f9611f7c914dfae313c274870016853416",
+      "source_normalized_sha256": "3b4ccf815bd46f219388923fe65650ca867f07d78e084b8d13881cc4d8c11d34",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache.",
-      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files."
+      "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
@@ -549,12 +549,12 @@
     },
     "ArtificialHarmonics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
-      "source_sha256": "fcbecdae245c148d0400c51eda6e56fed8cd97eccb65b68305973bcc0e871d44",
+      "source_sha256": "a60d8c6afb87c77cbb381a453a88078b78d12415da3ad6bd89c13b49ff2196c5",
       "reviewed_app_commit": "abdad95ab53c8481049a8f1c7b25442779a46404",
-      "source_normalized_sha256": "394ebbbeee4744898214d4137f45b0495d952a094a55ce61fea6ca9093fded75",
+      "source_normalized_sha256": "e50c0450cda1fe717e119f7244383167381e4560c2779e9c6dd769a3d4c3155c",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
-      "review_note": "Private held global Artificial harmonics fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged."
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Private held global Artificial harmonics fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
     },
     "ParallelBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelBeamTip.java",
@@ -621,12 +621,12 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "04625b352d374b6e51a80ac552a4dffc2b4ec41ef02e6e998e06f31d5754b5c1",
+      "source_sha256": "38dc4053f92b48c48c18a5d89ab9da8f16f47c21b1447e3db1b607fe378e977c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "c26d526b717d3a092ef63e06ef9e6884bdac408d919d89dc51e4983846dd85a9",
+      "source_normalized_sha256": "ce744cb787ba70766681792b9e27def354d57bfd3731ddc39d35279765aa0030",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "ScoreTempoSelection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/playback/ScoreTempoSelection.java",
@@ -831,11 +831,11 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "8e1868caacdefe89c8a40b14da468199a815902095662ad01c39f647a167e699",
+      "source_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "8e1868caacdefe89c8a40b14da468199a815902095662ad01c39f647a167e699",
-      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889",
-      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact.",
+      "source_normalized_sha256": "6d94e64a6aa4a441a303cddacf7bd98e3143132003af2f94f33d434166ea39e5",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base."
     },
     "FaintSharpInk.java": {
@@ -922,16 +922,16 @@
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "source_normalized_sha256": "a978cfda45e48342b7d6f8b4428b8705d8880a52f37f6b9506208167f468df7e",
       "review_note": "Reviewed unreachable sloped-rule coverage rejection; original thresholds, rounding, and deletion order unchanged. Package-only standalone adapter, original synthetic parity regression, no private scores, new dependencies or model changes. Immutable app snapshot based on released 840.",
-      "reviewed_app_snapshot": "F:\\Codex-builds\\music-sheets-rest-tuplet-841-source"
+      "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)"
     },
     "ScoreNavigationProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationProjection.java",
-      "source_sha256": "5b6ef07f50b6a8be4bd200fee8817147830c04d0240e11a84c324250e2ab5f6d",
+      "source_sha256": "04e10d035816d2d4bdec8bde8c7d9879881cd3149d903ae45f324d2b5ceb4a24",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a9797c55126d4babb13cfa6438e5171fa462dc90c7240c00522a51a09283920c",
+      "source_normalized_sha256": "f47224fb9227db36ac0e1100e974f83253336feca2ec567e075e4ee645a3358e",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
@@ -1020,12 +1020,12 @@
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
-      "source_sha256": "5d87cc2291c783406c20cf5e06b5cac33ae1c952eec9540bdcc7398fa5a7eb80",
+      "source_sha256": "3241e848eeeab9252ddf3ba4f6883c0df09935a4992cdadffa040495eb72efc6",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "9e8384421d33302a72be37ce607c9a7544303bf24d242a0f8e23675142973e65",
+      "source_normalized_sha256": "fe089fb5017708a371cffc600f8af98592c0ab2c455beee998b14857eece6bd2",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes.",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit"
+      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "DynamicStemCrop.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicStemCrop.java",
@@ -1139,10 +1139,10 @@
     },
     "CrossRowPortamento.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossRowPortamento.java",
-      "source_sha256": "2ba9a604531727f2e7f49b99cb062ac20bad0e566a91b690df80487f7113d0d3",
-      "source_normalized_sha256": "2ba9a604531727f2e7f49b99cb062ac20bad0e566a91b690df80487f7113d0d3",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "source_sha256": "c738b5a44a0d4f995f8faa98c35c73e904dfd87dacd39144cf5b0fa621709d0d",
+      "source_normalized_sha256": "c738b5a44a0d4f995f8faa98c35c73e904dfd87dacd39144cf5b0fa621709d0d",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "CurvedExitInk.java": {
@@ -1198,10 +1198,10 @@
     },
     "SlidePitchSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlidePitchSource.java",
-      "source_sha256": "47c2d98c4de852aa8a4567bb40e1d35f33218a848747145dd5ce9db99265e44b",
-      "source_normalized_sha256": "47c2d98c4de852aa8a4567bb40e1d35f33218a848747145dd5ce9db99265e44b",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "0031158aa26ab7aae82f88d4f56361042d19ae0935319dcf0e64b915bf192cca",
+      "source_normalized_sha256": "0031158aa26ab7aae82f88d4f56361042d19ae0935319dcf0e64b915bf192cca",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
     },
     "ExactWhiteTileInput.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExactWhiteTileInput.java",
@@ -1236,11 +1236,12 @@
     },
     "GlissPitchTarget.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlissPitchTarget.java",
-      "source_sha256": "96a57452f9a21e01e00eb966955909c2e4d9dda79bbaf3d0648abfe77c4fc7c4",
-      "source_normalized_sha256": "96a57452f9a21e01e00eb966955909c2e4d9dda79bbaf3d0648abfe77c4fc7c4",
+      "source_sha256": "e2f5be1332e9f9c8777dd35d91f44467b03c17174116d807fe2d64ff55675b8b",
+      "source_normalized_sha256": "e2f5be1332e9f9c8777dd35d91f44467b03c17174116d807fe2d64ff55675b8b",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit."
+      "review_note": "Global explicit tuplet ratio, octave endpoint ownership, branched-letter tie rejection and bounded wavy gliss recognition/performance. Original synthetic tests; JDK-only new helpers, unchanged models/dependencies. Source snapshot hash identifies the uncommitted app changes beyond the recorded base commit. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "GlissandoPerformance.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlissandoPerformance.java",
@@ -1390,11 +1391,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "fa23ee18f5e9b0005d4d2eaab8616ebb4272304cdb8c3a62b9c7b3792a17991b",
-      "source_normalized_sha256": "fa23ee18f5e9b0005d4d2eaab8616ebb4272304cdb8c3a62b9c7b3792a17991b",
+      "source_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
+      "source_normalized_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change.",
-      "reviewed_source_state": "Reviewed integrated recognition epoch3 on the recorded app base; guide281 record layout and protocol1 are unchanged."
+      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1448,19 +1449,19 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "661d52d5232b6b536725430aee6c84e89233af37271b942087927337e0780740",
-      "source_normalized_sha256": "48739455db7d530d1a8e309d85f3ed9750d73b84459b4f45ce53535f97c15a39",
+      "source_sha256": "ca017490dbb3ebfec63fef2c01d5a74d784f3b7bc081c6b3635218a99424479d",
+      "source_normalized_sha256": "2030e6709173403e1fb5e04990abaee2497ea9babadae65cb22bb95603708f03",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed integrated recognition epoch3 on the recorded app base; guide281 record layout and protocol1 are unchanged.",
-      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change."
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
-      "source_sha256": "8195d4cb0d321a511712e5d2d50bea22f297ecbe4c05c75cb38b7dbcfa3915d9",
-      "source_normalized_sha256": "8195d4cb0d321a511712e5d2d50bea22f297ecbe4c05c75cb38b7dbcfa3915d9",
+      "source_sha256": "76b76a0e168c9388e6b7bb6ec916be6217b5191bf03a1d9d72eaea1688bb4363",
+      "source_normalized_sha256": "76b76a0e168c9388e6b7bb6ec916be6217b5191bf03a1d9d72eaea1688bb4363",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed integrated retained-conversion and missing-grid source on the recorded app base; exact source hashes identify the uncommitted final changes.",
-      "review_note": "Pure-JDK package-only retained playback/written owner maps, explicit grace principals and per-measure edit invalidation. Original synthetic ownership, selection, grace deletion and malformed-clock controls; no coordinate-based reassignment or note/wire layout change."
+      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+      "review_note": "Pure-JDK package-only retained playback/written owner maps, explicit grace principals and per-measure edit invalidation. Original synthetic ownership, selection, grace deletion and malformed-clock controls; no coordinate-based reassignment or note/wire layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
     },
     "ScoreBoundaryClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryClock.java",
@@ -2207,5 +2208,43 @@
     "regression_path": "tests/test_source_note_index.py",
     "regression_methods": 6,
     "regression_sha256": "dc0280cef353124bdd0abcdb3543acb0d59feeaca2effee2cfb54e3f79c05820"
+  },
+  "typed_unpitched_review": {
+    "recordComponents": 23,
+    "analysisMarker": -23,
+    "guideLayout": 282,
+    "guideNoteBytes": 80,
+    "kindOffset": 79,
+    "recognitionRevision": 4,
+    "protocol": 1,
+    "mappedSources": [
+      "NativeDecoderWire.java",
+      "OmrScoreInterpreter.java",
+      "ScoreNoteEvent.java",
+      "ScoreNoteTiming.java",
+      "SixteenthRestDetector.java",
+      "TripletRhythmDetector.java",
+      "OctaveMarkDetector.java",
+      "TablatureDecoder.java",
+      "ArtificialHarmonics.java",
+      "ScoreTiePitchGuard.java",
+      "PortableNoteOrnaments.java",
+      "ScoreNavigationProjection.java",
+      "ScoreBoundaryTies.java",
+      "CrossRowPortamento.java",
+      "SlidePitchSource.java",
+      "GlissPitchTarget.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py",
+      "ScorePlacementMap.java"
+    ],
+    "helpersOutsideMap": [
+      "typed_events.py",
+      "typed_performance.py"
+    ],
+    "nativeWriterAdapter": "Relative semantic_wire import and Apache-2.0 notice only; original native/public byte controls.",
+    "licensing": "Original synthetic tests and authored source under Apache-2.0; no private scores, phone logs, signing material or model change.",
+    "unownedGracePolicy": "Reject raw U grace or an unpitched borrowed principal before timing/export/audio realization. Pitched grace clocks and session behavior remain unchanged.",
+    "sourceOwners": "Explicit kind/display/source-index selection; equal U records cannot establish another source occurrence or grace owner."
   }
 }

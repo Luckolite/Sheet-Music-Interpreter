@@ -873,7 +873,7 @@ final class SixteenthRestDetector {
                                     n.boundaryTies(),
                                     n.tupletNormalNotes())
                             .withStemDirection(n.stemDirection())
-                            .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes()));
+                            .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes()).withKind(n.kind()));
         }
         Staff rectified =
                 new Staff(

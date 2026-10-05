@@ -54,12 +54,39 @@ public final class UnpitchedCrossHeadTest {
         }
     }
 
+    private static void assertUnpitchedSource(ScoreNoteEvent note, int x, int y, Page page) {
+        assertEquals(ScoreNoteEvent.Kind.UNPITCHED, note.kind());
+        assertEquals(0, note.measureIndex());
+        assertEquals(0, note.staffIndex());
+        assertEquals(1, note.staffCount());
+        assertEquals((164 - y) / 8, note.staffStep());
+        assertEquals((x / (float) page.w - .04f) / (.96f - .04f), note.positionInMeasure(), 0);
+        assertEquals(y / (float) page.h, note.pageY(), 0);
+        assertEquals(-1, note.stemDirection());
+        assertEquals(1f, note.unbeamedDurationBeats(), 0);
+        assertFalse(note.tiedFromPrevious());
+        assertEquals(0, note.boundaryTies());
+        assertEquals(0, note.octaveShift());
+        assertThrows(IllegalStateException.class, note::diatonicPitchIdentity);
+    }
+
+    private static void assertMixedSourceAttacks(Page page, int crossY) {
+        var notes = page.notes();
+        assertEquals(2, notes.size());
+        assertUnpitchedSource(notes.get(0), 120, crossY, page);
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, notes.get(1).kind());
+        Page pitchedOnly = new Page();
+        pitchedOnly.oval(260, 156, false, 11, 7);
+        assertEquals(1, pitchedOnly.notes().size());
+        assertEquals(pitchedOnly.notes().get(0), notes.get(1));
+    }
+
     @Test
     public void partialCrossDoesNotBecomePitchedNote() {
         Page p = new Page();
         p.cross(120, 148, true);
         p.oval(260, 156, false, 11, 7);
-        assertEquals(1, p.notes().size());
+        assertMixedSourceAttacks(p, 148);
     }
 
     @Test
@@ -67,7 +94,7 @@ public final class UnpitchedCrossHeadTest {
         Page p = new Page();
         p.cross(120, 148, false);
         p.oval(260, 156, false, 11, 7);
-        assertEquals(1, p.notes().size());
+        assertMixedSourceAttacks(p, 148);
     }
 
     @Test
@@ -75,15 +102,19 @@ public final class UnpitchedCrossHeadTest {
         Page p = new Page();
         p.cross(120, 156, false);
         p.oval(260, 156, false, 11, 7);
-        assertEquals(1, p.notes().size());
+        assertMixedSourceAttacks(p, 156);
     }
 
     @Test
-    public void crossesWithoutPitchedNotesStaySilent() {
+    public void crossesWithoutPitchedNotesKeepIndependentUnpitchedAttacks() {
         Page p = new Page();
         p.cross(120, 148, true);
         p.cross(260, 148, true);
-        assertTrue(p.notes().isEmpty());
+        var notes = p.notes();
+        assertEquals(2, notes.size());
+        assertUnpitchedSource(notes.get(0), 120, 148, p);
+        assertUnpitchedSource(notes.get(1), 260, 148, p);
+        assertTrue(notes.get(0).positionInMeasure() < notes.get(1).positionInMeasure());
     }
 
     @Test
@@ -91,6 +122,7 @@ public final class UnpitchedCrossHeadTest {
         Page p = new Page();
         p.oval(120, 148, false, 11, 7);
         assertEquals(1, p.notes().size());
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, p.notes().get(0).kind());
     }
 
     @Test
@@ -98,6 +130,7 @@ public final class UnpitchedCrossHeadTest {
         Page p = new Page();
         p.oval(120, 148, true, 11, 7);
         assertEquals(1, p.notes().size());
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, p.notes().get(0).kind());
     }
 
     @Test
@@ -105,6 +138,7 @@ public final class UnpitchedCrossHeadTest {
         Page p = new Page();
         p.oval(120, 156, false, 7, 5);
         assertEquals(1, p.notes().size());
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, p.notes().get(0).kind());
     }
 
     @Test
@@ -115,7 +149,12 @@ public final class UnpitchedCrossHeadTest {
         b.cross(120, 148, true);
         b.oval(260, 156, false, 11, 7);
         var x = a.notes().get(0);
-        var y = b.notes().get(0);
+        assertEquals(1, a.notes().size());
+        assertEquals(2, b.notes().size());
+        assertUnpitchedSource(b.notes().get(0), 120, 148, b);
+        var y = b.notes().get(1);
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, x.kind());
+        assertEquals(x, y);
         assertEquals(x.staffStep(), y.staffStep());
         assertEquals(x.positionInMeasure(), y.positionInMeasure(), 0);
     }

@@ -10,6 +10,7 @@ public final class SlidePitchSource {
 
     public static ScoreNoteEvent previous(ScoreNoteEvent target, List<ScoreNoteEvent> notes) {
         if (target == null
+                || target.kind() != ScoreNoteEvent.Kind.PITCHED
                 || notes == null
                 || target.measureIndex() < 0
                 || !Float.isFinite(target.positionInMeasure())
@@ -32,7 +33,7 @@ public final class SlidePitchSource {
                             && candidate.positionInMeasure() > latest.positionInMeasure()))
                 latest = candidate;
         }
-        if (latest == null) return null;
+        if (latest == null || latest.kind() != ScoreNoteEvent.Kind.PITCHED) return null;
         for (ScoreNoteEvent candidate : notes) {
             if (candidate != latest
                     && samePart(target, candidate)

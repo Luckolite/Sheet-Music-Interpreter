@@ -914,12 +914,32 @@ final class OmrScoreInterpreter {
         }
         heads.removeAll(accentMarks);
         List<DetectedNote> detected = new ArrayList<>();
+        java.util.Set<CrossHeadIdentity> retainedCrossHeads = new java.util.HashSet<>();
         for (Component head : heads) {
             Staff staff = staffForHead(labels, gray, width, height, staffs, head);
             if (staff == null) continue;
             if (isHeavyRestCount(gray, width, height, head, staff)) continue;
-            if (!recoveredShadedChordHeads.contains(head)
-                    && isUnpitchedCrossHead(gray, width, height, head, staff)) continue;
+            Component crossHead =
+                    recoveredShadedChordHeads.contains(head)
+                            ? null
+                            : unpitchedCrossHead(gray, width, height, head, staff);
+            boolean unpitched = crossHead != null;
+            int[] crossStem =
+                    crossHead == null
+                            ? null
+                            : unpitchedStem(gray, width, height, crossHead, staff.gap);
+            if (unpitched) {
+                // Raw crossing diagonals establish the head, but a printed shaft must own it.
+                // A detached cross is not promoted into either a pitched or unpitched note.
+                if (crossStem == null) continue;
+                head = crossHead;
+                if (!retainedCrossHeads.add(
+                        new CrossHeadIdentity(
+                                Math.round(head.centerX),
+                                Math.round(head.centerY),
+                                staff.index,
+                                staff.count))) continue;
+            }
             // Heads far outside a staff require printed ledger lines. A nearby
             // text stroke can look like a stem, so a semantic stem alone cannot
             // promote a tempo digit or other text into an extreme pitch.
@@ -987,14 +1007,25 @@ final class OmrScoreInterpreter {
             int step = printedPitchStep(gray, width, height, head, localBottom, localGap);
             Staff rhythmStaff = beamStaffFrame(staff, localPitch, width);
             int beamCount =
-                    detectBeamCount(
-                            beamLabels,
-                            gray,
-                            width,
-                            height,
-                            paleChordRhythmHeads.getOrDefault(head, head),
-                            rhythmStaff,
-                            heads);
+                    unpitched
+                            ? detectBeamCount(
+                                    beamLabels,
+                                    gray,
+                                    width,
+                                    height,
+                                    head,
+                                    rhythmStaff,
+                                    false,
+                                    false,
+                                    crossStem)
+                            : detectBeamCount(
+                                    beamLabels,
+                                    gray,
+                                    width,
+                                    height,
+                                    paleChordRhythmHeads.getOrDefault(head, head),
+                                    rhythmStaff,
+                                    heads);
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, staff.gap, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
             if (tremolo[0] > 0)
@@ -1015,6 +1046,7 @@ final class OmrScoreInterpreter {
                 beamCount = recoveredCreaseGraces.get(head);
                 unbeamedDuration = 0;
             }
+            if (unpitched) unbeamedDuration = beamCount == 0 ? ScoreNoteEvent.DURATION_QUARTER : 0f;
             // Beamed notes cannot have open heads. If a staff line, slur, or artwork edge near
             // an open half/whole head looked like a beam, retain the notehead's stronger direct
             // evidence instead of collapsing the sustained passage into eighths/sixteenths.
@@ -1048,78 +1080,92 @@ final class OmrScoreInterpreter {
                 augmentationDots = 0;
             float accidentalGap =
                     accidentalGraces.contains(head) ? localPitch[1] * .65f : localPitch[1];
-            int writtenAccidental =
-                    detectWrittenAccidental(
-                            labels,
-                            width,
-                            height,
-                            localAccidentals,
-                            head,
-                            accidentalGap,
-                            heads,
-                            gray);
-            if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                    && (rawWideDoubleSharp(
-                                    gray, width, height, localAccidentals, head, accidentalGap)
-                            || rawCompactDoubleSharp(
-                                    gray, width, height, localAccidentals, head, accidentalGap)))
-                writtenAccidental = ScoreNoteEvent.ACCIDENTAL_DOUBLE_SHARP;
-            if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                            && rawSharpFromSeed(
-                                    gray, width, height, localAccidentals, head, accidentalGap)
-                    || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
-                            && completeRawSharpFromSeed(
-                                    gray, width, height, localAccidentals, head, accidentalGap))
-                writtenAccidental = ScoreNoteEvent.ACCIDENTAL_SHARP;
-            if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                    && rawFlatFromBowl(
-                            gray,
-                            width,
-                            height,
-                            withoutRecognizedSharps(
-                                    labels, width, height, localAccidentals, accidentalGap),
-                            head,
-                            accidentalGap)) writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FLAT;
-            if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                    && flatBowlUnderBeamedStem(
-                            labels, gray, width, height, localAccidentals, head, accidentalGap))
-                writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FLAT;
-            if ((writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                            || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
-                            || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_SHARP)
-                    && rawNaturalFromCrossbars(
-                            gray,
-                            width,
-                            height,
-                            localAccidentals,
-                            head,
-                            accidentalGap,
-                            writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
-                                    ? nearestFlatRightEdge(
-                                            labels,
-                                            width,
-                                            height,
-                                            localAccidentals,
-                                            head,
-                                            accidentalGap)
-                                    : -1)) writtenAccidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
-            if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
-                    && naturalFromUpperSpine(
-                            labels, gray, width, height, localAccidentals, head, accidentalGap))
-                writtenAccidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
+            int writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FROM_KEY;
+            if (!unpitched) {
+                writtenAccidental =
+                        detectWrittenAccidental(
+                                labels,
+                                width,
+                                height,
+                                localAccidentals,
+                                head,
+                                accidentalGap,
+                                heads,
+                                gray);
+                if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                        && (rawWideDoubleSharp(
+                                        gray, width, height, localAccidentals, head, accidentalGap)
+                                || rawCompactDoubleSharp(
+                                        gray,
+                                        width,
+                                        height,
+                                        localAccidentals,
+                                        head,
+                                        accidentalGap)))
+                    writtenAccidental = ScoreNoteEvent.ACCIDENTAL_DOUBLE_SHARP;
+                if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                                && rawSharpFromSeed(
+                                        gray, width, height, localAccidentals, head, accidentalGap)
+                        || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
+                                && completeRawSharpFromSeed(
+                                        gray, width, height, localAccidentals, head, accidentalGap))
+                    writtenAccidental = ScoreNoteEvent.ACCIDENTAL_SHARP;
+                if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                        && rawFlatFromBowl(
+                                gray,
+                                width,
+                                height,
+                                withoutRecognizedSharps(
+                                        labels, width, height, localAccidentals, accidentalGap),
+                                head,
+                                accidentalGap)) writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FLAT;
+                if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                        && flatBowlUnderBeamedStem(
+                                labels, gray, width, height, localAccidentals, head, accidentalGap))
+                    writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FLAT;
+                if ((writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                                || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
+                                || writtenAccidental == ScoreNoteEvent.ACCIDENTAL_SHARP)
+                        && rawNaturalFromCrossbars(
+                                gray,
+                                width,
+                                height,
+                                localAccidentals,
+                                head,
+                                accidentalGap,
+                                writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FLAT
+                                        ? nearestFlatRightEdge(
+                                                labels,
+                                                width,
+                                                height,
+                                                localAccidentals,
+                                                head,
+                                                accidentalGap)
+                                        : -1))
+                    writtenAccidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
+                if (writtenAccidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                        && naturalFromUpperSpine(
+                                labels, gray, width, height, localAccidentals, head, accidentalGap))
+                    writtenAccidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
+            }
             ScoreNoteEvent event =
                     new ScoreNoteEvent(
-                            measureIndex,
-                            clamp(position),
-                            Math.max(-32, Math.min(32, step)),
-                            staff.index,
-                            staff.count,
-                            clamp(normalizedY),
-                            false,
-                            augmentationDots,
-                            beamCount,
-                            writtenAccidental,
-                            unbeamedDuration);
+                                    measureIndex,
+                                    clamp(position),
+                                    Math.max(-32, Math.min(32, step)),
+                                    staff.index,
+                                    staff.count,
+                                    clamp(normalizedY),
+                                    false,
+                                    augmentationDots,
+                                    beamCount,
+                                    writtenAccidental,
+                                    unbeamedDuration)
+                            .withKind(
+                                    unpitched
+                                            ? ScoreNoteEvent.Kind.UNPITCHED
+                                            : ScoreNoteEvent.Kind.PITCHED)
+                            .withStemDirection(unpitched ? crossStem[2] : 0);
             if (accidentalGraces.contains(head))
                 event = event.withArticulations(event.articulations() | NoteOrnament.GRACE);
             if (recoveredCreaseGraces.containsKey(head))
@@ -1141,11 +1187,22 @@ final class OmrScoreInterpreter {
                             event.articulations() | recoveredArticulations.getOrDefault(head, 0));
             // A shared shaft between the two ovals is not on the combined component's
             // outer edge. Check the separate heads before accepting a whole-note guess.
-            List<Component> unison = sideBySideUnison(labels, gray, width, height, head, staff.gap);
+            List<Component> unison =
+                    unpitched
+                            ? List.of()
+                            : sideBySideUnison(labels, gray, width, height, head, staff.gap);
             if (!unison.isEmpty()) {
                 // Opposite stems share a printed pitch/attack but have separate durations.
                 for (int partIndex = 0; partIndex < unison.size(); partIndex++) {
                     Component part = unison.get(partIndex);
+                    Component partCross = unpitchedCrossHead(gray, width, height, part, staff);
+                    int[] partStem =
+                            partCross == null
+                                    ? null
+                                    : unpitchedStem(gray, width, height, partCross, staff.gap);
+                    if (partCross != null && partStem == null) continue;
+                    boolean partUnpitched = partCross != null;
+                    if (partUnpitched) part = partCross;
                     int partBeams =
                             partIndex == 0
                                     ? detectBeamCount(beamLabels, gray, width, height, part, staff)
@@ -1170,19 +1227,50 @@ final class OmrScoreInterpreter {
                                             width,
                                             height,
                                             true);
+                    if (partUnpitched) {
+                        partBeams =
+                                detectBeamCount(
+                                        beamLabels,
+                                        gray,
+                                        width,
+                                        height,
+                                        part,
+                                        rhythmStaff,
+                                        false,
+                                        false,
+                                        partStem);
+                        partDuration = partBeams == 0 ? ScoreNoteEvent.DURATION_QUARTER : 0f;
+                    }
                     var separate =
                             new ScoreNoteEvent(
-                                    measureIndex,
-                                    clamp(position),
-                                    step,
-                                    staff.index,
-                                    staff.count,
-                                    clamp(normalizedY),
-                                    false,
-                                    partDots,
-                                    partBeams,
-                                    writtenAccidental,
-                                    partDuration);
+                                            measureIndex,
+                                            clamp(position),
+                                            partUnpitched
+                                                    ? printedPitchStep(
+                                                            gray,
+                                                            width,
+                                                            height,
+                                                            part,
+                                                            localBottom,
+                                                            localGap)
+                                                    : step,
+                                            staff.index,
+                                            staff.count,
+                                            partUnpitched
+                                                    ? clamp(part.centerY / height)
+                                                    : clamp(normalizedY),
+                                            false,
+                                            partDots,
+                                            partBeams,
+                                            partUnpitched
+                                                    ? ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                                                    : writtenAccidental,
+                                            partDuration)
+                                    .withKind(
+                                            partUnpitched
+                                                    ? ScoreNoteEvent.Kind.UNPITCHED
+                                                    : ScoreNoteEvent.Kind.PITCHED)
+                                    .withStemDirection(partUnpitched ? partStem[2] : 0);
                     if (partTremolo[0] > 0)
                         separate =
                                 separate.withArticulations(
@@ -1191,26 +1279,54 @@ final class OmrScoreInterpreter {
                 }
                 continue;
             }
-            List<Component> seconds = sideBySideSeconds(labels, width, head, staff.gap);
+            List<Component> seconds =
+                    unpitched ? List.of() : sideBySideSeconds(labels, width, head, staff.gap);
             if (seconds.isEmpty()) detected.add(new DetectedNote(event, head, staff.gap));
             else
                 for (Component part : seconds) {
+                    Component partCross = unpitchedCrossHead(gray, width, height, part, staff);
+                    int[] partStem =
+                            partCross == null
+                                    ? null
+                                    : unpitchedStem(gray, width, height, partCross, staff.gap);
+                    if (partCross != null && partStem == null) continue;
+                    boolean partUnpitched = partCross != null;
+                    if (partUnpitched) part = partCross;
                     int partStep =
                             printedPitchStep(gray, width, height, part, localBottom, localGap);
                     int partAccidental =
-                            displacedSecondAccidental(
-                                    labels,
-                                    gray,
-                                    width,
-                                    height,
-                                    localAccidentals,
-                                    head,
-                                    part,
-                                    seconds,
-                                    accidentalGap,
-                                    heads);
+                            partUnpitched
+                                    ? ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                                    : displacedSecondAccidental(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            localAccidentals,
+                                            head,
+                                            part,
+                                            seconds,
+                                            accidentalGap,
+                                            heads);
                     // Displaced seconds share the stem/attack, despite their two horizontal
                     // centres.
+                    int partBeams =
+                            partUnpitched
+                                    ? detectBeamCount(
+                                            beamLabels,
+                                            gray,
+                                            width,
+                                            height,
+                                            part,
+                                            rhythmStaff,
+                                            false,
+                                            false,
+                                            partStem)
+                                    : beamCount;
+                    float partDuration =
+                            partUnpitched
+                                    ? (partBeams == 0 ? ScoreNoteEvent.DURATION_QUARTER : 0f)
+                                    : unbeamedDuration;
                     var chord =
                             new ScoreNoteEvent(
                                             measureIndex,
@@ -1221,9 +1337,14 @@ final class OmrScoreInterpreter {
                                             clamp(part.centerY / height),
                                             false,
                                             augmentationDots,
-                                            beamCount,
+                                            partBeams,
                                             partAccidental,
-                                            unbeamedDuration)
+                                            partDuration)
+                                    .withKind(
+                                            partUnpitched
+                                                    ? ScoreNoteEvent.Kind.UNPITCHED
+                                                    : ScoreNoteEvent.Kind.PITCHED)
+                                    .withStemDirection(partUnpitched ? partStem[2] : 0)
                                     .withArticulations(event.articulations());
                     detected.add(new DetectedNote(chord, part, staff.gap));
                 }
@@ -1300,7 +1421,7 @@ final class OmrScoreInterpreter {
         for (DetectedNote note : joined) {
             Component h = note.head;
             float gap = note.staffGap;
-            if (gray == null) continue;
+            if (gray == null || note.event.kind() == ScoreNoteEvent.Kind.UNPITCHED) continue;
             int[] stem = attachedRawStem(gray, width, height, h, gap);
             if (stem == null
                     && h.maxX - h.minX + 1 <= gap * .7f
@@ -1607,7 +1728,8 @@ final class OmrScoreInterpreter {
                                     event.tupletNormalNotes())
                             .withStemDirection(event.stemDirection())
                             .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes())
-                            .withLeadingRest(leading));
+                            .withLeadingRest(leading)
+                            .withKind(event.kind()));
         }
         // Rest exclusion revalidates dots beside individual ovals. A displaced
         // second still shares the surviving printed duration of its proved shaft.
@@ -1659,16 +1781,18 @@ final class OmrScoreInterpreter {
                     tiedNotes
                             .get(i)
                             .withStemDirection(
-                                    tiedNotes.get(i).unbeamedDurationBeats()
-                                                    == ScoreNoteEvent.DURATION_WHOLE
-                                            ? 0
-                                            : PrintedStemDirection.detect(
-                                                    gray,
-                                                    width,
-                                                    height,
-                                                    printed.head.centerX,
-                                                    printed.head.centerY,
-                                                    printed.staffGap)));
+                                    tiedNotes.get(i).kind() == ScoreNoteEvent.Kind.UNPITCHED
+                                            ? tiedNotes.get(i).stemDirection()
+                                            : tiedNotes.get(i).unbeamedDurationBeats()
+                                                            == ScoreNoteEvent.DURATION_WHOLE
+                                                    ? 0
+                                                    : PrintedStemDirection.detect(
+                                                            gray,
+                                                            width,
+                                                            height,
+                                                            printed.head.centerX,
+                                                            printed.head.centerY,
+                                                            printed.staffGap)));
         }
         return new Analysis(voicedNotes, keyChanges, rests);
     }
@@ -1721,6 +1845,7 @@ final class OmrScoreInterpreter {
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         for (int i = 0; i < notes.size(); i++) {
             ScoreNoteEvent current = notes.get(i);
+            if (current.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
             if (!printedAccidental[i]
                     || !current.tiedFromPrevious()
                     || current.writtenAccidental() == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) continue;
@@ -1730,7 +1855,8 @@ final class OmrScoreInterpreter {
             for (int j = i - 1; j >= 0; j--) {
                 ScoreNoteEvent candidate = notes.get(j);
                 if (current.measureIndex() - candidate.measureIndex() > 1) break;
-                if (candidate.staffIndex() != current.staffIndex()
+                if (candidate.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || candidate.staffIndex() != current.staffIndex()
                         || candidate.staffCount() != current.staffCount()
                         || candidate.diatonicPitchIdentity() != current.diatonicPitchIdentity())
                     continue;
@@ -1765,12 +1891,14 @@ final class OmrScoreInterpreter {
                                     current.octaveShift(),
                                     current.boundaryTies(),
                                     current.tupletNormalNotes())
-                            .withStemDirection(current.stemDirection()));
+                            .withStemDirection(current.stemDirection())
+                            .withKind(current.kind()));
         }
         return result;
     }
 
     private static int resolvedTieAccidental(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
+        if (note.kind() != ScoreNoteEvent.Kind.PITCHED) return Integer.MIN_VALUE;
         if (note.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY)
             return ScoreNoteEvent.accidentalSemitones(note.writtenAccidental());
         Integer fifths = null;
@@ -4022,7 +4150,8 @@ final class OmrScoreInterpreter {
                                                     e.octaveShift(),
                                                     e.boundaryTies(),
                                                     e.tupletNormalNotes())
-                                            .withStemDirection(e.stemDirection()),
+                                            .withStemDirection(e.stemDirection())
+                                            .withKind(e.kind()),
                                     n.head,
                                     n.staffGap));
                 }
@@ -10147,7 +10276,8 @@ final class OmrScoreInterpreter {
                         e.octaveShift(),
                         e.boundaryTies(),
                         e.tupletNormalNotes())
-                .withStemDirection(e.stemDirection());
+                .withStemDirection(e.stemDirection())
+                .withKind(e.kind());
     }
 
     private static boolean sameGraceVoice(DetectedNote a, DetectedNote b) {
@@ -10200,16 +10330,31 @@ final class OmrScoreInterpreter {
      * Hollow oval sides diverge toward their centre, the opposite topology. */
     private static boolean isUnpitchedCrossHead(
             byte[] gray, int width, int height, Component head, Staff staff) {
+        return unpitchedCrossHead(gray, width, height, head, staff) != null;
+    }
+
+    private static int[] unpitchedStem(
+            byte[] gray, int width, int height, Component head, float gap) {
+        // A cross shaft meets an outer corner instead of the horizontal centre of an oval.
+        // The existing shaft proof still requires at least 2.3 staff gaps of printed ink.
+        return attachedRawStem(
+                gray, width, height, head, gap, Math.max(1, Math.round(gap * .4f)), 170, 9);
+    }
+
+    private static Component unpitchedCrossHead(
+            byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null
                 || staff.gap < 9
                 || head.maxX - head.minX > staff.gap * 1.7f
-                || head.maxY - head.minY > staff.gap * 1.2f) return false;
+                || head.maxY - head.minY > staff.gap * 1.2f) return null;
         float gap = staff.gap;
         int inner = Math.max(2, Math.round(gap * .22f)),
                 outer = Math.max(inner + 2, Math.round(gap * .38f));
         int radius = Math.round(gap),
                 searchX = Math.round(gap * .8f),
                 searchY = Math.round(gap * .65f);
+        Component best = null;
+        int bestSymmetry = Integer.MAX_VALUE;
         for (int cy = Math.max(outer, Math.round(head.centerY) - searchY);
                 cy <= Math.min(height - outer - 1, Math.round(head.centerY) + searchY);
                 cy++) {
@@ -10247,10 +10392,26 @@ final class OmrScoreInterpreter {
                 if (head.centerX < Math.min(upper[0], lower[0]) - cornerMargin
                         || head.centerX > Math.max(upper[3], lower[3]) + cornerMargin
                         || Math.abs(head.centerY - cy) > outer + 1) continue;
-                return true;
+                int symmetry =
+                        Math.abs(upper[1] - lower[1])
+                                + Math.abs(upper[2] - lower[2])
+                                + Math.abs(upper[0] + upper[3] - 2 * cx)
+                                + Math.abs(lower[0] + lower[3] - 2 * cx);
+                if (symmetry < bestSymmetry) {
+                    bestSymmetry = symmetry;
+                    best =
+                            new Component(
+                                    head.area,
+                                    Math.min(upper[0], lower[0]),
+                                    Math.max(upper[3], lower[3]),
+                                    cy - outer,
+                                    cy + outer,
+                                    cx,
+                                    cy);
+                }
             }
         }
-        return false;
+        return best;
     }
 
     private static int[] crossHeadSides(
@@ -16882,7 +17043,8 @@ final class OmrScoreInterpreter {
                                         e.octaveShift(),
                                         e.boundaryTies(),
                                         e.tupletNormalNotes())
-                                .withStemDirection(e.stemDirection());
+                                .withStemDirection(e.stemDirection())
+                                .withKind(e.kind());
                 result.set(j, new DetectedNote(corrected, n.head, n.staffGap));
             }
         }
@@ -17797,6 +17959,10 @@ final class OmrScoreInterpreter {
         List<DetectedNote> result = new ArrayList<>(source.size());
         for (DetectedNote note : source) {
             ScoreNoteEvent event = note.event;
+            if (event.kind() != ScoreNoteEvent.Kind.PITCHED) {
+                result.add(note);
+                continue;
+            }
             AccidentalStateKey stateKey =
                     new AccidentalStateKey(
                             event.measureIndex(),
@@ -17838,7 +18004,8 @@ final class OmrScoreInterpreter {
                                         event.boundaryTies(),
                                         event.tupletNormalNotes())
                                 .withStemDirection(event.stemDirection())
-                                .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes());
+                                .withTupletRatio(event.tupletDivisor(), event.tupletNormalNotes())
+                                .withKind(event.kind());
                 note = new DetectedNote(event, note.head, note.staffGap);
             }
             result.add(note);
@@ -17855,7 +18022,8 @@ final class OmrScoreInterpreter {
                 ScoreNoteEvent previous = result.get(index).event;
                 if (previous.measureIndex() != event.measureIndex()
                         || event.positionInMeasure() - previous.positionInMeasure() > .018f) break;
-                if (previous.staffIndex() == event.staffIndex()
+                if (previous.kind() == event.kind()
+                        && previous.staffIndex() == event.staffIndex()
                         && previous.staffStep() == event.staffStep()) {
                     Component priorHead = result.get(index).head;
                     boolean separateUnison =
@@ -17892,6 +18060,7 @@ final class OmrScoreInterpreter {
         List<DetectedNote> printedGeometry = null;
         for (int currentIndex = 1; currentIndex < result.size(); currentIndex++) {
             DetectedNote current = result.get(currentIndex);
+            if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
             int previousIndex =
                     previousSamePitch(result, currentIndex, width, labels, gray, height);
             boolean tied =
@@ -17950,7 +18119,8 @@ final class OmrScoreInterpreter {
                                             event.tupletNormalNotes())
                                     .withStemDirection(event.stemDirection())
                                     .withTupletRatio(
-                                            event.tupletDivisor(), event.tupletNormalNotes()),
+                                            event.tupletDivisor(), event.tupletNormalNotes())
+                                    .withKind(event.kind()),
                             current.head,
                             current.staffGap));
         }
@@ -18004,6 +18174,7 @@ final class OmrScoreInterpreter {
             byte[] gray,
             int height) {
         DetectedNote current = notes.get(currentIndex);
+        if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) return -1;
         DetectedNote previousOnset = null;
         for (int index = currentIndex - 1; index >= 0; index--) {
             DetectedNote previous = notes.get(index);
@@ -18012,10 +18183,14 @@ final class OmrScoreInterpreter {
                     && !systemBreakTieCandidate(previous, current, width)) continue;
             if (current.event.measureIndex() - previous.event.measureIndex() > 1) break;
             if (samePrintedOnset(previous, current)) continue;
-            if (previousOnset == null) previousOnset = previous;
+            boolean firstOnset = previousOnset == null;
+            if (firstOnset) previousOnset = previous;
+            // An unpitched attack still occupies this onset; do not borrow an older pitch.
+            if (previous.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
             // A held voice can bridge a barline while another voice keeps moving. Sustained
             // endpoints or opposing printed shafts prove that independent voice.
-            else if (!samePrintedOnset(previous, previousOnset)
+            if (!firstOnset
+                    && !samePrintedOnset(previous, previousOnset)
                     && !(ScoreNoteTiming.hasIndependentSustain(previous.event)
                             && (previous.event.measureIndex() == current.event.measureIndex()
                                     || ScoreNoteTiming.hasIndependentSustain(current.event)))
@@ -18090,7 +18265,9 @@ final class OmrScoreInterpreter {
             int height) {
         if (gray == null || gray.length != (long) width * height) return false;
         DetectedNote before = notes.get(previousIndex), after = notes.get(currentIndex);
-        if (before.event.diatonicPitchIdentity() != after.event.diatonicPitchIdentity()
+        if (before.event.kind() != ScoreNoteEvent.Kind.PITCHED
+                || after.event.kind() != ScoreNoteEvent.Kind.PITCHED
+                || before.event.diatonicPitchIdentity() != after.event.diatonicPitchIdentity()
                 || before.event.followingRestBeats() > 0
                 || after.event.leadingRestBeats() > 0) return false;
         int directions =
@@ -18103,8 +18280,9 @@ final class OmrScoreInterpreter {
             if (!ScoreTiePitchGuard.sameContinuingStaff(before.event, between.event)
                     || samePrintedOnset(before, between)
                     || samePrintedOnset(after, between)) continue;
-            if (between.event.diatonicPitchIdentity() == before.event.diatonicPitchIdentity())
-                return false;
+            if (between.event.kind() == ScoreNoteEvent.Kind.PITCHED
+                    && between.event.diatonicPitchIdentity()
+                            == before.event.diatonicPitchIdentity()) return false;
             int shafts =
                     tieVoiceStemDirections(gray, width, height, between.head, between.staffGap);
             if (shafts != 1 && shafts != 2) return false;
@@ -18147,7 +18325,11 @@ final class OmrScoreInterpreter {
         return first.event.measureIndex() == second.event.measureIndex()
                 && first.event.staffIndex() == second.event.staffIndex()
                 && first.event.staffCount() == second.event.staffCount()
-                && first.event.diatonicPitchIdentity() != second.event.diatonicPitchIdentity()
+                && (first.event.kind() == ScoreNoteEvent.Kind.PITCHED
+                                && second.event.kind() == ScoreNoteEvent.Kind.PITCHED
+                        ? first.event.diatonicPitchIdentity()
+                                != second.event.diatonicPitchIdentity()
+                        : first.event.staffStep() != second.event.staffStep())
                 && (first.head.maxX - first.head.minX + 1 >= gap * .7f
                                 && second.head.maxX - second.head.minX + 1 >= gap * .7f
                         || Math.max(
@@ -18236,7 +18418,9 @@ final class OmrScoreInterpreter {
     private static boolean systemBreakTieCandidate(
             DetectedNote previous, DetectedNote current, int width) {
         float gap = (previous.staffGap + current.staffGap) * .5f;
-        return current.event.measureIndex() == previous.event.measureIndex() + 1
+        return previous.event.kind() == ScoreNoteEvent.Kind.PITCHED
+                && current.event.kind() == ScoreNoteEvent.Kind.PITCHED
+                && current.event.measureIndex() == previous.event.measureIndex() + 1
                 && current.event.diatonicPitchIdentity() == previous.event.diatonicPitchIdentity()
                 && previous.head.centerX
                         > width
@@ -19100,6 +19284,8 @@ final class OmrScoreInterpreter {
             int measureIndex, int staffIndex, int staffCount, int staffStep) {}
 
     private record PitchKey(int staffIndex, int staffCount, int staffStep) {}
+
+    private record CrossHeadIdentity(int x, int y, int staffIndex, int staffCount) {}
 
     private record DetectedNote(ScoreNoteEvent event, Component head, float staffGap) {}
 

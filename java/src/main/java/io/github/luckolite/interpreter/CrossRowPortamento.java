@@ -55,7 +55,8 @@ final class CrossRowPortamento {
                     var n = notes.get(i);
                     if (n.staffIndex() != staff.index()
                             || n.staffCount() != staff.count()
-                            || n.crossStaffBeam()) continue;
+                            || (n.crossStaffBeam() && n.kind() == ScoreNoteEvent.Kind.PITCHED))
+                        continue;
                     if (n.measureIndex() == m
                             && (source < 0
                                     || n.positionInMeasure()
@@ -68,7 +69,9 @@ final class CrossRowPortamento {
                 if (source < 0 || target < 0) continue;
                 var from = notes.get(source);
                 var to = notes.get(target);
-                if (to.tiedFromPrevious()
+                if (from.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || to.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || to.tiedFromPrevious()
                         || from.staffStep() == to.staffStep()
                         || Math.abs(from.staffStep() - to.staffStep()) > 8) continue;
                 boolean chord = false;

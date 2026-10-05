@@ -2,9 +2,15 @@
 # SPDX-License-Identifier: Apache-2.0
 """Join two proved page-edge shoulders without guessing ties from equal pitches."""
 
+from .typed_events import event_kind, validate_unpitched
+
 
 def resolve_boundary_ties(document):
     pages = list(document["pages"])
+    for page in pages:
+        for event in page['events']:
+            validate_unpitched(event)
+
     for index in range(1, len(pages)):
         before, after = pages[index - 1], pages[index]
         if ("sourcePage" in before or "sourcePage" in after) and (
@@ -14,10 +20,14 @@ def resolve_boundary_ties(document):
         changed = False
         score_notes = list(after.get("score", {}).get("notes", []))
         for number, current in enumerate(events):
+            if event_kind(current) == 'UNPITCHED':
+                continue
             incoming = current.get("boundaryTies", 0) & 3
             if not incoming or abs(current["startBeat"]) > .04:
                 continue
             for previous in before["events"]:
+                if event_kind(previous) == 'UNPITCHED':
+                    continue
                 if not ((previous.get("boundaryTies", 0) >> 2) & incoming):
                     continue
                 if (previous.get("boundaryPitch") is None

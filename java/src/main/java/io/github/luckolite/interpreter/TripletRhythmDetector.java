@@ -136,7 +136,8 @@ final class TripletRhythmDetector {
                                     note.octaveShift(),
                                     note.boundaryTies(),
                                     note.tupletNormalNotes())
-                            .withStemDirection(note.stemDirection()));
+                            .withStemDirection(note.stemDirection())
+                            .withKind(note.kind()));
         }
         return new Rhythm(List.copyOf(result), List.copyOf(scaled));
     }
@@ -503,7 +504,8 @@ final class TripletRhythmDetector {
                                                 n.compactOpening(),
                                                 n.octaveShift(),
                                                 n.boundaryTies())
-                                        .withStemDirection(n.stemDirection()));
+                                        .withStemDirection(n.stemDirection())
+                                        .withKind(n.kind()));
                     }
                 marked = true;
             }
@@ -606,7 +608,8 @@ final class TripletRhythmDetector {
                                         n.compactOpening(),
                                         n.octaveShift(),
                                         n.boundaryTies())
-                                .withStemDirection(n.stemDirection()));
+                                .withStemDirection(n.stemDirection())
+                                .withKind(n.kind()));
             }
             i++;
         }
@@ -752,7 +755,8 @@ final class TripletRhythmDetector {
                                                 n.compactOpening(),
                                                 n.octaveShift(),
                                                 n.boundaryTies())
-                                        .withStemDirection(n.stemDirection()));
+                                        .withStemDirection(n.stemDirection())
+                                        .withKind(n.kind()));
                     }
             }
         }
@@ -1039,7 +1043,8 @@ final class TripletRhythmDetector {
                                                 n.compactOpening(),
                                                 n.octaveShift(),
                                                 n.boundaryTies())
-                                        .withStemDirection(n.stemDirection()));
+                                        .withStemDirection(n.stemDirection())
+                                        .withKind(n.kind()));
                     }
                 break;
             }

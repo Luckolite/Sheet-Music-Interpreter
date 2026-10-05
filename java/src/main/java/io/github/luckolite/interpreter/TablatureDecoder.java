@@ -464,6 +464,10 @@ public final class TablatureDecoder {
     public static ScorePageInterpretation apply(
             ScorePageInterpretation score, List<Staff> tabs, int w, int h, int[] tuning, int capo) {
         if (tabs.isEmpty()) return score;
+        for (var tab : tabs)
+            for (var fret : tab.frets)
+                if (fret.fret < -2 || fret.string < 0 || fret.string >= tab.stringCount)
+                    throw new IllegalArgumentException("Invalid tab token/string");
         if (tuning != null)
             for (int string = 0; string < tuning.length; string++) midi(string, 0, tuning, capo);
         // OCR measure numbers can create empty standard measures after the six
@@ -533,8 +537,10 @@ public final class TablatureDecoder {
                                 continue;
                             }
                             int marks = f.marks;
-                            if (f.fret < 0) marks |= TabEffect.encode(TabEffect.DEAD, 0);
-                            int pitch = soundingPitch(f, tabTuning(tab, tuning), capo);
+                            if (f.fret == -1)
+                                marks =
+                                        (marks & ~TabEffect.ALL)
+                                                | TabEffect.encode(TabEffect.DEAD, 0);
                             var n =
                                     new ScoreNoteEvent(
                                                     bar,
@@ -550,7 +556,10 @@ public final class TablatureDecoder {
                                                     f.duration,
                                                     f.tuplet)
                                             .withArticulations(marks);
-                            notes.add(pitched(n, pitch));
+                            if (f.fret == -1) notes.add(n.withKind(ScoreNoteEvent.Kind.UNPITCHED));
+                            else
+                                notes.add(
+                                        pitched(n, soundingPitch(f, tabTuning(tab, tuning), capo)));
                         }
                 }
                 continue;
@@ -559,6 +568,7 @@ public final class TablatureDecoder {
             int down = 0, same = 0;
             for (int i = 0; i < score.notes().size(); i++) {
                 var n = score.notes().get(i);
+                if (n.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
                 var m = score.measures().get(n.measureIndex());
                 if (tab.standardTop / h < m.top() - tab.gap / h * 2
                         || tab.standardTop / h > m.bottom()
@@ -613,6 +623,7 @@ public final class TablatureDecoder {
                     if (f.fret >= 0 && f.marks != 0) {
                         for (int i = 0; i < notes.size(); i++) {
                             var n = notes.get(i);
+                            if (n.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
                             var m = measures.get(n.measureIndex());
                             if (tab.standardTop / h < m.top() - tab.gap / h * 2
                                     || tab.standardTop / h > m.bottom()
@@ -632,7 +643,7 @@ public final class TablatureDecoder {
         for (Staff tab : tabs)
             if (tab.standardTop >= 0)
                 for (Fret fret : tab.frets)
-                    if (fret.fret < 0) {
+                    if (fret.fret == -1) {
                         if (tab.frets.stream()
                                 .anyMatch(
                                         f ->
@@ -642,7 +653,7 @@ public final class TablatureDecoder {
                         if (tab.frets.stream()
                                         .filter(
                                                 f ->
-                                                        f.fret < 0
+                                                        f.fret == -1
                                                                 && Math.abs(f.x - fret.x)
                                                                         < tab.gap * .65f)
                                         .map(Fret::string)
@@ -677,47 +688,23 @@ public final class TablatureDecoder {
                                         + ":"
                                         + Math.round(target.positionInMeasure() * 1000);
                         if (!handled.add(key)) continue;
-                        float duration =
-                                target.beamCount() > 0
-                                        ? 1f / (1 << Math.max(1, Math.min(3, target.beamCount())))
-                                        : target.unbeamedDurationBeats();
-                        if (duration <= 0) continue;
-                        duration *= target.durationScale();
-                        if (target.augmentationDots() > 0)
-                            duration *= 2 - 1f / (1 << target.augmentationDots());
                         final int bar = target.measureIndex();
                         final float position = target.positionInMeasure();
-                        notes.removeIf(
-                                n ->
-                                        n.measureIndex() == bar
-                                                && Math.abs(n.positionInMeasure() - position)
-                                                        < tolerance);
-                        float previous = -1, next = 2;
-                        for (var n : notes)
-                            if (n.measureIndex() == bar) {
-                                if (n.positionInMeasure() < position)
-                                    previous = Math.max(previous, n.positionInMeasure());
-                                else next = Math.min(next, n.positionInMeasure());
-                            }
+                        final int staff = target.staffIndex(), staffCount = target.staffCount();
                         for (int i = 0; i < notes.size(); i++) {
                             var n = notes.get(i);
-                            if (n.measureIndex() != bar) continue;
-                            if (previous >= 0
-                                    && Math.abs(n.positionInMeasure() - previous) < tolerance)
-                                notes.set(i, withRestAfter(n, duration));
-                            else if (previous < 0
-                                    && Math.abs(n.positionInMeasure() - next) < tolerance)
-                                notes.set(i, n.withLeadingRest(n.leadingRestBeats() + duration));
+                            if (n.measureIndex() != bar
+                                    || n.staffIndex() != staff
+                                    || n.staffCount() != staffCount
+                                    || Math.abs(n.positionInMeasure() - position) >= tolerance)
+                                continue;
+                            notes.set(
+                                    i,
+                                    n.withKind(ScoreNoteEvent.Kind.UNPITCHED)
+                                            .withArticulations(
+                                                    (n.articulations() & ~TabEffect.ALL)
+                                                            | TabEffect.encode(TabEffect.DEAD, 0)));
                         }
-                        rests.add(
-                                new ScoreRestEvent(
-                                        bar,
-                                        position,
-                                        target.pageY(),
-                                        tab.gap / h,
-                                        target.staffIndex(),
-                                        target.staffCount(),
-                                        duration));
                     }
         notes.sort(
                 Comparator.comparingInt(ScoreNoteEvent::measureIndex)
@@ -749,9 +736,11 @@ public final class TablatureDecoder {
     }
 
     private static int soundingPitch(Fret f, int[] tuning, int capo) {
+        if (f.fret < 0)
+            throw new IllegalArgumentException("Unpitched tab token has no sounding pitch");
         return TabEffect.kind(f.marks) == TabEffect.HARMONIC
                 ? tuning[f.string] + capo + TabEffect.harmonicOffset(f.fret)
-                : midi(f.string, Math.max(0, f.fret), tuning, capo);
+                : midi(f.string, f.fret, tuning, capo);
     }
 
     private static ScoreNoteEvent withRestAfter(ScoreNoteEvent n, float beats) {
@@ -777,10 +766,13 @@ public final class TablatureDecoder {
                         n.octaveShift(),
                         n.boundaryTies(),
                         n.tupletNormalNotes())
-                .withStemDirection(n.stemDirection());
+                .withStemDirection(n.stemDirection())
+                .withKind(n.kind());
     }
 
     private static int printedMidi(ScoreNoteEvent n, ScorePageInterpretation score) {
+        if (n.kind() != ScoreNoteEvent.Kind.PITCHED)
+            throw new IllegalStateException("Unpitched note has no MIDI pitch");
         int clef = n.clefBottomDiatonic();
         if (clef == ScoreNoteEvent.CLEF_UNKNOWN) clef = ScoreNoteEvent.CLEF_TREBLE;
         int pitch = clef + n.staffStep(),

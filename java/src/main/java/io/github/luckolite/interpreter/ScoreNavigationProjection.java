@@ -310,8 +310,10 @@ public final class ScoreNavigationProjection {
     }
 
     private static boolean hasEarlierPitch(List<ScoreNoteEvent> notes, ScoreNoteEvent note) {
+        if (note.kind() != ScoreNoteEvent.Kind.PITCHED) return false;
         for (var prior : notes)
-            if (prior.measureIndex() == note.measureIndex()
+            if (prior.kind() == ScoreNoteEvent.Kind.PITCHED
+                    && prior.measureIndex() == note.measureIndex()
                     && prior.staffIndex() == note.staffIndex()
                     && prior.diatonicPitchIdentity() == note.diatonicPitchIdentity()
                     && prior.octaveShift() == note.octaveShift()
@@ -342,7 +344,8 @@ public final class ScoreNavigationProjection {
                         n.octaveShift(),
                         n.boundaryTies(),
                         n.tupletNormalNotes())
-                .withStemDirection(n.stemDirection());
+                .withStemDirection(n.stemDirection())
+                .withKind(n.kind());
     }
 
     // Source dynamics are evaluated below in musical time, not page distance or bar count.

@@ -213,9 +213,15 @@ public class TablatureDecoderTest {
                         tabs,
                         W,
                         H);
-        assertEquals(1, score.notes().size());
-        assertEquals(.5, score.notes().get(0).followingRestBeats(), 0);
-        assertEquals(.5, score.rests().get(0).durationBeats(), 0);
+        assertEquals(2, score.notes().size());
+        assertEquals(first, score.notes().get(0));
+        assertEquals(ScoreNoteEvent.Kind.UNPITCHED, score.notes().get(1).kind());
+        assertEquals(.5, ScoreNoteTiming.writtenDurationBeats(score.notes().get(1)), 0);
+        assertTrue(score.rests().isEmpty());
+        assertEquals(
+                1,
+                score.notes().stream().mapToDouble(ScoreNoteTiming::writtenDurationBeats).sum(),
+                0);
     }
 
     private static void assertTabProjectionGeometry(

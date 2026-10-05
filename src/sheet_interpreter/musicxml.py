@@ -5,6 +5,7 @@ from collections import defaultdict
 import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
+from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -105,6 +106,10 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         element(node, 'chord')
     if event is None:
         element(node, 'rest')
+    elif event_kind(event) == 'UNPITCHED':
+        identity = element(node, 'unpitched')
+        element(identity, 'display-step', event['displayStep'])
+        element(identity, 'display-octave', event['displayOctave'])
     else:
         midi = event['midi']
         names = (('C', 0), ('D', -1), ('D', 0), ('E', -1), ('E', 0), ('F', 0),
@@ -125,6 +130,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         element(node, 'footnote', 'Estimated duration from interpretation')
     element(node, 'voice', voice)
     note_type(node, duration, event)
+    if event is not None and event_kind(event) == 'UNPITCHED':
+        element(node, 'notehead', 'x')
     effect = event.get('guitarEffect') if event else None
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
@@ -171,6 +178,10 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     Expressive symbols preserve written evidence; preview holds never lengthen notation.
     """
     from .boundary_ties import resolve_boundary_ties
+    for page in document['pages']:
+        for event in page['events']:
+            event_kind(event)
+            validate_unpitched(event)
     document = resolve_boundary_ties(document)
     meter = tuple(document.get('initialMeter', meter))
     key_fifths = document.get('initialKeyFifths', key_fifths)
@@ -201,7 +212,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             local_start += length
         first_event = len(events)
         for n in page['events']:
-            if not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127:
+            if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
                 raise ValueError('MusicXML note pitch must be a MIDI integer in 0..127')
             start, duration = ticks(n['startBeat']), ticks(n['durationBeats'])
             if duration <= 0 or start + duration > local_start + 2:
@@ -253,7 +264,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         part_id = f'P{staff+1}'
         element(element(part_list, 'score-part', id=part_id), 'part-name', f'Staff {staff+1}')
         part = element(root, 'part', id=part_id)
-        notes = sorted((n for n in events if n.get('staffIndex', 0) == staff), key=lambda n: (n['start'], n['midi']))
+        notes = sorted((n for n in events if n.get('staffIndex', 0) == staff), key=lambda n: (n['start'], notation_order(n)))
         for index, n in enumerate(notes):
             gliss = n.get('glissando')
             if gliss is None:
@@ -262,7 +273,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     or type(gliss.get('targetMidi')) is not int or not 0 <= gliss['targetMidi'] <= 127):
                 raise ValueError('Unsupported glissando notation')
             targets = [target for target in notes if abs(target['start']-n['end']) <= 2]
-            if len(targets) == 1 and targets[0]['midi'] == gliss['targetMidi']:
+            if len(targets) == 1 and event_kind(targets[0]) == 'PITCHED' and targets[0]['midi'] == gliss['targetMidi']:
                 n['gliss_start'] = index % 16 + 1
                 targets[0]['gliss_stop'] = n['gliss_start']
         marks = sorted((m for m in expressions if m.get('scope') == 'SCORE' or m['staffIndex'] == staff),
@@ -285,11 +296,15 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             eligible = [n for n in notes if n['end'] == release and not n.get('durationFallback', False)
                         and (not mark['ownerIds'] or n['sourceIdentity'] in mark['ownerIds'])]
             if eligible:
-                selected = (min if symbol['inverted'] else max)(eligible, key=lambda n: n['midi'])
+                selected = (min if symbol['inverted'] else max)(eligible, key=(
+                    (lambda n: display_position(n)) if any(event_kind(n) == 'UNPITCHED' for n in eligible)
+                    else (lambda n: n['midi'])))
                 selected.setdefault('releaseSymbols', []).append(symbol)
                 rendered.add(mark['identity'])
         previous = {}
         for n in notes:
+            if event_kind(n) == 'UNPITCHED':
+                continue
             prior = previous.get(n['midi'])
             if n.get('tiedFromPrevious') and prior and abs(prior['end']-n['start']) <= 2:
                 prior['tie_start'] = True
@@ -321,9 +336,19 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             element(time, 'beat-type', denominator)
             if index == 0:
                 clef = element(attributes, 'clef')
-                bass = notes and sum(n['midi'] for n in notes)/len(notes) < 60
-                element(clef, 'sign', 'F' if bass else 'G')
-                element(clef, 'line', 4 if bass else 2)
+                pitched = [n for n in notes if event_kind(n) == 'PITCHED']
+                bass = (sum(n['midi'] for n in pitched)/len(pitched) < 60 if pitched
+                        else bool(notes) and notes[0].get('clefBottomDiatonic') == 18)
+                sign, line = ('F', 4) if bass else ('G', 2)
+                bottom = notes[0].get('clefBottomDiatonic', 30) if notes and not pitched else None
+                if bottom == 24:
+                    sign, line = 'C', 3
+                elif bottom == 22:
+                    sign, line = 'C', 4
+                element(clef, 'sign', sign)
+                element(clef, 'line', line)
+                if bottom == 37:
+                    element(clef, 'clef-octave-change', 1)
             tempos = ([dict(bpm=bpm, positionInMeasure=0)] if index == 0 else []) + bar['tempos']
             for tempo in tempos:
                 direction = element(measure, 'direction')

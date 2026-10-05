@@ -27,8 +27,10 @@ final class ArtificialHarmonics {
         var replacements = new HashMap<ScoreNoteEvent, ScoreNoteEvent>();
         var remove = new HashSet<ScoreNoteEvent>();
         for (var n : notes) {
-            if (n.octaveShift() != 0 || n.measureIndex() < 0 || n.measureIndex() >= measures.size())
-                continue;
+            if (n.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || n.octaveShift() != 0
+                    || n.measureIndex() < 0
+                    || n.measureIndex() >= measures.size()) continue;
             var m = measures.get(n.measureIndex());
             float x = (m.left() + n.positionInMeasure() * (m.right() - m.left())) * w,
                     y = n.pageY() * h;
@@ -42,9 +44,23 @@ final class ArtificialHarmonics {
                 }
             if (staff == null) continue;
             float gap = staff.gap();
+            boolean unpitchedTouch = false;
+            for (var upper : notes)
+                if (upper.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                        && upper.measureIndex() == n.measureIndex()
+                        && upper.staffIndex() == n.staffIndex()
+                        && upper.staffStep() - n.staffStep() == 3
+                        && Math.abs(upper.pageY() * h - (y - 1.5f * gap)) < gap * .35f
+                        && Math.abs(
+                                        (upper.positionInMeasure() - n.positionInMeasure())
+                                                * (m.right() - m.left())
+                                                * w)
+                                < gap * .55f) unpitchedTouch = true;
+            if (unpitchedTouch) continue;
             ScoreNoteEvent pairedTouch = null;
             for (var upper : notes)
-                if (upper != n
+                if (upper.kind() == ScoreNoteEvent.Kind.PITCHED
+                        && upper != n
                         && upper.measureIndex() == n.measureIndex()
                         && upper.staffIndex() == n.staffIndex()
                         && upper.staffStep() - n.staffStep() == 3
@@ -84,7 +100,8 @@ final class ArtificialHarmonics {
                 continue;
             replacements.put(n, n.withOctaveShift(2));
             for (var upper : notes)
-                if (upper != n
+                if (upper.kind() == ScoreNoteEvent.Kind.PITCHED
+                        && upper != n
                         && upper.measureIndex() == n.measureIndex()
                         && upper.staffIndex() == n.staffIndex()
                         && upper.staffStep() - n.staffStep() == 3

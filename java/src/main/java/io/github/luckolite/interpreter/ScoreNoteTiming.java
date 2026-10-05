@@ -142,7 +142,7 @@ public final class ScoreNoteTiming {
                 return notes;
             }
             List<ScoreNoteEvent> result = new ArrayList<>(notes.size());
-            for (ScoreNoteEvent note : notes) if (!grace(note)) result.add(note);
+            for (ScoreNoteEvent note : notes) if (metricalNote(note)) result.add(note);
             metricalNotes.put(notes, result);
             metricalNotes.put(result, result);
             return result;
@@ -372,13 +372,29 @@ public final class ScoreNoteTiming {
         return note != null && (note.articulations() & NoteOrnament.GRACE) != 0;
     }
 
+    private static boolean metricalNote(ScoreNoteEvent note) {
+        boolean marked = grace(note);
+        if (marked && note.kind() == ScoreNoteEvent.Kind.UNPITCHED)
+            throw new IllegalArgumentException(
+                    "Unpitched grace ownership requires an explicit realization");
+        return !marked;
+    }
+
     private record GracePlayback(
             List<ScoreNoteEvent> metrical,
             ScoreNoteEvent principal,
             int index,
             int count,
             boolean trailing,
-            boolean bothSides) {}
+            boolean bothSides) {
+        private GracePlayback {
+            if (count > 0
+                    && principal != null
+                    && principal.kind() == ScoreNoteEvent.Kind.UNPITCHED)
+                throw new IllegalArgumentException(
+                        "Unpitched grace ownership requires an explicit realization");
+        }
+    }
 
     private static GracePlayback gracePlayback(ScoreNoteEvent target, List<ScoreNoteEvent> notes) {
         if (target == null || notes == null) return null;
@@ -387,7 +403,7 @@ public final class ScoreNoteTiming {
         List<ScoreNoteEvent> metrical =
                 session == null
                         ? notes.stream()
-                                .filter(n -> !grace(n))
+                                .filter(ScoreNoteTiming::metricalNote)
                                 .collect(java.util.stream.Collectors.toList())
                         : session.metrical(notes);
         if (metrical == notes) return null;
@@ -456,7 +472,7 @@ public final class ScoreNoteTiming {
         var metrical =
                 session == null
                         ? notes.stream()
-                                .filter(n -> !grace(n))
+                                .filter(ScoreNoteTiming::metricalNote)
                                 .collect(java.util.stream.Collectors.toList())
                         : session.metrical(notes);
         GracePlayback context = grace(target) ? gracePlayback(target, notes) : null;

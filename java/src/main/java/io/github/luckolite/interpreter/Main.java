@@ -159,53 +159,44 @@ public final class Main {
                 var region = score.measures().get(bar);
                 int key = initialKey;
                 for (var k : score.keyChanges()) if (k.measureIndex() <= bar) key = k.fifths();
-                int clef = note.clefBottomDiatonic();
-                boolean guessed = clef == ScoreNoteEvent.CLEF_UNKNOWN;
-                if (guessed)
-                    clef =
-                            note.staffCount() > 1 && note.staffIndex() > 0
-                                    ? ScoreNoteEvent.CLEF_BASS
-                                    : ScoreNoteEvent.CLEF_TREBLE;
-                int diatonic = clef + note.staffStep(),
-                        letter = Math.floorMod(diatonic, 7),
-                        octave = Math.floorDiv(diatonic, 7);
-                int accidental = note.writtenAccidental();
-                if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) {
-                    accidental = 0;
-                    int[] order =
-                            key >= 0
-                                    ? new int[] {3, 0, 4, 1, 5, 2, 6}
-                                    : new int[] {6, 2, 5, 1, 4, 0, 3};
-                    for (int i = 0; i < Math.abs(key); i++)
-                        if (order[i] == letter) accidental = key > 0 ? 1 : -1;
-                }
-                int midi =
-                        (octave + 1 + note.octaveShift()) * 12
-                                + new int[] {0, 2, 4, 5, 7, 9, 11}[letter]
-                                + ScoreNoteEvent.accidentalSemitones(accidental);
+                var identity = noteIdentity(note, key);
+                boolean guessed = (Boolean) identity.get("clefInferred");
                 double duration =
                         ScoreNoteTiming.resolvedWrittenDurationBeats(
                                 note, score.notes(), beats[bar]);
                 boolean estimated = !Double.isFinite(duration) || duration <= 0;
+                if (estimated && note.kind() == ScoreNoteEvent.Kind.UNPITCHED)
+                    throw new IOException(
+                            "An unpitched note needs a finite positive written duration");
                 if (estimated) duration = .5;
                 var event = new LinkedHashMap<String, Object>();
                 event.put("measureIndex", bar);
                 event.put("staffIndex", note.staffIndex());
                 event.put("staffCount", note.staffCount());
-                if (note.octaveShift() != 0) event.put("octaveShift", note.octaveShift());
-                if (note.boundaryTies() != 0 && !guessed) {
+                if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED)
+                    event.put("sourceNoteIndex", noteIndex);
+                if (note.kind() == ScoreNoteEvent.Kind.PITCHED && note.octaveShift() != 0)
+                    event.put("octaveShift", note.octaveShift());
+                if (note.kind() == ScoreNoteEvent.Kind.PITCHED
+                        && note.boundaryTies() != 0
+                        && !guessed) {
                     event.put("boundaryTies", note.boundaryTies());
                     event.put(
                             "boundaryPitch", note.diatonicPitchIdentity() + note.octaveShift() * 7);
                     event.put("boundaryAccidental", note.writtenAccidental());
                     event.put("sourceNoteIndex", noteIndex);
                 }
-                event.put("midi", midi);
-                event.put("clefInferred", guessed);
-                event.put(
-                        "startBeat",
+                event.putAll(identity);
+                double startBeat =
                         starts[bar]
-                                + ScoreNoteTiming.beatInMeasure(note, score.notes(), beats[bar]));
+                                + ScoreNoteTiming.beatInMeasure(note, score.notes(), beats[bar]);
+                if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                        && (!Double.isFinite(startBeat)
+                                || startBeat < 0
+                                || !Double.isFinite(startBeat + duration)))
+                    throw new IOException(
+                            "An unpitched note needs a finite nonnegative written clock");
+                event.put("startBeat", startBeat);
                 if (NoteOrnament.tremoloBeams(note.articulations()) > 0)
                     event.put("tremoloBeats", NoteOrnament.tremoloBeats(note.articulations()));
                 int guitar = note.articulations() & TabEffect.ALL;
@@ -247,6 +238,70 @@ public final class Main {
         Files.writeString(Path.of(args[1]), json(result) + "\n", StandardCharsets.UTF_8);
     }
 
+    static Map<String, Object> noteIdentity(ScoreNoteEvent note, int key) throws IOException {
+        int clef = note.clefBottomDiatonic();
+        boolean guessed = clef == ScoreNoteEvent.CLEF_UNKNOWN;
+        if (guessed)
+            clef =
+                    note.staffCount() > 1 && note.staffIndex() > 0
+                            ? ScoreNoteEvent.CLEF_BASS
+                            : ScoreNoteEvent.CLEF_TREBLE;
+        if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED) {
+            if (clef != ScoreNoteEvent.CLEF_BASS
+                    && clef != ScoreNoteEvent.CLEF_TREBLE
+                    && clef != 22
+                    && clef != 24
+                    && clef != 37)
+                throw new IOException("Unpitched display clef must be a supported retained clef");
+            long display = (long) clef + note.staffStep();
+            if (display < 0 || display > 69)
+                throw new IOException("Unpitched display octave must be 0..9");
+        }
+        int diatonic = clef + note.staffStep(),
+                letter = Math.floorMod(diatonic, 7),
+                octave = Math.floorDiv(diatonic, 7);
+        var identity = new LinkedHashMap<String, Object>();
+        if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED) {
+            if (note.octaveShift() != 0)
+                throw new IOException(
+                        "Unpitched source octave shifts need explicit instrument semantics");
+            int guitar = note.articulations() & TabEffect.ALL;
+            boolean neutralDead = guitar == TabEffect.encode(TabEffect.DEAD, 0);
+            if (note.tiedFromPrevious()
+                    || note.boundaryTies() != 0
+                    || (note.articulations() & NoteOrnament.GRACE) != 0
+                    || NoteOrnament.type(note.articulations()) != NoteOrnament.NONE
+                    || NoteOrnament.tremoloBeams(note.articulations()) != 0
+                    || guitar != 0 && !neutralDead)
+                throw new IOException(
+                        "Unpitched source ties and tonal performance marks need explicit instrument semantics");
+            if (octave < 0 || octave > 9)
+                throw new IOException("Unpitched display octave must be 0..9");
+            identity.put("kind", note.kind().name());
+            identity.put("displayStep", "CDEFGAB".substring(letter, letter + 1));
+            identity.put("displayOctave", octave);
+            identity.put("clefBottomDiatonic", clef);
+        } else {
+            int accidental = note.writtenAccidental();
+            if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) {
+                accidental = 0;
+                int[] order =
+                        key >= 0
+                                ? new int[] {3, 0, 4, 1, 5, 2, 6}
+                                : new int[] {6, 2, 5, 1, 4, 0, 3};
+                for (int i = 0; i < Math.abs(key); i++)
+                    if (order[i] == letter) accidental = key > 0 ? 1 : -1;
+            }
+            int midi =
+                    (octave + 1 + note.octaveShift()) * 12
+                            + new int[] {0, 2, 4, 5, 7, 9, 11}[letter]
+                            + ScoreNoteEvent.accidentalSemitones(accidental);
+            identity.put("midi", midi);
+        }
+        identity.put("clefInferred", guessed);
+        return identity;
+    }
+
     static void attachNotePerformance(
             List<ScoreNoteEvent> notes, List<Map<String, Object>> events) {
         for (int index = 0; index < notes.size(); index++) {
@@ -255,7 +310,9 @@ public final class Main {
                 events.get(index).put("tupletActualNotes", note.tupletDivisor());
                 events.get(index).put("tupletNormalNotes", note.tupletNormalNotes());
             }
+            if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED) continue;
             var target = GlissPitchTarget.next(note, notes);
+            if (target != null && target.kind() == ScoreNoteEvent.Kind.UNPITCHED) continue;
             if (target == null) continue;
             var sourceEvent = events.get(index);
             var targetEvent = events.get(notes.indexOf(target));
@@ -324,8 +381,13 @@ public final class Main {
             return "{" + String.join(",", items) + "}";
         }
         if (value.getClass().isRecord()) {
-            for (var c : value.getClass().getRecordComponents())
+            for (var c : value.getClass().getRecordComponents()) {
+                // Absent Kind is the legacy pitched default in the public JSON contract.
+                if (value instanceof ScoreNoteEvent note
+                        && note.kind() == ScoreNoteEvent.Kind.PITCHED
+                        && c.getName().equals("kind")) continue;
                 items.add(json(c.getName()) + ":" + json(c.getAccessor().invoke(value)));
+            }
             return "{" + String.join(",", items) + "}";
         }
         if (value instanceof Iterable<?> values) for (var item : values) items.add(json(item));
