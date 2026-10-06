@@ -44,15 +44,18 @@ final class FaintSharpInk {
                 mask[(y - top) * w + x - left] = OmrMeasurePostProcessor.CLEF_OR_KEY;
             }
         }
-        byte[] closed = mask.clone();
+        byte[] closed = mask;
         int limit = Math.max(1, Math.round(gap * .2f));
         for (int y = 1; y < h - 2; y++)
             for (int x = 0; x < w; x++)
                 if (mask[y * w + x] != 0 && mask[(y - 1) * w + x] != 0)
                     for (int skip = 1; skip <= limit && y + skip + 2 < h; skip++)
-                        if (mask[(y + skip + 1) * w + x] != 0 && mask[(y + skip + 2) * w + x] != 0)
+                        if (mask[(y + skip + 1) * w + x] != 0
+                                && mask[(y + skip + 2) * w + x] != 0) {
+                            if (closed == mask) closed = mask.clone();
                             for (int dy = 1; dy <= skip; dy++)
                                 closed[(y + dy) * w + x] = OmrMeasurePostProcessor.CLEF_OR_KEY;
+                        }
         return closed;
     }
 

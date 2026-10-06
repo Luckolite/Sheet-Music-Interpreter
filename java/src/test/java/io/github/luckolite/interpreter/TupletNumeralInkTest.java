@@ -112,4 +112,56 @@ public class TupletNumeralInkTest {
         detect(gray, false);
         assertArrayEquals(copy, gray);
     }
+
+    @Test
+    public void completeWindowKeepsOriginalNumeralPixelsAndOwnsResult() {
+        byte[] gray = image(245, 180, false, false);
+        byte[] before = gray.clone();
+        var window = TupletNumeralInk.window(gray, 400, 240, 100, 150, 160, 160, 12, 190);
+        var edges = TupletNumeralInk.ruleEdgesWindow(gray, 400, 240, 100, 150, 160, 160, 12, 190);
+        assertNotNull(window);
+        assertNotNull(edges);
+        assertEquals(76, window.left());
+        assertEquals(70, window.top());
+        assertEquals(99, window.width());
+        assertEquals(170, window.height());
+        assertNotSame(gray, window.pixels());
+        for (int y = 0; y < window.height(); y++)
+            for (int x = 0; x < window.width(); x++)
+                assertEquals(
+                        (byte) ((before[(y + 70) * 400 + x + 76] & 255) <= 190 ? 0 : 255),
+                        window.pixels()[y * window.width() + x]);
+        assertEquals(window.left(), edges.left());
+        assertEquals(window.top(), edges.top());
+        assertEquals(window.width(), edges.width());
+        assertEquals(window.height(), edges.height());
+        assertArrayEquals(window.pixels(), edges.pixels());
+        assertArrayEquals(before, gray);
+        window.pixels()[0] = 0;
+        var repeated = TupletNumeralInk.window(gray, 400, 240, 100, 150, 160, 160, 12, 190);
+        assertNotSame(window.pixels(), repeated.pixels());
+        assertEquals((byte) 255, repeated.pixels()[0]);
+        gray[145 * 400 + 121] = (byte) 245;
+        byte[] changed = gray.clone();
+        var reread = TupletNumeralInk.window(gray, 400, 240, 100, 150, 160, 160, 12, 190);
+        assertEquals((byte) 255, reread.pixels()[75 * 99 + 45]);
+        assertArrayEquals(changed, gray);
+    }
+
+    @Test
+    public void boundedInvalidAndNonfiniteGapsKeepOriginalEarlyRejections() {
+        byte[] gray = image(245, 180, false, false);
+        byte[] before = gray.clone();
+        assertNull(TupletNumeralInk.window(null, 400, 240, 100, 150, 160, 160, 12, 190));
+        for (float gap : new float[] {-0f, 0f, Float.NEGATIVE_INFINITY, Float.NaN}) {
+            assertNull(TupletNumeralInk.window(gray, 400, 240, 100, 150, 160, 160, gap, 190));
+            assertNull(
+                    TupletNumeralInk.ruleEdgesWindow(gray, 400, 240, 100, 150, 160, 160, gap, 190));
+        }
+        assertNull(
+                TupletNumeralInk.window(
+                        new byte[] {(byte) 255}, 1, 1, 0, 0, 0, 0, Float.POSITIVE_INFINITY, 190));
+        assertNull(TupletNumeralInk.window(gray, 400, 240, 100, 150, 160, 160, 12, 99));
+        assertArrayEquals(before, gray);
+    }
 }

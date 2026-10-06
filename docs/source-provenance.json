@@ -13,10 +13,10 @@
   "files": {
     "AccidentalDotInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalDotInk.java",
-      "source_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
+      "source_sha256": "9d011ea760d0498c740719f500cdf2c092ac726e6cc6699c5642ecdce1eb529f",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Original raw-ink connected-paired-shaft proof with local contrast; package-only standalone port and generated positive/negative regressions. No private source imagery or new dependencies. App904 reuses invariant per-call raw-ink contrast work without changing threshold, geometry or traversal semantics. Paired helper outputs and existing original synthetic controls remain exact. No private score, model, dependency or measured speed claim is included.",
-      "source_normalized_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
+      "source_normalized_sha256": "9d011ea760d0498c740719f500cdf2c092ac726e6cc6699c5642ecdce1eb529f",
       "reviewed_source_state": "Reviewed app904 initial carry/two-helper selection on preserved app903H and standalone e26aed0; historical origin commit retained."
     },
     "ScoreNavigationPerformance.java": {
@@ -505,9 +505,9 @@
     },
     "DoubleSharpGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DoubleSharpGlyph.java",
-      "source_sha256": "b3d69bedbc27dc833db1f1ed72a8d0014e703f849629eee3c39a147ef81df1a4",
+      "source_sha256": "82dc38c72a053460151c74dec7a267a5782e175345c49bd72afe1b8369e8d125",
       "reviewed_app_commit": "edebae3824b8df22a455eabcdaf471192b404d29",
-      "source_normalized_sha256": "28b3e8576af070bda12fc4ed2872a9e08f2d8921501f5d42afb0e8c86eef7070"
+      "source_normalized_sha256": "55696e582b0472807808a23b1932db534466ae3aef127bdfe9d960d26e291e96"
     },
     "OctaveClefDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
@@ -567,9 +567,9 @@
     },
     "PrintedFlatGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedFlatGlyph.java",
-      "source_sha256": "a2193f31adeb3e6893f17373d03277cbd76de5de91a9b5784b0bd36a6fc57cb9",
+      "source_sha256": "a883ae09029fcdfa5cfc830a366208e76b429aac17b755b8c4ab2325bb48931c",
       "reviewed_app_commit": "85ff84983ca51b825afdb86da0791695e2b72be6",
-      "source_normalized_sha256": "c7e7ef8bc924e2a0ca9e2eba8b8b77e6d8cb2a6104f77d83228f185d7b9d46f8"
+      "source_normalized_sha256": "bf25d4d6d2c90acc27b5795fe3badeae610fd23a0d6f3bf4aadb25fddcc4cb57"
     },
     "SeparateBeamGroups.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeparateBeamGroups.java",
@@ -693,9 +693,9 @@
     },
     "DetachedAnnotationInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedAnnotationInk.java",
-      "source_sha256": "779af20fae0bfbe8ea4706fe45f34f97fe724960d635bc58af6d832f024188b5",
+      "source_sha256": "2aedfbe722c7d8508a3e3ea749fc5ed6fb863fcb58120565c4f9b38791950532",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "779af20fae0bfbe8ea4706fe45f34f97fe724960d635bc58af6d832f024188b5"
+      "source_normalized_sha256": "2aedfbe722c7d8508a3e3ea749fc5ed6fb863fcb58120565c4f9b38791950532"
     },
     "DynamicGlyphEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicGlyphEvidence.java",
@@ -727,9 +727,9 @@
     },
     "GlyphInkContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlyphInkContrast.java",
-      "source_sha256": "961b5efb557c77554618290318f0e74add649df15a113a0f3c4e4a6d9be5345a",
+      "source_sha256": "556d4c6b799571e4a455a6e7d64fb1837f68fadc2b1507d5815e8ae596fccaff",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "961b5efb557c77554618290318f0e74add649df15a113a0f3c4e4a6d9be5345a"
+      "source_normalized_sha256": "556d4c6b799571e4a455a6e7d64fb1837f68fadc2b1507d5815e8ae596fccaff"
     },
     "GraceConnectorInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GraceConnectorInk.java",
@@ -739,9 +739,9 @@
     },
     "HandwrittenTwoHeadInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HandwrittenTwoHeadInk.java",
-      "source_sha256": "6e834e0ca2614afe0cbf6c987eaf17ddcac1c0e8921231d2f9779c43a6db4623",
+      "source_sha256": "3b9d704c95f7b6a75447ff31d60857f8414bd677051f07da810ea10ccf2ec5c3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6e834e0ca2614afe0cbf6c987eaf17ddcac1c0e8921231d2f9779c43a6db4623"
+      "source_normalized_sha256": "3b9d704c95f7b6a75447ff31d60857f8414bd677051f07da810ea10ccf2ec5c3"
     },
     "LedgerSpacePhase.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LedgerSpacePhase.java",
@@ -751,9 +751,9 @@
     },
     "LongSlurFragmentInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LongSlurFragmentInk.java",
-      "source_sha256": "28f8eb283193f2f16cd908a71b248ac6a187120c7579693747c64d1d27854d30",
+      "source_sha256": "d5de28fb00d4feab7007f632fbfb47629c2fb3d9ba76974f586f57b4d071c1e9",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "28f8eb283193f2f16cd908a71b248ac6a187120c7579693747c64d1d27854d30"
+      "source_normalized_sha256": "d5de28fb00d4feab7007f632fbfb47629c2fb3d9ba76974f586f57b4d071c1e9"
     },
     "MusicalOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicalOcrEvidence.java",
@@ -795,9 +795,9 @@
     },
     "OutlinedBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
-      "source_sha256": "00a62caf8d96c42d3e9cdb16849f3da313ec13f5073319121cec803af53705e9",
+      "source_sha256": "09f2cc16f588eb29d0b68bc3f47c659e99c134e3c8996ed12d6e780344d1559c",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "00a62caf8d96c42d3e9cdb16849f3da313ec13f5073319121cec803af53705e9"
+      "source_normalized_sha256": "09f2cc16f588eb29d0b68bc3f47c659e99c134e3c8996ed12d6e780344d1559c"
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
@@ -843,10 +843,10 @@
     },
     "FaintSharpInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
-      "source_sha256": "9dc447438528bd93ce0959687bae40bc3c9e1f65a7631ee6b6dfa25b2d00be56",
+      "source_sha256": "bc5b5aaf27bca7bdeac41e8f93e2d72db3e6ee31ff5df28caed48f04b2f5cd16",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Original local-background mask used only after established sharp thresholds fail in edge-checked verification. Both individual-pixel and three-row local contrast are required for faint ink; staff rule pixels require vertical support. A bounded, nonrecursive vertical gap closure uses two original support pixels on each side. Separate non-edge-connected components still require established sharpPitchCenter and head-pitch alignment. Complete helper and caller code-and-literal parity reviewed with original procedural contrast, gap, pitch, one-spine, flat-paper and immutability controls; no private pixels, new dependency or model change.",
-      "source_normalized_sha256": "9dc447438528bd93ce0959687bae40bc3c9e1f65a7631ee6b6dfa25b2d00be56"
+      "source_normalized_sha256": "bc5b5aaf27bca7bdeac41e8f93e2d72db3e6ee31ff5df28caed48f04b2f5cd16"
     },
     "PortableOrnamentGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
@@ -891,9 +891,9 @@
     },
     "SegnoFragmentInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SegnoFragmentInk.java",
-      "source_sha256": "8bfb275599ea03830580d56b1a23a052d5e4fe620c8b38d74381ccced59e0452",
+      "source_sha256": "ff8457727ff8ed4e42b57c7b30ce752b3c5d310fb8f755c6e884fa2ed1b0c9f0",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "8bfb275599ea03830580d56b1a23a052d5e4fe620c8b38d74381ccced59e0452"
+      "source_normalized_sha256": "ff8457727ff8ed4e42b57c7b30ce752b3c5d310fb8f755c6e884fa2ed1b0c9f0"
     },
     "ShadedNoteheadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedNoteheadRecovery.java",
@@ -921,9 +921,9 @@
     },
     "TupletNumeralInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralInk.java",
-      "source_sha256": "a978cfda45e48342b7d6f8b4428b8705d8880a52f37f6b9506208167f468df7e",
+      "source_sha256": "f7dae5c34d2d523381a4ea73133ca1c066909c8ca456872c88b9c031555458fe",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a978cfda45e48342b7d6f8b4428b8705d8880a52f37f6b9506208167f468df7e",
+      "source_normalized_sha256": "f7dae5c34d2d523381a4ea73133ca1c066909c8ca456872c88b9c031555458fe",
       "review_note": "Reviewed unreachable sloped-rule coverage rejection; original thresholds, rounding, and deletion order unchanged. Package-only standalone adapter, original synthetic parity regression, no private scores, new dependencies or model changes. Immutable app snapshot based on released 840.",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)"
     },
@@ -2426,5 +2426,297 @@
     "whole_score_parity_claim": false,
     "phone_elapsed_claim": false,
     "boundary": "Focused pure JVM/Desktop ONNX parity only; Android caller and required release/worker gates remain pending. Exception source lines and removed temporary-array OOM boundary are not claimed equivalent."
+  },
+  "optical_histogram_and_primitive_loop_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "reviewed_source_state": "Private unselected pure optical candidate; origins retain their released905 bytes.",
+    "paired_sources": [
+      {
+        "name": "GlyphInkContrast.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/GlyphInkContrast.java",
+        "app_sha256": "556d4c6b799571e4a455a6e7d64fb1837f68fadc2b1507d5815e8ae596fccaff",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GlyphInkContrast.java",
+        "standalone_sha256": "408818abfdda64f9348b04a1f56499bfac7c468870a7933f7869efa778838fc5"
+      },
+      {
+        "name": "TupletNumeralInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralInk.java",
+        "app_sha256": "f7dae5c34d2d523381a4ea73133ca1c066909c8ca456872c88b9c031555458fe",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TupletNumeralInk.java",
+        "standalone_sha256": "31204493b7688255f829a8dc3f35fa53fdffb6e18ad51deccc07791edf226c13"
+      },
+      {
+        "name": "PrintedFlatGlyph.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedFlatGlyph.java",
+        "app_sha256": "a883ae09029fcdfa5cfc830a366208e76b429aac17b755b8c4ab2325bb48931c",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedFlatGlyph.java",
+        "standalone_sha256": "8ef2d87f0e4986f7c23f0f545de65cc48f42875673c37529168617ddae51f01a"
+      },
+      {
+        "name": "DoubleSharpGlyph.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/DoubleSharpGlyph.java",
+        "app_sha256": "82dc38c72a053460151c74dec7a267a5782e175345c49bd72afe1b8369e8d125",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DoubleSharpGlyph.java",
+        "standalone_sha256": "3f013107ed4d2de96596893943c790ed181b0445f03897d1cefa7e9db29c53ff"
+      },
+      {
+        "name": "OutlinedBeamInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
+        "app_sha256": "09f2cc16f588eb29d0b68bc3f47c659e99c134e3c8996ed12d6e780344d1559c",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OutlinedBeamInk.java",
+        "standalone_sha256": "e64de4557242420ff4a69fb72bcc8feecd3fe630d625c497a5f3979e8aefad50"
+      }
+    ],
+    "historical_origin_preserved": {
+      "GlyphInkContrast.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlyphInkContrast.java",
+        "source_sha256": "961b5efb557c77554618290318f0e74add649df15a113a0f3c4e4a6d9be5345a",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "961b5efb557c77554618290318f0e74add649df15a113a0f3c4e4a6d9be5345a"
+      },
+      "TupletNumeralInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralInk.java",
+        "source_sha256": "a978cfda45e48342b7d6f8b4428b8705d8880a52f37f6b9506208167f468df7e",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "a978cfda45e48342b7d6f8b4428b8705d8880a52f37f6b9506208167f468df7e",
+        "review_note": "Reviewed unreachable sloped-rule coverage rejection; original thresholds, rounding, and deletion order unchanged. Package-only standalone adapter, original synthetic parity regression, no private scores, new dependencies or model changes. Immutable app snapshot based on released 840.",
+        "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)"
+      },
+      "PrintedFlatGlyph.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedFlatGlyph.java",
+        "source_sha256": "a2193f31adeb3e6893f17373d03277cbd76de5de91a9b5784b0bd36a6fc57cb9",
+        "reviewed_app_commit": "85ff84983ca51b825afdb86da0791695e2b72be6",
+        "source_normalized_sha256": "c7e7ef8bc924e2a0ca9e2eba8b8b77e6d8cb2a6104f77d83228f185d7b9d46f8"
+      },
+      "DoubleSharpGlyph.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/DoubleSharpGlyph.java",
+        "source_sha256": "b3d69bedbc27dc833db1f1ed72a8d0014e703f849629eee3c39a147ef81df1a4",
+        "reviewed_app_commit": "edebae3824b8df22a455eabcdaf471192b404d29",
+        "source_normalized_sha256": "28b3e8576af070bda12fc4ed2872a9e08f2d8921501f5d42afb0e8c86eef7070"
+      },
+      "OutlinedBeamInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
+        "source_sha256": "00a62caf8d96c42d3e9cdb16849f3da313ec13f5073319121cec803af53705e9",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "00a62caf8d96c42d3e9cdb16849f3da313ec13f5073319121cec803af53705e9"
+      }
+    },
+    "scope": "Reuse one owned histogram for two percentile crossings, three width products, finalized flat row/probe values, double-sharp row geometry/scalar directional probes and outlined-beam rounded bounds. Exact thresholds, traversal, primitive association and caller ownership are retained.",
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 118,
+      "full_four_variant_observations": true,
+      "new_app_methods": 16,
+      "new_public_methods": 10,
+      "original_public_flat_fixture_adapted_to_new_app_test": true
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/GlyphInkContrastTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/TupletNumeralInkTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/PrintedFlatGlyphTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/HeavyDoubleSharpTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/OutlinedBeamInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Separate actual HOST helper gates with package-only APP adaptation and retained standalone dependencies. Combined required public/app/native release gates remain pending; removed-array OOM, exception source-line and native Android parity are not claimed."
+  },
+  "detached_annotation_queue_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "DetachedAnnotationInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedAnnotationInk.java",
+        "source_sha256": "779af20fae0bfbe8ea4706fe45f34f97fe724960d635bc58af6d832f024188b5",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "779af20fae0bfbe8ea4706fe45f34f97fe724960d635bc58af6d832f024188b5"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "DetachedAnnotationInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedAnnotationInk.java",
+        "app_sha256": "2aedfbe722c7d8508a3e3ea749fc5ed6fb863fcb58120565c4f9b38791950532",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DetachedAnnotationInk.java",
+        "standalone_sha256": "2326378b72dc5f38c73d1c57e73afd79f70b61531de47f94ec18c0957c0f6e0d"
+      }
+    ],
+    "scope": "One call-local flood queue retained across five threshold phases. First allocation remains after original seen/rules allocations; every component reads only its freshly written queue prefix. Raster rereads, neighbor order, float math and caller ownership remain unchanged.",
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 24,
+      "original_invocations": 20,
+      "new_invocations": 4,
+      "full_four_variant_observations": true,
+      "new_app_methods": 2,
+      "new_public_methods": 2
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/DetachedAnnotationInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Separate actual HOST helper gate with package-only APP adaptation, no model/core/native execution. Prior five-family formatted port and 118 invocations are retained unchanged. Combined public/app/native release gates and selection remain pending; eliminated repeated-allocation OOM opportunities and exception source-line equality are not claimed."
+  },
+  "handwritten_two_head_queue_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "HandwrittenTwoHeadInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/HandwrittenTwoHeadInk.java",
+        "source_sha256": "6e834e0ca2614afe0cbf6c987eaf17ddcac1c0e8921231d2f9779c43a6db4623",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "6e834e0ca2614afe0cbf6c987eaf17ddcac1c0e8921231d2f9779c43a6db4623"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "HandwrittenTwoHeadInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/HandwrittenTwoHeadInk.java",
+        "app_sha256": "3b9d704c95f7b6a75447ff31d60857f8414bd677051f07da810ea10ccf2ec5c3",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HandwrittenTwoHeadInk.java",
+        "standalone_sha256": "9e91768bb05cc8d84ed916d71d4fc98f1b906fe32f353bfb4fdde8b1bdf5a301"
+      }
+    ],
+    "scope": "One call-local flood queue retained across four threshold phases. First allocation remains after the original seen allocation; every component reads only its freshly written queue prefix. Raster rereads, neighbor order, float math and caller ownership remain unchanged.",
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 24,
+      "original_invocations": 20,
+      "new_invocations": 4,
+      "full_four_variant_observations": true,
+      "new_app_methods": 2,
+      "new_public_methods": 2
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/HandwrittenTwoHeadInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Separate actual HOST helper gate with package-only APP adaptation, no model/core/native execution. Prior six-family formatted port and 142 invocations are retained unchanged. Combined public/app/native release gates and selection remain pending; eliminated repeated-allocation OOM opportunities and exception source-line equality are not claimed."
+  },
+  "segno_queue_and_accidental_dot_scalar_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "SegnoFragmentInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SegnoFragmentInk.java",
+        "source_sha256": "8bfb275599ea03830580d56b1a23a052d5e4fe620c8b38d74381ccced59e0452",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "8bfb275599ea03830580d56b1a23a052d5e4fe620c8b38d74381ccced59e0452"
+      },
+      "AccidentalDotInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalDotInk.java",
+        "source_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Original raw-ink connected-paired-shaft proof with local contrast; package-only standalone port and generated positive/negative regressions. No private source imagery or new dependencies. App904 reuses invariant per-call raw-ink contrast work without changing threshold, geometry or traversal semantics. Paired helper outputs and existing original synthetic controls remain exact. No private score, model, dependency or measured speed claim is included.",
+        "source_normalized_sha256": "5d3a3882d405cbb2e7db9ea16d00e3fd98bd30e6dee185eb3ff191c314acf95c",
+        "reviewed_source_state": "Reviewed app904 initial carry/two-helper selection on preserved app903H and standalone e26aed0; historical origin commit retained."
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "SegnoFragmentInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/SegnoFragmentInk.java",
+        "app_sha256": "ff8457727ff8ed4e42b57c7b30ce752b3c5d310fb8f755c6e884fa2ed1b0c9f0",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SegnoFragmentInk.java",
+        "standalone_sha256": "8161b0f39fd7bd2c4b7fb04a743f4c4a8fff5c54701807808312ddfdc510b0de"
+      },
+      {
+        "name": "AccidentalDotInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalDotInk.java",
+        "app_sha256": "9d011ea760d0498c740719f500cdf2c092ac726e6cc6699c5642ecdce1eb529f",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AccidentalDotInk.java",
+        "standalone_sha256": "9c7a03ab9b89e6651acaa3d9fb3a6d5c512d37a659b46d4ccd087ee400a631d5"
+      }
+    ],
+    "scope": {
+      "SegnoFragmentInk": "One call-local integer flood queue retained across four threshold passes; first allocation stays after original seen and before glyph list; every flood read is freshly prefix-written and saved glyph records never alias queue.",
+      "AccidentalDotInk": "Call-local gap products, contrast indices, and bridge row offsets; original reads and hit/guard/order/float/int semantics retained without caching pixel values."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 34,
+      "segno_invocations": 20,
+      "accidental_dot_invocations": 14,
+      "original_invocations": 26,
+      "new_invocations": 8,
+      "full_four_variant_observations": true,
+      "new_app_methods": 4,
+      "new_public_methods": 4
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/SegnoFragmentInkTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/AccidentalDotInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Separate actual HOST helper gates with package-only APP adaptation. Seven-family immutable port and166 prior invocations retained; combined evidence totals200 candidate-side invocations. Required public/app/native release gates and selection remain pending; eliminated allocation OOM opportunities and exception source-line equality are not claimed."
+  },
+  "long_slur_queue_and_faint_sharp_first_write_reuse_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "LongSlurFragmentInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/LongSlurFragmentInk.java",
+        "source_sha256": "28f8eb283193f2f16cd908a71b248ac6a187120c7579693747c64d1d27854d30",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "28f8eb283193f2f16cd908a71b248ac6a187120c7579693747c64d1d27854d30"
+      },
+      "FaintSharpInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
+        "source_sha256": "9dc447438528bd93ce0959687bae40bc3c9e1f65a7631ee6b6dfa25b2d00be56",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Original local-background mask used only after established sharp thresholds fail in edge-checked verification. Both individual-pixel and three-row local contrast are required for faint ink; staff rule pixels require vertical support. A bounded, nonrecursive vertical gap closure uses two original support pixels on each side. Separate non-edge-connected components still require established sharpPitchCenter and head-pitch alignment. Complete helper and caller code-and-literal parity reviewed with original procedural contrast, gap, pitch, one-spine, flat-paper and immutability controls; no private pixels, new dependency or model change.",
+        "source_normalized_sha256": "9dc447438528bd93ce0959687bae40bc3c9e1f65a7631ee6b6dfa25b2d00be56"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "LongSlurFragmentInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/LongSlurFragmentInk.java",
+        "app_sha256": "d5de28fb00d4feab7007f632fbfb47629c2fb3d9ba76974f586f57b4d071c1e9",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LongSlurFragmentInk.java",
+        "standalone_sha256": "e97087fb1271d98fab1673cbaedfa98e6068523425154ca6b5564ac116b7688e"
+      },
+      {
+        "name": "FaintSharpInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
+        "app_sha256": "bc5b5aaf27bca7bdeac41e8f93e2d72db3e6ee31ff5df28caed48f04b2f5cd16",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintSharpInk.java",
+        "standalone_sha256": "baf49358a0f7879f45022023c6f54f967ab8ccdcac625a8288fc4622fe74e5af"
+      }
+    ],
+    "scope": {
+      "LongSlurFragmentInk": "One call-local queue across thresholds, with original fresh rules/seen and freshly written consumed prefixes.",
+      "FaintSharpInk": "First-write clone of local mask; unchanged original-mask predicates, output writes and per-call returned array ownership."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 44,
+      "original_invocations": 36,
+      "new_invocations": 8,
+      "full_four_variant_observations": true,
+      "new_app_methods": 4,
+      "new_public_methods": 4
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/LongSlurFragmentInkTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/FaintSharpInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Separate actual HOST helper gate with package-only APP adaptation. Nine-family immutable port and 200 prior invocations retained; combined evidence totals 244 candidate-side invocations. Required public/app/native release gates and selection remain pending; moved or removed allocation OOM opportunities and exception source-line equality are not claimed."
   }
 }

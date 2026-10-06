@@ -18,6 +18,10 @@ final class AccidentalDotInk {
         int lower = Math.max(0, cy - reach), upper = Math.min(h - 1, cy + reach);
         int flank = Math.max(2, Math.round(gap * .25f));
         List<Shaft> shafts = new ArrayList<>();
+        float minimumShaftLength = gap * 1.65f,
+                minimumDistance = gap * .35f,
+                maximumDistance = gap * .95f,
+                extension = gap * .6f;
         for (int x = first; x <= last; x++) {
             int a = cy, b = cy, blank = 0;
             while (a > lower) {
@@ -39,32 +43,33 @@ final class AccidentalDotInk {
                     break;
                 }
             }
-            if (b - a < gap * 1.65f || a > top || b < bottom) continue;
+            if (b - a < minimumShaftLength || a > top || b < bottom) continue;
             int hits = 0, contrasted = 0;
             boolean canContrast = x >= flank && x + flank < w;
-            for (int y = a; y <= b; y++)
-                if (ink(gray, w, x, y)) {
+            for (int y = a; y <= b; y++) {
+                int at = y * w + x;
+                if ((gray[at] & 255) <= 210) {
                     hits++;
                     if (canContrast
-                            && Math.max(
-                                            gray[y * w + x - flank] & 255,
-                                            gray[y * w + x + flank] & 255)
-                                    >= (gray[y * w + x] & 255) + 12) contrasted++;
+                            && Math.max(gray[at - flank] & 255, gray[at + flank] & 255)
+                                    >= (gray[at] & 255) + 12) contrasted++;
                 }
+            }
             if (hits >= (b - a + 1) * .9f && contrasted >= (b - a + 1) * .65f)
                 shafts.add(new Shaft(x, a, b));
         }
         for (var a : shafts)
             for (var b : shafts) {
                 int distance = b.x - a.x;
-                if (distance < gap * .35f || distance > gap * .95f) continue;
-                if (Math.min(a.top, b.top) > top - gap * .6f
-                        || Math.max(a.bottom, b.bottom) < bottom + gap * .6f) continue;
+                if (distance < minimumDistance || distance > maximumDistance) continue;
+                if (Math.min(a.top, b.top) > top - extension
+                        || Math.max(a.bottom, b.bottom) < bottom + extension) continue;
                 // The candidate itself must bridge the shafts, not sit independently beside them.
                 if (a.x > left + pad || b.x < right - pad) continue;
                 for (int y = top; y <= bottom; y++) {
                     int hits = 0;
-                    for (int x = a.x; x <= b.x; x++) if ((gray[y * w + x] & 255) <= 210) hits++;
+                    int row = y * w;
+                    for (int x = a.x; x <= b.x; x++) if ((gray[row + x] & 255) <= 210) hits++;
                     if (hits >= (distance + 1) * .85f) return true;
                 }
             }

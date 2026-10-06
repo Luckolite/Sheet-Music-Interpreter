@@ -109,4 +109,49 @@ public class SegnoFragmentInkTest {
         match();
         assertArrayEquals(before, gray);
     }
+
+    @Test
+    public void paleSegnoKeepsBodyAndDotRecordsAfterLongerRejectedPrefix() {
+        for (int ink : new int[] {66, 81, 111, 140}) {
+            Arrays.fill(gray, (byte) 255);
+            body(true);
+            dot(99, 108);
+            dot(128, 102);
+            for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) ink;
+            // This earlier solid component is disjoint and fails the original body/dot guards.
+            for (int y = 45; y <= 70; y++) for (int x = 60; x <= 95; x++) gray[y * W + x] = 0;
+            byte[] before = gray.clone();
+            assertTrue(match());
+            assertTrue(match());
+            assertArrayEquals(before, gray);
+            Arrays.fill(gray, (byte) 255);
+            before = gray.clone();
+            assertFalse(match());
+            assertArrayEquals(before, gray);
+        }
+    }
+
+    @Test
+    public void changedDotAndWhitenedCallerNeverReuseAnEarlierSegno() {
+        body(true);
+        dot(99, 108);
+        dot(128, 102);
+        byte[] before = gray.clone();
+        assertTrue(match());
+        assertArrayEquals(before, gray);
+        for (int y = 106; y <= 110; y++)
+            for (int x = 97; x <= 101; x++) gray[y * W + x] = (byte) 255;
+        before = gray.clone();
+        assertFalse(match());
+        assertFalse(match());
+        assertArrayEquals(before, gray);
+        dot(99, 108);
+        before = gray.clone();
+        assertTrue(match());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        before = gray.clone();
+        assertFalse(match());
+        assertArrayEquals(before, gray);
+    }
 }

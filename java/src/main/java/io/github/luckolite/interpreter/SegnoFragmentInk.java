@@ -27,9 +27,10 @@ final class SegnoFragmentInk {
         int top = Math.max(0, Math.round(minY - gap * 3)),
                 bottom = Math.min(height - 1, Math.round(maxY + gap * 3));
         int w = right - left + 1, h = bottom - top + 1;
+        int[] queue = null;
         for (int threshold : new int[] {65, 80, 110, 140}) {
             boolean[] seen = new boolean[w * h];
-            int[] queue = new int[w * h];
+            if (queue == null) queue = new int[w * h];
             var glyphs = new ArrayList<int[]>();
             for (int seed = 0; seed < w * h; seed++) {
                 if (seen[seed]

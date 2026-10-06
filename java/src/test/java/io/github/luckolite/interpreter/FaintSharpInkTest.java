@@ -79,4 +79,41 @@ public class FaintSharpInkTest {
         crop(g);
         assertArrayEquals(before, g);
     }
+
+    @Test
+    public void noClosingWriteResultsAreFreshAndIndependentlyOwned() {
+        byte[] g = page(), before = g.clone();
+        byte[] first = crop(g), second = crop(g);
+        assertNotSame(first, second);
+        assertNotSame(g, first);
+        assertArrayEquals(new byte[CW * (B - T + 1)], first);
+        assertArrayEquals(first, second);
+        first[0] = 42;
+        assertEquals(0, second[0]);
+        assertArrayEquals(new byte[CW * (B - T + 1)], crop(g));
+        assertArrayEquals(before, g);
+    }
+
+    @Test
+    public void completeTwoSpineOutputClosesOnlyTheSupportedShortGap() {
+        byte[] g = page();
+        vertical(g, 30, 60, 80);
+        vertical(g, 44, 46, 240);
+        for (int y = 30; y <= 60; y++) g[y * W + 45] = 80;
+        for (int y = 44; y <= 47; y++) g[y * W + 45] = (byte) 240;
+        byte[] expected = new byte[CW * (B - T + 1)];
+        for (int y = 30; y <= 60; y++) {
+            expected[(y - T) * CW + 35 - L] = OmrMeasurePostProcessor.CLEF_OR_KEY;
+            if (y < 44 || y > 47)
+                expected[(y - T) * CW + 45 - L] = OmrMeasurePostProcessor.CLEF_OR_KEY;
+        }
+        byte[] before = g.clone(), first = crop(g), second = crop(g);
+        assertArrayEquals(expected, first);
+        assertArrayEquals(expected, second);
+        assertNotSame(first, second);
+        first[0] = 42;
+        assertArrayEquals(expected, second);
+        assertArrayEquals(expected, crop(g));
+        assertArrayEquals(before, g);
+    }
 }

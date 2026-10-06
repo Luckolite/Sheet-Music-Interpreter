@@ -49,4 +49,46 @@ public class AccidentalDotInkTest {
         }
         assertFalse(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
     }
+
+    @Test
+    public void faintPairedShaftLevelsRepeatWithoutChangingTheCaller() {
+        for (int level : new int[] {164, 180, 198, 210}) {
+            byte[] g = page(true, true, true);
+            for (int i = 0; i < g.length; i++) if ((g[i] & 255) == 180) g[i] = (byte) level;
+            byte[] before = g.clone();
+            assertTrue(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
+            assertTrue(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
+            assertArrayEquals(before, g);
+            Arrays.fill(g, (byte) 255);
+            before = g.clone();
+            assertFalse(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
+            assertArrayEquals(before, g);
+        }
+        byte[] g = page(true, true, true);
+        for (int i = 0; i < g.length; i++) if ((g[i] & 255) == 180) g[i] = (byte) 211;
+        byte[] before = g.clone();
+        assertFalse(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
+        assertFalse(AccidentalDotInk.matches(g, W, H, 61, 59, 69, 63, 16));
+        assertArrayEquals(before, g);
+    }
+
+    @Test
+    public void translatedDifferentStrideStillRequiresTheConnectedCrossbar() {
+        byte[] source = page(true, true, true);
+        byte[] sourceBefore = source.clone();
+        byte[] g = new byte[177 * 163];
+        Arrays.fill(g, (byte) 255);
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++) g[(y + 11) * 177 + x + 7] = source[y * W + x];
+        byte[] before = g.clone();
+        assertTrue(AccidentalDotInk.matches(g, 177, 163, 68, 70, 76, 74, 16));
+        assertTrue(AccidentalDotInk.matches(g, 177, 163, 68, 70, 76, 74, 16));
+        assertArrayEquals(before, g);
+        for (int y = 70; y <= 74; y++) for (int x = 71; x <= 73; x++) g[y * 177 + x] = (byte) 255;
+        before = g.clone();
+        assertFalse(AccidentalDotInk.matches(g, 177, 163, 68, 70, 76, 74, 16));
+        assertFalse(AccidentalDotInk.matches(g, 177, 163, 68, 70, 76, 74, 16));
+        assertArrayEquals(before, g);
+        assertArrayEquals(sourceBefore, source);
+    }
 }

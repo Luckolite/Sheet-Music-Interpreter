@@ -23,9 +23,10 @@ final class HandwrittenTwoHeadInk {
         int top = Math.max(0, Math.round(minY - gap * 4)),
                 bottom = Math.min(height - 1, Math.round(maxY + gap * 2));
         int w = right - left + 1, h = bottom - top + 1;
+        int[] queue = null;
         for (int threshold : new int[] {65, 80, 110, 140}) {
             boolean[] seen = new boolean[w * h];
-            int[] queue = new int[w * h];
+            if (queue == null) queue = new int[w * h];
             for (int sy = minY; sy <= maxY; sy++)
                 for (int sx = minX; sx <= maxX; sx++) {
                     int seed = (sy - top) * w + sx - left;

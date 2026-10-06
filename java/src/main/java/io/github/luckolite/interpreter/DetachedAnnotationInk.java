@@ -43,9 +43,10 @@ final class DetachedAnnotationInk {
         int top = Math.max(0, Math.round(minY - gap * (bow ? 5 : 2))),
                 bottom = Math.min(height - 1, Math.round(maxY + gap * (bow ? .4f : 2)));
         int w = right - left + 1, h = bottom - top + 1;
+        int[] queue = null;
         for (int threshold : new int[] {80, 110, 140, 180, 205}) {
             boolean[] seen = new boolean[w * h], rules = new boolean[h];
-            int[] queue = new int[w * h];
+            if (queue == null) queue = new int[w * h];
             if (!bow)
                 for (int y = 0; y < h; y++) {
                     int count = 0;

@@ -85,4 +85,45 @@ public class PrintedFlatGlyphTest {
                         RejectedKeyBoundaryTest.M);
         assertTrue(result.keyChanges().isEmpty());
     }
+
+    @Test
+    public void completeFlatOutcomeRereadsCallerAndKeepsItsPixels() {
+        flat();
+        byte[] before = gray.clone();
+        assertTrue(read(50));
+        assertTrue(read(50));
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        byte[] white = gray.clone();
+        assertFalse(read(50));
+        assertFalse(read(50));
+        assertArrayEquals(white, gray);
+    }
+
+    @Test
+    public void edgeFlatSkipsUnavailableRuleProbeAndKeepsGuardErrors() {
+        flat();
+        byte[] edge = new byte[w * h];
+        Arrays.fill(edge, (byte) 255);
+        for (int y = 0; y < h; y++)
+            for (int x = 60; x <= 74; x++) edge[y * w + x - 60] = gray[y * w + x];
+        byte[] before = edge.clone();
+        assertTrue(PrintedFlatGlyph.matches(edge, w, h, 0, 50, 14, 90, 16));
+        assertArrayEquals(before, edge);
+        assertFalse(PrintedFlatGlyph.matches(null, w, h, 0, 50, 14, 90, 16));
+        byte[] shortRaster = {(byte) 231};
+        try {
+            PrintedFlatGlyph.matches(shortRaster, w, h, 0, 50, 14, 90, 16);
+            fail("the original first source-ink read must reject a short raster");
+        } catch (ArrayIndexOutOfBoundsException expected) {
+            assertEquals((byte) 231, shortRaster[0]);
+        }
+        Arrays.fill(edge, (byte) 255);
+        before = edge.clone();
+        for (float gap :
+                new float[] {-0f, 0f, Float.NaN, Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY})
+            assertFalse(PrintedFlatGlyph.matches(edge, w, h, 0, 50, 14, 90, gap));
+        assertFalse(PrintedFlatGlyph.matches(shortRaster, w, h, 0, 50, -1, 90, 16));
+        assertArrayEquals(before, edge);
+    }
 }

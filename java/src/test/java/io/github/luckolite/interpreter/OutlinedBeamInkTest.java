@@ -94,4 +94,61 @@ public class OutlinedBeamInkTest {
                 OutlinedBeamInk.count(
                         page(1, 240, 185, true, true, 0), W, H, new int[] {100, 128, 1}, 80, 20));
     }
+
+    @Test
+    public void completePaperAndBeamOutcomesRereadTheirCaller() throws Exception {
+        var paper =
+                OutlinedBeamInk.class.getDeclaredMethod(
+                        "paper",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        float.class);
+        paper.setAccessible(true);
+        byte[] raw = page(2, 240, 185, false, false, 0), before = raw.clone();
+        assertEquals(240, (int) (Integer) paper.invoke(null, raw, W, H, 100, 40, 100, 20));
+        assertEquals(2, count(raw, false));
+        assertEquals(2, count(raw, false));
+        assertArrayEquals(before, raw);
+        Arrays.fill(raw, (byte) 255);
+        before = raw.clone();
+        assertEquals(255, (int) (Integer) paper.invoke(null, raw, W, H, 100, 40, 100, 20));
+        assertEquals(0, count(raw, false));
+        assertArrayEquals(before, raw);
+    }
+
+    @Test
+    public void paperBoundsKeepEmptyNonfiniteAndShortRoutes() throws Exception {
+        var paper =
+                OutlinedBeamInk.class.getDeclaredMethod(
+                        "paper",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        int.class,
+                        float.class);
+        paper.setAccessible(true);
+        byte[] small = new byte[16];
+        Arrays.fill(small, (byte) 173);
+        byte[] before = small.clone();
+        for (float gap : new float[] {-0f, 0f, Float.NaN, 4})
+            assertEquals(173, (int) (Integer) paper.invoke(null, small, 4, 4, 2, 1, 2, gap));
+        for (float gap : new float[] {Float.POSITIVE_INFINITY, Float.NEGATIVE_INFINITY})
+            assertEquals(0, (int) (Integer) paper.invoke(null, small, 4, 4, 2, 1, 2, gap));
+        assertEquals(0, (int) (Integer) paper.invoke(null, null, 0, 0, 0, 0, 0, 0f));
+        byte[] shortRaster = {(byte) 231};
+        try {
+            paper.invoke(null, shortRaster, 4, 4, 2, 1, 2, 0f);
+            fail("the original first sampled luminance must reject a short raster");
+        } catch (java.lang.reflect.InvocationTargetException expected) {
+            assertTrue(expected.getCause() instanceof ArrayIndexOutOfBoundsException);
+            assertEquals((byte) 231, shortRaster[0]);
+        }
+        assertArrayEquals(before, small);
+    }
 }

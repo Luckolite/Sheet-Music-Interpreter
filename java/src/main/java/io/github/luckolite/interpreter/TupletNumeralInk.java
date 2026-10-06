@@ -170,6 +170,7 @@ final class TupletNumeralInk {
     private static void removeSlopedRules(byte[] pixels, int w, int h, float gap) {
         byte[] original = pixels.clone();
         int max = Math.max(2, Math.round(gap * .30f));
+        float center = w * .5f, validThreshold = w * .90f, thinThreshold = w * .82f;
         for (int angle = -4; angle <= 4; angle++) {
             if (angle == 0) continue;
             float slope = angle * .025f;
@@ -179,8 +180,9 @@ final class TupletNumeralInk {
                     // Each remaining column can supply at most one observation.
                     // Reject only when the original coverage thresholds are unreachable.
                     int remaining = w - x;
-                    if (valid + remaining < w * .90f || thin + remaining < w * .82f) break;
-                    int y = Math.round(cy + slope * (x - w * .5f));
+                    if (valid + remaining < validThreshold || thin + remaining < thinThreshold)
+                        break;
+                    int y = Math.round(cy + slope * (x - center));
                     if (y - max < 0 || y + max >= h) continue;
                     if (original[y * w + x] != 0) continue;
                     valid++;
@@ -189,9 +191,9 @@ final class TupletNumeralInk {
                     while (bottom < y + max && original[(bottom + 1) * w + x] == 0) bottom++;
                     if (bottom - top + 1 <= max) thin++;
                 }
-                if (valid < w * .90f || thin < w * .82f) continue;
+                if (valid < validThreshold || thin < thinThreshold) continue;
                 for (int x = 1; x < w - 1; x++) {
-                    int y = Math.round(cy + slope * (x - w * .5f));
+                    int y = Math.round(cy + slope * (x - center));
                     if (y - max - 1 < 0 || y + max + 1 >= h || original[y * w + x] != 0) continue;
                     int top = y, bottom = y;
                     while (top > y - max && original[(top - 1) * w + x] == 0) top--;

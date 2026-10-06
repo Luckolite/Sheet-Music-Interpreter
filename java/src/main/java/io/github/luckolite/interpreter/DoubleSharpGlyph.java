@@ -30,7 +30,8 @@ final class DoubleSharpGlyph {
         // Real cross arms terminate at their box; long vertical continuations do not.
         int reachEnd = Math.max(3, Math.round(gap * .4f));
         for (int x = left; x <= right; x++)
-            for (int direction : new int[] {-1, 1}) {
+            for (int side = 0; side < 2; side++) {
+                int direction = side == 0 ? -1 : 1;
                 int edge = direction < 0 ? top : bottom, run = 0;
                 for (int d = 0; d <= reachEnd; d++) {
                     int y = edge + direction * d;
@@ -101,12 +102,14 @@ final class DoubleSharpGlyph {
                 || h > w * 1.5f) return false;
         double[][] fill = new double[3][3];
         int[][] count = new int[3][3];
-        for (int y = 0; y < h; y++)
+        for (int y = 0; y < h; y++) {
+            int row = Math.min(2, y * 3 / h), sourceRow = (top + y) * width + left;
             for (int x = 0; x < w; x++) {
-                int row = Math.min(2, y * 3 / h), col = Math.min(2, x * 3 / w);
+                int col = Math.min(2, x * 3 / w);
                 count[row][col]++;
-                if (ink(pixels[(top + y) * width + left + x], label)) fill[row][col]++;
+                if (ink(pixels[sourceRow + x], label)) fill[row][col]++;
             }
+        }
         for (int y = 0; y < 3; y++)
             for (int x = 0; x < 3; x++) fill[y][x] /= Math.max(1, count[y][x]);
         boolean corners = fill[0][0] > .15 && fill[0][2] > .3 && fill[2][0] > .3 && fill[2][2] > .3;

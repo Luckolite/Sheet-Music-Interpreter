@@ -111,4 +111,47 @@ public class HandwrittenTwoHeadInkTest {
         matches();
         assertArrayEquals(before, gray);
     }
+
+    @Test
+    public void lateReturningTwoUsesItsOwnPrefixAfterLargerRejectedComponent() {
+        for (int ink : new int[] {66, 81, 111, 140}) {
+            Arrays.fill(gray, (byte) 255);
+            two();
+            for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) ink;
+            // The solid block is disjoint, seeded first, and rejected by the original geometry.
+            for (int y = 100; y <= 123; y++) for (int x = 60; x <= 98; x++) gray[y * W + x] = 0;
+            byte[] before = gray.clone();
+            assertTrue(matches());
+            assertTrue(matches());
+            assertArrayEquals(before, gray);
+            Arrays.fill(gray, (byte) 255);
+            before = gray.clone();
+            assertFalse(matches());
+            assertArrayEquals(before, gray);
+        }
+    }
+
+    @Test
+    public void rejectedAndRestoredRasterNeverRetainsAnEarlierTwo() {
+        two();
+        byte[] before = gray.clone();
+        assertTrue(matches());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        line(132, 95, 100, 130);
+        before = gray.clone();
+        assertFalse(matches());
+        assertFalse(matches());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        two();
+        for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) 140;
+        before = gray.clone();
+        assertTrue(matches());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        before = gray.clone();
+        assertFalse(matches());
+        assertArrayEquals(before, gray);
+    }
 }

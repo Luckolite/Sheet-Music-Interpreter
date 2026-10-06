@@ -52,12 +52,15 @@ final class PrintedFlatGlyph {
         int start = Math.max(spine + Math.round(gap * .3f), left + Math.round(ww * .6f));
         if (start > right) return false;
         int upper = 0, bowl = 0, tail = 0, clear = 0;
+        boolean ruleWithinSource = left - gap >= 0 && right + gap < w;
+        int leftRuleX = ruleWithinSource ? Math.round(left - gap) : 0;
+        int rightRuleX = ruleWithinSource ? Math.round(right + gap) : 0;
+        float upperEnd = top + hh * .4f, tailStart = top + hh * .9f;
+        float clearStart = top + hh * .5f, clearEnd = top + hh * .8f;
+        int clearColumn = spine + Math.round(gap * .2f);
         for (int y = top; y <= bottom; y++) {
             boolean rule =
-                    left - gap >= 0
-                            && right + gap < w
-                            && dark(gray, w, Math.round(left - gap), y)
-                            && dark(gray, w, Math.round(right + gap), y);
+                    ruleWithinSource && dark(gray, w, leftRuleX, y) && dark(gray, w, rightRuleX, y);
             if (rule) continue;
             boolean ink = false;
             for (int x = start; x <= right; x++)
@@ -66,13 +69,12 @@ final class PrintedFlatGlyph {
                     break;
                 }
             if (ink) {
-                if (y < top + hh * .4f) upper++;
-                else if (y > top + hh * .9f) tail++;
+                if (y < upperEnd) upper++;
+                else if (y > tailStart) tail++;
                 else bowl++;
             }
-            if (y > top + hh * .5f && y < top + hh * .8f)
-                for (int x = spine + Math.round(gap * .2f); x < start; x++)
-                    if (!dark(gray, w, x, y)) clear++;
+            if (y > clearStart && y < clearEnd)
+                for (int x = clearColumn; x < start; x++) if (!dark(gray, w, x, y)) clear++;
         }
         return upper <= hh * .08f && tail <= 1 && bowl >= hh * .18f && clear >= 3;
     }

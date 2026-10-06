@@ -96,4 +96,42 @@ public final class LongSlurFragmentInkTest {
         left();
         assertArrayEquals(copy, gray);
     }
+
+    @Test
+    public void paleReturnCurveSurvivesAfterLargerEarlierRejectedInk() {
+        curve(-1, false, false);
+        for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) 140;
+        // This disjoint filled block is seeded first and cannot prove a long return curve.
+        for (int y = 90; y <= 105; y++) for (int x = 160; x <= 200; x++) gray[y * W + x] = 0;
+        byte[] before = gray.clone();
+        assertTrue(left());
+        assertTrue(left());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        before = gray.clone();
+        assertFalse(left());
+        assertArrayEquals(before, gray);
+    }
+
+    @Test
+    public void thresholdReturnCurvesRestoreWithoutRetainingAnEarlierRaster() {
+        for (int shade : new int[] {80, 110, 140}) {
+            Arrays.fill(gray, (byte) 255);
+            curve(1, false, false);
+            for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) shade;
+            byte[] before = gray.clone();
+            assertTrue(left());
+            assertTrue(left());
+            assertArrayEquals(before, gray);
+            Arrays.fill(gray, (byte) 255);
+            before = gray.clone();
+            assertFalse(left());
+            assertArrayEquals(before, gray);
+        }
+        curve(1, false, false);
+        for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) 141;
+        byte[] before = gray.clone();
+        assertFalse(left());
+        assertArrayEquals(before, gray);
+    }
 }

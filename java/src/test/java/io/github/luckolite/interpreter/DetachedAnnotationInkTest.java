@@ -105,4 +105,53 @@ public final class DetachedAnnotationInkTest {
         bowTip();
         assertArrayEquals(copy, gray);
     }
+
+    @Test
+    public void lateThresholdComponentsUseOnlyTheirNewQueuePrefix() {
+        for (int ink : new int[] {81, 111, 141, 181, 205}) {
+            Arrays.fill(gray, (byte) 255);
+            accent();
+            for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) ink;
+            // This larger early dark component is disjoint from the pale accent tip.
+            rect(185, 200, 80, 107);
+            byte[] before = gray.clone();
+            assertTrue(accentTip());
+            assertTrue(accentTip());
+            assertArrayEquals(before, gray);
+
+            Arrays.fill(gray, (byte) 255);
+            bow();
+            for (int i = 0; i < gray.length; i++) if (gray[i] == 0) gray[i] = (byte) ink;
+            // Its one surviving thick center is disjoint from the pale bow leg.
+            rect(200, 202, 111, 113);
+            before = gray.clone();
+            assertTrue(bowTip());
+            assertTrue(bowTip());
+            assertArrayEquals(before, gray);
+        }
+    }
+
+    @Test
+    public void rejectedAndChangedRasterCannotReuseAnEarlierComponent() {
+        bow();
+        byte[] before = gray.clone();
+        assertTrue(bowTip());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        rect(160, 200, 60, 110);
+        before = gray.clone();
+        assertFalse(bowTip());
+        assertFalse(bowTip());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        accent();
+        before = gray.clone();
+        assertTrue(accentTip());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 255);
+        before = gray.clone();
+        assertFalse(accentTip());
+        assertFalse(bowTip());
+        assertArrayEquals(before, gray);
+    }
 }

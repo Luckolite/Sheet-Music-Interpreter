@@ -135,12 +135,13 @@ final class OutlinedBeamInk {
             byte[] gray, int width, int height, int x, int top, int bottom, float gap) {
         int[] hist = new int[256];
         int total = 0;
-        for (int y = Math.max(0, top - Math.round(gap));
-                y <= Math.min(height - 1, bottom + Math.round(gap));
-                y++)
-            for (int col = Math.max(0, x - Math.round(gap * 2));
-                    col <= Math.min(width - 1, x + Math.round(gap * 2));
-                    col++) {
+        int rowMargin = Math.round(gap), columnMargin = Math.round(gap * 2);
+        int firstRow = Math.max(0, top - rowMargin),
+                lastRow = Math.min(height - 1, bottom + rowMargin);
+        int firstColumn = Math.max(0, x - columnMargin),
+                lastColumn = Math.min(width - 1, x + columnMargin);
+        for (int y = firstRow; y <= lastRow; y++)
+            for (int col = firstColumn; col <= lastColumn; col++) {
                 hist[gray[y * width + col] & 255]++;
                 total++;
             }

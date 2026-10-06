@@ -35,9 +35,10 @@ final class LongSlurFragmentInk {
         int top = Math.max(0, Math.round(cy - gap * 4)),
                 bottom = Math.min(height - 1, Math.round(cy + gap * 4));
         int w = right - left + 1, h = bottom - top + 1;
+        int[] queue = null;
         for (int threshold : new int[] {80, 110, 140}) {
             boolean[] rules = new boolean[h], seen = new boolean[w * h];
-            int[] queue = new int[w * h];
+            if (queue == null) queue = new int[w * h];
             for (int y = 0; y < h; y++) {
                 int count = 0;
                 for (int x = left; x <= right; x++)
