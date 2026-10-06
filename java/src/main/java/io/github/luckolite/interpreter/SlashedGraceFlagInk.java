@@ -35,11 +35,12 @@ final class SlashedGraceFlagInk {
         boolean hasRule = false;
         int reach = Math.round(gap), span = Math.max(4, Math.round(gap * .5f));
         if (stemX - reach - span < 0 || stemX + reach + span >= width) return original;
+        int ruleThreshold = Math.round(threshold * .8f);
         for (int y = Math.max(0, top - 1); y <= Math.min(height - 1, bottom + 1); y++) {
             int a = 0, b = 0;
             for (int dx = 0; dx < span; dx++) {
-                if ((gray[y * width + stemX - reach - dx] & 255) < Math.round(threshold * .8f)) a++;
-                if ((gray[y * width + stemX + reach + dx] & 255) < Math.round(threshold * .8f)) b++;
+                if ((gray[y * width + stemX - reach - dx] & 255) < ruleThreshold) a++;
+                if ((gray[y * width + stemX + reach + dx] & 255) < ruleThreshold) b++;
             }
             rules[y] = a >= span * .85f && b >= span * .85f;
             hasRule |= rules[y];
@@ -60,13 +61,15 @@ final class SlashedGraceFlagInk {
             int threshold,
             float gap,
             boolean[] rules) {
+        float[] slopes = null;
         for (float contrast : new float[] {.8f, 1f}) {
             int th = Math.round(threshold * contrast);
             var roots = new ArrayList<Integer>();
             boolean slash = false;
             for (int y = top; y <= bottom; y++) {
                 boolean down = false;
-                for (float slope : new float[] {.75f, 1f, 1.25f, 1.5f, 1.75f, 2f}) {
+                if (slopes == null) slopes = new float[] {.75f, 1f, 1.25f, 1.5f, 1.75f, 2f};
+                for (float slope : slopes) {
                     if (y + (right - left) * slope <= bottom)
                         down |= line(gray, width, height, left, right, y, slope, th, rules);
                     slash |= line(gray, width, height, left, right, y, -slope, th, rules);

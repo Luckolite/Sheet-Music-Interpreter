@@ -138,4 +138,50 @@ public class PaleSingleBeamInkTest {
     public void paleUnbeamedQuarterStaysUnbeamed() throws Exception {
         assertEquals(0, decoded(0, 240));
     }
+
+    @Test
+    public void bothBeamSidesAndStemDirectionsRetainTheInkBoundary() {
+        for (int direction : new int[] {-1, 1})
+            for (int side : new int[] {-1, 1}) {
+                Arrays.fill(g, (byte) 255);
+                stem[2] = direction;
+                rect(side < 0 ? 40 : 100, side < 0 ? 100 : 160, 80, 86, 164);
+                byte[] before = g.clone();
+                int[] originalStem = stem.clone();
+                assertTrue(proof());
+                assertTrue(proof());
+                assertArrayEquals(before, g);
+                assertArrayEquals(originalStem, stem);
+                rect(side < 0 ? 40 : 100, side < 0 ? 100 : 160, 80, 86, 165);
+                before = g.clone();
+                assertFalse(proof());
+                assertArrayEquals(before, g);
+                assertArrayEquals(originalStem, stem);
+            }
+    }
+
+    @Test
+    public void changedStemAndClearedRasterDoNotReuseEarlierBeamEvidence() {
+        rect(100, 160, 80, 86, 40);
+        byte[] before = g.clone();
+        int[] originalStem = stem.clone();
+        assertTrue(proof());
+        assertArrayEquals(before, g);
+        assertArrayEquals(originalStem, stem);
+        stem[1] = 180;
+        originalStem = stem.clone();
+        assertFalse(proof());
+        assertArrayEquals(before, g);
+        assertArrayEquals(originalStem, stem);
+        stem[1] = 80;
+        originalStem = stem.clone();
+        assertTrue(proof());
+        assertArrayEquals(before, g);
+        assertArrayEquals(originalStem, stem);
+        Arrays.fill(g, (byte) 255);
+        before = g.clone();
+        assertFalse(proof());
+        assertArrayEquals(before, g);
+        assertArrayEquals(originalStem, stem);
+    }
 }

@@ -23,9 +23,11 @@ final class PaleSingleBeamInk {
         int thick = Math.max(4, (int) Math.ceil(gap * .28f)),
                 near = Math.max(2, Math.round(gap * .25f)),
                 far = Math.round(gap * 1.75f);
+        float[] slopes = null;
         for (int side : new int[] {-1, 1})
-            for (int y = t; y <= b; y++)
-                for (float slope : new float[] {-.5f, -.35f, -.2f, 0, .2f, .35f, .5f}) {
+            for (int y = t; y <= b; y++) {
+                if (slopes == null) slopes = new float[] {-.5f, -.35f, -.2f, 0, .2f, .35f, .5f};
+                for (float slope : slopes) {
                     int hits = 0, total = 0;
                     for (int d = near; d <= far; d++) {
                         int x = stem[0] + side * d, yy = Math.round(y + slope * d);
@@ -44,6 +46,7 @@ final class PaleSingleBeamInk {
                     }
                     if (total > 0 && hits >= total * .9f) return true;
                 }
+            }
         return false;
     }
 }

@@ -101,9 +101,9 @@
     },
     "SlashedGraceFlagInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
-      "source_sha256": "2f455aea365e9635565d253671aed6dd68ad22d4ab0225de1e3ce4944cb66d92",
+      "source_sha256": "339211e6d57a500ac901baecb4618521cf2f8fdbba6c8e4746a5df78fba47726",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "2f455aea365e9635565d253671aed6dd68ad22d4ab0225de1e3ce4944cb66d92"
+      "source_normalized_sha256": "339211e6d57a500ac901baecb4618521cf2f8fdbba6c8e4746a5df78fba47726"
     },
     "CurvedStaffTail.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurvedStaffTail.java",
@@ -276,19 +276,19 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+      "source_sha256": "b195e425d67f128add8c29ddbca40d8d51f654fa004998435f1a4ca62c561c8a",
       "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Lazily reuse printed body contrast at its original first eligible note within each glyph. Keep immutable raster ownership, classification, note order, thresholds and all other note-dependent predicates unchanged; reset for every glyph and detection call. Original synthetic multi-owner/glyph/page/caller regression; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
-      "source_normalized_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+      "source_normalized_sha256": "b195e425d67f128add8c29ddbca40d8d51f654fa004998435f1a4ca62c561c8a",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
       "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
-      "source_sha256": "c2cece6146c6e2d12b3a389b369a931b5c306fbb5f1739587f40e91d352efa35",
+      "source_sha256": "985a7a30e799d88ac33e7223bc63aa850490ca4c9a5da2fe8c7f8f97cb18065a",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Original pure-Java topology helper. Requires two open left arms converging to one bounded right tip, consistent direction and column continuity. Caller bounds source components before allocation and retains dark seed/semantic/ownership vetoes. Whole760code/literal tokens match app,10original generated shape/immutability controls; no Android dependency or private score material.",
-      "source_normalized_sha256": "c2cece6146c6e2d12b3a389b369a931b5c306fbb5f1739587f40e91d352efa35"
+      "source_normalized_sha256": "985a7a30e799d88ac33e7223bc63aa850490ca4c9a5da2fe8c7f8f97cb18065a"
     },
     "NoteOrnament.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteOrnament.java",
@@ -816,9 +816,9 @@
     },
     "PaleSingleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleSingleBeamInk.java",
-      "source_sha256": "187d4755c93fae7cb4b51eb2696e4fdcd7ea8797cf0008c2a73fcb58c608fdce",
+      "source_sha256": "3d22df8d35b339a518caf36861f64a2a7b4024da83ad2aae6daf9d24112c306d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "187d4755c93fae7cb4b51eb2696e4fdcd7ea8797cf0008c2a73fcb58c608fdce"
+      "source_normalized_sha256": "3d22df8d35b339a518caf36861f64a2a7b4024da83ad2aae6daf9d24112c306d"
     },
     "PaleChordHeadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleChordHeadRecovery.java",
@@ -2718,5 +2718,170 @@
     "whole_score_parity_claim": false,
     "phone_elapsed_claim": false,
     "boundary": "Separate actual HOST helper gate with package-only APP adaptation. Nine-family immutable port and 200 prior invocations retained; combined evidence totals 244 candidate-side invocations. Required public/app/native release gates and selection remain pending; moved or removed allocation OOM opportunities and exception source-line equality are not claimed."
+  },
+  "slashed_grace_flag_and_pale_single_beam_lazy_slopes_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "SlashedGraceFlagInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
+        "source_sha256": "2f455aea365e9635565d253671aed6dd68ad22d4ab0225de1e3ce4944cb66d92",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "2f455aea365e9635565d253671aed6dd68ad22d4ab0225de1e3ce4944cb66d92"
+      },
+      "PaleSingleBeamInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleSingleBeamInk.java",
+        "source_sha256": "187d4755c93fae7cb4b51eb2696e4fdcd7ea8797cf0008c2a73fcb58c608fdce",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "187d4755c93fae7cb4b51eb2696e4fdcd7ea8797cf0008c2a73fcb58c608fdce"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "SlashedGraceFlagInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
+        "app_sha256": "339211e6d57a500ac901baecb4618521cf2f8fdbba6c8e4746a5df78fba47726",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SlashedGraceFlagInk.java",
+        "standalone_sha256": "3c1a4e547e580cb6190aab627efc5198c6ec30a89fd1f9ac9e90c2e61eafe706"
+      },
+      {
+        "name": "PaleSingleBeamInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PaleSingleBeamInk.java",
+        "app_sha256": "3d22df8d35b339a518caf36861f64a2a7b4024da83ad2aae6daf9d24112c306d",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PaleSingleBeamInk.java",
+        "standalone_sha256": "0708a52b3a191e7d87c8cb168aee04c0a55d505d70cf66982ebae9e98cd82300"
+      }
+    ],
+    "scope": {
+      "SlashedGraceFlagInk": "One lazy call-local six-slope table per scan; identical rule threshold scalar rounded after original reach guard, every pixel/line read retained.",
+      "PaleSingleBeamInk": "One lazy call-local seven-slope table per supports call; original side array, side/y/slope traversal and all stem/gray reads retained."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 54,
+      "original_invocations": 46,
+      "new_invocations": 8,
+      "full_four_variant_observations": true,
+      "full_stem_gray_rules_callers": true,
+      "new_app_methods": 4,
+      "new_public_methods": 4
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/SlashedGraceFlagInkTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/PaleSingleBeamInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Actual54 model-free HOST helper invocations with package-only APP adaptation; original pure decoder controls use frozen905 standalone core, with actual class origins checked. Eleven-family accepted parent and its244 historical invocations are unchanged. No model/native entry points, Android bytecode, current full-pipeline or phone elapsed proof. This separate two-family port does not alter fixed eleven publication or assign a future version; ordinary release gates/selection remain pending and removed allocation OOM opportunities are explicit."
+  },
+  "marcato_head_primitive_pixel_buffer_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "5abe7ee7615ee3b1766975e4ed14f0452a2693d0",
+    "historical_origin_preserved": {
+      "NoteArticulationDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
+        "source_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+        "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Lazily reuse printed body contrast at its original first eligible note within each glyph. Keep immutable raster ownership, classification, note order, thresholds and all other note-dependent predicates unchanged; reset for every glyph and detection call. Original synthetic multi-owner/glyph/page/caller regression; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
+        "source_normalized_sha256": "bb49932f1ca8440edf0f5bec8b96b4eefb2db6425cc2b1f92892b1b4c1e748a9",
+        "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
+        "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "NoteArticulationDetector.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
+        "app_sha256": "cd9a83d3168fa886133f40c76fe8e03b742c8b192cef42d21ad8dfac958569e8",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
+        "standalone_sha256": "59c8a5b417cbf543cd58e294fce86d6a8589f850ba401e73b1aebfff0b39d42d"
+      }
+    ],
+    "scope": {
+      "NoteArticulationDetector": "Call-local lazy primitive retained-pixel buffer in marcatoAtHead; identical flood/component/pixel order, raw gray/queue/rules reads and predicates. Exact-length Glyph copy replaces boxing/stream. Allocation/OOM sites may differ."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 26,
+      "original_invocations": 22,
+      "new_invocations": 4,
+      "full_four_variant_observations": true,
+      "full_boolean_error_gray_caller_observations": true,
+      "actual_helper_test_core_class_origins_checked": true,
+      "new_app_methods": 2,
+      "new_public_methods": 2
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/MarcatoHeadTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Actual26 model-free HOST helper invocations with package-only APP adaptation; original pure decoder controls use frozen905 standalone core, with actual helper/test/core class origins checked. Thirteen-family accepted parent preserves its eleven-family244 and Slashed/Pale54 historical invocations. No model/native entry points, Android bytecode, current full-pipeline or phone elapsed proof. This separate one-family port does not alter fixed eleven publication or assign a future version; ordinary release gates/selection remain pending. Removed boxing/stream allocation and changed primitive allocation OOM opportunities are explicit."
+  },
+  "owned_faint_chevron_prefix_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "92af7089671118389e26e7c9f8fb04b30b4b3ab1",
+    "historical_origin_preserved": {
+      "OpenChevron.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
+        "source_sha256": "c2cece6146c6e2d12b3a389b369a931b5c306fbb5f1739587f40e91d352efa35",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Original pure-Java topology helper. Requires two open left arms converging to one bounded right tip, consistent direction and column continuity. Caller bounds source components before allocation and retains dark seed/semantic/ownership vetoes. Whole760code/literal tokens match app,10original generated shape/immutability controls; no Android dependency or private score material.",
+        "source_normalized_sha256": "c2cece6146c6e2d12b3a389b369a931b5c306fbb5f1739587f40e91d352efa35"
+      },
+      "NoteArticulationDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
+        "source_sha256": "cd9a83d3168fa886133f40c76fe8e03b742c8b192cef42d21ad8dfac958569e8",
+        "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change. Lazily reuse printed body contrast at its original first eligible note within each glyph. Keep immutable raster ownership, classification, note order, thresholds and all other note-dependent predicates unchanged; reset for every glyph and detection call. Original synthetic multi-owner/glyph/page/caller regression; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
+        "source_normalized_sha256": "cd9a83d3168fa886133f40c76fe8e03b742c8b192cef42d21ad8dfac958569e8",
+        "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
+        "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "OpenChevron.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
+        "app_sha256": "985a7a30e799d88ac33e7223bc63aa850490ca4c9a5da2fe8c7f8f97cb18065a",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpenChevron.java",
+        "standalone_sha256": "1420f691ecc333668e584b9f73eca7dbaa83f6e00cbf29125bec5d2ba5bf1b0b"
+      },
+      {
+        "name": "NoteArticulationDetector.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
+        "app_sha256": "b195e425d67f128add8c29ddbca40d8d51f654fa004998435f1a4ca62c561c8a",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
+        "standalone_sha256": "bc36811fef2de684af8d83d9b1c51892d88a3c3ccd461cc5c9f72998220c9491"
+      }
+    ],
+    "scope": {
+      "OpenChevron": "Preserve the full-array six-argument API and original geometry/ink-allocation/read order; an owned prefix overload classifies only freshly written component pixels.",
+      "NoteArticulationDetector": "Retain the prior Marcato primitive-buffer change. Faint accents classify queue[0:end] before making an independent exact-length array only for an accepted Glyph; all flood/gray/pixel/threshold order is unchanged. Rejected copies are omitted and accepted-copy allocation exhaustion order can differ."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 60,
+      "original_invocations": 56,
+      "new_invocations": 4,
+      "full_four_variant_observations": true,
+      "full_glyph_pixels_detect_error_gray_caller_observations": true,
+      "actual_helper_test_core_class_origins_checked": true,
+      "new_app_methods": 2,
+      "new_public_methods": 2
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/OpenChevronTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/FaintOpenAccentTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Actual60 model-free HOST helper invocations with package-only APP adaptation; original controls use frozen905 standalone core with actual helper/test/core class origins checked. Fourteen-family parent retains eleven244, Slashed/Pale54 and Marcato26 historical invocations. Full-array API ordinary read/error order is retained; owned queue prefix cannot escape, and accepted Glyph pixels remain detached. Removed rejected copies and accepted-copy allocation exhaustion order are explicit. No native/model/Android bytecode/current full-score/guide/phone elapsed proof. This private successor leaves fixed eleven publication and all earlier review groups unchanged; ordinary release gates/selection remain pending."
   }
 }

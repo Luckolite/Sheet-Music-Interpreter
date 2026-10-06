@@ -144,4 +144,38 @@ public class SlashedGraceFlagInkTest {
     public void faintCompanionStemCannotForceSolitaryFlagRecovery() throws Exception {
         assertEquals(0, decoded(true));
     }
+
+    @Test
+    public void repeatedShadowedFlagCallsDoNotRetainAnEarlierRaster() {
+        for (int paper : new int[] {185, 240}) {
+            Arrays.fill(gray, (byte) paper);
+            flag();
+            slash();
+            byte[] before = gray.clone();
+            assertEquals(1, count());
+            assertEquals(1, count());
+            assertArrayEquals(before, gray);
+            Arrays.fill(gray, (byte) paper);
+            before = gray.clone();
+            assertEquals(0, count());
+            assertArrayEquals(before, gray);
+        }
+    }
+
+    @Test
+    public void aMissingFlagAndRestoredFlagKeepIndependentProbeResults() {
+        slash();
+        byte[] before = gray.clone();
+        assertEquals(0, count());
+        assertEquals(0, count());
+        assertArrayEquals(before, gray);
+        flag();
+        before = gray.clone();
+        assertEquals(1, count());
+        assertArrayEquals(before, gray);
+        Arrays.fill(gray, (byte) 240);
+        before = gray.clone();
+        assertEquals(0, count());
+        assertArrayEquals(before, gray);
+    }
 }

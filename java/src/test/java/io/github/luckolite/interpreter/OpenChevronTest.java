@@ -79,4 +79,16 @@ public class OpenChevronTest {
         assertTrue(OpenChevron.matches(p, 64, 0, 0, 24, 12));
         assertArrayEquals(copy, p);
     }
+
+    @Test
+    public void ownedPrefixIgnoresPoisonedTailWithoutChangingFullArrayApi() {
+        int[] pixels = raster(25, 13, (x, y) -> arms(x, y, 25, 13));
+        int[] queue = java.util.Arrays.copyOf(pixels, pixels.length + 7);
+        java.util.Arrays.fill(queue, pixels.length, queue.length, Integer.MIN_VALUE);
+        int[] before = queue.clone();
+        assertTrue(OpenChevron.matches(queue, 64, 0, 0, 24, 12, pixels.length));
+        assertFalse(OpenChevron.matches(queue, 64, 0, 0, 24, 12));
+        assertFalse(OpenChevron.matches(queue, 64, 0, 0, 24, 12, 0));
+        assertArrayEquals(before, queue);
+    }
 }

@@ -5,10 +5,18 @@ package io.github.luckolite.interpreter;
 /** A right-pointing accent has an open left side and two arms joining at its right tip. */
 final class OpenChevron {
     static boolean matches(int[] pixels, int stride, int left, int top, int right, int bottom) {
+        return matches(pixels, stride, left, top, right, bottom, -1);
+    }
+
+    /** Classify the current owned queue prefix; -1 retains the full-array API. */
+    static boolean matches(
+            int[] pixels, int stride, int left, int top, int right, int bottom, int pixelCount) {
         int w = right - left + 1, h = bottom - top + 1;
         if (w < 8 || h < 5 || w < h * 1.25 || w > h * 4) return false;
         boolean[][] ink = new boolean[w][h];
-        for (int p : pixels) {
+        int limit = pixelCount == -1 ? pixels.length : pixelCount;
+        for (int i = 0; i < limit; i++) {
+            int p = pixels[i];
             int x = p % stride - left, y = p / stride - top;
             if (x < 0 || x >= w || y < 0 || y >= h) return false;
             ink[x][y] = true;

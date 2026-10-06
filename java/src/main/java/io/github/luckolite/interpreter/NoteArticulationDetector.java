@@ -109,7 +109,8 @@ final class NoteArticulationDetector {
         for (int y = y0; y <= y1; y++)
             rules[y - y0] = recoveryStaffRule(gray, width, height, (left + right) / 2, y, gap);
         int[] queue = new int[w * h];
-        List<Integer> pixels = new ArrayList<>();
+        int[] pixels = null;
+        int pixelCount = 0;
         int gx0 = width, gx1 = 0, gy0 = height, gy1 = 0;
         for (int origin = 0; origin < seen.length; origin++) {
             int ox = origin % w, oy = origin / w;
@@ -152,19 +153,30 @@ final class NoteArticulationDetector {
                 gx1 = Math.max(gx1, x);
                 gy0 = Math.min(gy0, y);
                 gy1 = Math.max(gy1, y);
-                pixels.add(y * width + x);
+                int pixel = y * width + x;
+                if (pixels == null) pixels = new int[Math.min(10, queue.length)];
+                else if (pixelCount == pixels.length) {
+                    int capacity =
+                            (int)
+                                    Math.min(
+                                            queue.length,
+                                            Math.max(
+                                                    (long) pixelCount + 1,
+                                                    (long) pixels.length + (pixels.length >> 1)));
+                    pixels = java.util.Arrays.copyOf(pixels, capacity);
+                }
+                pixels[pixelCount++] = pixel;
             }
         }
-        if (pixels.isEmpty() || right < gx0 || left > gx1 || bottom < gy0 || top > gy1)
-            return false;
+        if (pixelCount == 0 || right < gx0 || left > gx1 || bottom < gy0 || top > gy1) return false;
         Glyph glyph =
                 new Glyph(
                         gx0,
                         gy0,
                         gx1,
                         gy1,
-                        pixels.size(),
-                        pixels.stream().mapToInt(Integer::intValue).toArray());
+                        pixelCount,
+                        java.util.Arrays.copyOf(pixels, pixelCount));
         if (interiorCrossbar(glyph, width, .45f)) return false;
         if (classify(glyph, width, gap, above) == NoteArticulation.MARCATO) return true;
         // Removing staff stripes can trim both the peak and feet of a small caret.
@@ -2454,9 +2466,10 @@ final class NoteArticulationDetector {
                     || dark < Math.max(3, Math.round(end * .18f) - 1)
                     || right - left > width * .025f
                     || bottom - top > height * .018f) continue;
-            int[] pixels = java.util.Arrays.copyOf(queue, end);
-            if (OpenChevron.matches(pixels, width, left, top, right, bottom))
+            if (OpenChevron.matches(queue, width, left, top, right, bottom, end)) {
+                int[] pixels = java.util.Arrays.copyOf(queue, end);
                 result.add(new Glyph(left, top, right, bottom, end, pixels));
+            }
         }
         return result;
     }

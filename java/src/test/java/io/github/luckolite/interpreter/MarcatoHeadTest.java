@@ -154,4 +154,31 @@ public class MarcatoHeadTest {
         cueMark(95, true, false, true);
         assertFalse(NoteArticulationDetector.marcatoAtHead(gray, W, H, 114, 81, 126, 91, 12, true));
     }
+
+    @Test
+    public void rejectedComponentsDoNotChangeStaffSplitMarcato() {
+        cueMark(95, true, false, false);
+        // The local window is x108..140/y73..106: one component is clipped,
+        // and the separate one-pixel shaft is rejected before pixel retention.
+        for (int y = 74; y <= 78; y++) gray[y * W + 108] = 0;
+        for (int y = 97; y <= 102; y++) gray[y * W + 139] = 0;
+        byte[] beforeGray = gray.clone(), beforeLabels = labels.clone();
+        assertTrue(NoteArticulationDetector.marcatoAtHead(gray, W, H, 121, 86, 127, 93, 12, true));
+        assertTrue(NoteArticulationDetector.marcatoAtHead(gray, W, H, 121, 86, 127, 93, 12, true));
+        assertArrayEquals(beforeGray, gray);
+        assertArrayEquals(beforeLabels, labels);
+    }
+
+    @Test
+    public void repeatedMarcatoRecoveryRereadsWhitenedCallerRaster() {
+        cueMark(95, true, false, false);
+        byte[] beforeGray = gray.clone(), beforeLabels = labels.clone();
+        assertTrue(NoteArticulationDetector.marcatoAtHead(gray, W, H, 121, 86, 127, 93, 12, true));
+        assertArrayEquals(beforeGray, gray);
+        Arrays.fill(gray, (byte) 255);
+        assertFalse(NoteArticulationDetector.marcatoAtHead(gray, W, H, 121, 86, 127, 93, 12, true));
+        assertFalse(NoteArticulationDetector.marcatoAtHead(gray, W, H, 121, 86, 127, 93, 12, true));
+        for (byte value : gray) assertEquals(255, value & 255);
+        assertArrayEquals(beforeLabels, labels);
+    }
 }
