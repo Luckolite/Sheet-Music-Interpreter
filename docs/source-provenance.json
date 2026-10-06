@@ -3117,5 +3117,19 @@
         "standalone_sha256": "aa7c595e0b87dc8c7f315c28cbfeb54053cbeae37feaee7732f382493b8f5d1a"
       }
     ]
+  },
+  "native_page_json_escaping_review": {
+    "source_path": "tools/native-worker/NativePageGuide.java",
+    "source_sha256": "3a46840f7ef861b87159c6d3f71b819c8ecd8af54e2eae94e0d0d234c33db1cc",
+    "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/Main.java",
+    "standalone_sha256": "704ce95baba5cae2bbd39209867a8746a5c7cd5b451a7c5783b3e63e6fab8ef0",
+    "regression_path": "java/src/test/java/io/github/luckolite/interpreter/MainSemanticJsonTest.java",
+    "license": "Apache-2.0",
+    "base_public_commit": "f6e8960545b3a910d1e78447460a29d893034413",
+    "scope": "The native page bridge retains each original quote and backslash after its escape slash. The standalone Main encoder already implements this behavior and its production source is unchanged.",
+    "regressions": "Seven original string, control-character, Unicode, record, array and map regressions extend the two existing MainSemanticJsonTest methods without changing their assertions.",
+    "source_map_boundary": "NativePageGuide is a desktop bridge adapter outside the mapped decoder rows; this review does not change any mapped source hashes. Its tool-source package identity changes independently of the unchanged decoder-core fingerprint.",
+    "preserved": "Plain and empty strings, solidus, existing four-digit ASCII-control escapes, valid BMP and supplementary Unicode, scalar fields and existing optional/wire branches retain their behavior.",
+    "boundary": "Unpaired UTF-16 surrogate policy is unchanged. No private score, raster, library, device log, signing material, model, dependency, note record layout or wire protocol is included or changed."
   }
 }

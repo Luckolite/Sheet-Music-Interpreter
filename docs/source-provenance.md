@@ -633,3 +633,12 @@ preserved app903H and public commit `e26aed0`. Guide282, record23, recognition4 
 protocol1 are unchanged; the paired processing release uses audio69. No model,
 dependency, private score, phone-performance or whole-library accuracy claim is
 included. Fresh standalone/release gates are recorded separately.
+
+Native page JSON retains the original quote and backslash after their escape slash.
+The standalone encoder already has this behavior; its production source is unchanged.
+Seven original string, control-character, Unicode and nested-value regressions extend
+the two existing tests. Plain strings, scalar fields and optional/wire branches remain.
+
+The native bridge is reviewed separately from the mapped decoder sources, whose hashes
+are unchanged. Unpaired-surrogate policy, note records, wire layouts, models and
+dependencies are unchanged; no private score, device or signing material is included.
