@@ -3131,5 +3131,73 @@
     "source_map_boundary": "NativePageGuide is a desktop bridge adapter outside the mapped decoder rows; this review does not change any mapped source hashes. Its tool-source package identity changes independently of the unchanged decoder-core fingerprint.",
     "preserved": "Plain and empty strings, solidus, existing four-digit ASCII-control escapes, valid BMP and supplementary Unicode, scalar fields and existing optional/wire branches retain their behavior.",
     "boundary": "Unpaired UTF-16 surrogate policy is unchanged. No private score, raster, library, device log, signing material, model, dependency, note record layout or wire protocol is included or changed."
+  },
+  "android_local_page_ocr_overlap_review": {
+    "license": "Apache-2.0",
+    "documentation_path": "docs/android-page-ocr-overlap.md",
+    "scope": "Android-only page orchestration with explicit local serial-await capability. No standalone scheduler, production counterpart or dependency is introduced.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "ee334684981f952f7ecde6867a570fe3310dd9dd43b4f3c53c297cae1b27992e"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortablePageOcr.java",
+        "source_sha256": "0906b58d68907e33d036d607a6eb3f190126ceeb7734900363d4810649fb5656"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/PageTextRecognition.java",
+        "source_sha256": "07b9eace96503b9dcda796dd5d4b51e9c8ccc622e53073a82aca4fe877848a94"
+      }
+    ],
+    "original_composed_app_source_manifest_sha256": "44241b737523fac80e799fbe9770335352c2146fb79d4428117f4856db52ff1d",
+    "android_test_fixture_continuation_manifest_sha256": "48e1b9954f763e94732ec361039119a599ccfc59224201d600ec5c066d4decd1",
+    "manifest_scope": "Android test-fixture continuation inputs; later private C# smoke changes can alter the effective whole-source manifest without changing Android inputs.",
+    "existing_mapped_hashes_origins_and_prior_reviews_retained": true,
+    "source_hash_mapping_updates": [],
+    "standalone_production_counterpart": false,
+    "mapped_portable_ocr_change_by_this_adapter": false,
+    "combined_changes_separately_reviewed": [
+      "PortableOcr gray normalization",
+      "TablatureDecoder seventh-line bounds repair"
+    ],
+    "managed_await_contract": "Original timed Future.get, wrapped ExecutionException causes, completed-failure cancel attempt and interrupt restoration retained.",
+    "local_await_contract": "Only opted-in local readers provide their serial await; PortablePageOcr delegates its existing serial method.",
+    "tab_contract": "Read-only tab detection runs once. Segmentation retains failure priority over a deferred ordinary tab indexing failure. Tab crop/header request order is preserved; the bounds repair is a separate admitted change.",
+    "compatibility": {
+      "guide_layout": 282,
+      "note_layout": 23,
+      "recognition_revision": 5,
+      "record_layout_change_by_this_adapter": false
+    },
+    "synthetic_android_regressions": {
+      "source_path": "app/src/androidTest/java/com/musicsheets/app/importer/PageTextRecognitionInstrumentedTest.java",
+      "source_sha256": "1d43cab45edf83a06c3c4fa6da651cd4a399a2ef628ea2c064feff5855a54b1d",
+      "exact_method_excerpts_in_documentation": [
+        "managedPrefetchKeepsWrappedNativeFailuresAndCompletedFailureCancelAttempts",
+        "localPrefetchMatchesSerialNativeCausesAndRejectsUnspecifiedAwaitContracts",
+        "localAndManagedPrefetchRetainTimeoutAndInterruptCancellationBoundaries"
+      ],
+      "app_main_compilation_passed": true,
+      "unit_total": 7470,
+      "unit_executed_passed": 7468,
+      "unit_skipped": 2,
+      "unit_failed": 0,
+      "lint_errors": 0,
+      "android_test_compilation_continuation_pending": false,
+      "methods_executed": false,
+      "model_or_native_owner_creation_required": false,
+      "standalone_java_regression_claim": false,
+      "optional_owner_control_excluded_after_separate_tab_repair": true,
+      "android_test_compilation_passed": true,
+      "android_test_apk_packaged": true
+    },
+    "resource_boundary": "Earlier allocations, speculative work and physical timeout occurrence can change. Future cancellation does not establish in-flight native completion.",
+    "native_completion_proved": false,
+    "whole_score_or_guide_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "model_or_record_bytes_changed_by_this_adapter": false,
+    "compiled_whole_app_source_manifest_sha256": "eb84e7c1d4662fe4b1214ccd5bc2b007f97dc6b6e2a4eb573d3703dc8edbab56",
+    "android_inputs_unchanged_after_hub_smoke_isolation": true
   }
 }
