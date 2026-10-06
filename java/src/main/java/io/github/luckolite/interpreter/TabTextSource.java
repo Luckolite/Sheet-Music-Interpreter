@@ -9,12 +9,19 @@ import java.util.regex.*;
 public final class TabTextSource {
     private TabTextSource() {}
 
+    private static final class TokenPattern {
+        private static final Pattern VALUE =
+                Pattern.compile(
+                        "<[0-9]{1,2}>|\\([0-9]{1,2}\\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|[xXHPT=]|[\\uE1E7\\uE241\\uE243\\uE245\\uE4E3-\\uE4E8\\uE4A2\\uEAB2\\uE080-\\uE089\\uECA5\\uECA6\\uECB7]");
+    }
+
+    private static final class DigitPattern {
+        private static final Pattern VALUE = Pattern.compile("[0-9]");
+    }
+
     public static List<String> tokens(String text) {
         var found = new LinkedHashSet<String>();
-        var m =
-                Pattern.compile(
-                                "<[0-9]{1,2}>|\\([0-9]{1,2}\\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|[xXHPT=]|[\\uE1E7\\uE241\\uE243\\uE245\\uE4E3-\\uE4E8\\uE4A2\\uEAB2\\uE080-\\uE089\\uECA5\\uECA6\\uECB7]")
-                        .matcher(text);
+        var m = TokenPattern.VALUE.matcher(text);
         while (m.find()) found.add(m.group());
         for (char c = '0'; c <= '9'; c++)
             if (text.indexOf(c) >= 0) found.add(Character.toString(c));
@@ -64,7 +71,7 @@ public final class TabTextSource {
                 float cy = tab.top() + string * tab.gap();
                 var lane = new ArrayList<TablatureDecoder.Word>();
                 for (var v : words)
-                    if (v.text().matches("[0-9]")
+                    if (DigitPattern.VALUE.matcher(v.text()).matches()
                             && Math.abs((v.top() + v.bottom()) * .5f * h - cy) < tab.gap() * .35f)
                         lane.add(v);
                 lane.sort(Comparator.comparingDouble(TablatureDecoder.Word::left));

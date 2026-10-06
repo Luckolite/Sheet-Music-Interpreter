@@ -405,4 +405,89 @@ public class PortableOcrGrayTest {
             Thread.interrupted();
         }
     }
+
+    @Test
+    public void everyRoundedGrayLevelKeepsAllNormalizationBitsAndPadding() {
+        byte[] input = new byte[256];
+        for (int i = 0; i < input.length; i++) input[i] = (byte) i;
+        byte[] before = input.clone();
+        float[] mean = {.485f, .456f, .406f}, std = {.229f, .224f, .225f};
+        for (boolean detector : new boolean[] {false, true}) {
+            float[] actual =
+                    PortableOcr.normalizeGray(input, 256, 1, 0, 0, 256, 1, 256, 1, 259, detector);
+            bits(
+                    PortableOcr.normalize(
+                            referenceArgb(input), 256, 1, 0, 0, 256, 1, 256, 1, 259, detector),
+                    actual);
+            for (int c = 0; c < 3; c++) {
+                for (int i = 0; i < 256; i++) {
+                    float value = i / 255f;
+                    float expected = detector ? (value - mean[c]) / std[c] : (value - .5f) / .5f;
+                    assertEquals(
+                            Float.floatToRawIntBits(expected),
+                            Float.floatToRawIntBits(actual[c * 259 + i]));
+                }
+                for (int i = 256; i < 259; i++)
+                    assertEquals(0, Float.floatToRawIntBits(actual[c * 259 + i]));
+            }
+            bits(
+                    actual,
+                    PortableOcr.normalizeGray(input, 256, 1, 0, 0, 256, 1, 256, 1, 259, detector));
+            assertArrayEquals(before, input);
+        }
+    }
+
+    @Test
+    public void roundedGrayResizeKeepsHalfStepsClampsAndIndependentMutableCalls() {
+        int[][] pairs = {{0, 1}, {1, 2}, {126, 127}, {127, 128}, {254, 255}, {0, 255}};
+        for (int[] pair : pairs)
+            for (boolean detector : new boolean[] {false, true}) {
+                byte[] input = {(byte) pair[0], (byte) pair[1], (byte) pair[1], (byte) pair[0]};
+                for (int[] size : new int[][] {{3, 3, 5}, {4, 5, 7}, {9, 7, 12}}) {
+                    byte[] before = input.clone();
+                    float[] expected =
+                            PortableOcr.normalize(
+                                    referenceArgb(input),
+                                    2,
+                                    2,
+                                    0,
+                                    0,
+                                    2,
+                                    2,
+                                    size[0],
+                                    size[1],
+                                    size[2],
+                                    detector);
+                    float[] actual =
+                            PortableOcr.normalizeGray(
+                                    input, 2, 2, 0, 0, 2, 2, size[0], size[1], size[2], detector);
+                    bits(expected, actual);
+                    assertArrayEquals(before, input);
+                    Arrays.fill(actual, Float.NaN);
+                    bits(
+                            expected,
+                            PortableOcr.normalizeGray(
+                                    input, 2, 2, 0, 0, 2, 2, size[0], size[1], size[2], detector));
+                    Arrays.fill(input, (byte) 255);
+                    byte[] white = input.clone();
+                    bits(
+                            PortableOcr.normalize(
+                                    referenceArgb(input),
+                                    2,
+                                    2,
+                                    0,
+                                    0,
+                                    2,
+                                    2,
+                                    size[0],
+                                    size[1],
+                                    size[2],
+                                    detector),
+                            PortableOcr.normalizeGray(
+                                    input, 2, 2, 0, 0, 2, 2, size[0], size[1], size[2], detector));
+                    assertArrayEquals(white, input);
+                    input = before;
+                }
+            }
+    }
 }

@@ -2,8 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
-import java.util.ArrayList;
-
 /** Three independent aligned cores across a slightly wider full-size beam pair. */
 final class WideTripleBeamInk {
     private WideTripleBeamInk() {}
@@ -57,8 +55,8 @@ final class WideTripleBeamInk {
                 for (int y = top; y <= bottom; y++)
                     darkest = Math.min(darkest, gray[y * w + x] & 255);
                 threshold = darkest + Math.round((threshold - darkest) * fraction);
-                var cores = new ArrayList<Float>();
-                int start = -1;
+                float[] cores = null;
+                int coreCount = 0, start = -1;
                 for (int y = top; y <= bottom + 1; y++) {
                     boolean ink =
                             y <= bottom
@@ -68,18 +66,21 @@ final class WideTripleBeamInk {
                     if (ink && start < 0) start = y;
                     if (!ink && start >= 0) {
                         int size = y - start;
-                        if (size >= Math.max(3, (int) Math.ceil(gap * .3f)) && size <= gap * .8f)
-                            cores.add((start + y - 1) * .5f - end);
+                        if (size >= Math.max(3, (int) Math.ceil(gap * .3f)) && size <= gap * .8f) {
+                            float core = (start + y - 1) * .5f - end;
+                            if (cores == null) cores = new float[expected];
+                            if (coreCount < expected) cores[coreCount] = core;
+                            coreCount++;
+                        }
                         start = -1;
                     }
                 }
-                if (cores.size() != expected) {
+                if (coreCount != expected) {
                     okay = false;
                     break;
                 }
-                float[] current = new float[expected];
+                float[] current = cores;
                 for (int i = 0; i < expected; i++) {
-                    current[i] = cores.get(i);
                     if (i > 0
                             && (current[i] - current[i - 1] < gap * .3f
                                     || current[i] - current[i - 1] > gap * .9f)) okay = false;

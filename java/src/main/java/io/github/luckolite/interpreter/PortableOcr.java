@@ -259,7 +259,6 @@ public final class PortableOcr {
                 || (long) paddedWidth * outHeight > 5_000_000)
             throw new IllegalArgumentException("Invalid OCR resize");
         float[] output = new float[paddedWidth * outHeight * 3];
-        float[] mean = {.485f, .456f, .406f}, std = {.229f, .224f, .225f};
         int[] xs0 = new int[outWidth], xs1 = new int[outWidth];
         float[] fractions = new float[outWidth];
         for (int x = 0; x < outWidth; x++) {
@@ -286,20 +285,46 @@ public final class PortableOcr {
                 float fx = fractions[x];
                 float a = pixels[row0 + x0] & 255, b = pixels[row0 + x1] & 255;
                 float d = pixels[row1 + x0] & 255, e = pixels[row1 + x1] & 255;
-                float value =
-                        Math.round((a + (b - a) * fx) * (1 - fy) + (d + (e - d) * fx) * fy) / 255f;
+                int rounded = Math.round((a + (b - a) * fx) * (1 - fy) + (d + (e - d) * fx) * fy);
                 if (detector) {
                     for (int c = 0; c < 3; c++)
                         output[c * paddedWidth * outHeight + y * paddedWidth + x] =
-                                (value - mean[c]) / std[c];
+                                GrayDetectorNormalization.VALUES[c][rounded];
                 } else {
-                    float normalized = (value - .5f) / .5f;
+                    float normalized = GrayRecognizerNormalization.VALUES[rounded];
                     for (int c = 0; c < 3; c++)
                         output[c * paddedWidth * outHeight + y * paddedWidth + x] = normalized;
                 }
             }
         }
         return output;
+    }
+
+    private static final class GrayDetectorNormalization {
+        private static final float[][] VALUES = values();
+
+        private static float[][] values() {
+            float[] mean = {.485f, .456f, .406f}, std = {.229f, .224f, .225f};
+            float[][] values = new float[3][256];
+            for (int intensity = 0; intensity < 256; intensity++) {
+                float value = intensity / 255f;
+                for (int c = 0; c < 3; c++) values[c][intensity] = (value - mean[c]) / std[c];
+            }
+            return values;
+        }
+    }
+
+    private static final class GrayRecognizerNormalization {
+        private static final float[] VALUES = values();
+
+        private static float[] values() {
+            float[] values = new float[256];
+            for (int intensity = 0; intensity < 256; intensity++) {
+                float value = intensity / 255f;
+                values[intensity] = (value - .5f) / .5f;
+            }
+            return values;
+        }
     }
 
     private static float channel(int color, int shift) {

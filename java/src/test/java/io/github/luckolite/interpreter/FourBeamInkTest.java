@@ -60,4 +60,40 @@ public class FourBeamInkTest {
                 WideTripleBeamInk.countFour(
                         pixels, W, H, new int[] {60, 50, -1}, new int[] {90, 50, 1}, 12));
     }
+
+    @Test
+    public void fiveSeparatedCoresAreRejectedWithoutChangingCaller() {
+        beams(5, 5);
+        int[] a = {60, 50, -1}, b = {90, 50, -1};
+        byte[] before = pixels.clone();
+        int[] aBefore = a.clone(), bBefore = b.clone();
+        assertEquals(0, WideTripleBeamInk.countFour(pixels, W, H, a, b, 12));
+        assertArrayEquals(before, pixels);
+        assertArrayEquals(aBefore, a);
+        assertArrayEquals(bBefore, b);
+    }
+
+    @Test
+    public void excessCoreRejectionDoesNotLeakIntoFourOrThreeCoreRecovery() {
+        int[] a = {60, 50, -1}, b = {90, 50, -1};
+        int[] aBefore = a.clone(), bBefore = b.clone();
+        for (int rails : new int[] {5, 4, 3, 4}) {
+            Arrays.fill(pixels, (byte) 240);
+            beams(rails, 5);
+            byte[] before = pixels.clone();
+            assertEquals(rails == 4 ? 4 : 0, WideTripleBeamInk.countFour(pixels, W, H, a, b, 12));
+            assertEquals(rails == 4 ? 4 : 0, WideTripleBeamInk.countFour(pixels, W, H, b, a, 12));
+            assertArrayEquals(before, pixels);
+            assertArrayEquals(aBefore, a);
+            assertArrayEquals(bBefore, b);
+        }
+        WideTripleBeamInkTest triple = new WideTripleBeamInkTest();
+        triple.page(3, 6, 0);
+        byte[] before = triple.g.clone();
+        int[] first = triple.a.clone(), second = triple.b.clone();
+        assertEquals(3, triple.count());
+        assertArrayEquals(before, triple.g);
+        assertArrayEquals(first, triple.a);
+        assertArrayEquals(second, triple.b);
+    }
 }

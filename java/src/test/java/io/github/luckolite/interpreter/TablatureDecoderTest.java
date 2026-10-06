@@ -277,4 +277,60 @@ public class TablatureDecoderTest {
         assertTabProjectionGeometry(rows.get(1), 280f, -1f, List.of(30f, 260f, 470f));
         assertArrayEquals(original, gray);
     }
+
+    private static byte[] bottomEdgeTabFixture(int strings, int height, boolean clippedSeventh) {
+        int width = 128;
+        byte[] gray = new byte[width * height];
+        Arrays.fill(gray, (byte) 255);
+        for (int string = 0; string < strings; string++) {
+            int y = clippedSeventh && string == 6 ? 69 : 10 + string * 10;
+            Arrays.fill(gray, y * width, (y + 1) * width, (byte) 0);
+        }
+        int actualBottom = clippedSeventh ? 69 : 10 + (strings - 1) * 10;
+        for (int x : new int[] {20, 90})
+            for (int y = 10; y <= actualBottom; y++) gray[y * width + x] = 0;
+        return gray;
+    }
+
+    private static void assertBottomEdgeTabGeometry(TablatureDecoder.Staff row, int strings) {
+        assertEquals(Float.floatToRawIntBits(10f), Float.floatToRawIntBits(row.top()));
+        assertEquals(Float.floatToRawIntBits(10f), Float.floatToRawIntBits(row.gap()));
+        assertEquals(
+                Float.floatToRawIntBits(strings == 6 ? 60f : 70f),
+                Float.floatToRawIntBits(row.bottom()));
+        assertEquals(Float.floatToRawIntBits(-1f), Float.floatToRawIntBits(row.standardTop()));
+        assertEquals(strings, row.stringCount());
+        assertEquals(List.of(20f, 90f), row.bars());
+        assertTrue(row.frets().isEmpty());
+        assertTrue(row.tuning().isEmpty());
+    }
+
+    @Test
+    public void clippedSeventhStringKeepsGeometryAndBoundsBarReads() {
+        byte[] gray = bottomEdgeTabFixture(7, 70, true);
+        byte[] original = gray.clone();
+        var rows = TablatureDecoder.detect(gray, 128, 70);
+        assertEquals(1, rows.size());
+        // The tolerant line fit still ends at 70, beyond the last available raster row 69.
+        assertBottomEdgeTabGeometry(rows.get(0), 7);
+        assertArrayEquals(original, gray);
+        byte[] masked = TablatureDecoder.withoutTabs(gray, 128, 70, rows, true);
+        assertNotSame(gray, masked);
+        byte[] expectedMask = original.clone();
+        Arrays.fill(expectedMask, 4 * 128, expectedMask.length, (byte) 255);
+        assertArrayEquals(expectedMask, masked);
+        assertArrayEquals(original, gray);
+    }
+
+    @Test
+    public void ordinarySixAndSevenStringBarsKeepTheirCompleteGeometry() {
+        for (int strings : new int[] {6, 7}) {
+            byte[] gray = bottomEdgeTabFixture(strings, 82, false);
+            byte[] original = gray.clone();
+            var rows = TablatureDecoder.detect(gray, 128, 82);
+            assertEquals(1, rows.size());
+            assertBottomEdgeTabGeometry(rows.get(0), strings);
+            assertArrayEquals(original, gray);
+        }
+    }
 }

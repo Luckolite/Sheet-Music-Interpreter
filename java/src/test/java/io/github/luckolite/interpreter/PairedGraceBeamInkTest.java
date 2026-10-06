@@ -195,4 +195,44 @@ public final class PairedGraceBeamInkTest {
                 PairedGraceBeamInk.countFullSize(
                         fullPair(true), W, H, new int[] {120, 50, -1}, new int[] {80, 50, -1}, 20));
     }
+
+    private void paintSeparatedFullSizeRails(byte[] gray, int rails) {
+        Arrays.fill(gray, (byte) 255);
+        for (int rail = 0; rail < rails; rail++)
+            for (int x = 60; x <= 100; x++)
+                for (int dy = 0; dy < 6; dy++) gray[(60 + rail * 12 + dy) * W + x] = 0;
+        for (int y = 60; y < 130; y++) {
+            gray[y * W + 60] = 0;
+            gray[y * W + 100] = 0;
+        }
+    }
+
+    @Test
+    public void fourSeparatedFullSizeRailsAreRejectedAndPreserveCaller() {
+        byte[] gray = new byte[W * H];
+        paintSeparatedFullSizeRails(gray, 4);
+        int[] a = {60, 60, -1}, b = {100, 60, -1};
+        byte[] before = gray.clone();
+        int[] aBefore = a.clone(), bBefore = b.clone();
+        assertEquals(0, PairedGraceBeamInk.countFullSize(gray, W, H, a, b, 20));
+        assertArrayEquals(before, gray);
+        assertArrayEquals(aBefore, a);
+        assertArrayEquals(bBefore, b);
+    }
+
+    @Test
+    public void manyCoreRejectionDoesNotLeakIntoLaterTwoOrThreeRailQueries() {
+        byte[] gray = new byte[W * H];
+        int[] a = {60, 60, -1}, b = {100, 60, -1};
+        int[] aBefore = a.clone(), bBefore = b.clone();
+        for (int rails : new int[] {4, 2, 3, 4, 2, 3}) {
+            paintSeparatedFullSizeRails(gray, rails);
+            byte[] before = gray.clone();
+            assertEquals(
+                    rails == 4 ? 0 : rails, PairedGraceBeamInk.countFullSize(gray, W, H, a, b, 20));
+            assertArrayEquals(before, gray);
+            assertArrayEquals(aBefore, a);
+            assertArrayEquals(bBefore, b);
+        }
+    }
 }

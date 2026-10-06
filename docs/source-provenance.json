@@ -157,9 +157,9 @@
     },
     "PortableOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
-      "source_sha256": "c7256f762029450a010005695d5dee3bee3447079c2038799b3f089bd9fd5ddc",
+      "source_sha256": "64b5fea893581f282e34f3668b97beeb5218c88f381d4f0e1a20bf53586e5024",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f229cae25689108fb33dfc9669fba38f17bdc0bfe38b27b850be9836b94209bb",
+      "source_normalized_sha256": "65202fa41a2cbd8faf83371415e758a97739bf34296d835d19318629b48d9010",
       "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
       "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency. read(int[]) now validates and snapshots fully opaque equal-channel input in one pass before the existing gray path; three probes only reject and never establish eligibility. Original synthetic regressions preserve full raw tensor bits, nested OCR, color/alpha fallback, caller arrays and cancellation. No models, weights, thresholds or platform dependency change."
     },
@@ -531,9 +531,9 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "49c6e9c567c614686c53205307bab9d541b9191abb7fc2eeca265e39a1e9d05c",
+      "source_sha256": "3fc8d9bec2cd4737254d99ea998ef8c505be594a547c8d720dcd91ef1c3b7da0",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "3b4ccf815bd46f219388923fe65650ca867f07d78e084b8d13881cc4d8c11d34",
+      "source_normalized_sha256": "a0ebd939a88bceffe467a058cf0ce612f30af75060f34ab2a2068e48330a9538",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
@@ -612,9 +612,9 @@
     },
     "TabTextSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
-      "source_sha256": "19b72b02534c7fd3106b40d95bd907add821db4d5e26fb63ba4b2123240ae792",
+      "source_sha256": "0b86a6ab2c2bf5aa241361a0ddb031221e73e58edc37e897f8e06d58f8e50ba5",
       "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
-      "source_normalized_sha256": "19b72b02534c7fd3106b40d95bd907add821db4d5e26fb63ba4b2123240ae792"
+      "source_normalized_sha256": "a6f70840235832302f1c867def0ce4afe44291fbc19bfd531895fb68febb8d78"
     },
     "TabTuning.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTuning.java",
@@ -801,17 +801,17 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "c90c97a52247e6b2cd355360ef44f364807e05ce646272941bc43e870cd42d57",
+      "source_sha256": "4d3eabdee9d8a148d01215f28ae06c65b14fe3a5c35ddfb75a1a055d469e9f78",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "26adff9b6301d2e7d1ce128e63989d592ca37339f39e0e4f602a487b9559b99d",
+      "source_normalized_sha256": "4bdf4b96014355de1131a4090304f1740b0d02253f7830c134a05e95fb360308",
       "review_note": "Six global geometry repairs including complete paired printed-rail recovery with39 original generated controls. Full token parity with package and existing diagnostics adapters. Existing compact rail APIs retain their three-gap bound; written rails use five unchanged aligned-core probes within five gaps. Model, dependencies and full framed record layout unchanged; no private score or device material.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
-      "source_sha256": "1cc46d98b626708658d7103750fe2d6ba84bed55fb2b3c73de058b22fbbcb94a",
+      "source_sha256": "2215c7ae03c76b1b4e0319c840f0415eb03be27aa14eedd7a6bd775e2e7cdab0",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "422e5dc119c5efd50223991ca1879419c46d996cfa8184080b838dfdc632ebcd",
+      "source_normalized_sha256": "d5f5149c3a87d35e217f2b80b6e133cb5dc5abdd597335417073faa523d8d6df",
       "review_note": "Reviewed global raw-ink, rhythmic and bounded-navigation repair; full token parity with package/diagnostics adapters verified. Original synthetic positive and rejection controls; no source score, model or new dependency included."
     },
     "PaleSingleBeamInk.java": {
@@ -1394,10 +1394,10 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
-      "source_normalized_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
+      "source_sha256": "27683fbb977adeed81d8c5243dace34bc25d94ab3a811f178b8603997080f739",
+      "source_normalized_sha256": "27683fbb977adeed81d8c5243dace34bc25d94ab3a811f178b8603997080f739",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged. Recognition epoch5 gives the combined reviewed Tab/OCR behavior batch a fresh derived-guide cache namespace. Guide282, typed note23, public wire encoding, legacy explicit revision identity functions and all prior layout/source/cleanup regressions are unchanged. The existing current-epoch key regression rejects epochs0 through4; paired app/Hub/worker epoch constants and current-epoch expectations advance together. Cache namespace companion, with no speed or native/runtime correctness claim.",
       "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
     },
     "BeamInkConnectivity.java": {
@@ -1452,11 +1452,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "ca017490dbb3ebfec63fef2c01d5a74d784f3b7bc081c6b3635218a99424479d",
-      "source_normalized_sha256": "2030e6709173403e1fb5e04990abaee2497ea9babadae65cb22bb95603708f03",
+      "source_sha256": "17a2d23e21d4cdbb9ff2e6c6dfa7cb59b4280fd1309c2c0df5d03c6b609b33e4",
+      "source_normalized_sha256": "ae58c896a05a1c377bfa725dbb776398e32ec651c997c24d8ef1c90d7faffbc3",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
-      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
+      "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged. Recognition epoch5 gives the combined reviewed Tab/OCR behavior batch a fresh derived-guide cache namespace. Guide282, typed note23, public wire encoding, legacy explicit revision identity functions and all prior layout/source/cleanup regressions are unchanged. The existing current-epoch key regression rejects epochs0 through4; paired app/Hub/worker epoch constants and current-epoch expectations advance together. Cache namespace companion, with no speed or native/runtime correctness claim."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2883,5 +2883,239 @@
     "whole_score_parity_claim": false,
     "phone_elapsed_claim": false,
     "boundary": "Actual60 model-free HOST helper invocations with package-only APP adaptation; original controls use frozen905 standalone core with actual helper/test/core class origins checked. Fourteen-family parent retains eleven244, Slashed/Pale54 and Marcato26 historical invocations. Full-array API ordinary read/error order is retained; owned queue prefix cannot escape, and accepted Glyph pixels remain detached. Removed rejected copies and accepted-copy allocation exhaustion order are explicit. No native/model/Android bytecode/current full-score/guide/phone elapsed proof. This private successor leaves fixed eleven publication and all earlier review groups unchanged; ordinary release gates/selection remain pending."
+  },
+  "owned_paired_grace_wide_beam_core_buffer_review": {
+    "license": "Apache-2.0",
+    "base_public_commit": "3061fedbfcc6e5a769dc83638b6e588f29a64103",
+    "historical_origin_preserved": {
+      "PairedGraceBeamInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
+        "source_sha256": "c90c97a52247e6b2cd355360ef44f364807e05ce646272941bc43e870cd42d57",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "26adff9b6301d2e7d1ce128e63989d592ca37339f39e0e4f602a487b9559b99d",
+        "review_note": "Six global geometry repairs including complete paired printed-rail recovery with39 original generated controls. Full token parity with package and existing diagnostics adapters. Existing compact rail APIs retain their three-gap bound; written rails use five unchanged aligned-core probes within five gaps. Model, dependencies and full framed record layout unchanged; no private score or device material.",
+        "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit"
+      },
+      "WideTripleBeamInk.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
+        "source_sha256": "1cc46d98b626708658d7103750fe2d6ba84bed55fb2b3c73de058b22fbbcb94a",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "422e5dc119c5efd50223991ca1879419c46d996cfa8184080b838dfdc632ebcd",
+        "review_note": "Reviewed global raw-ink, rhythmic and bounded-navigation repair; full token parity with package/diagnostics adapters verified. Original synthetic positive and rejection controls; no source score, model or new dependency included."
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "PairedGraceBeamInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
+        "app_sha256": "4d3eabdee9d8a148d01215f28ae06c65b14fe3a5c35ddfb75a1a055d469e9f78",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PairedGraceBeamInk.java",
+        "standalone_sha256": "b6dafa75722ff2f739f54d1b4136e1fa053fa5bdc4b2b830c574bd67d1cfcb67"
+      },
+      {
+        "name": "WideTripleBeamInk.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
+        "app_sha256": "2215c7ae03c76b1b4e0319c840f0415eb03be27aa14eedd7a6bd775e2e7cdab0",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/WideTripleBeamInk.java",
+        "standalone_sha256": "31e11e089a841f6a899b27a884f27f5f35636994dc23e8180e06c84a7010becd"
+      }
+    ],
+    "scope": {
+      "PairedGraceBeamInk": "Call-local primitive accepted-core storage replaces boxed lists and the final float-array copy; all probes, pixel reads, float expressions, complete excess-core scanning and rejection order remain unchanged.",
+      "WideTripleBeamInk": "Call-local primitive accepted-center storage replaces boxed per-column lists and copying; all raster reads, float expressions, complete excess-center scanning and rejection order remain unchanged."
+    },
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 135,
+      "original_invocations": 127,
+      "new_invocations": 8,
+      "full_four_variant_observations": true,
+      "full_helper_error_gray_caller_observations": true,
+      "actual_helper_test_core_class_origins_checked": true,
+      "new_app_methods": 4,
+      "new_public_methods": 4
+    },
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/FourBeamInkTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/PairedGraceBeamInkTest.java"
+    ],
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Actual92 PairedGrace and43 WideTriple model-free HOST helper invocations with package-only APP adaptation; original controls use frozen905 standalone core with actual helper/test/core class origins checked. Fifteen-family parent retains384 historical invocations. Primitive storage preserves complete raster scans, accepted-core float expressions and excess-core rejection order; removed boxing/copy resource-exhaustion opportunities are explicit. No native/model/Android bytecode/current whole-score/guide/phone elapsed proof. This private successor leaves selected15/publication and every earlier origin/review unchanged; required public/App/pair/Library gates and further selection remain pending."
+  },
+  "reviewed_tablature_bottom_edge_bar_bounds": {
+    "license": "Apache-2.0",
+    "base_public_commit": "3061fedbfcc6e5a769dc83638b6e588f29a64103",
+    "historical_origin_preserved": {
+      "TablatureDecoder.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
+        "source_sha256": "49c6e9c567c614686c53205307bab9d541b9191abb7fc2eeca265e39a1e9d05c",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "3b4ccf815bd46f219388923fe65650ca867f07d78e084b8d13881cc4d8c11d34",
+        "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+        "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+        "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "TablatureDecoder.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
+        "app_sha256": "8ef6042c69d846b2a74653ccff0f50cfd0d985bced30f99a90523131e4217965",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TablatureDecoder.java",
+        "standalone_sha256": "bf33c9d295d4151bc65b11031809365102652497b737f6db8da94147f4a955b0"
+      }
+    ],
+    "scope": "Bound only the bottom of the existing bar-evidence raster traversal by the page height. Preserve every in-range read, integer/float expression, staff/bar order and returned seven-string geometry; do not refit or clamp the staff record.",
+    "shareable_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/TablatureDecoderTest.java"
+    ],
+    "validation": {
+      "actual_model_free_candidate_side_junit_invocations": 40,
+      "original_invocations": 36,
+      "new_invocations": 4,
+      "new_app_methods": 2,
+      "new_public_methods": 2,
+      "baseline_junit_reruns": 0,
+      "ordinary_six_and_seven_string_full_four_variant_parity": true,
+      "baseline_clipped_seventh_line_bounds_exception_reproduced": true,
+      "repaired_clipped_staff_top": 10,
+      "repaired_clipped_staff_gap": 10,
+      "repaired_clipped_staff_bottom": 70,
+      "repaired_clipped_staff_strings": 7,
+      "repaired_ordered_bars": [
+        20,
+        90
+      ],
+      "complete_caller_gray_and_owned_mask_observations": true,
+      "app_package_only_host_adaptation": true
+    },
+    "dependencies_changed": false,
+    "models_changed": false,
+    "record_layouts_changed": false,
+    "whole_score_parity_claim": false,
+    "phone_elapsed_claim": false,
+    "boundary": "Ordinary valid staffs retain complete ordered fields/raw floats and caller/mask bytes across original/candidate APP/public helpers. The valid-size bottom-clipped seven-string fixture intentionally replaces the original bounds exception with exact staff geometry and available-row bar evidence. Actual40 model-free HOST invocations use package-only APP adaptation and the pinned standalone core. Parent17 retains519 focused invocations; no native/model/Android-bytecode/whole-score/guide/phone elapsed claim. The combined required public/App/pair/Library release obligations remain pending; recognition revision selection is separately owned."
+  },
+  "rounded_gray_ocr_normalization_reuse_review": {
+    "source_paths": [
+      "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java"
+    ],
+    "standalone_paths": [
+      "java/src/main/java/io/github/luckolite/interpreter/PortableOcr.java"
+    ],
+    "license": "Apache-2.0",
+    "scope": "Private immutable256-level gray detector/recognizer normalization reuses exact float expressions after the unchanged rounded bilinear sample. Raster read order, clipping, CHW writes, padding, validation and interruption remain unchanged. The ARGB path and model/backend are unchanged. The now-unused normalizeGray mean/std arrays are removed; unchanged ARGB normalization and private table initializer retain their constants.",
+    "regressions": "Actual24 model-free APP/public candidate-side JUnit invocations (20 retained +4 new) plus complete four-variant raw-float/error/caller observations passed. All256 gray levels, half-step crops, padding, repeat/returned-output mutation and caller whitening are covered. No baseline JUnit rerun.",
+    "boundary": "No private score, raster, device log, model, signing data, added dependency, native/whole-score/guide parity or elapsed speed claim. JVM lazy holder allocation/class-initialization resource failures are a distinct first-use boundary. The two removed per-call array allocation/OOM opportunities are also outside numerical and ordinary exception parity.",
+    "validation": {
+      "actual_candidate_junit_invocations": 24,
+      "original_invocations": 20,
+      "new_invocations": 4,
+      "complete_four_variant_raw_float_error_caller_parity": true,
+      "models": 0,
+      "phone_elapsed_claim": false
+    },
+    "base_public_commit": "3061fedbfcc6e5a769dc83638b6e588f29a64103",
+    "historical_origin_preserved": {
+      "PortableOcr.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
+        "source_sha256": "c7256f762029450a010005695d5dee3bee3447079c2038799b3f089bd9fd5ddc",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "f229cae25689108fb33dfc9669fba38f17bdc0bfe38b27b850be9836b94209bb",
+        "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
+        "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency. read(int[]) now validates and snapshots fully opaque equal-channel input in one pass before the existing gray path; three probes only reject and never establish eligibility. Original synthetic regressions preserve full raw tensor bits, nested OCR, color/alpha fallback, caller arrays and cancellation. No models, weights, thresholds or platform dependency change."
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "PortableOcr.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
+        "app_sha256": "64b5fea893581f282e34f3668b97beeb5218c88f381d4f0e1a20bf53586e5024",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PortableOcr.java",
+        "standalone_sha256": "29a855b00ae9ab8daa828ddca0451ce4eeb51b65db7666f187118ddaa35ad98d"
+      }
+    ]
+  },
+  "tab_text_fixed_pattern_reuse_review": {
+    "source_paths": [
+      "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java"
+    ],
+    "standalone_paths": [
+      "java/src/main/java/io/github/luckolite/interpreter/TabTextSource.java"
+    ],
+    "license": "Apache-2.0",
+    "scope": "Privately owned lazy immutable compiled patterns reuse the original exact token and single ASCII digit expressions/default flags. Every call/evaluated word gets a fresh matcher; find/matches, short-circuit, geometry, traversal and output ordering remain unchanged. No manual regex substitution.",
+    "validation": "Existing original TabTextSourceTest and TabTextRhythmTest controls are retained byte-exact for the one upcoming complete public gate; no separate execution or new implementation-mirroring tests. Source literal equivalence and whole-byte inverses are verified.",
+    "boundary": "No model, dependency, score, raster, device log, signing data or elapsed speed claim. Lazy first-use class initialization/resource failures and removed later compilation allocation failures are explicit boundaries.",
+    "base_public_commit": "3061fedbfcc6e5a769dc83638b6e588f29a64103",
+    "historical_origin_preserved": {
+      "TabTextSource.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
+        "source_sha256": "19b72b02534c7fd3106b40d95bd907add821db4d5e26fb63ba4b2123240ae792",
+        "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
+        "source_normalized_sha256": "19b72b02534c7fd3106b40d95bd907add821db4d5e26fb63ba4b2123240ae792"
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "TabTextSource.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
+        "app_sha256": "0b86a6ab2c2bf5aa241361a0ddb031221e73e58edc37e897f8e06d58f8e50ba5",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TabTextSource.java",
+        "standalone_sha256": "882bfd75bf238e2866e08bba7f16cb2f25f08f8e2315a8db419cf9eec2d641c8"
+      }
+    ]
+  },
+  "guide282_recognition_epoch5_cache_namespace_review": {
+    "recognitionRevision": 5,
+    "priorRecognitionRevision": 4,
+    "guideVersion": 282,
+    "typedNoteFields": 23,
+    "purpose": "Invalidate derived guide caches for the combined reviewed behavior batch without a binary layout change.",
+    "applicableFiles": [
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "regressions": "Existing currentRecognitionFiveRejectsAllPriorEpochsAtLayout282 methods check complete local/portable epoch5 keys and reject epochs0..4; legacy identity and cleanup/source/layout regressions remain intact. Existing Python wire byte/framing/write-new and Hub high-water/stale-peer tests retain their assertions with current epoch expectations updated.",
+    "licensing": "Existing public Apache-2.0 notices and source origins are retained. Only original synthetic fixture identities are used.",
+    "evidenceScope": "Private source-only candidate; no compiler, tests, native model, SDK, benchmark, publication or active source execution.",
+    "base_public_commit": "3061fedbfcc6e5a769dc83638b6e588f29a64103",
+    "historical_origin_preserved": {
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
+        "source_normalized_sha256": "1d702ccecae31ce7f66d597e1c4eff61af065792a6260295bb2ba689bd69006a",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "review_note": "Recognition epoch2 invalidates results predating the already-reviewed triplet/rest fixes without changing layout281. Legacy identity functions retained; direct revision0/1/2 identity regressions. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+        "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "ca017490dbb3ebfec63fef2c01d5a74d784f3b7bc081c6b3635218a99424479d",
+        "source_normalized_sha256": "2030e6709173403e1fb5e04990abaee2497ea9babadae65cb22bb95603708f03",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
+        "review_note": "Only recognition revision one to two; guide layout281 and all current/legacy record bytes remain unchanged. Actual standalone writer port and original revision0/1/2 controls passed in the same mandatory batch. No model, runtime binary or private material changed. Recognition epoch3 invalidates stale reconstructed metadata from epoch2. Full actual source parity after existing package/import adapters; original current3 versus stale0/1/2 identity controls and unchanged epoch2/3 guide bytes. No model, dependency or record-layout change. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
+      }
+    },
+    "paired_sources": [
+      {
+        "name": "GuideCacheIdentity.java",
+        "app_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "app_sha256": "27683fbb977adeed81d8c5243dace34bc25d94ab3a811f178b8603997080f739",
+        "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
+        "standalone_sha256": "2deedcc322c1329f41fc6930db2854a6df8620b0f1f5cbcf67da36577eded181"
+      },
+      {
+        "name": "guide_writer.py",
+        "app_path": "tools/native-worker/guide_writer.py",
+        "app_sha256": "17a2d23e21d4cdbb9ff2e6c6dfa7cb59b4280fd1309c2c0df5d03c6b609b33e4",
+        "standalone_path": "src/sheet_interpreter/guide_writer.py",
+        "standalone_sha256": "aa7c595e0b87dc8c7f315c28cbfeb54053cbeae37feaee7732f382493b8f5d1a"
+      }
+    ]
   }
 }

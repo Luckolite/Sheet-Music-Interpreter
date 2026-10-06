@@ -278,7 +278,9 @@ public final class TablatureDecoder {
             for (int x = 0; x <= w; x++) {
                 int ink = 0, total = 0;
                 if (x < w)
-                    for (int y = Math.round(top); y <= Math.round(top + (strings - 1) * gap); y++) {
+                    for (int y = Math.round(top);
+                            y < h && y <= Math.round(top + (strings - 1) * gap);
+                            y++) {
                         total++;
                         if ((gray[y * w + x] & 255) < threshold) ink++;
                     }
