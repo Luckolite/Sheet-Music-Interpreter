@@ -63,8 +63,7 @@ final class ParallelBeamTip {
         return clearOrRule(gray, w, h, x, y, gap, 165);
     }
 
-    private static boolean clearOrRule(
-            byte[] gray, int w, int h, int x, int y, float gap, int threshold) {
+    static boolean clearOrRule(byte[] gray, int w, int h, int x, int y, float gap, int threshold) {
         if ((gray[y * w + x] & 255) >= threshold) return true;
         int radius = Math.round(gap * 4), ink = 0;
         if (x - radius < 0 || x + radius >= w) return false;

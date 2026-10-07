@@ -94,6 +94,7 @@ final class MultiMeasureRestDetector {
                 || gray.length != labels.length
                 || measures == null
                 || measures.isEmpty()) return List.of();
+        labels = PrintedRestBarHeads.withoutBars(labels, gray, width, height);
         int[] noteheadPixels = new int[measures.size()];
         List<MeasureRegion> noteRegions = new ArrayList<>();
         List<Integer> writtenCounts = new ArrayList<>();

@@ -182,17 +182,41 @@ final class PrintedMeasureRhythmGuard {
             final int measure = index;
             // On a grand staff, a barline crosses the empty space between staves.
             // A single-staff note stem can be just as tall as its measure region.
-            if (notes.stream()
-                            .filter(n -> n.measureIndex() == measure)
-                            .map(ScoreNoteEvent::staffIndex)
-                            .distinct()
-                            .count()
-                    < 2) continue;
+            boolean singleStaff =
+                    notes.stream()
+                                    .filter(n -> n.measureIndex() == measure)
+                                    .map(ScoreNoteEvent::staffIndex)
+                                    .distinct()
+                                    .count()
+                            < 2;
             var region = raw.get(index);
             var pieces = fragments(region, result);
             if (pieces.size() != 2
                     || Math.abs(pieces.get(0).left() - region.left()) > .006f
                     || Math.abs(pieces.get(1).right() - region.right()) > .006f) continue;
+            if (singleStaff) {
+                Float verified =
+                        PrintedVoiceMeasureCut.resolve(region, notes, measure, gray, width, height);
+                if (verified != null) {
+                    float spacing = Math.min(.004f, (region.right() - region.left()) * .04f);
+                    int at = result.indexOf(pieces.get(0));
+                    result.set(
+                            at,
+                            new MeasureRegion(
+                                    region.left(),
+                                    verified - spacing * .5f,
+                                    region.top(),
+                                    region.bottom()));
+                    result.set(
+                            at + 1,
+                            new MeasureRegion(
+                                    verified + spacing * .5f,
+                                    region.right(),
+                                    region.top(),
+                                    region.bottom()));
+                }
+                continue;
+            }
             int top = Math.max(0, Math.round(region.top() * height));
             int bottom = Math.min(height - 1, Math.round(region.bottom() * height));
             float span = region.right() - region.left();

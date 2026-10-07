@@ -120,6 +120,7 @@ final class OctaveMarkDetector {
         }
         List<ScoreNoteEvent> result = new ArrayList<>(notes.size());
         for (var note : notes) {
+
             if (note.kind() != ScoreNoteEvent.Kind.PITCHED) {
                 result.add(note);
                 continue;
@@ -275,6 +276,7 @@ final class OctaveMarkDetector {
                 var bareBoxes = new ArrayList<>(boxes);
                 bareBoxes.addAll(attachedEightBoxes(gray, width, height, top, bottom, gap));
                 for (var box : bareBoxes) {
+                    if (centeredInStaff(box, staffs)) continue;
                     int bw = box.right - box.left + 1, bh = box.bottom - box.top + 1;
                     if (bw < gap * .3f
                             || bw > gap * 1.6f
@@ -429,6 +431,16 @@ final class OctaveMarkDetector {
                                                         && other.bottom() * height
                                                                 >= word.bottom() * height - 1));
         return words;
+    }
+
+    // Staff rules can divide an accidental into two apparent counters. A bare
+    // octave numeral belongs outside the staff, while complete suffix words
+    // retain their separate recognition and ownership evidence.
+    private static boolean centeredInStaff(
+            InkBox box, List<PlayingTechniqueDetector.Staff> staffs) {
+        float center = (box.top + box.bottom) * .5f;
+        for (var staff : staffs) if (center >= staff.top() && center <= staff.bottom()) return true;
+        return false;
     }
 
     /** Balanced thin curved brackets may enclose a printed continuation word. */

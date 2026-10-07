@@ -7,17 +7,23 @@ final class PairedGraceBeamInk {
     private PairedGraceBeamInk() {}
 
     static int count(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 1.5f, 3f);
+        return count(gray, width, height, a, b, gap, 1.5f, 3f, Float.NaN);
     }
 
     static int countFullSize(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 2.2f, 3f);
+        return count(gray, width, height, a, b, gap, 2.2f, 3f, Float.NaN);
     }
 
     /** Full-size written rails may join neighboring pitches across five staff gaps.
      * Every accepted core still crosses all five existing shaft-to-shaft probes. */
     static int countPrintedSize(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 2.2f, 5f);
+        return count(gray, width, height, a, b, gap, 2.2f, 5f, Float.NaN);
+    }
+
+    /** Confirm full-size rails against the independent local printed rules. */
+    static int countFullSize(
+            byte[] gray, int width, int height, int[] a, int[] b, float gap, float staffTop) {
+        return count(gray, width, height, a, b, gap, 2.2f, 3f, staffTop);
     }
 
     private static int count(
@@ -28,7 +34,8 @@ final class PairedGraceBeamInk {
             int[] b,
             float gap,
             float inside,
-            float maximumSpan) {
+            float maximumSpan,
+            float staffTop) {
         if (gray == null || a == null || b == null || gap < 4 || a[2] != b[2]) return 0;
         int span = Math.abs(a[0] - b[0]);
         // Compact ornaments can rise one staff space between their stems. The
@@ -43,7 +50,9 @@ final class PairedGraceBeamInk {
                         ? new float[] {.25f, .5f, .75f}
                         : new float[] {edge, .25f, .5f, .75f, 1 - edge};
         for (float fraction : new float[] {.5f, .75f, 1f}) {
-            int count = countAtContrast(gray, width, height, a, b, gap, fraction, inside, probes);
+            int count =
+                    countAtContrast(
+                            gray, width, height, a, b, gap, fraction, inside, probes, staffTop);
             if (count > 0 && inside == 1.5f) return count;
             maximum = Math.max(maximum, count);
         }
@@ -55,7 +64,8 @@ final class PairedGraceBeamInk {
                 for (float fraction : new float[] {.5f, .75f}) {
                     int count =
                             countAtContrast(
-                                    gray, width, height, a, b, gap, fraction, inside, columns);
+                                    gray, width, height, a, b, gap, fraction, inside, columns,
+                                    staffTop);
                     if (count == 2) return count;
                 }
         // A returning slur can extend one stem beyond its actual beam tip.
@@ -72,7 +82,7 @@ final class PairedGraceBeamInk {
                         int count =
                                 countAtContrast(
                                         gray, width, height, first, last, gap, fraction, inside,
-                                        probes);
+                                        probes, staffTop);
                         if (count >= 2) return count;
                     }
                 }
@@ -88,7 +98,8 @@ final class PairedGraceBeamInk {
             float gap,
             float fraction,
             float inside,
-            float[] columns) {
+            float[] columns,
+            float staffTop) {
         int wanted = 0;
         float[] previous = null;
         for (float f : columns) {
@@ -112,6 +123,13 @@ final class PairedGraceBeamInk {
                 if (ink && start < 0) start = y;
                 if (!ink && start >= 0) {
                     int size = y - start;
+                    if (Float.isFinite(staffTop)
+                            && LocalPrintedStaffBand.matches(
+                                    gray, width, height, x, staffTop, gap, threshold, start,
+                                    y - 1)) {
+                        start = -1;
+                        continue;
+                    }
                     if (size >= Math.max(3, Math.round(gap * (inside == 1.5f ? .18f : .28f)))
                             && size <= gap * (inside == 1.5f ? .6f : .8f)) {
                         float core = (start + y - 1) * .5f - end;

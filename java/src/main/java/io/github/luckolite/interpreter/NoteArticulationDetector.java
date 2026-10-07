@@ -369,7 +369,9 @@ final class NoteArticulationDetector {
                     new Glyph(left, top, right, bottom, end, java.util.Arrays.copyOf(queue, end)));
         }
         List<Glyph> faintAccents =
-                raw ? faintAccentGlyphs(gray, width, height, seen, queue) : List.of();
+                new ArrayList<>(
+                        raw ? faintAccentGlyphs(gray, width, height, seen, queue) : List.of());
+        if (raw) faintAccents.addAll(shadedAccentGlyphs(gray, width, height, notes, seen, queue));
         List<Glyph> originalGlyphs = List.copyOf(glyphs);
         List<Glyph> paperCandidates =
                 raw ? paperGlyphs(gray, width, height, notes, seen, queue) : List.of();
@@ -537,6 +539,19 @@ final class NoteArticulationDetector {
                         && candidate == NoteArticulation.STACCATO
                         && embeddedTextDot(glyph, context, note.gap, labels)) continue;
                 if (raw
+                        && paperCandidates.contains(glyph)
+                        && candidate == NoteArticulation.STACCATO
+                        && ShadedItalicFCap.proved(
+                                gray,
+                                labels,
+                                width,
+                                height,
+                                note.gap,
+                                glyph.left,
+                                glyph.top,
+                                glyph.right,
+                                glyph.bottom)) continue;
+                if (raw
                         && candidate == NoteArticulation.STACCATO
                         && initialsPunctuation(glyph, context, note.gap, labels)) continue;
                 if (raw
@@ -552,7 +567,25 @@ final class NoteArticulationDetector {
                                         && (candidate != NoteArticulation.STACCATISSIMO
                                                 || !filledTaper(glyph, width, glyph.y() < note.y)))
                                 || nearHead(glyph, notes))) continue;
+                if (raw
+                        && semanticNotation
+                        && candidate == NoteArticulation.STACCATISSIMO
+                        && attachedMarkStem(glyph, note, gray, width, height)) continue;
                 if (candidate == NoteArticulation.TENUTO && nearHead(glyph, notes)) continue;
+                if (raw
+                        && paperCandidates.contains(glyph)
+                        && candidate == NoteArticulation.TENUTO
+                        && ShadedLedgerMarkOwnership.proved(
+                                gray,
+                                width,
+                                height,
+                                note.x,
+                                note.y,
+                                note.gap,
+                                glyph.left,
+                                glyph.top,
+                                glyph.right,
+                                glyph.bottom)) continue;
                 if (raw
                         && candidate == NoteArticulation.TENUTO
                         && (ledgerStackDash(glyph, note, gray, width, height)
@@ -2092,6 +2125,40 @@ final class NoteArticulationDetector {
         return horizontalRuleInk(gray, width, height, x, y, gap, 155, .85f);
     }
 
+    /** A tapered dark part of an attached shaft does not supply a detached wedge. */
+    private static boolean attachedMarkStem(
+            Glyph glyph, Anchor note, byte[] gray, int width, int height) {
+        float gap = note.gap;
+        if (!Float.isFinite(gap)
+                || gap < 6
+                || glyph.right - glyph.left + 1 > gap * .45f
+                || glyph.bottom - glyph.top + 1 < gap * .4f) return false;
+        int direction = glyph.y() < note.y ? -1 : 1;
+        int head = Math.round(note.y), end = direction < 0 ? glyph.top : glyph.bottom;
+        if (Math.abs(end - head) < gap * .9f
+                || Math.abs(glyph.x() - note.x) < gap * .3f
+                || Math.abs(glyph.x() - note.x) > gap * .85f) return false;
+        int first = Math.min(head, end), last = Math.max(head, end);
+        if (first < 0 || last >= height) return false;
+        int threshold =
+                BeamInkThreshold.at(gray, width, height, Math.round(glyph.x()), first, last, gap)
+                        + 5;
+        for (int x = Math.max(1, glyph.left - 1); x <= Math.min(width - 2, glyph.right + 1); x++) {
+            int hit = 0, longestGap = 0, missing = 0;
+            for (int y = first; y <= last; y++) {
+                boolean ink = false;
+                for (int dx = -1; dx <= 1; dx++)
+                    if ((gray[y * width + x + dx] & 255) < threshold) ink = true;
+                if (ink) {
+                    hit++;
+                    missing = 0;
+                } else longestGap = Math.max(longestGap, ++missing);
+            }
+            if (hit >= (last - first + 1) * .95f && longestGap <= 1) return true;
+        }
+        return false;
+    }
+
     /** A short dark dash can be only the surviving core of a faded ledger line. */
     private static boolean ledgerStackDash(
             Glyph glyph, Anchor note, byte[] gray, int width, int height) {
@@ -2430,20 +2497,71 @@ final class NoteArticulationDetector {
         return hits >= g.count * .78 && covered >= Math.ceil(binCount * 10d / 12);
     }
 
+    /** Complete chevron recovery may retain a pale bridge on darker photographed paper. */
+    private static List<Glyph> shadedAccentGlyphs(
+            byte[] gray, int width, int height, List<Anchor> notes, boolean[] seen, int[] queue) {
+        float[] gaps = new float[notes.size()];
+        int n = 0;
+        for (Anchor a : notes) if (Float.isFinite(a.gap) && a.gap > 0) gaps[n++] = a.gap;
+        if (n == 0) return List.of();
+        java.util.Arrays.sort(gaps, 0, n);
+        byte[] paper = RestPaperTone.normalize(gray, width, height, gaps[n / 2]);
+        if (paper == gray) return List.of();
+        List<Glyph> result = new ArrayList<>();
+        for (Glyph glyph : faintAccentGlyphs(paper, width, height, seen, queue, 235, 200)) {
+            int pad =
+                    Math.max(
+                            3,
+                            Math.max(glyph.right - glyph.left + 1, glyph.bottom - glyph.top + 1)
+                                    / 2);
+            int[] hist = new int[256];
+            int count = 0;
+            for (int y = Math.max(0, glyph.top - pad);
+                    y <= Math.min(height - 1, glyph.bottom + pad);
+                    y++)
+                for (int x = Math.max(0, glyph.left - pad);
+                        x <= Math.min(width - 1, glyph.right + pad);
+                        x++) {
+                    hist[gray[y * width + x] & 255]++;
+                    count++;
+                }
+            int total = 0, tone = 255;
+            for (int v = 0; v < 256; v++)
+                if ((total += hist[v]) >= Math.ceil(count * .75)) {
+                    tone = v;
+                    break;
+                }
+            if (tone >= 96 && tone < 185 && printedBodyContrast(glyph, gray, width, height))
+                result.add(glyph);
+        }
+        return result;
+    }
+
     /** Recover only complete open chevrons; pale ink never becomes a dot or dash. */
     private static List<Glyph> faintAccentGlyphs(
             byte[] gray, int width, int height, boolean[] seen, int[] queue) {
+        return faintAccentGlyphs(gray, width, height, seen, queue, 185, 155);
+    }
+
+    private static List<Glyph> faintAccentGlyphs(
+            byte[] gray,
+            int width,
+            int height,
+            boolean[] seen,
+            int[] queue,
+            int threshold,
+            int darkThreshold) {
         java.util.Arrays.fill(seen, false);
         List<Glyph> result = new ArrayList<>();
         for (int p = 0; p < gray.length; p++) {
-            if (seen[p] || (gray[p] & 255) >= 185) continue;
+            if (seen[p] || (gray[p] & 255) >= threshold) continue;
             int start = 0, end = 1;
             queue[0] = p;
             seen[p] = true;
             int left = p % width, right = left, top = p / width, bottom = top, dark = 0;
             while (start < end) {
                 int point = queue[start++], x = point % width, y = point / width;
-                if ((gray[point] & 255) < 155) dark++;
+                if ((gray[point] & 255) < darkThreshold) dark++;
                 left = Math.min(left, x);
                 right = Math.max(right, x);
                 top = Math.min(top, y);
@@ -2453,7 +2571,7 @@ final class NoteArticulationDetector {
                         int nx = x + dx, ny = y + dy;
                         if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
                         int next = ny * width + nx;
-                        if (!seen[next] && (gray[next] & 255) < 185) {
+                        if (!seen[next] && (gray[next] & 255) < threshold) {
                             seen[next] = true;
                             queue[end++] = next;
                         }

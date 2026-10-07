@@ -245,6 +245,17 @@ final class BeamOccludedStaffPhase {
             float gap) {
         int radius = Math.max(3, Math.round(gap * .55f)),
                 minimum = Math.max(4, Math.round(gap * .38f));
+        int inkLimit =
+                Math.min(
+                        140,
+                        BeamInkThreshold.at(
+                                gray,
+                                w,
+                                h,
+                                Math.round(x),
+                                Math.round(row - radius),
+                                Math.round(row + radius),
+                                gap));
         for (int side = 0; side < 2; side++) {
             int first = side == 0 ? left : headRight + exclusion + 1,
                     last = side == 0 ? headLeft - exclusion - 1 : right;
@@ -255,7 +266,7 @@ final class BeamOccludedStaffPhase {
                 for (int y = Math.max(0, center - radius);
                         y <= Math.min(h - 1, center + radius);
                         y++) {
-                    if ((gray[y * w + xx] & 255) < 140) {
+                    if ((gray[y * w + xx] & 255) < inkLimit) {
                         run++;
                         longest = Math.max(longest, run);
                     } else run = 0;

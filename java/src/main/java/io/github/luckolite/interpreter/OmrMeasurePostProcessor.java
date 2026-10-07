@@ -252,7 +252,78 @@ final class OmrMeasurePostProcessor {
                     result.remove(other);
             }
         }
+        var admission = new java.util.IdentityHashMap<StaffRun, PrintedStaffAdmission.Evidence>();
+        float firstPrinted = Float.POSITIVE_INFINITY, lastPrinted = Float.NEGATIVE_INFINITY;
+        for (StaffRun staff : result) {
+            var evidence =
+                    PrintedStaffAdmission.evidence(
+                            gray,
+                            width,
+                            height,
+                            staff.left,
+                            staff.right,
+                            staff.gap,
+                            (line, x) -> {
+                                if (staff.track != null) {
+                                    float[] at = staff.track.at(x);
+                                    return at[0] - (4 - line) * at[1];
+                                }
+                                return staff.top
+                                        + line * staff.gap
+                                        + staff.slope * (x - width * .5f);
+                            });
+            admission.put(staff, evidence);
+            if (evidence.printed()) {
+                float center = (staff.top + staff.bottom) * .5f;
+                firstPrinted = Math.min(firstPrinted, center);
+                lastPrinted = Math.max(lastPrinted, center);
+            }
+        }
+        final float first = firstPrinted, last = lastPrinted;
+        result.removeIf(
+                staff ->
+                        !PrintedStaffAdmission.admitted(
+                                admission.get(staff),
+                                (staff.top + staff.bottom) * .5f,
+                                first,
+                                last));
         result.sort(Comparator.comparingInt(StaffRun::top));
+        for (int index = 0; index < result.size(); index++) {
+            StaffRun staff = result.get(index);
+            Integer closing =
+                    PrintedStaffEnd.closingBeforeTexture(
+                            gray,
+                            width,
+                            height,
+                            staff.gap,
+                            staff.boundaries,
+                            (line, x) -> {
+                                if (staff.track != null) {
+                                    float[] a = staff.track.at(x);
+                                    return a[0] - (4 - line) * a[1];
+                                }
+                                return staff.top
+                                        + line * staff.gap
+                                        + staff.slope * (x - width * .5f);
+                            });
+            if (closing != null) {
+                var bars =
+                        staff.boundaries.stream()
+                                .filter(x -> x <= closing)
+                                .collect(java.util.stream.Collectors.toList());
+                result.set(
+                        index,
+                        new StaffRun(
+                                staff.top,
+                                staff.bottom,
+                                staff.gap,
+                                staff.left,
+                                closing,
+                                bars,
+                                staff.slope,
+                                staff.track));
+            }
+        }
         return result;
     }
 
@@ -1154,6 +1225,9 @@ final class OmrMeasurePostProcessor {
             int top,
             int bottom,
             float gap) {
+        // A blurred semantic edge may sit three pixels from its proven raw stem.
+        // Raw continuity remains mandatory before an extended head can own the column.
+        int radius = gray == null ? 2 : Math.min(3, Math.max(2, Math.round(gap * .2f)));
         for (int direction : new int[] {-1, 1}) {
             int start = direction < 0 ? top : bottom;
             int misses = 0;
@@ -1163,7 +1237,7 @@ final class OmrMeasurePostProcessor {
                 int y = start + direction * distance;
                 if (y < 0 || y >= height) break;
                 boolean stem = false, headTouchesStem = false;
-                for (int dx = -2; dx <= 2; dx++) {
+                for (int dx = -radius; dx <= radius; dx++) {
                     int xx = x + dx;
                     if (xx < 0 || xx >= width) continue;
                     byte label = labels[y * width + xx];

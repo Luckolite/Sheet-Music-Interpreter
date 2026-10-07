@@ -9,6 +9,8 @@ final class PrintedFlatGlyph {
     static boolean matches(
             byte[] gray, int w, int h, int left, int top, int right, int bottom, float gap) {
         if (gray == null
+                || right < left
+                || bottom < top
                 || left < 0
                 || top < 0
                 || right >= w
@@ -16,12 +18,22 @@ final class PrintedFlatGlyph {
                 || bottom - top + 1 < gap * .8f) return false;
         // A staff-labelled cut can leave only the flat's bowl in the semantic box.
         // Follow its existing left spine upward in the source, never invent pixels.
+        int inkLimit =
+                ShadedInkWindow.flatSpineLimit(
+                        gray,
+                        w,
+                        h,
+                        left - Math.round(gap),
+                        top - Math.round(gap),
+                        right + Math.round(gap),
+                        bottom + Math.round(gap),
+                        165);
         int extended = top;
         for (int x = left; x <= left + (right - left) * .4f; x++) {
-            if (!dark(gray, w, x, top)) continue;
+            if (!dark(gray, w, x, top, inkLimit)) continue;
             int blank = 0, end = top;
             for (int y = top; y >= Math.max(0, top - Math.round(gap * 1.5f)); y--) {
-                if (dark(gray, w, x, y)) {
+                if (dark(gray, w, x, y, inkLimit)) {
                     end = y;
                     blank = 0;
                 } else if (++blank > 1) break;
@@ -42,7 +54,7 @@ final class PrintedFlatGlyph {
         int spine = left, best = 0;
         for (int x = left; x <= left + ww * .4f; x++) {
             int count = 0;
-            for (int y = top; y <= bottom; y++) if (dark(gray, w, x, y)) count++;
+            for (int y = top; y <= bottom; y++) if (dark(gray, w, x, y, inkLimit)) count++;
             if (count > best) {
                 best = count;
                 spine = x;
@@ -60,11 +72,13 @@ final class PrintedFlatGlyph {
         int clearColumn = spine + Math.round(gap * .2f);
         for (int y = top; y <= bottom; y++) {
             boolean rule =
-                    ruleWithinSource && dark(gray, w, leftRuleX, y) && dark(gray, w, rightRuleX, y);
+                    ruleWithinSource
+                            && dark(gray, w, leftRuleX, y, inkLimit)
+                            && dark(gray, w, rightRuleX, y, inkLimit);
             if (rule) continue;
             boolean ink = false;
             for (int x = start; x <= right; x++)
-                if (dark(gray, w, x, y)) {
+                if (dark(gray, w, x, y, inkLimit)) {
                     ink = true;
                     break;
                 }
@@ -74,12 +88,13 @@ final class PrintedFlatGlyph {
                 else bowl++;
             }
             if (y > clearStart && y < clearEnd)
-                for (int x = clearColumn; x < start; x++) if (!dark(gray, w, x, y)) clear++;
+                for (int x = clearColumn; x < start; x++)
+                    if (!dark(gray, w, x, y, inkLimit)) clear++;
         }
         return upper <= hh * .08f && tail <= 1 && bowl >= hh * .18f && clear >= 3;
     }
 
-    private static boolean dark(byte[] gray, int w, int x, int y) {
-        return (gray[y * w + x] & 255) < 165;
+    private static boolean dark(byte[] gray, int w, int x, int y, int inkLimit) {
+        return (gray[y * w + x] & 255) < inkLimit;
     }
 }

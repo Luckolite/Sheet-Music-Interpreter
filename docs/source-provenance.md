@@ -691,3 +691,14 @@ returned list permits the established component merges without mutating caller
 data. Filled/hollow heads, a one-pixel slot, absent rasters and pixel immutability
 are covered. Recognition10 retains the guide282 record layout and unchanged
 models, geometry, helpers and dependencies.
+
+Recognition11 reviews shaded-paper staff and symbol ownership, short and
+independent inward shafts, accidental columns, staff-owned octave numerals,
+rest/bar boundaries, and connected glyph exclusions from articulations.
+New regressions use original procedural geometry and the existing licensed OFL
+glyph renderer. Native and standalone implementations retain complete executable
+parity under the established package/diagnostics adapters. New helpers use JDK
+collections and existing interpreter APIs. The guide282 record layout, model
+weights and dependencies remain unchanged. Independent voice-clock diagnostics
+are excluded from this recognition batch. No private score or device data is
+distributed.
