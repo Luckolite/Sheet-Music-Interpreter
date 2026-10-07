@@ -659,3 +659,11 @@ accidental, short-rest, dot, and raster-preservation controls remain in the suit
 Recognition epoch6 is shared by the app, standalone identity helpers, Hub, and page
 writer; guide282 record layout and model weights are unchanged. Synthetic regressions
 and retained-page comparisons do not establish whole-library recognition accuracy.
+
+The faded beam junction repair uses original painted up/down stems and two rails.
+Dark beam bodies, a connected pale shaft and a thick continuous junction path are
+required; flags, detached bands, thin strokes and shaded paper remain rejection
+controls. Full generated recognition retains a written sixteenth duration. Only
+reviewed shared methods and the recognition-7 companions are mirrored; guide282,
+protocol1, model weights and platform adapters are unchanged. Private retained
+page checks are kept outside this repository and are not an overall accuracy claim.

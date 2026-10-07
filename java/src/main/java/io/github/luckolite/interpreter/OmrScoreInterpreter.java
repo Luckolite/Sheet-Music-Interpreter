@@ -14939,9 +14939,13 @@ final class OmrScoreInterpreter {
                             head.centerY);
         if (count == 0 && gray != null && head.maxX - head.minX + 1 > staff.gap * 1.05f)
             count = detectBeamCount(labels, gray, width, height, head, staff, false, true);
-        if (count == 0 && gray != null && head.maxX - head.minX + 1 > staff.gap * 1.05f) {
+        if (count < 2 && gray != null && head.maxX - head.minX + 1 > staff.gap * 1.05f) {
             int[] pale = paleStemToDoubleBeam(labels, gray, width, height, head, staff);
             if (pale != null
+                    && fadedDoubleBeamJunction(labels, gray, width, height, head, staff, pale))
+                count = 2;
+            else if (count == 0
+                    && pale != null
                     && rootedPaleFlag(
                             labels,
                             gray,
@@ -17287,6 +17291,64 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    /** Two dark bodies may meet a pale shaft through a locally faded junction.
+     * Keep the bodies' dark threshold and require a continuous thick path to the
+     * shaft. A returning flag or an unattached outer stroke cannot supply it. */
+    private static boolean fadedDoubleBeamJunction(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            int[] pale) {
+        float gap = staff.gap;
+        boolean up = pale[2] < 0;
+        if (rootedPaleFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up)
+                || hasCurvedFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up))
+            return false;
+        int top = Math.max(0, pale[1] - Math.round(gap * (up ? .2f : 1.85f)));
+        int bottom = Math.min(height - 1, pale[1] + Math.round(gap * (up ? 1.85f : .2f)));
+        for (int side : new int[] {-1, 1}) {
+            int inner = pale[0] + side * Math.round(gap * .4f);
+            int outer = pale[0] + side * Math.round(gap * .65f);
+            int near = pale[0] + side * 2;
+            int threshold = BeamInkThreshold.at(gray, width, height, inner, top, bottom, gap);
+            int rootThreshold = threshold < 165 ? threshold + 16 : 205;
+            if (thickNonHeadBands(gray, labels, width, height, inner, top, bottom, staff) == 2
+                    && thickNonHeadBands(
+                                    gray, labels, width, height, outer, top, bottom, staff, inner)
+                            == 2
+                    && thickNonHeadBandsAtThreshold(
+                                    gray,
+                                    labels,
+                                    width,
+                                    height,
+                                    inner,
+                                    top,
+                                    bottom,
+                                    staff,
+                                    threshold,
+                                    near,
+                                    rootThreshold)
+                            == 2
+                    && thickNonHeadBandsAtThreshold(
+                                    gray,
+                                    labels,
+                                    width,
+                                    height,
+                                    outer,
+                                    top,
+                                    bottom,
+                                    staff,
+                                    threshold,
+                                    near,
+                                    rootThreshold)
+                            == 2) return true;
+        }
+        return false;
+    }
+
     private static int thickNonHeadBandsAtThreshold(
             byte[] gray,
             byte[] labels,
@@ -17298,6 +17360,23 @@ final class OmrScoreInterpreter {
             Staff staff,
             int threshold,
             int stemwardX) {
+        return thickNonHeadBandsAtThreshold(
+                gray, labels, width, height, x, top, bottom, staff, threshold, stemwardX,
+                threshold);
+    }
+
+    private static int thickNonHeadBandsAtThreshold(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            int x,
+            int top,
+            int bottom,
+            Staff staff,
+            int threshold,
+            int stemwardX,
+            int rootThreshold) {
         float gap = staff.gap, lineTop = staff.top;
         if (x < 1 || x >= width - 1) return 0;
         float[] track = staff.pitchTrack == null ? null : staff.pitchTrack.at(x);
@@ -17410,8 +17489,14 @@ final class OmrScoreInterpreter {
                 boolean rooted =
                         run >= 3
                                 && bandReachesInnerProbe(
-                                        gray, width, height, x, stemwardX, y - run, y - 1,
-                                        threshold);
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        stemwardX,
+                                        y - run,
+                                        y - 1,
+                                        rootThreshold);
                 if (run >= Math.max(3, Math.round(gap * .30f)) && !onlyStaff && rooted) bands++;
                 if (run >= Math.max(3, Math.ceil(gap * .30f)) && !onlyStaff && rooted)
                     strongBands++;
