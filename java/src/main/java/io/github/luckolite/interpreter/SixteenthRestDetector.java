@@ -135,7 +135,7 @@ final class SixteenthRestDetector {
         dots = new ArrayList<>(stable.dots());
         for (ScoreRestEvent rest : recovered.rests()) {
             if (!seededOrdinaryRest(gray, width, height, measures, staffs, rest)) continue;
-            boolean duplicate = false;
+            ScoreRestEvent duplicate = null;
             for (ScoreRestEvent old : rests)
                 if (old.measureIndex() == rest.measureIndex()
                         && old.staffIndex() == rest.staffIndex()
@@ -143,14 +143,33 @@ final class SixteenthRestDetector {
                         && Math.abs(old.positionInMeasure() - rest.positionInMeasure()) < .025f
                         && Math.abs(old.pageY() - rest.pageY())
                                 < Math.max(old.pageHeight(), rest.pageHeight())) {
-                    duplicate = true;
+                    duplicate = old;
                     break;
                 }
-            if (duplicate) continue;
+            if (duplicate != null) {
+                // A dark lower contour can resemble two rest bulbs before the pale
+                // zigzag is recovered. Prefer the proved full quarter only when it
+                // encloses that shorter reading; adjacent rests retain their identity.
+                if (!completeRecoveredQuarter(rest, duplicate)) continue;
+                rests.remove(duplicate);
+                ScoreRestEvent replaced = duplicate;
+                dots.removeIf(dot -> dot.rest().equals(replaced));
+            }
             rests.add(rest);
             for (RestDot dot : recovered.dots()) if (dot.rest().equals(rest)) dots.add(dot);
         }
         return collected(rests, dots);
+    }
+
+    private static boolean completeRecoveredQuarter(ScoreRestEvent full, ScoreRestEvent cropped) {
+        if (full.durationBeats() != 1
+                || (cropped.durationBeats() != .25 && cropped.durationBeats() != .5)
+                || full.pageHeight() <= cropped.pageHeight() * 1.1f) return false;
+        float fullTop = full.pageY() - full.pageHeight() * .5f;
+        float fullBottom = full.pageY() + full.pageHeight() * .5f;
+        float croppedTop = cropped.pageY() - cropped.pageHeight() * .5f;
+        float croppedBottom = cropped.pageY() + cropped.pageHeight() * .5f;
+        return fullTop <= croppedTop + .000001f && fullBottom >= croppedBottom - .000001f;
     }
 
     /** Recover an occluded eighth-rest bulb only from its separate diagonal tail,
@@ -873,7 +892,8 @@ final class SixteenthRestDetector {
                                     n.boundaryTies(),
                                     n.tupletNormalNotes())
                             .withStemDirection(n.stemDirection())
-                            .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes()).withKind(n.kind()));
+                            .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes())
+                            .withKind(n.kind()));
         }
         Staff rectified =
                 new Staff(

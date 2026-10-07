@@ -104,6 +104,11 @@ public class FadedQuarterGlyphTest {
     }
 
     @Test
+    public void tallerFadedQuartersRetainTheirCompleteContour() throws Exception {
+        quarters(46);
+    }
+
+    @Test
     public void uniformlyFaintQuartersNeedDarkSeeds() throws Exception {
         for (int shade : new int[] {185, 195, 202})
             assertTrue(detect(glyph('\ue4e5', 40, shade, H, .5)).isEmpty());

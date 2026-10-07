@@ -642,3 +642,20 @@ the two existing tests. Plain strings, scalar fields and optional/wire branches 
 The native bridge is reviewed separately from the mapped decoder sources, whose hashes
 are unchanged. Unpaired-surrogate policy, note records, wire layouts, models and
 dependencies are unchanged; no private score, device or signing material is included.
+
+### Complete faded quarter-rest selection
+
+The faint-ink pass can prove a full quarter-rest contour after an earlier dark-only
+pass reads its lower portion as an eighth or sixteenth rest. Duplicate selection now
+retains that recovered quarter only when it passes the existing contour and dark-seed
+checks, belongs to the same measure/staff/position, is over ten percent taller, and
+encloses the earlier reading's vertical extent. Its own dot ownership replaces that
+of the cropped reading. Other duplicate decisions retain their existing behavior.
+
+The original SIL-OFL Bravura regression matrix includes heights38 through46, three
+pale shades, three faded bands, and two raster phases. The height46 extension exposes
+six wrong-duration readings on the preceding implementation. Existing damaged-glyph,
+accidental, short-rest, dot, and raster-preservation controls remain in the suite.
+Recognition epoch6 is shared by the app, standalone identity helpers, Hub, and page
+writer; guide282 record layout and model weights are unchanged. Synthetic regressions
+and retained-page comparisons do not establish whole-library recognition accuracy.
