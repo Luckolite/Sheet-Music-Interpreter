@@ -731,3 +731,13 @@ its own room within a bounded 900-second worker lifetime. The standalone CLI's
 execution policy is unchanged. Models, dependencies and guide282 record layouts
 are unchanged; recognition13 and app/desktop audio71 invalidate prior derived data.
 Private source, device and library evidence remains outside the package.
+
+
+Engraved common/cut-time signs may have a circular terminal overlapping the
+central opening window. A continuous right channel can establish an opening
+while existing bowl, terminal, shoulder, cavity, separate-cut and clef evidence
+remain required. Original generated regressions cover asymmetric terminals,
+closed boundaries, insufficient one-row gaps and read-only source masks.
+Recognition14 invalidates older interpretations; guide282 and audio71 formats,
+models and dependencies remain unchanged. Meter is already part of the audio
+input identity, so a changed printed meter cannot reuse prior performance data.

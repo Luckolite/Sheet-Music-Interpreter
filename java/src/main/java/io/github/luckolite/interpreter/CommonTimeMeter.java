@@ -109,7 +109,11 @@ final class CommonTimeMeter {
                 if (ink(gray, width, height, x, y, slope)) open++;
             }
         }
-        if (total == 0 || open > total * .16f) return 0;
+        if (total == 0
+                || open > total * .16f
+                        && !openChannel(
+                                gray, width, height, left, right, mid, gap, firstLine, slope))
+            return 0;
         // Both right terminals and both left shoulders must be present, not a 3 or rest.
         if (count(
                                 gray,
@@ -255,6 +259,32 @@ final class CommonTimeMeter {
             if (row) rowCount++;
         }
         return rowCount >= gap * 3.2f && pixels >= gap * gap;
+    }
+
+    /** A circular upper terminal may enter the central window while a lower channel stays open. */
+    private static boolean openChannel(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float mid,
+            float gap,
+            int firstLine,
+            float slope) {
+        int radius = Math.max(1, Math.round(gap * .12f));
+        int x0 = Math.round(left + (right - left + 1) * .72f),
+                needed = Math.max(2, (int) Math.ceil(gap * .12f));
+        int clear = 0;
+        for (int y = Math.round(mid - gap * .30f); y <= Math.round(mid + gap * .30f); y++) {
+            if (rule(y, firstLine, gap, radius)) continue;
+            int dark = 0;
+            for (int x = x0; x <= right; x++) if (ink(gray, width, height, x, y, slope)) dark++;
+            if (dark <= (right - x0 + 1) * .16f) {
+                if (++clear >= needed) return true;
+            } else clear = 0;
+        }
+        return false;
     }
 
     private static int count(

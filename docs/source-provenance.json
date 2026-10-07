@@ -683,9 +683,11 @@
     },
     "CommonTimeMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CommonTimeMeter.java",
-      "source_sha256": "d92fac10e0314831abb21edf1cfc2945f9e806eb2f384602d744d1869d39ed85",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "d92fac10e0314831abb21edf1cfc2945f9e806eb2f384602d744d1869d39ed85"
+      "source_sha256": "23dc7595f12365e669e7928887b3007e1ed38472ebd25e04de8745e033685910",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "source_normalized_sha256": "23dc7595f12365e669e7928887b3007e1ed38472ebd25e04de8745e033685910",
+      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base.",
+      "review_note": "Original asymmetric circular-terminal C/cut-C regressions; prove a continuous right opening channel when the terminal overlaps the symmetric window. Left bowl, both shoulders/terminals, cut separation, cavity, clef and conflicting-copy guards remain. No score-specific rules, fonts/models/dependencies/private data."
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",
@@ -1406,11 +1408,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "b74984d2070e0679f8d734546e223ac147c2439fcb2653b40ca72f91d8843f9b",
-      "source_normalized_sha256": "b74984d2070e0679f8d734546e223ac147c2439fcb2653b40ca72f91d8843f9b",
+      "source_sha256": "212f0204a7db6f5b587cb8123dc9a6dce521032c9858771f255cce28b572939f",
+      "source_normalized_sha256": "212f0204a7db6f5b587cb8123dc9a6dce521032c9858771f255cce28b572939f",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition13 invalidates prior derived interpretations while preserving the complete guide282 layout.",
-      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta."
+      "review_note": "Recognition14 invalidates older guide interpretations; guide282 layout unchanged.",
+      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1464,11 +1466,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f70a7c0fc41e99d046ceddb237af3945181d5d18a0efe870554d3a2ec7a94e29",
-      "source_normalized_sha256": "f70a7c0fc41e99d046ceddb237af3945181d5d18a0efe870554d3a2ec7a94e29",
+      "source_sha256": "e8e290a3f64851c49345a210c6c5c3cc6cd9b4ca7c6c89c5e974e99b816a4c2d",
+      "source_normalized_sha256": "e8e290a3f64851c49345a210c6c5c3cc6cd9b4ca7c6c89c5e974e99b816a4c2d",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
-      "review_note": "Only recognition identity12 to13; every guide282 record field and legacy layout remains unchanged."
+      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base.",
+      "review_note": "Only recognition identity13 to14; all current/legacy guide record fields unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
