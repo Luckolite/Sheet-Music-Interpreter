@@ -38,7 +38,8 @@ public final class MusicalOcr {
                     .merge(change.numerator() + "/" + change.denominator(), 1, Integer::sum);
             decisive.add(change.measureIndex());
         }
-        var candidates = MeterChangeDetector.candidates(labels, gray, width, height);
+        var candidates =
+                MeterChangeDetector.candidates(labels, gray, width, height, measures, notes);
         if (TRACE) System.err.println("meter candidates=" + candidates.size());
         for (var crop : candidates) {
             int measure = MeterChangeDetector.followingMeasure(crop, width, height, measures);

@@ -751,3 +751,14 @@ procedural controls cover symbol support, faded connections, false shapes, absen
 masks and caller input ownership. Android, desktop and standalone adapters pass
 the existing geometry mask; no model, dependency or record layout changed.
 Recognition15 prevents reuse of older harmonic interpretations.
+
+Numeric-meter OCR spends its bounded crop budget after existing note, accidental,
+clef and brace ownership checks, so body glyph-like ink cannot starve a later
+header. The legacy raw-candidate API remains bounded and unchanged. Desktop and
+standalone font matching excludes the same scale-relative staff-rule band used
+by crop geometry; confidence and winning-margin thresholds remain unchanged.
+Three original procedural regressions exercise crowded early bars/staves and
+thick printed rules using the existing licensed Bravura font. Android uses the
+shared eligible-candidate budget while retaining its platform OCR. Recognition16
+invalidates prior meter interpretations; weights, dependencies and physical guide
+and audio layouts are unchanged. No private score material is distributed.

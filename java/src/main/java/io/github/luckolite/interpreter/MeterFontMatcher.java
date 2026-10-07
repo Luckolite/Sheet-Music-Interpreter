@@ -69,7 +69,8 @@ public final class MeterFontMatcher {
                 source[y * width + x] = (color & 255) < 150;
                 boolean onLine = false;
                 for (int n = 0; n < 5; n++)
-                    if (Math.abs(first + y - Math.round(firstLine + n * gap)) <= 1) onLine = true;
+                    if (Math.abs(first + y - Math.round(firstLine + n * gap))
+                            <= Math.max(1, Math.round(gap * .12f))) onLine = true;
                 valid[y * width + x] = !onLine;
                 if (!onLine && source[y * width + x]) sourceCount++;
             }

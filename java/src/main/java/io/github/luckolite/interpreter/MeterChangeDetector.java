@@ -199,6 +199,36 @@ public final class MeterChangeDetector {
     }
 
     public static List<Crop> candidates(byte[] labels, byte[] gray, int width, int height) {
+        return candidates(labels, gray, width, height, crop -> true);
+    }
+
+    /** Apply note ownership before the bounded OCR budget, so body ink cannot starve later headers. */
+    public static List<Crop> candidates(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        return candidates(
+                labels,
+                gray,
+                width,
+                height,
+                crop -> {
+                    int measure = followingMeasure(crop, width, height, measures);
+                    return measure >= 0
+                            && precedesNotes(
+                                    crop, labels, gray, width, height, measure, measures, notes);
+                });
+    }
+
+    private static List<Crop> candidates(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            java.util.function.Predicate<Crop> eligible) {
         List<Crop> result = new ArrayList<>();
         if (labels == null
                 || gray == null
@@ -279,19 +309,22 @@ public final class MeterChangeDetector {
                         int center = (xx + end) / 2,
                                 localTop = top + Math.round(slope * (center - width * .5f));
                         int pad = Math.max(2, Math.round(gap * .18f));
-                        result.add(
+                        addCandidate(
+                                result,
                                 new Crop(
                                         Math.max(0, Math.round(center - gap * 1.6f)),
                                         Math.max(0, localTop - pad),
                                         Math.min(width, Math.round(center + gap)),
                                         Math.min(height, localTop + bottom - top + pad + 1),
                                         localTop,
-                                        gap));
+                                        gap),
+                                eligible);
                         if (result.size() >= 48) return List.copyOf(result);
                         xx = end + gapPixels;
                     }
                     if (left < firstHead - gap * .35f)
-                        result.addAll(
+                        addCandidates(
+                                result,
                                 stackedSymbolMeterCrops(
                                         labels,
                                         width,
@@ -304,7 +337,8 @@ public final class MeterChangeDetector {
                                         bottom,
                                         gap,
                                         slope,
-                                        false));
+                                        false),
+                                eligible);
                     if (firstSemanticHead != firstHead && left < firstSemanticHead - gap * .35f)
                         for (var crop :
                                 stackedSymbolMeterCrops(
@@ -322,8 +356,8 @@ public final class MeterChangeDetector {
                                         slope,
                                         true))
                             if (!result.contains(crop)
-                                    && pairedStackedSymbols(labels, width, height, crop))
-                                result.add(crop);
+                                    && pairedStackedSymbols(labels, width, height, crop)
+                                    && eligible.test(crop)) result.add(crop);
                     if (result.size() >= 48) return List.copyOf(result.subList(0, 48));
                 }
                 if (span < gap * .5f || span > gap * 3.2f) continue;
@@ -411,7 +445,8 @@ public final class MeterChangeDetector {
                 int shiftRight = Math.round(slope * (last - width * .5f));
                 int firstLine =
                         staff.top() + Math.round(slope * ((left + last) * .5f - width * .5f));
-                result.add(
+                addCandidate(
+                        result,
                         new Crop(
                                 Math.max(0, left - pad),
                                 Math.max(0, top + Math.min(shiftLeft, shiftRight) - pad),
@@ -419,11 +454,22 @@ public final class MeterChangeDetector {
                                 Math.min(
                                         height, bottom + Math.max(shiftLeft, shiftRight) + pad + 1),
                                 firstLine,
-                                gap));
+                                gap),
+                        eligible);
                 if (result.size() >= 48) return List.copyOf(result);
             }
         }
         return List.copyOf(result);
+    }
+
+    private static void addCandidate(
+            List<Crop> result, Crop crop, java.util.function.Predicate<Crop> eligible) {
+        if (eligible.test(crop)) result.add(crop);
+    }
+
+    private static void addCandidates(
+            List<Crop> result, List<Crop> crops, java.util.function.Predicate<Crop> eligible) {
+        for (var crop : crops) addCandidate(result, crop, eligible);
     }
 
     private static boolean completeBarlineBefore(
@@ -650,7 +696,7 @@ public final class MeterChangeDetector {
         return true;
     }
 
-    /** A pair of chord heads and their shared stem can resemble an open C. */
+    /** A signature crop must precede the music and cannot reuse decoded head/accidental ink. */
     public static boolean precedesNotes(
             Crop crop,
             byte[] gray,
@@ -666,6 +712,7 @@ public final class MeterChangeDetector {
                 && !belongsToNoteAccidental(crop, gray, width, height, measure, measures, notes);
     }
 
+    /** The numeric crop cannot reuse a complete printed clef or grand-staff brace. */
     public static boolean precedesNotes(
             Crop crop,
             byte[] labels,
@@ -680,6 +727,7 @@ public final class MeterChangeDetector {
                 && !MeterHeaderInkGuard.owns(crop, labels, gray, width, height);
     }
 
+    /** A decoded natural beside a chord owns its narrow glyph, even when OCR reads two digits. */
     public static boolean belongsToNoteAccidental(
             Crop crop,
             byte[] gray,
@@ -712,6 +760,7 @@ public final class MeterChangeDetector {
         return false;
     }
 
+    /** A pair of chord heads and their shared stem can resemble an open C. */
     static boolean overlapsRecognizedNote(
             Crop crop,
             int width,

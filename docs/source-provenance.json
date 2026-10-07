@@ -252,11 +252,11 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "7f9fb7c548420745d396218ae93c65115578691d3cda2532fff69d0127616e65",
+      "source_sha256": "d59a920289d19b2ab62910330d868ba6c5d7af8ef8b636a678df8852133b160e",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
-      "source_normalized_sha256": "7f9fb7c548420745d396218ae93c65115578691d3cda2532fff69d0127616e65",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894.",
+      "review_note": "Apply existing note/header/accidental ownership before the48-crop OCR budget. Legacy raw-candidate API, crop geometry and thresholds remain unchanged. Original same-staff and later-staff crowding controls prove recovery without unbounded OCR.",
+      "source_normalized_sha256": "e91f03749ae7fab9c65a7985767d7af16bec301dffec39647637aaaedb110f31",
+      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
     "MultiMeasureRestDetector.java": {
@@ -995,11 +995,11 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "e50a9b373609edf6cd91457ee32fae947795f97acbf1b3d33ae044e8d54840d8",
+      "source_sha256": "8affe7d6cbf8aa8ce9ae58ff997cb5a465057e3b40acfd7979aadf806d657e12",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "e50a9b373609edf6cd91457ee32fae947795f97acbf1b3d33ae044e8d54840d8",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+      "source_normalized_sha256": "27620518266b041ad3ce2ea4ced82feb39cc261e4e6f3168e8b59edee9f098e3",
+      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
+      "review_note": "Use note-eligible bounded candidate overload; caller-owned standalone inference and existing consensus/conflict guards remain unchanged."
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1408,11 +1408,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "c9db94b4d9aeb67ac2d63011350b45e7115f69c1be22f402d872e853646eca7a",
-      "source_normalized_sha256": "c9db94b4d9aeb67ac2d63011350b45e7115f69c1be22f402d872e853646eca7a",
+      "source_sha256": "2677c04c836e20698fa16135d0e126aa06a5821724d2efe9ba35655e96e5ff87",
+      "source_normalized_sha256": "394117ef5552c684d8b4cce269664959d3593c2d3b5661cfe52eb4519b305b0c",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition15 separates changed harmonic interpretations from older guides at unchanged layout282.",
-      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained."
+      "review_note": "Recognition16 separates numeric-meter repairs from prior guides at unchanged layout282.",
+      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1466,11 +1466,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "fe355f904d3934efa76a8d815fbd808fb3feecf940e0b9f72f4748e519823864",
-      "source_normalized_sha256": "fe355f904d3934efa76a8d815fbd808fb3feecf940e0b9f72f4748e519823864",
+      "source_sha256": "a9dc78e8286a5cf64343d7657a80b0fa410d0c865eee65eab1ae059622fd762e",
+      "source_normalized_sha256": "e2c02b05981897b25b3e6afc150c523c3d11dfe874d3eb24f746452ecd856809",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained.",
-      "review_note": "Only recognition identity14 to15; current and legacy physical guide record layouts are unchanged."
+      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
+      "review_note": "Recognition identity15 to16; current and legacy physical guide records unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3570,5 +3570,24 @@
         "change": "Pass existing geometry label mask to harmonic detection; stage order unchanged."
       }
     ]
+  },
+  "numeric_meter_budget_and_staff_band_review": {
+    "base_public_commit": "b60ce93fba372bb6746c7a8de9120c08d7511492",
+    "base_app_commit": "042079baf2e66aafa7a242c9555fa4f4d51eb920",
+    "recognition_revision": 16,
+    "guide_format": 282,
+    "audio_format": 71,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "fixture_origin": "Original Apache-2.0 procedural glyph crowding geometry and licensed Bravura OFL generated glyphs. Three JUnit regressions with18 positive/rejection behavior checks; no score pixels, library identifiers or score coordinates.",
+    "font_adapter": {
+      "source_path": "tools/native-worker/NativeMeterFont.java",
+      "source_sha256": "c30a9661d31f7509ba6ef34d2f03e4a9c9eeeba4fbba8e018d9ab80d06d19fde",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterFontMatcher.java",
+      "standalone_sha256": "e29320a1a2e848a02e5b659a5d1b34e2f7c23b21ca873baa2b0dc4ac4ac08644",
+      "review": "Same bounded font match with staff-rule exclusion radius consistent with candidate generation; score.84 and ambiguity margin.05 unchanged. Package/class/public access adaptation only. Existing Bravura font unchanged."
+    },
+    "android_adapter": "OmrMeasureAnalyzer uses the same note-eligible crop budget. Android OCR remains platform-specific; desktop font evidence is not a phone OCR accuracy claim."
   }
 }
