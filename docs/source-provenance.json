@@ -556,12 +556,12 @@
     },
     "ArtificialHarmonics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
-      "source_sha256": "a60d8c6afb87c77cbb381a453a88078b78d12415da3ad6bd89c13b49ff2196c5",
+      "source_sha256": "ac937cb2413f0125266119c368aad3e29741dfe027a26ec182b1b77d8a639472",
       "reviewed_app_commit": "abdad95ab53c8481049a8f1c7b25442779a46404",
-      "source_normalized_sha256": "e50c0450cda1fe717e119f7244383167381e4560c2779e9c6dd769a3d4c3155c",
+      "source_normalized_sha256": "93922789837d5bf6ea516bfa8680167fd9c28a886106db5e61eefbf07c3ff2c5",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls.",
-      "review_note": "Private held global Artificial harmonics fixed work reuse candidate; exact paired source/inverse and existing model-free functional receipt retained. No elapsed or complete page/Score/guide claim for these17 families. Final901 source/commit merge and normal mandatory gates remain required. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged."
+      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained.",
+      "review_note": "Original synthetic touch-diamond and joined faded-stem controls review the labels-aware overload. Gray-only behavior is retained; no model, dependency or record-layout change."
     },
     "ParallelBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelBeamTip.java",
@@ -1408,11 +1408,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "212f0204a7db6f5b587cb8123dc9a6dce521032c9858771f255cce28b572939f",
-      "source_normalized_sha256": "212f0204a7db6f5b587cb8123dc9a6dce521032c9858771f255cce28b572939f",
+      "source_sha256": "c9db94b4d9aeb67ac2d63011350b45e7115f69c1be22f402d872e853646eca7a",
+      "source_normalized_sha256": "c9db94b4d9aeb67ac2d63011350b45e7115f69c1be22f402d872e853646eca7a",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition14 invalidates older guide interpretations; guide282 layout unchanged.",
-      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base."
+      "review_note": "Recognition15 separates changed harmonic interpretations from older guides at unchanged layout282.",
+      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1466,11 +1466,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e8e290a3f64851c49345a210c6c5c3cc6cd9b4ca7c6c89c5e974e99b816a4c2d",
-      "source_normalized_sha256": "e8e290a3f64851c49345a210c6c5c3cc6cd9b4ca7c6c89c5e974e99b816a4c2d",
+      "source_sha256": "fe355f904d3934efa76a8d815fbd808fb3feecf940e0b9f72f4748e519823864",
+      "source_normalized_sha256": "fe355f904d3934efa76a8d815fbd808fb3feecf940e0b9f72f4748e519823864",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base.",
-      "review_note": "Only recognition identity13 to14; all current/legacy guide record fields unchanged."
+      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained.",
+      "review_note": "Only recognition identity14 to15; current and legacy physical guide record layouts are unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3535,5 +3535,40 @@
       ],
       "boundary": "Select the fourteen reviewed JDK-only recognition helpers for the desktop decoder. The existing builder hashes names and exact normalized source bytes before compiling the same snapshots. Standalone compilation already selects these helpers. No source rewrites, model, dependency or record-layout changes."
     }
+  },
+  "symbol_touch_harmonics_review": {
+    "base_public_commit": "8c2aea39b8cc55985bc9c369694ec022db2dbd71",
+    "base_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+    "fixture_origin": "Twelve original Apache-2.0 procedural controls; no score-derived pixels, identifiers or coordinates.",
+    "new_test": "SymbolTouchHarmonicsTest.java",
+    "recognition_revision": 15,
+    "guide_format": 282,
+    "audio_format": 71,
+    "model_weights_changed": false,
+    "production_dependencies_changed": false,
+    "record_layout_changed": false,
+    "adapter_review": [
+      {
+        "path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "surface": "app",
+        "before_sha256": "ee334684981f952f7ecde6867a570fe3310dd9dd43b4f3c53c297cae1b27992e",
+        "after_sha256": "1c9d4175a8e62c691e78eb79bc23f40e08fe826526f00934f5f101c605f8ee5d",
+        "change": "Pass existing geometry label mask to harmonic detection; stage order unchanged."
+      },
+      {
+        "path": "tools/native-worker/NativePageGuide.java",
+        "surface": "app",
+        "before_sha256": "3a46840f7ef861b87159c6d3f71b819c8ecd8af54e2eae94e0d0d234c33db1cc",
+        "after_sha256": "3dc65773bd17f8abc6139039257e1397d4116be36c56c7b522e0b5b128e24cf2",
+        "change": "Pass existing geometry label mask to harmonic detection; stage order unchanged."
+      },
+      {
+        "path": "java/src/main/java/io/github/luckolite/interpreter/SheetInterpreter.java",
+        "surface": "public",
+        "before_sha256": "d09f0ea5e8bbd63eed8c8ff1f22a3d125c9316646c383898f9e9c9f2efc63455",
+        "after_sha256": "5a38e1b9053d8e50283f40d49ecca7e49b90aead3b77aaab7fd91b3b687cd585",
+        "change": "Pass existing geometry label mask to harmonic detection; stage order unchanged."
+      }
+    ]
   }
 }

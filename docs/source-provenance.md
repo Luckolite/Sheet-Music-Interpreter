@@ -741,3 +741,13 @@ closed boundaries, insufficient one-row gaps and read-only source masks.
 Recognition14 invalidates older interpretations; guide282 and audio71 formats,
 models and dependencies remain unchanged. Meter is already part of the audio
 input identity, so a changed printed meter cannot reuse prior performance data.
+
+A hollow touch diamond may retain existing semantic-symbol support even when no
+upper note head was decoded. Its sides, open center, fourth spacing, beamed stopped
+head and joined stem still require geometric evidence. Faded joined stems use
+local paper contrast and bounded coverage; detached symbols and ordinary chords
+remain guarded. The gray-only API retains its prior behavior. Twelve original
+procedural controls cover symbol support, faded connections, false shapes, absent
+masks and caller input ownership. Android, desktop and standalone adapters pass
+the existing geometry mask; no model, dependency or record layout changed.
+Recognition15 prevents reuse of older harmonic interpretations.

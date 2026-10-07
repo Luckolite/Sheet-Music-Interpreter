@@ -23,6 +23,17 @@ final class ArtificialHarmonics {
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes,
             List<PlayingTechniqueDetector.Staff> staffs) {
+        return apply(null, gray, w, h, measures, notes, staffs);
+    }
+
+    static List<ScoreNoteEvent> apply(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            List<PlayingTechniqueDetector.Staff> staffs) {
         if (gray == null || notes.isEmpty()) return notes;
         var replacements = new HashMap<ScoreNoteEvent, ScoreNoteEvent>();
         var remove = new HashSet<ScoreNoteEvent>();
@@ -44,6 +55,7 @@ final class ArtificialHarmonics {
                 }
             if (staff == null) continue;
             float gap = staff.gap();
+
             boolean unpitchedTouch = false;
             for (var upper : notes)
                 if (upper.kind() == ScoreNoteEvent.Kind.UNPITCHED
@@ -74,7 +86,13 @@ final class ArtificialHarmonics {
                     break;
                 }
             boolean strictDiamond = diamond(gray, w, h, x, y - 1.5f * gap, gap);
+            boolean symbolTouch =
+                    pairedTouch == null
+                            && n.beamCount() >= 2
+                            && n.unbeamedDurationBeats() < ScoreNoteEvent.DURATION_HALF
+                            && symbolDiamond(labels, gray, w, h, x, y - 1.5f * gap, gap);
             if (!strictDiamond
+                    && !symbolTouch
                     && !(pairedTouch != null
                             && n.beamCount() >= 2
                             && ((pairedTouch.beamCount() == 0
@@ -92,6 +110,7 @@ final class ArtificialHarmonics {
                             y,
                             gap,
                             n.unbeamedDurationBeats() < ScoreNoteEvent.DURATION_HALF)
+                    && !(symbolTouch && paleJoinedStem(gray, w, h, x, y, gap))
                     && !(pairedTouch != null
                             && n.beamCount() >= 2
                             && !strictDiamond
@@ -116,6 +135,67 @@ final class ArtificialHarmonics {
         var result = new ArrayList<ScoreNoteEvent>();
         for (var n : notes) if (!remove.contains(n)) result.add(replacements.getOrDefault(n, n));
         return List.copyOf(result);
+    }
+
+    private static boolean symbolDiamond(
+            byte[] labels, byte[] gray, int w, int h, float x, float y, float gap) {
+        return labels != null
+                && labels.length == (long) w * h
+                && diamondEvidence(gray, labels, w, h, x, y, gap, true);
+    }
+
+    private static boolean paleJoinedStem(byte[] gray, int w, int h, float x, float y, float gap) {
+        int[] paper = new int[256];
+        int samples = 0;
+        for (int yy = Math.max(0, Math.round(y - gap * 1.1f));
+                yy <= Math.min(h - 1, Math.round(y + gap * 1.2f));
+                yy++)
+            for (int sign : ProbeSigns.VALUES) {
+                int xx = Math.round(x + sign * gap * 1.2f);
+                if (xx >= 0 && xx < w) {
+                    paper[gray[yy * w + xx] & 255]++;
+                    samples++;
+                }
+            }
+        int background = 0, count = 0;
+        for (; background < 255; background++) {
+            count += paper[background];
+            if (count >= Math.max(1, (samples * 3 + 3) / 4)) break;
+        }
+        int limit = Math.min(210, background - 45);
+        if (samples < 8 || limit <= 165) return false;
+        for (int direction : ProbeSigns.VALUES)
+            for (int offset = Math.round(gap * .3f); offset <= Math.round(gap * .95f); offset++) {
+                int xx = Math.round(x) - direction * offset, countStem = 0, total = 0;
+                for (int distance = Math.round(gap * .2f);
+                        distance <= Math.round(gap * 1.2f);
+                        distance++) {
+                    int yy = Math.round(y) + direction * distance;
+                    total++;
+                    if (ink(gray, w, h, xx, yy, limit)) countStem++;
+                }
+                if (total < 4 || countStem < total * .9f) continue;
+                int joined = 0, span = 0, missing = 0, longestGap = 0;
+                // A lower stem and touch diamond must share the same actual ink column.
+                for (int yy = Math.round(y - gap * 1.05f); yy <= Math.round(y - gap * .3f); yy++) {
+                    span++;
+                    if (ink(gray, w, h, xx, yy, limit)) {
+                        joined++;
+                        missing = 0;
+                    } else {
+                        missing++;
+                        longestGap = Math.max(longestGap, missing);
+                    }
+                }
+                if (span >= 4
+                        && joined >= span * .7f
+                        && longestGap <= Math.max(1, Math.round(gap * .25f))) return true;
+            }
+        return false;
+    }
+
+    private static boolean ink(byte[] gray, int w, int h, int x, int y, int limit) {
+        return x >= 0 && x < w && y >= 0 && y < h && (gray[y * w + x] & 255) < limit;
     }
 
     private static boolean stem(
@@ -159,13 +239,18 @@ final class ArtificialHarmonics {
 
     private static boolean diamond(
             byte[] g, int w, int h, float x, float y, float gap, boolean crowded) {
+        return diamondEvidence(g, null, w, h, x, y, gap, crowded);
+    }
+
+    private static boolean diamondEvidence(
+            byte[] g, byte[] labels, int w, int h, float x, float y, float gap, boolean crowded) {
         if (gap < 8) return false;
         int horizontal = Math.round(gap * .4f), vertical = Math.round(gap * .25f);
         for (int dx = -horizontal; dx <= horizontal; dx++)
             for (int dy = -vertical; dy <= vertical; dy++)
                 for (float size : DiamondSizes.VALUES) {
                     float cx = x + dx, cy = y + dy, r = gap * size;
-                    int hit = 0, total = 0;
+                    int hit = 0, total = 0, symbolHits = 0;
                     for (int side = 0; side < 4; side++)
                         for (int i = 1; i <= 4; i++) {
                             float t = i / 5f, px = (1 - t) * r, py = t * r;
@@ -181,9 +266,18 @@ final class ArtificialHarmonics {
                             total++;
                             if (dark(g, w, h, xx, yy)
                                     || dark(g, w, h, xx - 1, yy)
-                                    || dark(g, w, h, xx + 1, yy)) hit++;
+                                    || dark(g, w, h, xx + 1, yy)) {
+                                hit++;
+                                if (labels != null
+                                        && (symbol(labels, w, h, xx, yy)
+                                                || symbol(labels, w, h, xx - 1, yy)
+                                                || symbol(labels, w, h, xx + 1, yy))) symbolHits++;
+                            }
                         }
                     if (hit < total * (crowded ? .9f : .94f)) continue;
+                    // Model support belongs to the four diamond sides, not neighboring staff/stem
+                    // ink.
+                    if (labels != null && symbolHits < Math.max(8, (hit + 1) / 2)) continue;
                     // Side samples alone also fit a tilted oval at small staff sizes.
                     // A touch diamond has four actual vertices, including its high and low tips.
                     boolean vertices = true;
@@ -228,6 +322,14 @@ final class ArtificialHarmonics {
                     } else if (outside == 4) return true;
                 }
         return false;
+    }
+
+    private static boolean symbol(byte[] labels, int w, int h, int x, int y) {
+        return x >= 0
+                && x < w
+                && y >= 0
+                && y < h
+                && labels[y * w + x] == OmrMeasurePostProcessor.SYMBOL;
     }
 
     private static boolean dark(byte[] g, int w, int h, int x, int y) {

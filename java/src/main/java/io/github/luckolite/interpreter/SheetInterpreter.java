@@ -200,7 +200,7 @@ public final class SheetInterpreter {
                             notes,
                             ornamentWords);
         }
-        notes = ArtificialHarmonics.apply(gray, width, height, measures, notes, staffs);
+        notes = ArtificialHarmonics.apply(labels, gray, width, height, measures, notes, staffs);
         notes = ScoreTiePitchGuard.apply(notes, score.keyChanges());
         var dynamicEvidence = new java.util.ArrayList<>(words);
         if (ocr != null)
