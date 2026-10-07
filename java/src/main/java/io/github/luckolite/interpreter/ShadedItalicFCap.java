@@ -8,6 +8,8 @@ import java.util.Arrays;
 final class ShadedItalicFCap {
     private ShadedItalicFCap() {}
 
+    record Body(int left, int top, int right, int bottom) {}
+
     static boolean proved(
             byte[] gray,
             byte[] labels,
@@ -18,12 +20,49 @@ final class ShadedItalicFCap {
             int seedTop,
             int seedRight,
             int seedBottom) {
+        if (labels == null) return false;
+        return body(
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        gap,
+                        seedLeft,
+                        seedTop,
+                        seedRight,
+                        seedBottom,
+                        false)
+                != null;
+    }
+
+    static Body wordBody(
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            int seedLeft,
+            int seedTop,
+            int seedRight,
+            int seedBottom) {
+        return body(gray, null, width, height, gap, seedLeft, seedTop, seedRight, seedBottom, true);
+    }
+
+    private static Body body(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            float gap,
+            int seedLeft,
+            int seedTop,
+            int seedRight,
+            int seedBottom,
+            boolean recognizedWord) {
         if (gray == null
-                || labels == null
                 || width <= 0
                 || height <= 0
                 || gray.length != (long) width * height
-                || labels.length != gray.length
+                || labels != null && labels.length != gray.length
                 || !Float.isFinite(gap)
                 || gap < 8
                 || gap > height * .15f
@@ -34,11 +73,11 @@ final class ShadedItalicFCap {
                 || seedLeft > seedRight
                 || seedTop > seedBottom
                 || seedRight - seedLeft + 1 > gap * .55f
-                || seedBottom - seedTop + 1 > gap * .55f) return false;
+                || seedBottom - seedTop + 1 > gap * .55f) return null;
         int cx = (seedLeft + seedRight) / 2, cy = (seedTop + seedBottom) / 2;
         int left = Math.round(cx - gap * 2.5f), right = Math.round(cx + gap * 2.5f);
         int top = Math.round(cy - gap * 3.5f), bottom = Math.round(cy + gap * 3.5f);
-        if (left < 0 || right >= width || top < 0 || bottom >= height) return false;
+        if (left < 0 || right >= width || top < 0 || bottom >= height) return null;
         int w = right - left + 1, h = bottom - top + 1;
         int[] tones = new int[w * h];
         int n = 0;
@@ -46,7 +85,7 @@ final class ShadedItalicFCap {
             for (int x = left; x <= right; x++) tones[n++] = gray[y * width + x] & 255;
         Arrays.sort(tones);
         int paper = tones[(n - 1) * 75 / 100];
-        if (paper < 96 || paper >= 185) return false;
+        if (paper < 96 || paper >= 185) return null;
         int threshold = Math.max(40, paper - 40);
         boolean[] ink = new boolean[w * h];
         int[] queue = new int[w * h];
@@ -62,12 +101,12 @@ final class ShadedItalicFCap {
         int minX = w, maxX = -1, minY = h, maxY = -1, notation = 0;
         while (read < size) {
             int p = queue[read++], x = p % w, y = p / w;
-            if (x == 0 || x == w - 1 || y == 0 || y == h - 1) return false;
+            if (x == 0 || x == w - 1 || y == 0 || y == h - 1) return null;
             minX = Math.min(minX, x);
             maxX = Math.max(maxX, x);
             minY = Math.min(minY, y);
             maxY = Math.max(maxY, y);
-            int label = labels[(top + y) * width + left + x];
+            int label = labels == null ? 0 : labels[(top + y) * width + left + x];
             if (label == OmrMeasurePostProcessor.NOTEHEAD
                     || label == OmrMeasurePostProcessor.STEM_OR_REST
                     || label == OmrMeasurePostProcessor.CLEF_OR_KEY
@@ -88,9 +127,9 @@ final class ShadedItalicFCap {
                 || gw > gap * 2.2f
                 || size < gh * gw * .15f
                 || size > gh * gw * .55f
-                || notation > size * .15f) return false;
+                || notation > size * .15f) return null;
         float relativeY = (cy - top - minY) / (float) gh;
-        if (relativeY > .15f && relativeY < .85f) return false;
+        if (relativeY > .15f && relativeY < .85f) return null;
         float upper = capCenter(ink, w, minX, maxX, minY, minY + Math.round(gh * .22f));
         float lower = capCenter(ink, w, minX, maxX, minY + Math.round(gh * .8f), maxY);
         if (!Float.isFinite(upper)
@@ -100,7 +139,7 @@ final class ShadedItalicFCap {
                 || lower > minX + gw * .45f
                 || maxX - upper < gap * .35f
                 || Math.abs(cx - left - (relativeY <= .15f ? upper : lower)) > gap * .5f)
-            return false;
+            return null;
         int[] bodyWidths = new int[gh];
         int bodyCount = 0, widestBar = 0;
         for (int y = minY + Math.round(gh * .2f); y <= minY + Math.round(gh * .75f); y++) {
@@ -110,18 +149,20 @@ final class ShadedItalicFCap {
                     first = Math.min(first, x);
                     last = Math.max(last, x);
                 }
-            if (last < first) return false;
+            if (last < first) return null;
             int span = last - first + 1;
             float phase = (y - minY) / (float) gh;
             if (phase <= .5f) widestBar = Math.max(widestBar, span);
             if (phase >= .5f) bodyWidths[bodyCount++] = span;
         }
-        if (bodyCount == 0) return false;
+        if (bodyCount == 0) return null;
         Arrays.sort(bodyWidths, 0, bodyCount);
         int shaftWidth = bodyWidths[bodyCount / 2];
         return shaftWidth <= gap * .6f
-                && widestBar >= gap * .6f
-                && widestBar >= shaftWidth + gap * .2f;
+                        && widestBar >= gap * (recognizedWord ? .5f : .6f)
+                        && widestBar >= shaftWidth + gap * (recognizedWord ? .1f : .2f)
+                ? new Body(left + minX, top + minY, left + maxX + 1, top + maxY + 1)
+                : null;
     }
 
     private static float capCenter(

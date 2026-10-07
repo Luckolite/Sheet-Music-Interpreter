@@ -7,6 +7,20 @@ final class RestPaperTone {
     private RestPaperTone() {}
 
     static byte[] normalize(byte[] gray, int width, int height, float gap) {
+        return normalize(gray, width, height, gap, 340f);
+    }
+
+    /** Direction arms retain their pale connective ink while paper stays above 145. */
+    static byte[] normalizeDirectionInk(byte[] gray, int width, int height, float gap) {
+        return normalize(gray, width, height, gap, 190f);
+    }
+
+    static byte[] normalizeSoftDirectionInk(byte[] gray, int width, int height, float gap) {
+        return normalize(gray, width, height, gap, 180f);
+    }
+
+    private static byte[] normalize(
+            byte[] gray, int width, int height, float gap, float paperLevel) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -36,7 +50,8 @@ final class RestPaperTone {
         byte[] result = gray.clone();
         // Bound coordinate storage; unusually wide images keep the original traversal.
         if (width > 16384)
-            return interpolateWide(gray, width, height, tile, columns, rows, paper, result);
+            return interpolateWide(
+                    gray, width, height, tile, columns, rows, paper, result, paperLevel);
         int[] leftColumns = new int[width], rightColumns = new int[width];
         float[] fractions = new float[width];
         for (int x = 0; x < width; x++) {
@@ -78,7 +93,10 @@ final class RestPaperTone {
                             (byte)
                                     Math.min(
                                             255,
-                                            Math.round((gray[y * width + x] & 255) * 340f / tone));
+                                            Math.round(
+                                                    (gray[y * width + x] & 255)
+                                                            * paperLevel
+                                                            / tone));
             }
         }
         return result;
@@ -92,7 +110,8 @@ final class RestPaperTone {
             int columns,
             int rows,
             int[] paper,
-            byte[] result) {
+            byte[] result,
+            float paperLevel) {
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++) {
                 float gx = Math.max(0, Math.min(columns - 1, (x + .5f) / tile - .5f));
@@ -110,7 +129,10 @@ final class RestPaperTone {
                             (byte)
                                     Math.min(
                                             255,
-                                            Math.round((gray[y * width + x] & 255) * 340f / tone));
+                                            Math.round(
+                                                    (gray[y * width + x] & 255)
+                                                            * paperLevel
+                                                            / tone));
             }
         return result;
     }

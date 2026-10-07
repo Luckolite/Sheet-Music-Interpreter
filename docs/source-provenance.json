@@ -317,13 +317,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "86854174f4e3340e408b7245ff71725b72061253d5a2b0b1afe5eb66d2630471",
+      "source_sha256": "8eb8864a023861332956f3c318013ede064d2c258358414cd6f7e99abc517143",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
-      "source_normalized_sha256": "86854174f4e3340e408b7245ff71725b72061253d5a2b0b1afe5eb66d2630471",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "source_normalized_sha256": "8eb8864a023861332956f3c318013ede064d2c258358414cd6f7e99abc517143",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta."
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -347,13 +347,13 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "e2506a15d5ddda7f3ebde0f7ea95bd459243438f9a292c947fe15c2ec67d2b07",
-      "source_normalized_sha256": "e2506a15d5ddda7f3ebde0f7ea95bd459243438f9a292c947fe15c2ec67d2b07",
-      "review_note": "Reuse each note-to-staff distance and per-staff votes; retain original float comparisons, every tied nearest staff, HashMap insertion/winner order and note metadata. Original synthetic staff/tie/nonfinite/caller regressions. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Lazily reuse ledger floors within one direction detection call, keyed by original staff position and immutable staff identity. Retain preliminary owner traversal, original notes/measures/height, float/NaN/tie semantics and the unchanged direct mutable-input API. Original synthetic ownership/threshold regressions; Apache-2.0/JDK-only, no model/dependency/record-layout changes.",
+      "source_sha256": "c8485132d05942c8990034bf541cb44bc79ef1bc1f5d4c1c3673a2bbde4f63f6",
+      "source_normalized_sha256": "c8485132d05942c8990034bf541cb44bc79ef1bc1f5d4c1c3673a2bbde4f63f6",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
-      "reviewed_source_state": "Reviewed output-preserving reuse batch890 on accepted app889"
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
     },
     "HairpinContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinContinuation.java",
@@ -1189,11 +1189,11 @@
     },
     "RestPaperTone.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestPaperTone.java",
-      "source_sha256": "b4f9a7f7f9502a5e7e16641d4573e7597b03e319308099fecee5af45c3fc5e0e",
-      "source_normalized_sha256": "bc441fad295c433278435cc78f5d1393a333d42a37553693be8c5ef4fd9107e9",
-      "reviewed_source_state": "Music Sheets 1.18.386 reviewed staging source, preserving the accepted 1.18.385 parent",
-      "review_note": "Reviewed output-preserving horizontal row interpolation reuse. Float expressions and evaluation order, histogram thresholds, input ownership and unshaded identity remain exact. Widths above16384 retain the original interpolation loop. Original generated byte/identity/invalid/wide-boundary regressions; package-only standalone executable parity. No helper file, dependency, model or record layout changed.",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd"
+      "source_sha256": "326b6b8c24a769497dbe421678cdd970f867f9bb1e59e976fa01a5f84ba5456d",
+      "source_normalized_sha256": "326b6b8c24a769497dbe421678cdd970f867f9bb1e59e976fa01a5f84ba5456d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
     },
     "TechniqueTextRegions.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TechniqueTextRegions.java",
@@ -1404,11 +1404,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "f588ec5cb0aad27198837e9698f38a70c14bc86bbf4f8b5c4c4252ed7090e04d",
-      "source_normalized_sha256": "f588ec5cb0aad27198837e9698f38a70c14bc86bbf4f8b5c4c4252ed7090e04d",
+      "source_sha256": "630c490e6f75439385c03b748af004d91586882d1596d154d1e5255ee60d26bd",
+      "source_normalized_sha256": "630c490e6f75439385c03b748af004d91586882d1596d154d1e5255ee60d26bd",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta."
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1428,11 +1428,11 @@
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
-      "source_sha256": "0b0496190c3fc4f6f4e3e4552412684ead6925f63f59de5f2e40d1e6d8eee86c",
-      "source_normalized_sha256": "0b0496190c3fc4f6f4e3e4552412684ead6925f63f59de5f2e40d1e6d8eee86c",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed complete printed clocks across changing stem directions and genuine rest slots beside independent quarter voices. Unknown shafts, incomplete ratios and inconsistent rest/meter evidence remain ambiguous; original controls.",
+      "source_sha256": "34473bec13fcf6cba91c650129d647b9c0a27f4b2b048203dfa9a063a5605244",
+      "source_normalized_sha256": "34473bec13fcf6cba91c650129d647b9c0a27f4b2b048203dfa9a063a5605244",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "PrintedCClef.java": {
@@ -1462,11 +1462,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d673411109c65fa25efade10c99ee46bf6da1663efc906fc7086e2bd546cab56",
-      "source_normalized_sha256": "d673411109c65fa25efade10c99ee46bf6da1663efc906fc7086e2bd546cab56",
+      "source_sha256": "713d9bd77beea397a8c190920992a89d265de6b428b043da4af1a37f7824ed41",
+      "source_normalized_sha256": "713d9bd77beea397a8c190920992a89d265de6b428b043da4af1a37f7824ed41",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "reviewed_source_state": "Recognition12 reviewed cache identity at unchanged guide282 record layout.",
+      "review_note": "Only recognition identity changes from11 to12. Complete record layouts and supported guide formats are unchanged; actual guide roundtrip/source fields are validated separately."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1533,11 +1533,11 @@
     },
     "InwardVoiceBeamOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InwardVoiceBeamOwnership.java",
-      "source_sha256": "d70e37082a7a40212654d854854802a6728f5a4614ce304a1306db95742a7b43",
-      "source_normalized_sha256": "d70e37082a7a40212654d854854802a6728f5a4614ce304a1306db95742a7b43",
+      "source_sha256": "dfcb832430c22a6cd33746a354a614002110e44b554d9397c294ea4b57c2dbbf",
+      "source_normalized_sha256": "dfcb832430c22a6cd33746a354a614002110e44b554d9397c294ea4b57c2dbbf",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
     },
     "LocalPrintedStaffBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalPrintedStaffBand.java",
@@ -1597,11 +1597,11 @@
     },
     "ShadedItalicFCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedItalicFCap.java",
-      "source_sha256": "86328b6fb9f40fb24fb12cf7474738bb2527f58d43169f8dc23b32e19f737b68",
-      "source_normalized_sha256": "86328b6fb9f40fb24fb12cf7474738bb2527f58d43169f8dc23b32e19f737b68",
+      "source_sha256": "a44883d34f6cc50618d2308255fca71a335f1d9dd9dd0929b3ace01cf665ac20",
+      "source_normalized_sha256": "a44883d34f6cc50618d2308255fca71a335f1d9dd9dd0929b3ace01cf665ac20",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
     },
     "ShadedLedgerMarkOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedLedgerMarkOwnership.java",
@@ -1626,6 +1626,38 @@
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
       "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+    },
+    "ShadedCompactTieRidge.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedCompactTieRidge.java",
+      "source_sha256": "58c03e20d46b5a240780947c2ed902e7a8c214de58a9d6cea6137b4805facd57",
+      "source_normalized_sha256": "58c03e20d46b5a240780947c2ed902e7a8c214de58a9d6cea6137b4805facd57",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
+    },
+    "ShadedHairpinFragments.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedHairpinFragments.java",
+      "source_sha256": "24a5e911bb83a38d169fb9d663a8c1303d3aa7d1084e3f02af02b80e90b94d9b",
+      "source_normalized_sha256": "24a5e911bb83a38d169fb9d663a8c1303d3aa7d1084e3f02af02b80e90b94d9b",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
+    },
+    "ShadedStemBlankCap.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedStemBlankCap.java",
+      "source_sha256": "d609a65706d45ffa60d506596a7c1e11cfbdfa88aaee7da7976a96cd0af3617f",
+      "source_normalized_sha256": "d609a65706d45ffa60d506596a7c1e11cfbdfa88aaee7da7976a96cd0af3617f",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
+    },
+    "ShadedTallDynamicWord.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedTallDynamicWord.java",
+      "source_sha256": "3718a9e081c488dabe67b98e1d41c12371bc11abb3278a49f6a62a3cf7ea6603",
+      "source_normalized_sha256": "3718a9e081c488dabe67b98e1d41c12371bc11abb3278a49f6a62a3cf7ea6603",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
+      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
     }
   },
   "interpreter_speedup_review": {

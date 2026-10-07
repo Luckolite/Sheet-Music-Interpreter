@@ -65,6 +65,34 @@ final class InwardVoiceBeamOwnership {
         int direction = dy > 0 ? 1 : -1;
         int edge = direction > 0 ? left : right;
         int otherEdge = direction > 0 ? otherRight : otherLeft;
+        if (Math.abs(otherEdge - edge) <= gap * .35f) {
+            int threshold =
+                    BeamInkThreshold.at(
+                                    gray,
+                                    width,
+                                    height,
+                                    (left + right) / 2,
+                                    Math.round(centerY - gap * 5),
+                                    Math.round(centerY + gap * 5),
+                                    gap)
+                            + 5;
+            int first = (direction > 0 ? bottom : top) + direction;
+            int otherFirst = (direction > 0 ? otherTop : otherBottom) - direction;
+            return alignedCount(
+                    gray,
+                    labels,
+                    width,
+                    height,
+                    gap,
+                    edge,
+                    otherEdge,
+                    first,
+                    otherFirst,
+                    centerY,
+                    otherCenterY,
+                    direction,
+                    threshold);
+        }
         // Inward shafts must be independent and horizontally separated.
         if ((otherEdge - edge) * direction < gap * 1.5f
                 || (otherEdge - edge) * direction > gap * 5f) return -1;
@@ -201,6 +229,134 @@ final class InwardVoiceBeamOwnership {
                         foreignRun = 0;
                         foreignStart = -1;
                     }
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static int alignedCount(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            float gap,
+            int edge,
+            int otherEdge,
+            int first,
+            int otherFirst,
+            float centerY,
+            float otherCenterY,
+            int direction,
+            int threshold) {
+        int tolerance = Math.max(1, Math.round(gap * .15f));
+        int minimum = Math.max(4, Math.round(gap * .28f));
+        for (int x = edge - tolerance; x <= edge + tolerance; x++) {
+            for (int side : new int[] {-1, 1}) {
+                int[] starts = new int[3], ends = new int[3];
+                int bands = 0, run = 0, start = -1, end = -1, blanks = 0;
+                for (int y = first; (otherFirst - y) * direction >= 0; y += direction) {
+                    boolean rail =
+                            ink(gray, width, height, x, y, threshold)
+                                    && labels[y * width + x] != OmrMeasurePostProcessor.NOTEHEAD
+                                    && ink(
+                                            gray,
+                                            width,
+                                            height,
+                                            x + side * Math.round(gap * .6f),
+                                            y,
+                                            threshold)
+                                    && ink(
+                                            gray,
+                                            width,
+                                            height,
+                                            x + side * Math.round(gap * .9f),
+                                            y,
+                                            threshold)
+                                    && !ink(
+                                            gray,
+                                            width,
+                                            height,
+                                            x - side * Math.round(gap * .55f),
+                                            y,
+                                            threshold);
+                    if (rail) {
+                        if (run++ == 0) start = y;
+                        end = y;
+                        blanks = 0;
+                    } else if (++blanks > Math.max(1, Math.round(gap * .15f))) {
+                        if (run >= minimum && bands < 3) {
+                            starts[bands] = start;
+                            ends[bands++] = end;
+                        }
+                        run = 0;
+                    }
+                }
+                if (run >= minimum && bands < 3) {
+                    starts[bands] = start;
+                    ends[bands++] = end;
+                }
+                if (bands != 2
+                        || (starts[1] - ends[0]) * direction < gap * .3f
+                        || !connected(
+                                gray,
+                                width,
+                                height,
+                                x,
+                                Math.round(centerY),
+                                starts[0],
+                                direction,
+                                threshold)
+                        || !narrowShaft(
+                                gray,
+                                width,
+                                height,
+                                x,
+                                first,
+                                starts[0] - direction,
+                                direction,
+                                gap,
+                                threshold,
+                                Math.max(2, Math.round(gap * .15f)))) continue;
+                int blankRows = 0;
+                boolean narrowBridge = false;
+                for (int y = ends[0] + direction;
+                        (starts[1] - direction - y) * direction >= 0;
+                        y += direction) {
+                    boolean occupied = false;
+                    for (int xx = edge - tolerance; xx <= edge + tolerance; xx++) {
+                        if (ink(gray, width, height, xx, y, threshold)) occupied = true;
+                        if (narrowShaft(
+                                gray, width, height, xx, y, y, direction, gap, threshold, 1))
+                            narrowBridge = true;
+                    }
+                    if (!occupied) blankRows++;
+                }
+                if (narrowBridge || blankRows < Math.max(3, Math.round(gap * .25f))) continue;
+                for (int otherX = otherEdge - tolerance;
+                        otherX <= otherEdge + tolerance;
+                        otherX++) {
+                    if (ink(gray, width, height, otherX, ends[1], threshold)
+                            && connected(
+                                    gray,
+                                    width,
+                                    height,
+                                    otherX,
+                                    Math.round(otherCenterY),
+                                    ends[1],
+                                    -direction,
+                                    threshold)
+                            && narrowShaft(
+                                    gray,
+                                    width,
+                                    height,
+                                    otherX,
+                                    otherFirst,
+                                    ends[1] + direction,
+                                    -direction,
+                                    gap,
+                                    threshold,
+                                    Math.max(2, Math.round(gap * .15f)))) return 1;
                 }
             }
         }

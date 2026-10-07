@@ -15,6 +15,10 @@ final class ParallelTripletClock {
             return null;
         Clock bridged = findCrossStaff(target, bar, beats);
         if (bridged != null) return bridged;
+        Clock continued = findCompleteCrossStaffPhrase(target, bar, beats);
+        if (continued != null) return continued;
+        Clock restContinuation = findCompleteRestContinuation(target, bar, beats);
+        if (restContinuation != null) return restContinuation;
         Clock restLane = findPrintedRestLane(target, bar, beats);
         if (restLane != null) return restLane;
         Clock printed = findPrintedChangingStem(target, bar, beats);
@@ -353,6 +357,306 @@ final class ParallelTripletClock {
                 cursor += duration;
             }
             if (!ambiguous && opposing >= 2 && Math.abs(cursor - beats) < .001)
+                return new Clock(List.copyOf(members), groups, unit, beats, List.copyOf(attacks));
+        }
+        return null;
+    }
+
+    /** A complete physical cross-staff phrase can change shaft directions between triplet groups. */
+    private static Clock findCompleteCrossStaffPhrase(
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        if (target.staffCount() != 2) return null;
+        for (int beams : new int[] {1, 2}) {
+            double unit = (beams == 1 ? .5 : .25) * 2 / 3;
+            var members = new ArrayList<ScoreNoteEvent>();
+            var other = new ArrayList<ScoreNoteEvent>();
+            boolean invalid = false;
+            for (var n : bar) {
+                if (n == null
+                        || n.staffCount() != 2
+                        || n.staffIndex() < 0
+                        || n.staffIndex() > 1
+                        || !Float.isFinite(n.positionInMeasure())
+                        || n.positionInMeasure() < 0
+                        || n.positionInMeasure() > 1
+                        || n.leadingRestBeats() != 0
+                        || n.followingRestBeats() != 0
+                        || (n.articulations() & NoteOrnament.GRACE) != 0) {
+                    invalid = true;
+                    break;
+                }
+                if (n.beamCount() == beams
+                        && n.augmentationDots() == 0
+                        && n.unbeamedDurationBeats() == 0
+                        && (n.tupletDivisor() == 1
+                                || n.tupletDivisor() == 3 && n.tupletNormalNotes() == 2))
+                    members.add(n);
+                else other.add(n);
+            }
+            if (invalid || other.isEmpty()) continue;
+            var groups = columns(members);
+            if (groups.size() < 6
+                    || groups.size() % 3 != 0
+                    || Math.abs(groups.size() * unit - beats) > .001
+                    || groups.get(0).get(0).positionInMeasure() > .18f
+                    || groups.get(groups.size() - 1).get(0).positionInMeasure() < .8f) continue;
+            float small = Float.MAX_VALUE, large = 0;
+            for (int i = 1; i < groups.size(); i++) {
+                float gap =
+                        groups.get(i).get(0).positionInMeasure()
+                                - groups.get(i - 1).get(0).positionInMeasure();
+                small = Math.min(small, gap);
+                large = Math.max(large, gap);
+            }
+            if (small <= 0 || large > small * 2.4f) continue;
+            int bridges = 0;
+            for (int i = 1; i < groups.size(); i++) {
+                var a = groups.get(i - 1).get(0);
+                var b = groups.get(i).get(0);
+                if (a.staffIndex() == b.staffIndex()) continue;
+                if (a.crossStaffBeam()
+                        && b.crossStaffBeam()
+                        && a.stemDirection() != 0
+                        && b.stemDirection() != 0
+                        && (i - 1) / 3 == i / 3) bridges++;
+                else invalid = true;
+            }
+            if (bridges == 0 || invalid) continue;
+            for (int begin = 0; begin < groups.size(); begin += 3) {
+                int[] directions = new int[2];
+                boolean known = false;
+                for (int i = begin; i < begin + 3; i++) {
+                    var column = groups.get(i);
+                    int chordDirection = 0;
+                    for (var n : column) {
+                        int direction = n.stemDirection();
+                        if (column.size() > 1 && direction == 0
+                                || chordDirection != 0 && direction != chordDirection)
+                            invalid = true;
+                        if (direction != 0) chordDirection = direction;
+                        if (direction == 0) continue;
+                        known = true;
+                        int staff = n.staffIndex();
+                        if (directions[staff] != 0 && directions[staff] != direction)
+                            invalid = true;
+                        directions[staff] = direction;
+                    }
+                }
+                if (!known) {
+                    // Only the terminal trio can borrow a clock anchor from an independently
+                    // read quarter in its opening column, after a physically proved bridge.
+                    var first = groups.get(begin).get(0);
+                    boolean closing =
+                            begin + 3 == groups.size()
+                                    && other.stream()
+                                            .anyMatch(
+                                                    n ->
+                                                            n.staffIndex() == first.staffIndex()
+                                                                    && n.beamCount() == 0
+                                                                    && n.stemDirection() != 0
+                                                                    && Math.abs(
+                                                                                    n
+                                                                                                    .positionInMeasure()
+                                                                                            - first
+                                                                                                    .positionInMeasure())
+                                                                            <= SAME
+                                                                    && Math.abs(
+                                                                                    ScoreNoteTiming
+                                                                                                    .writtenDurationBeats(
+                                                                                                            n)
+                                                                                            - 3
+                                                                                                    * unit)
+                                                                            < .001);
+                    if (!closing) invalid = true;
+                }
+            }
+            if (invalid) continue;
+            var clock = new Clock(List.copyOf(members), groups, unit, beats);
+            var attacks = new ArrayList<Attack>();
+            var unanchored = new ArrayList<ScoreNoteEvent>();
+            for (var n : other) {
+                double duration = ScoreNoteTiming.writtenDurationBeats(n);
+                double onset = clock.column(n.positionInMeasure());
+                if (!Double.isFinite(duration) || duration <= 0) {
+                    invalid = true;
+                    break;
+                }
+                if (!Double.isFinite(onset)) {
+                    unanchored.add(n);
+                    continue;
+                }
+                if (onset + duration > beats + .001) {
+                    invalid = true;
+                    break;
+                }
+                attacks.add(new Attack(n, onset));
+            }
+            for (var n : unanchored) {
+                double duration = ScoreNoteTiming.writtenDurationBeats(n);
+                double onset = Double.NaN;
+                if (n.beamCount() <= 0
+                        || n.positionInMeasure()
+                                < groups.get(groups.size() - 1).get(0).positionInMeasure() - SAME) {
+                    invalid = true;
+                    break;
+                }
+                for (var anchor : attacks) {
+                    var prior = anchor.note();
+                    if (prior.staffIndex() != n.staffIndex()
+                            || prior.beamCount() <= 0
+                            || prior.positionInMeasure() >= n.positionInMeasure()
+                            || prior.stemDirection() != 0
+                                    && n.stemDirection() != 0
+                                    && prior.stemDirection() != n.stemDirection()) continue;
+                    double next = anchor.onset() + ScoreNoteTiming.writtenDurationBeats(prior);
+                    if (Math.abs(next + duration - beats) >= .001) continue;
+                    if (Double.isFinite(onset) && Math.abs(onset - next) > .001) invalid = true;
+                    onset = next;
+                }
+                if (!Double.isFinite(onset)) {
+                    invalid = true;
+                    break;
+                }
+                attacks.add(new Attack(n, onset));
+            }
+            if (!invalid)
+                return new Clock(List.copyOf(members), groups, unit, beats, List.copyOf(attacks));
+        }
+        return null;
+    }
+
+    /** A complete, evenly spaced lane can continue triplets through a printed rest slot. */
+    private static Clock findCompleteRestContinuation(
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        if (target.staffCount() != 2) return null;
+        for (int beams : new int[] {1, 2}) {
+            double writtenUnit = beams == 1 ? .5 : .25;
+            double unit = writtenUnit * 2 / 3;
+            var members = new ArrayList<ScoreNoteEvent>();
+            var other = new ArrayList<ScoreNoteEvent>();
+            boolean invalid = false;
+            for (var n : bar) {
+                if (n == null
+                        || n.staffCount() != 2
+                        || n.staffIndex() < 0
+                        || n.staffIndex() > 1
+                        || !Float.isFinite(n.positionInMeasure())
+                        || n.positionInMeasure() < 0
+                        || n.positionInMeasure() > 1
+                        || n.crossStaffBeam()
+                        || (n.articulations() & NoteOrnament.GRACE) != 0) {
+                    invalid = true;
+                    break;
+                }
+                if (n.staffIndex() == target.staffIndex()
+                        && n.beamCount() == beams
+                        && n.augmentationDots() == 0
+                        && n.unbeamedDurationBeats() == 0
+                        && n.stemDirection() != 0
+                        && (n.tupletDivisor() == 1
+                                || n.tupletDivisor() == 3 && n.tupletNormalNotes() == 2))
+                    members.add(n);
+                else other.add(n);
+            }
+            if (invalid || other.isEmpty()) continue;
+            var groups = columns(members);
+            if (groups.size() < 5
+                    || groups.get(0).get(0).positionInMeasure() > .25f
+                    || groups.get(groups.size() - 1).get(0).positionInMeasure() < .8f) continue;
+            var slotIndices = new ArrayList<Integer>();
+            int cursor = 0, restSlots = 0;
+            var directions = new HashMap<Integer, Integer>();
+            for (int i = 0; i < groups.size(); i++) {
+                var column = groups.get(i);
+                double lead = column.get(0).leadingRestBeats();
+                double follow = column.get(0).followingRestBeats();
+                if (lead < 0
+                        || follow < 0
+                        || lead > 0 && i != 0
+                        || lead > 0 && Math.abs(lead - writtenUnit) > .001
+                        || follow > 0 && Math.abs(follow - writtenUnit) > .001) invalid = true;
+                if (lead > 0) {
+                    cursor++;
+                    restSlots++;
+                }
+                slotIndices.add(cursor);
+                for (var n : column) {
+                    if (Math.abs(n.leadingRestBeats() - lead) > .001
+                            || Math.abs(n.followingRestBeats() - follow) > .001) invalid = true;
+                    int direction = n.stemDirection();
+                    Integer old = directions.putIfAbsent(cursor / 3, direction);
+                    if (old != null && old != direction) invalid = true;
+                }
+                cursor++;
+                if (follow > 0) {
+                    cursor++;
+                    restSlots++;
+                }
+            }
+            if (invalid
+                    || restSlots == 0
+                    || cursor % 3 != 0
+                    || Math.abs(cursor * unit - beats) > .001) continue;
+            float small = Float.MAX_VALUE, large = 0;
+            for (int i = 1; i < groups.size(); i++) {
+                float distance =
+                        (groups.get(i).get(0).positionInMeasure()
+                                        - groups.get(i - 1).get(0).positionInMeasure())
+                                / (slotIndices.get(i) - slotIndices.get(i - 1));
+                small = Math.min(small, distance);
+                large = Math.max(large, distance);
+            }
+            if (small <= SAME || large > small * 1.35f) continue;
+            float step =
+                    (groups.get(groups.size() - 1).get(0).positionInMeasure()
+                                    - groups.get(0).get(0).positionInMeasure())
+                            / (slotIndices.get(slotIndices.size() - 1) - slotIndices.get(0));
+            float first = groups.get(0).get(0).positionInMeasure() - slotIndices.get(0) * step;
+            if (first < -SAME || first > .18f) continue;
+            var attacks = new ArrayList<Attack>();
+            for (int i = 0; i < groups.size(); i++) {
+                if (Math.abs(
+                                groups.get(i).get(0).positionInMeasure()
+                                        - (first + slotIndices.get(i) * step))
+                        > SAME) invalid = true;
+                for (var n : groups.get(i)) attacks.add(new Attack(n, slotIndices.get(i) * unit));
+            }
+            boolean completeHold = false, halfHold = false, closingHalf = false;
+            for (var n : other) {
+                double duration = ScoreNoteTiming.writtenDurationBeats(n);
+                int slot = Math.round((n.positionInMeasure() - first) / step);
+                if (n.leadingRestBeats() != 0
+                        || n.followingRestBeats() != 0
+                        || !Double.isFinite(duration)
+                        || duration < 1
+                        || slot < 0
+                        || slot >= cursor
+                        || Math.abs(n.positionInMeasure() - (first + slot * step)) > SAME
+                        || slot * unit + duration > beats + .001) {
+                    invalid = true;
+                    break;
+                }
+                double onset = slot * unit;
+                attacks.add(new Attack(n, onset));
+                completeHold |= slot == 0 && Math.abs(duration - beats) < .001;
+                halfHold |= slot == 0 && Math.abs(duration * 2 - beats) < .001;
+                closingHalf |=
+                        Math.abs(onset * 2 - beats) < .001 && Math.abs(duration * 2 - beats) < .001;
+            }
+            // A held full measure or two half-measure voices supplies an independent
+            // clock. A half hold may instead end where complete triplet groups turn stems.
+            boolean halfTurn = false;
+            if (halfHold) {
+                int middle = (int) Math.round(beats / (2 * unit));
+                Integer before = directions.get(0), after = directions.get(middle / 3);
+                halfTurn =
+                        Math.abs(middle * unit * 2 - beats) < .001
+                                && middle % 3 == 0
+                                && before != null
+                                && after != null
+                                && !before.equals(after);
+            }
+            if (!invalid && (completeHold || halfHold && (closingHalf || halfTurn)))
                 return new Clock(List.copyOf(members), groups, unit, beats, List.copyOf(attacks));
         }
         return null;

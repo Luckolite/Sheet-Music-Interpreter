@@ -16098,6 +16098,40 @@ final class OmrScoreInterpreter {
                 else if (distance < 0) outerLeft = count;
                 else outerRight = count;
             }
+            // A shaded blank cap can separate a coarse stem trace from detached ink.
+            // Recount at the independently supported endpoint; ordinary faint shafts,
+            // genuine second beams and independently curved flags retain their evidence.
+            if (voiceStem == null
+                    && thick == 2
+                    && innerThick == 1
+                    && (outerLeft == 2 && outerRight == 1 || outerRight == 2 && outerLeft == 1)
+                    && !hasCurvedFlag(
+                            labels, gray, width, height, head, gap, bestX, stemEnd, upward)) {
+                int side = upward ? -1 : 1;
+                int refined =
+                        ShadedStemBlankCap.endpoint(
+                                gray,
+                                width,
+                                height,
+                                bestX,
+                                head.centerY,
+                                stemEnd,
+                                side,
+                                gap,
+                                stemThreshold);
+                if (refined != stemEnd
+                        && detectBeamCount(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        head,
+                                        staff,
+                                        corroborate,
+                                        allowSinglePale,
+                                        new int[] {bestX, refined, side})
+                                == 1) return 1;
+            }
             // A detached accent is not an additional beam; retain independently curved flags.
             if (upward
                     && outerLeft == 1
@@ -19105,6 +19139,9 @@ final class OmrScoreInterpreter {
             float centerY,
             float gap,
             boolean faintShoulders) {
+        if (faintShoulders
+                && ShadedCompactTieRidge.proved(
+                        labels, gray, width, height, left, right, centerY, gap)) return true;
         if (hasContinuousTieArc(labels, gray, width, height, left, right, centerY, gap))
             return true;
         // Compact ties leave small gaps beside the heads. Sample both shoulders

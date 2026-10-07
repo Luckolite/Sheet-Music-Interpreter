@@ -702,3 +702,16 @@ collections and existing interpreter APIs. The guide282 record layout, model
 weights and dependencies remain unchanged. Independent voice-clock diagnostics
 are excluded from this recognition batch. No private score or device data is
 distributed.
+
+
+Recognition12 uses original Apache procedural regressions for aligned opposing
+beams, locally shaded tie/hairpin/dynamic-word ink, and detached ink beyond a
+supported stem endpoint. Continued triplet timing requires complete meter/rest
+accounting, coherent printed shafts and independent held-note evidence; ambiguous
+or incomplete phrases retain the established fallback. All standalone/native
+member bodies agree under the existing package and diagnostics adapters. The
+guide282 record layout, model weights and dependencies are unchanged. Recognition
+identity12 and app/desktop audio identity70 invalidate older derived results.
+Private source audits, photos, device logs and libraries remain outside the public
+package. Generated tests and retained comparisons do not establish whole-library
+accuracy.

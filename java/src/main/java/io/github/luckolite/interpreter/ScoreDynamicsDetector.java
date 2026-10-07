@@ -438,7 +438,10 @@ final class ScoreDynamicsDetector {
                                 (word.left() + word.right()) * width * .5f,
                                 word.top() * height,
                                 word.bottom() * height);
-            if (owner == null || word.bottom() - word.top() > owner.gap() * 3 / height) continue;
+            if (owner == null
+                    || word.bottom() - word.top() > owner.gap() * 3 / height
+                            && !ShadedTallDynamicWord.proved(
+                                    word, ownershipGray, width, height, owner.gap())) continue;
             var common =
                     GrandStaffDynamics.directionPart(
                             shared, owner, word.top() * height, word.bottom() * height);
@@ -462,6 +465,7 @@ final class ScoreDynamicsDetector {
             int[] queue = new int[gray.length];
             var strokes = new ArrayList<HairpinContinuation.Stroke>();
             var wedges = new ArrayList<HairpinContinuation.Wedge>();
+            var fragments = new ArrayList<ShadedHairpinFragments.Rail>();
             for (int p = 0; p < gray.length; p++) {
                 if (seen[p] || (gray[p] & 255) >= 145) continue;
                 int start = 0, n = 1;
@@ -514,9 +518,6 @@ final class ScoreDynamicsDetector {
                                 && w >= h * 2.5f
                                 && precedingPrintedLevel(
                                         words, gray, width, height, left, top, bottom, gap);
-                if (!qualifiedShort && (w < gap * 4 || w < h * 4)
-                        || h > gap * 3
-                        || n > w * Math.max(8, gap)) continue;
                 int[] upper = new int[w], lower = new int[w];
                 Arrays.fill(upper, Integer.MAX_VALUE);
                 Arrays.fill(lower, Integer.MIN_VALUE);
@@ -525,6 +526,16 @@ final class ScoreDynamicsDetector {
                     upper[x] = Math.min(upper[x], y);
                     lower[x] = Math.max(lower[x], y);
                 }
+                if (gray != ownershipGray
+                        && w >= gap * 2
+                        && h <= gap * 3
+                        && n <= w * Math.max(8, gap))
+                    fragments.addAll(
+                            ShadedHairpinFragments.pieces(owner, left, right, upper, lower));
+                if (!qualifiedShort && (w < gap * 4 || w < h * 4)
+                        || h > gap * 3
+                        || n > w * Math.max(8, gap)) continue;
+
                 if (qualifiedShort && !openHairpinInterior(gray, width, left, upper, lower, gap))
                     continue;
                 var stroke = HairpinContinuation.stroke(owner, left, right, upper, lower);
@@ -592,6 +603,20 @@ final class ScoreDynamicsDetector {
                     }
                 }
             }
+            for (var shape :
+                    ShadedHairpinFragments.recover(fragments, ownershipGray, width, height))
+                add(
+                        result,
+                        shape.staff(),
+                        shape.left() / (float) width,
+                        shape.right() / (float) width,
+                        0,
+                        shape.direction(),
+                        measures,
+                        notes,
+                        width,
+                        height,
+                        false);
             for (var link :
                     HairpinContinuation.links(wedges, strokes, staffs, measures, width, height)) {
                 var from =
@@ -766,30 +791,40 @@ final class ScoreDynamicsDetector {
                                     scoped.get(i), word.text(), word.left()));
         }
         if (paperProposals && gray != null && !staffs.isEmpty()) {
-            byte[] normalized = RestPaperTone.normalize(gray, width, height, staffs.get(0).gap());
-            if (normalized != gray) {
-                var proposed =
-                        detectDirectionCore(
-                                words,
-                                staffs,
-                                measures,
-                                notes,
-                                normalized,
-                                width,
-                                height,
-                                gray,
-                                false);
-                for (var change : proposed.changes()) {
-                    if (change.direction() == 0) continue;
-                    boolean claimed = false;
-                    for (var old : scoped)
-                        if (old.direction() == change.direction()
-                                && old.measureIndex() == change.measureIndex()
-                                && old.staffIndex() == change.staffIndex()
-                                && old.staffCount() == change.staffCount()
-                                && Math.abs(old.positionInMeasure() - change.positionInMeasure())
-                                        < .06f) claimed = true;
-                    if (!claimed) scoped.add(change);
+            for (byte[] normalized :
+                    new byte[][] {
+                        RestPaperTone.normalize(gray, width, height, staffs.get(0).gap()),
+                        RestPaperTone.normalizeDirectionInk(
+                                gray, width, height, staffs.get(0).gap()),
+                        RestPaperTone.normalizeSoftDirectionInk(
+                                gray, width, height, staffs.get(0).gap())
+                    }) {
+                if (normalized != gray) {
+                    var proposed =
+                            detectDirectionCore(
+                                    words,
+                                    staffs,
+                                    measures,
+                                    notes,
+                                    normalized,
+                                    width,
+                                    height,
+                                    gray,
+                                    false);
+                    for (var change : proposed.changes()) {
+                        if (change.direction() == 0) continue;
+                        boolean claimed = false;
+                        for (var old : scoped)
+                            if (old.direction() == change.direction()
+                                    && old.measureIndex() == change.measureIndex()
+                                    && old.staffIndex() == change.staffIndex()
+                                    && old.staffCount() == change.staffCount()
+                                    && Math.abs(
+                                                    old.positionInMeasure()
+                                                            - change.positionInMeasure())
+                                            < .06f) claimed = true;
+                        if (!claimed) scoped.add(change);
+                    }
                 }
             }
         }
