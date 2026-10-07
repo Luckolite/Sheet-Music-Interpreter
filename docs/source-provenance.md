@@ -684,3 +684,10 @@ edges, interrupted shafts, broad patches, thin rules and full written-duration
 controls distinguish shafts from paper. Established beam counts take priority.
 Recognition9 updates cache identity at the existing guide282 layout; helpers,
 weights, dependencies and platform adapters are unchanged.
+
+Clipped dot-search checks use original painted ovals under Apache-2.0.
+An empty image-edge search region remains an empty candidate set; copying the
+returned list permits the established component merges without mutating caller
+data. Filled/hollow heads, a one-pixel slot, absent rasters and pixel immutability
+are covered. Recognition10 retains the guide282 record layout and unchanged
+models, geometry, helpers and dependencies.

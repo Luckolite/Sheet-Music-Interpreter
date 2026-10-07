@@ -14277,7 +14277,7 @@ final class OmrScoreInterpreter {
         // ink component; the model's artificial boundary is not a printed dot.
         List<Component> combined =
                 gray != null && gray.length == width * height
-                        ? findDarkDotComponents(gray, width, height, head, gap)
+                        ? new ArrayList<>(findDarkDotComponents(gray, width, height, head, gap))
                         : new ArrayList<>(candidates);
         // Antialiasing can join a round dot to a nearby tie. Its dark core remains
         // separate; retain the same bounds, shape and engraving-slot checks below.
