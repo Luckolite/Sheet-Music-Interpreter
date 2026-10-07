@@ -15367,6 +15367,16 @@ final class OmrScoreInterpreter {
                     if (common != count) return common;
                 }
         }
+        // Uneven paper may hide one flank of a faint shaft. Established
+        // counts and complete paired rails take priority over this recovery.
+        if (count == 0 && gray != null && head.maxX - head.minX + 1 > staff.gap * 1.05f) {
+            int[] gradient =
+                    paleStemToSupportedBeamAtThreshold(
+                            labels, gray, width, height, head, staff, false, 245, true);
+            if (gradient != null
+                    && fadedDoubleBeamJunction(labels, gray, width, height, head, staff, gradient))
+                return 2;
+        }
         if (count < 2 || gray == null) return count;
         int[] stem = attachedRawStem(gray, width, height, head, staff.gap);
         if (stem == null) return count;
@@ -16688,6 +16698,20 @@ final class OmrScoreInterpreter {
             Staff staff,
             boolean allowSinglePale,
             int inkThreshold) {
+        return paleStemToSupportedBeamAtThreshold(
+                labels, gray, width, height, head, staff, allowSinglePale, inkThreshold, false);
+    }
+
+    private static int[] paleStemToSupportedBeamAtThreshold(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            boolean allowSinglePale,
+            int inkThreshold,
+            boolean gradientPaper) {
         if (gray == null) return null;
         float gap = staff.gap;
         int[] trace =
@@ -16704,6 +16728,8 @@ final class OmrScoreInterpreter {
             return null;
         int flank = Math.max(3, Math.round(gap * .45f)), direction = trace[2];
         int centerRadius = Math.max(2, Math.round(gap * .3f));
+        if (gradientPaper)
+            centerRadius += Math.abs(trace[0] - (direction < 0 ? head.maxX : head.minX));
         for (int step = -centerRadius; step <= centerRadius; step++) {
             int ordinal = step + centerRadius;
             int offset = (ordinal + 1) / 2 * (ordinal % 2 == 1 ? -1 : 1);
@@ -16745,7 +16771,11 @@ final class OmrScoreInterpreter {
                 localGap = local[1];
             }
             int first = Math.round(head.centerY) + direction * Math.round(gap * .85f);
-            int last = trace[1] - direction * Math.round(gap * 1.35f), samples = 0, support = 0;
+            int last = trace[1] - direction * Math.round(gap * 1.35f),
+                    samples = 0,
+                    support = 0,
+                    gradientSupport = 0,
+                    agreedPaper = 0;
             for (int y = first; (last - y) * direction >= 0; y += direction) {
                 float rule = localBottom + Math.round((y - localBottom) / localGap) * localGap;
                 if (Math.abs(y - rule) <= localGap * .2f) continue;
@@ -16755,13 +16785,29 @@ final class OmrScoreInterpreter {
                 int ink = gray[y * width + x] & 255;
                 samples++;
                 int contrast = inkThreshold == 245 ? 8 : 25;
+                if (gradientPaper && x - 2 * flank >= 0 && x + 2 * flank < width) {
+                    int leftPaper = gray[y * width + x - flank] & 255;
+                    int rightPaper = gray[y * width + x + flank] & 255;
+                    if (ink < inkThreshold && leftPaper + rightPaper >= 2 * (ink + contrast)) {
+                        gradientSupport++;
+                        int leftCenter = 2 * leftPaper - (gray[y * width + x - 2 * flank] & 255);
+                        int rightCenter = 2 * rightPaper - (gray[y * width + x + 2 * flank] & 255);
+                        if (Math.abs(leftCenter - rightCenter) <= 2 * contrast) agreedPaper++;
+                    }
+                }
                 if (ink < inkThreshold
                         && (gray[y * width + x - flank] & 255) >= ink + contrast
                         && (boundedFlag || (gray[y * width + x + flank] & 255) >= ink + contrast))
                     support++;
             }
-            if (samples < Math.max(8, Math.round(gap * .6f)) || support < samples * .75f) continue;
-            if (Math.abs(trace[1] - head.centerY) <= gap * 5.5f
+            int minimumSamples = Math.max(8, Math.round(gap * .6f));
+            if (samples < minimumSamples) continue;
+            if (gradientPaper) {
+                if (gradientSupport < samples * .75f
+                        || agreedPaper < Math.max(minimumSamples, samples * .5f)) continue;
+            } else if (support < samples * .75f) continue;
+            if (!gradientPaper
+                    && Math.abs(trace[1] - head.centerY) <= gap * 5.5f
                     && rootedPaleFlag(
                             labels, gray, width, height, head, gap, x, trace[1], direction < 0))
                 return new int[] {x, trace[1], direction};

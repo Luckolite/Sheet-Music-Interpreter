@@ -676,3 +676,11 @@ Crop boundaries, flats, naturals, real stemmed heads, blank paper and neighborin
 pitches provide rejection controls. Recognition8 changes cache identity at the
 existing guide282 layout. Private raw-page checks stay outside this repository;
 model weights, dependencies and platform adapters are unchanged.
+
+Uneven-paper shaft checks use original painted geometry under Apache-2.0.
+Late two-beam recovery retains attached ink, interpolated contrast, agreeing
+background estimates and complete connected dark bodies. Tone slopes, shadow
+edges, interrupted shafts, broad patches, thin rules and full written-duration
+controls distinguish shafts from paper. Established beam counts take priority.
+Recognition9 updates cache identity at the existing guide282 layout; helpers,
+weights, dependencies and platform adapters are unchanged.
