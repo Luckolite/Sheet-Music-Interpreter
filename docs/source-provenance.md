@@ -667,3 +667,12 @@ controls. Full generated recognition retains a written sixteenth duration. Only
 reviewed shared methods and the recognition-7 companions are mirrored; guide282,
 protocol1, model weights and platform adapters are unchanged. Private retained
 page checks are kept outside this repository and are not an overall accuracy claim.
+
+Leaning-sharp and crossbar-ownership checks use original painted geometry under
+Apache-2.0. Row projection retains every ink pixel and requires complete shafts,
+bridged crossbars and agreeing pitch centers. Proved crossbars remain accidental
+seeds after note rejection; short shaft gaps retain bounded endpoint support.
+Crop boundaries, flats, naturals, real stemmed heads, blank paper and neighboring
+pitches provide rejection controls. Recognition8 changes cache identity at the
+existing guide282 layout. Private raw-page checks stay outside this repository;
+model weights, dependencies and platform adapters are unchanged.

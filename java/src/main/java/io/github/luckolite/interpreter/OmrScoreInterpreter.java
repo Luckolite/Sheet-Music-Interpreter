@@ -346,7 +346,10 @@ final class OmrScoreInterpreter {
                 splitClefKeyBridges(labels, gray, width, height, clefOrKeyComponents, staffs);
         // Inspect a complete meter digit before chord splitting can turn its
         // two bowls into separate, individually plausible noteheads.
+        List<Component> sharpBars =
+                sharpCrossbarHeads(gray, width, height, rawHeadComponents, staffs);
         List<Component> notationHeads = new ArrayList<>(rawHeadComponents);
+        notationHeads.removeAll(sharpBars);
         notationHeads.removeIf(
                 head ->
                         PrintedNoteContrast.paperTexture(
@@ -453,6 +456,10 @@ final class OmrScoreInterpreter {
         // as a second plausible notehead. Demote only small, stemless components immediately to
         // the right of a substantially larger head; grace notes retain their attached stem.
         List<AccidentalCandidate> accidentalCandidates = new ArrayList<>();
+        // Preserve the proved accidental strokes as seeds for the following note.
+        for (Component bar : sharpBars)
+            accidentalCandidates.add(
+                    new AccidentalCandidate(bar, OmrMeasurePostProcessor.NOTEHEAD));
         for (Component component : clefOrKeyComponents)
             accidentalCandidates.add(
                     new AccidentalCandidate(component, OmrMeasurePostProcessor.CLEF_OR_KEY));
@@ -531,7 +538,7 @@ final class OmrScoreInterpreter {
         // A returning tie shoulder can share this stem-adjacent shape. Once rejected
         // as a note, its mask must not obscure the two-ended raw tie proof.
         rejectedSlurHeads.addAll(stemSlashHeads);
-        heads.removeAll(sharpCrossbarHeads(gray, width, height, heads, staffs));
+
         List<Component> longSlurFragments = new ArrayList<>();
         for (Component candidate : heads) {
             Staff staff = nearestHeadStaff(staffs, candidate.centerY);
@@ -5079,8 +5086,7 @@ final class OmrScoreInterpreter {
             if (head.area > gap * gap * .65f
                     || head.area < gap * gap * .1f
                     || head.maxX - head.minX + 1 > gap
-                    || head.maxY - head.minY + 1 > gap * .85f
-                    || attachedRawStem(gray, width, height, head, gap) != null) continue;
+                    || head.maxY - head.minY + 1 > gap * .85f) continue;
             float center =
                     printedSignatureSharpCenter(
                             gray,
@@ -5323,11 +5329,27 @@ final class OmrScoreInterpreter {
             AccidentalCandidate candidate,
             float gap,
             boolean pitch) {
+        for (float margin : new float[] {.3f, .45f, .6f}) {
+            float result =
+                    printedSignatureSharpInCrop(gray, width, height, candidate, gap, pitch, margin);
+            if (Float.isFinite(result)) return result;
+        }
+        return Float.NaN;
+    }
+
+    private static float printedSignatureSharpInCrop(
+            byte[] gray,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            boolean pitch,
+            float cropMargin) {
         if (gray == null || gap < 3) return Float.NaN;
         Component seed = candidate.component;
         if (seed.maxX - seed.minX + 1 > gap * 1.6f || seed.maxY - seed.minY + 1 > gap * 3.65f)
             return Float.NaN;
-        int margin = Math.max(1, Math.round(gap * .3f));
+        int margin = Math.max(1, Math.round(gap * cropMargin));
         int left = Math.max(0, seed.minX - margin), right = Math.min(width - 1, seed.maxX + margin);
         int top = Math.max(0, Math.round(seed.centerY - gap * 2.5f));
         int bottom = Math.min(height - 1, Math.round(seed.centerY + gap * 2.5f));
@@ -5371,6 +5393,21 @@ final class OmrScoreInterpreter {
                                                 glyph, OmrMeasurePostProcessor.SYMBOL),
                                         gap)
                         : left + glyph.centerX;
+        }
+        byte[] faint = FaintSharpInk.crop(gray, width, height, left, top, right, bottom, gap);
+        if (faint != null) {
+            Component glyph = retainSeedConnectedInk(faint, w, h, seed, left, top);
+            if (glyph != null
+                    && !rawStrokeLeavesCrop(gray, width, height, faint, w, h, left, top, gap)) {
+                float center =
+                        sharpPitchCenter(
+                                faint,
+                                w,
+                                h,
+                                new AccidentalCandidate(glyph, OmrMeasurePostProcessor.CLEF_OR_KEY),
+                                gap);
+                if (Float.isFinite(center)) return pitch ? top + center : left + glyph.centerX;
+            }
         }
         return Float.NaN;
     }
@@ -11323,6 +11360,10 @@ final class OmrScoreInterpreter {
                                     staff.gap))) result.add(candidate);
         }
         result.addAll(sameLabel);
+        // Proved sharp crossbars must remain available as a pair after a greedy
+        // union of their faint connecting shafts loses the individual seeds.
+        for (AccidentalCandidate candidate : candidates)
+            if (candidate.label == OmrMeasurePostProcessor.NOTEHEAD) result.add(candidate);
         // Keep the original glyphs: a cross-label union can also include a
         // nearby rule fragment and must not replace an already legible natural.
         for (AccidentalCandidate candidate :
@@ -11517,18 +11558,18 @@ final class OmrScoreInterpreter {
         for (Component upper : bars)
             for (Component lower : bars) {
                 float dy = lower.centerY - upper.centerY;
-                if (dy < gap * .65f
+                if (dy < gap * .5f
                         || dy > gap * 1.5f
                         || Math.abs(upper.centerX - lower.centerX) > gap * .5f) continue;
-                int left = Math.max(0, Math.round(Math.min(upper.minX, lower.minX) - gap * .20f));
+                int left = Math.max(0, Math.round(Math.min(upper.minX, lower.minX) - gap * .4f));
                 int right =
                         Math.min(
                                 width - 1,
                                 Math.min(
                                         Math.round(head.minX - gap * .15f),
-                                        Math.round(Math.max(upper.maxX, lower.maxX) + gap * .20f)));
-                int top = Math.max(0, Math.round(upper.minY - gap * .8f));
-                int bottom = Math.min(height - 1, Math.round(lower.maxY + gap * .8f));
+                                        Math.round(Math.max(upper.maxX, lower.maxX) + gap * .4f)));
+                int top = Math.max(0, Math.round(upper.minY - gap * 1.1f));
+                int bottom = Math.min(height - 1, Math.round(lower.maxY + gap * 1.1f));
                 if (right <= left || bottom <= top) continue;
                 if (rawSharpInBounds(
                         gray, width, height, head, gap, left, right, top, bottom, true))
@@ -13337,6 +13378,71 @@ final class OmrScoreInterpreter {
     }
 
     private static float sharpPitchCenter(
+            byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
+        float upright = uprightSharpPitchCenter(labels, width, height, candidate, gap);
+        if (Float.isFinite(upright)) return upright;
+        Component glyph = candidate.component;
+        int gw = glyph.maxX - glyph.minX + 1, gh = glyph.maxY - glyph.minY + 1;
+        if (!Float.isFinite(gap)
+                || gap < 3
+                || gh < gap * 1.55f
+                || gh > gap * 3.65f
+                || gw < gap * .65f
+                || gw > gap * 2.8f
+                || glyph.area < gap * gap * .42f
+                || glyph.area > gap * gap * 2.45f
+                || glyph.minX <= 0
+                || glyph.maxX >= width - 1
+                || glyph.minY <= 0
+                || glyph.maxY >= height - 1) return Float.NaN;
+        int pad = Math.round(gh * .3f) + 2, w = gw + 2 * pad;
+        float pitchSum = 0, firstPitch = Float.NaN;
+        int accepted = 0;
+        // Shift each row without dropping ink. A shared lean must preserve both
+        // shaft extensions, two bridged crossbars and the upright shape limits.
+        for (int step : new int[] {-6, -5, -4, -3, -2, 2, 3, 4, 5, 6}) {
+            float lean = step * .05f;
+            byte[] projected = new byte[w * gh];
+            int area = 0, minX = w, maxX = -1, minY = gh, maxY = -1;
+            long sx = 0, sy = 0;
+            for (int y = 0; y < gh; y++) {
+                int shift = Math.round((y - (gh - 1) * .5f) * lean);
+                for (int x = 0; x < gw; x++) {
+                    if (!candidate.matches(labels[(glyph.minY + y) * width + glyph.minX + x]))
+                        continue;
+                    int xx = x - shift + pad;
+                    projected[y * w + xx] = OmrMeasurePostProcessor.SYMBOL;
+                    area++;
+                    sx += xx;
+                    sy += y;
+                    minX = Math.min(minX, xx);
+                    maxX = Math.max(maxX, xx);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+            if (area != glyph.area) return Float.NaN;
+            Component shifted =
+                    new Component(
+                            area, minX, maxX, minY, maxY, sx / (float) area, sy / (float) area);
+            float pitch =
+                    uprightSharpPitchCenter(
+                            projected,
+                            w,
+                            gh,
+                            new AccidentalCandidate(shifted, OmrMeasurePostProcessor.SYMBOL),
+                            gap);
+            if (!Float.isFinite(pitch)) continue;
+            if (Float.isFinite(firstPitch) && Math.abs(pitch - firstPitch) > gap * .12f)
+                return Float.NaN;
+            if (!Float.isFinite(firstPitch)) firstPitch = pitch;
+            pitchSum += pitch;
+            accepted++;
+        }
+        return accepted >= 2 ? glyph.minY + pitchSum / accepted : Float.NaN;
+    }
+
+    private static float uprightSharpPitchCenter(
             byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
         Component glyph = candidate.component;
         int glyphWidth = glyph.maxX - glyph.minX + 1;

@@ -49,13 +49,22 @@ final class FaintSharpInk {
         for (int y = 1; y < h - 2; y++)
             for (int x = 0; x < w; x++)
                 if (mask[y * w + x] != 0 && mask[(y - 1) * w + x] != 0)
-                    for (int skip = 1; skip <= limit && y + skip + 2 < h; skip++)
-                        if (mask[(y + skip + 1) * w + x] != 0
-                                && mask[(y + skip + 2) * w + x] != 0) {
-                            if (closed == mask) closed = mask.clone();
-                            for (int dy = 1; dy <= skip; dy++)
-                                closed[(y + dy) * w + x] = OmrMeasurePostProcessor.CLEF_OR_KEY;
-                        }
+                    for (int skip = 1; skip <= limit && y + skip + 2 < h; skip++) {
+                        int radius = Math.max(1, Math.round((skip + 1) * .3f));
+                        for (int end = Math.max(0, x - radius);
+                                end <= Math.min(w - 1, x + radius);
+                                end++)
+                            if (mask[(y + skip + 1) * w + end] != 0
+                                    && mask[(y + skip + 2) * w + end] != 0) {
+                                if (closed == mask) closed = mask.clone();
+                                // Follow the bounded shaft lean across a short missing
+                                // stripe; both ends retain two consecutive raw ink pixels.
+                                for (int dy = 1; dy <= skip; dy++) {
+                                    int xx = x + Math.round((end - x) * dy / (float) (skip + 1));
+                                    closed[(y + dy) * w + xx] = OmrMeasurePostProcessor.CLEF_OR_KEY;
+                                }
+                            }
+                    }
         return closed;
     }
 
