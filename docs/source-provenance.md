@@ -715,3 +715,19 @@ identity12 and app/desktop audio identity70 invalidate older derived results.
 Private source audits, photos, device logs and libraries remain outside the public
 package. Generated tests and retained comparisons do not establish whole-library
 accuracy.
+
+
+Computed expressive endpoints normalize only arithmetic roundoff within four ULPs
+of the relevant musical time scale. Stored anchors and genuine timing overruns
+remain invalid; fermatas still require ownership of the actual sounding release.
+Original generated tests exercise an overfull optical clock, bar-end breath and
+fermata anchoring, interior bit preservation and strict rejection boundaries.
+
+The shared raster budget retains a 360-second native deadline for ordinary pages
+(up to 8 million pixels). Larger accepted rasters receive a bounded allowance up to
+600 seconds at the 20-million-pixel input limit. Desktop lifecycle adapters retain
+all raster resolution, model inference and musical OCR passes and give preprocessing
+its own room within a bounded 900-second worker lifetime. The standalone CLI's
+execution policy is unchanged. Models, dependencies and guide282 record layouts
+are unchanged; recognition13 and app/desktop audio71 invalidate prior derived data.
+Private source, device and library evidence remains outside the package.

@@ -13,6 +13,23 @@ public record ScoreAnchor(int measureIndex, double quarterBeatOffset)
             throw new IllegalArgumentException("Invalid musical anchor");
     }
 
+    /** Normalizes arithmetic roundoff past a bar end; genuine overruns remain unchanged. */
+    public static double computedOffset(int measureIndex, double offset, ScoreMeterMap meter) {
+        if (!Double.isFinite(offset) || offset < 0 || measureIndex < 0) return offset;
+        double length = meter.beatsInMeasure(measureIndex);
+        double scale = Math.max(length, Math.abs(meter.startBeat(measureIndex) + length));
+        double rounding = 4 * Math.ulp(scale);
+        return offset > length && offset - length <= rounding ? length : offset;
+    }
+
+    /** Builds an anchor from computed time while keeping stored-anchor validation strict. */
+    public static ScoreAnchor fromComputedTiming(
+            int measureIndex, double offset, ScoreMeterMap meter, int measureCount) {
+        if (measureIndex >= 0 && measureIndex < measureCount)
+            offset = computedOffset(measureIndex, offset, meter);
+        return new ScoreAnchor(measureIndex, offset).canonical(meter, measureCount);
+    }
+
     public ScoreAnchor canonical(ScoreMeterMap meter, int measureCount) {
         if (measureCount < 0
                 || measureIndex > measureCount

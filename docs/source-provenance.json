@@ -948,9 +948,11 @@
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
-      "source_sha256": "8698754b87c73ccbd130f9dc1e91d2fca9a7be83d43f4276ed8ad18540a30612",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "8698754b87c73ccbd130f9dc1e91d2fca9a7be83d43f4276ed8ad18540a30612"
+      "source_sha256": "9458507dbb75bb397e75f93e0d77786c3cfe9d4290f99f12ffeeba2f7d400647",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "source_normalized_sha256": "9458507dbb75bb397e75f93e0d77786c3cfe9d4290f99f12ffeeba2f7d400647",
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
+      "review_note": "Computed endpoint roundoff only, bounded to four ULPs at the bar/absolute arithmetic scale. Stored musical anchors, score bounds, true overruns and sound-release ownership remain strict. Original contradictory optical-clock controls and invalid-anchor rejection tests; no private notation, dependencies or weights."
     },
     "ScoreExpressiveEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressiveEvent.java",
@@ -1083,11 +1085,11 @@
     },
     "ScoreFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataDetector.java",
-      "source_sha256": "655b64af843c44359875721dc3f0459cf90b2383620ba5707fc96ec58320fc6c",
-      "source_normalized_sha256": "0bcd0c8c01e5f77254aac4f49f4b77fcc8863361cef64899cc527c690be1f3d9",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. The existing immutable detector-owned Attack is forwarded to the unchanged ordered target-note scan during resolve, eliminating duplicate target parsing; public entry validation and meter/timing arithmetic remain intact. Added an original synthetic repeated-resolution/chord/caller-preservation regression; focused execution is pending the release batch.",
-      "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension"
+      "source_sha256": "1333fea2f3345b3526cc07283f8c0ef81cc0621c38c62949f87bcdad3560d573",
+      "source_normalized_sha256": "1333fea2f3345b3526cc07283f8c0ef81cc0621c38c62949f87bcdad3560d573",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "review_note": "Computed endpoint roundoff only, bounded to four ULPs at the bar/absolute arithmetic scale. Stored musical anchors, score bounds, true overruns and sound-release ownership remain strict. Original contradictory optical-clock controls and invalid-anchor rejection tests; no private notation, dependencies or weights.",
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta."
     },
     "ScoreFermataNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataNotation.java",
@@ -1298,11 +1300,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "d6d556c05752882d98c70ce7899bee72e795490064b27b636d2abb7e7b0800e0",
-      "source_normalized_sha256": "15e2b6d4be72e0d5c7c654def02f3857e848c137f296b1d2a93d472d03ed2fbc",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed global output-preserving reuse batch891 on accepted app890",
-      "review_note": "Resolve retains original first/small-query note scans and indexes ordered note lanes only for five or more owned directions. Cached parser results are consumed once. Measure, staff, count, original note order, raw float membership, musical timing and evidence ownership remain unchanged; original complete-realization and boundary regressions. Apache-2.0; no private scores, model weights, dependencies or record layouts changed.",
+      "source_sha256": "1798f94588841751c278ab9beca78fa36f96a4630216643d7cc8e9257eb1e3fd",
+      "source_normalized_sha256": "1798f94588841751c278ab9beca78fa36f96a4630216643d7cc8e9257eb1e3fd",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
+      "review_note": "Computed endpoint roundoff only, bounded to four ULPs at the bar/absolute arithmetic scale. Stored musical anchors, score bounds, true overruns and sound-release ownership remain strict. Original contradictory optical-clock controls and invalid-anchor rejection tests; no private notation, dependencies or weights.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
@@ -1404,11 +1406,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "630c490e6f75439385c03b748af004d91586882d1596d154d1e5255ee60d26bd",
-      "source_normalized_sha256": "630c490e6f75439385c03b748af004d91586882d1596d154d1e5255ee60d26bd",
+      "source_sha256": "b74984d2070e0679f8d734546e223ac147c2439fcb2653b40ca72f91d8843f9b",
+      "source_normalized_sha256": "b74984d2070e0679f8d734546e223ac147c2439fcb2653b40ca72f91d8843f9b",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
-      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
+      "review_note": "Recognition13 invalidates prior derived interpretations while preserving the complete guide282 layout.",
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1462,11 +1464,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "713d9bd77beea397a8c190920992a89d265de6b428b043da4af1a37f7824ed41",
-      "source_normalized_sha256": "713d9bd77beea397a8c190920992a89d265de6b428b043da4af1a37f7824ed41",
+      "source_sha256": "f70a7c0fc41e99d046ceddb237af3945181d5d18a0efe870554d3a2ec7a94e29",
+      "source_normalized_sha256": "f70a7c0fc41e99d046ceddb237af3945181d5d18a0efe870554d3a2ec7a94e29",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Recognition12 reviewed cache identity at unchanged guide282 record layout.",
-      "review_note": "Only recognition identity changes from11 to12. Complete record layouts and supported guide formats are unchanged; actual guide roundtrip/source fields are validated separately."
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
+      "review_note": "Only recognition identity12 to13; every guide282 record field and legacy layout remains unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1658,6 +1660,14 @@
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
       "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change."
+    },
+    "page_processing_budget.py": {
+      "source_path": "tools/native-worker/page_processing_budget.py",
+      "source_sha256": "306c6460008cd7c145046795310db1aba8925b0abfa258b2927fa4e88bb6a0f6",
+      "source_normalized_sha256": "306c6460008cd7c145046795310db1aba8925b0abfa258b2927fa4e88bb6a0f6",
+      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
+      "review_note": "Original shared standard-library raster budget: ordinary accepted pages retain360 seconds;8-to20MP inputs receive a bounded workload allowance up to600 seconds. Invalid dimensions reject. No downscaling, changed inference/recognition calls, model/dependency changes or dropped musical OCR passes. Desktop overall worker lifecycle includes preprocessing and remains bounded/cancellable; standalone CLI execution policy is unchanged."
     }
   },
   "interpreter_speedup_review": {

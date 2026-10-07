@@ -189,6 +189,7 @@ public final class ScoreFermataDetector {
                             onset
                                     + ScoreNoteTiming.resolvedWrittenDurationBeats(
                                             note, score.notes(), beats);
+                    finish = ScoreAnchor.computedOffset(note.measureIndex(), finish, meter);
                     if (!Double.isFinite(onset)
                             || !Double.isFinite(finish)
                             || finish <= onset

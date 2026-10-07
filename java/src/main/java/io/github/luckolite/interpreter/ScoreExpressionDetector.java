@@ -228,8 +228,7 @@ public final class ScoreExpressionDetector {
         var events = new ArrayList<ScoreExpressiveEvent>();
         Map<NoteLane, List<Integer>> noteLanes = null;
         Deque<Optional<Column>> parsedAhead = null;
-        boolean firstColumn = true;
-        boolean indexDecision = false;
+        boolean firstColumn = true, indexDecision = false;
         int nextEventIndex = 0;
         try (var session = ScoreNoteTiming.beginTimingSession()) {
             for (var event : score.expressiveEvents()) {
@@ -267,10 +266,11 @@ public final class ScoreExpressionDetector {
                             onset
                                     + ScoreNoteTiming.resolvedWrittenDurationBeats(
                                             note, score.notes(), beats);
+                    end = ScoreAnchor.computedOffset(note.measureIndex(), end, meter);
                     if (!Double.isFinite(onset)
                             || !Double.isFinite(end)
                             || end <= onset
-                            || end > beats + 1e-7
+                            || end > beats
                             || start >= 0
                                     && (Math.abs(onset - start) > 1e-7
                                             || Math.abs(end - release) > 1e-7)) proved = false;

@@ -81,7 +81,7 @@ class UnpitchedGuideTests(unittest.TestCase):
             wire.encode(original_score(), 283)
 
     def test_current_epoch_layout_and_write_new_keep_existing_output(self):
-        self.assertEqual(12, wire.RECOGNITION_REVISION)
+        self.assertEqual(13, wire.RECOGNITION_REVISION)
         self.assertEqual(282, wire.GUIDE_VERSION)
         value = original_score()
         value['notes'][0]['kind'] = 'UNPITCHED'
