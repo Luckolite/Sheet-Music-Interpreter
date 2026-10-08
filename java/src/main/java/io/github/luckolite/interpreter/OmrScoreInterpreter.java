@@ -1032,7 +1032,8 @@ final class OmrScoreInterpreter {
                                     height,
                                     paleChordRhythmHeads.getOrDefault(head, head),
                                     rhythmStaff,
-                                    heads);
+                                    heads,
+                                    staff.count);
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, rhythmStaff, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
             if (tremolo[0] > 0)
@@ -15305,6 +15306,36 @@ final class OmrScoreInterpreter {
         Staff local = new Staff(localPitch[0] - 4 * localPitch[1], localPitch[0], localPitch[1]);
         local.pitchTrack = StaffPitchTrack.linear(width, localPitch[0], localPitch[1], 0);
         return local;
+    }
+
+    private static int detectBeamCount(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads,
+            int staffCount) {
+        // Adjacent or shared stems in a multi-staff system can carry different beam voices.
+        // Pass the original system count: a local beam frame may represent just one staff.
+        if (staffCount > 1) {
+            int owned =
+                    SharedStemBeamOwnership.count(
+                            gray,
+                            labels,
+                            width,
+                            height,
+                            staff.gap,
+                            head.minX,
+                            head.maxX,
+                            head.minY,
+                            head.maxY,
+                            head.centerX,
+                            head.centerY);
+            if (owned >= 0) return owned;
+        }
+        return detectBeamCount(labels, gray, width, height, head, staff, heads);
     }
 
     private static int detectBeamCount(

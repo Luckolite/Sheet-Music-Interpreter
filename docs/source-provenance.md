@@ -770,3 +770,13 @@ ownership. Filled stopped-head ink cannot supply stem-width evidence. Original
 geometric regressions cover shifted/scaled diamonds, circles, tilted ovals and
 missing model/rhythm/stem support. Recognition17 invalidates prior interpretations;
 weights, dependencies, fonts and physical guide/audio records are unchanged.
+
+Recognition18 reads attached beam rails in multi-staff systems using raw shaft,
+face and independently supported rail evidence. Ambiguous ownership stays with
+the existing decoder. Joined printed3 recovery compares visible ink and paper
+with a clearly read page-local numeral, requires physical beam ownership and
+same-direction sounding heads, and preserves existing fingering/text/rest guards.
+The original procedural regressions include both voices and rejection cases.
+Weights, dependencies, fonts and physical guide/audio records are unchanged.
+Thick segmented staff rules are excluded from beam bands; an original procedural
+regression covers staff-line crossings beside a true attached beam.

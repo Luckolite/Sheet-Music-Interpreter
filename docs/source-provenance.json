@@ -317,13 +317,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "8eb8864a023861332956f3c318013ede064d2c258358414cd6f7e99abc517143",
+      "source_sha256": "d27c7314adf6a27f17f93ad5c2538079579f41835fbd7fa860807853f88663b7",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
-      "source_normalized_sha256": "8eb8864a023861332956f3c318013ede064d2c258358414cd6f7e99abc517143",
+      "review_note": "Reviewed explicit multi-staff caller scope and attached semantic/raw-ink beam helper. Original system staff count survives local rhythm-frame construction; standalone and native diagnostics adapters remain independent.",
+      "source_normalized_sha256": "de81f7de6f1810e777504888d55045d4dd3dd7822e000f58c2e3486c573284d3",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -431,12 +431,12 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "328a2df98a97abb98e984cb1cccdcae744293d4c508daf8781dbea13ea5ba9e3",
+      "source_sha256": "e233bca54e63a8218404507caba0ccd484fbbf8afa5552a3e334e3b87b2e1995",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "328a2df98a97abb98e984cb1cccdcae744293d4c508daf8781dbea13ea5ba9e3",
-      "review_note": "Reviewed physical beam/numeral ownership across adjacent systems and uneven printed groups, plus rest-only displaced attack-column tolerance. Original procedural geometry controls; sounding-only grouping remains unchanged. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "source_normalized_sha256": "78e4d5891ed4630fe6141d9748bd74a0149c854a00eaf09d7bd297a089bd7d2d",
+      "review_note": "Existing printed-numeral rules remain primary. Joined printed3 recovery requires a clearly read same-page numeral template, independent beam ownership and same-direction sounding heads; original fingering, split-beam, neighbouring-system and rhythm guards still apply.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained."
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1408,11 +1408,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "2fbeb9b56e5b5cd5462ae543630fff0bc7ed13f3ba927a1c9a7683d62c13e8b5",
-      "source_normalized_sha256": "61cb23aa913eda65bac89e2c21ae3794dfdcd25a5cea9b99d0dd706ffd7192f1",
+      "source_sha256": "d4c5c08602034089d9c398e503a569148f8bae521a8d795b5abcfb185736f1f3",
+      "source_normalized_sha256": "9a08547064958dd2ef2643bb6cfd721a02375934ebb5b239a159f534c4d29a70",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition17 separates thick hollow harmonic corrections from prior guides at unchanged layout282.",
-      "reviewed_source_state": "Reviewed recognition17 delta on maintained personal d480494d; historical extraction commit retained."
+      "review_note": "Recognition18 separates beam/numeral recognition from prior cached guides at unchanged layout282.",
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1466,11 +1466,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f99183854180228bed5f8fd167c7ffd912803e2a485ef5b59be755f0caf2eb15",
-      "source_normalized_sha256": "bf37302dbc2c3da88afc792e385c2691818161d3b63e76ff74b954ffee146221",
+      "source_sha256": "d56f697758441b04454d1e7b458a106d0dae1dc32b363d56ecd4204095843050",
+      "source_normalized_sha256": "8f8ccae08dccdeb67c3f08183f9028a0a840b941f90f65f85128d1c09128bb43",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition17 delta on maintained personal d480494d; historical extraction commit retained.",
-      "review_note": "Recognition identity16 to17; current and legacy physical guide records unchanged."
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
+      "review_note": "Recognition17 to18 cache identity; unchanged current/legacy physical record layouts."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1670,6 +1670,22 @@
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
       "review_note": "Original shared standard-library raster budget: ordinary accepted pages retain360 seconds;8-to20MP inputs receive a bounded workload allowance up to600 seconds. Invalid dimensions reject. No downscaling, changed inference/recognition calls, model/dependency changes or dropped musical OCR passes. Desktop overall worker lifecycle includes preprocessing and remains bounded/cancellable; standalone CLI execution policy is unchanged."
+    },
+    "SharedStemBeamOwnership.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SharedStemBeamOwnership.java",
+      "reviewed_app_commit": "88c70428c55bbf045a949716be8a2a6032350139",
+      "source_sha256": "4d63499f4693c1c05787e1b5406c6054c17bbfac844307136aacddde9de18efe",
+      "source_normalized_sha256": "b876b2d6ebe8618658ed095b29b550fe4e2a886081459fe78bf4e1fe680de3a8",
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
+      "review_note": "Original Apache-2.0 raw shaft/face/rail ownership helper with conservative uncertainty, ledger-only foreign-shaft rejection, short secondary beams, both directions and near-coincident quarter protection. Uses existing JDK/labels/raw gray, no new weights or dependency. Thick segmented staff rules are explicitly excluded from beam-band evidence, preventing ordinary notes from borrowing staff lines as additional rails."
+    },
+    "RepeatedTupletNumeral.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
+      "reviewed_app_commit": "88c70428c55bbf045a949716be8a2a6032350139",
+      "source_sha256": "271a822161e68e924ca6321ca98ccc9bfa691a27cf939e0e606d800a1f2429f1",
+      "source_normalized_sha256": "8a3e9818985f9b628b4a006f9bd361c15845bf295d4b9d511c4c0afa81e91099",
+      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
+      "review_note": "Original Apache-2.0 template/contrast/visible bowl/paper matcher for printed3 touching another voice tie or beam. Bounded thin-rule/rail occlusion, isolated text rejection, physical ownership callback and malformed-input guards; no forced ratio from another group or score-specific exception."
     }
   },
   "interpreter_speedup_review": {
@@ -3604,5 +3620,26 @@
     "standalone_source_sha256": "e7af70c192867b4a0ad9b70940d2d7a264286d6ac8caac443c5f11bc42f59a46",
     "shareable_test_sha256": "7e09a4808efcbfad017bc1f328cae6f1ad57659426844f8e365e5d07fad46c64",
     "boundary": "Only the existing model-supported harmonic-touch fallback gains the enclosed-counter path. Original stem/rhythm/unpitched requirements and gray-only API are retained. Filled or fully obscured touches do not satisfy this new evidence. Weights, libraries, fonts and record layouts are unchanged."
+  },
+  "beam_and_joined_numeral_review": {
+    "base_public_commit": "ef2792ae5b7fc940016645b5853fe32b323389ac",
+    "base_app_commit": "88c70428c55bbf045a949716be8a2a6032350139",
+    "recognition_revision": 18,
+    "guide_format": 282,
+    "audio_format": 71,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "fixture_origin": "40 original Apache-2.0 procedural geometric/printed-glyph methods, including shaft/rail/stub/quarter/ledger/mirror/caller/thick segmented staff rule controls and complete numeral ownership, joined tie/beam, malformed image, bowl, blob, five, thirteen and adjacent-digit rejection. No private score pixels, identifiers, coordinates, logs or library material.",
+    "source_sha256": {
+      "OmrScoreInterpreter.java": "d27c7314adf6a27f17f93ad5c2538079579f41835fbd7fa860807853f88663b7",
+      "SharedStemBeamOwnership.java": "4d63499f4693c1c05787e1b5406c6054c17bbfac844307136aacddde9de18efe",
+      "TripletRhythmDetector.java": "e233bca54e63a8218404507caba0ccd484fbbf8afa5552a3e334e3b87b2e1995",
+      "RepeatedTupletNumeral.java": "271a822161e68e924ca6321ca98ccc9bfa691a27cf939e0e606d800a1f2429f1"
+    },
+    "shareable_test_sha256": {
+      "SharedStemBeamOwnershipTest.java": "2534c0f2142e34fe1886ad0204056779d95d3ad7d14b6c509469d1fdf806702f",
+      "RepeatedTupletNumeralTest.java": "e4fa34824573a76962a4402aad0a1e7fbaef1aff4c6ab755d473100d6b5f4f92"
+    }
   }
 }

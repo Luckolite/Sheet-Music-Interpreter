@@ -265,6 +265,7 @@ final class TripletRhythmDetector {
                 || height < 1
                 || gray.length != width * height) return notes;
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
+        List<Glyph> clearThrees = new ArrayList<>();
         List<Onset> groups = onsets(notes, virtualStart);
         for (int i = 0; i + 2 < groups.size(); i++) {
             boolean marked = false;
@@ -345,8 +346,78 @@ final class TripletRhythmDetector {
                                         region,
                                         measures);
                 }
+                final List<ScoreNoteEvent> ownershipNotes =
+                        result.subList(0, Math.min(virtualStart, result.size()));
+                boolean recoveredJoined = false;
+                boolean sharedJoinedDirection = true;
+                for (Onset onset : group)
+                    for (int index : onset.indices())
+                        if (index >= virtualStart
+                                || result.get(index).stemDirection() != first.stemDirection())
+                            sharedJoinedDirection = false;
+                if (numeral == null
+                        && first.beamCount() > 0
+                        && first.stemDirection() != 0
+                        && sharedJoinedDirection) {
+                    for (Glyph reference : clearThrees) {
+                        int[] found =
+                                RepeatedTupletNumeral.find(
+                                        gray,
+                                        width,
+                                        height,
+                                        new int[] {
+                                            reference.left(),
+                                            reference.top(),
+                                            reference.right(),
+                                            reference.bottom()
+                                        },
+                                        x1,
+                                        x3,
+                                        y1,
+                                        y2,
+                                        gap,
+                                        box -> {
+                                            Glyph glyph = new Glyph(box[0], box[1], box[2], box[3]);
+                                            return !insideOtherSystem(
+                                                            glyph, region, measures, width, height)
+                                                    && beamOwnsNumeral(
+                                                            glyph,
+                                                            first,
+                                                            ownershipNotes,
+                                                            region,
+                                                            gray,
+                                                            width,
+                                                            height,
+                                                            x1,
+                                                            x3,
+                                                            gap);
+                                        });
+                        if (found != null) {
+                            numeral = new Glyph(found[0], found[1], found[2], found[3]);
+                            recoveredJoined = true;
+                            break;
+                        }
+                    }
+                }
                 if (numeral == null || insideOtherSystem(numeral, region, measures, width, height))
                     continue;
+                if (!recoveredJoined) {
+                    boolean represented = false;
+                    for (Glyph known : clearThrees)
+                        if (Math.abs(
+                                                known.right()
+                                                        - known.left()
+                                                        - numeral.right()
+                                                        + numeral.left())
+                                        <= gap * .1f
+                                && Math.abs(
+                                                known.bottom()
+                                                        - known.top()
+                                                        - numeral.bottom()
+                                                        + numeral.top())
+                                        <= gap * .1f) represented = true;
+                    if (!represented && clearThrees.size() < 4) clearThrees.add(numeral);
+                }
                 // A finger number must not regroup attacks across two separate beams.
                 // A real tuplet bracket remains authoritative across beam breaks.
                 float x2 =
