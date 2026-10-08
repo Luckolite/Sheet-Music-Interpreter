@@ -823,3 +823,13 @@ and recognition22 invalidate affected derived caches; guide282 record layouts,
 standalone APIs, models and dependencies remain unchanged. Private source
 material is excluded. Retained-page replay and generated controls do not
 establish whole-score, whole-library, fresh inference or phone accuracy.
+
+Recognition23 recovers independent sitting half-rest plates near pitched-note
+heads and measured shafts. Additive recovery preserves prior rests; shared dot
+ownership and printed-staff mapping retain dotted and curved-page behavior.
+Thirty-three original Apache-2.0 generated controls cover these cases and reject
+beamlets, cropped heads and malformed staff bounds; fourteen fail against the
+previous detector. Recognition23/audio75 invalidate affected derived caches.
+Guide282 record layouts, standalone APIs, models and dependencies are unchanged.
+Private source material is excluded; retained replay and generated controls do
+not establish fresh whole-score, whole-library or physical-phone accuracy.

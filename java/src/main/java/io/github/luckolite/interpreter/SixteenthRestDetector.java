@@ -42,6 +42,55 @@ final class SixteenthRestDetector {
             List<MeasureRegion> measures,
             List<Staff> staffs,
             List<ScoreNoteEvent> notes) {
+        Detection baseline = detectWithDotsReleased(gray, width, height, measures, staffs, notes);
+        List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
+        List<RestDot> dots = new ArrayList<>(baseline.dots());
+        Detection additional =
+                PolyphonicHalfRests.detectWithDots(gray, width, height, measures, staffs, notes);
+        var candidates = new ArrayList<>(additional.rests());
+        var candidateDots = new ArrayList<>(additional.dots());
+        for (var staff : staffs)
+            if (staff.pitchTrack() != null) {
+                var curved =
+                        detectOnPrintedStaff(
+                                gray, width, height, measures, staff, notes, false, true, true);
+                candidates.addAll(curved.rests());
+                candidateDots.addAll(curved.dots());
+            }
+        for (var rest : candidates) {
+            boolean duplicate =
+                    combined.stream()
+                            .anyMatch(
+                                    old ->
+                                            old.measureIndex() == rest.measureIndex()
+                                                    && old.staffIndex() == rest.staffIndex()
+                                                    && old.staffCount() == rest.staffCount()
+                                                    && Math.abs(
+                                                                    old.positionInMeasure()
+                                                                            - rest
+                                                                                    .positionInMeasure())
+                                                            < .025f
+                                                    && Math.abs(old.pageY() - rest.pageY())
+                                                            < Math.max(
+                                                                    .001f,
+                                                                    Math.max(
+                                                                            old.pageHeight(),
+                                                                            rest.pageHeight())));
+            if (!duplicate) {
+                combined.add(rest);
+                for (var dot : candidateDots) if (dot.rest().equals(rest)) dots.add(dot);
+            }
+        }
+        return collected(combined, dots);
+    }
+
+    private static Detection detectWithDotsReleased(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
         Detection baseline = detectWithDotsStandard(gray, width, height, measures, staffs, notes);
         Detection contact =
                 BeamedHeadQuarterRests.detectWithDots(gray, width, height, measures, staffs, notes);
@@ -1635,6 +1684,20 @@ final class SixteenthRestDetector {
             List<ScoreNoteEvent> notes,
             boolean faintShapes,
             boolean contactOnly) {
+        return detectOnPrintedStaff(
+                gray, width, height, measures, staff, notes, faintShapes, contactOnly, false);
+    }
+
+    private static Detection detectOnPrintedStaff(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            Staff staff,
+            List<ScoreNoteEvent> notes,
+            boolean faintShapes,
+            boolean contactOnly,
+            boolean halfOnly) {
         int first = Math.max(0, (int) Math.floor(staff.top() - staff.gap() * 6));
         int last = Math.min(height, (int) Math.ceil(staff.bottom() + staff.gap() * 6.4f));
         if (last <= first) return new Detection(List.of(), List.of());
@@ -1718,23 +1781,31 @@ final class SixteenthRestDetector {
                         staff.index(),
                         staff.count());
         Detection detected =
-                contactOnly
-                        ? BeamedHeadQuarterRests.detectWithDots(
+                halfOnly
+                        ? PolyphonicHalfRests.detectWithDots(
                                 flat,
                                 width,
                                 bandHeight,
                                 mappedMeasures,
                                 List.of(rectified),
                                 mappedNotes)
-                        : detectWithDots(
-                                flat,
-                                width,
-                                bandHeight,
-                                mappedMeasures,
-                                List.of(rectified),
-                                mappedNotes,
-                                false,
-                                faintShapes);
+                        : contactOnly
+                                ? BeamedHeadQuarterRests.detectWithDots(
+                                        flat,
+                                        width,
+                                        bandHeight,
+                                        mappedMeasures,
+                                        List.of(rectified),
+                                        mappedNotes)
+                                : detectWithDots(
+                                        flat,
+                                        width,
+                                        bandHeight,
+                                        mappedMeasures,
+                                        List.of(rectified),
+                                        mappedNotes,
+                                        false,
+                                        faintShapes);
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
         for (ScoreRestEvent rest : detected.rests())
