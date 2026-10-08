@@ -45,6 +45,7 @@ final class SixteenthRestDetector {
         Detection original = detectWithDots(gray, width, height, measures, staffs, notes, true);
         var joined = joinedEighthRests(gray, width, height, measures, staffs, notes);
         joined.addAll(independentUpQuarterRests(gray, width, height, measures, staffs, notes));
+        joined.addAll(independentDownQuarterContacts(gray, width, height, measures, staffs, notes));
         if (!joined.isEmpty()) {
             var combined = new ArrayList<>(original.rests());
             combined.addAll(joined);
@@ -624,6 +625,201 @@ final class SixteenthRestDetector {
         return found;
     }
 
+    /** A separate downward quarter can occlude the lower foot of another voice's rest. */
+    private static List<ScoreRestEvent> independentDownQuarterContacts(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
+        var found = new ArrayList<ScoreRestEvent>();
+        if (gray == null || gray.length != (long) width * height || notes == null) return found;
+        for (var owner : notes) {
+            if (owner == null
+                    || owner.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || owner.beamCount() != 0
+                    || owner.unbeamedDurationBeats() != 1
+                    || owner.augmentationDots() != 0
+                    || owner.tupletDivisor() != 1
+                    || owner.tupletNormalNotes() != 1
+                    || owner.crossStaffBeam()
+                    || owner.tiedFromPrevious()
+                    || (owner.articulations() & NoteOrnament.GRACE) != 0
+                    || owner.measureIndex() < 0
+                    || owner.measureIndex() >= measures.size()
+                    || !Float.isFinite(owner.positionInMeasure())
+                    || owner.positionInMeasure() < 0
+                    || owner.positionInMeasure() > 1
+                    || !Float.isFinite(owner.pageY())) continue;
+            var region = measures.get(owner.measureIndex());
+            float hx =
+                    (region.left() + owner.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            float hy = owner.pageY() * height;
+            for (var staff : staffs) {
+                if (staff.index() != owner.staffIndex() || staff.count() != owner.staffCount())
+                    continue;
+                float[] frame = restFrame(staff, hx);
+                float gap = frame[1], printedTop = frame[0] - 4 * gap;
+                if (!Float.isFinite(gap)
+                        || gap < 4
+                        || gap > height * .25f
+                        || !Float.isFinite(frame[0])
+                        || !Float.isFinite(hx)
+                        || !Float.isFinite(hy)
+                        || PrintedStemDirection.detect(gray, width, height, hx, hy, gap) != -1)
+                    continue;
+                int left = Math.max(0, Math.round(hx - gap * 1.1f));
+                int right = Math.min(width - 1, Math.round(hx + gap * .9f));
+                int top = Math.max(0, Math.round(hy - gap * 2.8f)),
+                        bottom = Math.min(height - 1, Math.round(hy + gap * .6f));
+                if (left < region.left() * width
+                        || right > region.right() * width
+                        || top < region.top() * height
+                        || bottom > region.bottom() * height) continue;
+                boolean[] line = new boolean[bottom - top + 1];
+                for (int y = top; y <= bottom; y++)
+                    for (int j = 0; j < 5; j++)
+                        if (Math.abs(y - (printedTop + j * gap)) <= Math.max(1, gap * .12f))
+                            line[y - top] = true;
+                int[] counts = new int[line.length],
+                        ls = new int[line.length],
+                        rs = new int[line.length];
+                java.util.Arrays.fill(ls, right + 1);
+                java.util.Arrays.fill(rs, left - 1);
+                for (int y = top; y <= bottom; y++)
+                    if (!line[y - top])
+                        for (int x = left; x <= right; x++)
+                            if ((gray[y * width + x] & 255) < 170) {
+                                counts[y - top]++;
+                                ls[y - top] = Math.min(ls[y - top], x);
+                                rs[y - top] = Math.max(rs[y - top], x);
+                            }
+                int headTop = -1, headRows = 0;
+                for (int y = Math.max(top, Math.round(hy - gap * .65f)); y <= bottom; y++)
+                    if (!line[y - top]) {
+                        if (headTop < 0 && counts[y - top] >= gap * .35f) headTop = y;
+                        if (Math.abs(y - hy) < gap * .45f
+                                && counts[y - top] >= gap
+                                && counts[y - top] <= gap * 1.85f) headRows++;
+                    }
+                if (headTop < 0
+                        || headRows < 3
+                        || headTop > hy - gap * .2f
+                        || headTop < hy - gap * .65f) continue;
+                int inkTop = headTop,
+                        inkBottom = top - 1,
+                        inkLeft = right + 1,
+                        inkRight = left - 1,
+                        peak = -1,
+                        peakCount = 0;
+                for (int y = top; y < headTop; y++)
+                    if (!line[y - top] && counts[y - top] > 0) {
+                        inkTop = Math.min(inkTop, y);
+                        inkBottom = y;
+                        inkLeft = Math.min(inkLeft, ls[y - top]);
+                        inkRight = Math.max(inkRight, rs[y - top]);
+                        if (counts[y - top] > peakCount) {
+                            peakCount = counts[y - top];
+                            peak = y;
+                        }
+                    }
+                if (peak >= 0) {
+                    int plateauLast = peak;
+                    for (int y = peak + 1; y < headTop; y++) {
+                        if (line[y - top]) continue;
+                        if (counts[y - top] != peakCount) break;
+                        plateauLast = y;
+                    }
+                    peak = (peak + plateauLast) / 2;
+                }
+                if (inkTop <= top
+                        || inkBottom < headTop - 3
+                        || peak < 0
+                        || peakCount < gap * .6f
+                        || peakCount > gap * 1.3f
+                        || inkRight - inkLeft < gap * .7f
+                        || inkRight - inkLeft > gap * 1.6f
+                        || inkBottom - inkTop < gap
+                        || inkBottom - inkTop > gap * 1.8f
+                        || peak - inkTop < gap * .2f
+                        || peak - inkTop > gap * .65f
+                        || inkBottom - peak < gap * .55f
+                        || inkBottom - peak > gap * 1.35f) continue;
+                int tailFirst = -1, tailLast = -1, tailRows = 0;
+                boolean bad = false;
+                for (int y = peak + Math.max(2, Math.round(gap * .3f)); y < headTop; y++)
+                    if (!line[y - top]) {
+                        if (counts[y - top] < 1 || counts[y - top] > gap * .35f) {
+                            bad = true;
+                            break;
+                        }
+                        if (tailFirst < 0) tailFirst = y;
+                        tailLast = y;
+                        tailRows++;
+                        if (tailFirst != y) {
+                            float before = (ls[tailFirst - top] + rs[tailFirst - top]) * .5f;
+                            float now = (ls[y - top] + rs[y - top]) * .5f;
+                            if (now > before + gap * .1f) {
+                                bad = true;
+                                break;
+                            }
+                        }
+                    }
+                if (bad || tailRows < Math.max(3, Math.round(gap * .3f)) || tailLast < 0) continue;
+                float lastX = (ls[tailLast - top] + rs[tailLast - top]) * .5f;
+                float firstX = (ls[tailFirst - top] + rs[tailFirst - top]) * .5f;
+                // A rest tail descends leftward. A straight shaft is not that evidence.
+                if (firstX - lastX < Math.max(1, gap * .1f)) continue;
+                // Prove leftward motion before the occluding head's rounded rim.
+                // Its first few pixels must not provide the diagonal evidence.
+                int interiorLast = -1;
+                for (int y = tailFirst; y <= headTop - Math.max(2, Math.round(gap * .25f)); y++)
+                    if (!line[y - top]) interiorLast = y;
+                if (interiorLast <= tailFirst) continue;
+                float interiorX = (ls[interiorLast - top] + rs[interiorLast - top]) * .5f;
+                if (firstX - interiorX < Math.max(1, gap * .06f)) continue;
+                if (inkRight - lastX < gap * .2f || Math.abs(lastX - hx) > gap * .65f) continue;
+                // The last independently visible tail pixel must enter the measured head body.
+                boolean contact = false;
+                for (int x = Math.max(left, Math.round(lastX) - 1);
+                        x <= Math.min(right, Math.round(lastX) + 1);
+                        x++) if ((gray[headTop * width + x] & 255) < 170) contact = true;
+                if (!contact) continue;
+                boolean otherOwner = false;
+                for (var n : notes)
+                    if (n != owner && n.measureIndex() == owner.measureIndex()) {
+                        float
+                                x =
+                                        (region.left()
+                                                        + n.positionInMeasure()
+                                                                * (region.right() - region.left()))
+                                                * width,
+                                y = n.pageY() * height;
+                        if (Math.abs(x - (inkLeft + inkRight) * .5f) < gap * .8f
+                                && y >= inkTop - gap * .5f
+                                && y <= inkBottom + gap * .5f) {
+                            otherOwner = true;
+                            break;
+                        }
+                    }
+                if (otherOwner) continue;
+                float centerX = (inkLeft + inkRight) * .5f / width;
+                found.add(
+                        new ScoreRestEvent(
+                                owner.measureIndex(),
+                                (centerX - region.left()) / (region.right() - region.left()),
+                                (inkTop + inkBottom) * .5f / height,
+                                (inkBottom - inkTop + 1f) / height,
+                                owner.staffIndex(),
+                                owner.staffCount(),
+                                .5));
+            }
+        }
+        return found;
+    }
+
     private static List<ScoreRestEvent> joinedEighthRests(
             byte[] gray,
             int width,
@@ -655,16 +851,24 @@ final class SixteenthRestDetector {
                                 : staff.pitchTrack().at(hx);
                 float gap = frame[1], top = frame[0] - gap * 4;
                 if (gap < 4 || !Float.isFinite(gap)) continue;
-                for (int level = 0; level <= 4; level++) {
+                boolean independentUp =
+                        independentUpQuarterHead(gray, width, height, owner, hx, hy, gap, top);
+                for (int level = 0; level <= (independentUp ? 5 : 4); level++) {
                     int foot = Math.round(top + level * gap);
                     if (foot - hy < gap * .8f || foot - hy > gap * 2.3f) continue;
-                    int start = Math.max(Math.round(hy + gap * .5f), foot - Math.round(gap * .9f)),
+                    int
+                            start =
+                                    Math.max(
+                                            Math.round(hy + gap * (independentUp ? .6f : .5f)),
+                                            foot - Math.round(gap * .9f)),
                             end = foot - 2;
                     if (start < 0 || end >= height || end - start < gap * .7f) continue;
                     float tail = joinedRestTail(gray, width, height, hx, start, end, gap);
                     if (!Float.isFinite(tail)
-                            || !continuingQuarterShaft(
-                                    gray, width, height, hx, hy, tail, foot, gap)) continue;
+                            || !(independentUp
+                                    || continuingQuarterShaft(
+                                            gray, width, height, hx, hy, tail, foot, gap)))
+                        continue;
                     float x = tail / width,
                             pos = (x - region.left()) / (region.right() - region.left());
                     if (pos < 0 || pos > 1) continue;
@@ -757,6 +961,48 @@ final class SixteenthRestDetector {
             }
         }
         return result;
+    }
+
+    /** The quarter's actual upward shaft and broad head are independent of the tail below it. */
+    private static boolean independentUpQuarterHead(
+            byte[] gray,
+            int width,
+            int height,
+            ScoreNoteEvent note,
+            float hx,
+            float hy,
+            float gap,
+            float staffTop) {
+        if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                || note.beamCount() != 0
+                || note.unbeamedDurationBeats() != 1
+                || note.augmentationDots() != 0
+                || note.tupletDivisor() != 1
+                || note.tupletNormalNotes() != 1
+                || note.crossStaffBeam()
+                || note.tiedFromPrevious()
+                || (note.articulations() & NoteOrnament.GRACE) != 0
+                || !Float.isFinite(hx)
+                || !Float.isFinite(hy)
+                || PrintedStemDirection.detect(gray, width, height, hx, hy, gap) != 1) return false;
+        int rows = 0, upperRows = 0;
+        for (int y = Math.max(0, Math.round(hy - gap * .35f));
+                y <= Math.min(height - 1, Math.round(hy + gap * .15f));
+                y++) {
+            boolean line = false;
+            for (int j = 0; j < 5; j++)
+                if (Math.abs(y - (staffTop + j * gap)) <= Math.max(1, gap * .12f)) line = true;
+            if (line) continue;
+            int ink = 0;
+            for (int x = Math.max(0, Math.round(hx - gap * .9f));
+                    x <= Math.min(width - 1, Math.round(hx + gap * .9f));
+                    x++) if ((gray[y * width + x] & 255) < 170) ink++;
+            if (ink >= gap * .75f && ink <= gap * 1.85f) {
+                rows++;
+                if (y <= hy - gap * .1f) upperRows++;
+            }
+        }
+        return rows >= 3 && upperRows >= 2;
     }
 
     private static float joinedRestTail(

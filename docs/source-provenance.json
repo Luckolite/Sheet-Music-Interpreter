@@ -415,14 +415,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "a4b6e14d690edc89e03695e92f3bec90376e8cb68f0d92ba318e30fd65f06bb3",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "source_normalized_sha256": "79dff25bd5d0a7dd061c4c4694cd7b98fe0bd84a75e953c604ea89be83fe20ef",
+      "source_sha256": "e41e3e9bdaace045ea744f003e7e5bd491ebe13909b8d5b4ea0df8ea99da8c40",
+      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
+      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
+      "source_normalized_sha256": "103940b925b5334685e6919d37bd31b19ba48ec335dff6d22289ad7f6c1b0789",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
+      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1420,12 +1420,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "a995dfd2d5c80a788cded2a3a28459b38103d375ab24e452bf47b10c1fa1e225",
-      "source_normalized_sha256": "263fed1d3b7da3b2f2e9efd9ee684f33c8253bb7cb2cbe98f4b1ec4d725837a5",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "source_sha256": "8bc360c8021143bd4ba1266a49bb9b4c6f045eee3f9fb965adb106fd2686270d",
+      "source_normalized_sha256": "b83cb7022543e02520aa60e06c8666af5672676f4e86859c2e70a7474a11862a",
+      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
+      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
+      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1480,12 +1480,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d5ff7e259683bbf9511ae9ac65e463dc0c831cbba181edff27ccfd850251f7eb",
-      "source_normalized_sha256": "368b48a77d766ca5dd0f758777363a1f1077040a095c26aa9fbe417833f95a8c",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "review_note": "Recognition18 to19 derived cache identity; complete AST parity after the existing relative semantic import and standalone license header. Current and legacy guide record layouts are unchanged.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "source_sha256": "d57792f545d409ab5d086d92bfac3fdfd2040cf7133df49d8d0ee84610c39d49",
+      "source_normalized_sha256": "8dcadf7f9c6d3b2c4a1f48de84a115ea7c264cac9637c3aaee2334d4a540b9b6",
+      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
+      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
+      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3927,5 +3927,30 @@
       "music_sheets_v4_float16.tflite": "92ab7c34c27cb704d95f0cde247b3611d1563fdf1c114b9f9817abb18a7b6a93"
     },
     "private_source_material_included": false
+  },
+  "recognition21_contact_rest_review": {
+    "app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
+    "recognition_revision": 21,
+    "audio_revision": 73,
+    "guide_version": 282,
+    "changed_mapped_sources": [
+      "SixteenthRestDetector.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "source_sha256": {
+      "SixteenthRestDetector.java": "e41e3e9bdaace045ea744f003e7e5bd491ebe13909b8d5b4ea0df8ea99da8c40",
+      "GuideCacheIdentity.java": "8bc360c8021143bd4ba1266a49bb9b4c6f045eee3f9fb965adb106fd2686270d",
+      "guide_writer.py": "d57792f545d409ab5d086d92bfac3fdfd2040cf7133df49d8d0ee84610c39d49"
+    },
+    "new_production_helpers": [],
+    "synthetic_tests": [
+      "DownQuarterContactRestTest.java",
+      "UpQuarterCapRestTest.java"
+    ],
+    "synthetic_test_count": 40,
+    "standalone_java_tests": 7169,
+    "baseline_synthetic_failures": 8,
+    "review": "Rest contours may contact an independent quarter head. Downward owners require a measured upper bulb and leftward tail before the head rim. Upward owners require a physical quarter shaft, broad head and complete terminated tail. Existing physical triplet witnesses determine performed duration; independent quarters stay unscaled. Android-specific audio cache epoch changes are mirrored in the Hub and native audio renderer, with no standalone record or preview format change. Weights, dependencies, fonts and APIs are unchanged. No private score scans, libraries, identifiers or logs are included. Procedural checks and retained private-page replay do not establish whole-score or whole-library accuracy."
   }
 }

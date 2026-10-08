@@ -799,3 +799,15 @@ Apache-2.0 procedural positive and rejection controls cover the port; existing
 font-derived templates retain their SIL OFL notices. Private score images,
 libraries, device logs and identifiers are excluded, and these controls do not
 establish whole-library recognition accuracy.
+
+Recognition21 recovers an independently visible eighth-rest contour when a
+quarter head occludes part of its body. Downward owners retain a measured bulb
+and leftward tail before the head rim; upward owners retain a printed quarter
+shaft, broad head and complete terminated tail. Existing physical triplet
+witnesses determine the rest duration and preserve the independent quarter
+voice. Forty original Apache-2.0 procedural controls cover valid contacts and
+reject incomplete bodies, straight shafts, borrowed head-rim motion and missing
+voice evidence. Recognition21 and Android/Hub audio73 invalidate prior derived
+caches while guide282 records, standalone APIs, models and dependencies remain
+unchanged. No private score images or library data are included. These controls
+do not establish whole-score or whole-library recognition accuracy.

@@ -1,10 +1,8 @@
-// Copyright 2026 Luckolite
-// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 /** Recognition revisions invalidate derived results without changing their binary record layout. */
 public final class GuideCacheIdentity {
-    public static final int RECOGNITION_REVISION = 20;
+    public static final int RECOGNITION_REVISION = 21;
 
     private GuideCacheIdentity() {}
 
