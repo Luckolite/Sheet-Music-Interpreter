@@ -161,6 +161,10 @@ public final class SheetInterpreter {
         measures =
                 PrintedMeasureRhythmGuard.reconcile(
                         rawMeasures, measures, labels, gray, width, height);
+        int firstMeasureNumber = MeasureNumberReconciler.firstMeasureNumber(measures, numbers);
+        if (firstMeasureNumber == 0 && ocr != null)
+            firstMeasureNumber =
+                    ocr.firstSystemMeasureNumber(labels, gray, width, height, measures);
         var score = OmrScoreInterpreter.analyze(labels, gray, width, height, measures);
         var rhythm =
                 TripletRhythmDetector.withRests(
@@ -218,6 +222,13 @@ public final class SheetInterpreter {
         var techniqueWords = new java.util.ArrayList<>(words);
         if (ocr != null)
             techniqueWords.addAll(ocr.techniques(gray, width, height, staffs, measures, notes));
+        var articulationWords = new java.util.ArrayList<>(techniqueWords);
+        for (var word : dynamicWords)
+            if (!ExpressiveDirectionText.parse(word.text()).isEmpty()
+                    && !articulationWords.contains(word)) articulationWords.add(word);
+        notes =
+                PrintedWordArticulations.apply(
+                        articulationWords, staffs, measures, notes, labels, gray, width, height);
         var meters = new java.util.ArrayList<>(annotations.meters);
         if (ocr != null)
             for (var meter : ocr.meters(labels, gray, width, height, measures, notes))
@@ -239,7 +250,7 @@ public final class SheetInterpreter {
                         new ScorePageInterpretation(
                                 measures,
                                 notes,
-                                MeasureNumberReconciler.firstMeasureNumber(measures, numbers),
+                                firstMeasureNumber,
                                 score.keyChanges(),
                                 TempoChangeDetector.detect(
                                         TempoChangeDetector.withIsolatedDigits(
@@ -273,33 +284,34 @@ public final class SheetInterpreter {
                         width,
                         height,
                         !tabs.isEmpty());
-        var withExpressions=ScoreExpressionDetector.apply(
-                ScoreFermataDetector.withFermatas(
-                        finalScore
-                                .withExpressiveEvents(
-                                        finalScore.measures().isEmpty()
-                                                ? List.of()
-                                                : dynamicDetection.events())
-                                .withPlaybackDirections(
-                                        ScoreNavigationDetector.detect(
-                                                words,
-                                                NavigationSegnoGlyphs.detect(
-                                                        gray, width, height, staffs),
-                                                staffs,
-                                                finalScore.measures(),
-                                                width,
-                                                height)),
-                        labels,
+        var withExpressions =
+                ScoreExpressionDetector.apply(
+                        ScoreFermataDetector.withFermatas(
+                                finalScore
+                                        .withExpressiveEvents(
+                                                finalScore.measures().isEmpty()
+                                                        ? List.of()
+                                                        : dynamicDetection.events())
+                                        .withPlaybackDirections(
+                                                ScoreNavigationDetector.detect(
+                                                        words,
+                                                        NavigationSegnoGlyphs.detect(
+                                                                gray, width, height, staffs),
+                                                        staffs,
+                                                        finalScore.measures(),
+                                                        width,
+                                                        height)),
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                staffs),
+                        techniqueWords,
+                        staffs,
                         gray,
                         width,
                         height,
-                        staffs),
-                techniqueWords,
-                staffs,
-                gray,
-                width,
-                height,
-                GlyphResources.expressions());
-        return ScorePedalDetector.apply(withExpressions,gray,width,height,staffs);
+                        GlyphResources.expressions());
+        return ScorePedalDetector.apply(withExpressions, gray, width, height, staffs);
     }
 }

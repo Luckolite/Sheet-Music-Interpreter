@@ -7,23 +7,89 @@ final class PairedGraceBeamInk {
     private PairedGraceBeamInk() {}
 
     static int count(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 1.5f, 3f, Float.NaN);
+        return count(gray, width, height, a, b, gap, 1.5f, 3f, Float.NaN, null);
     }
 
     static int countFullSize(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 2.2f, 3f, Float.NaN);
+        return count(gray, width, height, a, b, gap, 2.2f, 3f, Float.NaN, null);
     }
 
     /** Full-size written rails may join neighboring pitches across five staff gaps.
      * Every accepted core still crosses all five existing shaft-to-shaft probes. */
     static int countPrintedSize(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
-        return count(gray, width, height, a, b, gap, 2.2f, 5f, Float.NaN);
+        return count(gray, width, height, a, b, gap, 2.2f, 5f, Float.NaN, null);
     }
 
     /** Confirm full-size rails against the independent local printed rules. */
     static int countFullSize(
             byte[] gray, int width, int height, int[] a, int[] b, float gap, float staffTop) {
-        return count(gray, width, height, a, b, gap, 2.2f, 3f, staffTop);
+        return count(gray, width, height, a, b, gap, 2.2f, 3f, staffTop, null);
+    }
+
+    static int countFullSize(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float staffTop,
+            StaffPitchTrack track) {
+        return count(gray, width, height, a, b, gap, 2.2f, 3f, staffTop, track);
+    }
+
+    /** Five freestanding probes beyond independently transported full-size shafts. */
+    static int countTransported(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float staffTop,
+            StaffPitchTrack track) {
+        if (gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || track == null
+                || !track.verified()
+                || a == null
+                || b == null
+                || a.length != 3
+                || b.length != 3
+                || !Float.isFinite(gap)
+                || gap < 4
+                || gap > Math.min(width, height) * .25f
+                || a[0] < 1
+                || a[0] >= width - 1
+                || b[0] < 1
+                || b[0] >= width - 1
+                || a[1] < 0
+                || a[1] >= height
+                || b[1] < 0
+                || b[1] >= height
+                || Math.abs(a[2]) != 1
+                || a[2] != b[2]) return 0;
+        int span = Math.abs(a[0] - b[0]);
+        if (span < gap * .95f || span > gap * 3 || Math.abs(a[1] - b[1]) > gap * .75f) return 0;
+        int sample = Math.max(4, Math.round(gap));
+        float slopeA = (track.at(a[0] + sample)[0] - track.at(a[0] - sample)[0]) / (2 * sample);
+        float slopeB = (track.at(b[0] + sample)[0] - track.at(b[0] - sample)[0]) / (2 * sample);
+        float axis = b[0] > a[0] ? 1 : -1;
+        float near = (2 + Math.max(0, slopeA * a[2] * axis * gap * 2.2f)) / span;
+        float far = 1 - (2 + Math.max(0, -slopeB * b[2] * axis * gap * 2.2f)) / span;
+        if (near >= .25f || far <= .75f) return 0;
+        float[] probes = {near, .25f, .5f, .75f, far};
+        int maximum = 0;
+        for (float fraction : new float[] {.5f, .75f, 1f})
+            maximum =
+                    Math.max(
+                            maximum,
+                            countAtContrast(
+                                    gray, width, height, a, b, gap, fraction, 2.2f, probes,
+                                    staffTop, track));
+        return maximum;
     }
 
     private static int count(
@@ -35,7 +101,8 @@ final class PairedGraceBeamInk {
             float gap,
             float inside,
             float maximumSpan,
-            float staffTop) {
+            float staffTop,
+            StaffPitchTrack track) {
         if (gray == null || a == null || b == null || gap < 4 || a[2] != b[2]) return 0;
         int span = Math.abs(a[0] - b[0]);
         // Compact ornaments can rise one staff space between their stems. The
@@ -52,7 +119,8 @@ final class PairedGraceBeamInk {
         for (float fraction : new float[] {.5f, .75f, 1f}) {
             int count =
                     countAtContrast(
-                            gray, width, height, a, b, gap, fraction, inside, probes, staffTop);
+                            gray, width, height, a, b, gap, fraction, inside, probes, staffTop,
+                            track);
             if (count > 0 && inside == 1.5f) return count;
             maximum = Math.max(maximum, count);
         }
@@ -65,7 +133,7 @@ final class PairedGraceBeamInk {
                     int count =
                             countAtContrast(
                                     gray, width, height, a, b, gap, fraction, inside, columns,
-                                    staffTop);
+                                    staffTop, track);
                     if (count == 2) return count;
                 }
         // A returning slur can extend one stem beyond its actual beam tip.
@@ -82,7 +150,7 @@ final class PairedGraceBeamInk {
                         int count =
                                 countAtContrast(
                                         gray, width, height, first, last, gap, fraction, inside,
-                                        probes, staffTop);
+                                        probes, staffTop, track);
                         if (count >= 2) return count;
                     }
                 }
@@ -99,7 +167,8 @@ final class PairedGraceBeamInk {
             float fraction,
             float inside,
             float[] columns,
-            float staffTop) {
+            float staffTop,
+            StaffPitchTrack track) {
         int wanted = 0;
         float[] previous = null;
         for (float f : columns) {
@@ -129,6 +198,33 @@ final class PairedGraceBeamInk {
                                     y - 1)) {
                         start = -1;
                         continue;
+                    }
+                    if (track != null && track.verified()) {
+                        float[] physical = track.at(x);
+                        if (LocalPrintedStaffBand.matches(
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        physical[0] - 4 * physical[1],
+                                        physical[1],
+                                        threshold,
+                                        start,
+                                        y - 1)
+                                || PrintedRuleInkOwnership.matchesWithNarrowReference(
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        start,
+                                        y - 1,
+                                        physical[0] - 4 * physical[1],
+                                        physical[1],
+                                        0,
+                                        track)) {
+                            start = -1;
+                            continue;
+                        }
                     }
                     if (size >= Math.max(3, Math.round(gap * (inside == 1.5f ? .18f : .28f)))
                             && size <= gap * (inside == 1.5f ? .6f : .8f)) {

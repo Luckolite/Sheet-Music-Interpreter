@@ -79,12 +79,28 @@ final class PortableNoteOrnaments {
                         OmrScoreInterpreter.techniqueStaffs(labels, gray, w, h, measures),
                         notes,
                         h);
-        return applyWithAlignedStaffs(recognizer, gray, w, h, measures, notes, trills, staffs);
+        return applyWithAlignedStaffs(
+                recognizer, labels, gray, w, h, measures, notes, trills, staffs);
     }
 
     /** Reuse only geometry computed for these same rasters, measures and unmodified notes. */
     static List<ScoreNoteEvent> applyWithAlignedStaffs(
             PortableOrnamentGlyphs recognizer,
+            byte[] gray,
+            int w,
+            int h,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            List<PlayingTechniqueDetector.Word> trills,
+            List<PlayingTechniqueDetector.Staff> staffs) {
+        return applyWithAlignedStaffs(
+                recognizer, null, gray, w, h, measures, notes, trills, staffs);
+    }
+
+    /** Retained labels permit only a physically verified local staff frame. */
+    static List<ScoreNoteEvent> applyWithAlignedStaffs(
+            PortableOrnamentGlyphs recognizer,
+            byte[] labels,
             byte[] gray,
             int w,
             int h,
@@ -118,7 +134,7 @@ final class PortableNoteOrnaments {
                             note.measureIndex()));
         }
         int[] marks = new int[notes.size()];
-        for (var found : detect(recognizer, gray, w, h, staffs, anchors, trills))
+        for (var found : detect(recognizer, labels, gray, w, h, staffs, anchors, trills))
             if (notes.get(found.noteIndex()).kind() == ScoreNoteEvent.Kind.PITCHED)
                 marks[found.noteIndex()] |= found.marks();
         var slideStaffs =
@@ -271,7 +287,24 @@ final class PortableNoteOrnaments {
             List<PlayingTechniqueDetector.Staff> staffs,
             List<Anchor> notes,
             List<PlayingTechniqueDetector.Word> trills) {
-        var boxes = boxes(gray, width, height, staffs);
+        return detect(recognizer, null, gray, width, height, staffs, notes, trills);
+    }
+
+    static List<Found> detect(
+            PortableOrnamentGlyphs recognizer,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<Anchor> notes,
+            List<PlayingTechniqueDetector.Word> trills) {
+        var tracks = ornamentTracks(labels, gray, width, height, staffs);
+        if (!staffs.isEmpty())
+            gray =
+                    RestPaperTone.normalizeOrdinaryRestInk(
+                            gray, width, height, staffs.get(0).gap(), 220f);
+        var boxes = boxes(gray, width, height, staffs, tracks);
         List<Found> found = new ArrayList<>();
         var repeatedTrills = new PageTrillEvidence(recognizer, gray, width, height, boxes, trills);
         Set<Bounds> textTrills = new HashSet<>();
@@ -337,8 +370,8 @@ final class PortableNoteOrnaments {
                 if (n.staff < 0) continue;
                 var s = staffs.get(n.staff);
                 // Ornament symbols belong above the staff, not in lyrics/dynamics below it.
-                if (box.bottom > s.top() + s.gap() * .1 || box.bottom < s.top() - s.gap() * 5.5)
-                    continue;
+                float top = ornamentTop(s, tracks.get(n.staff), box.exactCenterX());
+                if (box.bottom > top + s.gap() * .1 || box.bottom < top - s.gap() * 5.5) continue;
                 float dx = (box.exactCenterX() - n.x) / n.gap,
                         dy = (n.y - box.exactCenterY()) / n.gap;
                 boolean turn =
@@ -401,7 +434,13 @@ final class PortableNoteOrnaments {
                                                     upper
                                                             ? box.top - 1
                                                             : Math.min(
-                                                                    staff.top() - gap * .15f,
+                                                                    ornamentTop(
+                                                                                    staff,
+                                                                                    tracks.get(
+                                                                                            anchor.staff),
+                                                                                    box
+                                                                                            .exactCenterX())
+                                                                            - gap * .15f,
                                                                     box.bottom + gap * 2.5f))));
                     Bounds ink = inkBounds(gray, width, slot);
                     if (ink == null || ink.height() < gap * .5f || ink.height() > gap * 2.2f)
@@ -431,8 +470,56 @@ final class PortableNoteOrnaments {
         return right <= left ? null : new Bounds(left, top, right, bottom);
     }
 
+    private static List<StaffPitchTrack> ornamentTracks(
+            byte[] labels, byte[] gray, int w, int h, List<PlayingTechniqueDetector.Staff> staffs) {
+        List<StaffPitchTrack> tracks = new ArrayList<>();
+        var seeds = RegionalStaffSeeds.detect(labels, gray, w, h);
+        for (var staff : staffs) {
+            RegionalStaffSeeds.Seed selected = null;
+            float best = Float.POSITIVE_INFINITY;
+            for (var seed : seeds) {
+                if (seed.gap() < staff.gap() * .75f || seed.gap() > staff.gap() * 1.25f) continue;
+                float distance =
+                        Math.abs((seed.top() + seed.bottom() - staff.top() - staff.bottom()) * .5f);
+                if (distance <= staff.gap() * 2 && distance < best) {
+                    selected = seed;
+                    best = distance;
+                }
+            }
+            StaffPitchTrack track =
+                    selected == null
+                            ? null
+                            : RegionalStaffSeeds.track(labels, gray, w, h, selected);
+            if (track == null)
+                track =
+                        StaffPitchTrack.detectForMeasures(
+                                gray, w, h, staff.top(), staff.bottom(), staff.gap());
+            tracks.add(track);
+        }
+        return tracks;
+    }
+
+    private static float ornamentTop(
+            PlayingTechniqueDetector.Staff staff, StaffPitchTrack track, float x) {
+        if (track == null) return staff.top();
+        float[] local = track.at(x);
+        return local[0] - local[1] * 4;
+    }
+
     static List<Bounds> boxes(
             byte[] gray, int w, int h, List<PlayingTechniqueDetector.Staff> staffs) {
+        if (!staffs.isEmpty())
+            gray = RestPaperTone.normalizeOrdinaryRestInk(gray, w, h, staffs.get(0).gap(), 220f);
+        var tracks = ornamentTracks(null, gray, w, h, staffs);
+        return boxes(gray, w, h, staffs, tracks);
+    }
+
+    private static List<Bounds> boxes(
+            byte[] gray,
+            int w,
+            int h,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<StaffPitchTrack> tracks) {
         boolean[] seen = new boolean[gray.length];
         int[] queue = new int[gray.length];
         List<Bounds> parts = new ArrayList<>();
@@ -460,9 +547,11 @@ final class PortableNoteOrnaments {
                     }
             }
             if (end < 5) continue;
-            for (var s : staffs)
-                if (b <= s.top() + s.gap() * .1
-                        && b >= s.top() - s.gap() * 7
+            for (int staffIndex = 0; staffIndex < staffs.size(); staffIndex++) {
+                var s = staffs.get(staffIndex);
+                float top = ornamentTop(s, tracks.get(staffIndex), (l + r) * .5f);
+                if (b <= top + s.gap() * .1
+                        && b >= top - s.gap() * 7
                         && r - l <= s.gap() * 4.8
                         && b - t <= s.gap() * 2.8
                         && b - t >= s.gap() * .3
@@ -470,6 +559,7 @@ final class PortableNoteOrnaments {
                     parts.add(new Bounds(l, t, r + 1, b + 1));
                     break;
                 }
+            }
         }
         // The letters in tr may be separate components. Merge only letters on the same
         // baseline; dots and vertically placed auxiliary accidentals remain separate.

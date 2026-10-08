@@ -18,6 +18,22 @@ final class StemOwnedBeamTip {
             int boxHeight,
             int area,
             float gap) {
+        return pairedCorner(gray, w, h, a, b, cx, cy, boxWidth, boxHeight, area, gap, false);
+    }
+
+    static boolean pairedCorner(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int boxWidth,
+            int boxHeight,
+            int area,
+            float gap,
+            boolean completeNearStrip) {
         if (gray == null
                 || a == null
                 || b == null
@@ -27,7 +43,7 @@ final class StemOwnedBeamTip {
                         || (boxWidth <= gap * .85f
                                 && boxHeight <= gap * .85f
                                 && area <= gap * gap * .5f))) return false;
-        return ownedPair(gray, w, h, a, b, cx, cy, gap, 1.1f);
+        return ownedPair(gray, w, h, a, b, cx, cy, gap, 1.1f, completeNearStrip);
     }
 
     static boolean mergedCorner(
@@ -152,7 +168,8 @@ final class StemOwnedBeamTip {
             float cx,
             float cy,
             float gap,
-            float maximumOffset) {
+            float maximumOffset,
+            boolean completeNearStrip) {
         int[] left = a[0] < b[0] ? a : b, right = a[0] < b[0] ? b : a;
         float dx = right[0] - left[0];
         if (dx < gap * 1.2f
@@ -202,7 +219,10 @@ final class StemOwnedBeamTip {
             if (total >= gap * .65f
                     && valid >= total * .9f
                     && near >= 3
-                    && nearValid >= Math.max(3, near - Math.max(1, Math.round(gap * .18f))))
+                    && nearValid
+                            >= (completeNearStrip
+                                    ? near
+                                    : Math.max(3, near - Math.max(1, Math.round(gap * .18f)))))
                 return true;
         }
         return false;

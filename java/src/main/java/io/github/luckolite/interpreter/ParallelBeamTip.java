@@ -7,6 +7,11 @@ final class ParallelBeamTip {
     private ParallelBeamTip() {}
 
     static boolean matches(byte[] gray, int w, int h, float x, float y, float gap) {
+        return matches(gray, w, h, x, y, gap, null);
+    }
+
+    static boolean matches(
+            byte[] gray, int w, int h, float x, float y, float gap, StaffPitchTrack track) {
         if (gray == null || gap < 8) return false;
         int threshold =
                 BeamInkThreshold.at(
@@ -54,9 +59,54 @@ final class ParallelBeamTip {
                         if (clearOrRule(gray, w, h, xx, cy - outer, gap, threshold)
                                 && clearOrRule(gray, w, h, xx, cy + outer, gap, threshold)) clear++;
                     }
-                    if (checked > 0 && clear >= checked * .8f) return true;
+                    if (checked > 0
+                            && clear >= checked * .8f
+                            && !printedCore(gray, w, h, x, y, gap, side, shift, slope, -1, track)
+                            && !printedCore(gray, w, h, x, y, gap, side, shift, slope, 1, track))
+                        return true;
                 }
         return false;
+    }
+
+    private static boolean printedCore(
+            byte[] gray,
+            int w,
+            int h,
+            float x,
+            float y,
+            float gap,
+            int side,
+            int shift,
+            float slope,
+            int rail,
+            StaffPitchTrack track) {
+        if (track == null || !track.verified()) return false;
+        int hits = 0, radius = Math.max(1, Math.round(gap * .12f)), offset = Math.round(gap * .42f);
+        for (float off : new float[] {.9f, 1.5f, 2.5f}) {
+            int d = Math.round(gap * off), xx = Math.round(x) + side * d;
+            int cy = Math.round(y + shift + slope * d) + rail * offset;
+            float[] f = track.at(xx);
+            float top = f[0] - 4 * f[1];
+            int line = Math.round((cy - top) / f[1]);
+            int printedCenter = Math.round(top + line * f[1]);
+            boolean samePrintedRule =
+                    line >= 0 && line <= 4 && Math.abs(cy - top - line * f[1]) <= f[1] * .25f;
+            if (PrintedRuleInkOwnership.matchesWithNarrowReference(
+                            gray, w, h, xx, cy - radius, cy + radius, top, f[1], 0, track)
+                    || samePrintedRule
+                            && PrintedRuleInkOwnership.matchesWithNarrowReference(
+                                    gray,
+                                    w,
+                                    h,
+                                    xx,
+                                    printedCenter - radius,
+                                    printedCenter + radius,
+                                    top,
+                                    f[1],
+                                    0,
+                                    track)) hits++;
+        }
+        return hits >= 2;
     }
 
     static boolean clearOrRule(byte[] gray, int w, int h, int x, int y, float gap) {

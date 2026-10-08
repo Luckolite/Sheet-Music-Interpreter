@@ -5,8 +5,10 @@ package io.github.luckolite.interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Reads the two left-facing bulbs and descending diagonal tail from raw score ink.
- * HOMR often labels this entire glyph as background, so semantic symbol components cannot seed it. */
+/**
+ * Reads the two left-facing bulbs and descending diagonal tail from raw score ink. HOMR often
+ * labels this entire glyph as background, so semantic symbol components cannot seed it.
+ */
 final class SixteenthRestDetector {
     record Staff(
             float top, float bottom, float gap, int index, int count, StaffPitchTrack pitchTrack) {
@@ -42,6 +44,7 @@ final class SixteenthRestDetector {
             List<ScoreNoteEvent> notes) {
         Detection original = detectWithDots(gray, width, height, measures, staffs, notes, true);
         var joined = joinedEighthRests(gray, width, height, measures, staffs, notes);
+        joined.addAll(independentUpQuarterRests(gray, width, height, measures, staffs, notes));
         if (!joined.isEmpty()) {
             var combined = new ArrayList<>(original.rests());
             combined.addAll(joined);
@@ -192,8 +195,10 @@ final class SixteenthRestDetector {
         return collected(rests, dots);
     }
 
-    /** A shaded sitting rectangle needs its whole body and five printed rules.
-     * Sample along the existing track and keep the stricter note-column owner. */
+    /**
+     * A shaded sitting rectangle needs its whole body and five printed rules. Sample along the
+     * existing track and keep the stricter note-column owner.
+     */
     private static List<ScoreRestEvent> shadedHalfRests(
             byte[] paper,
             int width,
@@ -432,8 +437,193 @@ final class SixteenthRestDetector {
         return fullTop <= croppedTop + .000001f && fullBottom >= croppedBottom - .000001f;
     }
 
-    /** Recover an occluded eighth-rest bulb only from its separate diagonal tail,
-     * a continuing quarter shaft, and an owned printed rest-plus-two-note triplet. */
+    /**
+     * Recover an occluded eighth-rest bulb only from its separate diagonal tail, a continuing
+     * quarter shaft, and an owned printed rest-plus-two-note triplet.
+     */
+
+    /** A separately proved quarter shaft cannot own a complete eighth-rest body beside it. */
+    private static List<ScoreRestEvent> independentUpQuarterRests(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
+        var found = new ArrayList<ScoreRestEvent>();
+        if (gray == null || (long) width * height != gray.length || notes == null) return found;
+        for (var owner : notes) {
+            if (owner == null
+                    || owner.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || owner.beamCount() != 0
+                    || owner.unbeamedDurationBeats() != 1
+                    || owner.augmentationDots() != 0
+                    || owner.tupletDivisor() != 1
+                    || owner.tupletNormalNotes() != 1
+                    || owner.crossStaffBeam()
+                    || owner.tiedFromPrevious()
+                    || (owner.articulations() & NoteOrnament.GRACE) != 0
+                    || owner.measureIndex() < 0
+                    || owner.measureIndex() >= measures.size()
+                    || !Float.isFinite(owner.positionInMeasure())
+                    || owner.positionInMeasure() < 0
+                    || owner.positionInMeasure() > 1
+                    || !Float.isFinite(owner.pageY())) continue;
+            var region = measures.get(owner.measureIndex());
+            float
+                    hx =
+                            (region.left()
+                                            + owner.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width,
+                    hy = owner.pageY() * height;
+            if (!Float.isFinite(hx) || !Float.isFinite(hy)) continue;
+            for (var staff : staffs) {
+                if (staff.index() != owner.staffIndex() || staff.count() != owner.staffCount())
+                    continue;
+                float[] frame = restFrame(staff, hx);
+                float gap = frame[1];
+                if (!Float.isFinite(gap)
+                        || gap < 4
+                        || gap > height * .25f
+                        || !Float.isFinite(frame[0])
+                        || hy < frame[0] - 6 * gap
+                        || hy > frame[0] + 2 * gap
+                        || PrintedStemDirection.detect(gray, width, height, hx, hy, gap) != 1)
+                    continue;
+                int shaftTop = Math.round(hy - gap * 2.8f),
+                        shaftBottom = Math.round(hy - gap * .45f);
+                if (shaftTop < 0 || shaftBottom >= height) continue;
+                int stemLeft = -1, stemRight = -1;
+                for (int x = Math.max(0, Math.round(hx + gap * .4f));
+                        x <= Math.min(width - 1, Math.round(hx + gap * .85f));
+                        x++) {
+                    int dark = 0;
+                    for (int y = shaftTop; y <= shaftBottom; y++)
+                        if ((gray[y * width + x] & 255) < 170) dark++;
+                    if (dark >= (shaftBottom - shaftTop + 1) * .9f) {
+                        if (stemLeft < 0) stemLeft = x;
+                        stemRight = x;
+                    }
+                }
+                if (stemLeft < 0 || stemRight - stemLeft + 1 > gap * .25f) continue;
+                int left = Math.max(0, Math.round(hx - gap * 1.1f));
+                int right = stemLeft - Math.max(2, Math.round(gap * .12f));
+                int top = Math.max(0, Math.round(hy - gap * 2.65f));
+                int bottom = Math.min(height - 1, Math.round(hy - gap * .35f));
+                if (right <= left
+                        || top >= bottom
+                        || bottom > region.bottom() * height
+                        || top < region.top() * height
+                        || left < region.left() * width
+                        || right > region.right() * width) continue;
+                boolean[] line = new boolean[bottom - top + 1];
+                float printedTop = frame[0] - 4 * gap;
+                for (int y = top; y <= bottom; y++)
+                    for (int j = 0; j < 5; j++)
+                        if (Math.abs(y - (printedTop + j * gap)) <= Math.max(1, gap * .12f))
+                            line[y - top] = true;
+
+                // A bare quarter shaft needs no page-sized scratch plane.
+                // Any accepted rounded bulb must first have visible width away from its head.
+                boolean bulbSeed = false;
+                for (int y = top; y <= Math.min(bottom, Math.round(hy - gap * .9f)); y++) {
+                    if (line[y - top]) continue;
+                    int dark = 0;
+                    for (int x = left; x <= right; x++)
+                        if ((gray[y * width + x] & 255) < 170) dark++;
+                    if (dark >= Math.max(2, Math.round(gap * .4f))) {
+                        bulbSeed = true;
+                        break;
+                    }
+                }
+                if (!bulbSeed) continue;
+                // Remove only the physically continuous independent shaft from a local copy.
+                // The known lower head is excluded from this local component plane;
+                // the upper glyph must still pass every bulb/tail contour check;
+                // the caller plane and all other owners survive.
+                byte[] separate = gray.clone();
+                for (int y = shaftTop; y <= shaftBottom; y++)
+                    for (int x = stemLeft; x <= stemRight; x++)
+                        separate[y * width + x] = (byte) 255;
+                for (int y = Math.max(0, (int) Math.ceil(hy - gap * .7f));
+                        y <= Math.min(height - 1, Math.round(hy + gap * .6f));
+                        y++)
+                    for (int x = Math.max(0, Math.round(hx - gap * .9f));
+                            x <= Math.min(width - 1, Math.round(hx + gap * .9f));
+                            x++) separate[y * width + x] = (byte) 255;
+
+                var kept = new ArrayList<>(notes);
+                kept.remove(owner);
+
+                int inkLeft = right + 1,
+                        inkRight = left - 1,
+                        inkTop = bottom + 1,
+                        inkBottom = top - 1;
+                for (int y = top; y <= bottom; y++)
+                    if (!line[y - top])
+                        for (int x = left; x <= right; x++)
+                            if ((separate[y * width + x] & 255) < 170) {
+                                inkLeft = Math.min(inkLeft, x);
+                                inkRight = Math.max(inkRight, x);
+                                inkTop = Math.min(inkTop, y);
+                                inkBottom = Math.max(inkBottom, y);
+                            }
+                if (inkLeft > inkRight
+                        || inkTop > inkBottom
+                        || inkTop <= top
+                        || inkBottom >= bottom) continue;
+                // Existing complete-bulb/tail checks can bridge verified ruled-row gaps.
+                // Component flood fill need not join an occluding ruled row to a note owner.
+                for (var body :
+                        List.of(new SeparatedRestInk.Body(inkLeft, inkRight, inkTop, inkBottom))) {
+
+                    if (body.bottom() - body.top() < gap * 1.3f
+                            || body.bottom() - body.top() > gap * 2.2f
+                            || body.right() - body.left() < gap * .7f
+                            || body.right() - body.left() > gap * 1.6f) continue;
+                    var local =
+                            new Staff(
+                                    body.top() - gap,
+                                    body.top() + 3 * gap,
+                                    gap,
+                                    staff.index(),
+                                    staff.count());
+                    List<ScoreRestEvent> candidates = new ArrayList<>();
+                    inspect(
+                            separate,
+                            width,
+                            height,
+                            measures,
+                            kept,
+                            local,
+                            top,
+                            bottom,
+                            line,
+                            body.left(),
+                            body.right(),
+                            candidates,
+                            new ArrayList<>(),
+                            true,
+                            false,
+                            false,
+                            false,
+                            true,
+                            false,
+                            false,
+                            (frame[0] - 2 * gap) / height,
+                            false);
+                    for (var rest : candidates)
+                        if (rest.durationBeats() == .5
+                                && rest.measureIndex() == owner.measureIndex()
+                                && rest.staffIndex() == owner.staffIndex()
+                                && rest.staffCount() == owner.staffCount()) found.add(rest);
+                }
+            }
+        }
+        return found;
+    }
+
     private static List<ScoreRestEvent> joinedEighthRests(
             byte[] gray,
             int width,
@@ -791,6 +981,7 @@ final class SixteenthRestDetector {
         }
         List<ScoreRestEvent> result = new ArrayList<>();
         List<RestDot> restDots = new ArrayList<>();
+        List<Runnable> componentReads = new ArrayList<>();
         List<Placement> placements = new ArrayList<>();
         for (Staff s : staffs) placements.add(new Placement(s, (s.top() + s.bottom()) * .5f));
         // In polyphonic engraving rests for the upper voice move one space above their
@@ -983,6 +1174,7 @@ final class SixteenthRestDetector {
                                                                             > gap * 1.9f
                                                                     && staff.top() - s.top()
                                                                             < gap * 6.1f);
+                            int previousRestCount = result.size();
                             inspect(
                                     gray,
                                     width,
@@ -1006,6 +1198,59 @@ final class SixteenthRestDetector {
                                     farRaised,
                                     placement.printedCenter() / height,
                                     faintShapes);
+                            if (result.size() == previousRestCount
+                                    && x - start >= staff.gap() * .7f) {
+                                for (var body :
+                                        SeparatedRestInk.find(
+                                                gray,
+                                                width,
+                                                height,
+                                                start,
+                                                x - 1,
+                                                scanTop,
+                                                scanBottom,
+                                                mask,
+                                                staff.gap())) {
+                                    int bodyTop = Math.max(scanTop, body.top() - 1);
+                                    int bodyBottom = Math.min(scanBottom, body.bottom() + 1);
+                                    boolean[] bodyMask =
+                                            java.util.Arrays.copyOfRange(
+                                                    mask,
+                                                    bodyTop - scanTop,
+                                                    bodyBottom - scanTop + 1);
+                                    boolean componentBulbOnly =
+                                            (ordinary || shallowLowered || farRaised) && pass > 0;
+                                    componentReads.add(
+                                            () -> {
+                                                if (SeparatedRestInk.represented(
+                                                        body, staff, measures, result, width,
+                                                        height)) return;
+                                                inspect(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        measures,
+                                                        notes,
+                                                        staff,
+                                                        bodyTop,
+                                                        bodyBottom,
+                                                        bodyMask,
+                                                        body.left(),
+                                                        body.right(),
+                                                        result,
+                                                        restDots,
+                                                        ordinary,
+                                                        lowered,
+                                                        deepLowered,
+                                                        baseMask != line && baseMask != narrowLine,
+                                                        componentBulbOnly,
+                                                        quarterOnly,
+                                                        farRaised,
+                                                        placement.printedCenter() / height,
+                                                        faintShapes);
+                                            });
+                                }
+                            }
                             start = -1;
                         }
                     }
@@ -1033,6 +1278,12 @@ final class SixteenthRestDetector {
                 result.addAll(additional.rests());
                 restDots.addAll(additional.dots());
             }
+        Detection standard = collected(result, restDots);
+        result.clear();
+        result.addAll(standard.rests());
+        restDots.clear();
+        restDots.addAll(standard.dots());
+        for (Runnable read : componentReads) read.run();
         return collected(result, restDots);
     }
 
@@ -1069,9 +1320,11 @@ final class SixteenthRestDetector {
         return new Detection(List.copyOf(unique), List.copyOf(selectedDots));
     }
 
-    /** Translate columns in a narrow staff band; map results back to the source page.
-     * Keep glyph height intact: small local spacing errors must not stretch the
-     * rest and leave partial staff rules connected to its hook. */
+    /**
+     * Translate columns in a narrow staff band; map results back to the source page. Keep glyph
+     * height intact: small local spacing errors must not stretch the rest and leave partial staff
+     * rules connected to its hook.
+     */
     private static Detection detectOnPrintedStaff(
             byte[] gray,
             int width,
@@ -1364,7 +1617,11 @@ final class SixteenthRestDetector {
                             line,
                             top,
                             gap,
-                            false)) return;
+                            false)
+                    && !(lowered
+                            && separatedUpQuarterAboveRest(
+                                    gray, width, height, measures, notes, staff, left, right, minY,
+                                    maxY, line, top, gap))) return;
             // Three rest bulbs also reverse their row centres five times. The
             // complete bulb count, spacing and diagonal foot below adjudicate
             // those glyphs; a wave silhouette alone must not erase them.
@@ -1490,6 +1747,19 @@ final class SixteenthRestDetector {
                         break;
                     }
                 if (!heldAbove
+                        && !(quarter
+                                && StackedVoiceRestEvidence.above(
+                                        result,
+                                        m,
+                                        staff.index(),
+                                        staff.count(),
+                                        region,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        minY,
+                                        gap))
                         && !((eighth || sixteenth)
                                 && beamedVoiceAroundRest(
                                         gray, width, height, region, notes, m, staff, left, right,
@@ -1601,6 +1871,68 @@ final class SixteenthRestDetector {
         }
     }
 
+    /** A separate upward quarter shaft cannot be the tail of the complete rest below it. */
+    private static boolean separatedUpQuarterAboveRest(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            boolean[] line,
+            int top,
+            float gap) {
+        if (straightShafts(gray, width, left, right, minY, maxY, line, top, gap, false))
+            return false;
+        for (var note : notes) {
+            if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || note.staffIndex() != staff.index()
+                    || note.staffCount() != staff.count()
+                    || note.measureIndex() < 0
+                    || note.measureIndex() >= measures.size()
+                    || note.beamCount() != 0
+                    || note.unbeamedDurationBeats() != 1
+                    || note.augmentationDots() != 0
+                    || note.tupletDivisor() != 1
+                    || note.tupletNormalNotes() != 1
+                    || note.crossStaffBeam()
+                    || note.tiedFromPrevious()
+                    || (note.articulations() & NoteOrnament.GRACE) != 0) continue;
+            var measure = measures.get(note.measureIndex());
+            float x =
+                    (measure.left() + note.positionInMeasure() * (measure.right() - measure.left()))
+                            * width;
+            float y = note.pageY() * height;
+            if (!Float.isFinite(x)
+                    || !Float.isFinite(y)
+                    || note.positionInMeasure() < 0
+                    || note.positionInMeasure() > 1
+                    || x < left - gap * .65f
+                    || x > right + gap * .65f
+                    || minY - y < gap * .65f
+                    || minY - y > gap * 2.3f
+                    || minY < measure.top() * height
+                    || minY > measure.bottom() * height
+                    || PrintedStemDirection.detect(gray, width, height, x, y, gap) != 1) continue;
+            int blank = 0;
+            for (int row = Math.max(0, Math.round(y + gap * .35f)); row < minY; row++) {
+                boolean empty = true;
+                for (int col = left; col <= right; col++)
+                    if ((gray[row * width + col] & 255) < 170) {
+                        empty = false;
+                        break;
+                    }
+                blank = empty ? blank + 1 : 0;
+                if (blank >= Math.max(2, Math.round(gap * .12f))) return true;
+            }
+        }
+        return false;
+    }
+
     /** Count rounded flag bulbs without letting suppressed staff rows split them. */
     private static List<Integer> restBulbs(
             int[] source,
@@ -1643,8 +1975,10 @@ final class SixteenthRestDetector {
         return lobes;
     }
 
-    /** A broad mask can keep the valley above the width threshold. Separately
-     * rounded, visible peaks still prove two flags at the printed spacing. */
+    /**
+     * A broad mask can keep the valley above the width threshold. Separately rounded, visible peaks
+     * still prove two flags at the printed spacing.
+     */
     private static void appendRestBulbs(
             List<Integer> lobes,
             int[] ink,
@@ -1687,8 +2021,10 @@ final class SixteenthRestDetector {
         lobes.add(refined ? peak : (start + end) / 2);
     }
 
-    /** An italic descender can resemble a lowered eighth rest. Three separately
-     * bounded outline letters with a shared baseline establish the text row. */
+    /**
+     * An italic descender can resemble a lowered eighth rest. Three separately bounded outline
+     * letters with a shared baseline establish the text row.
+     */
     private static boolean eighthRestLetterRow(
             byte[] gray,
             int width,
@@ -1800,8 +2136,10 @@ final class SixteenthRestDetector {
         return straightShafts(gray, width, left, right, minY, maxY, line, top, gap, pair, false);
     }
 
-    /** Faded shaft evidence is allowed only beside an independently recognized sharp.
-     * Applying it to unowned rest shapes can erase real paired-bulb rests. */
+    /**
+     * Faded shaft evidence is allowed only beside an independently recognized sharp. Applying it to
+     * unowned rest shapes can erase real paired-bulb rests.
+     */
     private static boolean straightShafts(
             byte[] gray,
             int width,
@@ -2209,8 +2547,10 @@ final class SixteenthRestDetector {
         return List.copyOf(accepted);
     }
 
-    /** A half-rest is a filled rectangle sitting on the middle staff rule.
-     * Require flat, wide rows: an oval head or thin articulation is not a rest. */
+    /**
+     * A half-rest is a filled rectangle sitting on the middle staff rule. Require flat, wide rows:
+     * an oval head or thin articulation is not a rest.
+     */
     private static boolean halfRest(
             Staff staff,
             int top,
@@ -2239,8 +2579,10 @@ final class SixteenthRestDetector {
         return rows >= Math.max(3, Math.round(gap * .25f));
     }
 
-    /** A whole-rest rectangle hangs below the second rule, unlike a half rest
-     * resting above the middle rule. Retain the same flat-row/height proof. */
+    /**
+     * A whole-rest rectangle hangs below the second rule, unlike a half rest resting above the
+     * middle rule. Retain the same flat-row/height proof.
+     */
     private static int[] wholeRest(
             byte[] gray, int width, Staff staff, int top, int[] ink, int left, int right) {
         float gap = staff.gap(), rule = staff.top() + gap;

@@ -30,7 +30,7 @@ final class PortableOrnamentGlyphs {
     void add(byte[] gray, int width, int height, int kind, boolean accidental) {
         if (gray == null || width < 1 || height < 1 || gray.length != (long) width * height)
             throw new IllegalArgumentException("Invalid glyph raster");
-        float[] pixels = mask(gray, width, 0, 0, width, height);
+        float[] pixels = recognitionMask(gray, width, 0, 0, width, height);
         float aspect = width / (float) height;
         List<Template> list = accidental ? accidentals : ornaments;
         list.add(new Template(kind, aspect, pixels));
@@ -110,7 +110,8 @@ final class PortableOrnamentGlyphs {
                 double ink = Math.max(0, Math.min(1, 7.5 - Math.abs(y - center)));
                 gray[y * w + x] = (byte) Math.round(255 * (1 - ink));
             }
-        return new Template(NoteOrnament.MORDENT, w / (float) h, mask(gray, w, 0, 0, w, h));
+        return new Template(
+                NoteOrnament.MORDENT, w / (float) h, recognitionMask(gray, w, 0, 0, w, h));
     }
 
     Match accidental(byte[] gray, int width, PortableNoteOrnaments.Bounds bounds) {
@@ -147,7 +148,8 @@ final class PortableOrnamentGlyphs {
                     || query.right != bounds.right
                     || query.bottom != bounds.bottom) {
                 query.pixels =
-                        mask(gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
+                        recognitionMask(
+                                gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
                 query.aspect = bounds.width() / (float) bounds.height();
                 query.gray = gray;
                 query.width = width;
@@ -159,7 +161,9 @@ final class PortableOrnamentGlyphs {
             candidate = query.pixels;
             aspect = query.aspect;
         } else {
-            candidate = mask(gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
+            candidate =
+                    recognitionMask(
+                            gray, width, bounds.left, bounds.top, bounds.right, bounds.bottom);
             aspect = bounds.width() / (float) bounds.height();
         }
         Map<Integer, Float> scores = new HashMap<>();
@@ -185,7 +189,8 @@ final class PortableOrnamentGlyphs {
         return new Match(kind, best, best - second);
     }
 
-    private static float[] mask(byte[] gray, int width, int left, int top, int right, int bottom) {
+    private static float[] sampledLuminance(
+            byte[] gray, int width, int left, int top, int right, int bottom) {
         float[] values = new float[W * H];
         for (int y = 0; y < H; y++) {
             float sy = top + (y + .5f) * (bottom - top) / H - .5f;
@@ -203,9 +208,31 @@ final class PortableOrnamentGlyphs {
                                 + (gray[upperRow + x1] & 255) * fx * (1 - fy)
                                 + (gray[lowerRow + x0] & 255) * (1 - fx) * fy
                                 + (gray[lowerRow + x1] & 255) * fx * fy;
-                values[y * W + x] = 1 - shade / 255f;
+                values[y * W + x] = shade;
             }
         }
         return values;
+    }
+
+    /** Raw unsigned bilinear ink accessor; each call rereads the caller's original raster. */
+    private static float[] mask(byte[] gray, int width, int left, int top, int right, int bottom) {
+        float[] values = sampledLuminance(gray, width, left, top, right, bottom);
+        for (int i = 0; i < values.length; i++) values[i] = 1 - values[i] / 255f;
+        return values;
+    }
+
+    /** Contrast normalization is confined to template construction and recognition queries. */
+    private static float[] recognitionMask(
+            byte[] gray, int width, int left, int top, int right, int bottom) {
+        float[] values = sampledLuminance(gray, width, left, top, right, bottom);
+        int[] tones = new int[256];
+        for (float luminance : values) tones[Math.max(0, Math.min(255, Math.round(luminance)))]++;
+        int paper = percentile(tones, values.length, .85);
+        // Preserve established bright-paper templates and solid dark glyph queries.
+        if (paper < 96 || paper >= 240) {
+            for (int i = 0; i < values.length; i++) values[i] = 1 - values[i] / 255f;
+            return values;
+        }
+        return GlyphInkContrast.mask(values);
     }
 }

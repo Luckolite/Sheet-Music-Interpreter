@@ -22,7 +22,20 @@ final class ParallelTripletClock {
         Clock restLane = findPrintedRestLane(target, bar, beats);
         if (restLane != null) return restLane;
         Clock printed = findPrintedChangingStem(target, bar, beats);
-        return printed != null ? printed : findSameStaff(target, bar, beats);
+        if (printed != null) return printed;
+        Clock same = findSameStaff(target, bar, beats);
+        if (same != null) return same;
+        var prefix = PrintedTripletVoicePrefix.find(target, bar, beats);
+        if (prefix == null) return null;
+        var attacks = new ArrayList<Attack>();
+        for (int i = 0; i < prefix.groups().size(); i++)
+            for (var note : prefix.groups().get(i))
+                attacks.add(new Attack(note, prefix.onsets().get(i)));
+        // The printed prefix proves this voice's duration, but does not prove
+        // where the countervoice begins. Preserve its independently resolved onset.
+        for (var quarter : prefix.quarters()) attacks.add(new Attack(quarter, Double.NaN));
+        return new Clock(
+                prefix.members(), prefix.groups(), prefix.unit(), beats, List.copyOf(attacks));
     }
 
     private static Clock findCrossStaff(

@@ -139,7 +139,35 @@ public class ParallelRestTripletClockTest {
         notes.set(
                 9,
                 new ScoreNoteEvent(0, .22f, 8, 0, 2, .5f, false, 0, 0, 2, 1).withStemDirection(1));
-        assertNull(ParallelTripletClock.find(notes.get(0), notes, 4));
+        var clock = ParallelTripletClock.find(notes.get(0), notes, 4);
+        assertNotNull("Complete explicit primary rhythm retains its own clock", clock);
+        assertEquals(9, clock.members().size());
+        double[] primaryOnsets = {
+            0, 1 / 3d, 2 / 3d, 4 / 3d, 5 / 3d, 7 / 3d, 8 / 3d, 10 / 3d, 11 / 3d
+        };
+        for (int i = 0; i < 9; i++) {
+            var primary = notes.get(i);
+            assertTrue(clock.members().contains(primary));
+            assertEquals(primaryOnsets[i], clock.onset(primary, notes), 1e-6);
+            assertEquals(primaryOnsets[i], ScoreNoteTiming.beatInMeasure(primary, notes, 4), 1e-6);
+            assertEquals(1 / 3d, clock.duration(primary), 1e-6);
+            assertEquals(
+                    1 / 3d, ScoreNoteTiming.resolvedWrittenDurationBeats(primary, notes, 4), 1e-6);
+        }
+        // These independently resolved counter attacks are the exact pre-prefix
+        // consumer values. Their positions outside the rest slots prove no shared onset.
+        double[] counterOnsets = {.75, 13 / 6d, 19 / 6d};
+        for (int i = 9; i < 12; i++) {
+            var counter = notes.get(i);
+            assertFalse(clock.members().contains(counter));
+            assertTrue(
+                    "Primary proof must not place the countervoice",
+                    Double.isNaN(clock.onset(counter, notes)));
+            assertEquals(
+                    counterOnsets[i - 9], ScoreNoteTiming.beatInMeasure(counter, notes, 4), 1e-6);
+            assertEquals(1, clock.duration(counter), 1e-6);
+            assertEquals(1, ScoreNoteTiming.resolvedWrittenDurationBeats(counter, notes, 4), 1e-6);
+        }
     }
 
     @Test

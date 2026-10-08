@@ -1043,6 +1043,10 @@ final class OmrScoreInterpreter {
                                     rhythmStaff,
                                     heads,
                                     staff.count);
+            if (!unpitched && beamCount < 2)
+                beamCount =
+                        transportedPairedBeamCount(
+                                gray, width, height, head, rhythmStaff, heads, beamCount);
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, rhythmStaff, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
             if (tremolo[0] > 0)
@@ -1053,6 +1057,26 @@ final class OmrScoreInterpreter {
             float unbeamedDuration =
                     detectUnbeamedDuration(
                             labels, gray, width, height, head, staff.gap, beamCount, heads);
+            float hollowSlope =
+                    rhythmStaff.pitchTrack == null
+                            ? 0
+                            : (rhythmStaff.pitchTrack.at(head.centerX + localGap)[0]
+                                            - rhythmStaff.pitchTrack.at(head.centerX)[0])
+                                    / localGap;
+            if (unbeamedDuration < ScoreNoteEvent.DURATION_HALF
+                    && !unpitched
+                    && ClosedWrittenHeadPocket.proved(
+                            gray,
+                            width,
+                            height,
+                            head.minX,
+                            head.minY,
+                            head.maxX,
+                            head.maxY,
+                            head.centerX,
+                            head.centerY,
+                            localGap,
+                            hollowSlope)) unbeamedDuration = ScoreNoteEvent.DURATION_HALF;
             if (recoveredPaleChordHeads.contains(head)
                     || recoveredFilledFragmentHeads.contains(head))
                 unbeamedDuration = beamCount == 0 ? 1f : 0f;
@@ -1093,7 +1117,11 @@ final class OmrScoreInterpreter {
                             height,
                             unbeamedDuration >= ScoreNoteEvent.DURATION_HALF,
                             accidentalInk,
-                            heads);
+                            heads,
+                            unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                                    ? hollowSlope
+                                    : Float.NaN,
+                            rhythmStaff.pitchTrack);
             if (augmentationDots > 0
                     && beamCount > 0
                     && hasHollowUnisonToRight(labels, gray, width, height, head, heads, staff.gap))
@@ -1750,7 +1778,27 @@ final class OmrScoreInterpreter {
                                                             note.staffGap)
                                                     : note.head,
                                             resolvedHeads,
-                                            dotValidationGap),
+                                            dotValidationGap,
+                                            event.unbeamedDurationBeats()
+                                                            == ScoreNoteEvent.DURATION_HALF
+                                                    ? restOwner.pitchTrack == null
+                                                            ? restOwner.pitchSlope
+                                                            : (restOwner
+                                                                                    .pitchTrack
+                                                                                    .at(
+                                                                                            note.head
+                                                                                                            .centerX
+                                                                                                    + dotValidationGap)[
+                                                                                    0]
+                                                                            - restOwner
+                                                                                    .pitchTrack
+                                                                                    .at(
+                                                                                            note.head
+                                                                                                    .centerX)[
+                                                                                    0])
+                                                                    / dotValidationGap
+                                                    : Float.NaN,
+                                            restOwner.pitchTrack),
                                     beams,
                                     event.writtenAccidental(),
                                     beams != event.beamCount() ? 0 : event.unbeamedDurationBeats(),
@@ -1779,14 +1827,16 @@ final class OmrScoreInterpreter {
                 reconcileSingleShaftChords(validatedRhythms, labels, gray, width, height);
         for (int i = 0; i < chordRhythms.size(); i++) withRests.set(i, chordRhythms.get(i).event);
         List<NoteArticulationDetector.Anchor> anchors = new ArrayList<>();
-        for (DetectedNote note : joined)
+        for (DetectedNote note : joined) {
+            Staff owner = staffForHead(labels, gray, width, height, staffs, note.head);
             anchors.add(
                     new NoteArticulationDetector.Anchor(
                             note.head.centerX,
                             note.head.centerY,
                             note.staffGap,
-                            staffs.indexOf(
-                                    staffForHead(labels, gray, width, height, staffs, note.head))));
+                            staffs.indexOf(owner),
+                            owner == null ? null : owner.pitchTrack));
+        }
         int[] marks = NoteArticulationDetector.detect(labels, gray, width, height, anchors);
         for (int i = 0; i < withRests.size(); i++)
             withRests.set(
@@ -1815,6 +1865,39 @@ final class OmrScoreInterpreter {
         List<ScoreNoteEvent> voicedNotes = new ArrayList<>();
         for (int i = 0; i < tiedNotes.size(); i++) {
             DetectedNote printed = joined.get(i);
+            int printedDirection =
+                    PrintedStemDirection.detect(
+                            gray,
+                            width,
+                            height,
+                            printed.head.centerX,
+                            printed.head.centerY,
+                            printed.staffGap);
+            if (printedDirection == 0) {
+                Staff frame = staffForHead(labels, gray, width, height, staffs, printed.head);
+                float localGap = printed.staffGap, slope = 0;
+                if (frame != null && frame.pitchTrack != null) {
+                    float[] local = frame.pitchTrack.at(printed.head.centerX);
+                    localGap = local[1];
+                    slope =
+                            (frame.pitchTrack.at(printed.head.centerX + localGap)[0] - local[0])
+                                    / localGap;
+                }
+                if ((tiedNotes.get(i).articulations() & 32768) != 0) localGap *= .65f;
+                printedDirection =
+                        PrintedStemMetadata.detect(
+                                gray,
+                                width,
+                                height,
+                                printed.head.minX,
+                                printed.head.maxX,
+                                printed.head.minY,
+                                printed.head.maxY,
+                                printed.head.centerX,
+                                printed.head.centerY,
+                                localGap,
+                                slope);
+            }
             voicedNotes.add(
                     tiedNotes
                             .get(i)
@@ -1824,13 +1907,7 @@ final class OmrScoreInterpreter {
                                             : tiedNotes.get(i).unbeamedDurationBeats()
                                                             == ScoreNoteEvent.DURATION_WHOLE
                                                     ? 0
-                                                    : PrintedStemDirection.detect(
-                                                            gray,
-                                                            width,
-                                                            height,
-                                                            printed.head.centerX,
-                                                            printed.head.centerY,
-                                                            printed.staffGap)));
+                                                    : printedDirection));
         }
         return new Analysis(voicedNotes, keyChanges, rests);
     }
@@ -4274,6 +4351,7 @@ final class OmrScoreInterpreter {
             int height) {
         List<DetectedNote> result = new ArrayList<>(notes);
         Map<Integer, Integer> inherited = new HashMap<>();
+        List<AccidentalCandidate> headerPieces = null;
         for (Staff staff : staffs) {
             List<ClefGlyph> clefs = new ArrayList<>();
             float gap = staff.gap;
@@ -4289,7 +4367,7 @@ final class OmrScoreInterpreter {
                 if (gh >= gap * 4.8f
                         && gh <= gap * 8.8f
                         && gw >= gap * 1.25f
-                        && gw <= gap * 3.4f
+                        && gw <= gap * 3.8f
                         && glyph.area >= gap * gap * 1.65f
                         && glyph.minY < staff.top - gap * .35f
                         && glyph.maxY > staff.bottom + gap * .20f
@@ -4361,13 +4439,16 @@ final class OmrScoreInterpreter {
                                     joinSmallTrebleFragments(original, glyphs, printed),
                                     glyphs,
                                     printed);
+                    // The header stage already rejoins semantic clef fragments
+                    // in the verified local physical frame.
+                    candidate = joinHeaderClefFragments(candidate, glyphs, printed);
                     float cg = printed.gap,
                             ch = candidate.maxY - candidate.minY + 1,
                             cw = candidate.maxX - candidate.minX + 1;
                     if (ch >= cg * 4.8f
                             && ch <= cg * 8.8f
                             && cw >= cg * 1.25f
-                            && cw <= cg * 3.4f
+                            && cw <= cg * 3.8f
                             && candidate.area >= cg * cg * 1.65f
                             && candidate.minY < printed.top - cg * .35f
                             && candidate.maxY > printed.bottom + cg * .20f
@@ -4389,6 +4470,46 @@ final class OmrScoreInterpreter {
                                 clefReference.top,
                                 clefReference.gap)) clef = ScoreNoteEvent.CLEF_TREBLE_OTTAVA;
                 if (clef != ScoreNoteEvent.CLEF_UNKNOWN) clefs.add(new ClefGlyph(glyph.maxX, clef));
+            }
+            // A staff rule may split the printed upper loop into SYMBOL while
+            // leaving the large lower curl in CLEF_OR_KEY. Use the same complete
+            // bounded header proof as key recognition, only before the first note.
+            float firstNoteX = width;
+            for (DetectedNote note : notes)
+                if (staffForHead(labels, gray, width, height, staffs, note.head) == staff)
+                    firstNoteX = Math.min(firstNoteX, note.head.minX);
+            boolean alreadyPrinted = false;
+            for (ClefGlyph c : clefs) if (c.x < firstNoteX) alreadyPrinted = true;
+            if (!alreadyPrinted && firstNoteX < width && staff.pitchTrack != null) {
+                if (headerPieces == null) {
+                    headerPieces = new ArrayList<>();
+                    for (Component glyph : glyphs)
+                        headerPieces.add(
+                                new AccidentalCandidate(
+                                        glyph, OmrMeasurePostProcessor.CLEF_OR_KEY));
+                    for (Component symbol :
+                            findComponents(labels, width, height, OmrMeasurePostProcessor.SYMBOL))
+                        headerPieces.add(
+                                new AccidentalCandidate(symbol, OmrMeasurePostProcessor.SYMBOL));
+                }
+                Component header =
+                        fragmentedHeaderClef(headerPieces, gray, width, height, staff, firstNoteX);
+                if (header != null && completeHeaderTreble(header, staff)) {
+                    Staff printed = headerPrintedFrame(staff, header.centerX);
+                    int clef =
+                            OctaveClefDigit.above(
+                                            gray,
+                                            width,
+                                            height,
+                                            header.minX,
+                                            header.minY,
+                                            header.maxX,
+                                            printed.top,
+                                            printed.gap)
+                                    ? ScoreNoteEvent.CLEF_TREBLE_OTTAVA
+                                    : ScoreNoteEvent.CLEF_TREBLE;
+                    clefs.add(new ClefGlyph(header.maxX, clef));
+                }
             }
             clefs.sort(Comparator.comparingDouble(ClefGlyph::x));
             int voice = staff.count * 16 + staff.index;
@@ -8985,8 +9106,14 @@ final class OmrScoreInterpreter {
                             && head.area <= gap * gap * 1.8f;
             if (!thinCorner && !pairedCorner && !mergedStrip) continue;
             for (Component main : heads) {
+                boolean originalMainSize =
+                        main.area >= (mergedStrip ? gap * gap * .8f : head.area * 3f);
+                boolean reducedPairSize =
+                        !originalMainSize
+                                && thinCorner
+                                && main.area >= Math.max(gap * gap, head.area * 2.5f);
                 if (main == head
-                        || main.area < (mergedStrip ? gap * gap * .8f : head.area * 3f)
+                        || !originalMainSize && !reducedPairSize
                         || nearestHeadStaff(staffs, main.centerY) != staff
                         || Math.abs(main.centerX - head.centerX) > gap * 1.5f
                         || Math.abs(main.centerY - head.centerY) < gap * 2
@@ -9035,7 +9162,9 @@ final class OmrScoreInterpreter {
                             || other == main
                             || other.area
                                     < Math.max(
-                                            mergedStrip ? gap * gap * .8f : head.area * 3f,
+                                            mergedStrip
+                                                    ? gap * gap * .8f
+                                                    : head.area * (reducedPairSize ? 2.5f : 3f),
                                             gap * gap)
                             || nearestHeadStaff(staffs, other.centerY) != staff
                             || Math.abs(other.centerX - main.centerX)
@@ -9050,7 +9179,8 @@ final class OmrScoreInterpreter {
                                     Math.max(1, Math.round(gap * .16f)),
                                     Math.min(170, stemInk));
                     if (partner == null) partner = attachedRawStem(gray, width, height, other, gap);
-                    if ((mergedStrip || pairedCorner)
+                    if (originalMainSize
+                            && (mergedStrip || pairedCorner)
                             && StemOwnedBeamTip.mergedCorner(
                                     gray,
                                     width,
@@ -9078,28 +9208,31 @@ final class OmrScoreInterpreter {
                                     head.maxX - head.minX + 1,
                                     head.maxY - head.minY + 1,
                                     head.area,
-                                    gap)) {
+                                    gap,
+                                    reducedPairSize)) {
                         owned = true;
                         break;
                     }
-                    if (StemOwnedBeamTip.matches(
-                            gray,
-                            width,
-                            height,
-                            stem,
-                            partner,
-                            head.centerX,
-                            head.centerY,
-                            head.maxX - head.minX + 1,
-                            head.maxY - head.minY + 1,
-                            head.area,
-                            gap)) {
+                    if (originalMainSize
+                            && StemOwnedBeamTip.matches(
+                                    gray,
+                                    width,
+                                    height,
+                                    stem,
+                                    partner,
+                                    head.centerX,
+                                    head.centerY,
+                                    head.maxX - head.minX + 1,
+                                    head.maxY - head.minY + 1,
+                                    head.area,
+                                    gap)) {
                         owned = true;
                         break;
                     }
                 }
                 if (owned
-                        || thinCorner
+                        || originalMainSize
+                                && thinCorner
                                 && narrowBeamTip(gray, width, height, stem[0], head.centerY, gap)) {
 
                     rejected.add(head);
@@ -14692,6 +14825,36 @@ final class OmrScoreInterpreter {
             Component dotAnchor,
             List<Component> neighboringHeads,
             float dotGap) {
+        return dotsOutsideRests(
+                candidates,
+                note,
+                rests,
+                measures,
+                gray,
+                width,
+                height,
+                accidentalInk,
+                dotAnchor,
+                neighboringHeads,
+                dotGap,
+                Float.NaN,
+                null);
+    }
+
+    private static int dotsOutsideRests(
+            List<Component> candidates,
+            DetectedNote note,
+            List<ScoreRestEvent> rests,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            List<Component> accidentalInk,
+            Component dotAnchor,
+            List<Component> neighboringHeads,
+            float dotGap,
+            float sustainedSlope,
+            StaffPitchTrack sustainedTrack) {
         if (note.event.augmentationDots() == 0 || rests.isEmpty())
             return note.event.augmentationDots();
         List<Component> excluded = new ArrayList<>(accidentalInk);
@@ -14725,7 +14888,9 @@ final class OmrScoreInterpreter {
                         height,
                         note.event.unbeamedDurationBeats() >= ScoreNoteEvent.DURATION_HALF,
                         excluded,
-                        neighboringHeads);
+                        neighboringHeads,
+                        sustainedSlope,
+                        sustainedTrack);
     }
 
     /** Far-displaced rests belong to the opposing voice; central rests remain shared. */
@@ -14868,6 +15033,56 @@ final class OmrScoreInterpreter {
             boolean hollowHead,
             List<Component> excluded,
             List<Component> neighboringHeads) {
+        return countAugmentationDots(
+                candidates,
+                head,
+                gap,
+                gray,
+                width,
+                height,
+                hollowHead,
+                excluded,
+                neighboringHeads,
+                Float.NaN);
+    }
+
+    private static int countAugmentationDots(
+            List<Component> candidates,
+            Component head,
+            float gap,
+            byte[] gray,
+            int width,
+            int height,
+            boolean hollowHead,
+            List<Component> excluded,
+            List<Component> neighboringHeads,
+            float sustainedSlope) {
+        return countAugmentationDots(
+                candidates,
+                head,
+                gap,
+                gray,
+                width,
+                height,
+                hollowHead,
+                excluded,
+                neighboringHeads,
+                sustainedSlope,
+                null);
+    }
+
+    private static int countAugmentationDots(
+            List<Component> candidates,
+            Component head,
+            float gap,
+            byte[] gray,
+            int width,
+            int height,
+            boolean hollowHead,
+            List<Component> excluded,
+            List<Component> neighboringHeads,
+            float sustainedSlope,
+            StaffPitchTrack sustainedTrack) {
         // Semantic boundaries can cut a tiny round island out of a slur, stem
         // or ledger line. When the page is available, require an isolated raw
         // ink component; the model's artificial boundary is not a printed dot.
@@ -14884,6 +15099,27 @@ final class OmrScoreInterpreter {
                         && core.maxY - core.minY + 1 >= gap * .22f) combined.add(core);
         if (gray != null && gray.length == width * height)
             combined.addAll(fadedAugmentationDots(gray, width, height, head, gap));
+        if (gray != null
+                && gray.length == width * height
+                && hollowHead
+                && Float.isFinite(sustainedSlope)
+                && PrintedStemMetadata.detect(
+                                gray,
+                                width,
+                                height,
+                                head.minX,
+                                head.maxX,
+                                head.minY,
+                                head.maxY,
+                                head.centerX,
+                                head.centerY,
+                                gap,
+                                sustainedSlope)
+                        != 0)
+            for (Component dot : shadedAugmentationDots(gray, width, height, head, gap))
+                if (!shadedDotInkOwner(
+                        gray, width, height, dot, gap, neighboringHeads, sustainedTrack))
+                    combined.add(dot);
         if (gray != null && gray.length == width * height)
             combined.addAll(tieTouchingDotCores(gray, width, height, head, gap, neighboringHeads));
         List<Component> aligned = new ArrayList<>();
@@ -15040,6 +15276,134 @@ final class OmrScoreInterpreter {
             }
         }
         return result;
+    }
+
+    /** Resolve isolated raw ink against local shaded paper; normal dot owners still apply. */
+    private static List<Component> shadedAugmentationDots(
+            byte[] gray, int width, int height, Component head, float gap) {
+        int left = Math.max(0, Math.round(head.maxX + gap * .08f));
+        int right = Math.min(width - 1, Math.round(head.maxX + gap * 2.3f));
+        int top = Math.max(0, Math.round(head.centerY - gap * 1.4f));
+        int bottom = Math.min(height - 1, Math.round(head.centerY + gap * 1.4f));
+        int[] histogram = new int[256];
+        int count = 0;
+        for (int y = top; y <= bottom; y++)
+            for (int x = left; x <= right; x++) {
+                histogram[gray[y * width + x] & 255]++;
+                count++;
+            }
+        int target = Math.max(1, (count * 85 + 99) / 100), paper = 0, seen = histogram[0];
+        while (seen < target && paper < 255) seen += histogram[++paper];
+        if (paper < 60 || paper >= 185) return List.of();
+        List<Component> result = new ArrayList<>();
+        for (int deficit : new int[] {35, 50, 65, 80, 95}) {
+            int threshold = paper - deficit;
+            if (threshold < 20) continue;
+            result.addAll(findDarkDotComponents(gray, width, height, head, gap, threshold));
+        }
+        return result;
+    }
+
+    /** A core inside another oval or continuing printed ink retains that complete owner. */
+    private static boolean shadedDotInkOwner(
+            byte[] gray,
+            int width,
+            int height,
+            Component dot,
+            float gap,
+            List<Component> heads,
+            StaffPitchTrack track) {
+        for (Component head : heads)
+            if (dot.centerX >= head.minX
+                    && dot.centerX <= head.maxX
+                    && dot.centerY >= head.minY
+                    && dot.centerY <= head.maxY) return true;
+        int pad = Math.max(3, Math.round(gap * 2));
+        int l = Math.max(0, dot.minX - pad), r = Math.min(width - 1, dot.maxX + pad);
+        int t = Math.max(0, dot.minY - Math.round(gap * .8f));
+        int b = Math.min(height - 1, dot.maxY + Math.round(gap * .8f));
+        int localWidth = r - l + 1, localHeight = b - t + 1;
+        int[] histogram = new int[256];
+        int samples = 0;
+        for (int y = t; y <= b; y++)
+            for (int x = l; x <= r; x++) {
+                histogram[gray[y * width + x] & 255]++;
+                samples++;
+            }
+        int target = Math.max(1, (samples * 3 + 3) / 4), paper = 0, sum = histogram[0];
+        while (sum < target && paper < 255) sum += histogram[++paper];
+        int cutoff = paper - Math.max(25, Math.round(paper * .2f));
+        boolean[] seen = new boolean[localWidth * localHeight];
+        byte[] ruleProof = new byte[localWidth * 5];
+        int[] queue = new int[seen.length];
+        int size = 0, at = 0;
+        for (int y = dot.minY; y <= dot.maxY; y++)
+            for (int x = dot.minX; x <= dot.maxX; x++) {
+                int q = (y - t) * localWidth + x - l;
+                if ((gray[y * width + x] & 255) < cutoff) {
+                    seen[q] = true;
+                    queue[size++] = q;
+                }
+            }
+        boolean left = false, right = false;
+        while (at < size) {
+            int q = queue[at++], x = q % localWidth, y = q / localWidth;
+            left |= x + l <= dot.minX - gap;
+            right |= x + l >= dot.maxX + gap;
+            if (left && right) return true;
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= localWidth || ny < 0 || ny >= localHeight) continue;
+                    int next = ny * localWidth + nx, px = nx + l, py = ny + t;
+                    if (seen[next] || (gray[py * width + px] & 255) >= cutoff) continue;
+                    // A verified thin physical rule can connect a true dot after downsampling.
+                    // Remove only independently corroborated rule ink from this ownership walk.
+                    if (track != null && track.verified()) {
+                        float[] frame = track.at(px);
+                        float topRule = frame[0] - 4 * frame[1];
+                        int rail = Math.round((py - topRule) / frame[1]);
+                        if (rail >= 0
+                                && rail < 5
+                                && Math.abs(py - topRule - rail * frame[1]) <= frame[1] * .35f) {
+                            int key = nx * 5 + rail;
+                            if (ruleProof[key] == 0) {
+                                int center = Math.round(topRule + rail * frame[1]);
+                                int radius = Math.max(1, Math.round(frame[1] * .12f));
+                                ruleProof[key] =
+                                        (byte)
+                                                (PrintedRuleInkOwnership.matchesWithNarrowReference(
+                                                                gray,
+                                                                width,
+                                                                height,
+                                                                px,
+                                                                center - radius,
+                                                                center + radius,
+                                                                topRule,
+                                                                frame[1],
+                                                                0,
+                                                                track)
+                                                        ? 2
+                                                        : 1);
+                            }
+                            if (ruleProof[key] == 2) continue;
+                        }
+                    }
+                    boolean oval = false;
+                    for (Component head : heads)
+                        if (px >= head.minX
+                                && px <= head.maxX
+                                && py >= head.minY
+                                && py <= head.maxY) {
+                            oval = true;
+                            break;
+                        }
+                    if (oval) continue;
+                    seen[next] = true;
+                    queue[size++] = next;
+                }
+        }
+        return false;
     }
 
     /** Thresholding can isolate the darker crossing of a shaded stem and rule. */
@@ -15531,6 +15895,19 @@ final class OmrScoreInterpreter {
                                                     gap,
                                                     strokeThreshold,
                                                     staffSlope);
+                    if (!printedRule && leftKey >= 0 && rightKey >= 0)
+                        printedRule =
+                                PrintedRuleInkOwnership.matches(
+                                        gray,
+                                        width,
+                                        height,
+                                        stem[0],
+                                        y - run,
+                                        y - 1,
+                                        staffTop,
+                                        gap,
+                                        staffSlope,
+                                        track);
                     if (!printedRule
                             && leftKey >= 0
                             && rightKey >= 0
@@ -15754,6 +16131,94 @@ final class OmrScoreInterpreter {
         return Math.min(3, beams);
     }
 
+    /** Written beam recovery only; no head admission or performance voice is changed. */
+    private static int transportedPairedBeamCount(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads,
+            int count) {
+        if (staff.pitchTrack != null
+                && staff.pitchTrack.verified()
+                && head.maxX - head.minX + 1 > staff.gap * 1.05f
+                && head.maxX - head.minX + 1 <= staff.gap * 2
+                && head.maxY - head.minY + 1 > staff.gap * .7f
+                && head.maxY - head.minY + 1 <= staff.gap * 1.3f
+                && opposingVoiceStem(gray, width, height, head, staff.gap, heads) == null) {
+            int[] own =
+                    TransportedBeamShaft.detect(
+                            gray,
+                            width,
+                            height,
+                            head.minX,
+                            head.maxX,
+                            head.minY,
+                            head.maxY,
+                            head.centerX,
+                            head.centerY,
+                            staff.gap,
+                            staff.pitchTrack);
+            if (own != null)
+                for (Component other : heads) {
+                    if (other == head
+                            || Math.abs(other.centerX - head.centerX) < staff.gap * .95f
+                            || Math.abs(other.centerX - head.centerX) > staff.gap * 3
+                            || Math.abs(other.centerY - head.centerY) > staff.gap * 2
+                            || other.maxX - other.minX + 1 <= staff.gap * 1.05f
+                            || other.maxX - other.minX + 1 > staff.gap * 2
+                            || other.maxY - other.minY + 1 <= staff.gap * .7f
+                            || other.maxY - other.minY + 1 > staff.gap * 1.3f) continue;
+                    int[] pair =
+                            TransportedBeamShaft.detect(
+                                    gray,
+                                    width,
+                                    height,
+                                    other.minX,
+                                    other.maxX,
+                                    other.minY,
+                                    other.maxY,
+                                    other.centerX,
+                                    other.centerY,
+                                    staff.gap,
+                                    staff.pitchTrack);
+                    if (pair == null)
+                        pair =
+                                attachedRawStem(
+                                        gray,
+                                        width,
+                                        height,
+                                        other,
+                                        staff.gap,
+                                        Math.max(1, Math.round(staff.gap * .16f)),
+                                        BeamInkThreshold.at(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        Math.round(other.centerX),
+                                                        Math.round(other.centerY - staff.gap * 5),
+                                                        Math.round(other.centerY + staff.gap * 5),
+                                                        staff.gap)
+                                                + 5);
+                    if (pair == null || Math.abs(pair[1] - other.centerY) >= staff.gap * 5.5f)
+                        continue;
+                    int candidate =
+                            PairedGraceBeamInk.countTransported(
+                                    gray,
+                                    width,
+                                    height,
+                                    own,
+                                    pair,
+                                    staff.gap,
+                                    staff.top,
+                                    staff.pitchTrack);
+                    if (candidate > count) return candidate;
+                }
+        }
+        return count;
+    }
+
     /** Reuse the proved local five-rule frame without changing the stored staff or pitch. */
     private static Staff beamStaffFrame(Staff staff, float[] localPitch, int width) {
         if (staff.pitchTrack == null
@@ -15959,7 +16424,14 @@ final class OmrScoreInterpreter {
                                     ? WideTripleBeamInk.count(
                                             gray, width, height, own, pair, staff.gap)
                                     : PairedGraceBeamInk.countFullSize(
-                                            gray, width, height, own, pair, staff.gap, staff.top);
+                                            gray,
+                                            width,
+                                            height,
+                                            own,
+                                            pair,
+                                            staff.gap,
+                                            staff.top,
+                                            staff.pitchTrack);
                     // Longer shafts need all three independently aligned beam cores.
                     // Keep the ordinary two-beam recovery within its original stem bound.
                     boolean longShaft =
@@ -16715,7 +17187,8 @@ final class OmrScoreInterpreter {
                             height,
                             head.centerX,
                             stemEnd + (upward ? 1 : -1) * gap * .55f,
-                            gap)) thick = 2;
+                            gap,
+                            staff.pitchTrack)) thick = 2;
             if (thick <= 1 && !smallHead) {
                 int[] pale =
                         thick == 0
@@ -17716,6 +18189,119 @@ final class OmrScoreInterpreter {
         return null;
     }
 
+    /** A normalized dot inside a complete flag's observed shaft is owned notation. */
+    static boolean flagStemOwnsDot(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            float hx,
+            float hy,
+            float gap,
+            int[] pixels) {
+        if (labels == null
+                || gray == null
+                || width <= 0
+                || height <= 0
+                || labels.length != (long) width * height
+                || gray.length != labels.length
+                || pixels == null
+                || pixels.length < 3
+                || !Float.isFinite(hx + hy + gap)
+                || gap < 6
+                || hx < 0
+                || hy < 0
+                || hx >= width
+                || hy >= height) return false;
+        int left = Math.max(0, Math.round(hx - gap)),
+                right = Math.min(width - 1, Math.round(hx + gap));
+        int top = Math.max(0, Math.round(hy - gap * .6f)),
+                bottom = Math.min(height - 1, Math.round(hy + gap * .6f));
+        int columns = right - left + 1, seed = -1, near = Math.max(1, Math.round(gap * .2f));
+        for (int dy = -near; dy <= near && seed < 0; dy++)
+            for (int dx = -near; dx <= near; dx++) {
+                int x = Math.round(hx) + dx, y = Math.round(hy) + dy;
+                if (x >= left
+                        && x <= right
+                        && y >= top
+                        && y <= bottom
+                        && labels[y * width + x] == OmrMeasurePostProcessor.NOTEHEAD) {
+                    seed = y * width + x;
+                    break;
+                }
+            }
+        if (seed < 0) return false;
+        boolean[] seen = new boolean[columns * (bottom - top + 1)];
+        int[] queue = new int[seen.length];
+        int read = 0, size = 1;
+        queue[0] = (seed / width - top) * columns + seed % width - left;
+        seen[queue[0]] = true;
+        int minX = width, maxX = 0, minY = height, maxY = 0;
+        while (read < size) {
+            int cell = queue[read++], x = left + cell % columns, y = top + cell / columns;
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx < left || xx > right || yy < top || yy > bottom) continue;
+                    int at = (yy - top) * columns + xx - left;
+                    if (!seen[at] && labels[yy * width + xx] == OmrMeasurePostProcessor.NOTEHEAD) {
+                        seen[at] = true;
+                        queue[size++] = at;
+                    }
+                }
+        }
+        if (size < 4
+                || minX == left
+                || maxX == right
+                || minY == top
+                || maxY == bottom
+                || maxX - minX + 1 > gap * 1.6f
+                || maxY - minY + 1 > gap * .95f) return false;
+        Component head = new Component(size, minX, maxX, minY, maxY, hx, hy);
+        int[] stem = attachedRawStem(gray, width, height, head, gap);
+        if (stem == null
+                || !hasCurvedFlag(
+                        labels, gray, width, height, head, gap, stem[0], stem[1], stem[2] < 0)
+                || !rootedPaleFlag(
+                        labels, gray, width, height, head, gap, stem[0], stem[1], stem[2] < 0))
+            return false;
+        int a = Math.min(Math.round(hy), stem[1]), b = Math.max(Math.round(hy), stem[1]);
+        int radius = Math.max(1, Math.round(gap * .16f)), semantic = 0;
+        for (int pixel : pixels) {
+            if (pixel < 0 || pixel >= gray.length) return false;
+            int x = pixel % width, y = pixel / width;
+            if (Math.abs(x - stem[0]) > radius || y < a + gap * .5f || y > b - gap * .5f)
+                return false;
+            if (labels[pixel] == OmrMeasurePostProcessor.STEM_OR_REST
+                    || labels[pixel] == OmrMeasurePostProcessor.CLEF_OR_KEY) semantic++;
+        }
+        if (semantic < pixels.length * .75f) return false;
+        int
+                threshold =
+                        Math.min(
+                                185,
+                                BeamInkThreshold.at(gray, width, height, stem[0], a, b, gap) + 15),
+                hits = 0,
+                missing = 0,
+                longest = 0;
+        for (int y = a; y <= b; y++) {
+            boolean ink = false;
+            for (int dx = -1; dx <= 1; dx++) {
+                int x = stem[0] + dx;
+                if (x >= 0 && x < width && (gray[y * width + x] & 255) < threshold) ink = true;
+            }
+            if (ink) {
+                hits++;
+                missing = 0;
+            } else longest = Math.max(longest, ++missing);
+        }
+        return hits >= (b - a + 1) * .95f && longest <= 1;
+    }
+
     private static boolean rootedPaleFlag(
             byte[] labels,
             byte[] gray,
@@ -18430,6 +19016,7 @@ final class OmrScoreInterpreter {
                 rightShift[i] = Math.round(staff.pitchTrack.at(x + dx)[0] - track[0]);
             }
         int bands = 0, strongBands = 0, run = 0, staffRows = 0;
+        int provedRuleBands = 0;
         for (int y = top; y <= bottom + 1; y++) {
             boolean ink =
                     y <= bottom
@@ -18547,6 +19134,24 @@ final class OmrScoreInterpreter {
                         && finiteBeamOverRule(
                                 gray, width, height, x, y - run, y - 1, staff, threshold))
                     onlyStaff = false;
+                boolean provedRuleBand =
+                        !onlyStaff
+                                && onStaff
+                                && run >= 3
+                                && run <= gap * .55f
+                                && PrintedRuleInkOwnership.matches(
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        y - run,
+                                        y - 1,
+                                        lineTop,
+                                        gap,
+                                        0,
+                                        staff.pitchTrack)
+                                && !finiteBeamOverRule(
+                                        gray, width, height, x, y - run, y - 1, staff, threshold);
                 boolean rooted =
                         run >= 3
                                 && bandReachesInnerProbe(
@@ -18561,13 +19166,17 @@ final class OmrScoreInterpreter {
                 if (run >= Math.max(3, Math.round(gap * .30f)) && !onlyStaff && rooted) bands++;
                 if (run >= Math.max(3, Math.ceil(gap * .30f)) && !onlyStaff && rooted)
                     strongBands++;
+                if (provedRuleBand && run >= Math.max(3, Math.ceil(gap * .30f)) && rooted)
+                    provedRuleBands++;
                 run = 0;
                 staffRows = 0;
             }
         }
         // Preserve a single narrow flag. Adding a second beam needs the full
         // thickness threshold so a thinner slur terminal cannot shorten the note.
-        return bands > 1 ? Math.max(1, strongBands) : bands;
+        int result = bands > 1 ? Math.max(1, strongBands) : bands;
+        // Additional rule proof can remove an extra band, never the sole surviving beam.
+        return result > 1 ? Math.max(1, result - provedRuleBands) : result;
     }
 
     /** A blurred rule may gain two fringe rows at the outer beam probe, while
@@ -19218,7 +19827,25 @@ final class OmrScoreInterpreter {
                                     width,
                                     height,
                                     result.get(previousIndex),
-                                    current);
+                                    current,
+                                    verifiedTieFrame(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            staffs,
+                                            result.get(previousIndex),
+                                            current));
+            if (!tied && previousIndex >= 0)
+                tied =
+                        verifiedSystemTieContinuation(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                staffs,
+                                result.get(previousIndex),
+                                current);
             // Semantic staff fragments can compress one system's scale. A
             // separately proved local five-rule track may restore only a
             // two-ended system-break tie; ordinary candidates keep their frame.
@@ -19398,6 +20025,8 @@ final class OmrScoreInterpreter {
             if (Math.abs(current.head.centerY - previous.head.centerY) > gap * .45f
                     && !verifiedTieStaffAlignment(
                             labels, gray, width, height, staffs, previous, current)
+                    && !verifiedPrintedTieStaffAlignment(
+                            labels, gray, width, height, staffs, previous, current)
                     && !LocalTieStaffAlignment.same(
                             labels,
                             gray,
@@ -19537,6 +20166,106 @@ final class OmrScoreInterpreter {
                 && Math.abs(first.positionInMeasure() - second.positionInMeasure()) <= .018f;
     }
 
+    /** Explicit ownership context; the original gray samples and arc search stay intact. */
+    private record TieFrame(StaffPitchTrack track) {}
+
+    private static TieFrame verifiedTieFrame(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Staff> staffs,
+            DetectedNote before,
+            DetectedNote after) {
+        if (staffs.isEmpty()) return null;
+        Staff first = staffForHead(labels, gray, width, height, staffs, before.head);
+        Staff last = staffForHead(labels, gray, width, height, staffs, after.head);
+        if (first == null
+                || first != last
+                || !LocalTieStaffAlignment.same(
+                        first.pitchTrack,
+                        before.head.centerX,
+                        before.head.centerY,
+                        after.head.centerX,
+                        after.head.centerY,
+                        after.event.staffStep())) return null;
+        return new TieFrame(first.pitchTrack);
+    }
+
+    /** Complementary complete bows, owned by independently proved physical rows. */
+    private static boolean verifiedSystemTieContinuation(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Staff> staffs,
+            DetectedNote before,
+            DetectedNote after) {
+        if (!systemBreakTieCandidate(before, after, width) || staffs.isEmpty()) return false;
+        Staff first = staffForHead(labels, gray, width, height, staffs, before.head);
+        Staff last = staffForHead(labels, gray, width, height, staffs, after.head);
+        if (first == null
+                || last == null
+                || first == last
+                || !LocalTieStaffAlignment.same(
+                        first.pitchTrack,
+                        before.head.centerX,
+                        before.head.centerY,
+                        before.head.centerX,
+                        before.head.centerY,
+                        before.event.staffStep())
+                || !LocalTieStaffAlignment.same(
+                        last.pitchTrack,
+                        after.head.centerX,
+                        after.head.centerY,
+                        after.head.centerX,
+                        after.head.centerY,
+                        after.event.staffStep())) return false;
+        for (int side : new int[] {-1, 1})
+            if (VerifiedStaffTieRidge.provedSystemEnd(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            before.head.minX,
+                            before.head.maxX,
+                            before.head.centerX,
+                            before.head.centerY,
+                            before.staffGap,
+                            before.event.staffStep(),
+                            first.pitchTrack,
+                            true,
+                            side)
+                    && VerifiedStaffTieRidge.provedSystemEnd(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            after.head.minX,
+                            after.head.maxX,
+                            after.head.centerX,
+                            after.head.centerY,
+                            after.staffGap,
+                            after.event.staffStep(),
+                            last.pitchTrack,
+                            false,
+                            side)) return true;
+        return false;
+    }
+
+    /** Sloped short endpoints require both proved rule phase and the complete original-pixel arc. */
+    private static boolean verifiedPrintedTieStaffAlignment(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Staff> staffs,
+            DetectedNote before,
+            DetectedNote after) {
+        TieFrame frame = verifiedTieFrame(labels, gray, width, height, staffs, before, after);
+        return frame != null && hasTieArc(labels, gray, width, height, before, after, frame);
+    }
+
     private static boolean hasTieArc(
             byte[] labels,
             byte[] gray,
@@ -19544,6 +20273,17 @@ final class OmrScoreInterpreter {
             int height,
             DetectedNote previous,
             DetectedNote current) {
+        return hasTieArc(labels, gray, width, height, previous, current, null);
+    }
+
+    private static boolean hasTieArc(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            DetectedNote previous,
+            DetectedNote current,
+            TieFrame frame) {
         if (systemBreakTieCandidate(previous, current, width)) {
             if (gray == null || gray.length != labels.length) return false;
             for (int side : new int[] {-1, 1})
@@ -19559,9 +20299,48 @@ final class OmrScoreInterpreter {
                 || right - left + 1 < gap * 1.3f
                         && current.head.centerX - previous.head.centerX < gap * 1.8f) return false;
         float centerY = (previous.head.centerY + current.head.centerY) * .5f;
+        if (frame != null && right - left <= gap * 6) {
+            for (float overlap : new float[] {0, .3f, .6f}) {
+                int a =
+                        Math.max(
+                                Math.round(previous.head.centerX),
+                                left - Math.round(gap * overlap));
+                int b =
+                        Math.min(
+                                Math.round(current.head.centerX),
+                                right + Math.round(gap * overlap));
+                if (VerifiedStaffTieRidge.proved(
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        a,
+                        b,
+                        previous.head.centerX,
+                        previous.head.centerY,
+                        current.head.centerX,
+                        current.head.centerY,
+                        current.event.staffStep(),
+                        frame.track)) return true;
+            }
+            if (VerifiedStaffTieRidge.provedAtHeadBounds(
+                    labels,
+                    gray,
+                    width,
+                    height,
+                    previous.head.minX,
+                    current.head.maxX,
+                    previous.head.centerX,
+                    previous.head.centerY,
+                    current.head.centerX,
+                    current.head.centerY,
+                    current.event.staffStep(),
+                    frame.track)) return true;
+        }
         if (gray != null && gray.length == labels.length) {
             if (right - left + 1 >= gap * 1.3f
-                    && hasPrintedTieArc(labels, gray, width, height, left, right, centerY, gap))
+                    && hasPrintedTieArc(
+                            labels, gray, width, height, left, right, centerY, gap, true, frame))
                 return true;
             // Engraved ties may begin below the heads, before their horizontal edges.
             // Recover the returning shoulders instead of testing only the flattened middle.
@@ -19569,7 +20348,7 @@ final class OmrScoreInterpreter {
             int arcLeft = Math.max(Math.round(previous.head.centerX), left - overlap);
             int arcRight = Math.min(Math.round(current.head.centerX), right + overlap);
             if (hasPrintedTieArc(
-                    labels, gray, width, height, arcLeft, arcRight, centerY, gap, false))
+                    labels, gray, width, height, arcLeft, arcRight, centerY, gap, false, frame))
                 return true;
             if (ScoreNoteTiming.hasIndependentSustain(previous.event)
                     && ScoreNoteTiming.hasIndependentSustain(current.event)
@@ -19694,11 +20473,27 @@ final class OmrScoreInterpreter {
             float centerY,
             float gap,
             boolean faintShoulders) {
+        return hasPrintedTieArc(
+                labels, gray, width, height, left, right, centerY, gap, faintShoulders, null);
+    }
+
+    private static boolean hasPrintedTieArc(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float centerY,
+            float gap,
+            boolean faintShoulders,
+            TieFrame frame) {
         if (faintShoulders
                 && ShadedCompactTieRidge.proved(
                         labels, gray, width, height, left, right, centerY, gap)) return true;
-        if (hasContinuousTieArc(labels, gray, width, height, left, right, centerY, gap))
-            return true;
+        if (hasContinuousTieArc(
+                labels, gray, width, height, left, right, centerY, gap, null, 165, 0, false, false,
+                frame)) return true;
         // Compact ties leave small gaps beside the heads. Sample both shoulders
         // finely enough to retain the whole returning curve, even at small sizes.
         // Faint ink is allowed only between heads: under a head it can belong
@@ -19712,11 +20507,13 @@ final class OmrScoreInterpreter {
                 if (first == 0 && last == 0) continue;
                 int a = left + first * step, b = right - last * step;
                 if (b - a < gap) continue;
-                if (hasContinuousTieArc(labels, gray, width, height, a, b, centerY, gap)
+                if (hasContinuousTieArc(
+                                labels, gray, width, height, a, b, centerY, gap, null, 165, 0,
+                                false, false, frame)
                         || faintShoulders
                                 && hasContinuousTieArc(
-                                        labels, gray, width, height, a, b, centerY, gap, null, 205))
-                    return true;
+                                        labels, gray, width, height, a, b, centerY, gap, null, 205,
+                                        0, false, false, frame)) return true;
             }
         // Long ties may leave a full staff-space of clearance beside a dot and fade near the heads.
         // Compact dotted notes also leave that clearance. Keep the whole returning
@@ -19729,8 +20526,8 @@ final class OmrScoreInterpreter {
                     int a = left + first * clearanceStep, b = right - last * clearanceStep;
                     if (b - a < Math.max(gap * .9f, (right - left) * .45f)) continue;
                     if (hasContinuousTieArc(
-                            labels, gray, width, height, a, b, centerY, gap, null, 205, 0, true))
-                        return true;
+                            labels, gray, width, height, a, b, centerY, gap, null, 205, 0, true,
+                            false, frame)) return true;
                 }
         }
         // Keep short-arc limits and require a dark core within the complete curve.
@@ -19740,8 +20537,8 @@ final class OmrScoreInterpreter {
                 for (int last = 0; last <= 5; last++) {
                     int a = left + first * longStep, b = right - last * longStep;
                     if (hasContinuousTieArc(
-                            labels, gray, width, height, a, b, centerY, gap, null, 205))
-                        return true;
+                            labels, gray, width, height, a, b, centerY, gap, null, 205, 0, false,
+                            false, frame)) return true;
                 }
         return false;
     }
@@ -19889,6 +20686,38 @@ final class OmrScoreInterpreter {
             int requiredSide,
             boolean strictContrast,
             boolean flatProfile) {
+        return hasContinuousTieArc(
+                labels,
+                gray,
+                width,
+                height,
+                left,
+                right,
+                centerY,
+                gap,
+                target,
+                inkLimit,
+                requiredSide,
+                strictContrast,
+                flatProfile,
+                null);
+    }
+
+    private static boolean hasContinuousTieArc(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float centerY,
+            float gap,
+            Component target,
+            int inkLimit,
+            int requiredSide,
+            boolean strictContrast,
+            boolean flatProfile,
+            TieFrame frame) {
         // Boundary arc evidence needs raw pixels; semantic-only decoding remains supported.
         if (gray == null || gray.length != (long) width * height) return false;
         {
@@ -20057,15 +20886,20 @@ final class OmrScoreInterpreter {
                             && bins[4] >= 7
                             && arcCurvature(strokeCenters, 0, 0, 49) >= Math.max(.8f, gap * .12f)) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                     // A short returning arc can cross a staff rule at one end. Treat a
                     // few such pixels as occluded only when the remaining curve and
@@ -20084,15 +20918,20 @@ final class OmrScoreInterpreter {
                             && arcCurvature(supportedCenters, 0, 0, 49)
                                     >= Math.max(1.2f, gap * .15f)) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                     // Both ends of a short tie can merge into the same thick staff rule.
                     // Require an almost complete curve and an independently visible middle
@@ -20111,15 +20950,20 @@ final class OmrScoreInterpreter {
                             && arcCurvature(strokeCenters, 0, 0, 49)
                                     >= Math.max(1.2f, gap * .15f)) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                     // A long, deeply bowed tie can cross several distinct staff rules.
                     // Require every sampled bin to be fully covered, both returning
@@ -20150,17 +20994,24 @@ final class OmrScoreInterpreter {
                                             target,
                                             inkLimit,
                                             requiredSide,
-                                            true))) {
+                                            true,
+                                            false,
+                                            frame))) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                     // Antialiased shoulders can reduce the dark count while staff rules
                     // obscure a returning curve. Require nearly complete coverage in
@@ -20197,17 +21048,24 @@ final class OmrScoreInterpreter {
                                             target,
                                             inkLimit,
                                             requiredSide,
-                                            true))) {
+                                            true,
+                                            false,
+                                            frame))) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                     // A compact tie can touch a staff rule at its crest instead of
                     // at the endpoints. Both returning shoulders must remain visible;
@@ -20241,17 +21099,24 @@ final class OmrScoreInterpreter {
                                             target,
                                             inkLimit,
                                             requiredSide,
-                                            true))) {
+                                            true,
+                                            false,
+                                            frame))) {
                         if (!TieArcBranchInk.outwardStems(
-                                gray,
-                                width,
-                                height,
-                                left,
-                                right,
-                                strokeCenters,
-                                side,
-                                gap,
-                                inkLimit)) return true;
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        strokeCenters,
+                                        side,
+                                        gap,
+                                        inkLimit)
+                                && !VerifiedStaffTieRidge.followsRule(
+                                        frame == null ? null : frame.track,
+                                        left,
+                                        right,
+                                        strokeCenters)) return true;
                     }
                 }
         return false;

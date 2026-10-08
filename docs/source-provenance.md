@@ -781,6 +781,21 @@ Weights, dependencies, fonts and physical guide/audio records are unchanged.
 Thick segmented staff rules are excluded from beam bands; an original procedural
 regression covers staff-line crossings beside a true attached beam.
 
-Perspective staff tracks retain already proved physical frames and use validated local rule gaps for pitch. Shaded stems, beams, headers, rests, ties, tremolo, fingerings and slur islands keep independent printed-body and written-owner proofs. Original procedural controls cover accepted and rejected shapes, source nonmutation and malformed inputs. Recognition epoch19 separates these derived results from earlier caches while guide282 records remain unchanged. The standalone port has executable-token parity after package and diagnostics adaptation; the new regional staff helper is pure JDK. Models, production dependencies and licensing remain unchanged, and private score material is excluded.
+Recognition20 binds heads, shafts, beam rails, headers, rests, ties, ornaments and
+articulations through verified local staff frames, complete original-pixel bodies
+and their written owners. Returning ties retain actual endpoint ownership and
+reject connected closed counter-bodies; independent words, ledger stripes and
+complete flags keep their own pixels. Small or shaded fragments cannot establish
+an unrelated note or mark. The shared helpers and scoped Android, native and
+standalone callers were reviewed separately; package and diagnostics adaptations
+preserve the shared executable behavior.
 
-Regional measure replacement also reuses the established printed closing-bar proof and quarter-page cap, preserving faint ending notes without adding a new pixel-admission path. Original procedural controls cover both slope signs, obscured rules and a stem-owned closing dyad, plus texture, courtesy, incomplete-bar, played-stem and extension-cap negatives.
+A known printed triplet prefix can anchor a separately shafted voice, and an
+independent countervoice includes its written leading and following rests.
+Ambiguous owners and unresolved clocks remain unknown. Recognition20 and audio72
+invalidate older derived interpretations and performance caches while guide282
+records, model checksums and production dependencies remain unchanged. Original
+Apache-2.0 procedural positive and rejection controls cover the port; existing
+font-derived templates retain their SIL OFL notices. Private score images,
+libraries, device logs and identifiers are excluded, and these controls do not
+establish whole-library recognition accuracy.

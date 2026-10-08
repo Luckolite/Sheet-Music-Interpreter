@@ -308,6 +308,38 @@ final class TripletRhythmDetector {
                                 result.subList(0, Math.min(virtualStart, result.size())),
                                 region,
                                 measures);
+                if (numeral == null && virtualStart < result.size()) {
+                    final List<ScoreNoteEvent> restGroupNotes = result;
+                    numeral =
+                            findContrastedNumeral(
+                                    gray,
+                                    width,
+                                    height,
+                                    x1,
+                                    x3,
+                                    y1,
+                                    y2,
+                                    gap,
+                                    first.beamCount() > 0,
+                                    Float.NaN,
+                                    Float.NaN,
+                                    3,
+                                    false,
+                                    glyph ->
+                                            bracketedRestBeamOwns(
+                                                    glyph,
+                                                    List.of(a, b, c),
+                                                    restGroupNotes,
+                                                    virtualStart,
+                                                    region,
+                                                    measures,
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    x1,
+                                                    x3,
+                                                    gap));
+                }
                 if (numeral == null
                         && a.indices().size() == 1
                         && b.indices().size() == 1
@@ -1125,6 +1157,106 @@ final class TripletRhythmDetector {
 
     /** Between piano staves a single numeral belongs to the nearer staff.
      * Explicit cross-staff beams keep their existing grouping authority. */
+    /** An actual rest slot has no shaft; the two sounding notes must own its complete bracket. */
+    private static boolean bracketedRestBeamOwns(
+            Glyph glyph,
+            List<Onset> group,
+            List<ScoreNoteEvent> notes,
+            int virtualStart,
+            MeasureRegion bar,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap) {
+        int restCount = 0;
+        List<ScoreNoteEvent> sounding = new ArrayList<>();
+        for (Onset onset : group) {
+            if (onset.indices().size() != 1) return false;
+            int index = onset.indices().get(0);
+            if (index >= virtualStart) restCount++;
+            else sounding.add(notes.get(index));
+        }
+        if (restCount != 1 || sounding.size() != 2) return false;
+        ScoreNoteEvent a = sounding.get(0), b = sounding.get(1);
+        if (a.beamCount() < 1
+                || a.beamCount() != b.beamCount()
+                || a.stemDirection() == 0
+                || a.stemDirection() != b.stemDirection()
+                || a.crossStaffBeam()
+                || b.crossStaffBeam()
+                || insideOtherSystem(glyph, bar, measures, width, height)) return false;
+        float top = Float.POSITIVE_INFINITY, bottom = Float.NEGATIVE_INFINITY;
+        for (Onset onset : group) {
+            top = Math.min(top, onset.top() * height);
+            bottom = Math.max(bottom, onset.bottom() * height);
+        }
+        // The existing bounded retry requires real deficit from local paper. Its
+        // rule cleanup only removes ink; it cannot create a shaft or bracket.
+        var ink =
+                TupletNumeralInk.window(gray, width, height, firstX, lastX, top, bottom, gap, 165);
+        if (ink == null) return false;
+        int l = ink.left(), t = ink.top();
+        if (!bracketArm(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        Math.round(firstX - gap * .3f) - l,
+                        glyph.left() - 2 - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap * .25f)
+                || !bracketArm(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        glyph.right() + 2 - l,
+                        Math.round(lastX + gap * .3f) - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap * .25f)
+                || !bracketHook(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        firstX - gap * .3f - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap)
+                || !bracketHook(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        lastX + gap * .3f - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap)) return false;
+        List<ScoreNoteEvent> heads = notes.subList(0, Math.min(virtualStart, notes.size()));
+        float ax = (bar.left() + a.positionInMeasure() * (bar.right() - bar.left())) * width;
+        float bx = (bar.left() + b.positionInMeasure() * (bar.right() - bar.left())) * width;
+        float distance =
+                PrintedTupletBeamOwner.distance(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        ax - l,
+                        a.pageY() * height - t,
+                        bx - l,
+                        b.pageY() * height - t,
+                        gap,
+                        a.stemDirection(),
+                        glyph.left() - l,
+                        glyph.top() - t,
+                        glyph.right() - l,
+                        glyph.bottom() - t);
+        return Float.isFinite(distance)
+                && !hasCompetingBeamOwner(glyph, a, heads, bar, gray, width, height, gap, distance)
+                && !otherSystemBeamOwns(
+                        glyph, a, heads, bar, measures, gray, width, height, gap, distance);
+    }
+
     private static Glyph findOwnedNumeral(
             byte[] gray,
             int width,
@@ -2333,7 +2465,24 @@ final class TripletRhythmDetector {
         for (int y = 0; y < Math.max(2, (int) Math.ceil(h * .10)); y++)
             capLeft = Math.min(capLeft, min[y]);
         for (int y = (int) Math.ceil(h * .92); y < h; y++) foot = Math.max(foot, max[y]);
-        return lowerLobe - foot >= indentation
+        int extendedSolidFoot = 0;
+        for (int y = (int) Math.ceil(h * .55f); y < (int) Math.ceil(h * .92f); y++) {
+            if (min[y] > w * .4f || max[y] - min[y] + 1 < w * .6f) continue;
+            boolean growsFromDiagonal = false;
+            for (int prior = Math.max(0, y - Math.max(2, Math.round(h * .15f))); prior < y; prior++)
+                if (max[prior] >= 0
+                        && max[y] - max[prior] >= Math.max(2, Math.ceil(w * .2f))
+                        && min[y] <= min[prior] + indentation) growsFromDiagonal = true;
+            if (!growsFromDiagonal) continue;
+            int occupied = 0;
+            for (int x = min[y]; x <= max[y]; x++)
+                if (dark(gray, width, left + x, top + y)) occupied++;
+            if (occupied >= (max[y] - min[y] + 1) * .9f) extendedSolidFoot++;
+        }
+        // A tilted 2's full terminal can end above the last antialiased rows.
+        // Its solid foot extends beyond the preceding diagonal, not around a lower bowl.
+        return extendedSolidFoot < required
+                && lowerLobe - foot >= indentation
                 && upper
                 && lower
                 && upperLobe - waist >= indentation

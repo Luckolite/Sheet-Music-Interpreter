@@ -71,15 +71,15 @@ public final class RestRowInkLifetimeParityTest {
     @Test
     public void exactThresholdAndRepeatedMaskResults() throws Exception {
         Result r = thresholdRecords();
-        assertEquals(44, r.rests());
-        assertEquals("1d6f5d34ffe30d80a94a9db331215bb6a2f2b050f7326ec3a9a869344ce60670", r.hash());
+        assertEquals(50, r.rests());
+        assertEquals("cd66d07e504927cd0212788a91657f06d847db3ed7093e685ce3fc819674dc2f", r.hash());
     }
 
     @Test
     public void callerMutationAndRestorationTakeEffectOnEveryCall() throws Exception {
         Result r = changingRecords();
-        assertEquals(44, r.rests());
-        assertEquals("3cf8616cfcc77d46f54713397a776c20b709e3c08db93b8bf5e70bab65365788", r.hash());
+        assertEquals(46, r.rests());
+        assertEquals("bd554337c8f885d7573d4f21af8fc59bca822c1ea7a10ce546352491c05961b2", r.hash());
     }
 
     public static void main(String[] args) throws Exception {

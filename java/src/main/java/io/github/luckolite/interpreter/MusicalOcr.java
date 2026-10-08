@@ -21,6 +21,18 @@ public final class MusicalOcr {
         this.meterFont = Objects.requireNonNull(meterFont);
     }
 
+    int firstSystemMeasureNumber(
+            byte[] labels, byte[] gray, int width, int height, List<MeasureRegion> measures)
+            throws Exception {
+        return PrintedSystemNumberOcr.firstMeasureNumber(
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                (pixels, w, h) -> reader.readGray(pixels, w, h).text());
+    }
+
     List<ScoreMeterChange> meters(
             byte[] labels,
             byte[] gray,
