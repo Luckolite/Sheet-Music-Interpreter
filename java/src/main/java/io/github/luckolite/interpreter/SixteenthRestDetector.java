@@ -21,7 +21,7 @@ final class SixteenthRestDetector {
 
     record Detection(List<ScoreRestEvent> rests, List<RestDot> dots) {}
 
-    private record InkDot(float x, float y) {}
+    record InkDot(float x, float y) {}
 
     private record Placement(Staff staff, float printedCenter) {}
 
@@ -36,6 +36,49 @@ final class SixteenthRestDetector {
     }
 
     static Detection detectWithDots(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
+        Detection baseline = detectWithDotsStandard(gray, width, height, measures, staffs, notes);
+        Detection contact =
+                BeamedHeadQuarterRests.detectWithDots(gray, width, height, measures, staffs, notes);
+        List<ScoreRestEvent> candidates = new ArrayList<>(contact.rests());
+        List<RestDot> candidateDots = new ArrayList<>(contact.dots());
+        for (Staff staff : staffs)
+            if (staff.pitchTrack() != null) {
+                Detection curved =
+                        detectOnPrintedStaff(
+                                gray, width, height, measures, staff, notes, false, true);
+                candidates.addAll(curved.rests());
+                candidateDots.addAll(curved.dots());
+            }
+        List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
+        List<RestDot> dots = new ArrayList<>(baseline.dots());
+        for (ScoreRestEvent rest : candidates) {
+            boolean duplicate = false;
+            for (ScoreRestEvent old : baseline.rests()) {
+                if (old.measureIndex() == rest.measureIndex()
+                        && old.staffIndex() == rest.staffIndex()
+                        && old.staffCount() == rest.staffCount()
+                        && Math.abs(old.positionInMeasure() - rest.positionInMeasure()) < .025f
+                        && Math.abs(old.pageY() - rest.pageY())
+                                < Math.max(.001f, Math.max(old.pageHeight(), rest.pageHeight()))) {
+                    duplicate = true;
+                    break;
+                }
+            }
+            if (!duplicate) {
+                combined.add(rest);
+                for (RestDot dot : candidateDots) if (dot.rest().equals(rest)) dots.add(dot);
+            }
+        }
+        return collected(combined, dots);
+    }
+
+    private static Detection detectWithDotsStandard(
             byte[] gray,
             int width,
             int height,
@@ -1579,6 +1622,19 @@ final class SixteenthRestDetector {
             Staff staff,
             List<ScoreNoteEvent> notes,
             boolean faintShapes) {
+        return detectOnPrintedStaff(
+                gray, width, height, measures, staff, notes, faintShapes, false);
+    }
+
+    private static Detection detectOnPrintedStaff(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            Staff staff,
+            List<ScoreNoteEvent> notes,
+            boolean faintShapes,
+            boolean contactOnly) {
         int first = Math.max(0, (int) Math.floor(staff.top() - staff.gap() * 6));
         int last = Math.min(height, (int) Math.ceil(staff.bottom() + staff.gap() * 6.4f));
         if (last <= first) return new Detection(List.of(), List.of());
@@ -1662,15 +1718,23 @@ final class SixteenthRestDetector {
                         staff.index(),
                         staff.count());
         Detection detected =
-                detectWithDots(
-                        flat,
-                        width,
-                        bandHeight,
-                        mappedMeasures,
-                        List.of(rectified),
-                        mappedNotes,
-                        false,
-                        faintShapes);
+                contactOnly
+                        ? BeamedHeadQuarterRests.detectWithDots(
+                                flat,
+                                width,
+                                bandHeight,
+                                mappedMeasures,
+                                List.of(rectified),
+                                mappedNotes)
+                        : detectWithDots(
+                                flat,
+                                width,
+                                bandHeight,
+                                mappedMeasures,
+                                List.of(rectified),
+                                mappedNotes,
+                                false,
+                                faintShapes);
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
         for (ScoreRestEvent rest : detected.rests())
@@ -2685,7 +2749,7 @@ final class SixteenthRestDetector {
     }
 
     /** Dots belong to a recognized rest only in the adjacent upper staff space. */
-    private static List<InkDot> augmentationDots(
+    static List<InkDot> augmentationDots(
             byte[] gray,
             int width,
             int height,

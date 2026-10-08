@@ -811,3 +811,15 @@ voice evidence. Recognition21 and Android/Hub audio73 invalidate prior derived
 caches while guide282 records, standalone APIs, models and dependencies remain
 unchanged. No private score images or library data are included. These controls
 do not establish whole-score or whole-library recognition accuracy.
+
+Recognition22 recovers separately visible quarter-rest contours that touch
+beamed noteheads. Measured physical shaft widths, visible turns and terminated
+rest strokes establish ownership. The standard detector completes first, and
+additive recovery preserves previously recognized rests. Existing shared dot
+assignment and tracked staff mapping retain dotted and curved-page behavior.
+Forty original Apache-2.0 generated controls cover these cases and reject
+insufficient ink; six fail against the previous detector. Android/Hub audio74
+and recognition22 invalidate affected derived caches; guide282 record layouts,
+standalone APIs, models and dependencies remain unchanged. Private source
+material is excluded. Retained-page replay and generated controls do not
+establish whole-score, whole-library, fresh inference or phone accuracy.

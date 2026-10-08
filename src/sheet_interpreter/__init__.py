@@ -5,5 +5,5 @@ from .reader import Interpreter
 from .musicxml import write_musicxml
 from .audio import write_mp3
 
-__version__ = "0.1.6"
+__version__ = "0.1.7"
 __all__ = ["Interpreter", "write_musicxml", "write_mp3"]

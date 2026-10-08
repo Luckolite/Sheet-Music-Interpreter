@@ -415,14 +415,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "e41e3e9bdaace045ea744f003e7e5bd491ebe13909b8d5b4ea0df8ea99da8c40",
-      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
-      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
-      "source_normalized_sha256": "103940b925b5334685e6919d37bd31b19ba48ec335dff6d22289ad7f6c1b0789",
+      "source_sha256": "7cbbce8164bb9cedc480669955e3b8a0f4325faeae598c73d7f95b78330a2142",
+      "reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+      "review_note": "Original Apache-2.0 raw-ink recovery uses a separately visible quarter-rest contour and measured adjacent beamed-head shaft. The standard detector finishes before additive recovery, preserving existing rests. Generated controls cover occlusion, dot ownership, curved staff mapping, invalid inputs and rejection cases. No private source imagery, models, dependencies or record layout changes.",
+      "source_normalized_sha256": "f56946f959b6eaac2e46953de5e13b736370bcdbd748a88968b629b71651cb47",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "reviewed_source_state": "Committed recognition22 quarter-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
+      "scoped_reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1420,12 +1420,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8bc360c8021143bd4ba1266a49bb9b4c6f045eee3f9fb965adb106fd2686270d",
-      "source_normalized_sha256": "b83cb7022543e02520aa60e06c8666af5672676f4e86859c2e70a7474a11862a",
-      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
-      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
-      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
+      "source_sha256": "d41bbed4ebd16d6e2305d5ca08a7c406097cd7d0d1115c01f973d0f6e155f806",
+      "source_normalized_sha256": "7c6d0347f4585833096566eee08a33415cbbb82c05198d5ae5d3f9201c142aa0",
+      "reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+      "review_note": "Original Apache-2.0 raw-ink recovery uses a separately visible quarter-rest contour and measured adjacent beamed-head shaft. The standard detector finishes before additive recovery, preserving existing rests. Generated controls cover occlusion, dot ownership, curved staff mapping, invalid inputs and rejection cases. No private source imagery, models, dependencies or record layout changes.",
+      "reviewed_source_state": "Committed recognition22 quarter-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "scoped_reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1480,12 +1480,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d57792f545d409ab5d086d92bfac3fdfd2040cf7133df49d8d0ee84610c39d49",
-      "source_normalized_sha256": "8dcadf7f9c6d3b2c4a1f48de84a115ea7c264cac9637c3aaee2334d4a540b9b6",
-      "reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617",
-      "reviewed_source_state": "Committed recognition21 contact-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "review_note": "Independent quarter-head ownership retains a separately visible rest contour. Original Apache-2.0 procedural regressions cover the positive and rejection cases. Recognition cache identity changes without altering guide282 records. No model, dependency or private source material changes.",
-      "scoped_reviewed_app_commit": "e4c46f7dacd5d3b20c52d6f11b88190e8d6d4617"
+      "source_sha256": "91cf72f11193279b36da7cc1ca50cc26ccd03240acf7e62a23f02a36dc360af7",
+      "source_normalized_sha256": "22001e28fa28421bcef33729bcaadfb87f1506f20a1bedf21085e2f992359712",
+      "reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+      "reviewed_source_state": "Committed recognition22 quarter-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Original Apache-2.0 raw-ink recovery uses a separately visible quarter-rest contour and measured adjacent beamed-head shaft. The standard detector finishes before additive recovery, preserving existing rests. Generated controls cover occlusion, dot ownership, curved staff mapping, invalid inputs and rejection cases. No private source imagery, models, dependencies or record layout changes.",
+      "scoped_reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1816,6 +1816,15 @@
       "source_normalized_sha256": "e6b25620a14abd5c3ed7f88e04fac282bd7cc6b6db3946c1e0748992f146c1f0",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
       "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls."
+    },
+    "BeamedHeadQuarterRests.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamedHeadQuarterRests.java",
+      "source_sha256": "2e98c265aadf42846070faa8ff17f9a6970cc9ff5712799d8068bb61017e6594",
+      "source_normalized_sha256": "1ad59e17ffe7500beadc2fab8b34ed0efff3b429dcd532d2bd5f5e387431bd69",
+      "reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+      "scoped_reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+      "reviewed_source_state": "Committed recognition22 quarter-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Original Apache-2.0 raw-ink recovery uses a separately visible quarter-rest contour and measured adjacent beamed-head shaft. The standard detector finishes before additive recovery, preserving existing rests. Generated controls cover occlusion, dot ownership, curved staff mapping, invalid inputs and rejection cases. No private source imagery, models, dependencies or record layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -3952,5 +3961,27 @@
     "standalone_java_tests": 7169,
     "baseline_synthetic_failures": 8,
     "review": "Rest contours may contact an independent quarter head. Downward owners require a measured upper bulb and leftward tail before the head rim. Upward owners require a physical quarter shaft, broad head and complete terminated tail. Existing physical triplet witnesses determine performed duration; independent quarters stay unscaled. Android-specific audio cache epoch changes are mirrored in the Hub and native audio renderer, with no standalone record or preview format change. Weights, dependencies, fonts and APIs are unchanged. No private score scans, libraries, identifiers or logs are included. Procedural checks and retained private-page replay do not establish whole-score or whole-library accuracy."
+  },
+  "recognition22_beamed_quarter_rest_review": {
+    "app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
+    "recognition_revision": 22,
+    "audio_revision": 74,
+    "guide_version": 282,
+    "changed_mapped_sources": [
+      "SixteenthRestDetector.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py",
+      "BeamedHeadQuarterRests.java"
+    ],
+    "new_production_helpers": [
+      "BeamedHeadQuarterRests.java"
+    ],
+    "synthetic_tests": [
+      "BeamedHeadQuarterRestsTest.java"
+    ],
+    "synthetic_test_count": 40,
+    "standalone_java_tests": 7209,
+    "baseline_synthetic_failures": 6,
+    "review": "Raw physical shaft width and separately visible quarter-rest turns establish ownership; nearby triplet numerals on another voice are not inherited. New recovery runs after the established detector and excludes existing rests. Dot assignment and tracked staff mapping use the existing shared implementations. Forty original generated controls and retained private-page replay were checked; private material is excluded from publication. Existing note clocks and written heads were preserved in that replay. This does not establish whole-score, fresh inference or device accuracy. Models, dependencies, record layout and public APIs are unchanged."
   }
 }
