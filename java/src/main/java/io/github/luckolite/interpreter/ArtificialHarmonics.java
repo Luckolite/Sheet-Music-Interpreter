@@ -293,6 +293,13 @@ final class ArtificialHarmonics {
                                         || dark(g, w, h, Math.round(cx) + 1, vy);
                     }
                     if (!vertices) continue;
+                    // An enclosed paper counter proves a thick hollow outline even when
+                    // its small opening occupies less of a fixed center sample rectangle.
+                    if (labels != null
+                            && hit == total
+                            && enclosedCounter(g, w, h, cx, cy, r)
+                            && diamondExterior(g, w, h, cx, cy, r, gap, y + 1.5f * gap))
+                        return true;
                     int clear = 0, inside = 0;
                     for (int yy = Math.round(cy - r * .3f); yy <= Math.round(cy + r * .3f); yy++) {
                         // Ignore a staff or ledger line crossing the hollow center.
@@ -321,6 +328,149 @@ final class ArtificialHarmonics {
                             return true;
                     } else if (outside == 4) return true;
                 }
+        return false;
+    }
+
+    private static boolean diamondExterior(
+            byte[] gray, int w, int h, float cx, float cy, float r, float gap, float stoppedY) {
+        int paper = 0, explained = 0, quadrants = 0, nearQuadrants = 0;
+        for (int a : ProbeSigns.VALUES)
+            for (int b : ProbeSigns.VALUES) {
+                int localPaper = 0, localOwned = 0;
+                for (float t : new float[] {.4f, .6f}) {
+                    int x = Math.round(cx + a * r * (1 - t) * 1.25f);
+                    int y = Math.round(cy + b * r * t * 1.25f);
+                    if (!dark(gray, w, h, x, y)) {
+                        paper++;
+                        localPaper++;
+                    } else if (horizontalRule(gray, w, h, y, cx, r)
+                            || outwardStemBeforeHead(gray, w, h, x, y, cx, cy, r, gap, stoppedY)) {
+                        explained++;
+                        localOwned++;
+                    }
+                }
+                if (localPaper > 0) {
+                    quadrants++;
+                    nearQuadrants++;
+                } else if (localOwned == 2
+                        && !dark(
+                                gray,
+                                w,
+                                h,
+                                Math.round(cx + a * r * 1.1f),
+                                Math.round(cy + b * r * 1.1f))) {
+                    quadrants++;
+                }
+            }
+        return paper >= 3 && paper + explained >= 6 && quadrants == 4 && nearQuadrants >= 3;
+    }
+
+    private static boolean horizontalRule(byte[] gray, int w, int h, int y, float cx, float r) {
+        int from = Math.round(cx - r * 1.5f);
+        int to = Math.round(cx + r * 1.5f);
+        if (!dark(gray, w, h, from, y) || !dark(gray, w, h, to, y)) return false;
+        int hits = 0;
+        for (int p = from; p <= to; p++) if (dark(gray, w, h, p, y)) hits++;
+        if (hits < (to - from + 1) * .9f) return false;
+        int limit = Math.max(1, Math.round(r * .5f));
+        for (int endpoint : new int[] {from, to}) {
+            int thickness = 1;
+            for (int direction : ProbeSigns.VALUES)
+                for (int d = 1; d <= limit; d++) {
+                    if (!dark(gray, w, h, endpoint, y + direction * d)) break;
+                    thickness++;
+                }
+            if (thickness > limit) return false;
+        }
+        return true;
+    }
+
+    private static boolean outwardStemBeforeHead(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            int y,
+            float cx,
+            float cy,
+            float r,
+            float gap,
+            float stoppedY) {
+        int direction = y >= cy ? 1 : -1;
+        int endpoint = y + direction * Math.round(r * 2);
+        // Measure the stem in the gap between the heads, before its filled-head attachment.
+        if (direction > 0) endpoint = Math.min(endpoint, Math.round(stoppedY - gap * .5f));
+        int distance = direction * (endpoint - y);
+        if (distance < 2) return false;
+        if (direction > 0) {
+            int from = Math.round(stoppedY + gap * .2f), to = Math.round(stoppedY + gap * 1.2f);
+            int stemHits = 0;
+            for (int yy = from; yy <= to; yy++) if (dark(gray, w, h, x, yy)) stemHits++;
+            if (stemHits < (to - from + 1) * .9f) return false;
+        } else if (distance < Math.round(r * .5f)) return false;
+        int hits = 0;
+        for (int d = 0; d <= distance; d++) if (dark(gray, w, h, x, y + direction * d)) hits++;
+        if (hits < (distance + 1) * .9f) return false;
+        int limit = Math.max(1, Math.round(r * .5f)), outward = x < cx ? -1 : 1;
+        int nearThickness = 1;
+        for (int d = 1; d <= limit; d++) {
+            if (!dark(gray, w, h, x + outward * d, y)) break;
+            nearThickness++;
+        }
+        if (nearThickness > limit) return false;
+        int farThickness = 1;
+        for (int side : ProbeSigns.VALUES)
+            for (int d = 1; d <= limit; d++) {
+                if (!dark(gray, w, h, x + side * d, endpoint)) break;
+                farThickness++;
+            }
+        return farThickness <= limit;
+    }
+
+    private static boolean enclosedCounter(byte[] gray, int w, int h, float cx, float cy, float r) {
+        int left = (int) Math.floor(cx - r), top = (int) Math.floor(cy - r);
+        int right = (int) Math.ceil(cx + r), bottom = (int) Math.ceil(cy + r);
+        if (left < 0 || top < 0 || right >= w || bottom >= h) return false;
+        int width = right - left + 1, height = bottom - top + 1;
+        boolean[] visited = new boolean[width * height];
+        int[] queue = new int[visited.length];
+        for (int iy = 0; iy < height; iy++)
+            for (int ix = 0; ix < width; ix++) {
+                int first = iy * width + ix;
+                if (visited[first] || dark(gray, w, h, left + ix, top + iy)) continue;
+                int head = 0, tail = 1, area = 0, minX = ix, maxX = ix, minY = iy, maxY = iy;
+                long sumX = 0, sumY = 0;
+                boolean boundary = false;
+                queue[0] = first;
+                visited[first] = true;
+                while (head < tail) {
+                    int value = queue[head++], x = value % width, y = value / width;
+                    area++;
+                    sumX += x;
+                    sumY += y;
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                    if (x == 0 || y == 0 || x == width - 1 || y == height - 1) boundary = true;
+                    for (int direction = 0; direction < 4; direction++) {
+                        int nx = x + (direction == 0 ? -1 : direction == 1 ? 1 : 0);
+                        int ny = y + (direction == 2 ? -1 : direction == 3 ? 1 : 0);
+                        if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+                        int next = ny * width + nx;
+                        if (!visited[next] && !dark(gray, w, h, left + nx, top + ny)) {
+                            visited[next] = true;
+                            queue[tail++] = next;
+                        }
+                    }
+                }
+                if (!boundary
+                        && area >= 4
+                        && maxX > minX
+                        && maxY > minY
+                        && Math.abs(left + sumX / (float) area - cx) <= r * .4f
+                        && Math.abs(top + sumY / (float) area - cy) <= r * .4f) return true;
+            }
         return false;
     }
 

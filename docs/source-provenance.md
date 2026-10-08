@@ -762,3 +762,11 @@ thick printed rules using the existing licensed Bravura font. Android uses the
 shared eligible-candidate budget while retaining its platform OCR. Recognition16
 invalidates prior meter interpretations; weights, dependencies and physical guide
 and audio layouts are unchanged. No private score material is distributed.
+
+Thick hollow artificial-harmonic touch diamonds may retain a small enclosed
+paper counter. The model-supported fallback requires enclosed paper, supported
+sides and vertices, diamond exterior shape, and thin continuous staff/stem
+ownership. Filled stopped-head ink cannot supply stem-width evidence. Original
+geometric regressions cover shifted/scaled diamonds, circles, tilted ovals and
+missing model/rhythm/stem support. Recognition17 invalidates prior interpretations;
+weights, dependencies, fonts and physical guide/audio records are unchanged.

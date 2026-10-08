@@ -556,12 +556,12 @@
     },
     "ArtificialHarmonics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
-      "source_sha256": "ac937cb2413f0125266119c368aad3e29741dfe027a26ec182b1b77d8a639472",
+      "source_sha256": "adaca14e82c27010cc16ed04da3a5fcd274847b7fa08232c488ba2c62a5d7967",
       "reviewed_app_commit": "abdad95ab53c8481049a8f1c7b25442779a46404",
-      "source_normalized_sha256": "93922789837d5bf6ea516bfa8680167fd9c28a886106db5e61eefbf07c3ff2c5",
+      "source_normalized_sha256": "2edfa42a978b2b88fc6ea0008cd4e86b15a92e35d14cabd6b2a1874b60aae42b",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed recognition15 working-tree delta on app f4fca934fee0c72545a3761a485a87cb0f32af1d; historical extraction commit retained.",
-      "review_note": "Original synthetic touch-diamond and joined faded-stem controls review the labels-aware overload. Gray-only behavior is retained; no model, dependency or record-layout change."
+      "reviewed_source_state": "Reviewed recognition17 delta on maintained personal d480494d; historical extraction commit retained.",
+      "review_note": "Recover thick hollow touch diamonds through enclosed paper topology, fully supported sides/vertices and diamond exterior evidence. Staff/stem ownership remains thin and continuous; stopped-head ink cannot supply stem-width evidence. Existing model, beam, filled-lower-head, joined-stem and unpitched guards retained."
     },
     "ParallelBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelBeamTip.java",
@@ -1408,11 +1408,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "2677c04c836e20698fa16135d0e126aa06a5821724d2efe9ba35655e96e5ff87",
-      "source_normalized_sha256": "394117ef5552c684d8b4cce269664959d3593c2d3b5661cfe52eb4519b305b0c",
+      "source_sha256": "2fbeb9b56e5b5cd5462ae543630fff0bc7ed13f3ba927a1c9a7683d62c13e8b5",
+      "source_normalized_sha256": "61cb23aa913eda65bac89e2c21ae3794dfdcd25a5cea9b99d0dd706ffd7192f1",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition16 separates numeric-meter repairs from prior guides at unchanged layout282.",
-      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained."
+      "review_note": "Recognition17 separates thick hollow harmonic corrections from prior guides at unchanged layout282.",
+      "reviewed_source_state": "Reviewed recognition17 delta on maintained personal d480494d; historical extraction commit retained."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1466,11 +1466,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "a9dc78e8286a5cf64343d7657a80b0fa410d0c865eee65eab1ae059622fd762e",
-      "source_normalized_sha256": "e2c02b05981897b25b3e6afc150c523c3d11dfe874d3eb24f746452ecd856809",
+      "source_sha256": "f99183854180228bed5f8fd167c7ffd912803e2a485ef5b59be755f0caf2eb15",
+      "source_normalized_sha256": "bf37302dbc2c3da88afc792e385c2691818161d3b63e76ff74b954ffee146221",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
-      "review_note": "Recognition identity15 to16; current and legacy physical guide records unchanged."
+      "reviewed_source_state": "Reviewed recognition17 delta on maintained personal d480494d; historical extraction commit retained.",
+      "review_note": "Recognition identity16 to17; current and legacy physical guide records unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3589,5 +3589,20 @@
       "review": "Same bounded font match with staff-rule exclusion radius consistent with candidate generation; score.84 and ambiguity margin.05 unchanged. Package/class/public access adaptation only. Existing Bravura font unchanged."
     },
     "android_adapter": "OmrMeasureAnalyzer uses the same note-eligible crop budget. Android OCR remains platform-specific; desktop font evidence is not a phone OCR accuracy claim."
+  },
+  "thick_hollow_harmonic_review": {
+    "base_public_commit": "a420672069d149326a7d8901fe242bda6ee17b33",
+    "base_app_commit": "d480494d0242303f2303bf84eb0856040515a866",
+    "recognition_revision": 17,
+    "guide_format": 282,
+    "audio_format": 71,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "fixture_origin": "Nine original Apache-2.0 geometric bitmap regressions: 288 shifted/scaled hollow diamonds, 288 circles, 1296 tilted ovals, and model/rhythm/stem/counter rejection guards. No score-derived pixels, identifiers, coordinates, logs or private evidence included.",
+    "app_source_sha256": "adaca14e82c27010cc16ed04da3a5fcd274847b7fa08232c488ba2c62a5d7967",
+    "standalone_source_sha256": "e7af70c192867b4a0ad9b70940d2d7a264286d6ac8caac443c5f11bc42f59a46",
+    "shareable_test_sha256": "7e09a4808efcbfad017bc1f328cae6f1ad57659426844f8e365e5d07fad46c64",
+    "boundary": "Only the existing model-supported harmonic-touch fallback gains the enclosed-counter path. Original stem/rhythm/unpitched requirements and gray-only API are retained. Filled or fully obscured touches do not satisfy this new evidence. Weights, libraries, fonts and record layouts are unchanged."
   }
 }
