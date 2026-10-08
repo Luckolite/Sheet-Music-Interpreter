@@ -74,12 +74,12 @@
     },
     "LocalTieStaffAlignment.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalTieStaffAlignment.java",
-      "source_sha256": "daf6e0bfd1e4b4d8594e546ccb0c4f9d44252c739763429f151e6752ca536b88",
+      "source_sha256": "8264c03b376cad3ac7b833fe3cddd3d2b62d1a794a9eb08b0cee11f27ef1c081",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6b6c526494a4f16e55db9d4c8234ea9e65d379d045b714ef670770fb7d88b871",
-      "review_note": "Reviewed fragmented semantic staff tie alignment and actual stroke-center curvature. Complete independent printed five-rule endpoint evidence with majority semantic support; sloping straight rules rejected by fitted stroke-center residual. Full executable token parity after package/logging adaptation; original generated Apache-2.0 controls. Existing processing optimizations, weights, dependencies and record layout retained. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
+      "source_normalized_sha256": "1e360ceeff9bd90f654bd912d54445caa08b3c5f9ec4a4070e4b751effb21f1c",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
     },
     "CreaseBeamAttachment.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CreaseBeamAttachment.java",
@@ -276,12 +276,12 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "4bf2a295cbb5ddaae167037fc9fc0baff69173d835e836ba7156b5be93a3fb69",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
-      "source_normalized_sha256": "4bf2a295cbb5ddaae167037fc9fc0baff69173d835e836ba7156b5be93a3fb69",
+      "source_sha256": "07a1ac2f9edecc326cb4084c76930fdbd94211d5343eb9636272cc1b923e6342",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "source_normalized_sha256": "420b4417fda2e8b00ae1a778128845e67b37a4d53d242145681ff5e5ecfad49d",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
     },
     "OpenChevron.java": {
@@ -301,11 +301,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "ba10ce8347003829fc94ac35c4185d21ed6b09a0d3dd2dad7709c1d283455ad6",
-      "source_normalized_sha256": "ba10ce8347003829fc94ac35c4185d21ed6b09a0d3dd2dad7709c1d283455ad6",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
+      "source_sha256": "a4362a29782493c3f17d3f7e0038a3809e89557a7d00ac52b21296e61f56041d",
+      "source_normalized_sha256": "7e24de264b9a229cde2cab83651fd685af31204b308031ef7c555561110ea510",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
     },
     "ShortFinalStaff.java": {
@@ -317,13 +317,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d27c7314adf6a27f17f93ad5c2538079579f41835fbd7fa860807853f88663b7",
+      "source_sha256": "63a7ae64d7bc80bb76ac6b579282eefb75034cf1f00cbcba5a746f016306970b",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "scoped_reviewed_app_commit": "75c25e4349e7a27e5303dd0645c53dec58eb3353",
-      "review_note": "Reviewed explicit multi-staff caller scope and attached semantic/raw-ink beam helper. Original system staff count survives local rhythm-frame construction; standalone and native diagnostics adapters remain independent.",
-      "source_normalized_sha256": "de81f7de6f1810e777504888d55045d4dd3dd7822e000f58c2e3486c573284d3",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "source_normalized_sha256": "6acbd21605b44e424267c43adae04e20564a6c5283588f096c71fa765a4b4f21",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained."
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -414,12 +414,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "f33794b8f5348cf5203fce51f5528b2642d262f79b617f04562c71b5c5b6fcbd",
+      "source_sha256": "0b295dfa45c61b626c0c11f761fbe38066a4d20369ebc726b9ef4019f6f3d8b0",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Reviewed early physical up-stem voice evidence and occluded eighth-rest recovery from a separate diagonal tail, continuing independent quarter shaft, owned printed triplet and connected following beams. Original procedural controls; no source-specific geometry. Rest staff-position reconstruction preserves octave shift and boundary-tie evidence while retaining the existing rhythm, stem and tuplet metadata. No new rest or pitch decisions; unchanged detector controls remain in the full regression suite. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged. A seeded faint pass may replace a shorter eighth/sixteenth reading only with a proved quarter contour at the same measure/staff/position, over ten percent taller and enclosing the complete earlier vertical extent. Stale dots are removed and the recovered contour supplies its own dot ownership. Other duplicate decisions remain unchanged. Original font rasters span height38-46, three pale shades, three faded bands and two raster phases; damaged glyph/accidental/short-rest controls retained. Model weights and dependencies unchanged.",
-      "source_normalized_sha256": "366451feaa819112cd6067c7678c8b1e8dc3ad9bb066a7dde65475fb09ccf79e",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "source_normalized_sha256": "deaa1e017f00d08d6cac7ce6b725b9e523396f25074a0bb891d80d5a73525215",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Reviewed working-tree extension: recovered quarter-rest duplicate selection, shared literal-identical changed section, original licensed-font regression and actual app-source host controls.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
     },
     "TempoChangeDetector.java": {
@@ -458,11 +458,11 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "822bae71374e853783471dcd9e4c758400f02db612a6584a8899f55253bbf551",
-      "source_normalized_sha256": "e9d2a0d98f8ee12fe9b44a1c9e97eab13c438c1cad3a22d136a481e1ffd01ccb",
+      "source_sha256": "35b1e657b954d44d6d010037eb1c8c16eeb8b2210912e3adbeb94109db81ac78",
+      "source_normalized_sha256": "f9ea2e9fc1817e660416f8e5db333492fda56c67d6d6f6ee9af896d1dcb7d1f2",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed column shift hoist retains exact original float operands and Math.round order. Original synthetic regressions; unchanged models/dependencies/layouts, no private source images or device data. The13 strip samples share one fully overwritten call-local raster. Raw detector and contrast/rule readers are synchronous and retain only geometry; strip order, caller pixels, float math, validation and pitch output remain unchanged. Existing8 plus one original varying-paper/ink curve and caller-preservation regression passed on app and standalone sources (18 focused checks). No models, dependencies, record fields or private inputs changed.",
-      "reviewed_source_state": "Reviewed Music Sheets 1.18.383 source; parent is accepted 1.18.382"
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
@@ -730,10 +730,11 @@
     },
     "FingeringAnnotationFilter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FingeringAnnotationFilter.java",
-      "source_sha256": "13db66be6c8bf35df8673762fb52f902f868941c9ad8cf3efd476b92cbba898c",
+      "source_sha256": "ce3b51ef6b7c663098b6be9f02275cbb454204c48af428ded3c606e5d1403080",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "13db66be6c8bf35df8673762fb52f902f868941c9ad8cf3efd476b92cbba898c",
-      "review_note": "Reuse three immutable fixed regex Patterns with fresh whole-input Matchers at the original fingering/printed-stem branches. Preserve trim, existing ASCII whitespace removal, Locale.ROOT, short-circuit order, note/staff geometry, list identity and source pixels. Original Unicode/newline/whole-token and independent stem/hand-label regressions; Apache-2.0/JDK only. Also reuse the original default-flags \\s+ Pattern with a fresh local Matcher.replaceAll at the original trim-to-Locale.ROOT position. ASCII whitespace, NBSP/Unicode boundaries, short-circuits and replacement text stay unchanged."
+      "source_normalized_sha256": "a5a076bba99ec4dc0a6c7bcd7067e0a77f81c8b07da2c45f219cbb3bf98af0cf",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
     },
     "GlyphInkContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GlyphInkContrast.java",
@@ -927,9 +928,11 @@
     },
     "StemOwnedBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StemOwnedBeamTip.java",
-      "source_sha256": "535fe4f02f69b7851f06f7252e59fa4a611c68e74e27ecca034e9d0eeca54a15",
+      "source_sha256": "1290566f2786d0653b79e0827e9d0493fa75c45cc962b5e3442d1240361e3b32",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "535fe4f02f69b7851f06f7252e59fa4a611c68e74e27ecca034e9d0eeca54a15"
+      "source_normalized_sha256": "62ade0328e383e7bda21fd158ce8d6cbc3eb2ca1d62de2a6362fbabc34a208fd",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
     },
     "TupletNumeralInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralInk.java",
@@ -966,11 +969,11 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "78568326fd846f698928b049e773180078c70d06277ce8a00d4c0d97c4d8488f",
+      "source_sha256": "379d2875fe6a5e028f3bba8314f0936f54f2066694e45e7b542b463f721403a0",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "5cf6da5b56f23d22a49db65ec73d97323a1d93e3652976dcb79d94c60c47f74e",
-      "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data. Reuse fixed combining-mark and strength regex Patterns with fresh Matchers, and lazily compute progression once per parse at its original first matched-rule boundary. Preserve normalization, rule order, modifiers, qualifiers and printed text; original composed/decomposed and multi-rule progression regressions. Apache-2.0/JDK-only; no model/dependency/record-layout changes."
+      "source_normalized_sha256": "4cd34a04dc0eaa2ce401445a8024449e640eafca400b356b287fa34f65519026",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
@@ -1193,10 +1196,10 @@
     },
     "RestPaperTone.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestPaperTone.java",
-      "source_sha256": "326b6b8c24a769497dbe421678cdd970f867f9bb1e59e976fa01a5f84ba5456d",
-      "source_normalized_sha256": "326b6b8c24a769497dbe421678cdd970f867f9bb1e59e976fa01a5f84ba5456d",
-      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta.",
-      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "source_sha256": "270431c5fdd82ada1cf3cf57f6967b60977699a4bbc68cde702e0a63bf5b0139",
+      "source_normalized_sha256": "b5671dee265f0b40e23d94c5f58fe618f435e5d7a37d6a6a214941ce803ef877",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
     },
     "TechniqueTextRegions.java": {
@@ -1302,11 +1305,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "1798f94588841751c278ab9beca78fa36f96a4630216643d7cc8e9257eb1e3fd",
-      "source_normalized_sha256": "1798f94588841751c278ab9beca78fa36f96a4630216643d7cc8e9257eb1e3fd",
+      "source_sha256": "5525f3d374ef8077bebb80de72590d6be0d198bce95978e81842aca59bd1b547",
+      "source_normalized_sha256": "520ea8dc2e111a0bacece54121657f8c00347e0d1ed45df317b551f08cbcb3ad",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
-      "review_note": "Computed endpoint roundoff only, bounded to four ULPs at the bar/absolute arithmetic scale. Stored musical anchors, score bounds, true overruns and sound-release ownership remain strict. Original contradictory optical-clock controls and invalid-anchor rejection tests; no private notation, dependencies or weights.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
@@ -1408,11 +1411,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "d4c5c08602034089d9c398e503a569148f8bae521a8d795b5abcfb185736f1f3",
-      "source_normalized_sha256": "9a08547064958dd2ef2643bb6cfd721a02375934ebb5b239a159f534c4d29a70",
+      "source_sha256": "e5eaaba282fc8a278ef62eef6800e62af05746f9642b38ee9f432e0a1dceb3b3",
+      "source_normalized_sha256": "31d3c67091b502224e9cd0468c9f019c74302562f05589bf2b5b4515ca781684",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Recognition18 separates beam/numeral recognition from prior cached guides at unchanged layout282.",
-      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained."
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1466,11 +1469,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d56f697758441b04454d1e7b458a106d0dae1dc32b363d56ecd4204095843050",
-      "source_normalized_sha256": "8f8ccae08dccdeb67c3f08183f9028a0a840b941f90f65f85128d1c09128bb43",
+      "source_sha256": "a74bbfd19688fced649cac7bc930abc670855f348427460d80a2ecd5c586def7",
+      "source_normalized_sha256": "29634b7a1063a2a28da074318d44eed29c80cd759eb315b1bc17e596e7014e01",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
-      "review_note": "Recognition17 to18 cache identity; unchanged current/legacy physical record layouts."
+      "reviewed_source_state": "Frozen recognition19 app writer; historical extraction commits retained.",
+      "review_note": "Recognition18 to19 derived cache identity; complete AST parity after the existing relative semantic import and standalone license header. Current and legacy guide record layouts are unchanged."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1545,11 +1548,11 @@
     },
     "LocalPrintedStaffBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalPrintedStaffBand.java",
-      "source_sha256": "d7a41b36f12eec8257cf434a8c102eb5365c9819ef10d8d0be966fcd3a5ee10e",
-      "source_normalized_sha256": "d7a41b36f12eec8257cf434a8c102eb5365c9819ef10d8d0be966fcd3a5ee10e",
+      "source_sha256": "a0fccfafc0e14067238a690c2f2367954a97107529dd547629d45777d3cb320c",
+      "source_normalized_sha256": "163d7c82f06abc8c65c859c5ef7393743bef9d1aa8e069ef892815906c9fcc1e",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
     },
     "PrintedRestBarHeads.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestBarHeads.java",
@@ -1686,6 +1689,13 @@
       "source_normalized_sha256": "8a3e9818985f9b628b4a006f9bd361c15845bf295d4b9d511c4c0afa81e91099",
       "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
       "review_note": "Original Apache-2.0 template/contrast/visible bowl/paper matcher for printed3 touching another voice tie or beam. Bounded thin-rule/rail occlusion, isolated text rejection, physical ownership callback and malformed-input guards; no forced ratio from another group or score-specific exception."
+    },
+    "RegionalStaffSeeds.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",
+      "source_sha256": "1ab97d885e6f4b3f15538d23ce4a70024c82540247ffe0d9884e2b63c8bc5786",
+      "source_normalized_sha256": "4f5fc0b4d523d7f3865d6eacee36e9bd21990e5c5b21260968980098c17edfa5",
+      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
+      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
     }
   },
   "interpreter_speedup_review": {
@@ -3641,5 +3651,54 @@
       "SharedStemBeamOwnershipTest.java": "2534c0f2142e34fe1886ad0204056779d95d3ad7d14b6c509469d1fdf806702f",
       "RepeatedTupletNumeralTest.java": "e4fa34824573a76962a4402aad0a1e7fbaef1aff4c6ab755d473100d6b5f4f92"
     }
+  },
+  "recognition19_physical_ownership_review": {
+    "source_sha256": {
+      "ExpressiveDirectionText.java": "379d2875fe6a5e028f3bba8314f0936f54f2066694e45e7b542b463f721403a0",
+      "FingeringAnnotationFilter.java": "ce3b51ef6b7c663098b6be9f02275cbb454204c48af428ded3c606e5d1403080",
+      "LocalPrintedStaffBand.java": "a0fccfafc0e14067238a690c2f2367954a97107529dd547629d45777d3cb320c",
+      "LocalTieStaffAlignment.java": "8264c03b376cad3ac7b833fe3cddd3d2b62d1a794a9eb08b0cee11f27ef1c081",
+      "OmrMeasurePostProcessor.java": "a4362a29782493c3f17d3f7e0038a3809e89557a7d00ac52b21296e61f56041d",
+      "OmrScoreInterpreter.java": "63a7ae64d7bc80bb76ac6b579282eefb75034cf1f00cbcba5a746f016306970b",
+      "RegionalStaffSeeds.java": "1ab97d885e6f4b3f15538d23ce4a70024c82540247ffe0d9884e2b63c8bc5786",
+      "RestPaperTone.java": "270431c5fdd82ada1cf3cf57f6967b60977699a4bbc68cde702e0a63bf5b0139",
+      "ScoreExpressionDetector.java": "5525f3d374ef8077bebb80de72590d6be0d198bce95978e81842aca59bd1b547",
+      "SixteenthRestDetector.java": "0b295dfa45c61b626c0c11f761fbe38066a4d20369ebc726b9ef4019f6f3d8b0",
+      "StaffPitchTrack.java": "35b1e657b954d44d6d010037eb1c8c16eeb8b2210912e3adbeb94109db81ac78",
+      "StemOwnedBeamTip.java": "1290566f2786d0653b79e0827e9d0493fa75c45cc962b5e3442d1240361e3b32",
+      "NoteArticulationDetector.java": "07a1ac2f9edecc326cb4084c76930fdbd94211d5343eb9636272cc1b923e6342",
+      "GuideCacheIdentity.java": "e5eaaba282fc8a278ef62eef6800e62af05746f9642b38ee9f432e0a1dceb3b3",
+      "guide_writer.py": "a74bbfd19688fced649cac7bc930abc670855f348427460d80a2ecd5c586def7"
+    },
+    "shareable_test_sha256": {
+      "RegionalStaffSeedsTest.java": "d9be91af17c74762819d24b934a3af6de79c2ad549fe6f38a89a4b769e38ffe6",
+      "RegionalStaffTrackTest.java": "229bc0dfd23d04c6eab515b6bce6771ccdf043a13542ae25f2726a0c0a894d03",
+      "RegionalStaffInputOwnershipTest.java": "0ff9fe8fd231cb73db228d8260037d967043b8430efae25ddbee965ac4c71495",
+      "ShadedStemAdmissionTest.java": "356d3f91000665819d98b15ac5964031941f376e01daa5de9a65327764d57a92",
+      "ShadedLedgerCrossingTest.java": "eed4a59285fe89fbb06431c6d30dfe7a91ba42f25b5884e8c765c8013816be01",
+      "ShadedBeamOwnershipTest.java": "7beb1cb062ede017e1ce3b39230ae815b6ed6617d7b17741206066f64544ee54",
+      "MergedBeamOwnershipTest.java": "30529f6bccbd7610a5fc643bde32ff99916d0ef6597518172722532a7127d205",
+      "SmallCornerOwnershipTest.java": "077e9d732e65157d9569a608848f176f1387d0fb93efe78c0c6d9d34a5ca2a78",
+      "WideEighthRestOwnershipTest.java": "d9670a6e49730504e0a3f99bf4b31fcd2fd16774ebdf8d3240de77e9da7092a8",
+      "OrdinaryRestLocalContrastTest.java": "71be2d4dcee00896f6362d5d6f4224fca90c5909193724c0b813a53894138254",
+      "ShadedHalfRestRectangleTest.java": "2ca17fafa923ab6aadc522aadce6c3bc56e9d5abba06cb9ef11ef73fec064ce6",
+      "FineRestContourTest.java": "2622b401aa2b616890424a0fed9b88f835ae1c5f5f8257baf48a5d573b7d218b",
+      "BelowStaffFingeringTest.java": "6cae6e01a8daf6fe7886943dabe018c7f99e4240da16cfebeeba34ae3655da3e",
+      "CurvedHeaderRawSharpTest.java": "8bdd645ab1fa1170ff15bd60b0b41440e31f1d35e44379ba82a1c8490ac6174b",
+      "CurvedHeaderOwnershipTest.java": "302d79992ee14a368dd3631208d77d193d4c5607b80f3801ef5448ca7c3c7f20",
+      "VerifiedRegionalTieAlignmentTest.java": "d4d614e138834703891e613b2bececcfff6087a4158dbc03a81d9da585cd8ae5",
+      "InclinedTrackedTremoloTest.java": "78e6f6d108c3af6cb90b33762c123ad96bbe051bd78c840bd0211219102d6c1e",
+      "CharacterDirectionsTest.java": "f3344a68f7ba9688c185bdbcf121aa4c509c3318ae01d77549140cfb2a55b9b1",
+      "PaperCurveTenutoOwnershipTest.java": "f99240484cc5883deb887472c2ff99b2a15ea21ab717d38c3aaf1c0d07237266",
+      "GuideCacheIdentityTest.java": "86a97c5446939ef3933ec2afd0f5519ffd07e053ba7ab5a9044eda9981b32567",
+      "FragmentedSignatureSharpTest.java": "8d19ed41b5056c0c4e1e2f7ccc46cb3f411a1b6993d46215da06debb70eb365d",
+      "RegionalPrintedExtentTest.java": "d55dd8b1d9ec0f41c489a709c61597a594be55f69b7c87842cf0f36d76fda889"
+    },
+    "new_helpers": [
+      "RegionalStaffSeeds.java"
+    ],
+    "models_changed": false,
+    "record_layout_changed": false,
+    "fixture_origin": "Original Apache-2.0 procedural staff, shaded glyph, stem, beam, rest, header, tie, tremolo, text and slur ownership controls. No private scans, model masks, library identifiers, coordinates, logs or data."
   }
 }

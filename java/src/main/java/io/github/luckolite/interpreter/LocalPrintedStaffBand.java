@@ -18,6 +18,40 @@ final class LocalPrintedStaffBand {
             int threshold,
             int first,
             int last) {
+        return matches(gray, w, h, x, top, gap, threshold, first, last, 0);
+    }
+
+    static boolean matches(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            int first,
+            int last,
+            float slope) {
+        return matches(gray, w, h, x, top, gap, threshold, first, last, slope, null);
+    }
+
+    static boolean matches(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            int first,
+            int last,
+            float slope,
+            StaffPitchTrack track) {
+        if (track != null) {
+            float[] frame = track.at(x);
+            gap = frame[1];
+            top = frame[0] - 4 * gap;
+        }
         if (gray == null
                 || gap < 8
                 || x < 1
@@ -43,10 +77,16 @@ final class LocalPrintedStaffBand {
             int n = 0, left = 0, right = 0;
             for (int side : new int[] {-1, 1})
                 for (int i = 0; i < span; i++) {
-                    var a = sample(gray, w, h, x + side * (start + i), seed, gap, threshold);
+                    int sampleX = x + side * (start + i);
+                    float localSeed = seed + slope * side * (start + i);
+                    if (track != null) {
+                        float[] frame = track.at(sampleX);
+                        localSeed = frame[0] - (4 - line) * frame[1];
+                    }
+                    var a = sample(gray, w, h, x + side * (start + i), localSeed, gap, threshold);
                     if (a == null) continue;
                     masses[n] = a[1];
-                    offsets[n++] = a[0] - seed;
+                    offsets[n++] = a[0] - localSeed;
                     if (side < 0) left++;
                     else right++;
                 }

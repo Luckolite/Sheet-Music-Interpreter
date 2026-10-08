@@ -287,6 +287,135 @@ final class OmrMeasurePostProcessor {
                                 (staff.top + staff.bottom) * .5f,
                                 first,
                                 last));
+        for (var seed : RegionalStaffSeeds.detect(labels, gray, width, height)) {
+            int[] rows = new int[5];
+            for (int line = 0; line < 5; line++)
+                rows[line] = Math.round(seed.top() + line * seed.gap());
+            StaffPitchTrack track = RegionalStaffSeeds.track(labels, gray, width, height, seed);
+            if (track == null)
+                track = StaffPitchTrack.linear(width, seed.bottom(), seed.gap(), seed.slope());
+            int[] columns =
+                    rawStaffColumns(gray, width, height, rows, seed.gap(), seed.slope(), track);
+            int total = Arrays.stream(columns).sum();
+            if (total <= 0) continue;
+            int left = -1, right = -1, clusterStart = -1, lastHit = -1, hits = 0;
+            int minimumHits = Math.max(8, Math.round(seed.gap() * 3));
+            for (int x = 0; x <= width; x++) {
+                if (x < width && columns[x] >= 4) {
+                    if (clusterStart < 0) clusterStart = x;
+                    lastHit = x;
+                    hits++;
+                }
+                if (clusterStart >= 0 && (x == width || x - lastHit > seed.gap() * 2)) {
+                    if (hits >= minimumHits) {
+                        if (left < 0) left = clusterStart;
+                        right = lastHit;
+                    }
+                    clusterStart = -1;
+                    lastHit = -1;
+                    hits = 0;
+                }
+            }
+            if (left < 0 || right < 0) continue;
+            left = Math.max(0, left - Math.round(seed.gap() * .5f));
+            right = Math.min(width - 1, right + Math.round(seed.gap() * .5f));
+            if (right - left < Math.max(width / 4, seed.gap() * 18)) continue;
+            // Reuse the established reader's faint closing-bar proof in this frame.
+            List<Integer> outer =
+                    findBoundaries(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            rows,
+                            seed.gap(),
+                            left,
+                            width - 1,
+                            seed.slope(),
+                            track);
+            if (outer.size() > 2) {
+                int closing = outer.get(outer.size() - 2);
+                if (closing > right && closing - right < width * .25f) right = closing;
+            }
+            List<Integer> boundaries =
+                    findBoundaries(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            rows,
+                            seed.gap(),
+                            left,
+                            right,
+                            seed.slope(),
+                            track);
+            if (boundaries.size() < 2) continue;
+            StaffRun recovered =
+                    new StaffRun(
+                            Math.round(seed.top()),
+                            Math.round(seed.bottom()),
+                            seed.gap(),
+                            left,
+                            right,
+                            boundaries,
+                            seed.slope(),
+                            track);
+            boolean represented = false;
+            for (int index = 0; index < result.size(); index++) {
+                StaffRun prior = result.get(index);
+                if (Math.abs((prior.top + prior.bottom - seed.top() - seed.bottom()) * .5f)
+                        > seed.gap() * 2.5f) continue;
+                represented = true;
+                int proofLeft = Math.max(0, Math.min(prior.left, recovered.left));
+                int proofRight = Math.min(width - 1, Math.max(prior.right, recovered.right));
+                int[] complete = new int[2], longestComplete = new int[2], completeRun = new int[2];
+                StaffRun[] frames = {prior, recovered};
+                for (int x = proofLeft; x <= proofRight; x++) {
+                    for (int frame = 0; frame < frames.length; frame++) {
+                        StaffRun physical = frames[frame];
+                        float[] local =
+                                physical.track == null
+                                        ? new float[] {
+                                            physical.bottom + physical.slope * (x - width * .5f),
+                                            physical.gap
+                                        }
+                                        : physical.track.at(x);
+                        int flank = Math.max(2, Math.round(local[1] * .32f));
+                        int radius = Math.max(0, Math.round(local[1] * .10f)), support = 0;
+                        for (int line = 0; line < 5; line++) {
+                            int center = Math.round(local[0] - (4 - line) * local[1]);
+                            boolean printed = false;
+                            for (int dy = -radius; dy <= radius; dy++) {
+                                int y = center + dy;
+                                if (y - flank < 0 || y + flank >= height) continue;
+                                int ink = gray[y * width + x] & 255;
+                                if (ink <= 238
+                                        && (gray[(y - flank) * width + x] & 255) >= ink + 12
+                                        && (gray[(y + flank) * width + x] & 255) >= ink + 12) {
+                                    printed = true;
+                                    break;
+                                }
+                            }
+                            if (printed) support++;
+                        }
+                        if (support == 5) {
+                            complete[frame]++;
+                            longestComplete[frame] =
+                                    Math.max(longestComplete[frame], ++completeRun[frame]);
+                        } else completeRun[frame] = 0;
+                    }
+                }
+                boolean established =
+                        complete[0] >= Math.max(24, Math.round((proofRight - proofLeft + 1) * .08f))
+                                && longestComplete[0] >= Math.max(8, Math.round(prior.gap * 3))
+                                && complete[0] >= complete[1]
+                                && longestComplete[0] >= longestComplete[1];
+                // Equal or stronger complete printed evidence keeps the old
+                // frame and bounds; a new seed still recovers weak or absent rows.
+                if (!established) result.set(index, recovered);
+            }
+            if (!represented) result.add(recovered);
+        }
         result.sort(Comparator.comparingInt(StaffRun::top));
         for (int index = 0; index < result.size(); index++) {
             StaffRun staff = result.get(index);

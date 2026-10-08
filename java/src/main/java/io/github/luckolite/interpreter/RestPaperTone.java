@@ -19,6 +19,18 @@ final class RestPaperTone {
         return normalize(gray, width, height, gap, 180f);
     }
 
+    /** Ordinary rest connectors need a softer paper target than isolated dark contours. */
+    static byte[] normalizeOrdinaryRestInk(byte[] gray, int width, int height, float gap) {
+        return normalize(gray, width, height, gap, 220f);
+    }
+
+    /** Keep separate complete contour readings when blur changes a thin rule edge. */
+    static byte[] normalizeOrdinaryRestInk(
+            byte[] gray, int width, int height, float gap, float paperLevel) {
+        if (!Float.isFinite(paperLevel) || paperLevel < 120 || paperLevel > 340) return gray;
+        return normalize(gray, width, height, gap, paperLevel);
+    }
+
     private static byte[] normalize(
             byte[] gray, int width, int height, float gap, float paperLevel) {
         if (gray == null

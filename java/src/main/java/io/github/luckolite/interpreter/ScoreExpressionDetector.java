@@ -24,7 +24,8 @@ public final class ScoreExpressionDetector {
                     Kind.SFORZATO,
                     Kind.SFORZANDO_PIANO,
                     Kind.BREATH,
-                    Kind.CAESURA);
+                    Kind.CAESURA,
+                    Kind.UNRESOLVED_DIRECTION);
 
     private ScoreExpressionDetector() {}
 
@@ -120,7 +121,10 @@ public final class ScoreExpressionDetector {
                                 + direction.kind()
                                 + ":"
                                 + target.substring(TARGET.length());
-                if (events.stream().anyMatch(e -> e.eventId().equals(id))) continue;
+                if (direction.kind() == Kind.UNRESOLVED_DIRECTION)
+                    id += ":word:" + direction.printedText().trim();
+                String eventId = id;
+                if (events.stream().anyMatch(e -> e.eventId().equals(eventId))) continue;
                 events.add(
                         new ScoreExpressiveEvent(
                                 id,

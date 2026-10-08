@@ -1,3 +1,5 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 import java.util.ArrayList;
@@ -127,6 +129,35 @@ final class SixteenthRestDetector {
             }
             stable = collected(rests, dots);
         }
+        for (float paperLevel : new float[] {220, 230, 250}) {
+            byte[] ordinaryPaper =
+                    gaps.isEmpty()
+                            ? gray
+                            : RestPaperTone.normalizeOrdinaryRestInk(
+                                    gray, width, height, gaps.get(gaps.size() / 2), paperLevel);
+            if (ordinaryPaper != gray) {
+                Detection ordinary =
+                        detectWithDots(ordinaryPaper, width, height, measures, staffs, notes, true);
+                rests = new ArrayList<>(stable.rests());
+                dots = new ArrayList<>(stable.dots());
+                for (ScoreRestEvent rest : ordinary.rests()) {
+                    // Only a complete body in its printed ordinary phase can add silence.
+                    // Keep the detector's note/flag owners and reject a continuing shaft.
+                    if (!ordinaryPrintedBody(width, height, measures, staffs, rest)
+                            || !seededOrdinaryRest(
+                                    ordinaryPaper, width, height, measures, staffs, rest)
+                            || continuedRecoveredTail(
+                                    ordinaryPaper, width, height, measures, staffs, rest)) continue;
+                    rests.add(rest);
+                    for (RestDot dot : ordinary.dots()) if (dot.rest().equals(rest)) dots.add(dot);
+                }
+                if (paperLevel == 220)
+                    rests.addAll(
+                            shadedHalfRests(
+                                    ordinaryPaper, width, height, measures, staffs, notes, dots));
+                stable = collected(rests, dots);
+            }
+        }
         byte[] faint = contrastedRestInk(gray, width, height, staffs, 205);
         if (faint == gray) return stable;
         Detection recovered =
@@ -159,6 +190,235 @@ final class SixteenthRestDetector {
             for (RestDot dot : recovered.dots()) if (dot.rest().equals(rest)) dots.add(dot);
         }
         return collected(rests, dots);
+    }
+
+    /** A shaded sitting rectangle needs its whole body and five printed rules.
+     * Sample along the existing track and keep the stricter note-column owner. */
+    private static List<ScoreRestEvent> shadedHalfRests(
+            byte[] paper,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<RestDot> restDots) {
+        List<ScoreRestEvent> result = new ArrayList<>();
+        for (Staff staff : staffs) {
+            int start = -1;
+            for (int x = 0; x <= width; x++) {
+                float[] frame = x < width ? restFrame(staff, x) : new float[] {0, 0};
+                float gap = frame[1], middle = frame[0] - 2 * gap;
+                int dark = 0;
+                if (x < width
+                        && Float.isFinite(frame[0])
+                        && Float.isFinite(gap)
+                        && gap >= 4
+                        && gap <= height * .25f)
+                    for (int y = Math.round(middle - gap * .55f);
+                            y <= Math.round(middle - gap * .30f);
+                            y++)
+                        if (y >= 0 && y < height && (paper[y * width + x] & 255) < 170) dark++;
+                if (x < width && dark >= Math.max(3, Math.round(gap * .2f))) {
+                    if (start < 0) start = x;
+                    continue;
+                }
+                if (start < 0) continue;
+                int left = start, right = x - 1;
+                start = -1;
+                float center = (left + right) * .5f;
+                frame = restFrame(staff, center);
+                gap = frame[1];
+                int[] body = sittingRectangle(paper, width, height, staff, left, right, frame);
+                if (body == null) continue;
+                float centerX = center / width, printedCenter = (frame[0] - 2 * gap) / height;
+                for (int m = 0; m < measures.size(); m++) {
+                    MeasureRegion region = measures.get(m);
+                    if (centerX <= region.left()
+                            || centerX >= region.right()
+                            || printedCenter <= region.top()
+                            || printedCenter >= region.bottom()) continue;
+                    if (m > 0 && region.equals(measures.get(m - 1))
+                            || m + 1 < measures.size() && region.equals(measures.get(m + 1))) break;
+                    boolean owned = false;
+                    for (ScoreNoteEvent note : notes)
+                        if (note.measureIndex() == m
+                                && note.staffIndex() == staff.index()
+                                && note.staffCount() == staff.count()) {
+                            float noteX =
+                                    (region.left()
+                                                    + note.positionInMeasure()
+                                                            * (region.right() - region.left()))
+                                            * width;
+                            if (noteX >= left - gap * .65f && noteX <= right + gap * .65f) {
+                                owned = true;
+                                break;
+                            }
+                        }
+                    if (!owned) {
+                        Staff local =
+                                new Staff(
+                                        frame[0] - 4 * gap,
+                                        frame[0],
+                                        gap,
+                                        staff.index(),
+                                        staff.count());
+                        List<InkDot> augmentation =
+                                augmentationDots(
+                                        paper, width, height, local, right, region, notes, m);
+                        ScoreRestEvent rest =
+                                new ScoreRestEvent(
+                                        m,
+                                        (centerX - region.left())
+                                                / (region.right() - region.left()),
+                                        (body[0] + body[1]) * .5f / height,
+                                        (body[1] - body[0] + 1f) / height,
+                                        staff.index(),
+                                        staff.count(),
+                                        augmentation.size() == 2
+                                                ? 3.5
+                                                : augmentation.size() == 1 ? 3 : 2);
+                        result.add(rest);
+                        for (InkDot dot : augmentation)
+                            restDots.add(new RestDot(dot.x(), dot.y(), rest));
+                    }
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    private static float[] restFrame(Staff staff, float x) {
+        return staff.pitchTrack() == null
+                ? new float[] {staff.bottom(), staff.gap()}
+                : staff.pitchTrack().at(x);
+    }
+
+    private static int restPixel(
+            byte[] gray, int width, int height, Staff staff, int x, int y, float bottom) {
+        if (x < 0 || x >= width) return 255;
+        int sourceY = Math.round(y + restFrame(staff, x)[0] - bottom);
+        return sourceY < 0 || sourceY >= height ? 255 : gray[sourceY * width + x] & 255;
+    }
+
+    private static int restRowInk(
+            byte[] gray,
+            int width,
+            int height,
+            Staff staff,
+            int left,
+            int right,
+            int y,
+            float bottom) {
+        int count = 0;
+        for (int x = left; x <= right; x++)
+            if (restPixel(gray, width, height, staff, x, y, bottom) < 170) count++;
+        return count;
+    }
+
+    private static int[] sittingRectangle(
+            byte[] gray, int width, int height, Staff staff, int left, int right, float[] frame) {
+        float bottom = frame[0], gap = frame[1];
+        int bodyWidth = right - left + 1;
+        if (!Float.isFinite(bottom)
+                || !Float.isFinite(gap)
+                || gap < 4
+                || gap > height * .25f
+                || bodyWidth < gap * .7f
+                || bodyWidth > gap * 1.6f) return null;
+        int reach = Math.max(4, Math.round(gap * 2)), margin = Math.max(2, Math.round(gap * .25f));
+        if (left - reach < 0 || right + reach >= width) return null;
+        int contrast = Math.max(2, Math.round(gap * .32f)),
+                search = Math.max(1, Math.round(gap * .15f));
+        for (int line = 0; line < 5; line++) {
+            int expected = Math.round(bottom - (4 - line) * gap);
+            boolean supported = false;
+            for (int y = expected - search; y <= expected + search && !supported; y++) {
+                int a = 0, b = 0;
+                for (int x = left - reach; x < left - margin; x++) {
+                    int ink = restPixel(gray, width, height, staff, x, y, bottom);
+                    if (ink <= 225
+                            && restPixel(gray, width, height, staff, x, y - contrast, bottom)
+                                    >= ink + 12
+                            && restPixel(gray, width, height, staff, x, y + contrast, bottom)
+                                    >= ink + 12) a++;
+                }
+                for (int x = right + margin + 1; x <= right + reach; x++) {
+                    int ink = restPixel(gray, width, height, staff, x, y, bottom);
+                    if (ink <= 225
+                            && restPixel(gray, width, height, staff, x, y - contrast, bottom)
+                                    >= ink + 12
+                            && restPixel(gray, width, height, staff, x, y + contrast, bottom)
+                                    >= ink + 12) b++;
+                }
+                supported = a >= (reach - margin) * .5f && b >= (reach - margin) * .5f;
+            }
+            if (!supported) return null;
+        }
+        int rule = Math.round(bottom - 2 * gap), first = rule - 1;
+        while (first >= 0
+                && rule - first <= gap * .7f
+                && restRowInk(gray, width, height, staff, left, right, first, bottom)
+                        >= bodyWidth * .8f) first--;
+        first++;
+        int rows = rule - first;
+        if (rows < Math.max(3, Math.round(gap * .25f))
+                || rows > gap * .65f
+                || restRowInk(gray, width, height, staff, left, right, first - 1, bottom)
+                        > bodyWidth * .8f
+                || restRowInk(gray, width, height, staff, left, right, first - 2, bottom)
+                        > bodyWidth * .25f) return null;
+        int ruleEdge = Math.max(2, Math.round(gap * .2f));
+        for (int y = first; y < rule - ruleEdge; y++)
+            if (restRowInk(gray, width, height, staff, left - margin, left - 1, y, bottom) > 1
+                    || restRowInk(gray, width, height, staff, right + 1, right + margin, y, bottom)
+                            > 1) return null;
+        int outside = 0;
+        for (int y = Math.round(bottom - 4 * gap + gap * .15f);
+                y <= Math.round(bottom + gap * .3f);
+                y++) {
+            if (y >= first - 1 && y < rule) continue;
+            float nearest = bottom + Math.round((y - bottom) / gap) * gap;
+            if (Math.abs(y - nearest) <= ruleEdge) continue;
+            outside += restRowInk(gray, width, height, staff, left, right, y, bottom);
+        }
+        if (outside > Math.max(2, Math.round(gap * .2f))) return null;
+        return new int[] {first, rule - 1};
+    }
+
+    private static boolean ordinaryPrintedBody(
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            ScoreRestEvent rest) {
+        if (rest.durationBeats() != .5 && rest.durationBeats() != 1
+                || rest.measureIndex() < 0
+                || rest.measureIndex() >= measures.size()) return false;
+        MeasureRegion region = measures.get(rest.measureIndex());
+        float x =
+                (region.left() + rest.positionInMeasure() * (region.right() - region.left()))
+                        * width;
+        float first = (rest.pageY() - rest.pageHeight() * .5f) * height;
+        float last = (rest.pageY() + rest.pageHeight() * .5f) * height - 1;
+        for (Staff staff : staffs) {
+            if (staff.index() != rest.staffIndex() || staff.count() != rest.staffCount()) continue;
+            float[] frame =
+                    staff.pitchTrack() == null
+                            ? new float[] {staff.bottom(), staff.gap()}
+                            : staff.pitchTrack().at(x);
+            float bottom = frame[0], gap = frame[1], top = bottom - 4 * gap;
+            if (rest.durationBeats() == .5) {
+                if (last >= bottom - gap * 1.5f
+                        && last <= bottom - gap * .75f
+                        && first >= top + gap * .85f - 1
+                        && first <= top + gap * 1.55f + 1) return true;
+            } else if (first >= top + gap * .2f - 1
+                    && first <= top + gap * 1.1f + 1
+                    && last + 1 >= Math.floor(bottom - gap * 1.2f)
+                    && last <= bottom - gap * .1f + 1) return true;
+        }
+        return false;
     }
 
     private static boolean completeRecoveredQuarter(ScoreRestEvent full, ScoreRestEvent cropped) {
@@ -2094,7 +2354,8 @@ final class SixteenthRestDetector {
                 e = bandCenter(centers, .80, .91),
                 f = bandCenter(centers, .94, 1);
         if (b - a > gap * .10
-                && b - c > gap * .055
+                && b > c
+                && b - c + .5 > gap * .055
                 && d - c > gap * .055
                 && d - e > gap * .12
                 && f - e > gap * .10) return true;
@@ -2142,7 +2403,7 @@ final class SixteenthRestDetector {
                 && gap >= 4
                 && peak - start + .5 > gap * .14
                 && peak - valley + .5 > gap * .18
-                && hookRight - valley > gap * .08
+                && hookRight - valley + .5 > gap * .08
                 && hookRight - hookLeft + .5 > gap * .10
                 && foot - hookLeft >= -gap * .06
                 && foot - hookLeft < gap * .15;

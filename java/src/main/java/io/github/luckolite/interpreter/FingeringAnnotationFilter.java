@@ -32,7 +32,7 @@ final class FingeringAnnotationFilter {
         for (var note : notes) {
             if (note.measureIndex() < 0
                     || note.measureIndex() >= measures.size()
-                    || note.staffStep() < 8
+                    || note.staffStep() < 8 && note.staffStep() > -3
                     || (note.articulations() & NoteOrnament.GRACE) != 0) {
                 result.add(note);
                 continue;
@@ -47,7 +47,10 @@ final class FingeringAnnotationFilter {
                     y = note.pageY() * height;
             boolean annotation = false;
             for (var word : words) {
-                if (!isFingering(word.text())) continue;
+                boolean below = note.staffStep() <= -3;
+                String token = word.text() == null ? "" : word.text().trim();
+                boolean sequence = below && token.matches("[1-5]{2,4}");
+                if (!isFingering(word.text()) && !sequence) continue;
                 float l = word.left() * width,
                         r = word.right() * width,
                         t = word.top() * height,
@@ -59,21 +62,34 @@ final class FingeringAnnotationFilter {
                     if (staff.index() != note.staffIndex()
                             || staff.count() != note.staffCount()
                             || staff.gap() < 5) continue;
-                    float dy = (staff.top() - b) / staff.gap();
-                    if (dy < -.4f || dy > 5 || Math.abs(dy) >= distance) continue;
+                    float dy =
+                            below
+                                    ? (t - staff.bottom()) / staff.gap()
+                                    : (staff.top() - b) / staff.gap();
+                    if (dy < (below ? -2.5f : -.4f)
+                            || dy > (below ? 6 : 5)
+                            || Math.abs(dy) >= distance) continue;
                     owner = staff;
                     distance = Math.abs(dy);
                 }
                 if (owner == null) continue;
                 float gap = owner.gap();
                 if (b - t < gap * 1.15f
-                        || b - t > gap * 5.5f
+                        || b - t > gap * (sequence ? 6 : 5.5f)
                         || r - l < gap * .45f
-                        || r - l > gap * 7) continue;
-                if (SINGLE_DIGIT.matcher(word.text().trim()).matches()
+                        || r - l > gap * (sequence ? token.length() * 3.5f : 7)) continue;
+                if (sequence && (r - l) / token.length() > gap * 3.5f) continue;
+                if ((below || SINGLE_DIGIT.matcher(word.text().trim()).matches())
                         && printedStemBeyondWord(gray, width, height, x, y, t, b, gap)) continue;
-                if (note.staffStep() >= 10
-                        && printedLedgerAcrossWord(gray, width, height, l, r, y, gap)) continue;
+                if ((note.staffStep() >= 10 || below)
+                        && printedLedgerAcrossWord(
+                                gray,
+                                width,
+                                height,
+                                sequence ? x - gap * .75f : l,
+                                sequence ? x + gap * .75f : r,
+                                y,
+                                gap)) continue;
                 annotation = true;
                 break;
             }
@@ -99,6 +115,17 @@ final class FingeringAnnotationFilter {
             float top,
             float bottom,
             float gap) {
+        int limit = 170;
+        int local =
+                BeamInkThreshold.at(
+                        gray,
+                        width,
+                        height,
+                        Math.round(x),
+                        Math.round(top - gap),
+                        Math.round(bottom + gap),
+                        gap);
+        if (local < 153) limit = Math.min(limit, local + 15);
         for (int direction : new int[] {-1, 1})
             for (int offset = Math.round(gap * .35f); offset <= Math.round(gap * .9f); offset++) {
                 int xx = Math.round(x) - direction * offset;
@@ -112,7 +139,7 @@ final class FingeringAnnotationFilter {
                 int ink = 0, total = 0, run = 0, longestBlank = 0;
                 for (int yy = Math.round(y); direction * (end - yy) >= 0; yy += direction) {
                     total++;
-                    if ((gray[yy * width + xx] & 255) < 170) {
+                    if ((gray[yy * width + xx] & 255) < limit) {
                         ink++;
                         run = 0;
                     } else {
@@ -129,6 +156,17 @@ final class FingeringAnnotationFilter {
 
     private static boolean printedLedgerAcrossWord(
             byte[] gray, int width, int height, float left, float right, float y, float gap) {
+        int limit = 190;
+        int local =
+                BeamInkThreshold.at(
+                        gray,
+                        width,
+                        height,
+                        Math.round((left + right) * .5f),
+                        Math.round(y - gap),
+                        Math.round(y + gap),
+                        gap);
+        if (local < 153) limit = Math.min(limit, local + 15);
         for (int yy = Math.max(1, Math.round(y - gap * .3f));
                 yy <= Math.min(height - 2, Math.round(y + gap * .3f));
                 yy++) {
@@ -142,7 +180,7 @@ final class FingeringAnnotationFilter {
                         break;
                     }
                     total++;
-                    if ((gray[yy * width + x] & 255) < 190) hits++;
+                    if ((gray[yy * width + x] & 255) < limit) hits++;
                 }
                 if (total < 3 || hits < total * .8f) both = false;
             }

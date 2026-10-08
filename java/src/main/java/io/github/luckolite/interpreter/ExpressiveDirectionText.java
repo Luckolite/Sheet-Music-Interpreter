@@ -43,7 +43,10 @@ public final class ExpressiveDirectionText {
                     PEDAL_RELEASE,
                     rule(
                             Kind.UNRESOLVED_DIRECTION,
-                            "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"));
+                            "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"
+                                    + "|scherzando|agitato|festoso|espressivo|dolce(?:\\s+e\\s+cantabile)?"
+                                    + "|cantabile|con\\s+(?:brio|fuoco|anima)|tranquillo|grazioso"
+                                    + "|giocoso|maestoso|appassionato|leggiero"));
 
     private ExpressiveDirectionText() {}
 

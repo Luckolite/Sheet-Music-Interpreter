@@ -6,6 +6,21 @@ package io.github.luckolite.interpreter;
 final class LocalTieStaffAlignment {
     private LocalTieStaffAlignment() {}
 
+    /** Accept only the caller's independently verified regional staff frame. */
+    static boolean same(StaffPitchTrack track, float ax, float ay, float bx, float by, int step) {
+        if (track == null || !track.verified() || !Float.isFinite(ax + ay + bx + by)) return false;
+        float[] a = track.at(ax), b = track.at(bx);
+        float gap = (a[1] + b[1]) * .5f;
+        if (!Float.isFinite(a[0] + a[1] + b[0] + b[1])
+                || a[1] < 5
+                || b[1] < 5
+                || Math.abs(a[1] - b[1]) > gap * .12f) return false;
+        float ap = (a[0] - ay) / a[1], bp = (b[0] - by) / b[1];
+        return Math.abs(ap - bp) <= .22f
+                && Math.abs(ap - step * .5f) <= .22f
+                && Math.abs(bp - step * .5f) <= .22f;
+    }
+
     static boolean same(
             byte[] labels,
             byte[] gray,

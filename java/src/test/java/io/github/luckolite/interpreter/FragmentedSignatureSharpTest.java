@@ -88,11 +88,30 @@ public class FragmentedSignatureSharpTest {
     }
 
     @Test
-    public void tinySemanticSpecksDoNotSeedAnExtraKeyGlyph() {
+    public void completePrintedSharpSurvivesTinySemanticMask() {
         var f = new JoinedSignatureSharpTest();
         f.row(100, 1, 0, false);
         for (int y = 78; y <= 122; y++) for (int x = 72; x <= 87; x++) f.labels[y * W + x] = 0;
         for (int y = 94; y <= 96; y++) for (int x = 75; x <= 77; x++) f.labels[y * W + x] = 3;
+        assertEquals(List.of(1), f.keys());
+    }
+
+    @Test
+    public void tinySemanticSpecksDoNotSeedAnExtraKeyGlyph() {
+        var f = new JoinedSignatureSharpTest();
+        f.row(100, 1, 0, false);
+        for (int y = 78; y <= 122; y++) {
+            for (int x = 72; x <= 87; x++) {
+                f.labels[y * W + x] = 0;
+                f.gray[y * W + x] = (byte) 255;
+            }
+        }
+        for (int y = 94; y <= 96; y++) {
+            for (int x = 75; x <= 77; x++) {
+                f.labels[y * W + x] = 3;
+                f.gray[y * W + x] = 0;
+            }
+        }
         assertEquals(List.of(), f.keys());
     }
 

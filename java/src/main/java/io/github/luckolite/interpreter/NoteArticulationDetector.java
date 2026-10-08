@@ -490,10 +490,16 @@ final class NoteArticulationDetector {
                         bodyContrast = printedBodyContrast(glyph, gray, width, height) ? 1 : 0;
                     if (bodyContrast == 0) continue;
                 }
-                if (recoveredCore
+                if (raw
                         && candidate == NoteArticulation.TENUTO
+                        && (recoveredCore || paperCandidates.contains(glyph))
                         && continuedPrintedCurve(
-                                printedCore, gray, labels, width, height, note.gap)) continue;
+                                recoveredCore ? printedCore : glyph,
+                                gray,
+                                labels,
+                                width,
+                                height,
+                                note.gap)) continue;
                 if (raw
                         && candidate == NoteArticulation.STACCATISSIMO
                         && descenderWord(glyph, context, labels, note.gap)) continue;

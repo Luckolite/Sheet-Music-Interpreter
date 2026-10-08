@@ -1,3 +1,5 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 import java.util.ArrayList;
@@ -456,7 +458,6 @@ final class OmrScoreInterpreter {
         // as a second plausible notehead. Demote only small, stemless components immediately to
         // the right of a substantially larger head; grace notes retain their attached stem.
         List<AccidentalCandidate> accidentalCandidates = new ArrayList<>();
-        // Preserve the proved accidental strokes as seeds for the following note.
         for (Component bar : sharpBars)
             accidentalCandidates.add(
                     new AccidentalCandidate(bar, OmrMeasurePostProcessor.NOTEHEAD));
@@ -921,11 +922,13 @@ final class OmrScoreInterpreter {
         }
         heads.removeAll(accentMarks);
         List<DetectedNote> detected = new ArrayList<>();
+
         java.util.Set<CrossHeadIdentity> retainedCrossHeads = new java.util.HashSet<>();
         for (Component head : heads) {
             Staff staff = staffForHead(labels, gray, width, height, staffs, head);
             if (staff == null) continue;
             if (isHeavyRestCount(gray, width, height, head, staff)) continue;
+
             Component crossHead =
                     recoveredShadedChordHeads.contains(head)
                             ? null
@@ -946,6 +949,12 @@ final class OmrScoreInterpreter {
                                 Math.round(head.centerY),
                                 staff.index,
                                 staff.count))) continue;
+                // Heads far outside a staff require printed ledger lines. A nearby
+                // text stroke can look like a stem, so a semantic stem alone cannot
+                // promote a tempo digit or other text into an extreme pitch.
+                // Cross-staff stems may assign a note to the other voice. Validate
+                // its printed position against the nearest physical staff instead.
+
             }
             Staff physicalStaff = printedLedgerOwner(gray, width, height, staffs, head);
             if (physicalStaff == null) physicalStaff = nearestHeadStaff(staffs, head.centerY);
@@ -1054,6 +1063,9 @@ final class OmrScoreInterpreter {
                 beamCount = recoveredCreaseGraces.get(head);
                 unbeamedDuration = 0;
             }
+            // Beamed notes cannot have open heads. If a staff line, slur, or artwork edge near
+            // an open half/whole head looked like a beam, retain the notehead's stronger direct
+            // evidence instead of collapsing the sustained passage into eighths/sixteenths.
             if (unpitched) unbeamedDuration = beamCount == 0 ? ScoreNoteEvent.DURATION_QUARTER : 0f;
             // Beamed notes cannot have open heads. If a staff line, slur, or artwork edge near
             // an open half/whole head looked like a beam, retain the notehead's stronger direct
@@ -1089,6 +1101,7 @@ final class OmrScoreInterpreter {
             float accidentalGap =
                     accidentalGraces.contains(head) ? localPitch[1] * .65f : localPitch[1];
             int writtenAccidental = ScoreNoteEvent.ACCIDENTAL_FROM_KEY;
+
             if (!unpitched) {
                 writtenAccidental =
                         detectWrittenAccidental(
@@ -1215,6 +1228,7 @@ final class OmrScoreInterpreter {
                 // Opposite stems share a printed pitch/attack but have separate durations.
                 for (int partIndex = 0; partIndex < unison.size(); partIndex++) {
                     Component part = unison.get(partIndex);
+
                     Component partCross = unpitchedCrossHead(gray, width, height, part, staff);
                     int[] partStem =
                             partCross == null
@@ -1247,6 +1261,7 @@ final class OmrScoreInterpreter {
                                             width,
                                             height,
                                             true);
+
                     if (partUnpitched) {
                         partBeams =
                                 detectBeamCount(
@@ -1304,6 +1319,7 @@ final class OmrScoreInterpreter {
             if (seconds.isEmpty()) detected.add(new DetectedNote(event, head, staff.gap));
             else
                 for (Component part : seconds) {
+
                     Component partCross = unpitchedCrossHead(gray, width, height, part, staff);
                     int[] partStem =
                             partCross == null
@@ -1347,6 +1363,8 @@ final class OmrScoreInterpreter {
                             partUnpitched
                                     ? (partBeams == 0 ? ScoreNoteEvent.DURATION_QUARTER : 0f)
                                     : unbeamedDuration;
+                    // Displaced seconds share the stem/attack, despite their two horizontal
+                    // centres.
                     var chord =
                             new ScoreNoteEvent(
                                             measureIndex,
@@ -1453,7 +1471,7 @@ final class OmrScoreInterpreter {
             // A quarter-rest zigzag can resemble a stem when several blank
             // rows are bridged. Preserve continuous stems, but let complete
             // rest recognition adjudicate a compact head on that broken path.
-            if (h.maxX - h.minX + 1 <= gap * 1.05f
+            if (h.maxX - h.minX + 1 <= gap * 1.25f
                     && h.maxY - h.minY + 1 <= gap * 1.05f
                     && h.area <= gap * gap * .65f
                     && (stem == null
@@ -1918,6 +1936,7 @@ final class OmrScoreInterpreter {
     }
 
     private static int resolvedTieAccidental(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
+
         if (note.kind() != ScoreNoteEvent.Kind.PITCHED) return Integer.MIN_VALUE;
         if (note.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY)
             return ScoreNoteEvent.accidentalSemitones(note.writtenAccidental());
@@ -2178,6 +2197,69 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    /** The complete printed key body owns a bounded mask body inside its bounds. */
+    private static boolean completeHeaderSharpOwnsHead(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads,
+            List<Component> clefs,
+            List<Component> symbols) {
+        if (staff.pitchTrack == null || !staff.pitchTrack.verified() || head.centerX > width * .25f)
+            return false;
+        Staff printed = headerPrintedFrame(staff, head.centerX);
+        float gap = printed.gap;
+        if (head.area > gap * gap * 2f
+                || head.maxX - head.minX + 1 > gap * 1.6f
+                || head.maxY - head.minY + 1 > gap * 3.2f) return false;
+        var candidates = new ArrayList<AccidentalCandidate>();
+        for (Component c : clefs)
+            candidates.add(new AccidentalCandidate(c, OmrMeasurePostProcessor.CLEF_OR_KEY));
+        for (Component c : symbols)
+            candidates.add(new AccidentalCandidate(c, OmrMeasurePostProcessor.SYMBOL));
+        Component clef = null;
+        for (AccidentalCandidate c : candidates)
+            if (c.component.maxX < head.minX
+                    && head.centerX - c.component.maxX < gap * 3
+                    && completeHeaderTreble(c.component, staff))
+                if (clef == null || c.component.maxX > clef.maxX) clef = c.component;
+        if (clef == null)
+            clef =
+                    fragmentedHeaderClef(
+                            candidates, gray, width, height, staff, head.maxX + gap * 1.8f);
+        if (clef == null
+                || !completeHeaderTreble(clef, staff)
+                || clef.maxX >= head.minX
+                || head.centerX - clef.maxX > gap * 3) return false;
+        var glyphs =
+                printedHeaderSymbols(
+                        gray, width, height, clef.maxX + gap * .2f, clef.maxX + gap * 10.5f, staff);
+        if (!headerSharpOwnsFragment(glyphs, head, clef, staff)) return false;
+        for (SignatureGlyph glyph : glyphs)
+            if (firstPrintedHeaderSharp(glyph, clef, staff)
+                    && glyph.printedBody != null
+                    && headerSharpOwnsFragment(List.of(glyph), head, clef, staff)) {
+                Component body = glyph.printedBody;
+                float first = Float.MAX_VALUE;
+                for (Component main : heads) {
+                    Staff local = headerPrintedFrame(staff, main.centerX);
+                    if (main != head
+                            && !headerSharpOwnsFragment(List.of(glyph), main, clef, staff)
+                            && main.area > gap * gap * .35f
+                            && main.maxX - main.minX + 1 > gap * .75f
+                            && main.maxY - main.minY + 1 > gap * .4f
+                            && main.minX > clef.maxX
+                            && main.centerY >= local.top - local.gap * 3
+                            && main.centerY <= local.bottom + local.gap * 3)
+                        first = Math.min(first, main.minX);
+                }
+                if (first > body.maxX + gap * 1.5f && first < body.maxX + gap * 10) return true;
+            }
+        return false;
+    }
+
     /** Small connected header crossbars belong to a symbolic glyph, not a chord.
      * This establishes ownership only; it does not infer an accidental value. */
     private static boolean isOwnedHeaderCrossbar(
@@ -2193,6 +2275,8 @@ final class OmrScoreInterpreter {
         if (gray == null) return false;
         Staff staff = nearestHeadStaff(staffs, head.centerY);
         if (staff == null) return false;
+        if (completeHeaderSharpOwnsHead(gray, width, height, head, staff, heads, clefs, symbols))
+            return true;
         float gap = staff.pitchGap, top = staff.pitchBottom - gap * 4;
         if (head.area > gap * gap * .5f
                 || head.maxX - head.minX + 1 > gap * 1.05f
@@ -4711,15 +4795,19 @@ final class OmrScoreInterpreter {
                     // Dense signatures and their meter can place the playable edge farther
                     // away. Unlike joined flats, a treble clef extends beyond both outer rules.
                     if ((firstInRow || boundary - c.maxX <= staff.gap * 2.2f)
-                            && candidate.label == OmrMeasurePostProcessor.CLEF_OR_KEY
+                            && (candidate.label == OmrMeasurePostProcessor.CLEF_OR_KEY
+                                    || firstInRow
+                                            && candidate.label == OmrMeasurePostProcessor.SYMBOL
+                                            && completeHeaderTreble(c, staff))
                             && c.maxX < boundary
                             && c.maxX > boundary - staff.gap * (firstInRow ? 16 : 10)
                             && (c.maxY - c.minY > staff.gap * 4.5f
                                             && c.maxX - c.minX > staff.gap * 1.1f
                                     || firstInRow
                                             && rawBassClef(c, labels, gray, width, height, staff))
-                            && c.centerY > staff.top - staff.gap
-                            && c.centerY < staff.bottom + staff.gap
+                            && (completeHeaderTreble(c, staff)
+                                    || c.centerY > staff.top - staff.gap
+                                            && c.centerY < staff.bottom + staff.gap)
                             && (clef == null
                                     || completeHeaderClef(c, staff)
                                             && !completeHeaderClef(clef, staff)
@@ -4734,6 +4822,10 @@ final class OmrScoreInterpreter {
                 }
                 if (clef != null) left = clef.maxX + staff.gap * .2f;
                 float right = Math.min(measure.right() * width, left + staff.gap * 10.5f);
+                var rawHeader =
+                        firstInRow && clef != null && completeHeaderTreble(clef, staff)
+                                ? printedHeaderSymbols(gray, width, height, left, right, staff)
+                                : List.<SignatureGlyph>of();
                 float firstHead = Float.MAX_VALUE;
                 for (Component head : heads) {
                     if (head.centerX < left - staff.gap * .2f || head.centerX > right) continue;
@@ -4741,6 +4833,7 @@ final class OmrScoreInterpreter {
                     if (head.centerX < boundary
                             && (head.centerY < measure.top() * height
                                     || head.centerY > measure.bottom() * height)) continue;
+                    if (headerSharpOwnsFragment(rawHeader, head, clef, staff)) continue;
                     Staff owner = nearestHeadStaff(staffs, head.centerY);
                     if (owner == staff) firstHead = Math.min(firstHead, head.minX);
                 }
@@ -4827,8 +4920,26 @@ final class OmrScoreInterpreter {
                         recognized.put(candidate, signatureX);
                     }
                 }
-                if (clef != null && !glyphs.isEmpty()) {
-                    var printed = printedHeaderSymbols(gray, width, height, left, right, staff);
+                if (clef != null
+                        && (!glyphs.isEmpty() || firstInRow && completeHeaderTreble(clef, staff))) {
+                    var printed =
+                            new ArrayList<>(
+                                    printedHeaderSymbols(gray, width, height, left, right, staff));
+                    // Keep a full raw body already proved before first-note clipping.
+                    // Recomputing contrast on a shorter window can discard pale tips.
+                    for (var raw : rawHeader)
+                        if (raw.printedBody != null
+                                && raw.printedBody.minX >= left
+                                && raw.printedBody.maxX <= right
+                                && printed.stream()
+                                        .noneMatch(g -> Math.abs(g.x - raw.x) < staff.gap * .45f))
+                            printed.add(raw);
+                    if (glyphs.isEmpty())
+                        for (var raw : printed)
+                            if (firstPrintedHeaderSharp(raw, clef, staff)) {
+                                glyphs.add(raw);
+                                break;
+                            }
                     for (int pass = 0; pass < 7; pass++) {
                         boolean added = false;
                         for (var raw : printed)
@@ -5137,18 +5248,51 @@ final class OmrScoreInterpreter {
             if (glyph.accidental == ScoreNoteEvent.ACCIDENTAL_SHARP
                     && result.stream().noneMatch(g -> Math.abs(g.x - glyph.x) < staff.gap * .45f))
                 result.add(glyph);
+        for (var glyph : printedHeaderSymbols(gray, width, height, from, to, staff, false, true))
+            if (glyph.accidental == ScoreNoteEvent.ACCIDENTAL_SHARP
+                    && result.stream().noneMatch(g -> Math.abs(g.x - glyph.x) < staff.gap * .45f))
+                result.add(glyph);
         return result;
     }
 
     private static List<SignatureGlyph> printedHeaderSymbols(
             byte[] gray, int width, int height, float from, float to, Staff staff, boolean wide) {
+        return printedHeaderSymbols(gray, width, height, from, to, staff, wide, false);
+    }
+
+    private static List<SignatureGlyph> printedHeaderSymbols(
+            byte[] gray,
+            int width,
+            int height,
+            float from,
+            float to,
+            Staff staff,
+            boolean wide,
+            boolean separateRules) {
         if (gray == null) return List.of();
         int left = Math.max(0, Math.round(from)), right = Math.min(width - 1, Math.round(to));
-        int top = Math.max(0, Math.round(staff.top - staff.gap * 2.5f)),
-                bottom = Math.min(height - 1, Math.round(staff.bottom + staff.gap * 2.5f));
+        Staff firstFrame = headerPrintedFrame(staff, left);
+        Staff lastFrame = headerPrintedFrame(staff, right);
+        int
+                top =
+                        Math.max(
+                                0,
+                                Math.round(
+                                        Math.min(
+                                                firstFrame.top - firstFrame.gap * 2.5f,
+                                                lastFrame.top - lastFrame.gap * 2.5f))),
+                bottom =
+                        Math.min(
+                                height - 1,
+                                Math.round(
+                                        Math.max(
+                                                firstFrame.bottom + firstFrame.gap * 2.5f,
+                                                lastFrame.bottom + lastFrame.gap * 2.5f)));
         int w = right - left + 1, h = bottom - top + 1;
         if (w < 1 || h < 1) return List.of();
         byte[] mask = new byte[w * h];
+        byte[] connected = separateRules ? new byte[w * h] : null;
+        byte[] crossbars = separateRules ? new byte[w * h] : null;
         int inkLimit = ShadedInkWindow.limit(gray, width, height, left, top, right, bottom, 205);
         int probe = Math.max(2, Math.round(staff.gap * (wide ? .42f : .25f)));
         for (int y = top; y <= bottom; y++)
@@ -5164,38 +5308,139 @@ final class OmrScoreInterpreter {
                 }
                 for (int i = 0; i < 5; i++)
                     if (Math.abs(y - localBottom + (4 - i) * localGap)
-                            < localGap * (wide ? .35f : .16f)) rule = true;
+                            < localGap * (separateRules ? .12f : wide ? .35f : .16f)) rule = true;
+                if (separateRules) {
+                    boolean originalRule = false;
+                    for (int i = 0; i < 5; i++)
+                        if (Math.abs(y - localBottom + (4 - i) * localGap) < localGap * .16f)
+                            originalRule = true;
+                    if (!originalRule
+                            || y >= probe
+                                    && y + probe < height
+                                    && (gray[(y - probe) * width + x] & 255) <= inkLimit
+                                    && (gray[(y + probe) * width + x] & 255) <= inkLimit)
+                        connected[(y - top) * w + x - left] = OmrMeasurePostProcessor.SYMBOL;
+                }
+                if (rule && separateRules) {
+                    mask[(y - top) * w + x - left] = OmrMeasurePostProcessor.STAFF;
+                    continue;
+                }
                 if (rule
                         && (y < probe
                                 || y + probe >= height
                                 || (gray[(y - probe) * width + x] & 255) > inkLimit
                                 || (gray[(y + probe) * width + x] & 255) > inkLimit)) continue;
-                mask[(y - top) * w + x - left] = OmrMeasurePostProcessor.SYMBOL;
+                mask[(y - top) * w + x - left] =
+                        separateRules
+                                ? OmrMeasurePostProcessor.CLEF_OR_KEY
+                                : OmrMeasurePostProcessor.SYMBOL;
+                if (separateRules && (gray[y * width + x] & 255) <= Math.round(inkLimit * .8f))
+                    crossbars[(y - top) * w + x - left] = OmrMeasurePostProcessor.CLEF_OR_KEY;
             }
+        var rawGlyphs = new ArrayList<AccidentalCandidate>();
+        if (separateRules) {
+            // Keep the connected printed body as the boundary; its two spine and
+            // two crossbar proof is read with only physical staff stripes suppressed.
+            for (var seed : findComponents(connected, w, h, OmrMeasurePostProcessor.SYMBOL)) {
+                Component body = headerMaskedBody(mask, w, h, seed, 0);
+                if (body != null)
+                    rawGlyphs.add(
+                            new AccidentalCandidate(body, OmrMeasurePostProcessor.CLEF_OR_KEY));
+                Component continued = headerMaskedBody(mask, w, h, seed, staff.gap);
+                if (continued != null
+                        && (body == null
+                                || continued.minY != body.minY
+                                || continued.maxY != body.maxY))
+                    rawGlyphs.add(
+                            new AccidentalCandidate(
+                                    continued, OmrMeasurePostProcessor.CLEF_OR_KEY));
+            }
+        } else
+            for (var c : findComponents(mask, w, h, OmrMeasurePostProcessor.SYMBOL))
+                rawGlyphs.add(new AccidentalCandidate(c, OmrMeasurePostProcessor.SYMBOL));
         var result = new ArrayList<SignatureGlyph>();
-        for (var c : findComponents(mask, w, h, OmrMeasurePostProcessor.SYMBOL)) {
+        for (var candidate : rawGlyphs) {
+            Component c = candidate.component;
             if (c.maxX - c.minX > staff.gap * 1.65f
                     || c.maxY - c.minY > staff.gap * 3.65f
                     || c.area < staff.gap * staff.gap * .25f) continue;
-            var candidate = new AccidentalCandidate(c, OmrMeasurePostProcessor.SYMBOL);
-            if (isSharpGlyph(mask, w, h, candidate, staff.gap))
+            float sharpPitch =
+                    separateRules
+                            ? sharpPitchCenter(mask, w, h, candidate, staff.gap, crossbars)
+                            : sharpPitchCenter(mask, w, h, candidate, staff.gap);
+            if (separateRules
+                    && Float.isFinite(sharpPitch)
+                    && result.stream()
+                            .anyMatch(g -> Math.abs(g.x - left - c.centerX) < staff.gap * .45f))
+                continue;
+            if (Float.isFinite(sharpPitch))
                 result.add(
                         new SignatureGlyph(
                                 left + c.centerX,
                                 ScoreNoteEvent.ACCIDENTAL_SHARP,
-                                top + sharpPitchCenter(mask, w, h, candidate, staff.gap)));
-            else if (PrintedFlatGlyph.matches(
-                    gray,
-                    width,
-                    height,
-                    left + c.minX,
-                    top + c.minY,
-                    left + c.maxX,
-                    top + c.maxY,
-                    staff.gap))
+                                top + sharpPitch,
+                                new Component(
+                                        c.area,
+                                        left + c.minX,
+                                        left + c.maxX,
+                                        top + c.minY,
+                                        top + c.maxY,
+                                        left + c.centerX,
+                                        top + c.centerY)));
+            else if (!separateRules
+                    && PrintedFlatGlyph.matches(
+                            gray,
+                            width,
+                            height,
+                            left + c.minX,
+                            top + c.minY,
+                            left + c.maxX,
+                            top + c.maxY,
+                            staff.gap))
                 result.add(new SignatureGlyph(left + c.centerX, ScoreNoteEvent.ACCIDENTAL_FLAT));
         }
         return result;
+    }
+
+    private static Component headerMaskedBody(
+            byte[] mask, int width, int height, Component seed, float gap) {
+        int padding = Math.max(0, Math.round(gap * .45f));
+        int minY = seed.minY, maxY = seed.maxY;
+        // Rule removal can disconnect a shaft tip. Permit a short vertical
+        // continuation only across a physical staff stripe in the same columns.
+        for (int direction : new int[] {-1, 1}) {
+            int edge = direction < 0 ? seed.minY : seed.maxY;
+            boolean crossedRule = false;
+            for (int step = 0; step <= padding; step++) {
+                int y = edge + direction * step;
+                if (y < 0 || y >= height) break;
+                int rule = 0;
+                for (int x = seed.minX; x <= seed.maxX; x++)
+                    if (mask[y * width + x] == OmrMeasurePostProcessor.STAFF) rule++;
+                if (rule >= (seed.maxX - seed.minX + 1) * .60f) crossedRule = true;
+            }
+            if (crossedRule) {
+                if (direction < 0) minY = Math.max(0, edge - padding);
+                else maxY = Math.min(height - 1, edge + padding);
+            }
+        }
+        int area = 0, left = width, right = -1, top = Integer.MAX_VALUE, bottom = -1;
+        long sx = 0, sy = 0;
+        for (int y = minY; y <= maxY; y++)
+            for (int x = seed.minX; x <= seed.maxX; x++)
+                if (mask[y * width + x] == OmrMeasurePostProcessor.CLEF_OR_KEY) {
+                    area++;
+                    sx += x;
+                    sy += y;
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = Math.max(bottom, y);
+                }
+        return area == 0
+                ? null
+                : new Component(
+                        area, left, right, top, bottom, sx / (float) area, sy / (float) area);
     }
 
     private static Component fragmentedHeaderClef(
@@ -5206,21 +5451,22 @@ final class OmrScoreInterpreter {
             Staff staff,
             float boundary) {
         Component best = null;
-        float g = staff.gap;
         for (var lower : candidates) {
             Component b = lower.component;
+            Staff printed = headerPrintedFrame(staff, b.centerX);
+            float g = printed.gap;
             if (b.maxX >= boundary
                     || b.maxX < boundary - g * 16
-                    || b.maxY < staff.bottom + g * .5f
-                    || b.minY < staff.top - g * .1f
+                    || b.maxY < printed.bottom + g * .5f
+                    || b.minY < printed.top - g * .1f
                     || b.maxY - b.minY < g * 2.5f
                     || b.maxY - b.minY > g * 6f) continue;
             for (var upper : candidates) {
                 Component a = upper.component;
                 if (a == b
-                        || a.minY >= staff.top - g * .35f
-                        || a.maxY < staff.top + g * .8f
-                        || a.maxY > staff.bottom
+                        || a.minY >= printed.top - g * .35f
+                        || a.maxY < printed.top + g * .8f
+                        || a.maxY > printed.bottom
                         || a.maxX < b.minX
                         || a.minX > b.maxX
                         || Math.abs(a.centerX - b.centerX) > g * 1.2f) continue;
@@ -5234,9 +5480,10 @@ final class OmrScoreInterpreter {
                         || y1 - y0 > g * 9f
                         || a.area + b.area < g * g * 3.5f) continue;
                 int rules = 0, sampleX = Math.min(width - 1, Math.round(x1 + g));
+                Staff rulesFrame = headerPrintedFrame(staff, sampleX);
                 if (gray != null)
                     for (int line = 0; line < 5; line++) {
-                        int cy = Math.round(staff.top + line * g);
+                        int cy = Math.round(rulesFrame.top + line * rulesFrame.gap);
                         boolean ink = false;
                         for (int yy = Math.max(0, Math.round(cy - g * .3f));
                                 yy <= Math.min(height - 1, Math.round(cy + g * .3f));
@@ -5263,8 +5510,57 @@ final class OmrScoreInterpreter {
     /** Prefer a complete treble over a later joined accidental cluster, while retaining
      * the existing damaged-clef fallback when no complete glyph survives. */
     private static boolean completeHeaderClef(Component glyph, Staff staff) {
-        return glyph.minY < staff.top - staff.gap * .35f
-                && glyph.maxY > staff.bottom + staff.gap * .20f;
+        Staff printed = headerPrintedFrame(staff, glyph.centerX);
+        return glyph.minY < printed.top - printed.gap * .35f
+                && glyph.maxY > printed.bottom + printed.gap * .20f;
+    }
+
+    private static Staff headerPrintedFrame(Staff staff, float x) {
+        if (staff.pitchTrack == null) return staff;
+        float[] local = staff.pitchTrack.at(x);
+        if (!Float.isFinite(local[0]) || !Float.isFinite(local[1]) || local[1] <= 0) return staff;
+        return new Staff(local[0] - 4 * local[1], local[0], local[1]);
+    }
+
+    /** A SYMBOL label may own a header only as a complete bounded treble body. */
+    private static boolean completeHeaderTreble(Component glyph, Staff staff) {
+        Staff printed = headerPrintedFrame(staff, glyph.centerX);
+        float gap = printed.gap,
+                glyphHeight = glyph.maxY - glyph.minY + 1,
+                glyphWidth = glyph.maxX - glyph.minX + 1;
+        return glyphHeight >= gap * 4.8f
+                && glyphHeight <= gap * 8.8f
+                && glyphWidth >= gap * 1.25f
+                && glyphWidth <= gap * 3.8f
+                && glyph.area >= gap * gap * 1.65f
+                && completeHeaderClef(glyph, staff)
+                && Math.abs(glyph.centerY - (printed.top + printed.bottom) * .5f) < gap * 1.1f;
+    }
+
+    /** Seed an otherwise empty raw header only with the first treble signature sharp. */
+    private static boolean firstPrintedHeaderSharp(
+            SignatureGlyph glyph, Component clef, Staff staff) {
+        if (clef == null
+                || glyph.accidental != ScoreNoteEvent.ACCIDENTAL_SHARP
+                || !Float.isFinite(glyph.pitchY)) return false;
+        Staff printed = headerPrintedFrame(staff, glyph.x);
+        return glyph.x > clef.maxX
+                && glyph.x - clef.maxX < printed.gap * 2.2f
+                && Math.abs(glyph.pitchY - printed.top) <= printed.gap * .35f;
+    }
+
+    /** A mask island contained by the proved printed sharp cannot truncate its header. */
+    private static boolean headerSharpOwnsFragment(
+            List<SignatureGlyph> glyphs, Component head, Component clef, Staff staff) {
+        for (SignatureGlyph glyph : glyphs) {
+            if (!firstPrintedHeaderSharp(glyph, clef, staff) || glyph.printedBody == null) continue;
+            Component body = glyph.printedBody;
+            if (head.minX >= body.minX - 1
+                    && head.maxX <= body.maxX + 1
+                    && head.minY >= body.minY - 1
+                    && head.maxY <= body.maxY + 1) return true;
+        }
+        return false;
     }
 
     private static boolean stackedSignatureSharpColumn(
@@ -5354,81 +5650,6 @@ final class OmrScoreInterpreter {
             float result =
                     printedSignatureSharpInCrop(gray, width, height, candidate, gap, pitch, margin);
             if (Float.isFinite(result)) return result;
-        }
-        return Float.NaN;
-    }
-
-    private static float printedSignatureSharpInCrop(
-            byte[] gray,
-            int width,
-            int height,
-            AccidentalCandidate candidate,
-            float gap,
-            boolean pitch,
-            float cropMargin) {
-        if (gray == null || gap < 3) return Float.NaN;
-        Component seed = candidate.component;
-        if (seed.maxX - seed.minX + 1 > gap * 1.6f || seed.maxY - seed.minY + 1 > gap * 3.65f)
-            return Float.NaN;
-        int margin = Math.max(1, Math.round(gap * cropMargin));
-        int left = Math.max(0, seed.minX - margin), right = Math.min(width - 1, seed.maxX + margin);
-        int top = Math.max(0, Math.round(seed.centerY - gap * 2.5f));
-        int bottom = Math.min(height - 1, Math.round(seed.centerY + gap * 2.5f));
-        int w = right - left + 1, h = bottom - top + 1, reach = Math.max(3, Math.round(gap * .7f));
-        int probe = Math.max(2, Math.round(gap * .2f));
-        for (int threshold : new int[] {180, 205}) {
-            byte[] ink = new byte[w * h];
-            for (int y = top; y <= bottom; y++) {
-                int outside = 0, dark = 0;
-                for (int x = Math.max(0, left - reach);
-                        x <= Math.min(width - 1, right + reach);
-                        x++)
-                    if (x < left || x > right) {
-                        outside++;
-                        if ((gray[y * width + x] & 255) <= threshold) dark++;
-                    }
-                boolean rule = outside > 0 && dark >= outside * .8f;
-                for (int x = left; x <= right; x++) {
-                    if ((gray[y * width + x] & 255) > threshold) continue;
-                    if (rule
-                            && (y < probe
-                                    || y + probe >= height
-                                    || (gray[(y - probe) * width + x] & 255) > threshold
-                                    || (gray[(y + probe) * width + x] & 255) > threshold)) continue;
-                    ink[(y - top) * w + x - left] = OmrMeasurePostProcessor.SYMBOL;
-                }
-            }
-            Component glyph = retainSeedConnectedInk(ink, w, h, seed, left, top);
-            if (glyph == null
-                    || rawStrokeLeavesCrop(gray, width, height, ink, w, h, left, top, gap))
-                continue;
-            if (isSharpGlyph(
-                    ink, w, h, new AccidentalCandidate(glyph, OmrMeasurePostProcessor.SYMBOL), gap))
-                return pitch
-                        ? top
-                                + sharpPitchCenter(
-                                        ink,
-                                        w,
-                                        h,
-                                        new AccidentalCandidate(
-                                                glyph, OmrMeasurePostProcessor.SYMBOL),
-                                        gap)
-                        : left + glyph.centerX;
-        }
-        byte[] faint = FaintSharpInk.crop(gray, width, height, left, top, right, bottom, gap);
-        if (faint != null) {
-            Component glyph = retainSeedConnectedInk(faint, w, h, seed, left, top);
-            if (glyph != null
-                    && !rawStrokeLeavesCrop(gray, width, height, faint, w, h, left, top, gap)) {
-                float center =
-                        sharpPitchCenter(
-                                faint,
-                                w,
-                                h,
-                                new AccidentalCandidate(glyph, OmrMeasurePostProcessor.CLEF_OR_KEY),
-                                gap);
-                if (Float.isFinite(center)) return pitch ? top + center : left + glyph.centerX;
-            }
         }
         return Float.NaN;
     }
@@ -7166,6 +7387,42 @@ final class OmrScoreInterpreter {
                                 (staff.top + staff.bottom) * .5f,
                                 first,
                                 last));
+        for (var seed : RegionalStaffSeeds.detect(labels, gray, width, height)) {
+            Staff recovered = new Staff(seed.top(), seed.bottom(), seed.gap());
+            recovered.pitchSlope = seed.slope();
+            recovered.printedSlope = true;
+            recovered.pitchTrack = RegionalStaffSeeds.track(labels, gray, width, height, seed);
+            if (recovered.pitchTrack == null)
+                recovered.pitchTrack =
+                        StaffPitchTrack.linear(width, seed.bottom(), seed.gap(), seed.slope());
+            boolean established = false;
+            float[] proposed = recovered.pitchTrack.at(width * .5f);
+            for (Staff existing : staffs) {
+                if (!existing.printedPhase) continue;
+                float[] prior =
+                        existing.pitchTrack == null
+                                ? new float[] {existing.pitchBottom, existing.pitchGap}
+                                : existing.pitchTrack.at(width * .5f);
+                if (proposed[1] < prior[1] * .8f || proposed[1] > prior[1] * 1.25f) continue;
+                if (Math.abs(proposed[0] - prior[0]) > prior[1] * 1.5f) continue;
+                // An established physical phase outranks a semantic group whose
+                // missing outer rule may have been replaced by ledger fragments.
+                established = true;
+                break;
+            }
+            if (established) continue;
+            staffs.removeIf(
+                    existing ->
+                            Math.abs(
+                                            (existing.top
+                                                            + existing.bottom
+                                                            - seed.top()
+                                                            - seed.bottom())
+                                                    * .5f)
+                                    <= seed.gap() * 1.5f);
+            staffs.add(recovered);
+        }
+        staffs.sort(Comparator.comparingDouble(staff -> staff.top));
         assignSystemPositions(staffs, measures, height);
         return staffs;
     }
@@ -8422,6 +8679,24 @@ final class OmrScoreInterpreter {
                 : Math.round(gap * 1.5f);
     }
 
+    private static boolean narrowShadedLedgerCrossing(
+            byte[] gray, int width, int height, int x, int y, float gap) {
+        int core = 255;
+        for (int yy = y - 1; yy <= y + 1; yy++) core = Math.min(core, gray[yy * width + x] & 255);
+        if (core >= BeamInkThreshold.at(gray, width, height, x, y, y, gap) + 15) return false;
+        int maximum = Math.max(1, Math.round(gap * .18f));
+        int left = 0, right = 0;
+        for (int d = 1; d <= maximum + 1; d++) {
+            if (left == 0
+                    && x - d >= 0
+                    && ShadedLedgerRule.thin(gray, width, height, x - d, y, gap)) left = d;
+            if (right == 0
+                    && x + d < width
+                    && ShadedLedgerRule.thin(gray, width, height, x + d, y, gap)) right = d;
+        }
+        return left > 0 && right > 0 && left + right - 1 <= maximum;
+    }
+
     private static boolean hasInnerLedgerInk(
             byte[] gray, int width, int height, Component head, Staff staff, boolean roundedGrace) {
         // Beyond two staff spaces, real notation needs another ledger toward
@@ -8465,6 +8740,11 @@ final class OmrScoreInterpreter {
                                     || (gray[(y + 1) * width + x] & 255) < limits[1];
                     if (shadedLedger) {
                         boolean thin = ShadedLedgerRule.thin(gray, width, height, x, y, gap);
+                        // A real shaft or flag can cross its own inner ledger.
+                        // Bridge only a narrow crossing within the head's span,
+                        // with a thin horizontal rule visible on both sides.
+                        if (!thin && !stemless && x >= head.minX && x <= head.maxX)
+                            thin = narrowShadedLedgerCrossing(gray, width, height, x, y, gap);
                         strong &= thin;
                         dark &= thin;
                     }
@@ -8689,21 +8969,26 @@ final class OmrScoreInterpreter {
         for (Component head : heads) {
             Staff staff = nearestHeadStaff(staffs, head.centerY);
             if (staff == null) continue;
-            float gap = staff.gap;
+            float gap = staff.pitchTrack == null ? staff.gap : staff.pitchTrack.at(head.centerX)[1];
             boolean pairedCorner =
                     head.maxX - head.minX + 1 <= gap * .65f
                             && head.maxY - head.minY + 1 <= gap * 1.1f
                             && head.area <= gap * gap * .36f;
             boolean thinCorner =
                     head.maxX - head.minX + 1 <= gap * .85f
-                            && head.maxY - head.minY + 1 <= gap * .60f
-                            && head.area <= gap * gap * .36f;
-            if (!thinCorner && !pairedCorner) continue;
+                            && head.maxY - head.minY + 1 <= gap * .85f
+                            && head.area <= gap * gap * .50f;
+            boolean mergedStrip =
+                    head.maxX - head.minX + 1 <= gap * 2.05f
+                            && head.maxY - head.minY + 1 >= gap * 1.05f
+                            && head.maxY - head.minY + 1 <= gap * 1.6f
+                            && head.area <= gap * gap * 1.8f;
+            if (!thinCorner && !pairedCorner && !mergedStrip) continue;
             for (Component main : heads) {
                 if (main == head
-                        || main.area < head.area * 3f
+                        || main.area < (mergedStrip ? gap * gap * .8f : head.area * 3f)
                         || nearestHeadStaff(staffs, main.centerY) != staff
-                        || Math.abs(main.centerX - head.centerX) > gap
+                        || Math.abs(main.centerX - head.centerX) > gap * 1.5f
                         || Math.abs(main.centerY - head.centerY) < gap * 2
                         || Math.abs(main.centerY - head.centerY) > gap * 6) continue;
                 int stemInk =
@@ -8718,6 +9003,7 @@ final class OmrScoreInterpreter {
                 // at() uses paper minus 32. Keep the original pale-stem fallback on
                 // paper at or above 185; shaded paper must not extend the shaft.
                 if (stemInk >= 185 - 32) stemInk = 205;
+                else stemInk += 15;
                 int[] stem =
                         attachedRawStem(
                                 gray,
@@ -8727,6 +9013,7 @@ final class OmrScoreInterpreter {
                                 gap,
                                 Math.max(1, Math.round(gap * .16f)),
                                 Math.min(170, stemInk));
+                if (stem == null) stem = attachedRawStem(gray, width, height, main, gap);
                 if (stem == null)
                     stem =
                             attachedRawStem(
@@ -8740,13 +9027,16 @@ final class OmrScoreInterpreter {
                 if (stem == null
                         || stem[0] < head.minX - gap * .2f
                         || stem[0] > head.maxX + gap * .2f
-                        || Math.abs(stem[1] - head.centerY) > gap * (pairedCorner ? 1.1f : .45f))
+                        || Math.abs(stem[1] - head.centerY) > gap * (mergedStrip ? 1.5f : 1.1f))
                     continue;
                 boolean owned = false;
                 for (Component other : heads) {
                     if (other == head
                             || other == main
-                            || other.area < Math.max(head.area * 3f, gap * gap)
+                            || other.area
+                                    < Math.max(
+                                            mergedStrip ? gap * gap * .8f : head.area * 3f,
+                                            gap * gap)
                             || nearestHeadStaff(staffs, other.centerY) != staff
                             || Math.abs(other.centerX - main.centerX)
                                     > gap * (pairedCorner ? 16 : 6)) continue;
@@ -8759,7 +9049,24 @@ final class OmrScoreInterpreter {
                                     gap,
                                     Math.max(1, Math.round(gap * .16f)),
                                     Math.min(170, stemInk));
-                    if (pairedCorner
+                    if (partner == null) partner = attachedRawStem(gray, width, height, other, gap);
+                    if ((mergedStrip || pairedCorner)
+                            && StemOwnedBeamTip.mergedCorner(
+                                    gray,
+                                    width,
+                                    height,
+                                    stem,
+                                    partner,
+                                    head.centerX,
+                                    head.centerY,
+                                    head.maxX - head.minX + 1,
+                                    head.maxY - head.minY + 1,
+                                    head.area,
+                                    gap)) {
+                        owned = true;
+                        break;
+                    }
+                    if ((pairedCorner || thinCorner)
                             && StemOwnedBeamTip.pairedCorner(
                                     gray,
                                     width,
@@ -10475,6 +10782,7 @@ final class OmrScoreInterpreter {
      * Hollow oval sides diverge toward their centre, the opposite topology. */
     private static boolean isUnpitchedCrossHead(
             byte[] gray, int width, int height, Component head, Staff staff) {
+
         return unpitchedCrossHead(gray, width, height, head, staff) != null;
     }
 
@@ -10537,6 +10845,7 @@ final class OmrScoreInterpreter {
                 if (head.centerX < Math.min(upper[0], lower[0]) - cornerMargin
                         || head.centerX > Math.max(upper[3], lower[3]) + cornerMargin
                         || Math.abs(head.centerY - cy) > outer + 1) continue;
+
                 int symmetry =
                         Math.abs(upper[1] - lower[1])
                                 + Math.abs(upper[2] - lower[2])
@@ -13558,73 +13867,18 @@ final class OmrScoreInterpreter {
         return Float.isFinite(sharpPitchCenter(labels, width, height, candidate, gap));
     }
 
-    private static float sharpPitchCenter(
+    private static float uprightSharpPitchCenter(
             byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
-        float upright = uprightSharpPitchCenter(labels, width, height, candidate, gap);
-        if (Float.isFinite(upright)) return upright;
-        Component glyph = candidate.component;
-        int gw = glyph.maxX - glyph.minX + 1, gh = glyph.maxY - glyph.minY + 1;
-        if (!Float.isFinite(gap)
-                || gap < 3
-                || gh < gap * 1.55f
-                || gh > gap * 3.65f
-                || gw < gap * .65f
-                || gw > gap * 2.8f
-                || glyph.area < gap * gap * .42f
-                || glyph.area > gap * gap * 2.45f
-                || glyph.minX <= 0
-                || glyph.maxX >= width - 1
-                || glyph.minY <= 0
-                || glyph.maxY >= height - 1) return Float.NaN;
-        int pad = Math.round(gh * .3f) + 2, w = gw + 2 * pad;
-        float pitchSum = 0, firstPitch = Float.NaN;
-        int accepted = 0;
-        // Shift each row without dropping ink. A shared lean must preserve both
-        // shaft extensions, two bridged crossbars and the upright shape limits.
-        for (int step : new int[] {-6, -5, -4, -3, -2, 2, 3, 4, 5, 6}) {
-            float lean = step * .05f;
-            byte[] projected = new byte[w * gh];
-            int area = 0, minX = w, maxX = -1, minY = gh, maxY = -1;
-            long sx = 0, sy = 0;
-            for (int y = 0; y < gh; y++) {
-                int shift = Math.round((y - (gh - 1) * .5f) * lean);
-                for (int x = 0; x < gw; x++) {
-                    if (!candidate.matches(labels[(glyph.minY + y) * width + glyph.minX + x]))
-                        continue;
-                    int xx = x - shift + pad;
-                    projected[y * w + xx] = OmrMeasurePostProcessor.SYMBOL;
-                    area++;
-                    sx += xx;
-                    sy += y;
-                    minX = Math.min(minX, xx);
-                    maxX = Math.max(maxX, xx);
-                    minY = Math.min(minY, y);
-                    maxY = Math.max(maxY, y);
-                }
-            }
-            if (area != glyph.area) return Float.NaN;
-            Component shifted =
-                    new Component(
-                            area, minX, maxX, minY, maxY, sx / (float) area, sy / (float) area);
-            float pitch =
-                    uprightSharpPitchCenter(
-                            projected,
-                            w,
-                            gh,
-                            new AccidentalCandidate(shifted, OmrMeasurePostProcessor.SYMBOL),
-                            gap);
-            if (!Float.isFinite(pitch)) continue;
-            if (Float.isFinite(firstPitch) && Math.abs(pitch - firstPitch) > gap * .12f)
-                return Float.NaN;
-            if (!Float.isFinite(firstPitch)) firstPitch = pitch;
-            pitchSum += pitch;
-            accepted++;
-        }
-        return accepted >= 2 ? glyph.minY + pitchSum / accepted : Float.NaN;
+        return uprightSharpPitchCenter(labels, width, height, candidate, gap, null);
     }
 
     private static float uprightSharpPitchCenter(
-            byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
+            byte[] labels,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            byte[] crossbarInk) {
         Component glyph = candidate.component;
         int glyphWidth = glyph.maxX - glyph.minX + 1;
         int glyphHeight = glyph.maxY - glyph.minY + 1;
@@ -13643,7 +13897,8 @@ final class OmrScoreInterpreter {
             for (int x = Math.max(0, glyph.minX); x <= Math.min(width - 1, glyph.maxX); x++)
                 if (candidate.matches(labels[y * width + x])) {
                     columns[x - glyph.minX]++;
-                    rows[y - glyph.minY]++;
+                    if (crossbarInk == null || candidate.matches(crossbarInk[y * width + x]))
+                        rows[y - glyph.minY]++;
                 }
 
         int leftSpine = 0;
@@ -13664,8 +13919,9 @@ final class OmrScoreInterpreter {
         for (int row = 0; row < glyphHeight; row++) {
             int bridge = 0;
             for (int col = leftSpine; col <= rightSpine; col++)
-                if (candidate.matches(labels[(glyph.minY + row) * width + glyph.minX + col]))
-                    bridge++;
+                if (candidate.matches(
+                        (crossbarInk == null ? labels : crossbarInk)
+                                [(glyph.minY + row) * width + glyph.minX + col])) bridge++;
             if (bridge < (rightSpine - leftSpine + 1) * .70f) rows[row] = 0;
         }
         // Measure crossbars against the two spines, not stray ink at the glyph edge.
@@ -13731,6 +13987,162 @@ final class OmrScoreInterpreter {
                 }
             }
         return bestCenter;
+    }
+
+    private static float printedSignatureSharpInCrop(
+            byte[] gray,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            boolean pitch,
+            float cropMargin) {
+        if (gray == null || gap < 3) return Float.NaN;
+        Component seed = candidate.component;
+        if (seed.maxX - seed.minX + 1 > gap * 1.6f || seed.maxY - seed.minY + 1 > gap * 3.65f)
+            return Float.NaN;
+        int margin = Math.max(1, Math.round(gap * cropMargin));
+        int left = Math.max(0, seed.minX - margin), right = Math.min(width - 1, seed.maxX + margin);
+        int top = Math.max(0, Math.round(seed.centerY - gap * 2.5f));
+        int bottom = Math.min(height - 1, Math.round(seed.centerY + gap * 2.5f));
+        int w = right - left + 1, h = bottom - top + 1, reach = Math.max(3, Math.round(gap * .7f));
+        int probe = Math.max(2, Math.round(gap * .2f));
+        for (int threshold : new int[] {180, 205}) {
+            byte[] ink = new byte[w * h];
+            for (int y = top; y <= bottom; y++) {
+                int outside = 0, dark = 0;
+                for (int x = Math.max(0, left - reach);
+                        x <= Math.min(width - 1, right + reach);
+                        x++)
+                    if (x < left || x > right) {
+                        outside++;
+                        if ((gray[y * width + x] & 255) <= threshold) dark++;
+                    }
+                boolean rule = outside > 0 && dark >= outside * .8f;
+                for (int x = left; x <= right; x++) {
+                    if ((gray[y * width + x] & 255) > threshold) continue;
+                    if (rule
+                            && (y < probe
+                                    || y + probe >= height
+                                    || (gray[(y - probe) * width + x] & 255) > threshold
+                                    || (gray[(y + probe) * width + x] & 255) > threshold)) continue;
+                    ink[(y - top) * w + x - left] = OmrMeasurePostProcessor.SYMBOL;
+                }
+            }
+            Component glyph = retainSeedConnectedInk(ink, w, h, seed, left, top);
+            if (glyph == null
+                    || rawStrokeLeavesCrop(gray, width, height, ink, w, h, left, top, gap))
+                continue;
+            if (isSharpGlyph(
+                    ink, w, h, new AccidentalCandidate(glyph, OmrMeasurePostProcessor.SYMBOL), gap))
+                return pitch
+                        ? top
+                                + sharpPitchCenter(
+                                        ink,
+                                        w,
+                                        h,
+                                        new AccidentalCandidate(
+                                                glyph, OmrMeasurePostProcessor.SYMBOL),
+                                        gap)
+                        : left + glyph.centerX;
+        }
+        byte[] faint = FaintSharpInk.crop(gray, width, height, left, top, right, bottom, gap);
+        if (faint != null) {
+            Component glyph = retainSeedConnectedInk(faint, w, h, seed, left, top);
+            if (glyph != null
+                    && !rawStrokeLeavesCrop(gray, width, height, faint, w, h, left, top, gap)) {
+                float center =
+                        sharpPitchCenter(
+                                faint,
+                                w,
+                                h,
+                                new AccidentalCandidate(glyph, OmrMeasurePostProcessor.CLEF_OR_KEY),
+                                gap);
+                if (Float.isFinite(center)) return pitch ? top + center : left + glyph.centerX;
+            }
+        }
+        return Float.NaN;
+    }
+
+    private static float sharpPitchCenter(
+            byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
+        return sharpPitchCenter(labels, width, height, candidate, gap, null);
+    }
+
+    private static float sharpPitchCenter(
+            byte[] labels,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            byte[] crossbarInk) {
+        float upright = uprightSharpPitchCenter(labels, width, height, candidate, gap, crossbarInk);
+        if (Float.isFinite(upright)) return upright;
+        Component glyph = candidate.component;
+        int gw = glyph.maxX - glyph.minX + 1, gh = glyph.maxY - glyph.minY + 1;
+        if (!Float.isFinite(gap)
+                || gap < 3
+                || gh < gap * 1.55f
+                || gh > gap * 3.65f
+                || gw < gap * .65f
+                || gw > gap * 2.8f
+                || glyph.area < gap * gap * .42f
+                || glyph.area > gap * gap * 2.45f
+                || glyph.minX <= 0
+                || glyph.maxX >= width - 1
+                || glyph.minY <= 0
+                || glyph.maxY >= height - 1) return Float.NaN;
+        int pad = Math.round(gh * .3f) + 2, w = gw + 2 * pad;
+        float pitchSum = 0, firstPitch = Float.NaN;
+        int accepted = 0;
+        // Shift each row without dropping ink. A shared lean must preserve both
+        // shaft extensions, two bridged crossbars and the upright shape limits.
+        for (int step : new int[] {-6, -5, -4, -3, -2, 2, 3, 4, 5, 6}) {
+            float lean = step * .05f;
+            byte[] projected = new byte[w * gh];
+            byte[] projectedBars = crossbarInk == null ? null : new byte[w * gh];
+            int area = 0, minX = w, maxX = -1, minY = gh, maxY = -1;
+            long sx = 0, sy = 0;
+            for (int y = 0; y < gh; y++) {
+                int shift = Math.round((y - (gh - 1) * .5f) * lean);
+                for (int x = 0; x < gw; x++) {
+                    if (!candidate.matches(labels[(glyph.minY + y) * width + glyph.minX + x]))
+                        continue;
+                    int xx = x - shift + pad;
+                    projected[y * w + xx] = OmrMeasurePostProcessor.SYMBOL;
+                    if (crossbarInk != null
+                            && candidate.matches(
+                                    crossbarInk[(glyph.minY + y) * width + glyph.minX + x]))
+                        projectedBars[y * w + xx] = OmrMeasurePostProcessor.SYMBOL;
+                    area++;
+                    sx += xx;
+                    sy += y;
+                    minX = Math.min(minX, xx);
+                    maxX = Math.max(maxX, xx);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                }
+            }
+            if (area != glyph.area) return Float.NaN;
+            Component shifted =
+                    new Component(
+                            area, minX, maxX, minY, maxY, sx / (float) area, sy / (float) area);
+            float pitch =
+                    uprightSharpPitchCenter(
+                            projected,
+                            w,
+                            gh,
+                            new AccidentalCandidate(shifted, OmrMeasurePostProcessor.SYMBOL),
+                            gap,
+                            projectedBars);
+            if (!Float.isFinite(pitch)) continue;
+            if (Float.isFinite(firstPitch) && Math.abs(pitch - firstPitch) > gap * .12f)
+                return Float.NaN;
+            if (!Float.isFinite(firstPitch)) firstPitch = pitch;
+            pitchSum += pitch;
+            accepted++;
+        }
+        return accepted >= 2 ? glyph.minY + pitchSum / accepted : Float.NaN;
     }
 
     /** Uses the staff line beside the note instead of the page-wide average on skewed scans. */
@@ -14004,6 +14416,9 @@ final class OmrScoreInterpreter {
             referenceBottom = local[0];
             gap = local[1];
         }
+        // All five physical rules were independently established across this row.
+        // A small glyph crop cannot rephase that frame using a beam or slur edge.
+        if (curved && staff.pitchTrack.verified()) return new float[] {referenceBottom, gap};
         boolean shaded =
                 StaffPitchTrack.needsContrast(
                         gray, width, height, head.centerX, referenceBottom, gap);
@@ -14947,6 +15362,21 @@ final class OmrScoreInterpreter {
             Component head,
             Staff staff,
             List<Component> heads) {
+        if (staff.pitchTrack != null) {
+            float[] local = staff.pitchTrack.at(head.centerX);
+            float[] other = staff.pitchTrack.at(head.centerX + local[1]);
+            float slope = (other[0] - local[0]) / local[1];
+            return tremoloStrokeCounts(
+                    gray,
+                    width,
+                    height,
+                    head,
+                    local[1],
+                    local[0] - 4 * local[1],
+                    slope,
+                    heads,
+                    staff.pitchTrack);
+        }
         return tremoloStrokeCounts(gray, width, height, head, staff.gap, staff.top, heads);
     }
 
@@ -14958,6 +15388,32 @@ final class OmrScoreInterpreter {
             float gap,
             float staffTop,
             List<Component> heads) {
+        return tremoloStrokeCounts(gray, width, height, head, gap, staffTop, 0, heads);
+    }
+
+    private static int[] tremoloStrokeCounts(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float gap,
+            float staffTop,
+            float staffSlope,
+            List<Component> heads) {
+        return tremoloStrokeCounts(
+                gray, width, height, head, gap, staffTop, staffSlope, heads, null);
+    }
+
+    private static int[] tremoloStrokeCounts(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float gap,
+            float staffTop,
+            float staffSlope,
+            List<Component> heads,
+            StaffPitchTrack track) {
         int[] empty = {0, 0};
         if (gray == null || head.maxX - head.minX + 1 < gap * .95f) return empty;
         // Shaded paper beyond the actual shaft must not connect nearby lettering.
@@ -15042,11 +15498,13 @@ final class OmrScoreInterpreter {
                                             width,
                                             height,
                                             stem[0] - side,
-                                            staffTop,
+                                            staffTop + staffSlope * (stem[0] - side - head.centerX),
                                             gap,
                                             strokeThreshold,
                                             y - run,
-                                            y - 1);
+                                            y - 1,
+                                            staffSlope,
+                                            track);
                     boolean rightRule =
                             Float.isFinite(staffTop)
                                     && LocalPrintedStaffBand.matches(
@@ -15054,11 +15512,13 @@ final class OmrScoreInterpreter {
                                             width,
                                             height,
                                             stem[0] + side,
-                                            staffTop,
+                                            staffTop + staffSlope * (stem[0] + side - head.centerX),
                                             gap,
                                             strokeThreshold,
                                             y - run,
-                                            y - 1);
+                                            y - 1,
+                                            staffSlope,
+                                            track);
                     boolean printedRule =
                             leftRule && rightRule
                                     || (leftRule || rightRule)
@@ -15069,7 +15529,8 @@ final class OmrScoreInterpreter {
                                                     stem[0],
                                                     center,
                                                     gap,
-                                                    strokeThreshold);
+                                                    strokeThreshold,
+                                                    staffSlope);
                     if (!printedRule
                             && leftKey >= 0
                             && rightKey >= 0
@@ -15092,13 +15553,26 @@ final class OmrScoreInterpreter {
     /** A ruled frame and six level thick cores prove a horizontal blurred rule. */
     private static boolean levelStrokeAcrossStem(
             byte[] gray, int width, int height, int stemX, float center, float gap, int threshold) {
+        return levelStrokeAcrossStem(gray, width, height, stemX, center, gap, threshold, 0);
+    }
+
+    private static boolean levelStrokeAcrossStem(
+            byte[] gray,
+            int width,
+            int height,
+            int stemX,
+            float center,
+            float gap,
+            int threshold,
+            float slope) {
         float minimum = Float.POSITIVE_INFINITY, maximum = Float.NEGATIVE_INFINITY;
         for (int side : new int[] {-1, 1})
             for (float fraction : new float[] {.4f, .65f, .9f}) {
                 int x = stemX + side * Math.round(gap * fraction);
                 if (x < 1 || x >= width - 1) return false;
-                int first = Math.max(1, Math.round(center - gap * .5f)),
-                        last = Math.min(height - 2, Math.round(center + gap * .5f));
+                float localCenter = center + slope * (x - stemX);
+                int first = Math.max(1, Math.round(localCenter - gap * .5f)),
+                        last = Math.min(height - 2, Math.round(localCenter + gap * .5f));
                 int start = -1;
                 float best = Float.NaN, distance = Float.POSITIVE_INFINITY;
                 for (int y = first; y <= last + 1; y++) {
@@ -15111,9 +15585,9 @@ final class OmrScoreInterpreter {
                                 && y <= last
                                 && length >= Math.max(3, Math.round(gap * .18f))
                                 && length <= gap * .85f
-                                && Math.abs(middle - center) < distance) {
-                            best = middle;
-                            distance = Math.abs(middle - center);
+                                && Math.abs(middle - localCenter) < distance) {
+                            best = middle - slope * (x - stemX);
+                            distance = Math.abs(middle - localCenter);
                         }
                         start = -1;
                     }
@@ -17363,6 +17837,13 @@ final class OmrScoreInterpreter {
             int inkThreshold,
             int maxStemGaps) {
         if (gray == null) return null;
+        // A photographed page can be darker than the fixed stem threshold.
+        // Retain the pale-ink fallback on light paper; shaded paper must have
+        // contrast against its local background before it can supply a shaft.
+        int localInk =
+                BeamInkThreshold.at(
+                        gray, width, height, Math.round(head.centerX), head.minY, head.maxY, gap);
+        if (localInk < 185 - 32) inkThreshold = Math.min(inkThreshold, localInk + 15);
         int bestLength = 0;
         int[] best = null;
         for (int direction : new int[] {-1, 1}) {
@@ -18624,6 +19105,7 @@ final class OmrScoreInterpreter {
         List<DetectedNote> result = new ArrayList<>(source.size());
         for (DetectedNote note : source) {
             ScoreNoteEvent event = note.event;
+
             if (event.kind() != ScoreNoteEvent.Kind.PITCHED) {
                 result.add(note);
                 continue;
@@ -18727,7 +19209,7 @@ final class OmrScoreInterpreter {
             DetectedNote current = result.get(currentIndex);
             if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
             int previousIndex =
-                    previousSamePitch(result, currentIndex, width, labels, gray, height);
+                    previousSamePitch(result, currentIndex, width, labels, gray, height, staffs);
             boolean tied =
                     previousIndex >= 0
                             && hasTieArc(
@@ -18838,7 +19320,19 @@ final class OmrScoreInterpreter {
             byte[] labels,
             byte[] gray,
             int height) {
+        return previousSamePitch(notes, currentIndex, width, labels, gray, height, List.of());
+    }
+
+    private static int previousSamePitch(
+            List<DetectedNote> notes,
+            int currentIndex,
+            int width,
+            byte[] labels,
+            byte[] gray,
+            int height,
+            List<Staff> staffs) {
         DetectedNote current = notes.get(currentIndex);
+
         if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) return -1;
         DetectedNote previousOnset = null;
         for (int index = currentIndex - 1; index >= 0; index--) {
@@ -18848,9 +19342,12 @@ final class OmrScoreInterpreter {
                     && !systemBreakTieCandidate(previous, current, width)) continue;
             if (current.event.measureIndex() - previous.event.measureIndex() > 1) break;
             if (samePrintedOnset(previous, current)) continue;
+
             boolean firstOnset = previousOnset == null;
             if (firstOnset) previousOnset = previous;
-            // An unpitched attack still occupies this onset; do not borrow an older pitch.
+            // A held voice can bridge a barline while another voice keeps moving. Sustained
+            // endpoints or opposing printed shafts prove that independent voice.
+
             if (previous.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
             // A held voice can bridge a barline while another voice keeps moving. Sustained
             // endpoints or opposing printed shafts prove that independent voice.
@@ -18899,6 +19396,8 @@ final class OmrScoreInterpreter {
             // Quantization alone can occasionally put two heads near a step boundary in the same
             // bucket. A real repeated pitch remains within less than half a staff-space vertically.
             if (Math.abs(current.head.centerY - previous.head.centerY) > gap * .45f
+                    && !verifiedTieStaffAlignment(
+                            labels, gray, width, height, staffs, previous, current)
                     && !LocalTieStaffAlignment.same(
                             labels,
                             gray,
@@ -18918,6 +19417,31 @@ final class OmrScoreInterpreter {
             return index;
         }
         return -1;
+    }
+
+    /** Regional rules may align endpoints; the raw returning arc still owns the tie. */
+    private static boolean verifiedTieStaffAlignment(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Staff> staffs,
+            DetectedNote before,
+            DetectedNote after) {
+        if (staffs.isEmpty()
+                || !ScoreNoteTiming.hasIndependentSustain(before.event)
+                || !ScoreNoteTiming.hasIndependentSustain(after.event)) return false;
+        Staff first = staffForHead(labels, gray, width, height, staffs, before.head);
+        Staff last = staffForHead(labels, gray, width, height, staffs, after.head);
+        return first != null
+                && first == last
+                && LocalTieStaffAlignment.same(
+                        first.pitchTrack,
+                        before.head.centerX,
+                        before.head.centerY,
+                        after.head.centerX,
+                        after.head.centerY,
+                        after.event.staffStep());
     }
 
     /** Opposing printed shafts keep a tied voice independent of other attacks. */
@@ -19932,9 +20456,13 @@ final class OmrScoreInterpreter {
         }
     }
 
-    private record SignatureGlyph(float x, int accidental, float pitchY) {
+    private record SignatureGlyph(float x, int accidental, float pitchY, Component printedBody) {
         SignatureGlyph(float x, int accidental) {
-            this(x, accidental, Float.NaN);
+            this(x, accidental, Float.NaN, null);
+        }
+
+        SignatureGlyph(float x, int accidental, float pitchY) {
+            this(x, accidental, pitchY, null);
         }
     }
 

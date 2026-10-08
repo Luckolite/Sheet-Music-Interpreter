@@ -780,3 +780,7 @@ The original procedural regressions include both voices and rejection cases.
 Weights, dependencies, fonts and physical guide/audio records are unchanged.
 Thick segmented staff rules are excluded from beam bands; an original procedural
 regression covers staff-line crossings beside a true attached beam.
+
+Perspective staff tracks retain already proved physical frames and use validated local rule gaps for pitch. Shaded stems, beams, headers, rests, ties, tremolo, fingerings and slur islands keep independent printed-body and written-owner proofs. Original procedural controls cover accepted and rejected shapes, source nonmutation and malformed inputs. Recognition epoch19 separates these derived results from earlier caches while guide282 records remain unchanged. The standalone port has executable-token parity after package and diagnostics adaptation; the new regional staff helper is pure JDK. Models, production dependencies and licensing remain unchanged, and private score material is excluded.
+
+Regional measure replacement also reuses the established printed closing-bar proof and quarter-page cap, preserving faint ending notes without adding a new pixel-admission path. Original procedural controls cover both slope signs, obscured rules and a stem-owned closing dyad, plus texture, courtesy, incomplete-bar, played-stem and extension-cap negatives.

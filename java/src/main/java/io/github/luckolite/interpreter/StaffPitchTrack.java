@@ -10,6 +10,12 @@ import java.util.List;
 /** Follows complete printed five-line groups across a curved page. */
 final class StaffPitchTrack {
     private final float[][] points;
+    private boolean verified;
+
+    boolean verified() {
+        return verified;
+    }
+
     private float tailStart = Float.NEGATIVE_INFINITY,
             tailEnd = Float.POSITIVE_INFINITY,
             tailBottom,
@@ -17,6 +23,28 @@ final class StaffPitchTrack {
 
     private StaffPitchTrack(List<float[]> points) {
         this.points = points.toArray(new float[0][]);
+    }
+
+    /** Copies bounded, ordered samples after their caller has verified all five printed rules. */
+    static StaffPitchTrack fromVerifiedSamples(List<float[]> samples) {
+        if (samples == null || samples.size() < 2 || samples.size() > 13)
+            throw new IllegalArgumentException("Invalid staff samples");
+        List<float[]> copy = new ArrayList<>();
+        float previous = Float.NEGATIVE_INFINITY;
+        for (float[] sample : samples) {
+            if (sample == null
+                    || sample.length != 3
+                    || !Float.isFinite(sample[0])
+                    || !Float.isFinite(sample[1])
+                    || !Float.isFinite(sample[2])
+                    || sample[0] <= previous
+                    || sample[2] < 3) throw new IllegalArgumentException("Invalid staff sample");
+            copy.add(sample.clone());
+            previous = sample[0];
+        }
+        StaffPitchTrack result = new StaffPitchTrack(copy);
+        result.verified = true;
+        return result;
     }
 
     /** Carry an already established straight staff slope into column rectification. */
