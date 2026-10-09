@@ -884,3 +884,19 @@ asset installation and independent checksum checks remain app orchestration.
 No Android services, private scans, libraries, device logs, new runtime dependencies
 or signing material are included. Generated native parity is not a phone heat
 measurement or a fresh whole-library recognition result.
+
+## Serial OCR idle release (0.1.12)
+
+Requested Android OCR-owner reclamation retains intent through full-queue trim
+rejection and wakes its serial worker after successful queued-cancellation removal.
+The Apache-2.0 pure-JDK `SerialIdleRelease` helper has an exact package-only app
+counterpart and an original deterministic JUnit resource-ownership regression.
+Its one-worker, aborting-rejection and worker-only hook contract, admission limits
+and close/shutdown responsibilities are documented in
+[serial idle release](serial-idle-release.md).
+
+The Android adapter remains outside the standalone API. Historical
+[page OCR overlap](android-page-ocr-overlap.md) source identities and format evidence
+are retained. Models, tensors, CTC/confidence, timed awaits, outputs, layouts and
+native221 source selection are unchanged. Generated executor controls are not
+native-session, pixel, memory or phone elapsed evidence.

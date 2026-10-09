@@ -1,4 +1,38 @@
 {
+  "android_page_ocr_idle_release_review": {
+    "license": "Apache-2.0",
+    "documentation_path": "docs/serial-idle-release.md",
+    "reviewed_app_commit": "659ec8547e719fbb99d34a3100b4785a28390032",
+    "scope": "Current bounded Android OCR-owner reclamation; Android adapter remains outside the standalone API and its reusable pure-JDK helper is mapped separately.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortablePageOcr.java",
+        "source_sha256": "c78d985b1a04a1210faae76f7c4de912b64da040fcefdcc3a3555c1ba78f49c1",
+        "source_normalized_sha256": "80d533fa5304b8e139c6cba02cbd1c7c6d205f96c7143d1cc3c4f018459fcea4"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SerialIdleRelease.java",
+        "source_sha256": "a5a6621b2b9562569cdd02204ee979db5efe9a4c812c7d817b9480abba120548",
+        "source_normalized_sha256": "a5a6621b2b9562569cdd02204ee979db5efe9a4c812c7d817b9480abba120548"
+      }
+    ],
+    "historical_overlap_review": "android_local_page_ocr_overlap_review and docs/android-page-ocr-overlap.md remain unchanged historical evidence.",
+    "owner_contract": "One serial worker, capacity-two ArrayBlockingQueue and standard AbortPolicy. Trim requests retain intent after rejected admission. After accepted work drains, the worker consumes intent; successful queued cancellation removal admits a bounded worker wake without closing on the cancel caller.",
+    "admission_limits": "Cleanup wake tasks use the existing bounded queue and can consume a newly freed slot. No extra queue capacity, global stop-admission guarantee or executor shutdown cleanup guarantee is added.",
+    "close_error_policy": "The helper consumes release intent before invoking the callback and does not retry callback failure. The Android adapter retains its existing close exception and reference-clear behavior.",
+    "standalone_counterpart": "java/src/main/java/io/github/luckolite/interpreter/SerialIdleRelease.java",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/SerialIdleReleaseBoundaryTest.java",
+    "regression_scope": "One original latch-controlled stale-nonempty/final-queued-cancellation boundary uses the full helper and fake resource. Five original owner controls retain healthy FIFO/rejection, drain, repeated-trim, idle-close and cancellation ownership with provider doubles. These are real JDK executor controls, not Android/native session, model, pixel, memory or elapsed evidence.",
+    "unchanged": [
+      "models and checksum trust",
+      "tensor/CTC/confidence",
+      "timed await and error behavior",
+      "OCR output and geometry",
+      "wire layouts and epochs",
+      "explicit native decoder source selection"
+    ],
+    "native_decoder": "Current explicit 221-source decoder list excludes both PortablePageOcr and SerialIdleRelease. No native selected source is changed by this lifecycle adapter."
+  },
   "source_project": "Music Sheets",
   "semantic_only_boundary_tie_review": {
     "reviewed_app_state": "Music Sheets 1.18.305 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
@@ -11,6 +45,15 @@
   "extraction": "Explicitly selected recognition classes and own training scripts; new repository history. No app history, old model, app services or song fixtures.",
   "documentation": "source-provenance.md",
   "files": {
+    "SerialIdleRelease.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SerialIdleRelease.java",
+      "source_sha256": "a5a6621b2b9562569cdd02204ee979db5efe9a4c812c7d817b9480abba120548",
+      "source_normalized_sha256": "a5a6621b2b9562569cdd02204ee979db5efe9a4c812c7d817b9480abba120548",
+      "reviewed_app_commit": "659ec8547e719fbb99d34a3100b4785a28390032",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SerialIdleRelease.java",
+      "license": "Apache-2.0",
+      "review_note": "Pure-JDK single-worker idle-release ownership helper. Exact package-only standalone counterpart; constructor contract retains one worker and an aborting rejection policy. Original deterministic queued-cancellation regression uses the actual helper with a fake resource and no Android or native dependencies. No model, tensor, await, output or record-layout change."
+    },
     "AccidentalDotInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccidentalDotInk.java",
       "source_sha256": "9d011ea760d0498c740719f500cdf2c092ac726e6cc6699c5642ecdce1eb529f",
