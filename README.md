@@ -22,6 +22,9 @@ You do not need to publish your own code. Follow the [license and notice require
 
 - Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Graphical bends, quarter-tone bends, whammy-bar directions and strum direction aren't supported.
 
+  Triplet chords/rests, rhythm-letter ownership and tuning spelling follow the
+  [guitar-tab interpretation rules](docs/guitar-tabs.md).
+
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing in notation software.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 

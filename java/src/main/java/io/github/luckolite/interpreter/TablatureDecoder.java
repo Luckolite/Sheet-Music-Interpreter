@@ -563,7 +563,14 @@ public final class TablatureDecoder {
                                                                         ? 1
                                                                         : f.dots == 1
                                                                                 ? 1.5f
-                                                                                : 1.75f)));
+                                                                                : 1.75f)
+                                                                * switch (f.tuplet) {
+                                                                    case 3 -> 2.0 / 3;
+                                                                    case 5 -> 4.0 / 5;
+                                                                    case 6 -> 4.0 / 6;
+                                                                    case 7 -> 4.0 / 7;
+                                                                    default -> 1;
+                                                                }));
                                 continue;
                             }
                             int marks = f.marks;

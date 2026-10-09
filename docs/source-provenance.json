@@ -589,22 +589,24 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "3f038e01e63c016fc48d429c1e6a1a0f15d0c4f7e71ac71c1834fc9083217798",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "source_normalized_sha256": "3f038e01e63c016fc48d429c1e6a1a0f15d0c4f7e71ac71c1834fc9083217798",
+      "source_sha256": "0fc94d9a4c445eb9d534c85aa14778c60fd643623ccaacc8125ce30e27bcf005",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+      "source_normalized_sha256": "bcdb5aa36e9f9118918f799810ec8fdfcd3c8d4afa022c90943d233f4088f0fb",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "standalone_sha256": "f24f704b4aac825e6991827a968e8228d37feef79a55d8428c4cc2fa6ce4db39"
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
-      "source_sha256": "066248c0a9849ac0d020b15d31fab899ee4d8866aa613b0b1a0652e35dc88ef6",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "source_normalized_sha256": "066248c0a9849ac0d020b15d31fab899ee4d8866aa613b0b1a0652e35dc88ef6",
+      "source_sha256": "ac8ea20d5ed4253002b208c568a64cbb28ea1c5314aee38de52665e2cee7dab3",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+      "source_normalized_sha256": "094d289d6b00e240a9690c7325a5c1e4a5a958b0c5efd7c95bc8eb28e5466995",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "standalone_sha256": "2b4704611ff3c566f87e962950c87fe49236edd86d2876b0a266110929a23381"
     },
     "TabEffect.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabEffect.java",
@@ -670,11 +672,11 @@
     },
     "TabPerformanceMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPerformanceMarks.java",
-      "source_sha256": "ef7f017f414ad90333ff07c29c6c80a3e2388326e46930d29e63891cae93ac4a",
-      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
-      "source_normalized_sha256": "aa505ff4eaf56d008a43bf7efae5656ea8d59fb408ccc4e761826a92caabd75f",
-      "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
-      "standalone_sha256": "76af307980825f971d63e5031d90fda1ff8c10ae0ce963f2d5c82729f46a649d"
+      "source_sha256": "df7872633a8cc86e3bc9968459d00dc0ef7e4746f00794ac3a3414601117fb4a",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+      "source_normalized_sha256": "78eee0641607778786e3ac64511377f552b2278c0a41195f92ebcc26fc012699",
+      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
+      "standalone_sha256": "3ce21778a458123613b7f08104f783b8e6f949b275906bdc57d2c3e02a5ab757"
     },
     "TabRhythmContinuations.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabRhythmContinuations.java",
@@ -692,9 +694,11 @@
     },
     "TabTuning.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTuning.java",
-      "source_sha256": "333eadd12e781b1bc7d404199b1b88882724705ce1569ee87937e97a5a08f899",
-      "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
-      "source_normalized_sha256": "333eadd12e781b1bc7d404199b1b88882724705ce1569ee87937e97a5a08f899"
+      "source_sha256": "79c324630710113d8c4fb2f70763b8cdd5eae1cf6e50cd81044ebb61bbd1ba15",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+      "source_normalized_sha256": "9fa4a465d171cd4f8085b74fbb3a324202acad3b8bf210e74883f0cc063f02aa",
+      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
+      "standalone_sha256": "1ac76ff249298c19069890456a82b0da6b7ffda618102b1df2dd51666670757e"
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
@@ -1487,13 +1491,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "b64c163b787aff57e88453d772b3bf64e9dc0fa072708ec445b18f6cc9a0d4c0",
-      "source_normalized_sha256": "2fe707488a606856942fd6bc28f3882b5a4ca135f14dce045b7e50b696490c72",
-      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
+      "source_sha256": "cb15d434dd68906ec88d5cdcc9518a396ecc7c796a90acce1fb8cf3e9183df57",
+      "source_normalized_sha256": "023d0622bee7fb0926c7170ae89957ce3fedc9e3379e23432b94344bb68b7112",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
+      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "standalone_sha256": "67f26fef6885c0e336c157eefcf08047a0b9461c1c73a612a579bf42fa26a75f"
+      "standalone_sha256": "11487ab36a565677ee96f18111699015a0cbb652da3f043f52838902a761e6a5"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1549,10 +1553,10 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "37d3f3161d60e0fa5d7b7806bcb8db0853c3b343e876bd95430a4d6086489a4d",
-      "source_normalized_sha256": "a67bcaacabbd659a6eaf7ca77c4ab4ed09c7cfca46ca092a0d2e5be8971d075d",
-      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
-      "reviewed_source_state": "Guide284 typed tab identity; app/public writer bodies reviewed apart from license header and package import.",
+      "source_sha256": "f83f1c4156fd1efaaba5fbc4c01674b6f538c1caa465b9da43aaead4a7734899",
+      "source_normalized_sha256": "c353cd530e7d143bfb2e4d4967352779b79dd69bdb8b57c8bcbcf02c8624d0a3",
+      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+      "reviewed_source_state": "Recognition27; guide284 typed boundary layout unchanged. App/public writer bodies reviewed apart from license header and package import.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
@@ -4333,5 +4337,45 @@
       }
     ],
     "privacy": "Only original synthetic geometry and scalar tests are public. No private score scans, library data, phone logs, signing material, model or production dependency changes."
+  },
+  "tablature_rhythm_tuning_review": {
+    "documentation_path": "docs/guitar-tabs.md",
+    "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+    "app_version": "1.18.470",
+    "license": "Apache-2.0",
+    "scope": "Triplets own three onset columns including chords, dead strums and rests. Literal rests use note-compatible tuplet ratios. Established H/T duration labels retain rhythm ownership. Compound suffix vibrato belongs to the final fret. Detached unambiguous tuning accidentals and explicit B-sharp/C-flat octaves preserve written pitches.",
+    "compatibility": "Recognition27, guide284/native analysis-25, note80/rest33 bytes, protocol1 and audio77. No new record fields.",
+    "shareable_regressions": [
+      "TabTripletOnsetTest.java",
+      "TabTechniqueOwnershipTest.java",
+      "TabTuningPitchRegressionTest.java"
+    ],
+    "reviewed_adapters": [
+      {
+        "source_path": "tools/native-worker/NativePageGuide.java",
+        "source_sha256": "47dea64065eaeff17a339ebde1f0a8688c35ae45f2351f6289533fc5a22eb217"
+      },
+      {
+        "source_path": "tools/native-worker/process_page.py",
+        "source_sha256": "2d2d25a16817a1040aee441a912ab4033346f50b8b2b5dc3a566965489ef47db"
+      },
+      {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "f83f1c4156fd1efaaba5fbc4c01674b6f538c1caa465b9da43aaead4a7734899"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "1c8847207c2bd77939031d41bd060a2175e49b0cca09cef80758231767ac5637"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "ca7e753dedaf392185cb9400152f136824702a34fcc72fe6adc52f396ae4cf6b"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuideArtifact.cs",
+        "source_sha256": "d4a17276b9e1e349cfc63cb96bd6148db373ea0baf21a048c83a660cdb67a979"
+      }
+    ],
+    "privacy": "Original synthetic OCR boxes, raster and expected clock/pitch cases only. No score scans, library data, device logs, signing material, model or dependency changes."
   }
 }

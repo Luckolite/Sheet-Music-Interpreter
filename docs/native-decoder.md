@@ -70,7 +70,8 @@ accuracy or fresh OCR performance.
 
 ## Typed tab boundary identity
 
-Recognition revision 26 selects guide 284 and native analysis marker -25.
+Recognition revision 27 retains guide 284 and native analysis marker -25.
+Revision 26 introduced the typed tab identity described below.
 They retain the 80-byte note and 33-byte rest records from guide 283/-24.
 The existing big-endian boundaryTies int32 at note byte offset 67 now permits
 an explicitly tagged tab identity. Transport protocol 1 is unchanged.

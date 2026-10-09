@@ -12,6 +12,16 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Guitar-tab triplets own onset columns, including chords, muted strums and rests;
+literal rests use the same supported tuplet ratios as notes. Established rhythm
+letters retain duration ownership, compound suffix vibrato belongs to the final
+fret, and tuning spelling preserves detached accidental glyphs and explicit
+octave carry. Four complete Java counterparts have package-adapted AOSP parity.
+Original synthetic text, raster, clock and native-wire controls cover the fixes.
+Recognition27 changes derived identities while guide284 records, native -25,
+protocol1, audio77, models and dependencies remain unchanged. See the
+[guitar-tab rules](guitar-tabs.md).
+
 Expressive directions retain printed evidence and proved written ownership through
 the decoder, framed transport, performed clock and notation exports. Thirteen shared
 classes have full executable-token app parity after package adaptation; the standalone

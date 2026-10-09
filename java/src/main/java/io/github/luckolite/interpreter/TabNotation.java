@@ -60,7 +60,8 @@ public final class TabNotation {
         while (tokens.find()) {
             int f = tokens.group().equalsIgnoreCase("x") ? -1 : Integer.parseInt(tokens.group());
             if (f > 36) return List.of();
-            int marks = flags;
+            // A trailing vibrato belongs to the immediately preceding fret, not the whole chain.
+            int marks = tokens.end() == text.length() ? flags : 0;
             if (previous >= 0 && tokens.start() > lastEnd) {
                 char op = text.charAt(lastEnd);
                 int kind =
@@ -188,7 +189,7 @@ public final class TabNotation {
                             }
                         if (restDot)
                             continue; // The silent lane owns its dot, including above the generic
-                                      // rhythm lane.
+                        // rhythm lane.
                     }
                     if (y < t.top() - t.gap() * 2 || y > t.bottom() + t.gap() * 3.5f) continue;
                     if (cp == 0xe241 || cp == 0xe243 || cp == 0xe245)
@@ -247,33 +248,45 @@ public final class TabNotation {
                         if (y < t.bottom() + t.gap() * 1.5f
                                 || y > t.bottom() + t.gap() * 4.5f
                                 || (word.bottom() - word.top()) * h > t.gap() * .9f) continue;
-                        var candidates = new ArrayList<TablatureDecoder.Fret>();
-                        for (var f : fs) if (f.fret() >= 0) candidates.add(f);
-                        candidates.sort(Comparator.comparingDouble(f -> Math.abs(f.x() - x)));
+                        // The printed count owns rhythmic onsets, including chords and rests.
+                        var candidates = new ArrayList<List<TablatureDecoder.Fret>>();
+                        var ordered = new ArrayList<>(fs);
+                        ordered.sort(Comparator.comparingDouble(TablatureDecoder.Fret::x));
+                        for (var f : ordered) {
+                            if ((f.marks() & NoteOrnament.GRACE) != 0) continue;
+                            if (candidates.isEmpty()
+                                    || f.x() - candidates.get(candidates.size() - 1).get(0).x()
+                                            >= t.gap() * .4f) candidates.add(new ArrayList<>());
+                            candidates.get(candidates.size() - 1).add(f);
+                        }
+                        candidates.sort(
+                                Comparator.comparingDouble(g -> Math.abs(g.get(0).x() - x)));
                         if (candidates.size() < 3) continue;
                         var three = new ArrayList<>(candidates.subList(0, 3));
-                        three.sort(Comparator.comparingDouble(TablatureDecoder.Fret::x));
-                        float a = three.get(1).x() - three.get(0).x(),
-                                b = three.get(2).x() - three.get(1).x();
+                        three.sort(Comparator.comparingDouble(g -> g.get(0).x()));
+                        float a = three.get(1).get(0).x() - three.get(0).get(0).x(),
+                                b = three.get(2).get(0).x() - three.get(1).get(0).x();
                         if (a < t.gap() * .6f
                                 || b < t.gap() * .6f
                                 || Math.max(a, b) > Math.min(a, b) * 1.7f
-                                || Math.abs(three.get(1).x() - x) > t.gap() * .5f) continue;
-                        for (var f : three) {
-                            fs.remove(f);
-                            fs.add(
-                                    new TablatureDecoder.Fret(
-                                            f.x(),
-                                            f.y(),
-                                            f.string(),
-                                            f.fret(),
-                                            f.duration(),
-                                            f.beams(),
-                                            f.dots(),
-                                            f.marks(),
-                                            f.tied(),
-                                            3));
-                        }
+                                || Math.abs(three.get(1).get(0).x() - x) > t.gap() * .5f) continue;
+                        for (var group : three)
+                            for (var f : group) {
+                                fs.remove(f);
+                                fs.add(
+                                        new TablatureDecoder.Fret(
+                                                f.x(),
+                                                f.y(),
+                                                f.string(),
+                                                f.fret(),
+                                                f.duration(),
+                                                f.beams(),
+                                                f.dots(),
+                                                f.marks(),
+                                                f.tied(),
+                                                3,
+                                                f.wholeRestGlyph()));
+                            }
                     }
             // Same-column whole rests are retained only when a separate full-bar voice is proved.
             for (var rest : deferred)

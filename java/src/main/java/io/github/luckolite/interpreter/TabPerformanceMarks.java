@@ -27,6 +27,9 @@ public final class TabPerformanceMarks {
                         };
                 boolean vibrato = word.text().equals("\uEAB2");
                 if (kind == 0 && !vibrato || kind != 0 && y >= t.top()) continue;
+                // H/T in an established duration lane already own half/thirty-second rhythm.
+                if ((kind == TabEffect.HAMMER || kind == TabEffect.TAP)
+                        && durationLabel(t, word, words, w, h)) continue;
                 int best = -1;
                 float distance = Float.MAX_VALUE;
                 for (int i = 0; i < fs.size(); i++) {
@@ -96,6 +99,29 @@ public final class TabPerformanceMarks {
     }
 
     private record AttackKey(float x, int string) {}
+
+    private static boolean durationLabel(
+            TablatureDecoder.Staff tab,
+            TablatureDecoder.Word word,
+            List<TablatureDecoder.Word> words,
+            int w,
+            int h) {
+        float x = (word.left() + word.right()) * .5f * w,
+                y = (word.top() + word.bottom()) * .5f * h;
+        if (tab.standardTop() >= 0
+                || y < tab.top() - tab.gap() * 3
+                || y > tab.bottom() + tab.gap() * 3
+                || y >= tab.top() - tab.gap() * .6f && y <= tab.bottom() + tab.gap() * .6f)
+            return false;
+        return tab.frets().stream()
+                        .anyMatch(f -> f.fret() != -2 && Math.abs(f.x() - x) < tab.gap() * .6f)
+                && words.stream()
+                        .anyMatch(
+                                v ->
+                                        v.text().matches("[QESW]\\.?")
+                                                && Math.abs((v.top() + v.bottom()) * .5f * h - y)
+                                                        < tab.gap());
+    }
 
     private static TablatureDecoder.Fret marked(TablatureDecoder.Fret f, int marks) {
         return new TablatureDecoder.Fret(

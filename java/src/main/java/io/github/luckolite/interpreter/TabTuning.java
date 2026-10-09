@@ -10,6 +10,7 @@ public final class TabTuning {
     private TabTuning() {}
 
     public static List<Integer> parse(String text, int strings) {
+        text = text.replaceAll("(?<=[A-Ga-g])[\\p{Zs}\\t]+(?=[#♯♭])", "");
         var m =
                 Pattern.compile(
                                 "(?i)\\btuning\\s*[:=]?\\s*((?:[A-G](?:[#♯b♭])?[0-9]?\\s+){5,6}[A-G](?:[#♯b♭])?[0-9]?)(?![A-Za-z0-9])")
@@ -34,13 +35,14 @@ public final class TabTuning {
                     };
             if (note.group(2).equals("#") || note.group(2).equals("♯")) pc++;
             else if (!note.group(2).isEmpty()) pc--;
-            pc = Math.floorMod(pc, 12);
             int midi;
             if (!note.group(3).isEmpty()) midi = (Integer.parseInt(note.group(3)) + 1) * 12 + pc;
             else if (i == names.length - 1) {
+                pc = Math.floorMod(pc, 12);
                 midi = 60 + pc;
                 while (midi > 69) midi -= 12;
             } else {
+                pc = Math.floorMod(pc, 12);
                 midi = (above / 12) * 12 + pc;
                 while (midi >= above) midi -= 12;
             }

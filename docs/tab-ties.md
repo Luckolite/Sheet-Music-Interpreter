@@ -27,7 +27,7 @@ Matching vibrato and palm-mute marks may continue through a held note.
 
 Guide 284 and native analysis -25 implement this identity in the existing
 boundary integer. They preserve 80-byte notes and 33-byte rests, reject tagged
-identity in every older layout, and use recognition revision 26. Transport
+identity in every older layout, and use recognition revision 27. Transport
 protocol 1, playback audio format 77, models and production dependencies are
 unchanged. See [the binary contract](native-decoder.md#typed-tab-boundary-identity).
 

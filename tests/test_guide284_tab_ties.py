@@ -30,7 +30,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
         old = wire.encode(original, 283)
         new = wire.encode(original)
         self.assertEqual(284, struct.unpack_from('>i', new)[0])
-        self.assertEqual(26, wire.RECOGNITION_REVISION)
+        self.assertEqual(27, wire.RECOGNITION_REVISION)
         self.assertEqual(old[4:], new[4:])
         original['notes'][0]['boundaryTies'] = identity()
         typed = wire.encode(original)
