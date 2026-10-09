@@ -353,17 +353,39 @@ public final class TabBoundaryTies {
             float gap,
             int direction,
             boolean incoming) {
+        // Pale glyphs may touch an otherwise independent dark curve. Keep each
+        // component proof separate so added antialias coverage cannot merge
+        // neighboring ink into and invalidate an already proven shoulder.
+        return bow(gray, width, height, left, right, cy, gap, direction, incoming, false)
+                || bow(gray, width, height, left, right, cy, gap, direction, incoming, true);
+    }
+
+    private static boolean bow(
+            byte[] gray,
+            int width,
+            int height,
+            float left,
+            float right,
+            float cy,
+            float gap,
+            int direction,
+            boolean incoming,
+            boolean coverage) {
         int x0 = Math.max(0, Math.round(left)), x1 = Math.min(width - 1, Math.round(right));
         int y0 = Math.max(0, Math.round(cy - gap * .92f)),
                 y1 = Math.min(height - 1, Math.round(cy + gap * .92f));
         int cw = x1 - x0 + 1, ch = y1 - y0 + 1;
         if (cw < 3 || ch < 3) return false;
+        boolean[] foreground =
+                coverage
+                        ? inkRuns(gray, width, x0, x1, y0, y1, cy, gap, direction)
+                        : darkInk(gray, width, x0, x1, y0, y1, cy, gap, direction);
         boolean[] seen = new boolean[cw * ch];
         int[] queue = new int[cw * ch];
         for (int y = y0; y <= y1; y++)
             for (int x = x0; x <= x1; x++) {
                 int seed = (y - y0) * cw + x - x0;
-                if (seen[seed] || !ink(gray, width, x, y, cy, gap, direction)) continue;
+                if (seen[seed] || !foreground[seed]) continue;
                 int begin = 0, end = 0;
                 queue[end++] = seed;
                 seen[seed] = true;
@@ -385,7 +407,7 @@ public final class TabBoundaryTies {
                             int nx = px + dx, ny = py + dy;
                             if (nx < x0 || nx > x1 || ny < y0 || ny > y1) continue;
                             int next = (ny - y0) * cw + nx - x0;
-                            if (!seen[next] && ink(gray, width, nx, ny, cy, gap, direction)) {
+                            if (!seen[next] && foreground[next]) {
                                 seen[next] = true;
                                 queue[end++] = next;
                             }
@@ -426,12 +448,65 @@ public final class TabBoundaryTies {
         return false;
     }
 
-    private static boolean ink(
-            byte[] gray, int width, int x, int y, float cy, float gap, int direction) {
-        float distance = (y - cy) * direction;
-        return distance >= gap * .08f
-                && distance <= gap * .92f
-                && (gray[y * width + x] & 255) < 210;
+    private static boolean[] darkInk(
+            byte[] gray,
+            int width,
+            int x0,
+            int x1,
+            int y0,
+            int y1,
+            float cy,
+            float gap,
+            int direction) {
+        int cw = x1 - x0 + 1;
+        boolean[] result = new boolean[cw * (y1 - y0 + 1)];
+        for (int y = y0; y <= y1; y++) {
+            float distance = (y - cy) * direction;
+            if (distance < gap * .08f || distance > gap * .92f) continue;
+            for (int x = x0; x <= x1; x++)
+                result[(y - y0) * cw + x - x0] = (gray[y * width + x] & 255) < 210;
+        }
+        return result;
+    }
+
+    /**
+     * A thin stroke may share its coverage between adjacent pale pixels. Keep
+     * only contiguous vertical runs with actual ink mass; white columns and
+     * separate fragments remain disconnected. Geometry still owns the tie.
+     */
+    private static boolean[] inkRuns(
+            byte[] gray,
+            int width,
+            int x0,
+            int x1,
+            int y0,
+            int y1,
+            float cy,
+            float gap,
+            int direction) {
+        int cw = x1 - x0 + 1;
+        boolean[] result = new boolean[cw * (y1 - y0 + 1)];
+        for (int x = x0; x <= x1; x++) {
+            int first = -1, mass = 0;
+            for (int y = y0; y <= y1 + 1; y++) {
+                float distance = (y - cy) * direction;
+                int value =
+                        y <= y1 && distance >= gap * .08f && distance <= gap * .92f
+                                ? gray[y * width + x] & 255
+                                : 255;
+                if (value < 245) {
+                    if (first < 0) first = y;
+                    mass += 255 - value;
+                } else if (first >= 0) {
+                    if (mass > 45)
+                        for (int row = first; row < y; row++)
+                            result[(row - y0) * cw + x - x0] = true;
+                    first = -1;
+                    mass = 0;
+                }
+            }
+        }
+        return result;
     }
 
     private static float average(float[] values, int from, int to) {

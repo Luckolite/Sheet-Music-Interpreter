@@ -223,7 +223,7 @@
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
       "source_sha256": "0d2c9d2dd3de94ed7d8225e6d080d915a36e6e14acbd5512a22b0618ba08e57f",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "source_normalized_sha256": "d4f6bcf83ec2be7d48c919647ee91c1196c7f2c1d4c4a8a293d503c8ce5860e6",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
@@ -422,7 +422,7 @@
     "ScoreNoteEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteEvent.java",
       "source_sha256": "e9c0fa48769ca137c31e80aa024e41ebbd1ea60623aefb7d968ceae3b8d87425",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "source_normalized_sha256": "795f82c91b7de8a5fcf5f98979b0bc45cfd5676f467f3446cf542b99924036a4",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
@@ -671,18 +671,18 @@
     "TabPerformanceMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPerformanceMarks.java",
       "source_sha256": "ef7f017f414ad90333ff07c29c6c80a3e2388326e46930d29e63891cae93ac4a",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "source_normalized_sha256": "aa505ff4eaf56d008a43bf7efae5656ea8d59fb408ccc4e761826a92caabd75f",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
       "standalone_sha256": "76af307980825f971d63e5031d90fda1ff8c10ae0ce963f2d5c82729f46a649d"
     },
     "TabRhythmContinuations.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabRhythmContinuations.java",
-      "source_sha256": "80532479fae7822ced29dcb4d5d1a8a90a746527c375fed59acb4651ca12d78a",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
-      "source_normalized_sha256": "944ff34974c836e48ebd9ffcbcef3756b474b947a735e65b9c87196672d323a1",
+      "source_sha256": "b57ee1524f0cfa233db3ebf0572c223609d3a92fbc37cf80953390f213497027",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
+      "source_normalized_sha256": "388c103234b34ce7bd95f45e1d17aa9223347d0951e8f7664ad2c4e9d29f4a75",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
-      "standalone_sha256": "06f8902cf4e5359afd9dbdccd2e19a5b49e1a2c314d99c156c166cad935bfce7"
+      "standalone_sha256": "4384d83cb1f37a981e79084e2bdd65722b69aff4460fcd350f0d7496bc76fbdc"
     },
     "TabTextSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
@@ -1115,7 +1115,7 @@
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
       "source_sha256": "978ce6f5cb126a3cefb90a1dc83d88108db85884e48e3691288a29acc9da0b0f",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "source_normalized_sha256": "7117746f103cecc9890dcef78e3854793f57916b5ca8d763301a26603fd920cc",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Reuse private lazy read-only sharp/flat key-order tables; preserve explicit-accidental/key-presence branches, sign selection, letter/fifths arithmetic, traversal and full tied-note construction. Original synthetic all-key/all-letter and early-return regression. Apache-2.0/JDK-only; no model or record-layout changes. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged. App904 resolves a proven predecessor's accidental from the already-resolved source occurrence, so a three-page true-tie chain preserves sharp/flat inheritance. Endpoint/rest/register/staff/kind checks and all23 components remain unchanged outside the correction. An original eighteen-case scalar regression covers true boundaries, breaks, explicit contradictions, key changes, input immutability and prior-field parity; no private score is included.",
@@ -1489,7 +1489,7 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
       "source_sha256": "b64c163b787aff57e88453d772b3bf64e9dc0fa072708ec445b18f6cc9a0d4c0",
       "source_normalized_sha256": "2fe707488a606856942fd6bc28f3882b5a4ca135f14dce045b7e50b696490c72",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
@@ -1551,7 +1551,7 @@
       "source_path": "tools/native-worker/guide_writer.py",
       "source_sha256": "37d3f3161d60e0fa5d7b7806bcb8db0853c3b343e876bd95430a4d6086489a4d",
       "source_normalized_sha256": "a67bcaacabbd659a6eaf7ca77c4ab4ed09c7cfca46ca092a0d2e5be8971d075d",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "reviewed_source_state": "Guide284 typed tab identity; app/public writer bodies reviewed apart from license header and package import.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
@@ -1975,17 +1975,17 @@
     },
     "TabBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabBoundaryTies.java",
-      "source_sha256": "00bf6bef80633f9b16051e87b52aa4bab740d1cb927aa90b652cc55b16921601",
-      "source_normalized_sha256": "f89e0c41b67eaae1288c4e2c77d5ceb0a6bd34ebaffe622f9cdb0602e9c7394a",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "source_sha256": "6cf6ae9b2a87d337211ab9c96bdd01ef2e7d5e77415d2e899a8b187518c39a44",
+      "source_normalized_sha256": "44bfea5c03e74a95d28ffc4c65e8dee7c19211e0c742b1dca7a0b319b6b5be8e",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
-      "standalone_sha256": "d5afb991e8c563a960b70f4e269dd7249b83e1a197cd8daff9e0991cac1b054a"
+      "standalone_sha256": "9a23522a024ea0fe73560a005d9541a84f2efba803a92e807e1e74b9540ef4ea"
     },
     "TabTieIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTieIdentity.java",
       "source_sha256": "f95352bab02bffd528933481aa89b67d4c60baf48d5fc4119e99e5b2b13c5fa8",
       "source_normalized_sha256": "a7f811479610226da3bb308cc43b17f39634537f7b34ade4e3e260ce68ed287b",
-      "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
       "standalone_sha256": "991690c026954b9f040859cc5d82a5688d2d517c1830b1fc9ace06a8a2309829"
     }
@@ -4280,7 +4280,7 @@
   },
   "tablature_tie_review": {
     "documentation_path": "docs/tab-ties.md",
-    "reviewed_app_commit": "04f064d8763493d243c5ddb61fad4fdbdd187892",
+    "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
     "app_version": "1.18.468",
     "license": "Apache-2.0",
     "scope": "Existing same-fret returning arcs and independently proved adjacent system/page shoulders; explicit performance attacks override conflicting ties.",
@@ -4290,6 +4290,9 @@
     "shareable_regressions": [
       "TabExistingTargetTieTest.java",
       "TabBoundaryTiesTest.java",
+      "TabOwnedContinuationStemTest.java",
+      "TabBoundaryAntialiasTest.java",
+      "TabBoundaryEntryPointTest.java",
       "TabTieIdentityTest.java",
       "TypedTabTieNativeWireTest.java",
       "tests/test_guide284_tab_ties.py",
@@ -4298,7 +4301,7 @@
     "reviewed_adapters": [
       {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
-        "source_sha256": "5e8f14a7189012bb8da3aef5a9242fc21d90534b6e57fd80c6a1d77c93385e0d"
+        "source_sha256": "8a5bb0582abe2ee29c06f4e2fd375426445a0936b94067d8e59d3d9a79bec5dc"
       },
       {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/PdfPageRenderCache.java",
@@ -4306,7 +4309,7 @@
       },
       {
         "source_path": "tools/native-worker/NativePageGuide.java",
-        "source_sha256": "ea6e6ab3e5a99d690331f6e857cf1a1997a6dfaa0121d88bb1da81b29ff37db5"
+        "source_sha256": "7aba64dba5661efb501c4329ce8a0440aca89746e2958d96c2f14409450d2012"
       },
       {
         "source_path": "tools/native-worker/process_page.py",

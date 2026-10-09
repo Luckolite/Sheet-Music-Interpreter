@@ -56,6 +56,7 @@ public final class TabRhythmContinuations {
             slots = separated;
             var frets = new ArrayList<>(tab.frets());
             frets.sort(Comparator.comparingDouble(TablatureDecoder.Fret::x));
+            var stemOwnership = new HashMap<Float, Boolean>();
             var chordBars = new HashSet<Integer>();
             for (var a : tab.frets())
                 for (var b : tab.frets())
@@ -87,6 +88,20 @@ public final class TabRhythmContinuations {
                             || (previous.marks() & NoteOrnament.GRACE) != 0
                             || current != null && previous.fret() != current.fret()
                             || slot - previous.x() > tab.gap() * 15) continue;
+                    // An explicit target attack/effect or ornament must retain its onset.
+                    // Matching non-attack modulation may continue; a source tap may ring
+                    // into an unannotated target. Never erase a newly changed target mark.
+                    int modulation = TabEffect.VIBRATO | TabEffect.PALM_MUTE;
+                    if (current != null
+                            && current.marks() != 0
+                            && ((current.marks() & ~modulation) != 0
+                                    || (current.marks() & modulation)
+                                            != (previous.marks() & modulation))) continue;
+                    // Explicit targets already own a printed onset. Only a newly synthesized
+                    // blank continuation needs independent detached-stem ownership.
+                    if (current == null
+                            && !stemOwnership.computeIfAbsent(
+                                    slot, x -> ownedBlankStem(gray, w, h, tab, x))) continue;
                     if (!chordBars.contains(barIndex(tab, slot))) {
                         boolean occupied = false;
                         float last = -1;
@@ -218,7 +233,7 @@ public final class TabRhythmContinuations {
                     nextCrest = new int[high + 1],
                     nextSourceX = new int[high + 1];
             int sourceEnd = Math.min(right, Math.round(from + gap * 1.15f));
-            int targetStart = Math.max(left, Math.round(to - gap * 1.15f));
+            int targetStart = Math.max(left, Math.round(to - gap * 1.30f));
             int skipped = 0;
             for (int x = left; x <= right; x++) {
                 boolean masked = false;
@@ -308,6 +323,73 @@ public final class TabRhythmContinuations {
             }
         }
         return result;
+    }
+
+    /** A blank fret cannot be invented from a short letter stroke beneath the tab.
+     * Tall rhythmic shafts may carry flags/beams. A shorter shaft must instead be
+     * a complete narrow isolated component, with no adjacent text-like ink. */
+    private static boolean ownedBlankStem(
+            byte[] gray, int w, int h, TablatureDecoder.Staff tab, float slot) {
+        float gap = tab.gap(), bottom = tab.bottom();
+        int x = Math.round(slot);
+        int y0 = Math.max(0, Math.round(bottom + gap * .45f)),
+                y1 = Math.min(h - 1, Math.round(bottom + gap * 3.1f) - 1);
+        if (x < 0 || x >= w || y1 < y0) return false;
+        int longest = 0, run = 0, start = -1;
+        for (int y = y0; y <= y1; y++) {
+            if ((gray[y * w + x] & 255) < 180) {
+                run++;
+                if (run > longest) {
+                    longest = run;
+                    start = y - run + 1;
+                }
+            } else run = 0;
+        }
+        if (longest >= gap * 1.2f) return true;
+        if (longest < gap * .8f || start < 0) return false;
+        int x0 = Math.max(0, Math.round(slot - gap)), x1 = Math.min(w - 1, Math.round(slot + gap));
+        int cw = x1 - x0 + 1, ch = y1 - y0 + 1;
+        boolean[] seen = new boolean[cw * ch];
+        int[] queue = new int[cw * ch];
+        int seed = (start - y0) * cw + x - x0, read = 0, end = 0;
+        queue[end++] = seed;
+        seen[seed] = true;
+        int minX = x, maxX = x, minY = start, maxY = start;
+        while (read < end) {
+            int value = queue[read++], px = x0 + value % cw, py = y0 + value / cw;
+            minX = Math.min(minX, px);
+            maxX = Math.max(maxX, px);
+            minY = Math.min(minY, py);
+            maxY = Math.max(maxY, py);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int nx = px + dx, ny = py + dy;
+                    if (nx < x0 || nx > x1 || ny < y0 || ny > y1) continue;
+                    int next = (ny - y0) * cw + nx - x0;
+                    if (!seen[next] && (gray[ny * w + nx] & 255) < 180) {
+                        seen[next] = true;
+                        queue[end++] = next;
+                    }
+                }
+        }
+        if (minX == x0
+                || maxX == x1
+                || minY == y0
+                || maxY == y1
+                || maxX - minX + 1 > gap * .18f
+                || maxY - minY + 1 < gap * .8f) return false;
+        // A short isolated shaft cannot borrow a neighboring letter or small glyph.
+        int marginX = Math.max(1, Math.round(gap * .25f)),
+                marginY = Math.max(1, Math.round(gap * .1f));
+        for (int py = Math.max(0, minY - marginY); py <= Math.min(h - 1, maxY + marginY); py++)
+            for (int px = Math.max(0, minX - marginX);
+                    px <= Math.min(w - 1, maxX + marginX);
+                    px++) {
+                if ((gray[py * w + px] & 255) >= 180) continue;
+                if (px < x0 || px > x1 || py < y0 || py > y1 || !seen[(py - y0) * cw + px - x0])
+                    return false;
+            }
+        return true;
     }
 
     private static int barIndex(TablatureDecoder.Staff t, float x) {

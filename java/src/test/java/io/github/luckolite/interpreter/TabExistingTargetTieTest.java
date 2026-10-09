@@ -372,9 +372,22 @@ public class TabExistingTargetTieTest {
     }
 
     @Test
-    public void arcEndingBeforeFiniteTargetWindowCannotProveATie() {
+    public void arcReturningAtFiniteTargetWindowBoundaryCanProveATie() {
+        // Target 340 minus 1.30 * gap 20 is exactly 314. Parentheses remain separate.
         byte[] gray = page();
         finiteBow(gray, 122, 314, 120, -1, 14);
+        courtesyParentheses(gray, 340, 120);
+        var out = apply(gray, fret(100, 2, 12), fret(340, 2, 12));
+        assertEquals(2, out.size());
+        assertFalse(out.get(0).tied());
+        assertTrue(out.get(1).tied());
+    }
+
+    @Test
+    public void arcEndingBeforeFiniteTargetWindowCannotProveATie() {
+        // Strictly outside the finite 1.30-gap window; no disconnected glyph may fill it.
+        byte[] gray = page();
+        finiteBow(gray, 122, 312, 120, -1, 14);
         courtesyParentheses(gray, 340, 120);
         assertUntied(apply(gray, fret(100, 2, 12), fret(340, 2, 12)));
     }

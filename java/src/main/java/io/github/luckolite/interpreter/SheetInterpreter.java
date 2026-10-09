@@ -120,6 +120,7 @@ public final class SheetInterpreter {
             if (label < 0 || label > 5)
                 throw new IllegalArgumentException("Labels must be in 0..5");
         Objects.requireNonNull(annotations);
+        byte[] tabSourceGray = gray;
         var tabWords =
                 java.util.stream.Stream.concat(
                                 annotations.words.stream(), annotations.tabWords.stream())
@@ -315,7 +316,7 @@ public final class SheetInterpreter {
         return TabBoundaryTies.apply(
                 ScorePedalDetector.apply(withExpressions, gray, width, height, staffs),
                 tabs,
-                gray,
+                tabSourceGray,
                 width,
                 height);
     }
