@@ -86,7 +86,7 @@ public class PrintedStemWireTest {
         assertEquals(96, newBytes.length);
         assertEquals(95, oldStemBytes.length);
         assertEquals(LEGACY.length + 9, newBytes.length);
-        assertEquals(-24, new DataInputStream(new ByteArrayInputStream(newBytes)).readInt());
+        assertEquals(-25, new DataInputStream(new ByteArrayInputStream(newBytes)).readInt());
         assertEquals(-22, new DataInputStream(new ByteArrayInputStream(oldStemBytes)).readInt());
         assertEquals(1, new DataInputStream(new ByteArrayInputStream(LEGACY)).readInt());
         assertEquals(83, stemOffset(newBytes));
@@ -108,7 +108,7 @@ public class PrintedStemWireTest {
     @Test
     public void unsupportedAnalysisMarkerAndOutOfRangeStemAreRejected() throws Exception {
         var bytes = bytes(note());
-        ByteBuffer.wrap(bytes).putInt(-25);
+        ByteBuffer.wrap(bytes).putInt(-26);
         assertThrows(IOException.class, () -> read(bytes));
         for (int direction : new int[] {-2, 2}) {
             var bad = bytes(note());

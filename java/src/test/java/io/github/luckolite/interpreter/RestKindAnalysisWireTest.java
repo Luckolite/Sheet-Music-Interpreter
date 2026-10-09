@@ -70,7 +70,7 @@ public class RestKindAnalysisWireTest {
     public void newMarkerAndActualThirtyThreeByteRestRecords() throws Exception {
         var old = oracle(score(false));
         var n = encoded(score(false));
-        assertEquals(-24, ByteBuffer.wrap(n).getInt());
+        assertEquals(-25, ByteBuffer.wrap(n).getInt());
         assertEquals(old.length + 2, n.length);
         assertArrayEquals(Arrays.copyOfRange(old, 4, 104), Arrays.copyOfRange(n, 4, 104));
         for (int i = 0; i < 2; i++) {
@@ -159,7 +159,7 @@ public class RestKindAnalysisWireTest {
     @Test
     public void unsupportedFutureAnalysisMarkerRejects() throws Exception {
         var b = encoded(score(false));
-        ByteBuffer.wrap(b).putInt(-25);
+        ByteBuffer.wrap(b).putInt(-26);
         invalid(b);
     }
 

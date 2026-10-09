@@ -181,9 +181,12 @@ public final class Main {
                         && note.boundaryTies() != 0
                         && !guessed) {
                     event.put("boundaryTies", note.boundaryTies());
-                    event.put(
-                            "boundaryPitch", note.diatonicPitchIdentity() + note.octaveShift() * 7);
-                    event.put("boundaryAccidental", note.writtenAccidental());
+                    if (!TabTieIdentity.typed(note.boundaryTies())) {
+                        event.put(
+                                "boundaryPitch",
+                                note.diatonicPitchIdentity() + note.octaveShift() * 7);
+                        event.put("boundaryAccidental", note.writtenAccidental());
+                    }
                     event.put("sourceNoteIndex", noteIndex);
                 }
                 event.putAll(identity);

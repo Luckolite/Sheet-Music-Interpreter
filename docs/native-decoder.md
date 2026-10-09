@@ -26,11 +26,11 @@ or result format; synthetic tests verify both geometry and analysis responses.
 
 ## Typed rest records (0.1.10)
 
-Recognition revision 25 selects the current derived interpretation; it is separate
+Recognition revision 25 selected that derived interpretation; it is separate
 from guide format 283 and native analysis marker -24. Transport protocol 1, note
 records, model weights and production dependencies are unchanged.
 
-Both current formats append one unsigned kind byte to the existing rest record:
+Both formats append one unsigned kind byte to the existing rest record:
 
 | Field | Wire type | Byte offset |
 | --- | --- | --- |
@@ -66,6 +66,42 @@ verified physical staff/voice ownership. Tab evidence uses explicit decoded
 whole-rest glyph tokens; plain duration text alone does not establish FULL.
 Original scalar/pixel regressions establish these contracts, not whole-library
 accuracy or fresh OCR performance.
+
+
+## Typed tab boundary identity
+
+Recognition revision 26 selects guide 284 and native analysis marker -25.
+They retain the 80-byte note and 33-byte rest records from guide 283/-24.
+The existing big-endian boundaryTies int32 at note byte offset 67 now permits
+an explicitly tagged tab identity. Transport protocol 1 is unchanged.
+
+| Bits | Meaning |
+| --- | --- |
+| 0–3 | Existing incoming/outgoing curve directions |
+| 4 | Typed tab identity tag |
+| 5–7 | Zero-based physical tab string |
+| 8 | String count: 0 means 6; 1 means 7 |
+| 9–14 | Printed fret, 0–36 |
+| 15–21 | Effective open-string MIDI pitch, including tuning and capo |
+| 22–31 | Reserved; must be zero |
+
+Untagged evidence remains exactly 0–15. Tagged evidence requires at least one
+direction, a string below its count, and effective open pitch plus fret at most
+127. An unpitched attack cannot carry typed identity. Guide formats below 284
+and native markers -24/-23/-22 or unmarked records reject tagged evidence;
+writers reject an incompatible target instead of dropping identity. Old record
+sizes and bytes remain unchanged for legacy evidence.
+
+A boundary match requires compatible directions, equal physical string, string
+count, fret and effective open pitch, plus existing page/time/staff ownership.
+Typed and untyped evidence never match. Public JSON retains the packed
+boundaryTies and sourceNoteIndex; boundaryPitch/boundaryAccidental remain only
+the legacy diatonic representation. Typed consumers compare performed MIDI
+without inventing an accidental from the packed tab identity.
+
+This is derived-cache recognition metadata. Model weights and source documents
+are unchanged. Generic scalar/geometry regressions establish layout and matching
+contracts; private score scans remain outside public fixtures.
 
 ## Review and verification boundary
 

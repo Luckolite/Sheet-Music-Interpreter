@@ -125,12 +125,12 @@ public final class UnpitchedNativeAnalysisWireTest {
     }
 
     @Test
-    public void typedWriterUsesDistinctMinus24Marker() throws Exception {
+    public void typedWriterUsesDistinctMinus25Marker() throws Exception {
         var in =
                 new DataInputStream(
                         new ByteArrayInputStream(
                                 encode(score(note(ScoreNoteEvent.Kind.UNPITCHED, 1)))));
-        assertEquals(-24, in.readInt());
+        assertEquals(-25, in.readInt());
         assertEquals(1, in.readInt());
         assertEquals(0x4d534431, NativeDecoderWire.MAGIC);
     }
@@ -159,7 +159,7 @@ public final class UnpitchedNativeAnalysisWireTest {
 
     @Test
     public void unknownSignedMarkersFailClosed() throws Exception {
-        for (int marker : new int[] {-1, -21, -25, Integer.MIN_VALUE}) {
+        for (int marker : new int[] {-1, -21, -26, Integer.MIN_VALUE}) {
             byte[] body = encode(score());
             ByteBuffer.wrap(body).putInt(marker);
             assertThrows(IOException.class, () -> decode(body));

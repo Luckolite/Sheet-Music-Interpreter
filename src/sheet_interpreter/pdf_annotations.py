@@ -13,6 +13,11 @@ def tuning_header(page):
     finally:
         textpage.close()
 
+def tuning_words(header):
+    """Document tuning is metadata, independent of transformed page coordinates."""
+    return [dict(text=header, left=.01, top=.001, right=.9, bottom=.009)] if header else []
+
+
 def tab_words(page, header=""):
     textpage = page.get_textpage()
     words = []
@@ -36,6 +41,5 @@ def tab_words(page, header=""):
                 search.close()
     finally:
         textpage.close()
-    if header:
-        words.append(dict(text=header, left=.01, top=.001, right=.9, bottom=.009))
+    words.extend(tuning_words(header))
     return words

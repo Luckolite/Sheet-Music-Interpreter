@@ -21,6 +21,9 @@ public final class NativeDecoderWire {
 
     static final int ANALYSIS_REST_KIND_FORMAT = -24;
 
+    /** Same record sizes; typed tab string identity in the existing boundary int. */
+    static final int ANALYSIS_TAB_TIE_FORMAT = -25;
+
     public record Request(
             byte[] labels,
             byte[] gray,
@@ -223,16 +226,25 @@ public final class NativeDecoderWire {
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score)
             throws IOException {
-        writeAnalysis(out, score, ANALYSIS_REST_KIND_FORMAT);
+        writeAnalysis(out, score, ANALYSIS_TAB_TIE_FORMAT);
     }
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score, int marker)
             throws IOException {
-        if (marker != ANALYSIS_REST_KIND_FORMAT && marker != ANALYSIS_KIND_FORMAT)
+        if (marker != ANALYSIS_TAB_TIE_FORMAT
+                && marker != ANALYSIS_REST_KIND_FORMAT
+                && marker != ANALYSIS_KIND_FORMAT)
             throw new IOException("Unsupported analysis writer marker");
         if (marker == ANALYSIS_KIND_FORMAT
                 && score.rests().stream().anyMatch(ScoreRestEvent::isFullMeasure))
             throw new IOException("Legacy analysis would lose full-measure rest kind");
+        for (var note : score.notes()) {
+            if (!TabTieIdentity.valid(note.boundaryTies())
+                    || TabTieIdentity.typed(note.boundaryTies())
+                            && (marker != ANALYSIS_TAB_TIE_FORMAT
+                                    || note.kind() != ScoreNoteEvent.Kind.PITCHED))
+                throw new IOException("Unsupported or invalid typed tab tie evidence");
+        }
         if (score.notes().size() > MAX_EVENTS
                 || score.rests().size() > MAX_EVENTS
                 || score.keyChanges().size() > MAX_MEASURES)
@@ -278,14 +290,23 @@ public final class NativeDecoderWire {
             out.writeInt(r.staffIndex());
             out.writeInt(r.staffCount());
             out.writeDouble(r.durationBeats());
-            if (marker == ANALYSIS_REST_KIND_FORMAT) out.writeByte(restKindId(r.kind()));
+            if (marker == ANALYSIS_REST_KIND_FORMAT || marker == ANALYSIS_TAB_TIE_FORMAT)
+                out.writeByte(restKindId(r.kind()));
         }
+    }
+
+    private static int boundaryTies(DataInputStream in, boolean tabTyped) throws IOException {
+        int evidence = in.readInt();
+        if (!TabTieIdentity.valid(evidence) || !tabTyped && TabTieIdentity.typed(evidence))
+            throw new IOException("Unsupported or invalid boundary tie evidence");
+        return evidence;
     }
 
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
         int marker = in.readInt();
-        boolean restTyped = marker == ANALYSIS_REST_KIND_FORMAT;
+        boolean tabTyped = marker == ANALYSIS_TAB_TIE_FORMAT;
+        boolean restTyped = tabTyped || marker == ANALYSIS_REST_KIND_FORMAT;
         boolean typed = restTyped || marker == ANALYSIS_KIND_FORMAT;
         boolean stems = typed || marker == ANALYSIS_STEM_FORMAT;
         int count = stems ? count(in, MAX_EVENTS) : marker;
@@ -313,10 +334,14 @@ public final class NativeDecoderWire {
                             finite(in),
                             in.readBoolean(),
                             in.readInt(),
-                            count(in, ScoreNoteEvent.BOUNDARY_TIES_ALL),
+                            boundaryTies(in, tabTyped),
                             normalCount(in),
                             stems ? stemDirection(in) : 0,
                             typed ? noteKind(in) : ScoreNoteEvent.Kind.PITCHED));
+        for (var note : notes)
+            if (TabTieIdentity.typed(note.boundaryTies())
+                    && note.kind() != ScoreNoteEvent.Kind.PITCHED)
+                throw new IOException("Unpitched tab tie identity");
         count = count(in, MAX_MEASURES);
         var keys = new ArrayList<ScoreKeyChange>(count);
         for (int i = 0; i < count; i++) {

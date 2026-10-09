@@ -34,22 +34,25 @@ public final class GuideCacheIdentityTest {
     }
 
     @Test
-    public void currentRecognitionTwentyFiveRejectsAllPriorEpochsAtLayout283() {
-        assertEquals(25, GuideCacheIdentity.RECOGNITION_REVISION);
+    public void currentRecognitionTwentySixRejectsAllPriorEpochsAtLayout284() {
+        assertEquals(26, GuideCacheIdentity.RECOGNITION_REVISION);
         String source = "same source", variant = "0|unchanged cleanup";
         String portable =
                 GuideCacheIdentity.portable(
-                        283, source, variant, GuideCacheIdentity.RECOGNITION_REVISION);
+                        284, source, variant, GuideCacheIdentity.RECOGNITION_REVISION);
         String local =
                 GuideCacheIdentity.local(
-                        source, 0, "clean", 283, GuideCacheIdentity.RECOGNITION_REVISION);
-        assertEquals("guide|283|0|same source|0|unchanged cleanup|recognition=25", portable);
-        assertEquals("same source|page=0|cleanup=clean|engine=283|recognition=25", local);
+                        source, 0, "clean", 284, GuideCacheIdentity.RECOGNITION_REVISION);
+        assertEquals("guide|284|0|same source|0|unchanged cleanup|recognition=26", portable);
+        assertEquals("same source|page=0|cleanup=clean|engine=284|recognition=26", local);
         for (int older :
-                new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24}) {
-            assertNotEquals(portable, GuideCacheIdentity.portable(283, source, variant, older));
-            assertNotEquals(local, GuideCacheIdentity.local(source, 0, "clean", 283, older));
+                new int[] {
+                    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                    22, 23, 24, 25
+                }) {
+            assertNotEquals(portable, GuideCacheIdentity.portable(284, source, variant, older));
+            assertNotEquals(local, GuideCacheIdentity.local(source, 0, "clean", 284, older));
         }
-        assertNotEquals(portable, GuideCacheIdentity.portable(282, source, variant, 25));
+        assertNotEquals(portable, GuideCacheIdentity.portable(282, source, variant, 26));
     }
 }

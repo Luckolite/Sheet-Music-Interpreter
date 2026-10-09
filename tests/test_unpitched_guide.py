@@ -78,17 +78,17 @@ class UnpitchedGuideTests(unittest.TestCase):
                     with self.assertRaisesRegex(ValueError, 'Invalid attack kind'):
                         wire.encode(value, version)
         with self.assertRaises(ValueError):
-            wire.encode(original_score(), 284)
+            wire.encode(original_score(), 285)
 
     def test_current_epoch_layout_and_write_new_keep_existing_output(self):
-        self.assertEqual(25, wire.RECOGNITION_REVISION)
-        self.assertEqual(283, wire.GUIDE_VERSION)
+        self.assertEqual(26, wire.RECOGNITION_REVISION)
+        self.assertEqual(284, wire.GUIDE_VERSION)
         value = original_score()
         value['notes'][0]['kind'] = 'UNPITCHED'
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / 'original.guide'
             wire.write_new(path, value)
-            expected = wire.encode(value, 283)
+            expected = wire.encode(value, 284)
             self.assertEqual(expected, path.read_bytes())
             with self.assertRaises(FileExistsError):
                 wire.write_new(path, original_score())

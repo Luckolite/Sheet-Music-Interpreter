@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 25
-GUIDE_VERSION = 283
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283)
+RECOGNITION_REVISION = 26
+GUIDE_VERSION = 284
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -43,6 +43,18 @@ def _records(stream, rows, fields, maximum):
             raise ValueError("Invalid guide record")
         _pack(stream, "".join(code for _, code in fields),
               *(_field(row, name) for name, _ in fields))
+
+
+def _valid_boundary_ties(value):
+    if type(value) is not int or value < 0 or value & ~((1 << 22) - 1):
+        return False
+    if not value & 16:
+        return value <= 15
+    string = value >> 5 & 7
+    count = 6 + (value >> 8 & 1)
+    fret = value >> 9 & 63
+    effective_open = value >> 15 & 127
+    return bool(value & 15) and string < count and fret <= 36 and effective_open + fret <= 127
 
 
 def encode(score, guide_version=GUIDE_VERSION):
@@ -73,11 +85,12 @@ def encode(score, guide_version=GUIDE_VERSION):
         note_fields += (("kind", "B"),)
     notes = score["notes"]
     if not isinstance(notes, list) or any(not isinstance(row, dict)
-            or type(row.get("boundaryTies", 0)) is not int
-            or not 0 <= row.get("boundaryTies", 0) <= 15 for row in notes):
+            or not _valid_boundary_ties(row.get("boundaryTies", 0)) for row in notes):
         raise ValueError("Invalid boundary tie evidence")
     normalized_notes = []
     for row in notes:
+        if guide_version < 284 and row.get("boundaryTies", 0) & 16:
+            raise ValueError("Typed tab tie identity requires guide284")
         actual = _field(row, "tupletDivisor")
         default_normal = {3: 2, 5: 4, 6: 4, 7: 4}.get(actual, 1)
         normal = row.get("tupletNormalNotes", default_normal)
@@ -95,6 +108,8 @@ def encode(score, guide_version=GUIDE_VERSION):
         kind = row.get("kind", "PITCHED")
         if type(kind) is not str or kind not in ("PITCHED", "UNPITCHED"):
             raise ValueError("Invalid attack kind")
+        if kind != "PITCHED" and row.get("boundaryTies", 0) & 16:
+            raise ValueError("Unpitched tab tie identity")
         if guide_version < 282 and kind != "PITCHED":
             raise ValueError("Unpitched attacks require guide282")
         normalized_notes.append(dict(row, boundaryTies=row.get("boundaryTies", 0),

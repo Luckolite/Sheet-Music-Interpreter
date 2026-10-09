@@ -19,6 +19,7 @@ final class ScoreBoundaryTies {
 
     static List<ScoreNoteEvent> resolve(
             List<ScoreNoteEvent> notes, List<ScoreKeyChange> keys, List<Integer> boundaries) {
+
         for (var note : notes)
             if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED
                     && (note.tiedFromPrevious() || note.boundaryTies() != 0))
@@ -39,6 +40,8 @@ final class ScoreBoundaryTies {
                         || earlier.staffIndex() != current.staffIndex()
                         || earlier.staffCount() != current.staffCount()
                         || ((earlier.boundaryTies() >> 2) & current.boundaryTies() & 3) == 0
+                        || !TabTieIdentity.compatible(
+                                earlier.boundaryTies(), current.boundaryTies())
                         || earlier.followingRestBeats() > 0
                         || earlier.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN
                         || earlier.diatonicPitchIdentity() != current.diatonicPitchIdentity()

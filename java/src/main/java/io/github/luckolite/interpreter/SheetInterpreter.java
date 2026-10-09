@@ -312,6 +312,11 @@ public final class SheetInterpreter {
                         width,
                         height,
                         GlyphResources.expressions());
-        return ScorePedalDetector.apply(withExpressions, gray, width, height, staffs);
+        return TabBoundaryTies.apply(
+                ScorePedalDetector.apply(withExpressions, gray, width, height, staffs),
+                tabs,
+                gray,
+                width,
+                height);
     }
 }

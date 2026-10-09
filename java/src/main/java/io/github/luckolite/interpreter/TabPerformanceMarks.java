@@ -13,6 +13,7 @@ public final class TabPerformanceMarks {
         var out = new ArrayList<TablatureDecoder.Staff>();
         for (var t : tabs) {
             var fs = new ArrayList<>(t.frets());
+            var explicitAttacks = new HashSet<AttackKey>();
             for (var word : words) {
                 float x = (word.left() + word.right()) * .5f * w,
                         y = (word.top() + word.bottom()) * .5f * h;
@@ -69,6 +70,7 @@ public final class TabPerformanceMarks {
                                     | TabEffect.encode(kind, delta);
                 }
                 fs.set(best, marked(f, marks));
+                if (kind != 0) explicitAttacks.add(new AttackKey(f.x(), f.string()));
             }
             fs.sort(Comparator.comparingDouble(TablatureDecoder.Fret::x));
             var last = new HashMap<Integer, TablatureDecoder.Fret>();
@@ -76,7 +78,10 @@ public final class TabPerformanceMarks {
                 var f = fs.get(i);
                 var previous = last.get(f.string());
                 if (f.fret() < 0) continue;
-                if (f.tied() && previous != null && f.fret() == previous.fret())
+                // An explicitly printed tap/hammer/pull is an attack, including a same-fret tap
+                // under an arc.
+                if (explicitAttacks.contains(new AttackKey(f.x(), f.string()))) f = withoutTie(f);
+                else if (f.tied() && previous != null && f.fret() == previous.fret())
                     f =
                             marked(
                                     f,
@@ -90,6 +95,8 @@ public final class TabPerformanceMarks {
         return List.copyOf(out);
     }
 
+    private record AttackKey(float x, int string) {}
+
     private static TablatureDecoder.Fret marked(TablatureDecoder.Fret f, int marks) {
         return new TablatureDecoder.Fret(
                 f.x(),
@@ -101,6 +108,22 @@ public final class TabPerformanceMarks {
                 f.dots(),
                 marks,
                 f.tied(),
-                f.tuplet());
+                f.tuplet(),
+                f.wholeRestGlyph());
+    }
+
+    private static TablatureDecoder.Fret withoutTie(TablatureDecoder.Fret f) {
+        return new TablatureDecoder.Fret(
+                f.x(),
+                f.y(),
+                f.string(),
+                f.fret(),
+                f.duration(),
+                f.beams(),
+                f.dots(),
+                f.marks(),
+                false,
+                f.tuplet(),
+                f.wholeRestGlyph());
     }
 }

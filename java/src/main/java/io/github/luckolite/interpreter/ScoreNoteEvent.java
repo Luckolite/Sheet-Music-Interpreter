@@ -35,7 +35,7 @@ public record ScoreNoteEvent(
         UNPITCHED
     }
 
-    /** Preserve the former complete constructor and all shorter legacy constructor chains. */
+    /** Existing callers without printed shaft evidence keep an unknown direction. */
     public ScoreNoteEvent(
             int measureIndex,
             float positionInMeasure,
@@ -676,6 +676,7 @@ public record ScoreNoteEvent(
     }
 
     public int diatonicPitchIdentity() {
+
         if (kind == Kind.UNPITCHED)
             throw new IllegalStateException("An unpitched event has no diatonic pitch");
         return staffStep + (clefBottomDiatonic == CLEF_UNKNOWN ? 0 : clefBottomDiatonic);
@@ -938,7 +939,7 @@ public record ScoreNoteEvent(
         if (kind == null) throw new IllegalArgumentException("A note kind is required");
         if (stemDirection < -1 || stemDirection > 1)
             throw new IllegalArgumentException("Invalid printed stem direction");
-        if ((boundaryTies & ~BOUNDARY_TIES_ALL) != 0)
+        if (!TabTieIdentity.valid(boundaryTies))
             throw new IllegalArgumentException("Invalid boundary tie evidence");
         if (octaveShift < -2 || octaveShift > 2)
             throw new IllegalArgumentException("Octave shift must be -2..2");
