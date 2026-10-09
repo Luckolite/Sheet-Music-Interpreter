@@ -266,6 +266,10 @@ final class TripletRhythmDetector {
                 || gray.length != width * height) return notes;
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         List<Glyph> clearThrees = new ArrayList<>();
+        List<RawStaffLineDetector.StaffLines> printedStaffs =
+                virtualStart < result.size()
+                        ? RawStaffLineDetector.detect(gray, width, height)
+                        : List.of();
         List<Onset> groups = onsets(notes, virtualStart);
         for (int i = 0; i + 2 < groups.size(); i++) {
             boolean marked = false;
@@ -310,6 +314,8 @@ final class TripletRhythmDetector {
                                 measures);
                 if (numeral == null && virtualStart < result.size()) {
                     final List<ScoreNoteEvent> restGroupNotes = result;
+                    final float restGap =
+                            printedRestTupletGap(printedStaffs, region, first, height, gap);
                     numeral =
                             findContrastedNumeral(
                                     gray,
@@ -319,7 +325,7 @@ final class TripletRhythmDetector {
                                     x3,
                                     y1,
                                     y2,
-                                    gap,
+                                    restGap,
                                     first.beamCount() > 0,
                                     Float.NaN,
                                     Float.NaN,
@@ -338,7 +344,7 @@ final class TripletRhythmDetector {
                                                     height,
                                                     x1,
                                                     x3,
-                                                    gap));
+                                                    restGap));
                 }
                 if (numeral == null
                         && a.indices().size() == 1
@@ -1237,7 +1243,7 @@ final class TripletRhythmDetector {
         float ax = (bar.left() + a.positionInMeasure() * (bar.right() - bar.left())) * width;
         float bx = (bar.left() + b.positionInMeasure() * (bar.right() - bar.left())) * width;
         float distance =
-                PrintedTupletBeamOwner.distance(
+                PrintedTupletBeamOwner.bracketedDistance(
                         ink.pixels(),
                         ink.width(),
                         ink.height(),
@@ -2534,5 +2540,22 @@ final class TripletRhythmDetector {
 
     private static boolean dark(byte[] gray, int width, int x, int y) {
         return (gray[y * width + x] & 0xff) <= 165;
+    }
+
+    private static float printedRestTupletGap(
+            List<RawStaffLineDetector.StaffLines> printed,
+            MeasureRegion bar,
+            ScoreNoteEvent note,
+            int height,
+            float fallback) {
+        List<RawStaffLineDetector.StaffLines> inside = new ArrayList<>();
+        for (var staff : printed)
+            if (staff.center() >= bar.top() * height && staff.center() <= bar.bottom() * height)
+                inside.add(staff);
+        if (inside.size() != note.staffCount()
+                || note.staffIndex() < 0
+                || note.staffIndex() >= inside.size()) return fallback;
+        float gap = inside.get(note.staffIndex()).gap();
+        return gap >= fallback * .65f && gap <= fallback * 1.35f ? gap : fallback;
     }
 }

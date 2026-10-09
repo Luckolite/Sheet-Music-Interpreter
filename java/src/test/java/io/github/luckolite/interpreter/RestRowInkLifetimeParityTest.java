@@ -71,15 +71,18 @@ public final class RestRowInkLifetimeParityTest {
     @Test
     public void exactThresholdAndRepeatedMaskResults() throws Exception {
         Result r = thresholdRecords();
-        assertEquals(50, r.rests());
-        assertEquals("cd66d07e504927cd0212788a91657f06d847db3ed7093e685ce3fc819674dc2f", r.hash());
+        // Reviewed fixture22 is now read at both repeated thresholds; caller ink remains unchanged.
+        assertEquals(52, r.rests());
+        assertEquals("58ae00a2559e50941e095cb3898ad336bf37de53b96d8f78badcba534324e88d", r.hash());
     }
 
     @Test
     public void callerMutationAndRestorationTakeEffectOnEveryCall() throws Exception {
         Result r = changingRecords();
-        assertEquals(46, r.rests());
-        assertEquals("bd554337c8f885d7573d4f21af8fc59bca822c1ea7a10ce546352491c05961b2", r.hash());
+        // Reviewed fixture22 returns before/after restoration and disappears when its real ink is
+        // erased.
+        assertEquals(48, r.rests());
+        assertEquals("e20737e8f20ac42ceb40f027922066ddd8c5ec94d6d0522b888b4f8bbc0a8759", r.hash());
     }
 
     public static void main(String[] args) throws Exception {

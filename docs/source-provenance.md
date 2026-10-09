@@ -833,3 +833,14 @@ previous detector. Recognition23/audio75 invalidate affected derived caches.
 Guide282 record layouts, standalone APIs, models and dependencies are unchanged.
 Private source material is excluded; retained replay and generated controls do
 not establish fresh whole-score, whole-library or physical-phone accuracy.
+
+Recognition24 reads complete connected rest ink beside disconnected brackets
+and retains raw-pixel note, beam and dot ownership. Complete rest brackets and
+verified printed staff spacing prove endpoint-aligned triplet numerals; an
+explicit opening-rest triplet lane keeps independent quarter attacks in their
+printed rest slots. Thirty-six original Apache-2.0 controls cover these cases;
+five positive cases fail against the previous decoder. One generated complete
+noisy two-bulb rest explains all four reviewed parity-golden updates. Recognition24
+and audio76 invalidate affected caches. Guide282 layouts, standalone APIs, models
+and dependencies are unchanged. Private score material is excluded; retained
+replay and generated tests do not establish fresh whole-score or phone accuracy.

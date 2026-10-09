@@ -5,9 +5,37 @@ package io.github.luckolite.interpreter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Experimental complete components inside a merged vertical projection. */
+/** Connected rest components inside a merged vertical projection. */
 final class SeparatedRestInk {
-    record Body(int left, int right, int top, int bottom) {}
+    record Body(int left, int right, int top, int bottom, int[] pixels) {
+        Body(int left, int right, int top, int bottom) {
+            this(left, right, top, bottom, null);
+        }
+
+        byte[] owned(
+                byte[] gray, byte[] scratch, int width, int height, boolean[] line, int lineTop) {
+            if (pixels == null) return gray;
+            int span = right - left + 1;
+            boolean[] member = new boolean[span * (bottom - top + 1)];
+            for (int pixel : pixels)
+                member[(pixel / width - top) * span + pixel % width - left] = true;
+            byte[] owned = scratch;
+            for (int y = Math.max(0, top - 1); y <= Math.min(height - 1, bottom + 1); y++) {
+                if (y >= lineTop && y - lineTop < line.length && line[y - lineTop]) continue;
+                for (int x = left; x <= right; x++)
+                    if (y < top || y > bottom || !member[(y - top) * span + x - left])
+                        owned[y * width + x] = (byte) 255;
+            }
+            return owned;
+        }
+
+        void restore(byte[] scratch, byte[] gray, int width, int height) {
+            if (pixels == null) return;
+            for (int y = Math.max(0, top - 1); y <= Math.min(height - 1, bottom + 1); y++)
+                System.arraycopy(
+                        gray, y * width + left, scratch, y * width + left, right - left + 1);
+        }
+    }
 
     static boolean represented(
             Body body,
@@ -107,7 +135,10 @@ final class SeparatedRestInk {
                     || r - l + 1 > gap * 1.6f
                     || b - t + 1 < gap * 1.3f
                     || b - t + 1 > gap * 3.6f) continue;
-            result.add(new Body(l, r, t, b));
+            int[] pixels = new int[count];
+            for (int i = 0; i < count; i++)
+                pixels[i] = (top + queue[i] / span) * width + left + queue[i] % span;
+            result.add(new Body(l, r, t, b, pixels));
         }
         return List.copyOf(result);
     }

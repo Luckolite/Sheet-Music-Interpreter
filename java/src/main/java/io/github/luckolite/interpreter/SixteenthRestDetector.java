@@ -1320,6 +1320,7 @@ final class SixteenthRestDetector {
         List<ScoreRestEvent> result = new ArrayList<>();
         List<RestDot> restDots = new ArrayList<>();
         List<Runnable> componentReads = new ArrayList<>();
+        final byte[][] isolatedInk = new byte[1][];
         List<Placement> placements = new ArrayList<>();
         for (Staff s : staffs) placements.add(new Placement(s, (s.top() + s.bottom()) * .5f));
         // In polyphonic engraving rests for the upper voice move one space above their
@@ -1563,29 +1564,44 @@ final class SixteenthRestDetector {
                                                 if (SeparatedRestInk.represented(
                                                         body, staff, measures, result, width,
                                                         height)) return;
-                                                inspect(
-                                                        gray,
-                                                        width,
-                                                        height,
-                                                        measures,
-                                                        notes,
-                                                        staff,
-                                                        bodyTop,
-                                                        bodyBottom,
-                                                        bodyMask,
-                                                        body.left(),
-                                                        body.right(),
-                                                        result,
-                                                        restDots,
-                                                        ordinary,
-                                                        lowered,
-                                                        deepLowered,
-                                                        baseMask != line && baseMask != narrowLine,
-                                                        componentBulbOnly,
-                                                        quarterOnly,
-                                                        farRaised,
-                                                        placement.printedCenter() / height,
-                                                        faintShapes);
+                                                if (isolatedInk[0] == null)
+                                                    isolatedInk[0] = gray.clone();
+                                                try {
+                                                    inspectOwned(
+                                                            body.owned(
+                                                                    gray,
+                                                                    isolatedInk[0],
+                                                                    width,
+                                                                    height,
+                                                                    bodyMask,
+                                                                    bodyTop),
+                                                            gray,
+                                                            width,
+                                                            height,
+                                                            measures,
+                                                            notes,
+                                                            staff,
+                                                            bodyTop,
+                                                            bodyBottom,
+                                                            bodyMask,
+                                                            body.left(),
+                                                            body.right(),
+                                                            result,
+                                                            restDots,
+                                                            ordinary,
+                                                            lowered,
+                                                            deepLowered,
+                                                            baseMask != line
+                                                                    && baseMask != narrowLine,
+                                                            componentBulbOnly,
+                                                            quarterOnly,
+                                                            farRaised,
+                                                            placement.printedCenter() / height,
+                                                            faintShapes);
+                                                } finally {
+                                                    body.restore(
+                                                            isolatedInk[0], gray, width, height);
+                                                }
                                             });
                                 }
                             }
@@ -1883,6 +1899,56 @@ final class SixteenthRestDetector {
             boolean farRaised,
             float printedStaffCenter,
             boolean faintShapes) {
+        inspectOwned(
+                gray,
+                gray,
+                width,
+                height,
+                measures,
+                notes,
+                staff,
+                top,
+                bottom,
+                line,
+                left,
+                right,
+                result,
+                restDots,
+                ordinary,
+                lowered,
+                deepLowered,
+                edgeFallback,
+                bulbOnly,
+                quarterOnly,
+                farRaised,
+                printedStaffCenter,
+                faintShapes);
+    }
+
+    private static void inspectOwned(
+            byte[] gray,
+            byte[] ownershipGray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            List<ScoreRestEvent> result,
+            List<RestDot> restDots,
+            boolean ordinary,
+            boolean lowered,
+            boolean deepLowered,
+            boolean edgeFallback,
+            boolean bulbOnly,
+            boolean quarterOnly,
+            boolean farRaised,
+            float printedStaffCenter,
+            boolean faintShapes) {
         float gap = staff.gap();
         if (right - left + 1 < gap * .7f || right - left + 1 > gap * 1.85f) return;
         int minY = bottom + 1, maxY = top - 1;
@@ -2059,6 +2125,10 @@ final class SixteenthRestDetector {
                     && deepLowered
                     && continuedRestTail(gray, width, height, left, right, maxY, gap)) return;
         }
+        // Component isolation is only for contour classification. Printed-note,
+        // voice, text and augmentation-dot ownership still use all original ink.
+        boolean isolatedContour = gray != ownershipGray;
+        gray = ownershipGray;
         if (eighth
                 && deepLowered
                 && ForteRestGuard.owns(gray, width, height, left, right, minY, maxY, gap)) return;
@@ -2144,7 +2214,12 @@ final class SixteenthRestDetector {
                         && !((eighth || sixteenth)
                                 && beamedVoiceAroundRest(
                                         gray, width, height, region, notes, m, staff, left, right,
-                                        minY, maxY))) continue;
+                                        minY, maxY))
+                        && !(isolatedContour
+                                && eighth
+                                && adjacentBeamedVoice(
+                                        gray, width, height, region, notes, m, staff, left, right,
+                                        minY))) continue;
             }
             for (ScoreNoteEvent note : notes)
                 if (note.measureIndex() == m
@@ -3142,5 +3217,74 @@ final class SixteenthRestDetector {
             n++;
         }
         return sum / Math.max(1, n);
+    }
+
+    /** Two real attached down-stemmed heads can follow or precede a complete displaced rest. */
+    private static boolean adjacentBeamedVoice(
+            byte[] gray,
+            int width,
+            int height,
+            MeasureRegion region,
+            List<ScoreNoteEvent> notes,
+            int measure,
+            Staff staff,
+            int left,
+            int right,
+            int restTop) {
+        float gap = staff.gap();
+        for (ScoreNoteEvent first : notes) {
+            if (first.measureIndex() != measure
+                    || first.staffIndex() != staff.index()
+                    || first.staffCount() != staff.count()
+                    || first.crossStaffBeam()
+                    || first.beamCount() < 1
+                    || first.beamCount() > 2
+                    || (first.articulations() & NoteOrnament.GRACE) != 0
+                    || first.pageY() * height >= restTop - gap * .65f) continue;
+            float x =
+                    (region.left() + first.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            int side = x > right + gap * .65f ? 1 : x < left - gap * .65f ? -1 : 0;
+            if (side == 0 || Math.min(Math.abs(x - left), Math.abs(x - right)) > gap * 26) continue;
+            int direction =
+                    first.stemDirection() != 0
+                            ? first.stemDirection()
+                            : PrintedStemDirection.detect(
+                                    gray, width, height, x, first.pageY() * height, gap);
+            if (direction != -1) continue;
+            for (ScoreNoteEvent second : notes) {
+                if (second == first
+                        || second.measureIndex() != measure
+                        || second.staffIndex() != staff.index()
+                        || second.staffCount() != staff.count()
+                        || second.crossStaffBeam()
+                        || second.beamCount() != first.beamCount()
+                        || (second.articulations() & NoteOrnament.GRACE) != 0
+                        || second.pageY() * height >= restTop - gap * .65f) continue;
+                float ox =
+                        (region.left()
+                                        + second.positionInMeasure()
+                                                * (region.right() - region.left()))
+                                * width;
+                if (side == 1 ? ox <= right + gap * .65f : ox >= left - gap * .65f) continue;
+                int otherDirection =
+                        second.stemDirection() != 0
+                                ? second.stemDirection()
+                                : PrintedStemDirection.detect(
+                                        gray, width, height, ox, second.pageY() * height, gap);
+                if (otherDirection != -1) continue;
+                if (PrintedTupletBeamOwner.connectedHeads(
+                        gray,
+                        width,
+                        height,
+                        Math.min(x, ox),
+                        (x < ox ? first.pageY() : second.pageY()) * height,
+                        Math.max(x, ox),
+                        (x < ox ? second.pageY() : first.pageY()) * height,
+                        gap,
+                        -1)) return true;
+            }
+        }
+        return false;
     }
 }

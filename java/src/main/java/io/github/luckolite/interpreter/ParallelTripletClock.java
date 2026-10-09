@@ -215,8 +215,7 @@ final class ParallelTripletClock {
                             || n.augmentationDots() != 0
                             || n.unbeamedDurationBeats() != 0
                             || n.tupletDivisor() != 3
-                            || n.tupletNormalNotes() != 2
-                            || n.leadingRestBeats() > 0) {
+                            || n.tupletNormalNotes() != 2) {
                         ambiguous = true;
                         break;
                     }
@@ -227,7 +226,10 @@ final class ParallelTripletClock {
                 if (groups.size() < 6
                         || groups.get(0).get(0).positionInMeasure() > .18f
                         || groups.get(groups.size() - 1).get(0).positionInMeasure() < .8f) continue;
-                double unit = (beams == 1 ? .5 : .25) * 2 / 3, cursor = 0;
+                double unit = (beams == 1 ? .5 : .25) * 2 / 3;
+                double opening = groups.get(0).get(0).leadingRestBeats();
+                if (opening < 0 || opening > 0 && Math.abs(opening - unit) > .001) continue;
+                double cursor = opening;
                 var attacks = new ArrayList<Attack>();
                 var rests = new ArrayList<RestGap>();
                 float smallest = Float.MAX_VALUE, largest = 0;
@@ -236,6 +238,8 @@ final class ParallelTripletClock {
                     double after = column.get(0).followingRestBeats();
                     if (after < 0 || after > 0 && Math.abs(after - unit) > .001) ambiguous = true;
                     for (var n : column) {
+                        if (Math.abs(n.leadingRestBeats() - (i == 0 ? opening : 0)) > .001)
+                            ambiguous = true;
                         if (Math.abs(n.followingRestBeats() - after) > .001) ambiguous = true;
                         attacks.add(new Attack(n, cursor));
                     }
@@ -260,7 +264,7 @@ final class ParallelTripletClock {
                 }
                 if (ambiguous
                         || rests.isEmpty()
-                        || (groups.size() + rests.size()) % 3 != 0
+                        || (groups.size() + rests.size() + (opening > 0 ? 1 : 0)) % 3 != 0
                         || Math.abs(cursor - beats) > .001
                         || smallest <= SAME
                         || largest > smallest * 3) continue;

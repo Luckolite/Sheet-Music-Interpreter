@@ -415,14 +415,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "ca54b839f7ea3cf85ea57ee487ff744ef5628782ed1888a9d74a0bff708fec83",
-      "reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80",
-      "review_note": "Original Apache-2.0 recovery proves an independent flat sitting plate and measured adjacent pitched-note shaft, rejects beamlets/cropped heads and invalid staff geometry, and reuses shared dot assignment and staff rectification. No model, dependency, record layout or public API changes; private source material excluded.",
-      "source_normalized_sha256": "d257202d1e97de426b7580e15219ad6b787db4673f3bbf13c710ee609b72e714",
+      "source_sha256": "68b8207afa8d4dd32f5ee1dac8e663a905ab3d0b3143c7a4126ec49ea41a6889",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "source_normalized_sha256": "474ecfd829d87b98f485b474a83202c605975a4cd5afb1307c0988e0e5b437b9",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed recognition23 half-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80"
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -433,13 +433,13 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "b25b842fb9bf606cfbf79dbf007f91fb4a8b0e46ef5e7b876e923b16e79768cb",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "701989eb75b66ede718cf6bc0b13334f35d5bcfc46a7f791982eb9d8edb8cd05",
-      "review_note": "Existing printed-numeral rules remain primary. Joined printed3 recovery requires a clearly read same-page numeral template, independent beam ownership and same-direction sounding heads; original fingering, split-beam, neighbouring-system and rhythm guards still apply.",
+      "source_sha256": "b221b1a6adebd16186bd66a0d8403fd579f38a3ee87af823f553b0b28640b8af",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "source_normalized_sha256": "4cd8c00ee01e1b3a7524931480cac2f27c6835d2a1d121b80a139cc977bca882",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1420,12 +1420,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "fcacad87a9df3019f45a68b25a6d2c9f0f9e2e7e0c8d688265e74173ff24746f",
-      "source_normalized_sha256": "d14cc2801a3b3b674e6add915881b36ca417c40eb1f8dcc27c4dbf107b9822c2",
-      "reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80",
-      "review_note": "Original Apache-2.0 recovery proves an independent flat sitting plate and measured adjacent pitched-note shaft, rejects beamlets/cropped heads and invalid staff geometry, and reuses shared dot assignment and staff rectification. No model, dependency, record layout or public API changes; private source material excluded.",
-      "reviewed_source_state": "Committed recognition23 half-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "scoped_reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80"
+      "source_sha256": "2c86bdbcdb8c5a68a5b6637498bf037432fe8f4fdfb92acddf77bd2b2c94b9e5",
+      "source_normalized_sha256": "90b21ce11f3519ad998cfa830af3ba85a9d639c4db9e89c9807e2ccea66da891",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1445,13 +1445,13 @@
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
-      "source_sha256": "53da5ec2591caade1c05458d9e5bf209a37c6dcd744f89596578037046b6a7c8",
-      "source_normalized_sha256": "d30f8bd0ffc44b8d0523d7161c14fcaa48bcacdbe163e56cd35d9fc482cd5e4e",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "source_sha256": "a4eb36ae23f0dc79ed8df111d902a5b472b2c41d794f1819a611ca5ecc25bf13",
+      "source_normalized_sha256": "3ea745e72f5b9e9735573dc4df4b695ba28929f59192e99ab88595ecf672a9b6",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "PrintedCClef.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
@@ -1471,21 +1471,22 @@
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "046eefe790091851e9637e65bdaedb522e41b061e2b2007178c3be69172becf7",
-      "source_normalized_sha256": "046eefe790091851e9637e65bdaedb522e41b061e2b2007178c3be69172becf7",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed uninterrupted attached-beam connectivity helper, shared by triplet and rest ownership. Existing standalone beam connectivity dependency; original synthetic controls.",
-      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port."
+      "source_sha256": "f3f23873cb7fbd27f4d9d5a83588087a0cfbce25545a355fde65f183246881b9",
+      "source_normalized_sha256": "84a4c3d20245f4209b5c674151f0bf385651d612c121f2dd8383c9619b9db705",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "7e3112e38f6ca27191a23259fe50db00ac83c74f1443604fe067ad0a77165025",
-      "source_normalized_sha256": "f6f4809ca6230d9fec13e0d99cbc26b4c44daa93fcf8be400fb83aaf228418ae",
-      "reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80",
-      "reviewed_source_state": "Committed recognition23 half-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "review_note": "Original Apache-2.0 recovery proves an independent flat sitting plate and measured adjacent pitched-note shaft, rejects beamlets/cropped heads and invalid staff geometry, and reuses shared dot assignment and staff rectification. No model, dependency, record layout or public API changes; private source material excluded.",
-      "scoped_reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80"
+      "source_sha256": "2f88c01db731e33d05a35607c669dc6184c20551a6dbd104be33192e1f5cda16",
+      "source_normalized_sha256": "959c02d06b195269802e13b3c3e88c21ba544f8bb1fb65ae6d336d555526e6bf",
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1756,12 +1757,12 @@
     },
     "SeparatedRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeparatedRestInk.java",
-      "reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "review_note": "Complete independent printed rest components can separate a merged vertical projection while preserving stem, beam and fingering guards. Original Apache-2.0 procedural positive/rejection controls; exact package/diagnostics-adapter token parity and existing JDK/interpreter dependencies only. No private source fixtures, model weights or record layouts are added.",
-      "source_sha256": "658fad1f5750ab8998a80a8f39fea661777c13947ae49b4d2fbd50b7e398ceac",
-      "source_normalized_sha256": "658fad1f5750ab8998a80a8f39fea661777c13947ae49b4d2fbd50b7e398ceac",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls."
+      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "source_sha256": "70b5f4b47005d5e6450d093ce7b3e20595aed13ce5c9772173630e8c11b250de",
+      "source_normalized_sha256": "5adbe4eba5ab58669553a05a4ee173093d357eddd0608e3e6765fee78f67f7de",
+      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed."
     },
     "ClosedWrittenHeadPocket.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedWrittenHeadPocket.java",
@@ -4018,5 +4019,31 @@
     "standalone_java_tests": 7242,
     "baseline_synthetic_failures": 14,
     "review": "Independent flat sitting rectangles, a real pitched head and its measured physical shaft establish ownership. Additive recovery follows the existing detector and preserves prior rests. Shared augmentation-dot assignment anchors dots to the supporting staff space; existing printed-staff mapping handles sloping and curved pages. Thirty-three original generated controls cover geometry, dot ownership, scale, cropped frames and malformed staff bounds; fourteen fail against the previous detector. Reviewed private replay preserves prior written notes, rests and note clocks; private material is excluded. This does not establish fresh whole-score, whole-library or physical-phone accuracy. Models, dependencies, wire record layout and public APIs remain unchanged."
+  },
+  "recognition24_component_rest_triplet_review": {
+    "app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+    "recognition_revision": 24,
+    "audio_revision": 76,
+    "guide_version": 282,
+    "changed_mapped_sources": [
+      "SixteenthRestDetector.java",
+      "SeparatedRestInk.java",
+      "PrintedTupletBeamOwner.java",
+      "TripletRhythmDetector.java",
+      "ParallelTripletClock.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "new_production_helpers": [],
+    "synthetic_tests": [
+      "BracketedLowerEighthRestTest.java",
+      "BracketedEighthOwnershipControlsTest.java",
+      "OpeningRestTripletClockTest.java",
+      "PrintedRestTupletScaleTest.java"
+    ],
+    "synthetic_test_count": 36,
+    "standalone_java_tests": 7278,
+    "baseline_synthetic_failures": 5,
+    "review": "Connected-component contour ownership preserves disconnected bracket ink and real note/beam guards. Complete rest brackets and verified printed staff scale retain endpoint numeral ownership without widening bare-beam matching. An explicit full-bar opening-rest triplet lane preserves independent quarter-note clocks. Thirty-six original Apache-2.0 generated controls cover these recoveries and reject broken beams/shafts/brackets, missing staff evidence, false numerals and incomplete rhythms; five positive cases fail against the prior decoder. Four generated parity goldens were updated only after336-state review isolated one complete original noisy two-bulb rest in six mask/threshold/restore states with no prior event loss or input mutation. Private retained source replay confirms targeted fixes while preserving other events/clocks. Private score material is excluded. Fresh whole-score, whole-library and physical-phone accuracy remains unverified; models, dependencies, guide282 layout and APIs unchanged."
   }
 }

@@ -71,10 +71,11 @@ public final class RestProjectionParityTest {
             digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
             rests += d.rests().size();
         }
-        org.junit.Assert.assertEquals(23, rests);
-        // Original generated pages include a complete paired-bulb rest recovered inside noise.
+        org.junit.Assert.assertEquals(24, rests);
+        // Reviewed fixture22 contains a complete faint two-bulb rest; connected-component ownership
+        // excludes disconnected noise.
         org.junit.Assert.assertEquals(
-                "1c85dde8e3d7d905483d24c2e3141213ad53d8388d0e1b6ba89d45d1d928583f",
+                "5c0e5b03483cda3bde69682766ebded45d681141f0f77e0bbb7e5d7ed1be64c5",
                 HexFormat.of().formatHex(digest.digest()));
     }
 
@@ -96,10 +97,11 @@ public final class RestProjectionParityTest {
             hash.update(detect(f).toString().getBytes(StandardCharsets.UTF_8));
             org.junit.Assert.assertArrayEquals(before, f.gray);
         }
-        org.junit.Assert.assertEquals(53, count);
-        // Reviewed complete records include the same recovered glyph under overlapping frames.
+        org.junit.Assert.assertEquals(54, count);
+        // The same reviewed fixture22 glyph retains its supplied staff identity under overlapping
+        // frames.
         org.junit.Assert.assertEquals(
-                "4a353fada312348f15cc7e06d42edd9e81e5dba4f39313583080654fa2d6162d",
+                "a6212a5c8b54997a1b1876c72c7c3798bc30c9b82043fcd9d3dc7b4771510759",
                 HexFormat.of().formatHex(hash.digest()));
     }
 }

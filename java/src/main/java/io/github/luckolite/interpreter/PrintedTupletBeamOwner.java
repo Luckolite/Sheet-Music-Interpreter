@@ -56,6 +56,70 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom) {
+        return distanceWithBounds(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                false);
+    }
+
+    /** The caller must already prove a complete rest-containing bracket. */
+    static float bracketedDistance(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom) {
+        return distanceWithBounds(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                true);
+    }
+
+    private static float distanceWithBounds(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            boolean bracketed) {
         float nearest = Float.POSITIVE_INFINITY;
         if (gray == null
                 || width < 1
@@ -74,7 +138,8 @@ final class PrintedTupletBeamOwner {
             for (Tip b : last) {
                 if (b.x - a.x < gap || Math.abs(b.y - a.y) > gap * 3) continue;
                 float fraction = (numeralX - a.x) / (b.x - a.x);
-                if (fraction < .15f || fraction > .85f) continue;
+                if (fraction < (bracketed ? -.15f : .15f) || fraction > (bracketed ? 1.15f : .85f))
+                    continue;
                 float beamY = a.y + fraction * (b.y - a.y);
                 float distance = travel > 0 ? numeralTop - beamY : beamY - numeralBottom;
                 if (distance < Math.max(2, gap * .2f) || distance > gap * 1.8f) continue;
