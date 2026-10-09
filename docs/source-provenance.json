@@ -143,11 +143,12 @@
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
-      "source_sha256": "05c8dd18ec8057c400969ae6d3d77e2ca31daeec0250887a9c0b08c8ae42950a",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "75af2a10ee6754ac7bfb6d6aeee8983b70c62f214bbe5b7b19387a6a631a7a98",
-      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
-      "review_note": "Detector retains intra-op2; recognizer uses intra-op4. Inter-op1, spin-stop1, weights/checksums/dictionary and all acquisition/closure/error lifetimes retained. Original fake-ORT controls capture model-specific options; 27 existing cases plus two recognizer-setter failure cases."
+      "source_sha256": "a866978b4577b0420afc42945f78dbe8d28003e0035e5287e398061f541c8100",
+      "reviewed_app_commit": "4b5d5da71a7a9e9d635186610c49c16fdcd45dfd",
+      "source_normalized_sha256": "0eb30e769a4cf7c12f5ff911172b5395b57f02f2396bd8418ddba44b00ab831e",
+      "reviewed_source_state": "Committed app932 recognizer-only capability; complete standalone namespace/header/formatting adaptation reviewed.",
+      "review_note": "Located text crops may explicitly construct a recognizer-only session, retaining recognizer/dictionary trust, normalization, probabilities, CTC, confidence and resource ownership. The full two-model constructor, detector trust and model-specific threads remain unchanged. Detection rejects the optional capability before tensor allocation. Whole-file executable tokens agree after standalone namespace, Apache header and formatting adaptation. The existing29 lifecycle criteria and original27 native tensors pass; nine new original generated tensors prove exact full/recognizer-only probabilities, repeated calls and caller inputs. No model, dependency or wire-layout change.",
+      "scoped_reviewed_app_commit": "4b5d5da71a7a9e9d635186610c49c16fdcd45dfd"
     },
     "PortableOcrProbe.java": {
       "source_path": "tools/native-worker/PortableOcrProbe.java",
@@ -4179,5 +4180,35 @@
     "dependencies_changed": false,
     "review": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
     "validation_limits": "Generated regressions, exact retained-input field/clock replay and actual guide/wire consumers are validated. Retained replay does not establish fresh whole-score, whole-library, physical-phone accuracy or reduced phone heat. Ordinary natural-adjacent and long-distance ties remain separate open repairs."
+  },
+  "recognizer_only_construction_review": {
+    "app_commit": "4b5d5da71a7a9e9d635186610c49c16fdcd45dfd",
+    "recognition_revision": 25,
+    "audio_revision": 77,
+    "guide_version": 283,
+    "changed_mapped_sources": [
+      "OnnxOcrInference.java"
+    ],
+    "app_only_orchestration": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BibliographicLineOcr.java",
+      "source_sha256": "f586ec6450090565b0de7e7fcc7ccabd6c0628a1c1ca9426ba2654450777cc35",
+      "review": "Android bibliographic crop reader independently verifies and installs the recognizer/dictionary only and selects the factory. Existing lazy-owner/retry/close and crop/credit semantics remain unchanged; Android services are not part of the standalone package."
+    },
+    "original_regression": {
+      "path": "optional/ocr/test/io/github/luckolite/interpreter/OnnxRecognizerOnlyParity.java",
+      "sha256": "65d2d70e4ed596e732551d6cd2d32673207d495dcf783099bacd2c3ec0d990bb",
+      "origin": "Original generated tensor inputs; Apache-2.0. Models are supplied by the caller, never embedded in this regression."
+    },
+    "native_source_count": 221,
+    "standalone_java_tests": 7498,
+    "python_tests": 389,
+    "python_skipped": 44,
+    "smoke_groups": 12,
+    "optional_native_existing_tensors": 27,
+    "optional_native_recognizer_only_tensors": 9,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "review": "Located text crops may explicitly construct a recognizer-only session, retaining recognizer/dictionary trust, normalization, probabilities, CTC, confidence and resource ownership. The full two-model constructor, detector trust and model-specific threads remain unchanged. Detection rejects the optional capability before tensor allocation. Whole-file executable tokens agree after standalone namespace, Apache header and formatting adaptation. The existing29 lifecycle criteria and original27 native tensors pass; nine new original generated tensors prove exact full/recognizer-only probabilities, repeated calls and caller inputs. No model, dependency or wire-layout change.",
+    "validation_limits": "Generated native and ownership controls establish exact recognition parity for their inputs. This does not establish Android device performance, reduced phone heat or fresh whole-library recognition accuracy."
   }
 }

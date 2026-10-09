@@ -13,11 +13,22 @@ public final class OnnxOcrInference implements PortableOcr.Inference, AutoClosea
     private final List<String> dictionary;
 
     public OnnxOcrInference(String detectorPath, String recognizerPath) throws Exception {
-        verify(
-                detectorPath,
-                Set.of(
-                        "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9",
-                        "4d97c44a20d30a81aad087d6a396b08f786c4635742afc391f6621f5c6ae78ae"));
+        this(detectorPath, recognizerPath, false);
+    }
+
+    /** Own only the recognizer when text crops have already been located. */
+    public static OnnxOcrInference recognizerOnly(String recognizerPath) throws Exception {
+        return new OnnxOcrInference(null, recognizerPath, true);
+    }
+
+    private OnnxOcrInference(String detectorPath, String recognizerPath, boolean recognizerOnly)
+            throws Exception {
+        if (!recognizerOnly)
+            verify(
+                    detectorPath,
+                    Set.of(
+                            "d2a7720d45a54257208b1e13e36a8479894cb74155a5efe29462512d42f49da9",
+                            "4d97c44a20d30a81aad087d6a396b08f786c4635742afc391f6621f5c6ae78ae"));
         verify(
                 recognizerPath,
                 Set.of("b20bd37c168a570f583afbc8cd7925603890efbcdc000a59e22c269d160b5f5a"));
@@ -29,8 +40,10 @@ public final class OnnxOcrInference implements PortableOcr.Inference, AutoClosea
             try (var options = new OrtSession.SessionOptions()) {
                 options.setIntraOpNumThreads(2);
                 options.setInterOpNumThreads(1);
+                // Keep spinning during a run, then release idle workers between runs.
                 options.addConfigEntry("session.force_spinning_stop", "1");
-                openedDetector = environment.createSession(detectorPath, options);
+                if (!recognizerOnly)
+                    openedDetector = environment.createSession(detectorPath, options);
                 options.setIntraOpNumThreads(4);
                 openedRecognizer = environment.createSession(recognizerPath, options);
             }
@@ -76,6 +89,8 @@ public final class OnnxOcrInference implements PortableOcr.Inference, AutoClosea
     }
 
     public float[][] detect(float[] input, int width, int height) throws Exception {
+        if (detector == null)
+            throw new IllegalStateException("OCR detector is unavailable in recognizer-only mode");
         try (var tensor =
                         OnnxTensor.createTensor(
                                 environment,
@@ -109,7 +124,7 @@ public final class OnnxOcrInference implements PortableOcr.Inference, AutoClosea
 
     public void close() throws OrtException {
         try {
-            detector.close();
+            if (detector != null) detector.close();
         } catch (OrtException | RuntimeException | Error failure) {
             closeAfterFailure(recognizer, failure);
             throw failure;

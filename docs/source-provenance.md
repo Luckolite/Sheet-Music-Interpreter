@@ -866,3 +866,21 @@ procedural/scalar regressions cover the shared behavior and writer compatibility
 Package and existing Diagnostics adaptations preserve executable source behavior.
 No model weights, external dependencies, private score data or device logs are
 included; these controls do not establish fresh whole-library or phone accuracy.
+
+## Recognizer-only construction (0.1.11)
+
+Located text crops may opt into `OnnxOcrInference.recognizerOnly`, which verifies
+the existing recognizer and UTF-8 dictionary and creates their unchanged runtime
+session without acquiring a detector. The two-path constructor retains complete
+detector/recognizer verification, model-specific threads and resource ownership.
+Detection in recognizer-only mode rejects before tensor allocation. Model weights,
+normalization, CTC, confidence, guide 283, recognition 25 and audio 77 are unchanged.
+
+The original optional native regression compares complete probability bits,
+dictionary, CTC and confidence for nine generated tensors, with repeated calls
+and unchanged input assertions. The ordinary lifecycle controls retain their
+29 criteria. The Android bibliographic line reader opts into this factory; its
+asset installation and independent checksum checks remain app orchestration.
+No Android services, private scans, libraries, device logs, new runtime dependencies
+or signing material are included. Generated native parity is not a phone heat
+measurement or a fresh whole-library recognition result.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
-"""Compare the optional OCR binding with the previous ORT session configuration."""
+"""Check full OCR session compatibility and opt-in recognizer-only parity."""
 import argparse
 import os
 from pathlib import Path
@@ -43,6 +43,9 @@ def main():
         subprocess.run([java_runtime, "-cp", str(classes) + os.pathsep + classpath,
                         "io.github.luckolite.interpreter.OnnxOcrSessionParity",
                         str(detector.resolve()), str(args.recognizer.resolve())], check=True, timeout=300)
+    subprocess.run([java_runtime, "-cp", str(classes) + os.pathsep + classpath,
+                    "io.github.luckolite.interpreter.OnnxRecognizerOnlyParity",
+                    str(args.detector[0].resolve()), str(args.recognizer.resolve())], check=True, timeout=300)
 
 
 if __name__ == "__main__":

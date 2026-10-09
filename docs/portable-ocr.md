@@ -54,6 +54,14 @@ Download the pinned models from the registry paths
 `https://www.modelscope.cn/models/RapidAI/RapidOCR/resolve/v3.9.2/`.
 The binding verifies all model/dictionary hashes before opening model sessions.
 
+For text crops that the caller has already located,
+`OnnxOcrInference.recognizerOnly(recognizerPath)` verifies the same recognizer and
+adjacent dictionary, then opens only the recognizer session. It keeps the same
+recognition thread configuration and inference/CTC output contract. Calling
+`detect` on this explicitly selected mode throws `IllegalStateException` before
+allocating a tensor. The two-path constructor remains available for complete
+page OCR and verifies both models; no caller selects line-only behavior implicitly.
+
 With the optional Python `onnxruntime` package installed, export the explicit
 dictionary beside the recognizer:
 
@@ -91,7 +99,14 @@ inputs. It uses the original two-intra/one-inter-thread configuration as its
 reference. No images, model downloads or interpretation caches are involved.
 This checks output compatibility on generated inputs, not OCR accuracy.
 
-The normal Python unittest suite also runs 27 original lifecycle fault controls
+The same command also runs `OnnxRecognizerOnlyParity` once for the recognizer.
+Nine original generated tensors, each read twice, compare the full binding and
+recognizer-only mode for every probability bit, dictionary, CTC text/tokens and
+confidence, and unchanged caller input. It also checks that detection is rejected
+in line-only mode. This is an optional native gate using the supplied models and
+runtime; it adds no runtime or model dependency to the ordinary Java/Python gates.
+
+The normal Python unittest suite also runs 29 original lifecycle fault controls
 against a fake public ORT API in an isolated temporary classpath. It checks
 partial constructor acquisition, options/dictionary failures, attempted cleanup,
 primary/suppressed exception identity, immutable dictionaries and unchanged
