@@ -8,18 +8,16 @@ import java.util.*;
 import java.util.zip.*;
 
 /** Versioned, bounded desktop decoder records. No Android types or Java object deserialization. */
-public final class NativeDecoderWire {
+public final class LegacyNativeDecoderWire {
     public static final int MAGIC = 0x4d534431, PORT = 45924, MAX_PIXELS = 20_000_000;
     public static final int MAX_PACKET = 45_000_000, MAX_MEASURES = 4000, MAX_EVENTS = 100_000;
     public static final int ANALYZE = 1, GEOMETRY = 2;
 
-    /** Negative marker distinguishes the 22-field analysis from legacy 21-field counts. */
+    /** Legacy stem records retain the complete 22-field layout. */
     static final int ANALYSIS_STEM_FORMAT = -22;
 
     /** Typed records append one bounded kind byte to the unchanged 22 fields. */
     static final int ANALYSIS_KIND_FORMAT = -23;
-
-    static final int ANALYSIS_REST_KIND_FORMAT = -24;
 
     public record Request(
             byte[] labels,
@@ -223,21 +221,11 @@ public final class NativeDecoderWire {
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score)
             throws IOException {
-        writeAnalysis(out, score, ANALYSIS_REST_KIND_FORMAT);
-    }
-
-    static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score, int marker)
-            throws IOException {
-        if (marker != ANALYSIS_REST_KIND_FORMAT && marker != ANALYSIS_KIND_FORMAT)
-            throw new IOException("Unsupported analysis writer marker");
-        if (marker == ANALYSIS_KIND_FORMAT
-                && score.rests().stream().anyMatch(ScoreRestEvent::isFullMeasure))
-            throw new IOException("Legacy analysis would lose full-measure rest kind");
         if (score.notes().size() > MAX_EVENTS
                 || score.rests().size() > MAX_EVENTS
                 || score.keyChanges().size() > MAX_MEASURES)
             throw new IOException("Decoder event limit");
-        out.writeInt(marker);
+        out.writeInt(ANALYSIS_KIND_FORMAT);
         out.writeInt(score.notes().size());
         for (var n : score.notes()) {
             out.writeInt(n.measureIndex());
@@ -278,15 +266,13 @@ public final class NativeDecoderWire {
             out.writeInt(r.staffIndex());
             out.writeInt(r.staffCount());
             out.writeDouble(r.durationBeats());
-            if (marker == ANALYSIS_REST_KIND_FORMAT) out.writeByte(restKindId(r.kind()));
         }
     }
 
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
         int marker = in.readInt();
-        boolean restTyped = marker == ANALYSIS_REST_KIND_FORMAT;
-        boolean typed = restTyped || marker == ANALYSIS_KIND_FORMAT;
+        boolean typed = marker == ANALYSIS_KIND_FORMAT;
         boolean stems = typed || marker == ANALYSIS_STEM_FORMAT;
         int count = stems ? count(in, MAX_EVENTS) : marker;
         if (count < 0 || count > MAX_EVENTS) throw new IOException("Decoder analysis format/count");
@@ -333,11 +319,7 @@ public final class NativeDecoderWire {
             double duration = in.readDouble();
             if (!Double.isFinite(duration) || duration <= 0)
                 throw new IOException("Decoder rest duration");
-            ScoreRestEvent.Kind kind = restTyped ? restKind(in) : ScoreRestEvent.Kind.LITERAL;
-            if (kind == ScoreRestEvent.Kind.FULL_MEASURE && duration != 4)
-                throw new IOException("Decoder full-measure rest glyph base");
-            rests.add(
-                    new ScoreRestEvent(index, position, y, height, staff, staffs, duration, kind));
+            rests.add(new ScoreRestEvent(index, position, y, height, staff, staffs, duration));
         }
         if (in.read() != -1) throw new IOException("Trailing decoder result");
         return new OmrScoreInterpreter.Analysis(notes, keys, rests);
@@ -366,20 +348,6 @@ public final class NativeDecoderWire {
             case 0 -> ScoreNoteEvent.Kind.PITCHED;
             case 1 -> ScoreNoteEvent.Kind.UNPITCHED;
             default -> throw new IOException("Decoder note kind");
-        };
-    }
-
-    private static int restKindId(ScoreRestEvent.Kind kind) throws IOException {
-        if (kind == ScoreRestEvent.Kind.LITERAL) return 0;
-        if (kind == ScoreRestEvent.Kind.FULL_MEASURE) return 1;
-        throw new IOException("Decoder rest kind");
-    }
-
-    private static ScoreRestEvent.Kind restKind(DataInputStream in) throws IOException {
-        return switch (in.readUnsignedByte()) {
-            case 0 -> ScoreRestEvent.Kind.LITERAL;
-            case 1 -> ScoreRestEvent.Kind.FULL_MEASURE;
-            default -> throw new IOException("Decoder rest kind");
         };
     }
 

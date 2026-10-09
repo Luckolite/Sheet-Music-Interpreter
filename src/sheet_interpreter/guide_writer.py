@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 24
-GUIDE_VERSION = 282
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282)
+RECOGNITION_REVISION = 25
+GUIDE_VERSION = 283
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -106,9 +106,29 @@ def encode(score, guide_version=GUIDE_VERSION):
         ("positionInMeasure", "f"), ("bpm", "d"), ("beatUnit", "d")), len(measures) * 2)
     _records(output, score["meterChanges"], (("measureIndex", "i"),
         ("numerator", "i"), ("denominator", "i")), len(measures))
-    _records(output, score["rests"], (("measureIndex", "i"),
+    rest_fields = (("measureIndex", "i"),
         ("positionInMeasure", "f"), ("pageY", "f"), ("pageHeight", "f"),
-        ("staffIndex", "i"), ("staffCount", "i"), ("durationBeats", "d")), 250_000)
+        ("staffIndex", "i"), ("staffCount", "i"), ("durationBeats", "d"))
+    if guide_version >= 283:
+        rest_fields += (("kind", "B"),)
+    rests = score["rests"]
+    if not isinstance(rests, list) or any(not isinstance(row, dict) for row in rests):
+        raise ValueError("Invalid rest records")
+    normalized_rests = []
+    for row in rests:
+        kind = row.get("kind", "LITERAL")
+        if type(kind) is not str or kind not in ("LITERAL", "FULL_MEASURE"):
+            raise ValueError("Invalid rest kind")
+        duration = _field(row, "durationBeats")
+        if (type(duration) not in (int, float) or not math.isfinite(duration)
+                or not 0 < duration <= 16):
+            raise ValueError("Invalid rest duration")
+        if kind == "FULL_MEASURE" and duration != 4:
+            raise ValueError("Invalid full-measure rest glyph base")
+        if guide_version < 283 and kind == "FULL_MEASURE":
+            raise ValueError("Full-measure rest requires guide283")
+        normalized_rests.append(dict(row, kind=0 if kind == "LITERAL" else 1))
+    _records(output, normalized_rests, rest_fields, 250_000)
     _records(output, score["techniqueChanges"], (("measureIndex", "i"),
         ("positionInMeasure", "f"), ("staffIndex", "i"), ("staffCount", "i"),
         ("technique", "i")), len(measures) * 16)

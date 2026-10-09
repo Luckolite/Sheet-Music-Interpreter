@@ -21,8 +21,51 @@ Packet sizes, dimensions, record counts and decompressed input are bounded.
 After flushing a reply, the server waits for the client to close its output side
 before closing the connection. This avoids truncating large replies through a
 guest network transport. The existing socket timeout bounds clients that do not
-finish. No protocol, recognition, model or result-format change is involved;
-synthetic tests verify the lifetime for both geometry and analysis responses.
+finish. That response-lifetime repair changes no protocol, recognition, model
+or result format; synthetic tests verify both geometry and analysis responses.
+
+## Typed rest records (0.1.10)
+
+Recognition revision 25 selects the current derived interpretation; it is separate
+from guide format 283 and native analysis marker -24. Transport protocol 1, note
+records, model weights and production dependencies are unchanged.
+
+Both current formats append one unsigned kind byte to the existing rest record:
+
+| Field | Wire type | Byte offset |
+| --- | --- | --- |
+| measureIndex | int32 | 0 |
+| positionInMeasure | float32 | 4 |
+| pageY | float32 | 8 |
+| pageHeight | float32 | 12 |
+| staffIndex | int32 | 16 |
+| staffCount | int32 | 20 |
+| durationBeats | float64 | 24 |
+| kind | uint8: LITERAL=0, FULL_MEASURE=1 | 32 |
+
+Each typed rest is 33 bytes, using big-endian fields. Guides 260–282 and analysis
+markers -23/-22 or the unmarked legacy count format retain 32-byte literal rests.
+Their original fixtures and bytes remain unchanged. Guide 283 and analysis -24
+retain guide 282/-23 note-kind records; they do not add another note byte.
+Unknown rest kinds and future layouts reject. Writing FULL_MEASURE to a legacy
+format rejects rather than discarding its meaning.
+
+JSON without a rest `kind` remains LITERAL. A FULL_MEASURE rest keeps raw
+`durationBeats: 4` as an undotted whole-glyph base. For public JSON performance
+and MusicXML consumers, its performed onset is 0 and its extent is the
+authoritative `page.measureBeats[measureIndex]`, including proved pickups and
+meter changes. Missing or invalid performed spans reject.
+Independent silent voices may coexist with moving notes. Owned rest fermatas
+keep that span; ordinary gap sums exclude FULL_MEASURE. MusicXML writes a
+separate silent voice with `<rest measure="yes"/>`, a whole type and the actual
+performed duration, preserving physical staff identity and rest-only parts.
+Literal-only reconstruction remains compatible.
+
+Printed full-rest classification requires a complete undotted hanging plate and
+verified physical staff/voice ownership. Tab evidence uses explicit decoded
+whole-rest glyph tokens; plain duration text alone does not establish FULL.
+Original scalar/pixel regressions establish these contracts, not whole-library
+accuracy or fresh OCR performance.
 
 ## Review and verification boundary
 

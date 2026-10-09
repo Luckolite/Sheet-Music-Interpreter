@@ -17,7 +17,9 @@ position and an x notehead, retaining mixed/coincident heads and written bar spa
 Standalone MusicXML does not serialize sourceNoteIndex/sourceEventId. It makes no
 new ownership metadata claim. Guide282 appends one kind byte to each complete
 note record: PITCHED=0, UNPITCHED=1. Earlier guide layouts reject U rather than
-discard its kind; recognition revision4 uses the new layout.
+discard its kind; recognition revision 4 introduced that layout. Guide 283 and
+analysis marker -24 retain these note records and add separate typed rest
+records. See the [current rest contract](native-decoder.md#typed-rest-records-0110).
 
 Default CLI MIDI and MP3 exports reject U clearly. Programmatic preview APIs
 require the caller to choose an explicit policy:

@@ -28,6 +28,7 @@ final class TripletRhythmDetector {
         List<Integer> restIndices = new ArrayList<>();
         for (int restIndex = 0; restIndex < rests.size(); restIndex++) {
             ScoreRestEvent rest = rests.get(restIndex);
+            if (rest.isFullMeasure()) continue;
             double value = rest.durationBeats();
             int beams = value == .25 ? 2 : value == .5 ? 1 : value == 1 ? 0 : -1;
             restIndices.add(restIndex);
@@ -144,6 +145,21 @@ final class TripletRhythmDetector {
 
     /** A chord contributes one attack column, regardless of how many heads it contains. */
     private record Onset(List<Integer> indices, float position, float top, float bottom) {}
+
+    private record OwnedPrintedThree(
+            int measure,
+            int staff,
+            int count,
+            int direction,
+            int beams,
+            float firstX,
+            float firstTop,
+            float firstBottom,
+            float lastX,
+            float lastTop,
+            float lastBottom,
+            Glyph glyph,
+            float distance) {}
 
     private static List<Onset> onsets(List<ScoreNoteEvent> notes) {
         return onsets(notes, Integer.MAX_VALUE);
@@ -266,6 +282,7 @@ final class TripletRhythmDetector {
                 || gray.length != width * height) return notes;
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         List<Glyph> clearThrees = new ArrayList<>();
+        List<OwnedPrintedThree> ownedPrintedThrees = new ArrayList<>();
         List<RawStaffLineDetector.StaffLines> printedStaffs =
                 virtualStart < result.size()
                         ? RawStaffLineDetector.detect(gray, width, height)
@@ -399,7 +416,7 @@ final class TripletRhythmDetector {
                         && sharedJoinedDirection) {
                     for (Glyph reference : clearThrees) {
                         int[] found =
-                                RepeatedTupletNumeral.find(
+                                RepeatedTupletNumeral.findJoined(
                                         gray,
                                         width,
                                         height,
@@ -418,8 +435,10 @@ final class TripletRhythmDetector {
                                             Glyph glyph = new Glyph(box[0], box[1], box[2], box[3]);
                                             return !insideOtherSystem(
                                                             glyph, region, measures, width, height)
-                                                    && beamOwnsNumeral(
+                                                    && joinedBeamOwnsNumeral(
                                                             glyph,
+                                                            group,
+                                                            ownershipNotes,
                                                             first,
                                                             ownershipNotes,
                                                             region,
@@ -428,7 +447,8 @@ final class TripletRhythmDetector {
                                                             height,
                                                             x1,
                                                             x3,
-                                                            gap);
+                                                            gap,
+                                                            ownedPrintedThrees);
                                         });
                         if (found != null) {
                             numeral = new Glyph(found[0], found[1], found[2], found[3]);
@@ -616,6 +636,40 @@ final class TripletRhythmDetector {
                                         .withStemDirection(n.stemDirection())
                                         .withKind(n.kind()));
                     }
+                if (recoveredJoined) {
+                    var last = result.get(c.indices().get(0));
+                    float ownedDistance =
+                            PrintedTupletBeamOwner.joinedDistance(
+                                    gray,
+                                    width,
+                                    height,
+                                    x1,
+                                    first.pageY() * height,
+                                    x3,
+                                    last.pageY() * height,
+                                    gap,
+                                    first.stemDirection(),
+                                    numeral.left(),
+                                    numeral.top(),
+                                    numeral.right(),
+                                    numeral.bottom());
+                    if (Float.isFinite(ownedDistance))
+                        ownedPrintedThrees.add(
+                                new OwnedPrintedThree(
+                                        first.measureIndex(),
+                                        first.staffIndex(),
+                                        first.staffCount(),
+                                        first.stemDirection(),
+                                        first.beamCount(),
+                                        x1,
+                                        a.top() * height,
+                                        a.bottom() * height,
+                                        x3,
+                                        c.top() * height,
+                                        c.bottom() * height,
+                                        numeral,
+                                        ownedDistance));
+                }
                 marked = true;
             }
             if (marked) i += 2;
@@ -1402,6 +1456,166 @@ final class TripletRhythmDetector {
             if (!Float.isFinite(ownDistance)) continue;
             if (!hasCompetingBeamOwner(
                     glyph, first, heads, bar, gray, width, height, gap, ownDistance)) return true;
+        }
+        return false;
+    }
+
+    /** A repeated numeral must remain attached to all three sounding attack columns. */
+    private static boolean joinedBeamOwnsNumeral(
+            Glyph glyph,
+            List<Onset> group,
+            List<ScoreNoteEvent> groupNotes,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap,
+            List<OwnedPrintedThree> proven) {
+        if (group.size() != 3 || first.beamCount() < 1 || first.stemDirection() == 0) return false;
+        List<ScoreNoteEvent> attacks = new ArrayList<>();
+        for (Onset onset : group) {
+            if (onset.indices().isEmpty()) return false;
+            for (int index : onset.indices()) {
+                if (index >= groupNotes.size()) return false;
+                var n = groupNotes.get(index);
+                if (!sameVoice(first, n)
+                        || n.beamCount() != first.beamCount()
+                        || n.stemDirection() != first.stemDirection()
+                        || n.crossStaffBeam()
+                        || (n.articulations() & NoteOrnament.GRACE) != 0) return false;
+            }
+            attacks.add(groupNotes.get(onset.indices().get(0)));
+        }
+        var middle = attacks.get(1);
+        var last = attacks.get(2);
+        float middleX =
+                (bar.left() + middle.positionInMeasure() * (bar.right() - bar.left())) * width;
+        if (!PrintedTupletBeamOwner.connectedHeads(
+                        gray,
+                        width,
+                        height,
+                        firstX,
+                        first.pageY() * height,
+                        middleX,
+                        middle.pageY() * height,
+                        gap,
+                        first.stemDirection())
+                || !PrintedTupletBeamOwner.connectedHeads(
+                        gray,
+                        width,
+                        height,
+                        middleX,
+                        middle.pageY() * height,
+                        lastX,
+                        last.pageY() * height,
+                        gap,
+                        first.stemDirection())) return false;
+        float distance =
+                PrintedTupletBeamOwner.joinedDistance(
+                        gray,
+                        width,
+                        height,
+                        firstX,
+                        first.pageY() * height,
+                        lastX,
+                        last.pageY() * height,
+                        gap,
+                        first.stemDirection(),
+                        glyph.left(),
+                        glyph.top(),
+                        glyph.right(),
+                        glyph.bottom());
+        return Float.isFinite(distance)
+                && !hasCompetingJoinedBeamOwner(
+                        glyph, first, heads, bar, gray, width, height, gap, distance, proven);
+    }
+
+    private static boolean hasCompetingJoinedBeamOwner(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            float ownDistance,
+            List<OwnedPrintedThree> proven) {
+        float cx = (glyph.left() + glyph.right()) * .5f;
+        for (var a : heads) {
+            if (a.measureIndex() != first.measureIndex()
+                    || a.staffCount() != first.staffCount()
+                    || a.staffIndex() == first.staffIndex()
+                    || a.beamCount() < 1
+                    || a.stemDirection() == 0) continue;
+            float ax = (bar.left() + a.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (ax >= cx || cx - ax > gap * 26) continue;
+            for (var b : heads) {
+                if (b.measureIndex() != a.measureIndex()
+                        || b.staffCount() != a.staffCount()
+                        || b.staffIndex() != a.staffIndex()
+                        || b.beamCount() != a.beamCount()
+                        || b.stemDirection() != a.stemDirection()) continue;
+                float bx =
+                        (bar.left() + b.positionInMeasure() * (bar.right() - bar.left())) * width;
+                if (bx <= cx || bx - ax > gap * 26) continue;
+                float other =
+                        PrintedTupletBeamOwner.joinedDistance(
+                                gray,
+                                width,
+                                height,
+                                ax,
+                                a.pageY() * height,
+                                bx,
+                                b.pageY() * height,
+                                gap,
+                                a.stemDirection(),
+                                glyph.left(),
+                                glyph.top(),
+                                glyph.right(),
+                                glyph.bottom());
+                if (Float.isFinite(other) && other <= ownDistance + gap * .1f) {
+                    boolean alreadyOwned = false;
+                    for (var proof : proven) {
+                        if (proof.measure() != a.measureIndex()
+                                || proof.staff() != a.staffIndex()
+                                || proof.count() != a.staffCount()
+                                || proof.direction() != a.stemDirection()
+                                || proof.beams() != a.beamCount()
+                                || Math.abs(proof.firstX() - ax) > gap * .4f
+                                || Math.abs(proof.lastX() - bx) > gap * .4f
+                                || a.pageY() * height < proof.firstTop() - gap * .4f
+                                || a.pageY() * height > proof.firstBottom() + gap * .4f
+                                || b.pageY() * height < proof.lastTop() - gap * .4f
+                                || b.pageY() * height > proof.lastBottom() + gap * .4f) continue;
+                        var known = proof.glyph();
+                        boolean separate =
+                                Math.abs(
+                                                        (known.left()
+                                                                        + known.right()
+                                                                        - glyph.left()
+                                                                        - glyph.right())
+                                                                * .5f)
+                                                > gap * .35f
+                                        || Math.abs(
+                                                        (known.top()
+                                                                        + known.bottom()
+                                                                        - glyph.top()
+                                                                        - glyph.bottom())
+                                                                * .5f)
+                                                > gap * .35f;
+                        if (separate && proof.distance() + gap * .1f < other) {
+                            alreadyOwned = true;
+                            break;
+                        }
+                    }
+                    if (!alreadyOwned) return true;
+                }
+            }
         }
         return false;
     }

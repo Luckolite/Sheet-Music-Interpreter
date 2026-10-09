@@ -844,3 +844,25 @@ noisy two-bulb rest explains all four reviewed parity-golden updates. Recognitio
 and audio76 invalidate affected caches. Guide282 layouts, standalone APIs, models
 and dependencies are unchanged. Private score material is excluded; retained
 replay and generated tests do not establish fresh whole-score or phone accuracy.
+
+Recognition 25 retains full-measure silence separately from literal durations.
+Complete original hanging plates, physical staff ownership and independent
+written voices establish FULL_MEASURE; dotted, incomplete or ambiguous evidence
+remains literal or unresolved. Glyph-token tab evidence survives kind-preserving
+copies without turning plain duration text into a printed whole-rest witness.
+Performed rest spans use actual meter/pickup timing, and independent silent voices
+retain owned fermatas and whole-measure MusicXML notation beside moving notes.
+
+Printed triplet repair recovers complete numeral contours beside their own beams
+and requires the corresponding three shaft/chord groups, rejecting competing
+beam and adjacent-staff borrowing. Incoming system ties require actual owned
+heads, adjacent complete homologous physical systems and both returning/outgoing
+arc evidence, preserving existing pitch, onset and competing-voice guards.
+
+Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
+legacy guides 260–282 and analysis layouts retain 32-byte LITERAL rests. The
+recognition 25 epoch is independent of this physical layout. Original Apache-2.0
+procedural/scalar regressions cover the shared behavior and writer compatibility.
+Package and existing Diagnostics adaptations preserve executable source behavior.
+No model weights, external dependencies, private score data or device logs are
+included; these controls do not establish fresh whole-library or phone accuracy.

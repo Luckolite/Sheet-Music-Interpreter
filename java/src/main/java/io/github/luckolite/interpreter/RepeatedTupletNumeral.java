@@ -19,6 +19,35 @@ final class RepeatedTupletNumeral {
             float y3,
             float gap,
             Predicate<int[]> owner) {
+        return findWithOcclusion(gray, w, h, ref, x1, x3, y1, y3, gap, owner, false);
+    }
+
+    static int[] findJoined(
+            byte[] gray,
+            int w,
+            int h,
+            int[] ref,
+            float x1,
+            float x3,
+            float y1,
+            float y3,
+            float gap,
+            Predicate<int[]> owner) {
+        return findWithOcclusion(gray, w, h, ref, x1, x3, y1, y3, gap, owner, true);
+    }
+
+    private static int[] findWithOcclusion(
+            byte[] gray,
+            int w,
+            int h,
+            int[] ref,
+            float x1,
+            float x3,
+            float y1,
+            float y3,
+            float gap,
+            Predicate<int[]> owner,
+            boolean ownedJoined) {
         if (gray == null
                 || w < 1
                 || h < 1
@@ -52,8 +81,10 @@ final class RepeatedTupletNumeral {
             }
         if (ni < rw * rh * .12f || np < rw * rh * .25f) return null;
         int cx = Math.round((x1 + x3) * .5f),
-                left = Math.max(0, Math.round(cx - gap * 1.2f)),
-                right = Math.min(w - rw, Math.round(cx + gap * 1.2f));
+                left = Math.max(0, Math.round(cx - gap * 1.2f - (ownedJoined ? rw * .5f : 0))),
+                right =
+                        Math.min(
+                                w - rw, Math.round(cx + gap * 1.2f - (ownedJoined ? rw * .5f : 0)));
         int top = Math.max(0, Math.round(y1 - gap * 7)),
                 bottom = Math.min(h - rh, Math.round(y3 + gap * 7));
         for (int y = top; y <= bottom; y++) {
@@ -73,16 +104,47 @@ final class RepeatedTupletNumeral {
                 for (int yy = 0; yy < rh; yy++) {
                     for (int angle = -10; angle <= 10 && !covered[yy]; angle++) {
                         float slope = angle * .05f;
-                        int valid = 0, total = 0;
+                        int valid = 0,
+                                total = 0,
+                                leftHits = 0,
+                                leftTotal = 0,
+                                rightHits = 0,
+                                rightTotal = 0;
                         for (int dx = -Math.round(gap * 1.5f); dx <= rw + gap * 1.5f; dx++) {
                             if (dx >= -1 && dx <= rw) continue;
                             int xx = x + dx, cy = Math.round(y + yy + slope * (dx - rw * .5f));
                             if (xx < 0 || xx >= w || cy < 0 || cy >= h) continue;
                             total++;
-                            if ((gray[cy * w + xx] & 255) < 190
-                                    || nearThinRule(gray, w, h, xx, cy, gap)) valid++;
+                            boolean rowInk =
+                                    (gray[cy * w + xx] & 255) < 190
+                                            || nearThinRule(gray, w, h, xx, cy, gap);
+                            if (rowInk) valid++;
+                            if (dx < 0) {
+                                leftTotal++;
+                                if (rowInk) leftHits++;
+                            } else {
+                                rightTotal++;
+                                if (rowInk) rightHits++;
+                            }
                         }
-                        covered[yy] = total >= gap * 2 && valid >= total * .9f;
+                        boolean bilateral = total >= gap * 2 && valid >= total * .9f;
+                        if (!ownedJoined) covered[yy] = bilateral;
+                        else {
+                            int inside = 0;
+                            for (int dx = 0; dx < rw; dx++) {
+                                int cy = Math.round(y + yy + slope * (dx - rw * .5f));
+                                if (cy >= 0 && cy < h && (gray[cy * w + x + dx] & 255) < 190)
+                                    inside++;
+                            }
+                            boolean arm =
+                                    leftTotal >= gap * 1.3f && leftHits >= leftTotal * .9f
+                                            || rightTotal >= gap * 1.3f
+                                                    && rightHits >= rightTotal * .9f;
+                            // The caller has proven all three shafts and the same beam.
+                            // Require that actual raw beam/rule ink cross the glyph window;
+                            // one long arm remains available near a proven beam endpoint.
+                            covered[yy] = inside >= rw * .9f && (bilateral || arm);
+                        }
                     }
                     if (covered[yy]) hidden++;
                 }

@@ -16,7 +16,29 @@ public final class TablatureDecoder {
             int dots,
             int marks,
             boolean tied,
-            int tuplet) {
+            int tuplet,
+            boolean wholeRestGlyph) {
+        /** Legacy/manual duration values are literal until a glyph producer proves their source. */
+        public Fret(
+                float x,
+                float y,
+                int string,
+                int fret,
+                float duration,
+                int beams,
+                int dots,
+                int marks,
+                boolean tied,
+                int tuplet) {
+            this(x, y, string, fret, duration, beams, dots, marks, tied, tuplet, false);
+        }
+
+        public Fret {
+            if (wholeRestGlyph && (fret != -2 || duration != 4))
+                throw new IllegalArgumentException(
+                        "Whole-rest glyph evidence requires the whole-rest base");
+        }
+
         public Fret(
                 float x,
                 float y,
@@ -466,6 +488,7 @@ public final class TablatureDecoder {
     public static ScorePageInterpretation apply(
             ScorePageInterpretation score, List<Staff> tabs, int w, int h, int[] tuning, int capo) {
         if (tabs.isEmpty()) return score;
+
         for (var tab : tabs)
             for (var fret : tab.frets)
                 if (fret.fret < -2 || fret.string < 0 || fret.string >= tab.stringCount)
@@ -525,17 +548,22 @@ public final class TablatureDecoder {
                             float position = (f.x - left) / (right - left);
                             if (f.fret == -2) {
                                 rests.add(
-                                        new ScoreRestEvent(
-                                                bar,
-                                                position,
-                                                f.y / h,
-                                                tab.gap / h,
-                                                0,
-                                                1,
-                                                f.duration
-                                                        * (f.dots == 0
-                                                                ? 1
-                                                                : f.dots == 1 ? 1.5f : 1.75f)));
+                                        fullMeasureRest(tab, f, left, right)
+                                                ? ScoreRestEvent.fullMeasure(
+                                                        bar, position, f.y / h, tab.gap / h, 0, 1)
+                                                : new ScoreRestEvent(
+                                                        bar,
+                                                        position,
+                                                        f.y / h,
+                                                        tab.gap / h,
+                                                        0,
+                                                        1,
+                                                        f.duration
+                                                                * (f.dots == 0
+                                                                        ? 1
+                                                                        : f.dots == 1
+                                                                                ? 1.5f
+                                                                                : 1.75f)));
                                 continue;
                             }
                             int marks = f.marks;
@@ -543,6 +571,7 @@ public final class TablatureDecoder {
                                 marks =
                                         (marks & ~TabEffect.ALL)
                                                 | TabEffect.encode(TabEffect.DEAD, 0);
+
                             var n =
                                     new ScoreNoteEvent(
                                                     bar,
@@ -558,6 +587,7 @@ public final class TablatureDecoder {
                                                     f.duration,
                                                     f.tuplet)
                                             .withArticulations(marks);
+
                             if (f.fret == -1) notes.add(n.withKind(ScoreNoteEvent.Kind.UNPITCHED));
                             else
                                 notes.add(
@@ -598,7 +628,7 @@ public final class TablatureDecoder {
         }
         // Attach standalone rests to the neighboring onset, preserving silent time in the clock.
         for (var r : rests)
-            if (r.measureIndex() >= score.measures().size()) {
+            if (!r.isFullMeasure() && r.measureIndex() >= score.measures().size()) {
                 float previous = -1, next = 2;
                 for (var n : notes)
                     if (n.measureIndex() == r.measureIndex()) {
@@ -690,9 +720,12 @@ public final class TablatureDecoder {
                                         + ":"
                                         + Math.round(target.positionInMeasure() * 1000);
                         if (!handled.add(key)) continue;
+
                         final int bar = target.measureIndex();
                         final float position = target.positionInMeasure();
+
                         final int staff = target.staffIndex(), staffCount = target.staffCount();
+
                         for (int i = 0; i < notes.size(); i++) {
                             var n = notes.get(i);
                             if (n.measureIndex() != bar
@@ -700,6 +733,7 @@ public final class TablatureDecoder {
                                     || n.staffCount() != staffCount
                                     || Math.abs(n.positionInMeasure() - position) >= tolerance)
                                 continue;
+
                             notes.set(
                                     i,
                                     n.withKind(ScoreNoteEvent.Kind.UNPITCHED)
@@ -726,6 +760,54 @@ public final class TablatureDecoder {
                 score.expressiveEvents());
     }
 
+    /** Whole-measure meaning needs glyph identity, real enclosing bars and a complete silent voice. */
+    static boolean fullMeasureRest(Staff tab, Fret rest, float left, float right) {
+        if (tab.standardTop >= 0
+                || !rest.wholeRestGlyph
+                || rest.duration != 4
+                || rest.dots != 0
+                || rest.beams != 0
+                || rest.tied
+                || rest.tuplet != 1
+                || rest.marks != 0
+                || !Float.isFinite(tab.gap)
+                || tab.gap <= 0
+                || right - left < tab.gap * 2
+                || !tab.bars.contains(left)
+                || !tab.bars.contains(right)
+                || Math.abs(rest.x - (left + right) * .5f)
+                        > Math.min((right - left) * .08f, tab.gap * .6f)) return false;
+        var sounding = new ArrayList<Fret>();
+        for (var f : tab.frets)
+            if (f != rest && f.x > left && f.x < right) {
+                if (f.fret == -2)
+                    return false; // Several written rests do not prove one full-bar voice.
+                sounding.add(f);
+            }
+        if (sounding.isEmpty()) return true;
+        // A separate external rest lane and an explicitly rhythmic simultaneous attack
+        // prove independent voices. Unknown or serial tab rhythms remain literal.
+        if (rest.y >= tab.top - tab.gap * .6f && rest.y <= tab.bottom() + tab.gap * .6f)
+            return false;
+        boolean simultaneous = false;
+        for (var f : sounding) {
+            if (f.fret < -1
+                    || f.duration <= 0 && f.beams <= 0
+                    || (f.marks & NoteOrnament.GRACE) != 0
+                    || Math.abs(rest.y - f.y) < tab.gap * 1.5f) return false;
+            simultaneous |= Math.abs(rest.x - f.x) < tab.gap * .4f;
+        }
+        return simultaneous;
+    }
+
+    static boolean fullMeasureRest(Staff tab, Fret rest) {
+        for (int i = 0; i + 1 < tab.bars.size(); i++) {
+            float left = tab.bars.get(i), right = tab.bars.get(i + 1);
+            if (rest.x > left && rest.x < right) return fullMeasureRest(tab, rest, left, right);
+        }
+        return false;
+    }
+
     private static int[] tabTuning(Staff staff, int[] supplied) {
         if (supplied != null) {
             if (supplied.length != staff.stringCount)
@@ -738,6 +820,7 @@ public final class TablatureDecoder {
     }
 
     private static int soundingPitch(Fret f, int[] tuning, int capo) {
+
         if (f.fret < 0)
             throw new IllegalArgumentException("Unpitched tab token has no sounding pitch");
         return TabEffect.kind(f.marks) == TabEffect.HARMONIC
@@ -773,6 +856,7 @@ public final class TablatureDecoder {
     }
 
     private static int printedMidi(ScoreNoteEvent n, ScorePageInterpretation score) {
+
         if (n.kind() != ScoreNoteEvent.Kind.PITCHED)
             throw new IllegalStateException("Unpitched note has no MIDI pitch");
         int clef = n.clefBottomDiatonic();

@@ -31,7 +31,9 @@ public final class RestRowInkLifetimeParityTest {
             }
             byte[] before = gray.clone();
             var result = RestProjectionParityTest.detect(f);
-            hash.update(result.toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(
+                    RestProjectionParityTest.legacyLiteralDiagnostic(result)
+                            .getBytes(StandardCharsets.UTF_8));
             rests += result.rests().size();
             assertArrayEquals(before, gray);
             assertEquals(result, RestProjectionParityTest.detect(f));
@@ -46,7 +48,9 @@ public final class RestRowInkLifetimeParityTest {
             var f = RestProjectionParityTest.fixture(n);
             byte[] original = f.gray().clone();
             var first = RestProjectionParityTest.detect(f);
-            hash.update(first.toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(
+                    RestProjectionParityTest.legacyLiteralDiagnostic(first)
+                            .getBytes(StandardCharsets.UTF_8));
             rests += first.rests().size();
             int origin = f.width() / 2;
             for (int y = 94; y <= 136; y++)
@@ -54,7 +58,9 @@ public final class RestRowInkLifetimeParityTest {
                     f.gray()[y * f.width() + x] = (byte) 255;
             byte[] erased = f.gray().clone();
             var second = RestProjectionParityTest.detect(f);
-            hash.update(second.toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(
+                    RestProjectionParityTest.legacyLiteralDiagnostic(second)
+                            .getBytes(StandardCharsets.UTF_8));
             rests += second.rests().size();
             assertArrayEquals(erased, f.gray());
             RestProjectionParityTest.detect(RestProjectionParityTest.fixture(47 - n));
@@ -62,7 +68,9 @@ public final class RestRowInkLifetimeParityTest {
             var restored = RestProjectionParityTest.detect(f);
             assertEquals(first, restored);
             assertArrayEquals(original, f.gray());
-            hash.update(restored.toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(
+                    RestProjectionParityTest.legacyLiteralDiagnostic(restored)
+                            .getBytes(StandardCharsets.UTF_8));
             rests += restored.rests().size();
         }
         return new Result(HexFormat.of().formatHex(hash.digest()), rests);

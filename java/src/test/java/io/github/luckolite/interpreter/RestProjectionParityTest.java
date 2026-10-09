@@ -58,6 +58,21 @@ public final class RestProjectionParityTest {
                 f.gray, f.width, f.height, f.measures, f.staffs, f.notes);
     }
 
+    /** Retain the original diagnostic oracle while proving every new kind is literal. */
+    static String legacyLiteralDiagnostic(SixteenthRestDetector.Detection detection) {
+        for (var rest : detection.rests())
+            org.junit.Assert.assertEquals(ScoreRestEvent.Kind.LITERAL, rest.kind());
+        for (var dot : detection.dots())
+            org.junit.Assert.assertEquals(ScoreRestEvent.Kind.LITERAL, dot.rest().kind());
+        String original = detection.toString();
+        String suffix = ", kind=LITERAL";
+        String legacy = original.replace(suffix, "");
+        org.junit.Assert.assertEquals(
+                detection.rests().size() + detection.dots().size(),
+                (original.length() - legacy.length()) / suffix.length());
+        return legacy;
+    }
+
     @org.junit.Test
     public void faintDarkNoisyAndNoteOwnedRestRecordsRemainExact() throws Exception {
         var digest = MessageDigest.getInstance("SHA-256");
@@ -68,7 +83,7 @@ public final class RestProjectionParityTest {
             var d = detect(f);
             org.junit.Assert.assertArrayEquals(
                     "Detection must preserve original ink", before, f.gray);
-            digest.update(d.toString().getBytes(StandardCharsets.UTF_8));
+            digest.update(legacyLiteralDiagnostic(d).getBytes(StandardCharsets.UTF_8));
             rests += d.rests().size();
         }
         org.junit.Assert.assertEquals(24, rests);
@@ -92,9 +107,9 @@ public final class RestProjectionParityTest {
             var result =
                     SixteenthRestDetector.detectWithDots(
                             f.gray, f.width, f.height, f.measures, staffs, f.notes);
-            hash.update(result.toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(legacyLiteralDiagnostic(result).getBytes(StandardCharsets.UTF_8));
             count += result.rests().size();
-            hash.update(detect(f).toString().getBytes(StandardCharsets.UTF_8));
+            hash.update(legacyLiteralDiagnostic(detect(f)).getBytes(StandardCharsets.UTF_8));
             org.junit.Assert.assertArrayEquals(before, f.gray);
         }
         org.junit.Assert.assertEquals(54, count);

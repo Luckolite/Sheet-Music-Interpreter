@@ -9,6 +9,9 @@ You do not need to publish your own code. Follow the [license and notice require
 ## What it supports 🎹🎸🎻🎷
 
 - Standard notation: pitches, accidentals, chords, rests, ties, tempo and key changes.
+  Full-measure silent voices retain the actual meter or pickup span and a whole-rest
+  MusicXML glyph; literal rest durations remain distinct. See the
+  [0.1.10 rest and wire contract](docs/native-decoder.md#typed-rest-records-0110).
 
 - Multi-staff piano, 6- and 7 string guitar tabs, violin and ensemble pages, including independently barred staves.
 

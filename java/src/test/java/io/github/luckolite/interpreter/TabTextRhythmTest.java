@@ -303,7 +303,7 @@ public class TabTextRhythmTest {
                         List.of(),
                         List.of(),
                         List.of(),
-                        List.of(new ScoreRestEvent(0, .5f, .3f, .05f, 0, 1, 4)),
+                        List.of(ScoreRestEvent.fullMeasure(0, .5f, .3f, .05f, 0, 1)),
                         List.of(),
                         List.of());
         var out =
@@ -314,7 +314,12 @@ public class TabTextRhythmTest {
                         W,
                         H);
         assertEquals(2, out.meterChanges().get(0).numerator());
-        assertEquals(2, out.rests().get(0).durationBeats(), 0);
+        assertEquals(4, out.rests().get(0).durationBeats(), 0);
+        assertTrue(out.rests().get(0).isFullMeasure());
+        assertEquals(
+                2,
+                out.rests().get(0).resolvedDurationBeats(out.meterChanges().get(0).quarterBeats()),
+                0);
     }
 
     @Test

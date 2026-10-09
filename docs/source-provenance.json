@@ -178,12 +178,13 @@
     },
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
-      "source_sha256": "d3e140badce5b48ae7896872f6a1bff381ec98e308284128276d17c7496a3748",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "605d829e945b97e721e9e57435ac7e0d3c24d62f69e6f7c91f3b561ca5412914",
+      "source_sha256": "41b964e85b523ba20d54c3dd38fe6dec7501d2ed380798c5f1b646c41e118d6c",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "41b964e85b523ba20d54c3dd38fe6dec7501d2ed380798c5f1b646c41e118d6c",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "NativeDecoderStages.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderStages.java",
@@ -318,13 +319,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "0590a41ad463b1f7993560873e426bb0701a2485e74b290a9a8ad8fafb4fa990",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "source_normalized_sha256": "0874971897cbe23da20a45c614fb775bd0e43153896f63cfb6439a858f1d2c28",
+      "source_sha256": "9b2c13f8cdd0998f961532984357676bd4d16890df60032c381a895253e184f2",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "source_normalized_sha256": "9b2c13f8cdd0998f961532984357676bd4d16890df60032c381a895253e184f2",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls."
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -399,8 +400,12 @@
     },
     "ScoreRestEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestEvent.java",
-      "source_sha256": "4bf7595846d9fd609aec35f8ca362e71e427e413ac09cb5e4311090c0e120ee2",
-      "source_normalized_sha256": "4bf7595846d9fd609aec35f8ca362e71e427e413ac09cb5e4311090c0e120ee2"
+      "source_sha256": "8a88b0858a7a9e6e29dc9005adb2530bce28eff4b720f7b528d06a9f5c599e71",
+      "source_normalized_sha256": "8a88b0858a7a9e6e29dc9005adb2530bce28eff4b720f7b528d06a9f5c599e71",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
     },
     "ScoreTechniqueChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTechniqueChange.java",
@@ -415,14 +420,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "68b8207afa8d4dd32f5ee1dac8e663a905ab3d0b3143c7a4126ec49ea41a6889",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
-      "source_normalized_sha256": "474ecfd829d87b98f485b474a83202c605975a4cd5afb1307c0988e0e5b437b9",
+      "source_sha256": "6f0016706c7e8a3914a5fa501b6f3c65fbb2723daa50e876d19da137b7b95ade",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "source_normalized_sha256": "6f0016706c7e8a3914a5fa501b6f3c65fbb2723daa50e876d19da137b7b95ade",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -433,13 +438,13 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "b221b1a6adebd16186bd66a0d8403fd579f38a3ee87af823f553b0b28640b8af",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "source_normalized_sha256": "4cd8c00ee01e1b3a7524931480cac2f27c6835d2a1d121b80a139cc977bca882",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "source_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -538,18 +543,22 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "3fc8d9bec2cd4737254d99ea998ef8c505be594a547c8d720dcd91ef1c3b7da0",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a0ebd939a88bceffe467a058cf0ce612f30af75060f34ab2a2068e48330a9538",
+      "source_sha256": "3f038e01e63c016fc48d429c1e6a1a0f15d0c4f7e71ac71c1834fc9083217798",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "3f038e01e63c016fc48d429c1e6a1a0f15d0c4f7e71ac71c1834fc9083217798",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "One request-local page walk builds exact six row projections for thresholds180/200/220/235/245/248. Coverage, threshold, staff, geometry and bar order retained. Three original direct low-coverage/pale-boundary/multiple-system regressions; no global or output cache. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
-      "source_sha256": "73a8a38533e10017df27f981068bb668facd73df79af3d9d1275f01fdbd5c788",
-      "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
-      "source_normalized_sha256": "73a8a38533e10017df27f981068bb668facd73df79af3d9d1275f01fdbd5c788"
+      "source_sha256": "066248c0a9849ac0d020b15d31fab899ee4d8866aa613b0b1a0652e35dc88ef6",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "066248c0a9849ac0d020b15d31fab899ee4d8866aa613b0b1a0652e35dc88ef6",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
     },
     "TabEffect.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabEffect.java",
@@ -600,9 +609,12 @@
     },
     "TabMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabMeter.java",
-      "source_sha256": "40744fb72ca4df76bca0a7094218449394bccd0e554fe2eac3705204e24d0dd7",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "dc7f1f482ed06271bb3efddc619e0e0fa6937e39dc93f2d00da30d9c8b0823e8"
+      "source_sha256": "f576402fab636eadc376900e9232ad5d4183ff9a658ae95425b9b525d3ed86e8",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "f576402fab636eadc376900e9232ad5d4183ff9a658ae95425b9b525d3ed86e8",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
     },
     "TabTempo.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTempo.java",
@@ -952,12 +964,13 @@
     },
     "ScoreNavigationProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationProjection.java",
-      "source_sha256": "04e10d035816d2d4bdec8bde8c7d9879881cd3149d903ae45f324d2b5ceb4a24",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f47224fb9227db36ac0e1100e974f83253336feca2ec567e075e4ee645a3358e",
+      "source_sha256": "a848996a9fb7c1ae5e56e2cea26b235852d921718cf1df2f794da13b34d43411",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "a848996a9fb7c1ae5e56e2cea26b235852d921718cf1df2f794da13b34d43411",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
@@ -992,10 +1005,12 @@
     },
     "ScoreOpeningDuration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningDuration.java",
-      "source_sha256": "89a0922716eec49ee46c55e51b88cb0129ba79eddafac1b48ffd5f41a80e128a",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "89a0922716eec49ee46c55e51b88cb0129ba79eddafac1b48ffd5f41a80e128a",
-      "review_note": "Original pure Java boundary duration proof; complete package-only code/literal parity. Opening requires short source layout and agreeing explicit staff spans; closing requires at least two staves and explicit terminal rests. Unknown gaps, ties, cross-staff and disagreement veto inference. Synthetic controls only, no private score or new dependencies."
+      "source_sha256": "2a9831ccfea1f4cb54aab7b4229ef7fa069f9c94bb4c134fbc24768c3fe48e03",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_normalized_sha256": "2a9831ccfea1f4cb54aab7b4229ef7fa069f9c94bb4c134fbc24768c3fe48e03",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed."
     },
     "ScoreMeterMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreMeterMap.java",
@@ -1339,11 +1354,12 @@
     },
     "ScoreRestFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestFermataDetector.java",
-      "source_sha256": "645287498f9908457ada8af5dddb17dcb22e1ce4469679c1f0666ff259dd4f38",
-      "source_normalized_sha256": "b6c1dcbb6d013b35444a6327b03ac8a2c7a86f84e41d86dfe89cfce91f548a22",
-      "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb",
-      "reviewed_source_state": "Isolated pedal candidate on accepted872 manifest ede2c2383426167237cb4da5d19afeb2f923d5daa581726e930c37b4b710ec45",
-      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data. Global rest-fermata resolution forwards the already validated immutable Ref into the unchanged ordered rest-target scan, removing a duplicate parse. Original repeated-resolution, malformed-event and caller-preservation regression retained; no dependency, model or record-layout change. The first unchanged onset scan also captures matching immutable note-lane witnesses in original order for the remaining two scans; timing APIs keep the original full note list and the raw entry point retains its full-scan behavior."
+      "source_sha256": "eb4d22ef67dfff26c0687dca777dceca0d151454b05e4c613d3776fb433f313f",
+      "source_normalized_sha256": "eb4d22ef67dfff26c0687dca777dceca0d151454b05e4c613d3776fb433f313f",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "PedalBracketDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PedalBracketDetector.java",
@@ -1420,12 +1436,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "2c86bdbcdb8c5a68a5b6637498bf037432fe8f4fdfb92acddf77bd2b2c94b9e5",
-      "source_normalized_sha256": "90b21ce11f3519ad998cfa830af3ba85a9d639c4db9e89c9807e2ccea66da891",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "source_sha256": "9d861a5ed923f720d2743315d71ff2364f2653087801c101f43878d97ac7aa58",
+      "source_normalized_sha256": "9d861a5ed923f720d2743315d71ff2364f2653087801c101f43878d97ac7aa58",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1471,22 +1487,22 @@
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "f3f23873cb7fbd27f4d9d5a83588087a0cfbce25545a355fde65f183246881b9",
-      "source_normalized_sha256": "84a4c3d20245f4209b5c674151f0bf385651d612c121f2dd8383c9619b9db705",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "source_sha256": "95993ba9e96be251aaf0636b23f26d921975fc32f97be38e6a10d1d2840005b7",
+      "source_normalized_sha256": "95993ba9e96be251aaf0636b23f26d921975fc32f97be38e6a10d1d2840005b7",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "2f88c01db731e33d05a35607c669dc6184c20551a6dbd104be33192e1f5cda16",
-      "source_normalized_sha256": "959c02d06b195269802e13b3c3e88c21ba544f8bb1fb65ae6d336d555526e6bf",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "source_sha256": "30c644cf9c557a05eb3be6cadd31a907a3d0343edd329349a9a2733474d8522e",
+      "source_normalized_sha256": "30c644cf9c557a05eb3be6cadd31a907a3d0343edd329349a9a2733474d8522e",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1697,11 +1713,12 @@
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
-      "reviewed_app_commit": "88c70428c55bbf045a949716be8a2a6032350139",
-      "source_sha256": "271a822161e68e924ca6321ca98ccc9bfa691a27cf939e0e606d800a1f2429f1",
-      "source_normalized_sha256": "8a3e9818985f9b628b4a006f9bd361c15845bf295d4b9d511c4c0afa81e91099",
-      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
-      "review_note": "Original Apache-2.0 template/contrast/visible bowl/paper matcher for printed3 touching another voice tie or beam. Bounded thin-rule/rail occlusion, isolated text rejection, physical ownership callback and malformed-input guards; no forced ratio from another group or score-specific exception."
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "source_sha256": "48fa64c7e45a75c73ca6cd1e32d62adf739ae0b75bc0c63821bcb20a634f6db9",
+      "source_normalized_sha256": "48fa64c7e45a75c73ca6cd1e32d62adf739ae0b75bc0c63821bcb20a634f6db9",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
     },
     "RegionalStaffSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",
@@ -1835,6 +1852,74 @@
       "scoped_reviewed_app_commit": "56afa5792dc4fdd0a43b59c2e0dfd68cc4ad1b80",
       "reviewed_source_state": "Committed recognition23 half-rest repair; namespace-only Java port and existing writer adaptation reviewed.",
       "review_note": "Original Apache-2.0 recovery proves an independent flat sitting plate and measured adjacent pitched-note shaft, rejects beamlets/cropped heads and invalid staff geometry, and reuses shared dot assignment and staff rectification. No model, dependency, record layout or public API changes; private source material excluded."
+    },
+    "ClassifiedWholeRests.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClassifiedWholeRests.java",
+      "origin": "Original global interpreter helper; Apache-2.0.",
+      "source_sha256": "29e21be4928437e76fd79e441a7f7c17f14352b6d235afa80a059cd62fc75e73",
+      "source_normalized_sha256": "29e21be4928437e76fd79e441a7f7c17f14352b6d235afa80a059cd62fc75e73",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+    },
+    "RawWholeRestVoiceEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawWholeRestVoiceEvidence.java",
+      "origin": "Original global interpreter helper; Apache-2.0.",
+      "source_sha256": "5f52973c6a3ae8884781d5b95eecec77a792504391d74562c4f1b4f8ee873c4e",
+      "source_normalized_sha256": "5f52973c6a3ae8884781d5b95eecec77a792504391d74562c4f1b4f8ee873c4e",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+    },
+    "ScoreRestTiming.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestTiming.java",
+      "origin": "Original global interpreter helper; Apache-2.0.",
+      "source_sha256": "dff07158c875eb3b8e0a32adbdd24b69b9662e5a6cfe9789c6ae12e816a58fec",
+      "source_normalized_sha256": "dff07158c875eb3b8e0a32adbdd24b69b9662e5a6cfe9789c6ae12e816a58fec",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+    },
+    "WholeRestClassifier.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
+      "origin": "Original global interpreter helper; Apache-2.0.",
+      "source_sha256": "e2801df4359b34fb443bd22b148aa4d1ef71f28c97fd114309942d2bb1960470",
+      "source_normalized_sha256": "e2801df4359b34fb443bd22b148aa4d1ef71f28c97fd114309942d2bb1960470",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+    },
+    "WideSystemIncomingTieProof.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",
+      "origin": "Original global interpreter helper; Apache-2.0.",
+      "source_sha256": "2e014c4d2723d567cd2ba1c7e92caf11b35d5bc81d3914688aed8e3e85b0547a",
+      "source_normalized_sha256": "2e014c4d2723d567cd2ba1c7e92caf11b35d5bc81d3914688aed8e3e85b0547a",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+    },
+    "src/sheet_interpreter/performance.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
+      "reviewed_sha256": "0c7bebbe98923c6916f089679451a8e94a78f993b21077b1420a026b170eca20",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
+    },
+    "src/sheet_interpreter/musicxml.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
+      "reviewed_sha256": "ded90003bc95c0ab86b64dc315914566d4a2e0717aac42a0ab76fb7266b98c6c",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
+    },
+    "src/sheet_interpreter/rest_kinds.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
+      "reviewed_sha256": "d902e20c427f37893dd30134f5e6b300613107f21c0231a7e28bc87124a87f75",
+      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
     }
   },
   "interpreter_speedup_review": {
@@ -4045,5 +4130,54 @@
     "standalone_java_tests": 7278,
     "baseline_synthetic_failures": 5,
     "review": "Connected-component contour ownership preserves disconnected bracket ink and real note/beam guards. Complete rest brackets and verified printed staff scale retain endpoint numeral ownership without widening bare-beam matching. An explicit full-bar opening-rest triplet lane preserves independent quarter-note clocks. Thirty-six original Apache-2.0 generated controls cover these recoveries and reject broken beams/shafts/brackets, missing staff evidence, false numerals and incomplete rhythms; five positive cases fail against the prior decoder. Four generated parity goldens were updated only after336-state review isolated one complete original noisy two-bulb rest in six mask/threshold/restore states with no prior event loss or input mutation. Private retained source replay confirms targeted fixes while preserving other events/clocks. Private score material is excluded. Fresh whole-score, whole-library and physical-phone accuracy remains unverified; models, dependencies, guide282 layout and APIs unchanged."
+  },
+  "recognition25_full_measure_joined_triplet_system_tie_review": {
+    "app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+    "recognition_revision": 25,
+    "audio_revision": 77,
+    "guide_version": 283,
+    "changed_mapped_sources": [
+      "ClassifiedWholeRests.java",
+      "NativeDecoderWire.java",
+      "OmrScoreInterpreter.java",
+      "PrintedTupletBeamOwner.java",
+      "RawWholeRestVoiceEvidence.java",
+      "RepeatedTupletNumeral.java",
+      "ScoreNavigationProjection.java",
+      "ScoreOpeningDuration.java",
+      "ScoreRestEvent.java",
+      "ScoreRestFermataDetector.java",
+      "ScoreRestTiming.java",
+      "SixteenthRestDetector.java",
+      "TabMeter.java",
+      "TabNotation.java",
+      "TablatureDecoder.java",
+      "TripletRhythmDetector.java",
+      "WholeRestClassifier.java",
+      "WideSystemIncomingTieProof.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "new_production_helpers": [
+      "ClassifiedWholeRests.java",
+      "RawWholeRestVoiceEvidence.java",
+      "ScoreRestTiming.java",
+      "WholeRestClassifier.java",
+      "WideSystemIncomingTieProof.java"
+    ],
+    "native_source_count": 221,
+    "standalone_java_tests": 7498,
+    "python_tests": 389,
+    "python_skipped": 44,
+    "android_composed_tests": 9924,
+    "android_skipped": 2,
+    "hub_self_test_groups": 49,
+    "legacy_parity_hashes_unchanged": true,
+    "guide_rest_record_bytes": 33,
+    "analysis_marker": -24,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "review": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+    "validation_limits": "Generated regressions, exact retained-input field/clock replay and actual guide/wire consumers are validated. Retained replay does not establish fresh whole-score, whole-library, physical-phone accuracy or reduced phone heat. Ordinary natural-adjacent and long-distance ties remain separate open repairs."
   }
 }

@@ -42,6 +42,36 @@ final class SixteenthRestDetector {
             List<MeasureRegion> measures,
             List<Staff> staffs,
             List<ScoreNoteEvent> notes) {
+        return detectWithDots(
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                notes,
+                RawWholeRestVoiceEvidence.unknown(notes));
+    }
+
+    static List<ScoreRestEvent> detect(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<ScoreNoteEvent> classificationNotes) {
+        return detectWithDots(gray, width, height, measures, staffs, notes, classificationNotes)
+                .rests();
+    }
+
+    static Detection detectWithDots(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<ScoreNoteEvent> classificationNotes) {
         Detection baseline = detectWithDotsReleased(gray, width, height, measures, staffs, notes);
         List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
         List<RestDot> dots = new ArrayList<>(baseline.dots());
@@ -81,7 +111,14 @@ final class SixteenthRestDetector {
                 for (var dot : candidateDots) if (dot.rest().equals(rest)) dots.add(dot);
             }
         }
-        return collected(combined, dots);
+        return ClassifiedWholeRests.apply(
+                collected(combined, dots),
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                classificationNotes);
     }
 
     private static Detection detectWithDotsReleased(
@@ -1873,7 +1910,8 @@ final class SixteenthRestDetector {
                 h,
                 rest.staffIndex(),
                 rest.staffCount(),
-                rest.durationBeats());
+                rest.durationBeats(),
+                rest.kind());
     }
 
     private static void inspect(

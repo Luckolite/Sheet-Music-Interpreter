@@ -11,6 +11,7 @@ from pathlib import Path
 from .runtime import java_executable
 from .semantic_wire import encode
 from .typed_events import event_kind, validate_unpitched
+from .rest_kinds import rest_kind, full_measure_span
 
 SUPPORTED = {'RITARDANDO', 'RALLENTANDO', 'RITENUTO', 'ACCELERANDO', 'A_TEMPO',
              'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA', 'BREATH', 'CAESURA',
@@ -76,8 +77,7 @@ def _rest_owned(expression):
         and any(e['sourceId'] == 'fermata-rest-raw-ink' for e in expression['evidence'])
 
 
-def _rest_span(expression, page):
-    """Same exact-slot proof as ScoreRestFermataDetector, using exported musical note times."""
+def _rest_identity(expression):
     if not _rest_owned(expression):
         return None
     try:
@@ -85,22 +85,45 @@ def _rest_span(expression, page):
         position = struct.unpack('>f', struct.pack('>I', bits & 0xffffffff))[0]
     except (ValueError, struct.error):
         return None
-    if not math.isfinite(position) or not 0 <= position <= 1 or not 0 <= m < len(page['measureBeats']) \
+    if not math.isfinite(position) or not 0 <= position <= 1 \
             or staff != expression['staffIndex'] or count != expression['staffCount']:
         return None
+    return m, staff, count, position
+
+
+def _rest_span(expression, page):
+    """Owned full silent voice, or the same exact literal-slot proof as the Java detector."""
+    identity = _rest_identity(expression)
+    if identity is None:
+        return None
+    m, staff, count, position = identity
+    beats = page.get('measureBeats')
+    if not isinstance(beats, (list, tuple)) or not 0 <= m < len(beats):
+        # The typed full-rest resolver diagnoses missing performed spans below.
+        if not any(rest_kind(r) == 'FULL_MEASURE' and r.get('measureIndex') == m
+                   and r.get('staffIndex') == staff and r.get('staffCount') == count
+                   for r in page.get('score', {}).get('rests', [])):
+            return None
     return _rest_column_span(page, m, staff, count, position, .018)
 
 
 def _rest_column_span(page, m, staff, count, position, tolerance):
-    raw = page.get('score', {}).get('notes', [])
-    if len(raw) != len(page['events']):
-        return None
     belongs = lambda row: row['measureIndex'] == m and row['staffIndex'] == staff and row['staffCount'] == count
     rests = [r for r in page.get('score', {}).get('rests', []) if belongs(r)]
+    for row in rests:
+        if rest_kind(row) == 'FULL_MEASURE':
+            full_measure_span(page, row)
     targets = [r for r in rests if abs(r['positionInMeasure']-position) <= tolerance]
     if len(targets) != 1:
         return None
-    target = targets[0]; duration = target['durationBeats']; beats = page['measureBeats'][m]
+    target = targets[0]
+    if rest_kind(target) == 'FULL_MEASURE':
+        beats = full_measure_span(page, target)
+        return dict(measureIndex=m, quarterBeatOffset=0), dict(measureIndex=m, quarterBeatOffset=beats)
+    raw = page.get('score', {}).get('notes', [])
+    if len(raw) != len(page['events']):
+        return None
+    duration = target['durationBeats']; beats = page['measureBeats'][m]
     if not math.isfinite(duration) or not 0 < duration <= beats:
         return None
     columns = [(r, n) for r, n in zip(raw, page['events']) if belongs(r)]
@@ -111,7 +134,7 @@ def _rest_column_span(page, m, staff, count, position, tolerance):
     bar_start = sum(page['measureBeats'][:m])
     start = max((n['startBeat']+n['durationBeats']-bar_start for r, n in columns if r['positionInMeasure'] == before), default=0)
     end = min((n['startBeat']-bar_start for r, n in columns if r['positionInMeasure'] == after), default=beats)
-    slot = [r for r in rests if before < r['positionInMeasure'] < after]
+    slot = [r for r in rests if rest_kind(r) == 'LITERAL' and before < r['positionInMeasure'] < after]
     if any(not math.isfinite(r['durationBeats']) or r['durationBeats'] <= 0 for r in slot) \
             or not math.isclose(end-start, sum(r['durationBeats'] for r in slot), abs_tol=1e-7):
         return None
@@ -334,6 +357,9 @@ def perform_expressions(document, bpm):
     for page in pages:
         for note in page['events']:
             validate_unpitched(note)
+        for row in page.get('score', {}).get('rests', []):
+            if rest_kind(row) == 'FULL_MEASURE':
+                full_measure_span(page, row)
     if not any(e['kind'] in SUPPORTED for page in pages for e in page.get('score', {}).get('expressiveEvents', [])):
         return None
     # Use the same arrangement boundaries as ordinary navigation export.

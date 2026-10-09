@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
+from .rest_kinds import rest_kind, full_measure_span
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -100,12 +101,12 @@ def expression_direction(measure, mark, offset):
 
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
-              gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=()):
+              gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False):
     node = element(measure, 'note')
     if chord:
         element(node, 'chord')
     if event is None:
-        element(node, 'rest')
+        element(node, 'rest', **({'measure': 'yes'} if full_measure else {}))
     elif event_kind(event) == 'UNPITCHED':
         identity = element(node, 'unpitched')
         element(identity, 'display-step', event['displayStep'])
@@ -129,7 +130,10 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     if event and event.get('durationFallback'):
         element(node, 'footnote', 'Estimated duration from interpretation')
     element(node, 'voice', voice)
-    note_type(node, duration, event)
+    if full_measure:
+        element(node, 'type', 'whole')
+    else:
+        note_type(node, duration, event)
     if event is not None and event_kind(event) == 'UNPITCHED':
         element(node, 'notehead', 'x')
     effect = event.get('guitarEffect') if event else None
@@ -182,6 +186,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         for event in page['events']:
             event_kind(event)
             validate_unpitched(event)
+        for row in page.get('score', {}).get('rests', []):
+            if rest_kind(row) == 'FULL_MEASURE':
+                full_measure_span(page, row)
     document = resolve_boundary_ties(document)
     meter = tuple(document.get('initialMeter', meter))
     key_fifths = document.get('initialKeyFifths', key_fifths)
@@ -190,12 +197,13 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         raise ValueError('Invalid MusicXML initial meter')
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
-    bars, events, expressions = [], [], []
+    bars, events, expressions, full_rests = [], [], [], []
     offset = 0
     current_meter, current_key = meter, key_fifths
     for page_index, page in enumerate(document['pages']):
         score = page['score']
         local_start = 0
+        first_bar = len(bars)
         for index, beats in enumerate(page['measureBeats']):
             length = ticks(beats)
             if length <= 0:
@@ -210,6 +218,13 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                        tempos=[c for c in score.get('tempoChanges', []) if c['measureIndex'] == index])
             bars.append(bar)
             local_start += length
+        for row in score.get('rests', []):
+            if rest_kind(row) == 'FULL_MEASURE':
+                bar_index = first_bar+row['measureIndex']
+                bar = bars[bar_index]
+                full_rests.append(dict(row, barIndex=bar_index, sourcePageIndex=page_index,
+                                       start=bar['start'], end=bar['start']+bar['length'],
+                                       restIdentity=len(full_rests), releaseSymbols=[]))
         first_event = len(events)
         for n in page['events']:
             if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
@@ -219,7 +234,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 raise ValueError('MusicXML note duration lies outside the page timeline')
             events.append(dict(n, start=offset+start, end=offset+min(local_start,start+duration), tie_stop=False, tie_start=False,
                                sourceIdentity=len(events)))
-        from .performance import _column_members, _rest_owned, _rest_span, _resolve_pedal
+        from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
         def absolute(anchor):
             if anchor is None:
                 return None
@@ -235,6 +250,13 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 span = _rest_span(mark, page)
                 mark['start'], mark['end'] = span if span else (None, None)
                 mark['scope'] = 'REST' if span else 'UNRESOLVED'
+                if span:
+                    m, staff, count, position = _rest_identity(mark)
+                    owned_full = [r for r in full_rests if r['sourcePageIndex'] == page_index
+                                  and r['measureIndex'] == m and r['staffIndex'] == staff
+                                  and r['staffCount'] == count and abs(r['positionInMeasure']-position) <= .018]
+                    if len(owned_full) == 1:
+                        mark['fullRestIdentity'] = owned_full[0]['restIdentity']
             mark['identity'] = f'page:{page_index}/'+mark['eventId']
             mark['startTick'], mark['endTick'] = absolute(mark.get('start')), absolute(mark.get('end'))
             members = _column_members(mark, page)
@@ -258,13 +280,27 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     misc = element(identification, 'miscellaneous')
     element(misc, 'miscellaneous-field', 'Concert-pitch reconstruction; recognition and estimated timing require review.', name='interpretation')
     part_list = element(root, 'part-list')
-    staffs = sorted({n.get('staffIndex', 0) for n in events}
-                    | {m['staffIndex'] for m in expressions if m.get('scope') == 'REST'}) or [0]
-    for staff in staffs:
-        part_id = f'P{staff+1}'
-        element(element(part_list, 'score-part', id=part_id), 'part-name', f'Staff {staff+1}')
+    def physical_staff(row):
+        staff = row.get('staffIndex', 0)
+        return staff, row.get('staffCount', staff+1)
+    if full_rests:
+        staffs = sorted({physical_staff(n) for n in events}
+                        | {physical_staff(r) for r in full_rests}
+                        | {physical_staff(m) for m in expressions if m.get('scope') == 'REST'})
+    else:
+        # Preserve the existing literal-only reconstruction and part identities.
+        staffs = sorted({n.get('staffIndex', 0) for n in events}
+                        | {m['staffIndex'] for m in expressions if m.get('scope') == 'REST'}) or [0]
+    for identity in staffs:
+        staff, count = identity if full_rests else (identity, None)
+        same_staff = lambda row: physical_staff(row) == identity if full_rests else row.get('staffIndex', 0) == staff
+        ambiguous_index = bool(full_rests) and sum(key[0] == staff for key in staffs) > 1
+        part_id = f'P{staff+1}C{count}' if ambiguous_index else f'P{staff+1}'
+        name = f'Staff {staff+1} of {count}' if ambiguous_index else f'Staff {staff+1}'
+        element(element(part_list, 'score-part', id=part_id), 'part-name', name)
         part = element(root, 'part', id=part_id)
-        notes = sorted((n for n in events if n.get('staffIndex', 0) == staff), key=lambda n: (n['start'], notation_order(n)))
+        notes = sorted((n for n in events if same_staff(n)), key=lambda n: (n['start'], notation_order(n)))
+        silent = [r for r in full_rests if same_staff(r)]
         for index, n in enumerate(notes):
             gliss = n.get('glissando')
             if gliss is None:
@@ -276,7 +312,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if len(targets) == 1 and event_kind(targets[0]) == 'PITCHED' and targets[0]['midi'] == gliss['targetMidi']:
                 n['gliss_start'] = index % 16 + 1
                 targets[0]['gliss_stop'] = n['gliss_start']
-        marks = sorted((m for m in expressions if m.get('scope') == 'SCORE' or m['staffIndex'] == staff),
+        marks = sorted((m for m in expressions if m.get('scope') == 'SCORE' or same_staff(m)),
                        key=lambda m: (m['startTick'], 0 if m['kind'] == 'PEDAL_UP' else 1))
         rendered, rest_symbols = set(), []
         for mark in marks:
@@ -289,7 +325,11 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                           value='tick' if 'tick' in mark.get('qualifierText', '') else 'comma',
                           inverted=mark.get('qualifierText') == 'fermata inverted')
             if mark.get('scope') == 'REST' and mark['kind'] == 'FERMATA':
-                if release > mark['startTick'] and not any(n['start'] < release and n['end'] > mark['startTick'] for n in notes):
+                owned = [r for r in silent if r['restIdentity'] == mark.get('fullRestIdentity')]
+                if owned:
+                    owned[0]['releaseSymbols'].append(symbol)
+                    rendered.add(mark['identity'])
+                elif release > mark['startTick'] and not any(n['start'] < release and n['end'] > mark['startTick'] for n in notes):
                     rest_symbols.append(symbol)
                     rendered.add(mark['identity'])
                 continue
@@ -363,10 +403,18 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                         or index == len(bars)-1 and mark['kind'] == 'PEDAL_UP' and mark['startTick'] == b):
                     expression_direction(measure, mark, mark['startTick']-a)
             present = [n for n in notes if n['start'] < b and n['end'] > a]
-            voices = sorted({n['voice'] for n in present}) or [1]
+            bar_rests = [r for r in silent if r['barIndex'] == index]
+            voices = sorted({n['voice'] for n in present}) or ([] if bar_rests else [1])
+            rest_voices = {max(1000, len(voice_ends))+i+1: row for i, row in enumerate(bar_rests)}
+            voices.extend(rest_voices)
             for vi, voice in enumerate(voices):
                 if vi:
                     element(element(measure, 'backup'), 'duration', bar['length'])
+                if voice in rest_voices:
+                    row = rest_voices[voice]
+                    emit_note(measure, bar['length'], voice, fragment_end=b,
+                              rest_symbols=row['releaseSymbols'], full_measure=True)
+                    continue
                 cursor = a
                 segments = defaultdict(list)
                 for n in present:

@@ -52,25 +52,6 @@ public final class TabMeter {
                         }
             }
         changes.sort(Comparator.comparingInt(ScoreMeterChange::measureIndex));
-        var rests = new ArrayList<ScoreRestEvent>();
-        for (var rest : score.rests()) {
-            float beats = 4;
-            for (var change : changes)
-                if (change.measureIndex() <= rest.measureIndex()) beats = change.quarterBeats();
-            boolean empty =
-                    score.notes().stream().noneMatch(n -> n.measureIndex() == rest.measureIndex());
-            rests.add(
-                    empty && rest.durationBeats() == 4
-                            ? new ScoreRestEvent(
-                                    rest.measureIndex(),
-                                    rest.positionInMeasure(),
-                                    rest.pageY(),
-                                    rest.pageHeight(),
-                                    rest.staffIndex(),
-                                    rest.staffCount(),
-                                    beats)
-                            : rest);
-        }
         return TabTempo.apply(
                 new ScorePageInterpretation(
                         score.measures(),
@@ -79,7 +60,7 @@ public final class TabMeter {
                         score.keyChanges(),
                         score.tempoChanges(),
                         changes,
-                        rests,
+                        score.rests(),
                         score.techniqueChanges(),
                         score.dynamicChanges(),
                         score.playbackDirections(),

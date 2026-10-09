@@ -70,6 +70,7 @@ final class PrintedTupletBeamOwner {
                 numeralTop,
                 numeralRight,
                 numeralBottom,
+                false,
                 false);
     }
 
@@ -102,6 +103,40 @@ final class PrintedTupletBeamOwner {
                 numeralTop,
                 numeralRight,
                 numeralBottom,
+                true,
+                false);
+    }
+
+    /** Caller proves a same-page repeated numeral with its visible original outline. */
+    static float joinedDistance(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom) {
+        return distanceWithBounds(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                false,
                 true);
     }
 
@@ -119,7 +154,8 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom,
-            boolean bracketed) {
+            boolean bracketed,
+            boolean joined) {
         float nearest = Float.POSITIVE_INFINITY;
         if (gray == null
                 || width < 1
@@ -142,7 +178,9 @@ final class PrintedTupletBeamOwner {
                     continue;
                 float beamY = a.y + fraction * (b.y - a.y);
                 float distance = travel > 0 ? numeralTop - beamY : beamY - numeralBottom;
-                if (distance < Math.max(2, gap * .2f) || distance > gap * 1.8f) continue;
+                float minimum =
+                        joined ? -(numeralBottom - numeralTop + 1) * .45f : Math.max(2, gap * .2f);
+                if (distance < minimum || distance > gap * 1.8f) continue;
                 int covered = 0, total = 0;
                 for (int x = a.x + 2; x < b.x - 1; x++) {
                     int y = Math.round(a.y + (b.y - a.y) * (x - a.x) / (float) (b.x - a.x));
@@ -153,7 +191,7 @@ final class PrintedTupletBeamOwner {
                         && covered >= total * .94f
                         && BeamInkConnectivity.connected(
                                 gray, width, height, a.x, a.y, b.x, b.y, gap))
-                    nearest = Math.min(nearest, distance);
+                    nearest = Math.min(nearest, joined ? Math.max(0, distance) : distance);
             }
         return nearest;
     }

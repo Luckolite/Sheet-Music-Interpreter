@@ -154,7 +154,8 @@ public final class ScoreNavigationProjection {
                                         r.pageHeight(),
                                         r.staffIndex(),
                                         r.staffCount(),
-                                        r.durationBeats()));
+                                        r.durationBeats(),
+                                        r.kind()));
                 int fifths = defaults.fifths(),
                         num = defaults.numerator(),
                         den = defaults.denominator();
@@ -310,6 +311,7 @@ public final class ScoreNavigationProjection {
     }
 
     private static boolean hasEarlierPitch(List<ScoreNoteEvent> notes, ScoreNoteEvent note) {
+
         if (note.kind() != ScoreNoteEvent.Kind.PITCHED) return false;
         for (var prior : notes)
             if (prior.kind() == ScoreNoteEvent.Kind.PITCHED

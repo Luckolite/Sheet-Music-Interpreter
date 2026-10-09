@@ -99,6 +99,11 @@ public final class TabNotation {
         };
     }
 
+    private static boolean wholeRestGlyph(String text) {
+        String s = text.replace(".", "").trim();
+        return s.equals("\uE4E3") || s.equals("𝄻");
+    }
+
     public static boolean rest(String s) {
         return s.codePoints()
                 .anyMatch(c -> c >= 0x1d13b && c <= 0x1d140 || c >= 0xe4e3 && c <= 0xe4e8);
@@ -109,6 +114,7 @@ public final class TabNotation {
         var result = new ArrayList<TablatureDecoder.Staff>();
         for (var t : tabs) {
             var fs = new ArrayList<>(t.frets());
+            var deferred = new ArrayList<TablatureDecoder.Fret>();
             if (t.standardTop() < 0)
                 for (var word : words) {
                     float x = (word.left() + word.right()) * .5f * w,
@@ -132,12 +138,26 @@ public final class TabNotation {
                             && y <= t.bottom() + t.gap() * .6f) continue;
                     int dots = Math.min(2, (int) word.text().chars().filter(c -> c == '.').count());
                     if (rest(word.text())) {
+                        var value =
+                                new TablatureDecoder.Fret(
+                                        x,
+                                        y,
+                                        0,
+                                        -2,
+                                        d,
+                                        0,
+                                        dots,
+                                        0,
+                                        false,
+                                        1,
+                                        wholeRestGlyph(word.text()));
                         if (fs.stream().noneMatch(f -> Math.abs(f.x() - x) < t.gap() * .4f))
-                            fs.add(new TablatureDecoder.Fret(x, y, 0, -2, d, 0, dots, 0));
+                            fs.add(value);
+                        else if (value.wholeRestGlyph() && dots == 0) deferred.add(value);
                     } else
                         for (int i = 0; i < fs.size(); i++) {
                             var f = fs.get(i);
-                            if (Math.abs(f.x() - x) < t.gap() * .6f)
+                            if (f.fret() != -2 && Math.abs(f.x() - x) < t.gap() * .6f)
                                 fs.set(i, withRhythm(f, d, 0, dots));
                         }
                 }
@@ -147,6 +167,29 @@ public final class TabNotation {
                     int cp = word.text().codePointAt(0);
                     float x = (word.left() + word.right()) * .5f * w,
                             y = (word.top() + word.bottom()) * .5f * h;
+                    if (cp == 0xe1e7) {
+                        boolean restDot = false;
+                        for (var values : List.of(fs, deferred))
+                            for (int i = 0; i < values.size(); i++) {
+                                var f = values.get(i);
+                                if (f.wholeRestGlyph()
+                                        && f.x() < x
+                                        && x - f.x() < t.gap() * 1.6f
+                                        && Math.abs(y - f.y()) < t.gap() * .6f) {
+                                    values.set(
+                                            i,
+                                            withRhythm(
+                                                    f,
+                                                    f.duration(),
+                                                    f.beams(),
+                                                    Math.min(2, f.dots() + 1)));
+                                    restDot = true;
+                                }
+                            }
+                        if (restDot)
+                            continue; // The silent lane owns its dot, including above the generic
+                                      // rhythm lane.
+                    }
                     if (y < t.top() - t.gap() * 2 || y > t.bottom() + t.gap() * 3.5f) continue;
                     if (cp == 0xe241 || cp == 0xe243 || cp == 0xe245)
                         for (int i = 0; i < fs.size(); i++) {
@@ -232,6 +275,9 @@ public final class TabNotation {
                                             3));
                         }
                     }
+            // Same-column whole rests are retained only when a separate full-bar voice is proved.
+            for (var rest : deferred)
+                if (TablatureDecoder.fullMeasureRest(t.withFrets(fs), rest)) fs.add(rest);
             fs.sort(Comparator.comparingDouble(TablatureDecoder.Fret::x));
             result.add(t.withFrets(fs));
         }
@@ -254,7 +300,8 @@ public final class TabNotation {
                 dots,
                 f.marks(),
                 f.tied(),
-                f.tuplet());
+                f.tuplet(),
+                f.wholeRestGlyph());
     }
 
     public static List<TablatureDecoder.Staff> rasterRhythm(

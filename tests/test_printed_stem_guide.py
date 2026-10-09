@@ -40,14 +40,14 @@ class PrintedStemGuideTests(unittest.TestCase):
             score=original_score();score['notes'][0]['stemDirection']=value
             with self.assertRaises(ValueError):wire.encode(score,281)
     def test_unknown_future_layout_is_rejected(self):
-        with self.assertRaises(ValueError):wire.encode(original_score(),283)
+        with self.assertRaises(ValueError):wire.encode(original_score(),284)
 
-    def test_current_layout282_appends_kind_after_legacy281_signed_stem(self):
-        self.assertEqual(24, wire.RECOGNITION_REVISION)
-        self.assertEqual(282,wire.GUIDE_VERSION)
+    def test_current_layout283_appends_kind_after_legacy281_signed_stem(self):
+        self.assertEqual(25, wire.RECOGNITION_REVISION)
+        self.assertEqual(283,wire.GUIDE_VERSION)
         score=original_score();score['notes'][0]['stemDirection']=1
         legacy=wire.encode(score,281);encoded=wire.encode(score)
-        self.assertEqual(282,struct.unpack('>i',encoded[:4])[0])
+        self.assertEqual(283,struct.unpack('>i',encoded[:4])[0])
         self.assertEqual(len(legacy)+1,len(encoded))
         self.assertEqual(legacy[4:111],encoded[4:111])
         self.assertEqual(0,encoded[111])

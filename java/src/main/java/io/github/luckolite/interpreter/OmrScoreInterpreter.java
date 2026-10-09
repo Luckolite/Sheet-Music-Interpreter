@@ -1478,7 +1478,23 @@ final class OmrScoreInterpreter {
                             restTrack));
         }
         List<ScoreRestEvent> rests =
-                SixteenthRestDetector.detect(gray, width, height, measures, restStaffs, result);
+                SixteenthRestDetector.detect(
+                        gray,
+                        width,
+                        height,
+                        measures,
+                        restStaffs,
+                        result,
+                        rawWholeRestDirections(
+                                result,
+                                joined,
+                                staffs,
+                                restStaffs,
+                                measures,
+                                labels,
+                                gray,
+                                width,
+                                height));
         // Small stemless model heads can be augmentation dots of an independently
         // recognized rest. Re-read those dots without letting the mistaken head
         // claim ownership, but require the same rest to have survived the first pass.
@@ -1514,7 +1530,22 @@ final class OmrScoreInterpreter {
             for (DetectedNote note : restBodyHeads) owners.remove(note.event);
             var evidence =
                     SixteenthRestDetector.detectWithDots(
-                            gray, width, height, measures, restStaffs, owners);
+                            gray,
+                            width,
+                            height,
+                            measures,
+                            restStaffs,
+                            owners,
+                            rawWholeRestDirections(
+                                    owners,
+                                    joined,
+                                    staffs,
+                                    restStaffs,
+                                    measures,
+                                    labels,
+                                    gray,
+                                    width,
+                                    height));
             List<DetectedNote> removed = new ArrayList<>();
             List<ScoreRestEvent> verifiedBodies = new ArrayList<>();
             // An independently recognized complete quarter-rest body can
@@ -1598,7 +1629,22 @@ final class OmrScoreInterpreter {
                 }
                 rests =
                         SixteenthRestDetector.detect(
-                                gray, width, height, measures, restStaffs, result);
+                                gray,
+                                width,
+                                height,
+                                measures,
+                                restStaffs,
+                                result,
+                                rawWholeRestDirections(
+                                        result,
+                                        joined,
+                                        staffs,
+                                        restStaffs,
+                                        measures,
+                                        labels,
+                                        gray,
+                                        width,
+                                        height));
             }
         }
         List<ScoreKeyChange> keyChanges =
@@ -1910,6 +1956,56 @@ final class OmrScoreInterpreter {
                                                     : printedDirection));
         }
         return new Analysis(voicedNotes, keyChanges, rests);
+    }
+
+    /** Pixel-derived temporary ownership notes; leaves original events and legacy inference unchanged. */
+    private static List<ScoreNoteEvent> rawWholeRestDirections(
+            List<ScoreNoteEvent> owners,
+            List<DetectedNote> joined,
+            List<Staff> staffs,
+            List<SixteenthRestDetector.Staff> restStaffs,
+            List<MeasureRegion> measures,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height) {
+        var proofHeads = new ArrayList<RawWholeRestVoiceEvidence.Head>();
+        for (var owner : owners) {
+            DetectedNote printed = null;
+            for (var item : joined)
+                if (item.event == owner) {
+                    printed = item;
+                    break;
+                }
+            if (printed == null) {
+                proofHeads.add(null);
+                continue;
+            }
+            Staff frame = staffForHead(labels, gray, width, height, staffs, printed.head);
+            float localGap = printed.staffGap, slope = 0;
+            if (frame != null && frame.pitchTrack != null) {
+                float[] local = frame.pitchTrack.at(printed.head.centerX);
+                localGap = local[1];
+                slope =
+                        (frame.pitchTrack.at(printed.head.centerX + localGap)[0] - local[0])
+                                / localGap;
+            }
+            if ((owner.articulations() & 32768) != 0) localGap *= .65f;
+            proofHeads.add(
+                    new RawWholeRestVoiceEvidence.Head(
+                            printed.head.minX,
+                            printed.head.maxX,
+                            printed.head.minY,
+                            printed.head.maxY,
+                            printed.head.centerX,
+                            printed.head.centerY,
+                            printed.staffGap,
+                            localGap,
+                            slope));
+        }
+        var directions =
+                RawWholeRestVoiceEvidence.directions(gray, width, height, owners, proofHeads);
+        return directions;
     }
 
     /** Keep both page-edge shoulders as evidence; assembly must still match pitch and continuity. */
@@ -14896,6 +14992,7 @@ final class OmrScoreInterpreter {
     /** Far-displaced rests belong to the opposing voice; central rests remain shared. */
     /** A rest sharing a note's column belongs to another voice, even for quarter notes. */
     static boolean restIsSeparateAttack(ScoreRestEvent rest, ScoreNoteEvent note) {
+        if (rest.isFullMeasure()) return false;
         return Math.abs(rest.positionInMeasure() - note.positionInMeasure()) > .018f;
     }
 
@@ -20007,7 +20104,9 @@ final class OmrScoreInterpreter {
             if ((samePrintedOnset(previous, previousOnset)
                             || ScoreNoteTiming.hasIndependentSustain(previous.event)
                                     && ScoreNoteTiming.hasIndependentSustain(current.event))
-                    && systemBreakTieCandidate(previous, current, width)) return index;
+                    && (systemBreakTieCandidate(previous, current, width)
+                            || wideSystemTieCandidate(gray, width, height, previous, current)))
+                return index;
             int horizontal = current.head.minX - previous.head.maxX;
             // Compact engraved ties can start inside the head shoulders. Keep
             // those candidates for the raw returning-arc test, but never relax
@@ -20284,6 +20383,20 @@ final class OmrScoreInterpreter {
             DetectedNote previous,
             DetectedNote current,
             TieFrame frame) {
+        if (!systemBreakTieCandidate(previous, current, width)
+                && wideSystemTieCandidate(gray, width, height, previous, current)) {
+            for (int side : new int[] {-1, 1})
+                if (hasSystemEndTieArc(labels, gray, width, height, previous, true, side)
+                        && WideSystemIncomingTieProof.prove(
+                                        gray,
+                                        width,
+                                        height,
+                                        wideTieEndpoint(previous),
+                                        wideTieEndpoint(current),
+                                        true,
+                                        side)
+                                .proved()) return true;
+        }
         if (systemBreakTieCandidate(previous, current, width)) {
             if (gray == null || gray.length != labels.length) return false;
             for (int side : new int[] {-1, 1})
@@ -20381,6 +20494,42 @@ final class OmrScoreInterpreter {
                         Math.round(centerY + gap * .12f),
                         Math.round(centerY + gap * 3f));
         return plausibleArc(above, left, right, gap) || plausibleArc(below, left, right, gap);
+    }
+
+    /** A complete homologous physical system frame owns a wide returning endpoint. */
+    private static boolean wideSystemTieCandidate(
+            byte[] gray, int width, int height, DetectedNote previous, DetectedNote current) {
+        float gap = (previous.staffGap + current.staffGap) * .5f;
+        if (gray == null
+                || gray.length != (long) width * height
+                || gap < 5
+                || current.event.measureIndex() != previous.event.measureIndex() + 1
+                || previous.event.diatonicPitchIdentity() != current.event.diatonicPitchIdentity()
+                || current.head.centerY - previous.head.centerY <= gap * 6
+                || previous.head.centerX <= width * .5f
+                || current.head.centerX >= width * .35f) return false;
+        WideSystemIncomingTieProof.Proof proof =
+                WideSystemIncomingTieProof.prove(
+                        gray,
+                        width,
+                        height,
+                        wideTieEndpoint(previous),
+                        wideTieEndpoint(current),
+                        false,
+                        1);
+        return proof.sameWrittenPitch() && proof.adjacentPhysicalSystems();
+    }
+
+    private static WideSystemIncomingTieProof.Endpoint wideTieEndpoint(DetectedNote note) {
+        return new WideSystemIncomingTieProof.Endpoint(
+                note.event,
+                note.head.minX,
+                note.head.maxX,
+                note.head.minY,
+                note.head.maxY,
+                note.head.centerX,
+                note.head.centerY,
+                note.staffGap);
     }
 
     private static boolean systemBreakTieCandidate(
