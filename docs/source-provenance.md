@@ -910,3 +910,14 @@ The Android adapter remains outside the standalone API. Historical
 are retained. Models, tensors, CTC/confidence, timed awaits, outputs, layouts and
 native221 source selection are unchanged. Generated executor controls are not
 native-session, pixel, memory or phone elapsed evidence.
+
+## Native tile retirement admission
+
+An explicit shared native-family registry retains unresolved owner cohorts and
+rejects further acquisition after terminal retirement failure. Healthy closes
+in progress permit admission; later reaping requires actual worker exit and
+normal owner-close return, preserving the original terminal observations and
+exceptions. The package-adapted Apache-2.0 helper and original real-thread JUnit
+regression are documented in [native tile retirement](two-lane-retirement.md).
+Generic constructors, model/inference bodies, weights and record layouts retain
+their behavior; synthetic ownership controls are not native or phone evidence.

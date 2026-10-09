@@ -35,6 +35,48 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
 
     private static final long FAILED_SHUTDOWN_JOIN_NANOS = TimeUnit.SECONDS.toNanos(2);
 
+    /** Admission for one native resource family; unrelated generic owners need not share it. */
+    static final class Admission {
+        private TwoLaneTileExecutor<?> retiring;
+
+        /** Rejects unresolved terminal retirement without waiting for native work or closing it. */
+        synchronized void requireRetirementAdmission() {
+            reap();
+            for (TwoLaneTileExecutor<?> cohort = retiring;
+                    cohort != null;
+                    cohort = cohort.nextRetiring) {
+                if (cohort.retirementTerminal)
+                    throw new IllegalStateException("Previous native tile owners have not retired");
+            }
+        }
+
+        private synchronized void retain(TwoLaneTileExecutor<?> cohort) {
+            if (cohort.retirementRegistered) return;
+            cohort.retirementRegistered = true;
+            cohort.nextRetiring = retiring;
+            retiring = cohort;
+        }
+
+        private synchronized void finished(TwoLaneTileExecutor<?> cohort) {
+            cohort.retirementTerminal = true;
+            reap();
+        }
+
+        private void reap() {
+            TwoLaneTileExecutor<?> previous = null;
+            TwoLaneTileExecutor<?> cohort = retiring;
+            while (cohort != null) {
+                TwoLaneTileExecutor<?> next = cohort.nextRetiring;
+                if (cohort.actuallyRetired()) {
+                    if (previous == null) retiring = next;
+                    else previous.nextRetiring = next;
+                    cohort.nextRetiring = null;
+                } else previous = cohort;
+                cohort = next;
+            }
+        }
+    }
+
     private final ThreadPoolExecutor[] executors = new ThreadPoolExecutor[2];
     private final Thread[] threads = new Thread[2];
     private final Object[] owners = new Object[2];
@@ -42,6 +84,11 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
     private final Throwable[] retirementFailures = new Throwable[2];
     private final CountDownLatch closeFinished = new CountDownLatch(1);
     private final Shutdown shutdown;
+    private final Admission admission;
+    // Accessed only under the family's Admission monitor, never while invoking native code.
+    private TwoLaneTileExecutor<?> nextRetiring;
+    private boolean retirementRegistered;
+    private boolean retirementTerminal;
     private final boolean[] joined = new boolean[2];
     private final boolean[] retirementReturned = new boolean[2];
     private CloseState closeState = CloseState.OPEN;
@@ -54,8 +101,15 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
     }
 
     TwoLaneTileExecutor(Factory<L> factory, Shutdown shutdown) throws Exception {
+        this(factory, shutdown, null);
+    }
+
+    TwoLaneTileExecutor(Factory<L> factory, Shutdown shutdown, Admission admission)
+            throws Exception {
         if (shutdown == null) throw new NullPointerException("shutdown");
         this.shutdown = shutdown;
+        this.admission = admission;
+        if (admission != null) admission.requireRetirementAdmission();
         boolean interrupted = Thread.interrupted();
         try {
             Future<?>[] opening = new Future<?>[2];
@@ -233,6 +287,8 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
             return;
         }
 
+        if (admission != null) admission.retain(this);
+
         Throwable firstOperation = null, secondOperation = null;
         Throwable firstShutdown = null, secondShutdown = null;
         Throwable firstRetirement, secondRetirement;
@@ -294,6 +350,8 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
                                             ? CloseState.RETIRED
                                             : CloseState.FAILED_JOINED;
                 }
+                // Publish unresolved ownership before any caller observes terminal close failure.
+                if (admission != null) admission.finished(this);
                 // Release concurrent/repeated close even when ownership is intentionally held.
                 closeFinished.countDown();
             }
@@ -301,6 +359,16 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
         synchronized (this) {
             rethrow(closeFailure);
         }
+    }
+
+    private boolean actuallyRetired() {
+        for (int lane = 0; lane < 2; lane++) {
+            Thread thread = threads[lane];
+            // Observing actual termination also makes the owner's close-return visible.
+            if (thread != null && thread.isAlive()) return false;
+            if (owners[lane] != null && !retirementReturned[lane]) return false;
+        }
+        return true;
     }
 
     private static void checkLane(int lane) {

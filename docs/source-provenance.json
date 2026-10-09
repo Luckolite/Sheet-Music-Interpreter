@@ -1602,10 +1602,10 @@
     },
     "TwoLaneTileExecutor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
-      "source_sha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
-      "source_normalized_sha256": "af99488c5b2e7b441953a7d8bf575d28138d53c3a45b7bb9f1957b879bce0eb3",
-      "reviewed_source_state": "Original Apache-2.0 JDK owner executor in app902",
-      "review_note": "Package-only equivalents acquire two independent owners concurrently, bound outstanding work to one request per owner, retain ordered consumption and exception precedence, and retire each owner on its creator thread after real completion. JUnit entry points exercise 7 startup, 12 lifecycle and 7 shutdown-fault groups using original synthetic owners and no native or Android dependencies."
+      "source_sha256": "91f8f76e89ac675d643a05e9ca1fb30937fba024f048b49b79c446b8c9df2ae1",
+      "source_normalized_sha256": "2ff849910edec3681238a168679224daf5d41de5e16bd7b280eed25100f6ba56",
+      "reviewed_source_state": "Reviewed app944 candidate on delivered app943; exact raw and normalized hashes identify the source.",
+      "review_note": "Apache-2.0 package and AOSP-format equivalents retain legacy constructors and add explicit native-family admission. Healthy CLOSING cohorts allow admission; terminal unresolved cohorts remain strongly owned and reject acquisition until actual thread exit and normal owner-close return. Original terminal observations, primary errors and interruption are retained. Four original synthetic real-thread schedules cover the new contract; the existing 26 groups remain unchanged."
     },
     "DetachedStemInkBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedStemInkBand.java",
@@ -4377,5 +4377,49 @@
       }
     ],
     "privacy": "Original synthetic OCR boxes, raster and expected clock/pitch cases only. No score scans, library data, device logs, signing material, model or dependency changes."
+  },
+  "native_tile_retirement_admission_review": {
+    "documentation_path": "docs/two-lane-retirement.md",
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
+    "reviewed_app_commit": "02bc9bf851b081971bc8a67aee9f630eb216959c",
+    "reviewed_source_state": "Reviewed app944 worktree based on delivered app943; exact current source hashes are recorded. The release owner reconciles the app commit before publication.",
+    "helper": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+      "source_sha256": "91f8f76e89ac675d643a05e9ca1fb30937fba024f048b49b79c446b8c9df2ae1",
+      "source_normalized_sha256": "2ff849910edec3681238a168679224daf5d41de5e16bd7b280eed25100f6ba56",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TwoLaneTileExecutor.java",
+      "standalone_sha256": "292ff0f3fbd7645f2e4f0e0c38c8f2227dfe7e7c77b14ae7ded61d7b49c1e28e",
+      "executable_token_parity": true
+    },
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "base_source_sha256": "9f92f1afc8cd3b87134c08b30732c383613288f1e7f878c8048b22d6ae33566e",
+      "change": "One shared Admission, an early ensureModel check after the existing-model return, and the guarded pair constructor. Existing model/inference/stitch/retirement bodies are preserved. Final adapter source is composed from this delivered baseline.",
+      "source_sha256": "b7ac59fe2dbaf1798144a86353a153cf1ea4898c320dd8c1e3853212fe5b5a7c",
+      "source_normalized_sha256": "b7ac59fe2dbaf1798144a86353a153cf1ea4898c320dd8c1e3853212fe5b5a7c"
+    },
+    "original_regression": {
+      "path": "java/src/test/java/io/github/luckolite/interpreter/TwoLaneAdmissionControlsTest.java",
+      "sha256": "99b534ef9334988d42be37252278433aef9cb201f0d880ae85031d9b0e368cec",
+      "scope": "Four original real-JDK-thread schedules with synthetic owners cover healthy CLOSING admission, actual later drain, unconfirmed joined-owner close, and unreturned partial-constructor ownership. Existing 7 startup, 12 lifecycle and 7 shutdown-fault groups remain unchanged."
+    },
+    "limitations": "No models, Android/native failure, pixel, memory, elapsed or heat evidence is claimed by these controls. Unconfirmed owner-close failure can permanently block the family; admission does not retry native close or fabricate historical joins.",
+    "native_decoder": "The explicit decoder source list excludes this Android adapter and helper; the existing desktop ONNX execution policy is unchanged.",
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "privacy": "Only original Apache-2.0 synthetic owner regressions and portable source are included; no private libraries, score scans, logs, assets or signing data."
+  },
+  "app_only_wav_publication_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java",
+    "source_sha256": "edf634da7b7c7b589184317fd46d7085599ace57c12a76af1d401f6c232e6c6f",
+    "source_normalized_sha256": "edf634da7b7c7b589184317fd46d7085599ace57c12a76af1d401f6c232e6c6f",
+    "reviewed_app_commit": "02bc9bf851b081971bc8a67aee9f630eb216959c",
+    "scope": "Android/native-audio WAV publication uses a unique operation-owned sibling, serializes final activation, preserves an existing playable destination on activation failure, and retains the primary error if temporary-file cleanup fails. Result preparation precedes activation.",
+    "source_boundary": "Only the publication lock and write activation/cleanup region differ. PCM synthesis, score clocks, decoded music, model and record-layout bodies are unchanged.",
+    "standalone_boundary": "No mapped standalone SheetInterpreterAudio writer exists; the public Python CLI/MP3 audio writer is unchanged.",
+    "native_audio": "tools/native-worker/build_audio.py selects this app source. Matching Hub/native-audio packaging and paired deployment are required; this source review does not prove live deployment.",
+    "private_data_included": false
   }
 }
