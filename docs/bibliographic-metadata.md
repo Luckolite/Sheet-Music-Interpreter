@@ -72,6 +72,12 @@ ambiguous. Use `trackedHeadingWordSpaceCandidate` and
 `mergeTrackedHeadingWordSpaces` to retain heading scope and coordinates.
 The input is a tightly bounded ARGB raster, with one array entry per pixel.
 
+An inline `Arrangement` or `Arrangements` label followed by a name is a prefix
+credit, including instrument-qualified forms such as `Piano Arrangement`.
+It remains eligible for the existing three agreeing original-source readings.
+An empty standalone arrangement label still locates its name above the label.
+This distinction does not merge similar names across different credits.
+
 The portable crop, cover and embedded-text helpers expose their evidence rules
 without Android dependencies. The Android adapter additionally owns bitmap
 lifetimes, original-PDF crop rendering, provider calls and timeout handling.

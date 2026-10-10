@@ -4565,8 +4565,13 @@ public final class ScoreCreditsDetector {
         String attributedValue = m.group(2);
         if (role == Role.ARRANGER && label.matches("(?iu)arr\\.?|ar\\.|arrangements?"))
             attributedValue = attributedValue.replaceFirst("(?iu)^by[\\h.:]+", "");
+        // Only an empty label can refer to a name printed above it. An inline
+        // name remains a prefix attribution and is eligible for source rereads.
         return new Credit(
-                role, attributedValue, label.equals("arrangement") || label.equals("arrangements"));
+                role,
+                attributedValue,
+                attributedValue.isBlank()
+                        && (label.equals("arrangement") || label.equals("arrangements")));
     }
 
     /** Exact attribution grammar can survive one extra OCR letter in its printed role verb. */
