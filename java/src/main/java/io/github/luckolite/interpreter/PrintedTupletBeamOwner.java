@@ -216,8 +216,11 @@ final class PrintedTupletBeamOwner {
                 || Math.abs(direction) != 1
                 || lastX - firstX < gap * .8f
                 || lastX - firstX > gap * 26) return false;
-        for (var a : tips(gray, width, height, firstX, firstY, gap, direction, 1))
-            for (var b : tips(gray, width, height, lastX, lastY, gap, direction, -1)) {
+        var first = tips(gray, width, height, firstX, firstY, gap, direction, 1);
+        if (first.isEmpty()) return false;
+        var last = tips(gray, width, height, lastX, lastY, gap, direction, -1);
+        for (var a : first)
+            for (var b : last) {
                 if (b.x - a.x < gap * .5f || Math.abs(b.y - a.y) > gap * 3) continue;
                 int covered = 0, total = 0;
                 for (int x = a.x + 2; x < b.x - 1; x++) {

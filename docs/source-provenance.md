@@ -962,3 +962,17 @@ fixture 253 changes to rejection. No score-derived pixels or private artifacts a
 included. The app, Hub and writer advance the recognition cache revision together;
 guide 284 and audio 77 record layouts remain unchanged. This correctness repair
 does not establish a speed or phone-temperature improvement.
+
+## Dense repeated-tuplet searches
+
+`RepeatedTupletNumeral` applies its existing shape, occlusion, contrast and
+neighbor vetoes before the expensive synchronous beam-owner predicate. Accepted
+numerals still pass every proof in the same raster order. `PrintedTupletBeamOwner`
+computes the last stem's tip candidates once per connected-head check.
+
+Original generated controls verify that filled beam ink does not trigger an
+ownership search and that a valid numeral still requires ownership. Existing
+voice, bracket and beam controls remain applicable. These are Java performance
+changes with unchanged acceptance thresholds, dependencies, models, recognition
+revision and guide/audio layouts. No score-derived examples or private logs are
+included; the controls do not establish phone opening time or temperature gains.

@@ -98,7 +98,6 @@ final class RepeatedTupletNumeral {
                 }
                 if (hit < ni * .93f) continue;
                 int[] box = {x, y, x + rw - 1, y + rh - 1};
-                if (!owner.test(box)) continue;
                 boolean[] covered = new boolean[rh];
                 int hidden = 0;
                 for (int yy = 0; yy < rh; yy++) {
@@ -166,6 +165,8 @@ final class RepeatedTupletNumeral {
                         gray, w, h, x, y, x + rw - 1, y + rh - 1, gap)) continue;
                 if (TupletNumeralNeighbors.joinedText(gray, w, h, x, y, x + rw - 1, y + rh - 1))
                     continue;
+                // Beam ownership is expensive. Reject non-numeral ink before proving it.
+                if (!owner.test(box)) continue;
                 return box;
             }
         }

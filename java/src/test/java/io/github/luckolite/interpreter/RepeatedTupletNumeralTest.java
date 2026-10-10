@@ -7,6 +7,35 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RepeatedTupletNumeralTest {
+    @Test
+    public void filledBeamInkIsRejectedBeforeExpensiveOwnership() {
+        byte[] g = paper();
+        three(g, 30, 25);
+        rect(g, 200, 90, 280, 145);
+        int[] calls = {0};
+        assertNull(
+                RepeatedTupletNumeral.findJoined(
+                        g, W, H, new int[] {30, 25, 41, 46}, 200, 280, 220, 220, G,
+                        box -> {
+                            calls[0]++;
+                            return true;
+                        }));
+        assertEquals("Non-numeral ink must not trigger a beam search", 0, calls[0]);
+    }
+
+    @Test
+    public void aValidShapeStillRequiresOwnershipAfterEarlyRejection() {
+        int[] calls = {0};
+        assertNull(
+                RepeatedTupletNumeral.findJoined(
+                        pair(), W, H, new int[] {30, 25, 41, 46}, 200, 280, 220, 220, G,
+                        box -> {
+                            calls[0]++;
+                            return false;
+                        }));
+        assertTrue("Ownership must still be checked for a printed numeral", calls[0] > 0);
+    }
+
     private static final int W = 400, H = 500, G = 20;
     private static final String[] THREE = {
         "..#######...", ".##########.", "###......###", "####.....###",

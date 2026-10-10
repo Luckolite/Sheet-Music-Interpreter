@@ -1544,13 +1544,13 @@
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "95993ba9e96be251aaf0636b23f26d921975fc32f97be38e6a10d1d2840005b7",
-      "source_normalized_sha256": "95993ba9e96be251aaf0636b23f26d921975fc32f97be38e6a10d1d2840005b7",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "source_sha256": "24abb37b322adc1a80eb3f2ccae447b2020af5024005a1099399673d4b1a7f27",
+      "source_normalized_sha256": "24abb37b322adc1a80eb3f2ccae447b2020af5024005a1099399673d4b1a7f27",
+      "reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
+      "reviewed_source_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
+      "review_note": "Compute final-stem tip candidates once per connected-head check. Reject numeral shape, occlusion, contrast and joined-text failures before invoking the unchanged synchronous beam-owner predicate. Every accepted numeral still passes all original proofs in the same raster order. The only production caller is the pure ownership predicate in TripletRhythmDetector. No helper dependencies, models, weights, record layouts or recognition cache revision changed. Original generated filled-beam control rejects 1911 unnecessary owner calls; a valid-shape control still requires ownership. Private score pixels/logs stay outside this repository.",
+      "reviewed_app_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
+      "scoped_reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4"
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
@@ -1771,12 +1771,12 @@
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "source_sha256": "48fa64c7e45a75c73ca6cd1e32d62adf739ae0b75bc0c63821bcb20a634f6db9",
-      "source_normalized_sha256": "48fa64c7e45a75c73ca6cd1e32d62adf739ae0b75bc0c63821bcb20a634f6db9",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
+      "source_sha256": "d533d4c30f2315225bd2ac21f080cb61a89f376fa28ab9fb3438e03920a26c8b",
+      "source_normalized_sha256": "5db42440c83d376281706c85a093d645e2fae703af54b8afe8c0d8a86238d4fe",
+      "reviewed_source_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
+      "review_note": "Compute final-stem tip candidates once per connected-head check. Reject numeral shape, occlusion, contrast and joined-text failures before invoking the unchanged synchronous beam-owner predicate. Every accepted numeral still passes all original proofs in the same raster order. The only production caller is the pure ownership predicate in TripletRhythmDetector. No helper dependencies, models, weights, record layouts or recognition cache revision changed. Original generated filled-beam control rejects 1911 unnecessary owner calls; a valid-shape control still requires ownership. Private score pixels/logs stay outside this repository.",
+      "scoped_reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4"
     },
     "RegionalStaffSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",
