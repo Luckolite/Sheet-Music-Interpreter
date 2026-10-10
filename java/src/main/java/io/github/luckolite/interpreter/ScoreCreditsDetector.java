@@ -448,6 +448,199 @@ public final class ScoreCreditsDetector {
         return new Line(text, original.left, original.top, original.right, original.bottom);
     }
 
+    private static final Pattern COVER_FOOTER_CAPTION =
+            Pattern.compile(
+                    "(?iu)\\b(?:copyright|rights|reserved|publish(?:ed|er|ers|ing)?|press(?:es)?|websites?|printed|edition|editions|version|versions|volume|volumes|book|books|series|collection|collections|piano|violin|guitar|vocal|cello|flute|orchestra|score|scores|arranged|composed|performed|transcribed|music|lyrics|words|by|for|from|www|https?)\\b");
+
+    /** Located literal text below a simple opening cover; it establishes no contributor role.
+     * Callers must restrict this route to the first page. Photographic classification is unchanged.
+     */
+    public static List<Line> coverFooterReviewCandidates(Page page) {
+        if (page.creditsOnly
+                || page.photographicCover
+                || !Float.isFinite(page.notationTop)
+                || page.notationTop > 0
+                || !Float.isFinite(page.width)
+                || !Float.isFinite(page.height)
+                || page.width <= 0
+                || page.height <= 0
+                || page.lines.stream().anyMatch(l -> !validCoverLine(page, l))) return List.of();
+        List<Line> headings =
+                page.lines.stream()
+                        .filter(
+                                l ->
+                                        l.top < page.height * .15f
+                                                && l.bottom < page.height * .25f
+                                                && l.height() >= page.width * .04f
+                                                && l.right - l.left >= page.width * .3f
+                                                && l.right - l.left <= page.width * .95f
+                                                && Math.abs(l.center() - page.width * .5f)
+                                                        < page.width * .12f
+                                                && titleText(l.text)
+                                                && credit(l.text) == null
+                                                && !LEGAL.matcher(l.text).find())
+                        .toList();
+        if (headings.size() != 1) return List.of();
+        Line heading = headings.get(0);
+        List<Line> footers =
+                page.lines.stream()
+                        .filter(
+                                l ->
+                                        !l.equals(heading)
+                                                && l.top >= page.height * .85f
+                                                && l.bottom <= page.height * .98f
+                                                && l.height() >= page.width * .025f
+                                                && l.height() <= heading.height() * 1.05f
+                                                && l.right - l.left >= page.width * .3f
+                                                && l.right - l.left <= page.width * .9f
+                                                && Math.abs(l.center() - page.width * .5f)
+                                                        < page.width * .12f
+                                                && l.top - heading.bottom >= page.height * .5f
+                                                && coverFooterText(l.text))
+                        .toList();
+        if (footers.size() != 1) return List.of();
+        Line footer = footers.get(0);
+        if (page.lines.stream()
+                        .anyMatch(
+                                l ->
+                                        !l.equals(heading)
+                                                && !l.equals(footer)
+                                                && l.height() >= page.width * .02f
+                                                && clean(l.text)
+                                                                .codePointCount(
+                                                                        0, clean(l.text).length())
+                                                        > 2)
+                || page.lines.stream().filter(l -> sameCoverBox(l, footer)).count() != 1)
+            return List.of();
+        return List.of(footer);
+    }
+
+    private static boolean validCoverLine(Page page, Line line) {
+        return line.text != null
+                && Float.isFinite(line.left)
+                && Float.isFinite(line.top)
+                && Float.isFinite(line.right)
+                && Float.isFinite(line.bottom)
+                && line.left >= 0
+                && line.top >= 0
+                && line.right > line.left
+                && line.bottom > line.top
+                && line.right <= page.width
+                && line.bottom <= page.height;
+    }
+
+    private static boolean sameCoverBox(Line first, Line second) {
+        return first.left == second.left
+                && first.top == second.top
+                && first.right == second.right
+                && first.bottom == second.bottom;
+    }
+
+    private static boolean coverFooterText(String text) {
+        if (text == null || text.indexOf('\n') >= 0 || text.indexOf('\r') >= 0) return false;
+        String value = Normalizer.normalize(clean(text), Normalizer.Form.NFC);
+        int words = value.split("\\h+").length;
+        return words >= 2
+                && words <= 5
+                && value.codePointCount(0, value.length()) <= 80
+                && properReviewName(value)
+                && credit(value) == null
+                && !LEGAL.matcher(value).find()
+                && !COVER_FOOTER_CAPTION.matcher(value).find();
+    }
+
+    /** Three strong original-PDF readings may refine the retained literal; failed reads retain it. */
+    public static List<Line> mergeCoverFooterReviewConsensus(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!coverFooterReviewCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || confidence.stream()
+                        .anyMatch(v -> v == null || !Float.isFinite(v) || v < .95f || v > 1)
+                || readings.stream().anyMatch(v -> !coverFooterText(v))) return page.lines;
+        String text = clean(readings.get(0));
+        String normalized = Normalizer.normalize(text, Normalizer.Form.NFC);
+        if (readings.stream()
+                        .anyMatch(
+                                v ->
+                                        !Normalizer.normalize(clean(v), Normalizer.Form.NFC)
+                                                .equals(normalized))
+                || !anchoredCoverFooterRefinement(original.text, normalized)) return page.lines;
+        List<Line> result = new ArrayList<>(page.lines);
+        result.set(
+                result.indexOf(original),
+                new Line(text, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(result);
+    }
+
+    private static boolean anchoredCoverFooterRefinement(String original, String reading) {
+        String before = Normalizer.normalize(clean(original), Normalizer.Form.NFC);
+        String[] sourceWords = before.split("\\h+"), readWords = reading.split("\\h+");
+        String first = sourceWords[0], nextFirst = readWords[0];
+        if (first.codePointCount(0, first.length()) < 4
+                || !first.equals(nextFirst)
+                || !CreditOcrIdentifierGuard.preservesIdentifiers(before, reading)) return false;
+        boolean sameBoundaries = sourceWords.length == readWords.length;
+        if (sameBoundaries)
+            for (int i = 0; i < sourceWords.length; i++)
+                sameBoundaries &=
+                        sourceWords[i].codePointCount(0, sourceWords[i].length())
+                                == readWords[i].codePointCount(0, readWords[i].length());
+        // Only a run of adjacent bare single-letter fragments may collapse;
+        // an isolated initial or any punctuated initial remains a separate word.
+        boolean fragments =
+                sourceWords.length >= 4
+                        && readWords.length == 2
+                        && sourceWords[sourceWords.length - 1].codePointCount(
+                                        0, sourceWords[sourceWords.length - 1].length())
+                                >= 3;
+        for (int i = 1; i < sourceWords.length - 1; i++)
+            fragments &=
+                    sourceWords[i].codePointCount(0, sourceWords[i].length()) == 1
+                            && Character.isLetter(sourceWords[i].codePointAt(0));
+        if (!sameBoundaries && !fragments) return false;
+        int[] a = before.replaceAll("\\h+", "").codePoints().toArray();
+        int[] b = reading.replaceAll("\\h+", "").codePoints().toArray();
+        if (a.length != b.length) return false;
+        int offset = 0;
+        for (String word : sourceWords) {
+            if (word.matches("\\p{L}\\p{M}*\\.?") && a[offset] != b[offset]) return false;
+            offset += word.codePointCount(0, word.length());
+        }
+        int differences = 0;
+        for (int i = 0; i < a.length; i++)
+            if (a[i] != b[i]) {
+                if (++differences > 1
+                        || i == 0
+                        || i == a.length - 1
+                        || !Character.isLetter(a[i])
+                        || !Character.isLetter(b[i])
+                        || a[i] > Character.MAX_VALUE
+                        || b[i] > Character.MAX_VALUE
+                        || hasCoverAccent(a[i])
+                        || hasCoverAccent(b[i])
+                        || i + 1 < a.length && (isCoverMark(a[i + 1]) || isCoverMark(b[i + 1]))
+                        || !(a[i] == 'I' && b[i] == 'L' || a[i] == 'L' && b[i] == 'I'))
+                    return false;
+            }
+        return true;
+    }
+
+    private static boolean hasCoverAccent(int point) {
+        return Normalizer.normalize(new String(Character.toChars(point)), Normalizer.Form.NFD)
+                .codePoints()
+                .anyMatch(ScoreCreditsDetector::isCoverMark);
+    }
+
+    private static boolean isCoverMark(int point) {
+        int type = Character.getType(point);
+        return type == Character.NON_SPACING_MARK
+                || type == Character.COMBINING_SPACING_MARK
+                || type == Character.ENCLOSING_MARK;
+    }
+
     private static boolean bibliographicLineCandidate(Page page, Line line) {
         float limit = page.notationTop > 0 ? page.notationTop : page.height * .62f;
         boolean locatedRecordingCredit =
@@ -3153,8 +3346,15 @@ public final class ScoreCreditsDetector {
             if (!page.creditsOnly && coverPerformer.matches())
                 addNames(artists, List.of(canonicalName(coverPerformer.group(1), knownNames)));
             Set<Line> claimed = new LinkedHashSet<>(), scopedClaimed = new LinkedHashSet<>();
+            List<Line> coverFooterReview =
+                    page == pages.get(0) ? coverFooterReviewCandidates(page) : List.of();
             for (Line line : lines) {
                 if (scopedClaimed.contains(line)) continue;
+                if (coverFooterReview.contains(line)) {
+                    other.add(clean(line.text));
+                    claimed.add(line);
+                    continue;
+                }
                 ReviewCredit service =
                         page.reviewCredits.stream()
                                 .filter(

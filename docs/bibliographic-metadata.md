@@ -85,6 +85,19 @@ the same literal contributor payload, and one reading must actually print
 inflections, changed names, extra contributors and multiline text are rejected.
 The existing source geometry, role and identifier checks still apply.
 
+`coverFooterReviewCandidates` retains a separated bottom line on a simple,
+staff-free opening cover as unresolved literal text. Call it only for the first
+page. It excludes photographic pages, attributed credits and publication
+captions, and leaves title and role selection unchanged. The geometry cannot
+distinguish a person's name from an identically placed work name.
+
+`mergeCoverFooterReviewConsensus` refines that line only after three strong
+original-PDF readings agree. It requires an unchanged word anchor, protected
+initials, punctuation and accents, and bounded spacing or internal I/L repair.
+Failed rereads retain the original literal. The Android adapter uses its fixed
+crop padding at scales 1, 2 and 4 and releases each bitmap after reading. This
+route adds no service-credit evidence field, dictionary or model weights.
+
 The portable crop, cover and embedded-text helpers expose their evidence rules
 without Android dependencies. The Android adapter additionally owns bitmap
 lifetimes, original-PDF crop rendering, provider calls and timeout handling.
