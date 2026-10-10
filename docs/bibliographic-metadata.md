@@ -103,6 +103,13 @@ in a generic motion-picture source caption beside an opening notation heading.
 Call it only for page 0. Exactly three strong, identical single-line readings
 must establish the complete printed phrase. No title or name is guessed.
 
+The Android adapter renders this caption with the existing tight-heading crop:
+padding is the greater of four source-frame pixels or one tenth of line height,
+at original-PDF scales 1, 2 and 4. This limits neighboring heading ink in the
+caption raster. Each of the three readings must still meet the unchanged 0.95
+confidence threshold and agree on the complete literal. A value immediately
+below that threshold remains rejected; tighter crops do not relax this guard.
+
 The bounded overlap exception applies only on that first nonphotographic page.
 Both nomination and joining reject competing heading owners and captions;
 adjacent fragments on the same heading baseline keep existing row ownership.

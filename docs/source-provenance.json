@@ -4711,7 +4711,7 @@
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
     "source_adaptation": "15 production classes and 20 original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 177,
+    "synthetic_tests": 178,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4731,17 +4731,18 @@
     "bibliography_page_api_layout_changed": true,
     "optional_page_evidence_layout": "reviewCredits: [{line: {text,left,top,right,bottom}, value}]. Missing old field defaults empty. Original OCR lines remain unchanged; writers and replays preserve typed review evidence.",
     "retained_provider_scope": "Repeated physically separate header titles; three strong original-source photographic heading readings; pixel-verified detached service marks. No filename completion, person dictionary, role inferred from a portrait, new model, or generic digit-guard relaxation.",
-    "adapter_source_sha256": "3306107b3734fcb0c10bcdd3c60a5ac518e4f19b028d84aed20aaefbef5bc000",
+    "adapter_source_sha256": "172a82532d66202de32d044b250b3bed37505e890c51b27fc4cb8bd785cdbeb9",
     "desktop_boundary": "The explicit desktop music decoder and audio source selections do not consume this bibliography-only Page API. Guide/audio/recognition record layouts remain unchanged. The required matching Hub/page-worker build, smoke and rollout remain pending integration verification.",
     "literal_service_binding_app_commit": "522d9990341ac6ffcb12f5475c5d885ccd4388c3",
     "inline_arrangement_app_commit": "580ef1a881ad2724667bc234cc8da4600a198dd5",
     "role_only_app_commit": "64ffde06acaf3c7505aca83be61ab6fcc9214b5d",
     "cover_footer_app_commit": "748a2a5504fd2ad270baa1add5a89aacda0e1566",
-    "adapter_reviewed_app_commit": "f5d79deaaa9e75715024edb37deadcdbdb6d0909",
+    "adapter_reviewed_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6",
     "cover_footer_page_layout_changed": false,
     "cover_footer_scope": "Only opening nonphotographic staff-free two-line cover geometry outside the ordinary title/credit regions. Existing literal is retained without claiming a person or role; three strong original-PDF rereads gate refinement, with fixed .3 crop padding and scales1/2/4. Service-only reviewCredits evidence is unchanged.",
     "title_source_caption_app_commit": "f5d79deaaa9e75715024edb37deadcdbdb6d0909",
     "title_source_caption_page_layout_changed": false,
-    "title_source_caption_scope": "Only first-page nonphotographic staff-header geometry with a unique nearby generic source caption and unambiguous title owner. Three strong identical original-PDF reads at fixed .3 padding/scales1/2/4 establish literal correction. Shared competing-heading guard also gates the bounded .35 heading-height overlap exception. Other words, roles, identifiers and later-page behavior remain guarded."
+    "title_source_caption_scope": "Only first-page nonphotographic staff-header geometry with a unique nearby generic source caption and unambiguous title owner. Three strong identical original-PDF reads at fixed tight-heading padding (max4px or .1 line height)/scales1/2/4 establish literal correction. Shared competing-heading guard also gates the bounded .35 heading-height overlap exception. Other words, roles, identifiers and later-page behavior remain guarded.",
+    "title_source_caption_tight_crop_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6"
   }
 }

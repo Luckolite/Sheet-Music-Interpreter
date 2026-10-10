@@ -124,6 +124,18 @@ public class NearbySourceCaptionTest {
     }
 
     @Test
+    public void adjacentConfidenceBoundaryKeepsCaptionLiteralGuard() {
+        var p = page(RAW);
+        var readings = List.of(READ, READ, READ);
+        assertEquals(p.lines(), merge(p, readings, List.of(Math.nextDown(.95f), .99f, .99f)));
+        var accepted = merge(p, readings, List.of(.95f, .99f, .99f));
+        assertEquals(READ, accepted.get(1).text());
+        assertEquals(
+                "Moorland Echoes Suite from the Motion Picture",
+                detect(withLines(p, accepted)).title());
+    }
+
+    @Test
     public void missingNullBlankOrMultilineEvidenceRejected() {
         var p = page(RAW);
         assertEquals(p.lines(), merge(p, null, null));
