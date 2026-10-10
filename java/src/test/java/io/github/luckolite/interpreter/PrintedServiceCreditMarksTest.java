@@ -220,4 +220,53 @@ public class PrintedServiceCreditMarksTest {
         w.set(1, line("by", 1378, 302, Float.POSITIVE_INFINITY, 340));
         assertTrue(PrintedServiceCreditMarks.candidates(page(CREDIT), w).isEmpty());
     }
+
+    @Test
+    public void forgedValueOnTheExactLineCannotOverrideThePrintedContributor() {
+        var p =
+                new ScoreCreditsDetector.Page(
+                        1800,
+                        2500,
+                        500,
+                        page(CREDIT).lines(),
+                        false,
+                        false,
+                        List.of(new ScoreCreditsDetector.ReviewCredit(CREDIT, "Different Person")));
+        var result = ScoreCreditsDetector.detect("Paper Lantern Waltz", List.of(p), Set.of());
+        assertEquals("f NacreNotation", result.arranger());
+        assertFalse(result.unclassifiedCredits().contains("Different Person"));
+    }
+
+    @Test
+    public void staleWordPayloadCannotRequestPixelsForADifferentFinalLine() {
+        var p = page(line("Transcribed by f Different Person", 1180, 300, 1690, 344));
+        assertSame(
+                p,
+                PrintedServiceCreditMarks.retain(
+                        p,
+                        words(),
+                        (l, t, w, h) -> {
+                            fail("stale words must be rejected before pixel access");
+                            return wave(w, h);
+                        }));
+    }
+
+    @Test
+    public void literalPayloadAllowsHorizontalSpaceAndCaseOnly() {
+        assertTrue(
+                PrintedServiceCreditMarks.isLiteralPayload(
+                        line("Transcription\tby\u00a0f Nacre   Notation", 1180, 300, 1690, 344),
+                        "NACRE Notation"));
+        assertTrue(PrintedServiceCreditMarks.isLiteralPayload(CREDIT, "f NacreNotation"));
+        assertFalse(PrintedServiceCreditMarks.isLiteralPayload(CREDIT, "Nacre"));
+        assertFalse(PrintedServiceCreditMarks.isLiteralPayload(CREDIT, " NacreNotation"));
+        assertFalse(
+                PrintedServiceCreditMarks.isLiteralPayload(
+                        line("Transcribed by extra f NacreNotation", 1180, 300, 1690, 344),
+                        "NacreNotation"));
+        assertFalse(
+                PrintedServiceCreditMarks.isLiteralPayload(
+                        line("Transcribed by\nNacreNotation", 1180, 300, 1690, 344),
+                        "NacreNotation"));
+    }
 }

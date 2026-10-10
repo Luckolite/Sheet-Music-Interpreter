@@ -2007,15 +2007,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "ec42405d450b922428c03137ab6d82c6accf29371c88f001ef9f338db63c208e",
-      "source_normalized_sha256": "ec42405d450b922428c03137ab6d82c6accf29371c88f001ef9f338db63c208e",
+      "source_sha256": "7800c4f814d5071b81e47b9bf7a4ff711d61664bdae29fe73abfce042a09f102",
+      "source_normalized_sha256": "7800c4f814d5071b81e47b9bf7a4ff711d61664bdae29fe73abfce042a09f102",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
       "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "afd4a2144f21c9fe9e7f030e33000e4727788241a0a6aafac53f0f0afa381a2c",
+      "standalone_sha256": "711d8b6534657e749d66200d73ca169ff6120ed826aac586b6692916993aa13f",
       "license": "Apache-2.0",
-      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain.",
-      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence.",
+      "reviewed_app_commit": "522d9990341ac6ffcb12f5475c5d885ccd4388c3"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2151,15 +2151,15 @@
     },
     "PrintedServiceCreditMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/PrintedServiceCreditMarks.java",
-      "source_sha256": "dea26089582210d57ad6a1e6c9bf8f56fb579a353586533a9488bea6b2e2b1aa",
-      "source_normalized_sha256": "dea26089582210d57ad6a1e6c9bf8f56fb579a353586533a9488bea6b2e2b1aa",
+      "source_sha256": "eab05c30ec9d9ef732667bfbff6426580aff33093a8c785e3cde222c62626b88",
+      "source_normalized_sha256": "eab05c30ec9d9ef732667bfbff6426580aff33093a8c785e3cde222c62626b88",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
       "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedServiceCreditMarks.java",
-      "standalone_sha256": "baa8d94bb8735222de10a08312d98830f6dfde86339415d1276cac5450ffdab0",
+      "standalone_sha256": "bc8e38316068b13c33bf193441940330a3b5e441639efc6fe2be571296a70b2d",
       "license": "Apache-2.0",
-      "review_note": "Pure Java original word-box gap selection for explicit transcription bylines, with bounded original-raster access and detached-waveform proof. It preserves literal OCR lines and genuine initials, and retains a typed review payload without identifying a brand or inferring a role.",
-      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+      "review_note": "Pure Java original word-box gap selection for explicit transcription bylines, with bounded original-raster access and detached-waveform proof. It preserves literal OCR lines and genuine initials, and retains a typed review payload without identifying a brand or inferring a role. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence.",
+      "reviewed_app_commit": "522d9990341ac6ffcb12f5475c5d885ccd4388c3"
     },
     "DetachedWaveformCreditMark.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/DetachedWaveformCreditMark.java",
@@ -4711,7 +4711,7 @@
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
     "source_adaptation": "Fifteen production classes and sixteen original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 104,
+    "synthetic_tests": 107,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4732,6 +4732,7 @@
     "optional_page_evidence_layout": "reviewCredits: [{line: {text,left,top,right,bottom}, value}]. Missing old field defaults empty. Original OCR lines remain unchanged; writers and replays preserve typed review evidence.",
     "retained_provider_scope": "Repeated physically separate header titles; three strong original-source photographic heading readings; pixel-verified detached service marks. No filename completion, person dictionary, role inferred from a portrait, new model, or generic digit-guard relaxation.",
     "adapter_source_sha256": "27830e8c48053317950f85e159c76dfb44a4fdc35ab40f59f92fa7d5d2794aea",
-    "desktop_boundary": "The explicit desktop music decoder and audio source selections do not consume this bibliography-only Page API. Guide/audio/recognition record layouts remain unchanged. The required matching Hub/page-worker build, smoke and rollout remain pending integration verification."
+    "desktop_boundary": "The explicit desktop music decoder and audio source selections do not consume this bibliography-only Page API. Guide/audio/recognition record layouts remain unchanged. The required matching Hub/page-worker build, smoke and rollout remain pending integration verification.",
+    "literal_service_binding_app_commit": "522d9990341ac6ffcb12f5475c5d885ccd4388c3"
   }
 }

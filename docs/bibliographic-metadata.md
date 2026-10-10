@@ -37,7 +37,10 @@ the printed “by” and payload words. It uses bounded gaps from the caller's w
 boxes. Connected letters and genuine initials do not establish that evidence.
 The original OCR line stays unchanged; `Page.reviewCredits` carries a separate
 `ReviewCredit(line, value)` for the detector. The detector binds it to that exact
-line and keeps the payload unresolved instead of assigning a contributor role.
+line and requires a literal payload suffix after the transcription label and at
+most one mark token. Case and horizontal whitespace may differ; changed names,
+partial payloads and stale word readings cannot authorize review evidence. It
+keeps the payload unresolved instead of assigning a contributor role.
 
 The four-, five- and six-argument `Page` constructors remain available and default
 to an empty review list. Callers serializing pages must also preserve the optional

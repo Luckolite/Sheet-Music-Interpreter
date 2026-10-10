@@ -5,6 +5,7 @@ package io.github.luckolite.interpreter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 /** Bind a detached service mark to existing word boxes without rewriting OCR text. */
@@ -26,6 +27,22 @@ public final class PrintedServiceCreditMarks {
             int top,
             int right,
             int bottom) {}
+
+    /** Evidence may retain only an observed suffix, after at most one detached mark token. */
+    public static boolean isLiteralPayload(ScoreCreditsDetector.Line line, String value) {
+        if (line == null
+                || line.text() == null
+                || value == null
+                || value.length() > 120
+                || Pattern.compile("\\R").matcher(line.text() + value).find()
+                || value.codePoints().filter(Character::isLetter).count() < 3) return false;
+        String payload = value.replaceAll("\\h+", " ").toLowerCase(Locale.ROOT);
+        if (payload.isEmpty() || !payload.strip().equals(payload)) return false;
+        String printed = line.text().replaceAll("\\h+", " ").strip().toLowerCase(Locale.ROOT);
+        if (!printed.endsWith(" " + payload)) return false;
+        String prefix = printed.substring(0, printed.length() - payload.length() - 1);
+        return prefix.matches("(?:transcribed|transcription) by(?: [^ ]+)?");
+    }
 
     /** At most two payload boundaries per explicit byline; no contributor spelling is guessed. */
     public static List<Candidate> candidates(
@@ -77,8 +94,7 @@ public final class PrintedServiceCreditMarks {
                                                 .map(ScoreCreditsDetector.Line::text)
                                                 .toList())
                                 .strip();
-                if (value.length() > 120
-                        || value.codePoints().filter(Character::isLetter).count() < 3) continue;
+                if (!isLiteralPayload(line, value)) continue;
                 result.add(new Candidate(line, value, left, top, right, bottom));
             }
         }

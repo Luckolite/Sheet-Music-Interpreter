@@ -3117,9 +3117,9 @@ public final class ScoreCreditsDetector {
                         page.reviewCredits.stream()
                                 .filter(
                                         e ->
-                                                e.line.equals(line)
-                                                        && e.value != null
-                                                        && !e.value.isBlank()
+                                                line.equals(e.line)
+                                                        && PrintedServiceCreditMarks
+                                                                .isLiteralPayload(line, e.value)
                                                         && credit(line.text) != null
                                                         && inCreditHeader(page, line))
                                 .findFirst()
