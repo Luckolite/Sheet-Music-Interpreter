@@ -82,6 +82,8 @@ or bundled in this repository's Apache-2.0 source/model artifacts.
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`
 from Java. See [API examples and output format](docs/integration.md).
+The Java [bibliographic metadata API](docs/bibliographic-metadata.md) extracts
+titles and contributor credits from caller-supplied OCR text and page geometry.
 An optional [native Java decoding service](docs/native-decoder.md) supports
 bounded, source-matched geometry and analysis requests from local workers.
 The Python reader runs bundled-model OCR automatically on images and scanned PDFs.

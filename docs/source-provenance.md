@@ -12,6 +12,19 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Bibliographic metadata has twelve pure-Java counterparts with complete
+executable-token parity after package adaptation and AOSP formatting. The port
+includes heading and credit evidence, original-pixel word spacing, embedded-text
+geometry, crop caching and recognition-band coordinates. Original fictional
+regressions cover title envelopes, section and direction scope, contributor
+boundaries, review retention, audio-access badges and tracked lettering.
+Source-work caption controls cover contextual composer inference while retaining
+unresolved dates and independently printed arranger roles. Android
+PDF rendering, bitmap ownership, ML Kit calls and recognizer-only inference remain
+platform adapters; their source crop and consensus boundaries are reviewed
+separately. Models, dependencies and musical/native record layouts are unchanged.
+See the [bibliographic API](bibliographic-metadata.md).
+
 Guitar-tab triplets own onset columns, including chords, muted strums and rests;
 literal rests use the same supported tuplet ratios as notes. Established rhythm
 letters retain duration ownership, compound suffix vibrato belongs to the final

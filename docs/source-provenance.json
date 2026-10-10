@@ -2004,6 +2004,150 @@
       "standalone_sha256": "0c170aa3260201e8d91db7e3cbb5d9d25878675ca22b2d746ab4f21acd771ee7",
       "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
       "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged."
+    },
+    "ScoreCreditsDetector.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
+      "source_sha256": "ef7678e2050abb732241cf56694d7acbfc41e24dc595e9620439fe2088178b1c",
+      "source_normalized_sha256": "ef7678e2050abb732241cf56694d7acbfc41e24dc595e9620439fe2088178b1c",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
+      "standalone_sha256": "287edf8293e5498528e0308e07da5bb327be0acdab745042bb2f0e31187daf47",
+      "license": "Apache-2.0",
+      "review_note": "Bibliographic text and original page geometry select document headings, explicit contributor roles and unresolved names. Contained fragments, broad title envelopes, section marks and spatial access badges retain independent title/credit evidence. Boundary-letter consensus and tracked word spacing preserve literal recognized characters. A dated header name may infer Composer from a separately located centered source-work caption; dates alone and publisher text do not establish the role.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "CreditOcrIdentifierGuard.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
+      "source_sha256": "e423418be41d2b02066f1291bc373d42ad5c55f27052c969719dea2b5b0ee546",
+      "source_normalized_sha256": "ea689c2fba8fd700e35fffec984733aa54dd3cbc7966d02d5dfdc985e197fb3a",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CreditOcrIdentifierGuard.java",
+      "standalone_sha256": "72db0ba320a53afa46788fba89537be79210e8c18c0c096f1c9ca54eff5a6b0b",
+      "license": "Apache-2.0",
+      "review_note": "Keep account, URL and identifier syntax out of person-name inference.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "PrintedCoverTitleEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/PrintedCoverTitleEvidence.java",
+      "source_sha256": "4987c174bd2cf7fa79c9a24f33d333da986dcf6c78d7a2158244a75729d048bc",
+      "source_normalized_sha256": "ec580f78af540e7a811a9b2f3f0baef01641b745347e8d55b2b242f3f9d52a41",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedCoverTitleEvidence.java",
+      "standalone_sha256": "1683eb327041f3337ee2de95f29ddb5c0e22261b0f251a925a2765ba96ec7bf9",
+      "license": "Apache-2.0",
+      "review_note": "Original cover projections locate printed title ink without filenames or expected metadata.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "CoverTitlePunctuationEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CoverTitlePunctuationEvidence.java",
+      "source_sha256": "6f0b220468f3fa704285038797afca4ac7b191f3ae2e7c0a0a02bfe7cbfc28f1",
+      "source_normalized_sha256": "e0110be49317646789a8d551eec2209159134219bc296610b96e8ea70d5edf59",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CoverTitlePunctuationEvidence.java",
+      "standalone_sha256": "fc068cd97d60c912a0ce1bd2610dd7c5c755a764f567e69ee642b85ccf67a81a",
+      "license": "Apache-2.0",
+      "review_note": "Original raster evidence corroborates punctuation without replacing unrelated recognized text.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "CoverTitleRegions.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CoverTitleRegions.java",
+      "source_sha256": "d2d6fb16e014646ba33183b37f4e4158ad59fa967a3f8d5b9d0dce4363c7d045",
+      "source_normalized_sha256": "97f07d0f0aad29f4fc673afc8affa9a200732cc8108c2b8cf70028a338415bc0",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CoverTitleRegions.java",
+      "standalone_sha256": "2cc73fee855d90f727ee24e02acafb25e76d930aac089759a05a394b84434595",
+      "license": "Apache-2.0",
+      "review_note": "Bounded geometric cover regions retain independently located header and credit evidence.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "BibliographicCoverSceneEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/BibliographicCoverSceneEvidence.java",
+      "source_sha256": "e999c4472cabd5a907a8d97a67a767ed8568a78b1a33f60444b91249bff0527d",
+      "source_normalized_sha256": "4732be7f4fde133577f497ae7af58e27436bbf22d0232f7a6ab30f0faeaaadf0",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BibliographicCoverSceneEvidence.java",
+      "standalone_sha256": "f006b4a7077b46e443a0013abe696910a18e8cac6a055d9a475f82cc051e9203",
+      "license": "Apache-2.0",
+      "review_note": "Conservative landscape photographic-cover evidence; unstable staff candidates require independent absence at two smaller scales.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "EmbeddedCreditColumns.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/EmbeddedCreditColumns.java",
+      "source_sha256": "1790f42cba0ad4745be203308e87f3e587f09ffc0d7362119bed2c3b276a1243",
+      "source_normalized_sha256": "d066de8dd0b09cd990090d2b88efb4e0864a8aa7d7601074d96c2076bf3da9cb",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/EmbeddedCreditColumns.java",
+      "standalone_sha256": "652a8bdf265bc380e2cf5dd5c888ab6a7cbfce24f3b0206fea6a370c5660c904",
+      "license": "Apache-2.0",
+      "review_note": "Located embedded credit columns require role, name, geometry and original crop corroboration.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "EmbeddedTitleContinuations.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/EmbeddedTitleContinuations.java",
+      "source_sha256": "86720016d13ff0e41f7c831e2679c0457c73929aaab9871ef5fcc29adfa1a3ba",
+      "source_normalized_sha256": "4416fa8d8085537270b940e867c30a0210a3758a1170b9f19b92548da81da5f6",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/EmbeddedTitleContinuations.java",
+      "standalone_sha256": "d5d7cf8108e709aa9cc1c9c48817506acc3de621a2dce2c35dd5f13f5d4642e1",
+      "license": "Apache-2.0",
+      "review_note": "Located embedded title continuations restore independently printed overlapping fragments after OCR merges.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "ExactCoverCropCache.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/ExactCoverCropCache.java",
+      "source_sha256": "875ef3df6f424fae9cd6cd5e0567d20c3dc0b019e1e4461895df029fc1beb9d1",
+      "source_normalized_sha256": "875ef3df6f424fae9cd6cd5e0567d20c3dc0b019e1e4461895df029fc1beb9d1",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExactCoverCropCache.java",
+      "standalone_sha256": "8cbf9f953c98201027edb0b00e62cc0045be2986b67089ef418bfa545ee00e35",
+      "license": "Apache-2.0",
+      "review_note": "Invocation-owned exact crop reuse preserves pixel bounds and original recognition results.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "FullPageRecognitionBands.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/FullPageRecognitionBands.java",
+      "source_sha256": "ef036c8468a1f85559e964fdc1d3d614d128567992e2c5beef96bf022ade43b7",
+      "source_normalized_sha256": "7021cf8cf46edcd08b6ed8051bbd33939387cc80f4a9f24e7fd5f377639b4802",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FullPageRecognitionBands.java",
+      "standalone_sha256": "69663b43201cacf4a73567561c98ec6694c9cbfc2288766e09c4734dd3e322b7",
+      "license": "Apache-2.0",
+      "review_note": "Two overlapping original-pixel bands preserve coordinates when the platform adapter explicitly handles a full-page timeout.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "HeadingCropEdgeEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/HeadingCropEdgeEvidence.java",
+      "source_sha256": "87c623475558a531b6137fa96f5ab33137047a4a4556661ebcff3593d657a59a",
+      "source_normalized_sha256": "87c623475558a531b6137fa96f5ab33137047a4a4556661ebcff3593d657a59a",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HeadingCropEdgeEvidence.java",
+      "standalone_sha256": "d6fa6366ac5e9af3ebfc2e753f02f9bb9af217609e8cb97a93e8329f16d6f77a",
+      "license": "Apache-2.0",
+      "review_note": "Horizontal crop widening requires independent ink outside the existing text box.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "TrackedHeadingWordSpaces.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/TrackedHeadingWordSpaces.java",
+      "source_sha256": "0617073e4269d1944b8aa04c668eb6eef4ec5a2659d898b751962edaa1385bce",
+      "source_normalized_sha256": "0617073e4269d1944b8aa04c668eb6eef4ec5a2659d898b751962edaa1385bce",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TrackedHeadingWordSpaces.java",
+      "standalone_sha256": "9c61be1fb5147538ce77c1b3ebb1116e7659ca4d5bf75046822bbfbd942f8ab4",
+      "license": "Apache-2.0",
+      "review_note": "Two ink thresholds must agree on glyph count and gap classification; only whitespace may change. Ambiguous polarity, glyph counts or gaps retain the original string.",
+      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
     }
   },
   "interpreter_speedup_review": {
@@ -4527,5 +4671,24 @@
     "decision_change": "In both existing golden corpora, only fixture253 changes: its deliberately removed middle remains disconnected despite staff rules and noise. All other golden decisions remain unchanged.",
     "scope": "Original generated raw pixels/model masks and existing synthetic corpora; no score-derived fixtures, private guides, logs, models or song exceptions.",
     "performance": "Correctness repair. No speed, heat or device-performance claim."
+  },
+  "bibliographic_metadata_review": {
+    "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
+    "source_adaptation": "Twelve production classes and twelve original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
+    "synthetic_tests": 62,
+    "platform_adapters_reviewed": [
+      "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+      "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
+      "app/src/main/java/com/musicsheets/app/importer/LocatedCoverPunctuationScanner.java",
+      "app/src/main/java/com/musicsheets/app/pdf/BibliographicPdfCrop.java"
+    ],
+    "platform_boundary": "Android retains PDF/bitmap lifetimes, provider calls, original-PDF crops at bounded scales, caller-owned metadata writes and timeout handling. These adapters are not copied into the standalone Java API.",
+    "resource_review": "Original crop/render caps and conditional routing remain bounded. Bitmap ownership is released in finally blocks; heading spacing reuses an already rendered page. Explicit timeout fallback retains original pixel coordinates without extending the provider deadline.",
+    "weights_changed": false,
+    "dependencies_changed": false,
+    "cache_or_worker_record_layout_changed": false,
+    "fixture_provenance": "Original fictional text, geometry and synthetic ink only. No commercial score scans, private library records, device logs, credentials or signing material included.",
+    "accuracy_limit": "Synthetic regressions and source parity do not establish whole-library or arbitrary-PDF accuracy.",
+    "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
   }
 }
