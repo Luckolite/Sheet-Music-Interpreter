@@ -919,5 +919,11 @@ in progress permit admission; later reaping requires actual worker exit and
 normal owner-close return, preserving the original terminal observations and
 exceptions. The package-adapted Apache-2.0 helper and original real-thread JUnit
 regression are documented in [native tile retirement](two-lane-retirement.md).
-Generic constructors, model/inference bodies, weights and record layouts retain
-their behavior; synthetic ownership controls are not native or phone evidence.
+Constructor APIs, model/inference bodies, weights and record layouts are unchanged.
+Constructor-cleanup and merged-failure diagnostic recording now use best-effort
+suppression, preserving the original primary and later cleanup attempts. A failed
+Android LiteRT acquisition retains its untransferred holder through the portable
+partial-owner token; that adapter remains separate from standalone ONNX. Original
+synthetic controls and modeled Java resource failures are not JNI, heap-exhaustion
+or phone evidence. Desktop source selection excludes these classes, but the public
+Java JAR fingerprint changes and matching Hub/page-worker rollout is still required.

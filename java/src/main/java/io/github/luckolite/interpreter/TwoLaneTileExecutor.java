@@ -38,10 +38,49 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
     /** Admission for one native resource family; unrelated generic owners need not share it. */
     static final class Admission {
         private TwoLaneTileExecutor<?> retiring;
+        private PartialAcquisition partialAcquisitions;
+
+        /** Preallocates ownership accounting before acquiring any native resources. */
+        PartialAcquisition preparePartialAcquisition(Object owner) {
+            if (owner == null) throw new NullPointerException("owner");
+            return new PartialAcquisition(this, owner);
+        }
+
+        /**
+         * A failed factory owns resources that were never transferred to the executor. Native
+         * destruction that did not return normally cannot be retried or reported as retirement.
+         * This terminal hold intentionally blocks this family until the process restarts.
+         */
+        static final class PartialAcquisition {
+            private final Admission admission;
+            private final Object owner;
+            private PartialAcquisition next;
+            private boolean retained;
+
+            private PartialAcquisition(Admission admission, Object owner) {
+                this.admission = admission;
+                this.owner = owner;
+            }
+
+            /** Retains the original partial owner without allocating or invoking native cleanup. */
+            void holdUnconfirmed() {
+                admission.retainPartial(this);
+            }
+        }
+
+        private synchronized void retainPartial(PartialAcquisition acquisition) {
+            if (acquisition.retained) return;
+            acquisition.retained = true;
+            acquisition.next = partialAcquisitions;
+            partialAcquisitions = acquisition;
+        }
 
         /** Rejects unresolved terminal retirement without waiting for native work or closing it. */
         synchronized void requireRetirementAdmission() {
             reap();
+            if (partialAcquisitions != null)
+                throw new IllegalStateException(
+                        "Previous partial native tile acquisition has not retired");
             for (TwoLaneTileExecutor<?> cohort = retiring;
                     cohort != null;
                     cohort = cohort.nextRetiring) {
@@ -191,7 +230,7 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
             try {
                 close();
             } catch (Exception | Error cleanup) {
-                if (cleanup != failure) failure.addSuppressed(cleanup);
+                bestEffortSuppressed(failure, cleanup);
             }
             throw failure;
         } finally {
@@ -377,8 +416,17 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
 
     private static Throwable merge(Throwable primary, Throwable later) {
         if (primary == null) return later;
-        if (later != null && later != primary) primary.addSuppressed(later);
+        bestEffortSuppressed(primary, later);
         return primary;
+    }
+
+    private static void bestEffortSuppressed(Throwable primary, Throwable cleanup) {
+        if (primary == null || cleanup == null || primary == cleanup) return;
+        try {
+            primary.addSuppressed(cleanup);
+        } catch (RuntimeException | Error ignored) {
+            // Diagnostic recording must not replace the primary or stop cleanup.
+        }
     }
 
     static <T> T awaitActual(Future<T> future) throws Exception {

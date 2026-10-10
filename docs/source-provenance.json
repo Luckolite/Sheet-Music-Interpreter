@@ -1602,10 +1602,11 @@
     },
     "TwoLaneTileExecutor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
-      "source_sha256": "91f8f76e89ac675d643a05e9ca1fb30937fba024f048b49b79c446b8c9df2ae1",
-      "source_normalized_sha256": "2ff849910edec3681238a168679224daf5d41de5e16bd7b280eed25100f6ba56",
-      "reviewed_source_state": "Reviewed app944 candidate on delivered app943; exact raw and normalized hashes identify the source.",
-      "review_note": "Apache-2.0 package and AOSP-format equivalents retain legacy constructors and add explicit native-family admission. Healthy CLOSING cohorts allow admission; terminal unresolved cohorts remain strongly owned and reject acquisition until actual thread exit and normal owner-close return. Original terminal observations, primary errors and interruption are retained. Four original synthetic real-thread schedules cover the new contract; the existing 26 groups remain unchanged."
+      "source_sha256": "e263e339710c74e9659e1bbcec7da2c2498cfeb04b9b20c7fa12fdd6cd09d5ea",
+      "source_normalized_sha256": "48c47fa0b1954dce582dd23985466a327c320e8a2001b7abb02b127eb00405ec",
+      "reviewed_app_commit": "45a1a305e56b7f52c03c10774c92bd512e4c3d8a",
+      "reviewed_source_state": "Reviewed app945 partial-acquisition source at the recorded app commit; exact raw and normalized hashes identify the helper. Android TileLane acquisition is reviewed separately below.",
+      "review_note": "Apache-2.0 pure-JDK package and AOSP-format equivalent retains existing constructor APIs, serial-owner execution and cohort retirement. A preallocated partial-acquisition token strongly retains an untransferred owner after unconfirmed cleanup and rejects further native-family acquisition. Only diagnostic recording in constructor cleanup and merge becomes best effort: suppression RuntimeException/Error cannot replace the original primary or stop later cleanup. Normal distinct diagnostic order is retained. Original synthetic partial-owner, healthy, readmission and independent-family regressions contain no native runtime or private input; the Android LiteRT holder/cleanup caller is not a standalone implementation."
     },
     "DetachedStemInkBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedStemInkBand.java",
@@ -4421,5 +4422,44 @@
     "standalone_boundary": "No mapped standalone SheetInterpreterAudio writer exists; the public Python CLI/MP3 audio writer is unchanged.",
     "native_audio": "tools/native-worker/build_audio.py selects this app source. Matching Hub/native-audio packaging and paired deployment are required; this source review does not prove live deployment.",
     "private_data_included": false
+  },
+  "native_tile_partial_acquisition_review": {
+    "documentation_path": "docs/two-lane-retirement.md",
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "a4ddc0a49bca2474534879c17dc02f6ee13827c5",
+    "reviewed_app_commit": "45a1a305e56b7f52c03c10774c92bd512e4c3d8a",
+    "reviewed_source_state": "Reviewed app945 partial-acquisition source at the recorded app commit; exact hashes identify the portable helper and separate Android adapter.",
+    "helper": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+      "source_sha256": "e263e339710c74e9659e1bbcec7da2c2498cfeb04b9b20c7fa12fdd6cd09d5ea",
+      "source_normalized_sha256": "48c47fa0b1954dce582dd23985466a327c320e8a2001b7abb02b127eb00405ec",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TwoLaneTileExecutor.java",
+      "standalone_sha256": "2daf31878815fe4e6fc55105eb02ae8f3a632dfccf54d1673bfb2a8b2f8db76f",
+      "source_origin": "Original pure-JDK owner/admission implementation, Copyright 2026 Luckolite, Apache-2.0.",
+      "executable_token_parity": true,
+      "change": "Preallocated partial-owner token and terminal native-family hold; best-effort addSuppressed only in constructor cleanup and merge, preserving primary identity, ordinary diagnostic order and all existing cleanup attempts."
+    },
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "base_source_sha256": "b7ac59fe2dbaf1798144a86353a153cf1ea4898c320dd8c1e3853212fe5b5a7c",
+      "source_sha256": "2dc581c2d1c1d04b495665e4ed2add7a6c46bf2a45b01b083df650049485b756",
+      "source_normalized_sha256": "2dc581c2d1c1d04b495665e4ed2add7a6c46bf2a45b01b083df650049485b756",
+      "change": "TileLane holder, Java input and partial token precede LiteRT Environment/model/buffer acquisition. Failed acquisition attempts returned-buffer/model/environment cleanup on its creator thread, publishing the terminal hold before best-effort diagnostic recording. Inference, stitching, packing and successful close remain unchanged.",
+      "standalone_boundary": "Android/LiteRT resources are not imported into standalone Java or ONNX. Only the pure-JDK token and diagnostic policy have a portable counterpart."
+    },
+    "original_regression": {
+      "path": "java/src/test/java/io/github/luckolite/interpreter/TwoLanePartialAcquisitionControlsTest.java",
+      "sha256": "6bc8b1f61c11094c27ef296142c1673ea60dadee1a05d00eb06c89b53281f243",
+      "scope": "Four original synthetic real-JDK-thread groups cover strong/idempotent partial-token retention after joined factory failure, rejection before fresh factories, healthy no-hold/readmission, independent families and ordinary startup/cleanup primary identity and diagnostic order. No native/model/score input is included."
+    },
+    "evidence_boundary": "Actual full Java TileLane/helper host controls use explicit Android/LiteRT resource providers and a factory AssertionError with modeled buffer/model/environment cleanup failures. They test Java primary identity, cleanup attempts, worker joins and admission; these are not JNI or real native-destructor executions.",
+    "diagnostic_failure_limit": "Best-effort suppression-allocation handling is source-reviewed. Heap exhaustion, hidden native-factory allocation failure and addSuppressed-allocation failure were not executed. A native close that throws is never claimed retired or retried; a held partial acquisition remains terminal until process restart.",
+    "native_selection": "The explicit desktop decoder and native-audio source selections exclude both changed classes. The existing ONNX adapter and Python execution policy are unchanged; no desktop token transplant is required.",
+    "standalone_build": "The standalone Java builder fingerprints and compiles all main Java sources, so the portable helper changes its JAR/build fingerprint even without a current standalone production caller.",
+    "paired_rollout": "The matching Hub1.6.140/page-worker verification and rollout remain required by integration policy. Source applicability alone is not packaged capability, live deployment or smoke evidence.",
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "privacy": "Only reviewed Apache-2.0 portable source and original synthetic owner regressions are published; no Android service implementation, private score/input/provider, library, device log or signing material."
   }
 }
