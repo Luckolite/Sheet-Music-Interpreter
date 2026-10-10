@@ -927,3 +927,21 @@ partial-owner token; that adapter remains separate from standalone ONNX. Origina
 synthetic controls and modeled Java resource failures are not JNI, heap-exhaustion
 or phone evidence. Desktop source selection excludes these classes, but the public
 Java JAR fingerprint changes and matching Hub/page-worker rollout is still required.
+
+## Typed restart-required partial ownership
+
+The Apache-2.0 `TwoLaneTileExecutor` distinguishes permanent retained partial
+acquisition from returned owners that can still drain. A pure query and typed
+`IllegalStateException` subtype expose that existing global admission outcome;
+generic constructors, healthy owners, independent families and retirement
+semantics are preserved. The original four-schedule JUnit regression uses
+synthetic owners and real JDK threads. See
+[native tile retirement](two-lane-retirement.md#distinguishing-restart-required-acquisition).
+
+The Android analyzer, guide/viewer, converter, indexer and activity propagate the
+reason through app-specific retry and user-guidance paths; they are not copied
+into standalone Java or its ONNX adapter. Cached output and healthy loaded
+analyzers remain distinct from new optical admission. This source boundary does
+not establish Android UX, JNI failure, model accuracy or performance results.
+The portable source changes the standalone Java build fingerprint, so the
+ordinary public and matched Hub/page-worker release gates remain required.

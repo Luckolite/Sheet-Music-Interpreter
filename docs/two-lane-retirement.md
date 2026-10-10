@@ -79,3 +79,33 @@ classes. The standalone Java builder still fingerprints all main sources, so its
 JAR identity changes with the portable helper. Matching Hub1.6.140/page-worker
 gates, packaged capability checks and verified paired rollout remain required;
 this source review does not establish live deployment or packaged smoke results.
+
+## Distinguishing restart-required acquisition
+
+`Admission.restartRequired()` identifies a retained partial-acquisition hold.
+It is a non-mutating query: it does not wait for, close, cancel or retry owners.
+New acquisition under that hold throws `Admission.RestartRequiredException`, an
+`IllegalStateException` subtype, with the existing diagnostic text. The hold
+remains terminal until process restart; reopening a viewer does not retire it.
+
+This reason differs from returned cohorts whose workers can still drain.
+`restartRequired()` remains false for ordinary `CLOSING` and returned unresolved
+cohorts; `requireRetirementAdmission()` still applies their existing admission
+and reaping rules. A false query does not mean all resources have retired.
+Previously admitted healthy owners remain usable, and independent families are
+unaffected.
+
+`TwoLaneRestartAdmissionControlsTest` uses four original real-JDK-thread
+schedules with synthetic owners: empty/healthy admission, permanent partial
+rejection before factories while existing work completes, concurrent healthy
+closing, and returned-unjoined retirement followed by actual drain/readmission.
+It is discovered by the ordinary Java test runner and contains no models,
+Android resources, native destruction, private inputs or allocation-failure test.
+
+Android failure propagation and restart guidance remain app orchestration.
+They distinguish new optical work from healthy loaded analyzers and cached
+results, preserve ordinary recoverable retries and report terminal partial
+ownership without killing the process. The standalone helper contains only the
+portable typed reason and query. No model, inference, record-layout or audio
+algorithm changes are part of this port. Public build/provenance checks and
+matched Hub/page-worker qualification remain separate release gates.

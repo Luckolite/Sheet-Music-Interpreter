@@ -1602,11 +1602,11 @@
     },
     "TwoLaneTileExecutor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
-      "source_sha256": "e263e339710c74e9659e1bbcec7da2c2498cfeb04b9b20c7fa12fdd6cd09d5ea",
-      "source_normalized_sha256": "48c47fa0b1954dce582dd23985466a327c320e8a2001b7abb02b127eb00405ec",
-      "reviewed_app_commit": "45a1a305e56b7f52c03c10774c92bd512e4c3d8a",
-      "reviewed_source_state": "Reviewed app945 partial-acquisition source at the recorded app commit; exact raw and normalized hashes identify the helper. Android TileLane acquisition is reviewed separately below.",
-      "review_note": "Apache-2.0 pure-JDK package and AOSP-format equivalent retains existing constructor APIs, serial-owner execution and cohort retirement. A preallocated partial-acquisition token strongly retains an untransferred owner after unconfirmed cleanup and rejects further native-family acquisition. Only diagnostic recording in constructor cleanup and merge becomes best effort: suppression RuntimeException/Error cannot replace the original primary or stop later cleanup. Normal distinct diagnostic order is retained. Original synthetic partial-owner, healthy, readmission and independent-family regressions contain no native runtime or private input; the Android LiteRT holder/cleanup caller is not a standalone implementation."
+      "source_sha256": "576c6f590fa51e291e17cc5d8b0018c4e80c1fcc148c39b7a78bd84b36330356",
+      "source_normalized_sha256": "484b7d3dd1d2eb5d7b37c90ef2713abcbe718fea6692353fab6e0ec9f82fadc8",
+      "reviewed_app_commit": "d711aa5e9872c7156d1aba1015507d9700eb4416",
+      "reviewed_source_state": "Reviewed app947 restart-required partial-acquisition source at the recorded app commit; exact raw and normalized hashes identify the portable helper. Android caller propagation remains separately reviewed app orchestration.",
+      "review_note": "Apache-2.0 pure-JDK package and AOSP-format equivalent retains existing constructor APIs, serial-owner execution and cohort retirement. A preallocated partial-acquisition token strongly retains an untransferred owner after unconfirmed cleanup and rejects further native-family acquisition. Only diagnostic recording in constructor cleanup and merge becomes best effort: suppression RuntimeException/Error cannot replace the original primary or stop later cleanup. Normal distinct diagnostic order is retained. Original synthetic partial-owner, healthy, readmission and independent-family regressions contain no native runtime or private input; the Android LiteRT holder/cleanup caller is not a standalone implementation. A non-mutating restartRequired query and typed RestartRequiredException distinguish the retained partial-acquisition hold from returned cohorts that can still drain and be readmitted. Existing healthy owners and independent families remain usable; no native cleanup or process restart is attempted by the query. Four original synthetic real-thread schedules cover this distinction."
     },
     "DetachedStemInkBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedStemInkBand.java",
@@ -4461,5 +4461,46 @@
     "dependencies_changed": false,
     "record_layout_changed": false,
     "privacy": "Only reviewed Apache-2.0 portable source and original synthetic owner regressions are published; no Android service implementation, private score/input/provider, library, device log or signing material."
+  },
+  "native_tile_restart_required_review": {
+    "documentation_path": "docs/two-lane-retirement.md",
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "96557327af009bcae91e5de5b729a62c7670f6eb",
+    "reviewed_app_commit": "d711aa5e9872c7156d1aba1015507d9700eb4416",
+    "reviewed_source_state": "Reviewed app947 portable restart-required reason and query on delivered app946; earlier retirement and partial-acquisition reviews retain their historical commits and hashes.",
+    "helper": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TwoLaneTileExecutor.java",
+      "source_sha256": "576c6f590fa51e291e17cc5d8b0018c4e80c1fcc148c39b7a78bd84b36330356",
+      "source_normalized_sha256": "484b7d3dd1d2eb5d7b37c90ef2713abcbe718fea6692353fab6e0ec9f82fadc8",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TwoLaneTileExecutor.java",
+      "standalone_sha256": "b85c547e97573eb6a05a4577a0d4a40d31942b7532418a1204151dc49bccf0a3",
+      "source_origin": "Original pure-JDK owner/admission implementation, Copyright 2026 Luckolite, Apache-2.0.",
+      "executable_token_parity": true,
+      "change": "Admission.restartRequired is a synchronized, non-mutating retained-partial query. Only acquisition under that permanent hold throws the new IllegalStateException subtype; ordinary returned-cohort admission and reaping, constructor APIs, resource ownership and diagnostic precedence remain unchanged."
+    },
+    "android_callers": [
+      "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "app/src/main/java/com/musicsheets/app/pdf/GuidePageWork.java",
+      "app/src/main/java/com/musicsheets/app/pdf/LockedScoreIndexer.java",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetConverter.java",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetView.java",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetReaderFailure.java",
+      "app/src/main/java/com/musicsheets/app/SongActivity.java"
+    ],
+    "android_boundary": "The analyzer, guide/viewer, converter, indexer and activity propagate the typed terminal reason through app-specific retries and restart guidance. Cached output and healthy loaded analyzers remain usable; ordinary recoverable retries remain distinct. These Android callers and their instrumented fixtures are not standalone implementations and are not copied into Java or ONNX.",
+    "original_regression": {
+      "path": "java/src/test/java/io/github/luckolite/interpreter/TwoLaneRestartAdmissionControlsTest.java",
+      "sha256": "3062abcce51c03bc61f12bdee8f278a1674921e71fec6b1ffd44f10340f324b5",
+      "scope": "Four original synthetic real-JDK-thread schedules cover empty/healthy admission, permanent partial rejection before factories while admitted work completes, healthy closing, and returned-unjoined retirement followed by actual drain/readmission. No Android, native/model, score, device or allocation-failure input is included."
+    },
+    "evidence_boundary": "The portable controls exercise Java ownership and admission. They do not establish JNI or native-destructor failure, heap exhaustion, Android UX, score accuracy, phone elapsed time or thermal results.",
+    "native_selection": "The explicit desktop decoder and native-audio source selections exclude this helper and the Android callers; the existing ONNX adapter and Python execution policy are unchanged.",
+    "standalone_build": "The standalone builder fingerprints and compiles all main Java sources, so the portable helper changes the JAR/build fingerprint even without a current standalone production caller.",
+    "paired_rollout": "The matching Hub1.6.141/page-worker build, verification and deployment remain required by integration policy. This source review is not packaged capability, live deployment or smoke evidence.",
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "audio_algorithm_changed": false,
+    "privacy": "Only reviewed Apache-2.0 portable source and original synthetic owner regressions are published; no Android implementation, private source score, library, device log, signing material or app history is included."
   }
 }

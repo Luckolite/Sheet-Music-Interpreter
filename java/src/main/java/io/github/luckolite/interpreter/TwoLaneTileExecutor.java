@@ -75,12 +75,21 @@ final class TwoLaneTileExecutor<L extends AutoCloseable> implements AutoCloseabl
             partialAcquisitions = acquisition;
         }
 
+        /** Permanent partial ownership differs from returned owners that may still drain. */
+        synchronized boolean restartRequired() {
+            return partialAcquisitions != null;
+        }
+
+        static final class RestartRequiredException extends IllegalStateException {
+            private RestartRequiredException() {
+                super("Previous partial native tile acquisition has not retired");
+            }
+        }
+
         /** Rejects unresolved terminal retirement without waiting for native work or closing it. */
         synchronized void requireRetirementAdmission() {
             reap();
-            if (partialAcquisitions != null)
-                throw new IllegalStateException(
-                        "Previous partial native tile acquisition has not retired");
+            if (partialAcquisitions != null) throw new RestartRequiredException();
             for (TwoLaneTileExecutor<?> cohort = retiring;
                     cohort != null;
                     cohort = cohort.nextRetiring) {
