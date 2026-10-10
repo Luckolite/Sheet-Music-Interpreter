@@ -31,6 +31,30 @@ context, including a smaller, centered “from …” caption beneath the title.
 Dates alone do not establish the role. Publisher text, distant side text and
 captions below the notation do not supply that source-work evidence.
 
+`PrintedServiceCreditMarks.retain(page, words, pixels)` can retain a transcription
+service for review when original pixels prove a detached waveform mark between
+the printed “by” and payload words. It uses bounded gaps from the caller's word
+boxes. Connected letters and genuine initials do not establish that evidence.
+The original OCR line stays unchanged; `Page.reviewCredits` carries a separate
+`ReviewCredit(line, value)` for the detector. The detector binds it to that exact
+line and keeps the payload unresolved instead of assigning a contributor role.
+
+The four-, five- and six-argument `Page` constructors remain available and default
+to an empty review list. Callers serializing pages must also preserve the optional
+`reviewCredits` array, whose entries contain `line` (text and four coordinates)
+and `value`. Old inputs with no array mean an empty list. Do not drop this evidence
+when replaying pages or storing intermediate metadata inputs.
+
+Header context can be corroborated by two separately printed copies of a title,
+even when an artist name precedes the title in the import label. Duplicate boxes
+over the same ink do not supply a second copy. For photographic covers,
+`LocatedCoverHeadingEvidence.fromOriginal` accepts three agreeing strong readings
+of an already located original-PDF heading, retaining its literal independently
+of the import label. Work identifiers and heading shape remain guarded. Merge
+only into the unchanged nominated line, and retain accepted source evidence
+through later fallback reads. OCR confidence is a selection threshold, not a
+calibrated probability of correctness.
+
 Title selection preserves separate printed rows inside a broad OCR envelope,
 filters duplicate contained fragments, and distinguishes staff-sized section
 captions from document headings. Direction words remain eligible when their

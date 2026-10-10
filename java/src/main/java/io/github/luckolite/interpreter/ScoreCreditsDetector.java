@@ -33,13 +33,27 @@ public final class ScoreCreditsDetector {
         }
     }
 
+    /** Printed payload beside a pixel-verified service mark; the OCR line stays unchanged. */
+    public record ReviewCredit(Line line, String value) {}
+
     public record Page(
             float width,
             float height,
             float notationTop,
             List<Line> lines,
             boolean creditsOnly,
-            boolean photographicCover) {
+            boolean photographicCover,
+            List<ReviewCredit> reviewCredits) {
+        public Page(
+                float width,
+                float height,
+                float notationTop,
+                List<Line> lines,
+                boolean creditsOnly,
+                boolean photographicCover) {
+            this(width, height, notationTop, lines, creditsOnly, photographicCover, List.of());
+        }
+
         public Page(
                 float width,
                 float height,
@@ -55,6 +69,7 @@ public final class ScoreCreditsDetector {
 
         public Page {
             lines = List.copyOf(lines);
+            reviewCredits = reviewCredits == null ? List.of() : List.copyOf(reviewCredits);
         }
     }
 
@@ -1372,8 +1387,35 @@ public final class ScoreCreditsDetector {
             String a = fold(full.text), b = fold(crop.text);
             if (editDistance(a, b) <= Math.max(a.length(), b.length()) * .3f) return false;
             if (headerHintMatches(full.text, hint)) return false;
+            if (repeatedPrintedHeader(page, full, crop, cropped)) return true;
         }
         return full == null || headerHintMatches(crop.text, hint);
+    }
+
+    /** Two separate printed copies can corroborate a centered title missed by full-page OCR. */
+    private static boolean repeatedPrintedHeader(
+            Page page, Line full, Line crop, List<Line> cropped) {
+        if (page.width <= 0
+                || crop.top > page.height * .2f
+                || crop.bottom >= page.notationTop
+                || crop.height() < page.width * .022f
+                || crop.right - crop.left < page.width * .16f
+                || Math.abs(crop.center() - page.width * .5f) > page.width * .12f
+                || Math.abs(full.center() - page.width * .5f) < page.width * .28f
+                || full.right - full.left > (crop.right - crop.left) * .4f
+                || full.height() > crop.height() * 1.25f) return false;
+        for (Line repeat : cropped) {
+            if (repeat == crop
+                    || repeat.top < crop.bottom
+                    || repeat.top - crop.bottom > crop.height() * 2
+                    || repeat.bottom >= page.notationTop
+                    || repeat.height() < page.width * .009f
+                    || repeat.height() > crop.height() * .75f
+                    || repeat.left < crop.right
+                    || !clean(repeat.text).equalsIgnoreCase(clean(crop.text))) continue;
+            return true;
+        }
+        return false;
     }
 
     private static boolean corroboratedTitleStem(Line full, Line crop, String hint) {
@@ -3071,6 +3113,22 @@ public final class ScoreCreditsDetector {
             Set<Line> claimed = new LinkedHashSet<>(), scopedClaimed = new LinkedHashSet<>();
             for (Line line : lines) {
                 if (scopedClaimed.contains(line)) continue;
+                ReviewCredit service =
+                        page.reviewCredits.stream()
+                                .filter(
+                                        e ->
+                                                e.line.equals(line)
+                                                        && e.value != null
+                                                        && !e.value.isBlank()
+                                                        && credit(line.text) != null
+                                                        && inCreditHeader(page, line))
+                                .findFirst()
+                                .orElse(null);
+                if (service != null) {
+                    other.add(clean(service.value));
+                    claimed.add(line);
+                    continue;
+                }
                 String recordingPerformer = recordingPerformer(page, line, lines);
                 if (!recordingPerformer.isEmpty()) {
                     addNames(artists, creditNames(recordingPerformer));

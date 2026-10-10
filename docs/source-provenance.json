@@ -2007,15 +2007,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "21d3655690fee9443b33fb86df6e20ab1e9e4c59b0518232d5fdd46e2e33a890",
-      "source_normalized_sha256": "21d3655690fee9443b33fb86df6e20ab1e9e4c59b0518232d5fdd46e2e33a890",
+      "source_sha256": "ec42405d450b922428c03137ab6d82c6accf29371c88f001ef9f338db63c208e",
+      "source_normalized_sha256": "ec42405d450b922428c03137ab6d82c6accf29371c88f001ef9f338db63c208e",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
-      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "0ece2baabdeb7972e9b9f809420b06f3c5a2cfa0aa7f074ee86e9dbd8514be48",
+      "standalone_sha256": "afd4a2144f21c9fe9e7f030e33000e4727788241a0a6aafac53f0f0afa381a2c",
       "license": "Apache-2.0",
-      "review_note": "Bibliographic text and original page geometry select document headings, explicit contributor roles and unresolved names. Contained fragments, broad title envelopes, section marks and spatial access badges retain independent title/credit evidence. Boundary-letter consensus and tracked word spacing preserve literal recognized characters. A dated header name may infer Composer from a separately located centered source-work caption; dates alone and publisher text do not establish the role. Source-work context excludes singular and plural publisher, edition, press and website captions.",
-      "reviewed_app_commit": "11e15196ffe7fb2a8fd4f9e5521de1b7ff5eb43f"
+      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain.",
+      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2148,6 +2148,42 @@
       "license": "Apache-2.0",
       "review_note": "Two ink thresholds must agree on glyph count and gap classification; only whitespace may change. Ambiguous polarity, glyph counts or gaps retain the original string.",
       "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    },
+    "PrintedServiceCreditMarks.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/PrintedServiceCreditMarks.java",
+      "source_sha256": "dea26089582210d57ad6a1e6c9bf8f56fb579a353586533a9488bea6b2e2b1aa",
+      "source_normalized_sha256": "dea26089582210d57ad6a1e6c9bf8f56fb579a353586533a9488bea6b2e2b1aa",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedServiceCreditMarks.java",
+      "standalone_sha256": "baa8d94bb8735222de10a08312d98830f6dfde86339415d1276cac5450ffdab0",
+      "license": "Apache-2.0",
+      "review_note": "Pure Java original word-box gap selection for explicit transcription bylines, with bounded original-raster access and detached-waveform proof. It preserves literal OCR lines and genuine initials, and retains a typed review payload without identifying a brand or inferring a role.",
+      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+    },
+    "DetachedWaveformCreditMark.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/DetachedWaveformCreditMark.java",
+      "source_sha256": "90c6c735bf8f05f92c818dc837d8fead92bf8a00510815803d27d73223af341c",
+      "source_normalized_sha256": "90c6c735bf8f05f92c818dc837d8fead92bf8a00510815803d27d73223af341c",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/DetachedWaveformCreditMark.java",
+      "standalone_sha256": "26e02e933712c2169d64c674ddb607559d6182bf267d0a55d0a81f176b6aa268",
+      "license": "Apache-2.0",
+      "review_note": "Original generated-ink connected-component classifier for a detached symmetric waveform at two thresholds. No OCR text, brand, name, model weight or contributor role is encoded.",
+      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+    },
+    "LocatedCoverHeadingEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingEvidence.java",
+      "source_sha256": "f4c07c48b2c54cd2bbbc624d67f88659e23722bf89bef1830b272d19e18ee842",
+      "source_normalized_sha256": "f4c07c48b2c54cd2bbbc624d67f88659e23722bf89bef1830b272d19e18ee842",
+      "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
+      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LocatedCoverHeadingEvidence.java",
+      "standalone_sha256": "8e57848de955f0a4b9b38a38f670f55742023bece8fb56790571e93edda74f7e",
+      "license": "Apache-2.0",
+      "review_note": "Three guarded agreeing strong original-PDF readings retain an already nominated photographic heading independently of the import label. Merge only into the unchanged source line; ordinary covers and unstable fallback evidence remain separate.",
+      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
     }
   },
   "interpreter_speedup_review": {
@@ -4674,8 +4710,8 @@
   },
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
-    "source_adaptation": "Twelve production classes and twelve original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 64,
+    "source_adaptation": "Fifteen production classes and sixteen original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
+    "synthetic_tests": 104,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4690,6 +4726,12 @@
     "fixture_provenance": "Original fictional text, geometry and synthetic ink only. No commercial score scans, private library records, device logs, credentials or signing material included.",
     "accuracy_limit": "Synthetic regressions and source parity do not establish whole-library or arbitrary-PDF accuracy.",
     "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7",
-    "publisher_context_correction_app_commit": "11e15196ffe7fb2a8fd4f9e5521de1b7ff5eb43f"
+    "publisher_context_correction_app_commit": "11e15196ffe7fb2a8fd4f9e5521de1b7ff5eb43f",
+    "retained_provider_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723",
+    "bibliography_page_api_layout_changed": true,
+    "optional_page_evidence_layout": "reviewCredits: [{line: {text,left,top,right,bottom}, value}]. Missing old field defaults empty. Original OCR lines remain unchanged; writers and replays preserve typed review evidence.",
+    "retained_provider_scope": "Repeated physically separate header titles; three strong original-source photographic heading readings; pixel-verified detached service marks. No filename completion, person dictionary, role inferred from a portrait, new model, or generic digit-guard relaxation.",
+    "adapter_source_sha256": "27830e8c48053317950f85e159c76dfb44a4fdc35ab40f59f92fa7d5d2794aea",
+    "desktop_boundary": "The explicit desktop music decoder and audio source selections do not consume this bibliography-only Page API. Guide/audio/recognition record layouts remain unchanged. The required matching Hub/page-worker build, smoke and rollout remain pending integration verification."
   }
 }
