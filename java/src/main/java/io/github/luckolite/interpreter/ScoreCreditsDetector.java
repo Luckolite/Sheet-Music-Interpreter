@@ -3436,7 +3436,8 @@ public final class ScoreCreditsDetector {
         Matcher source = Pattern.compile("(?iu)^from\\h+(.{3,100})$").matcher(clean(context.text));
         if (!source.matches()) return false;
         String work = source.group(1).replaceFirst("(?iu)^(?:the|a|an)\\h+(?=\\p{Lu})", "");
-        if (work.matches("(?iu).*\\b(?:press|publisher|publishing|website|edition|printed)\\b.*"))
+        if (work.matches(
+                "(?iu).*\\b(?:press(?:es)?|publishers?|publishing|websites?|editions?|printed)\\b.*"))
             return false;
         return work.matches("(?u)^\\p{Lu}[\\p{L}\\p{M}’'–-]*(?:\\h+[\\p{L}\\p{M}’'–-]+){1,9}$");
     }

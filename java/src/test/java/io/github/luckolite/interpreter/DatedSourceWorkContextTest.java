@@ -95,6 +95,21 @@ public final class DatedSourceWorkContextTest {
     }
 
     @Test
+    public void pluralEditionsAreNotSourceWorkEvidence() {
+        assertEquals(
+                "",
+                detect(line("from Northwind Editions", 630, 184, 1170, 222), author()).composer());
+    }
+
+    @Test
+    public void pluralPublishersAreNotSourceWorkEvidence() {
+        assertEquals(
+                "",
+                detect(line("from Northwind Publishers", 630, 184, 1170, 222), author())
+                        .composer());
+    }
+
+    @Test
     public void sourceCaptionMustBeInTheHeader() {
         assertEquals(
                 "",

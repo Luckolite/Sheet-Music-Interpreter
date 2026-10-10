@@ -2007,15 +2007,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "ef7678e2050abb732241cf56694d7acbfc41e24dc595e9620439fe2088178b1c",
-      "source_normalized_sha256": "ef7678e2050abb732241cf56694d7acbfc41e24dc595e9620439fe2088178b1c",
+      "source_sha256": "21d3655690fee9443b33fb86df6e20ab1e9e4c59b0518232d5fdd46e2e33a890",
+      "source_normalized_sha256": "21d3655690fee9443b33fb86df6e20ab1e9e4c59b0518232d5fdd46e2e33a890",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
       "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "287edf8293e5498528e0308e07da5bb327be0acdab745042bb2f0e31187daf47",
+      "standalone_sha256": "0ece2baabdeb7972e9b9f809420b06f3c5a2cfa0aa7f074ee86e9dbd8514be48",
       "license": "Apache-2.0",
-      "review_note": "Bibliographic text and original page geometry select document headings, explicit contributor roles and unresolved names. Contained fragments, broad title envelopes, section marks and spatial access badges retain independent title/credit evidence. Boundary-letter consensus and tracked word spacing preserve literal recognized characters. A dated header name may infer Composer from a separately located centered source-work caption; dates alone and publisher text do not establish the role.",
-      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+      "review_note": "Bibliographic text and original page geometry select document headings, explicit contributor roles and unresolved names. Contained fragments, broad title envelopes, section marks and spatial access badges retain independent title/credit evidence. Boundary-letter consensus and tracked word spacing preserve literal recognized characters. A dated header name may infer Composer from a separately located centered source-work caption; dates alone and publisher text do not establish the role. Source-work context excludes singular and plural publisher, edition, press and website captions.",
+      "reviewed_app_commit": "11e15196ffe7fb2a8fd4f9e5521de1b7ff5eb43f"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -4675,7 +4675,7 @@
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
     "source_adaptation": "Twelve production classes and twelve original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 62,
+    "synthetic_tests": 64,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4689,6 +4689,7 @@
     "cache_or_worker_record_layout_changed": false,
     "fixture_provenance": "Original fictional text, geometry and synthetic ink only. No commercial score scans, private library records, device logs, credentials or signing material included.",
     "accuracy_limit": "Synthetic regressions and source parity do not establish whole-library or arbitrary-PDF accuracy.",
-    "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+    "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7",
+    "publisher_context_correction_app_commit": "11e15196ffe7fb2a8fd4f9e5521de1b7ff5eb43f"
   }
 }
