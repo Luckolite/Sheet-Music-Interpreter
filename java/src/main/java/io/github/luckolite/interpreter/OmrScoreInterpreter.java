@@ -20117,8 +20117,16 @@ final class OmrScoreInterpreter {
                             && gray.length == labels.length
                             && horizontal > 2
                             && current.head.centerX - previous.head.centerX >= gap * 1.8f;
-            if (horizontal < gap * 1.3f && !compactPrintedCandidate || horizontal > width * .34f)
-                continue;
+            boolean heldAcrossBar =
+                    gray != null
+                            && labels != null
+                            && gray.length == labels.length
+                            && measureDistance == 1
+                            && ScoreNoteTiming.hasIndependentSustain(previous.event)
+                            && ScoreNoteTiming.hasIndependentSustain(current.event)
+                            && current.head.centerX > previous.head.centerX;
+            if (horizontal < gap * 1.3f && !compactPrintedCandidate
+                    || horizontal > width * .34f && !heldAcrossBar) continue;
             // Quantization alone can occasionally put two heads near a step boundary in the same
             // bucket. A real repeated pitch remains within less than half a staff-space vertically.
             if (Math.abs(current.head.centerY - previous.head.centerY) > gap * .45f
@@ -21048,7 +21056,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                     // A short returning arc can cross a staff rule at one end. Treat a
                     // few such pixels as occluded only when the remaining curve and
@@ -21080,7 +21105,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                     // Both ends of a short tie can merge into the same thick staff rule.
                     // Require an almost complete curve and an independently visible middle
@@ -21112,7 +21154,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                     // A long, deeply bowed tie can cross several distinct staff rules.
                     // Require every sampled bin to be fully covered, both returning
@@ -21160,7 +21219,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                     // Antialiased shoulders can reduce the dark count while staff rules
                     // obscure a returning curve. Require nearly complete coverage in
@@ -21214,7 +21290,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                     // A compact tie can touch a staff rule at its crest instead of
                     // at the endpoints. Both returning shoulders must remain visible;
@@ -21265,7 +21358,24 @@ final class OmrScoreInterpreter {
                                         frame == null ? null : frame.track,
                                         left,
                                         right,
-                                        strokeCenters)) return true;
+                                        strokeCenters)
+                                && DenseTieArcContinuity.proved(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        left,
+                                        right,
+                                        centerY,
+                                        gap,
+                                        side,
+                                        offset,
+                                        bend,
+                                        flatProfile,
+                                        inkLimit,
+                                        strictContrast,
+                                        straightRows,
+                                        contrastOffsets)) return true;
                     }
                 }
         return false;

@@ -364,13 +364,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "9b2c13f8cdd0998f961532984357676bd4d16890df60032c381a895253e184f2",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "source_normalized_sha256": "9b2c13f8cdd0998f961532984357676bd4d16890df60032c381a895253e184f2",
+      "source_sha256": "ce7f9109f63c89b31fdef290bfc81a3089e6e16598dfeb622e0e949d8f989de3",
+      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
+      "source_normalized_sha256": "1aa38a454469b13b27e028a6c2859a66153a7c9128987427f04bc65aeacd3506",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed."
+      "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
+      "standalone_sha256": "17e4cbacd60e6b3430e434c74c9e195bb1bfa577b256d4b370b93166497ec392"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1491,13 +1492,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "cb15d434dd68906ec88d5cdcc9518a396ecc7c796a90acce1fb8cf3e9183df57",
-      "source_normalized_sha256": "023d0622bee7fb0926c7170ae89957ce3fedc9e3379e23432b94344bb68b7112",
-      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "standalone_sha256": "11487ab36a565677ee96f18111699015a0cbb652da3f043f52838902a761e6a5"
+      "source_sha256": "8d2425055f8848b0fadb5f65ed042b736009ab041d124ff5bfcd894c885d2074",
+      "source_normalized_sha256": "1afaac24ebb7bdd51e1c33505833eb7fd40936029b2c75ac38da3a36332d4d86",
+      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
+      "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
+      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1553,12 +1554,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f83f1c4156fd1efaaba5fbc4c01674b6f538c1caa465b9da43aaead4a7734899",
-      "source_normalized_sha256": "c353cd530e7d143bfb2e4d4967352779b79dd69bdb8b57c8bcbcf02c8624d0a3",
-      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
-      "reviewed_source_state": "Recognition27; guide284 typed boundary layout unchanged. App/public writer bodies reviewed apart from license header and package import.",
+      "source_sha256": "ae5ca17db0e6967faa0d16256c71ab54e5fc505567d0425014dbd8d26bbd4402",
+      "source_normalized_sha256": "ee733b8a65cf9937a6da9ac09dfb4af8993f31c64f0270f81f18f0afb4b3dc36",
+      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "reviewed_source_state": "Recognition28 cache revision; guide284 writer body unchanged apart from revision. Existing license header and package import adaptations reviewed.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1993,6 +1994,16 @@
       "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
       "standalone_sha256": "991690c026954b9f040859cc5d82a5688d2d517c1830b1fc9ace06a8a2309829"
+    },
+    "DenseTieArcContinuity.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DenseTieArcContinuity.java",
+      "source_sha256": "0f2e49fef7e2b30c6b367412db9a7d82db53a9ca483b40838db2514e870a9230",
+      "source_normalized_sha256": "4fef983787b4ee0b426816b6d6b9f58e47ac7ca6f3cb738eddc7f28c649fa78d",
+      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "standalone_sha256": "0c170aa3260201e8d91db7e3cbb5d9d25878675ca22b2d746ab4f21acd771ee7",
+      "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
+      "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged."
     }
   },
   "interpreter_speedup_review": {
@@ -4502,5 +4513,19 @@
     "record_layout_changed": false,
     "audio_algorithm_changed": false,
     "privacy": "Only reviewed Apache-2.0 portable source and original synthetic owner regressions are published; no Android implementation, private source score, library, device log, signing material or app history is included."
+  },
+  "dense_held_tie_connectivity_review": {
+    "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+    "recognition_revision": 28,
+    "new_helper": "DenseTieArcContinuity.java",
+    "native_selection": "The app explicit decoder source list includes the new helper.",
+    "synthetic_regressions": [
+      "DenseHeldTieExtractionTest",
+      "TieCoverageParityTest",
+      "TieSampleGeometryParityTest"
+    ],
+    "decision_change": "In both existing golden corpora, only fixture253 changes: its deliberately removed middle remains disconnected despite staff rules and noise. All other golden decisions remain unchanged.",
+    "scope": "Original generated raw pixels/model masks and existing synthetic corpora; no score-derived fixtures, private guides, logs, models or song exceptions.",
+    "performance": "Correctness repair. No speed, heat or device-performance claim."
   }
 }

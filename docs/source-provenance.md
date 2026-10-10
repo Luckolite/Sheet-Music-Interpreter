@@ -945,3 +945,20 @@ analyzers remain distinct from new optical admission. This source boundary does
 not establish Android UX, JNI failure, model accuracy or performance results.
 The portable source changes the standalone Java build fingerprint, so the
 ordinary public and matched Hub/page-worker release gates remain required.
+
+## Connected held-note ties
+
+Recognition revision 28 checks original-column ink connectivity after the existing
+returning-arc and head-clearance proofs. It tolerates one missing raster column
+and bounded detached outer shoulders, while rejecting disconnected sampled ink.
+Adjacent independently sustained same-pitch heads may exceed the page-relative
+distance cap; existing staff, voice, pitch and timing guards still apply.
+
+The new `DenseTieArcContinuity` helper is included in the app's explicit desktop
+decoder source list. Original full-page generated controls cover narrow and
+blank-padded pages, continuous curves, disconnected fragments and differing
+pitches. In both existing synthetic golden corpora, only deliberately disconnected
+fixture 253 changes to rejection. No score-derived pixels or private artifacts are
+included. The app, Hub and writer advance the recognition cache revision together;
+guide 284 and audio 77 record layouts remain unchanged. This correctness repair
+does not establish a speed or phone-temperature improvement.

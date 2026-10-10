@@ -102,6 +102,10 @@ public final class TieSampleGeometryParityTest {
                         boolean.class,
                         boolean.class);
         detector.setAccessible(true);
+        // Reviewed change: fixture253 deliberately deletes the middle of the arc.
+        // Raw staff/noise pixels do not reconnect its separated returning halves.
+        org.junit.Assert.assertFalse(
+                "Disconnected middle remains a negative", detect(fixture(253)));
         MessageDigest hash = MessageDigest.getInstance("SHA-256");
         int positives = 0;
         for (int index = 0; index < 512; index++) {
@@ -113,9 +117,9 @@ public final class TieSampleGeometryParityTest {
             org.junit.Assert.assertArrayEquals(gray, value.gray);
             org.junit.Assert.assertArrayEquals(labels, value.labels);
         }
-        org.junit.Assert.assertEquals(87, positives);
+        org.junit.Assert.assertEquals(86, positives);
         org.junit.Assert.assertEquals(
-                "0cf8fcfe217ef6c743b71dbcbaaa6b9b935cb429c99b33b82c82ba4a10bddfa3",
+                "eb29f6fbdb52965a8d31e7a2dfa5980b32cd567795c3dc4a108112234b6a2da0",
                 HexFormat.of().formatHex(hash.digest()));
     }
 }

@@ -103,6 +103,9 @@ public final class TieCoverageParityTest {
                         boolean.class,
                         boolean.class);
         detector.setAccessible(true);
+        // Reviewed change: fixture253 deliberately deletes the middle of the arc.
+        // Raw staff/noise pixels do not reconnect its separated returning halves.
+        assertFalse("Disconnected middle remains a negative", detect(fixture(253)));
         MessageDigest hash = MessageDigest.getInstance("SHA-256");
         int positives = 0;
         for (int index = 0; index < 1024; index++) {
@@ -110,10 +113,10 @@ public final class TieCoverageParityTest {
             hash.update((byte) (found ? 1 : 0));
             if (found) positives++;
         }
-        // Golden decisions recorded from the unmodified released detector.
-        assertEquals(175, positives);
+        // Reviewed golden decisions: the disconnected fixture 253 is rejected.
+        assertEquals(174, positives);
         assertEquals(
-                "285188f363ea41d5fb5853920016a681ceda298d562bc46f1cc7c338c7b61204",
+                "38ee89df38b53045d0d3cbc9211e7444dddb1b7f50de4cbc6065b6498ec9e71e",
                 HexFormat.of().formatHex(hash.digest()));
     }
 }
