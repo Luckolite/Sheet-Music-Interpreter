@@ -2007,15 +2007,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "e1b03e2681b37f1f152d723c4d488ddbb7f203fd4f2f4c926b3f65df5f36eefd",
-      "source_normalized_sha256": "e1b03e2681b37f1f152d723c4d488ddbb7f203fd4f2f4c926b3f65df5f36eefd",
+      "source_sha256": "f0036a244b2a5feac79e251bc6cf2e45f075bd5016573830baaa18b0b3ccf625",
+      "source_normalized_sha256": "f0036a244b2a5feac79e251bc6cf2e45f075bd5016573830baaa18b0b3ccf625",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
       "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "6ad3be1f9727c5b298fd028488d9118ab4ddb2b5700915524188dfa0d93e56c4",
+      "standalone_sha256": "628bd98318ae56ec6b3c4a142292b1ab5a02ed599ca9967d06bf4b8aedc35cb9",
       "license": "Apache-2.0",
-      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence. Inline Arrangement/Arrangements followed by a name is a prefix credit eligible for the existing guarded original-source reread path; only empty arrangement labels search for a name above. No new name-similarity merge or consensus policy.",
-      "reviewed_app_commit": "580ef1a881ad2724667bc234cc8da4600a198dd5"
+      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence. Inline Arrangement/Arrangements followed by a name is a prefix credit eligible for the existing guarded original-source reread path; only empty arrangement labels search for a name above. No new name-similarity merge or consensus policy. Existing damaged arranger-label nomination may use a role-only fallback with case-sensitive identical literal contributor payload in original and all three readings, bounded label variations, and an actually observed exact Arranged by reading. Competing valid inflections are rejected. Source geometry, identifiers and contributor counts remain guarded; no name completion, model changes or new Android helpers.",
+      "reviewed_app_commit": "64ffde06acaf3c7505aca83be61ab6fcc9214b5d"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -4711,7 +4711,7 @@
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
     "source_adaptation": "Fifteen production classes and sixteen original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 113,
+    "synthetic_tests": 130,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4734,6 +4734,7 @@
     "adapter_source_sha256": "27830e8c48053317950f85e159c76dfb44a4fdc35ab40f59f92fa7d5d2794aea",
     "desktop_boundary": "The explicit desktop music decoder and audio source selections do not consume this bibliography-only Page API. Guide/audio/recognition record layouts remain unchanged. The required matching Hub/page-worker build, smoke and rollout remain pending integration verification.",
     "literal_service_binding_app_commit": "522d9990341ac6ffcb12f5475c5d885ccd4388c3",
-    "inline_arrangement_app_commit": "580ef1a881ad2724667bc234cc8da4600a198dd5"
+    "inline_arrangement_app_commit": "580ef1a881ad2724667bc234cc8da4600a198dd5",
+    "role_only_app_commit": "64ffde06acaf3c7505aca83be61ab6fcc9214b5d"
   }
 }

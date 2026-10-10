@@ -78,6 +78,13 @@ It remains eligible for the existing three agreeing original-source readings.
 An empty standalone arrangement label still locates its name above the label.
 This distinction does not merge similar names across different credits.
 
+For an already nominated damaged arranger label, three original-source readings
+may disagree only on the role word. The original and every reading must retain
+the same literal contributor payload, and one reading must actually print
+`Arranged by`. Only bounded variations of that label qualify; valid competing
+inflections, changed names, extra contributors and multiline text are rejected.
+The existing source geometry, role and identifier checks still apply.
+
 The portable crop, cover and embedded-text helpers expose their evidence rules
 without Android dependencies. The Android adapter additionally owns bitmap
 lifetimes, original-PDF crop rendering, provider calls and timeout handling.

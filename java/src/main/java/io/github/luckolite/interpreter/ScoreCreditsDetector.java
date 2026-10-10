@@ -930,7 +930,49 @@ public final class ScoreCreditsDetector {
         if (readings.stream()
                 .allMatch(s -> bibliographicConsensusReadingKey(original, s).equals(key)))
             return value;
+        String roleOnly = arrangementRoleOnlyConsensus(original, readings);
+        if (roleOnly != null) return roleOnly;
         return headingSingleLetterLossConsensus(page, original, readings);
+    }
+
+    /** A damaged role word may vary while every already printed name stays literal. */
+    private static String arrangementRoleOnlyConsensus(Line original, List<String> readings) {
+        if (credit(clean(original.text)) != null
+                || misspelledArrangementCredit(clean(original.text)) == null
+                || readings == null
+                || readings.size() != 3) return null;
+        Pattern format = Pattern.compile("(?iu)^(arr[\\p{L}]{4,6})\\h+by\\h+(.+)$");
+        if (Pattern.compile("\\R").matcher(original.text).find()) return null;
+        Matcher source = format.matcher(original.text.replaceAll("\\h+", " ").trim());
+        if (!source.matches()) return null;
+        if (source.group(1)
+                .toLowerCase(Locale.ROOT)
+                .matches("arrange|arranges|arranger|arrangers|arranging|arrangement|arrangements"))
+            return null;
+        String payload = source.group(2), observedExact = null;
+        for (String reading : readings) {
+            if (reading == null || Pattern.compile("\\R").matcher(reading).find()) return null;
+            String text = reading.replaceAll("\\h+", " ").trim();
+            Matcher match = format.matcher(text);
+            if (!match.matches() || !match.group(2).equals(payload)) return null;
+            String label = match.group(1).toLowerCase(Locale.ROOT);
+            if (label.matches(
+                    "arrange|arranges|arranger|arrangers|arranging|arrangement|arrangements"))
+                return null;
+            boolean near = false;
+            if (label.length() == 8) {
+                int changes = 0;
+                for (int i = 0; i < 8; i++) if (label.charAt(i) != "arranged".charAt(i)) changes++;
+                near = changes <= 2;
+            } else if (label.length() == 9) {
+                for (int i = 0; i < 9; i++)
+                    if ((label.substring(0, i) + label.substring(i + 1)).equals("arranged"))
+                        near = true;
+            }
+            if (!near) return null;
+            if (label.equals("arranged")) observedExact = text;
+        }
+        return observedExact;
     }
 
     public static List<Line> mergeBibliographicLineConsensus(
