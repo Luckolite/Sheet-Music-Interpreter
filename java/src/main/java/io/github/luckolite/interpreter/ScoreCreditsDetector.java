@@ -215,6 +215,125 @@ public final class ScoreCreditsDetector {
                                 original.bottom)));
     }
 
+    private static final Pattern MOTION_PICTURE_SOURCE_CAPTION =
+            Pattern.compile("(?i)^suite\\h+([a-z]{4})\\h+the\\h+motion\\h+picture$");
+
+    private static String motionPictureConnector(String value) {
+        Matcher match = MOTION_PICTURE_SOURCE_CAPTION.matcher(clean(value));
+        return match.matches() ? match.group(1).toLowerCase(Locale.ROOT) : "";
+    }
+
+    /** Caption boxes may overlap a heading slightly while their baselines remain separate. */
+    private static boolean nearbySourceCaptionGeometry(Page page, Line heading, Line caption) {
+        return !page.creditsOnly
+                && !page.photographicCover
+                && Float.isFinite(page.notationTop)
+                && page.notationTop > 0
+                && Float.isFinite(page.width)
+                && Float.isFinite(page.height)
+                && page.width > 0
+                && page.height > 0
+                && validCoverLine(page, heading)
+                && validCoverLine(page, caption)
+                && heading.top < page.height * .2f
+                && heading.height() >= page.width * .025f
+                && caption != heading
+                && caption.bottom < page.notationTop
+                && caption.top >= heading.bottom - heading.height() * .35f
+                && caption.top - heading.bottom < heading.height() * 1.2f
+                && (caption.top + caption.bottom) * .5f >= heading.bottom - heading.height() * .05f
+                && caption.height() >= heading.height() * .55f
+                && caption.height() <= heading.height()
+                && Math.abs(caption.center() - heading.center()) < heading.height() * .8f
+                && caption.right - caption.left < (heading.right - heading.left) * 2.5f;
+    }
+
+    private static List<Line> nearbyMotionPictureSourceCaptions(Page page, Line heading) {
+        return page.lines.stream()
+                .filter(
+                        line ->
+                                nearbySourceCaptionGeometry(page, heading, line)
+                                        && !motionPictureConnector(line.text).isEmpty())
+                .toList();
+    }
+
+    private static boolean sameBaselineHeadingFragment(Line heading, Line other) {
+        return (other.right <= heading.left || other.left >= heading.right)
+                && Math.max(other.left - heading.right, heading.left - other.right)
+                        < heading.height() * 1.2f
+                && other.height() >= heading.height() * .4f
+                && other.height() <= heading.height() * 1.4f
+                && Math.abs((other.top + other.bottom - heading.top - heading.bottom) * .5f)
+                        < heading.height() * .3f;
+    }
+
+    /** A caption cannot choose between separately located plausible heading owners. */
+    private static boolean competingSourceCaptionHeading(Page page, Line heading, Line caption) {
+        return page.lines.stream()
+                .anyMatch(
+                        other ->
+                                other != heading
+                                        && other != caption
+                                        && titleText(other.text)
+                                        && credit(other.text) == null
+                                        && !LEGAL.matcher(other.text).find()
+                                        && !DATED_AUTHOR.matcher(clean(other.text)).matches()
+                                        && motionPictureConnector(other.text).isEmpty()
+                                        && !sameBaselineHeadingFragment(heading, other)
+                                        && nearbySourceCaptionGeometry(page, other, caption));
+    }
+
+    /** A near source-caption connector requests original pixels, never a guessed title.
+     * Callers must restrict nomination and refinement to the first page.
+     */
+    public static List<Line> nearbySourceCaptionCandidates(Page page) {
+        if (page.creditsOnly || page.photographicCover || page.notationTop <= 0) return List.of();
+        Line heading = chooseTitle("", page, page.lines, page.notationTop);
+        if (heading == null) return List.of();
+        List<Line> captions = nearbyMotionPictureSourceCaptions(page, heading);
+        if (captions.size() != 1) return List.of();
+        Line caption = captions.get(0);
+        String connector = motionPictureConnector(caption.text);
+        return editDistance(connector, "from") == 1
+                        && !competingSourceCaptionHeading(page, heading, caption)
+                ? List.of(caption)
+                : List.of();
+    }
+
+    /** Exactly three strong original readings must establish the complete printed caption. */
+    public static List<Line> mergeNearbySourceCaptionConsensus(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!nearbySourceCaptionCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || confidence.stream()
+                        .anyMatch(v -> v == null || !Float.isFinite(v) || v < .95f || v > 1)
+                || readings.stream()
+                        .anyMatch(v -> v == null || v.indexOf('\n') >= 0 || v.indexOf('\r') >= 0))
+            return page.lines;
+        String observed =
+                Normalizer.normalize(readings.get(0), Normalizer.Form.NFC)
+                        .replaceAll("\\h+", " ")
+                        .strip();
+        if (!motionPictureConnector(observed).equals("from")
+                || readings.stream()
+                        .anyMatch(
+                                v ->
+                                        !Normalizer.normalize(v, Normalizer.Form.NFC)
+                                                .replaceAll("\\h+", " ")
+                                                .strip()
+                                                .equals(observed))
+                || !CreditOcrIdentifierGuard.preservesIdentifiers(original.text, observed))
+            return page.lines;
+        List<Line> merged = new ArrayList<>(page.lines);
+        merged.set(
+                merged.indexOf(original),
+                new Line(observed, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(merged);
+    }
+
     public record ProfileCreditEvidence(Line credit, Line profile, String correctedText) {}
 
     private static String profileReadingKey(String text) {
@@ -3299,7 +3418,10 @@ public final class ScoreCreditsDetector {
             List<Line> titleLines = withoutDedications(page, titleEvidence, titleLimit);
             Line heading = chooseTitle(fallback, page, titleLines, titleLimit);
             String pageTitle =
-                    heading == null ? "" : joinTitle(page, heading, titleLines, titleLimit);
+                    heading == null
+                            ? ""
+                            : joinTitle(
+                                    page, heading, titleLines, titleLimit, page == pages.get(0));
             if (heading != null && page.photographicCover) {
                 String stacked = photographicStackedTitle(page, heading, titleLines, titleLimit);
                 if (!stacked.isEmpty()) pageTitle = stacked;
@@ -4454,7 +4576,8 @@ public final class ScoreCreditsDetector {
                 .toList();
     }
 
-    private static String joinTitle(Page page, Line heading, List<Line> lines, float limit) {
+    private static String joinTitle(
+            Page page, Line heading, List<Line> lines, float limit, boolean openingPage) {
         List<Line> title = new ArrayList<>();
         title.add(heading);
         float rowLeft = heading.left, rowRight = heading.right;
@@ -4496,6 +4619,12 @@ public final class ScoreCreditsDetector {
             boolean versionCaption =
                     caption.matches(
                             "(?iu)^(?:(?:live|concert)\\h+performance|solo|easy|original|piano|violin|guitar|tavern|epic|wedding|concert)\\h+version(?:\\h+[0-9]+)?$");
+            boolean closeSourceCaption =
+                    openingPage
+                            && motionPictureConnector(caption).equals("from")
+                            && nearbyMotionPictureSourceCaptions(page, heading).size() == 1
+                            && !competingSourceCaptionHeading(page, heading, l)
+                            && nearbySourceCaptionGeometry(page, heading, l);
             boolean sourceCaption =
                     captionWords >= 2
                             && captionWords <= 12
@@ -4503,7 +4632,9 @@ public final class ScoreCreditsDetector {
                                             "(?iu).*\\b(?:soundtrack|opening\\h+[0-9]+|suite\\h+from\\h+the\\h+motion\\h+picture)$")
                                     || captionWords >= 3 && caption.matches("(?iu).+['’]s\\h+.+")
                                     || versionCaption)
-                            && l.top >= heading.bottom - heading.height() * .3f
+                            && l.top
+                                    >= heading.bottom
+                                            - heading.height() * (closeSourceCaption ? .35f : .3f)
                             && l.top - heading.bottom < heading.height() * 1.2f
                             && l.height() >= heading.height() * (versionCaption ? .4f : .55f)
                             && l.height() <= heading.height()

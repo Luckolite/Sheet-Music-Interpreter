@@ -98,6 +98,16 @@ Failed rereads retain the original literal. The Android adapter uses its fixed
 crop padding at scales 1, 2 and 4 and releases each bitmap after reading. This
 route adds no service-credit evidence field, dictionary or model weights.
 
+`nearbySourceCaptionCandidates` requests original pixels for a damaged connector
+in a generic motion-picture source caption beside an opening notation heading.
+Call it only for page 0. Exactly three strong, identical single-line readings
+must establish the complete printed phrase. No title or name is guessed.
+
+The bounded overlap exception applies only on that first nonphotographic page.
+Both nomination and joining reject competing heading owners and captions;
+adjacent fragments on the same heading baseline keep existing row ownership.
+Other caption geometry, contributor roles and the `Page` layout are unchanged.
+
 The portable crop, cover and embedded-text helpers expose their evidence rules
 without Android dependencies. The Android adapter additionally owns bitmap
 lifetimes, original-PDF crop rendering, provider calls and timeout handling.
