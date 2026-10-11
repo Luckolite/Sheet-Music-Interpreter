@@ -72,7 +72,19 @@ public final class PedalPerformance {
             int part = event.staffCount();
             if (event.kind() == ScoreExpressiveEvent.Kind.PEDAL_DOWN) {
                 if (conflicts.contains(part)) continue;
-                var old = held.put(part, event);
+                var old = held.get(part);
+                if (old != null
+                        && old.start()
+                                .orElseThrow()
+                                .canonical(meter, measures)
+                                .equals(event.start().orElseThrow().canonical(meter, measures))
+                        && (old.end().isEmpty() || event.end().isEmpty())) {
+                    // A literal cue can corroborate a bracket at the same written onset.
+                    // Keep its finite endpoint, but still require a separate release event.
+                    if (old.end().isEmpty() && event.end().isPresent()) held.put(part, event);
+                    continue;
+                }
+                held.put(part, event);
                 if (old != null) {
                     held.remove(part);
                     conflicts.add(part);

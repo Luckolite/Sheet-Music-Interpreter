@@ -7,6 +7,29 @@ import static io.github.luckolite.interpreter.ScoreExpressiveEvent.*;
 
 /** OCR directions attached to proved written columns; optical fractions never become beats. */
 public final class ScoreExpressionDetector {
+
+    private static boolean coveredPedalWord(
+            PlayingTechniqueDetector.Word word, List<PlayingTechniqueDetector.Word> words) {
+        String token = word.text().trim().toLowerCase(Locale.ROOT);
+        if (!token.matches("ped(?:ale|\\.?)")) return false;
+        float height = word.bottom() - word.top();
+        if (!(height > 0) || !(word.right() > word.left())) return false;
+        for (var other : words) {
+            String phrase = other.text().trim().toLowerCase(Locale.ROOT).replaceAll("\\s+", " ");
+            if (!phrase.matches("(?:con|senza) ped(?:ale|\\.?)")) continue;
+            if (!phrase.endsWith(" " + token)) continue;
+            float otherHeight = other.bottom() - other.top();
+            float overlap =
+                    Math.min(word.bottom(), other.bottom()) - Math.max(word.top(), other.top());
+            if (otherHeight > 0
+                    && overlap >= .8f * Math.min(height, otherHeight)
+                    && word.left() >= other.left()
+                    && word.right() <= other.right()
+                    && other.right() - other.left() > word.right() - word.left()) return true;
+        }
+        return false;
+    }
+
     private static final String SOURCE = "printed-expression-word";
     private static final String SYMBOL = "printed-expression-symbol";
     private static final String TARGET = "expression-column:";
@@ -25,7 +48,9 @@ public final class ScoreExpressionDetector {
                     Kind.SFORZANDO_PIANO,
                     Kind.BREATH,
                     Kind.CAESURA,
-                    Kind.UNRESOLVED_DIRECTION);
+                    Kind.UNRESOLVED_DIRECTION,
+                    Kind.PEDAL_DOWN,
+                    Kind.PEDAL_UP);
 
     private ScoreExpressionDetector() {}
 
@@ -66,6 +91,7 @@ public final class ScoreExpressionDetector {
             Set<PlayingTechniqueDetector.Word> symbols) {
         var events = new ArrayList<>(score.expressiveEvents());
         for (var word : words) {
+            if (coveredPedalWord(word, words)) continue;
             var directions =
                     ExpressiveDirectionText.parse(word.text()).stream()
                             .filter(d -> KINDS.contains(d.kind()))
@@ -309,7 +335,13 @@ public final class ScoreExpressionDetector {
                                         : Optional.empty(),
                                 Optional.empty(),
                                 proved
-                                        ? (attack ? Scope.NOTE : breath ? Scope.PART : Scope.SCORE)
+                                        ? (attack
+                                                ? Scope.NOTE
+                                                : breath
+                                                                || event.kind() == Kind.PEDAL_DOWN
+                                                                || event.kind() == Kind.PEDAL_UP
+                                                        ? Scope.PART
+                                                        : Scope.SCORE)
                                         : Scope.UNRESOLVED,
                                 event.staffIndex(),
                                 event.staffCount(),

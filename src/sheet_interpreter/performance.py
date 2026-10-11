@@ -63,6 +63,11 @@ def _column_members(expression, page):
         return []
     if not math.isfinite(position) or not 0 <= position <= 1:
         return []
+    if expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP') and (
+            staff != expression['staffIndex'] or count != expression['staffCount']
+            or any(not -2147483648 <= value <= 2147483647 for value in (m, staff, count, bits))
+            or m < 0):
+        return []
     notes = page.get('score', {}).get('notes', [])
     # Main exports each decoded head in the same order. Refuse any missing correspondence.
     if len(notes) != len(page['events']):
@@ -202,6 +207,11 @@ def _pedal_span(expression, page):
 
 
 def _resolve_pedal(expression, page):
+    if expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP') \
+            and (expression.get('targetEventId') or '').startswith('expression-column:') \
+            and any(e['sourceId'] == 'printed-expression-word' for e in expression.get('evidence', [])):
+        # Literal cues need final written-column proof in both playback and MusicXML.
+        expression['start'], expression['end'], expression['scope'] = None, None, 'UNRESOLVED'
     # Revalidate cached columns even when old anchors claim to be resolved.
     if (expression.get('targetEventId') or '').startswith('pedal-hooks-v1:') \
             and expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP'):
@@ -290,7 +300,7 @@ def _perform_one(pages, bpm):
                     expression['start'] = _anchor(release if breath else start, starts)
                     expression['end'] = _anchor(release, starts) if expression['kind'] == 'FERMATA' else None
                     attack = expression['kind'] in ('SFORZANDO', 'SFORZATO', 'SFORZANDO_PIANO')
-                    expression['scope'] = 'NOTE' if expression['kind'] == 'FERMATA' or attack else 'PART' if breath else 'SCORE'
+                    expression['scope'] = 'NOTE' if expression['kind'] == 'FERMATA' or attack else 'PART' if breath or expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP') else 'SCORE'
                     if expression['kind'] == 'FERMATA':
                         bindings[expression['eventId']] = {aliases[note_ids[i]] for i in members}
             for field in ('start', 'end'):

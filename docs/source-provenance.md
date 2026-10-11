@@ -1018,3 +1018,14 @@ voice, bracket and beam controls remain applicable. These are Java performance
 changes with unchanged acceptance thresholds, dependencies, models, recognition
 revision and guide/audio layouts. No score-derived examples or private logs are
 included; the controls do not establish phone opening time or temperature gains.
+
+## Literal pedal words
+
+Literal pedal directions retain their printed phrase below the staff rather than
+becoming an invented bracket. Final written columns establish part ownership;
+stale or mismatched columns do not realize sound. A same-onset word can corroborate
+a finite bracket, but a separate release remains mandatory. Contradictory finite
+ends and later repeated downs remain diagnostic. The matching original standalone
+Python exporters and Android exporter were reviewed separately. Recognition32 and
+audio79 invalidate affected derived caches at unchanged guide layout284. Original
+procedural regressions contain no commercial scans or private library material.

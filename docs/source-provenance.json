@@ -1386,11 +1386,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "355686ec984f50c43fa81bd639c8a3f2df528f8f54ffd909e8ad4cdaec19407e",
-      "source_normalized_sha256": "3640d085823c86512c542b95da7ceaacc45a37c3dc79427746fc50eec7147daf",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
-      "review_note": "Preserves existing left-edge direction anchors; a word-span fallback applies only when the old search finds no written head. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "source_sha256": "35b9eee15754ea523f643a925b173c4668546fcf58cb31861cb44cfb771d6f3b",
+      "source_normalized_sha256": "35bba81188068dee19340e6362c1add8bacfbf4791095bea4b4ab532f3ff262a",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+      "review_note": "Complete printed pedal phrases own contained OCR tokens; final written columns establish part ownership. Separate cues remain independent. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
@@ -1436,11 +1436,11 @@
     },
     "PedalPerformance.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PedalPerformance.java",
-      "source_sha256": "77b37763ae041fe34c8d627fd5b9132e73668315c6f2223b808baeaef079276d",
-      "source_normalized_sha256": "77b37763ae041fe34c8d627fd5b9132e73668315c6f2223b808baeaef079276d",
-      "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb",
-      "reviewed_source_state": "Isolated pedal candidate on accepted872 manifest ede2c2383426167237cb4da5d19afeb2f923d5daa581726e930c37b4b710ec45",
-      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data."
+      "source_sha256": "c07c7fb2685441c1eacab8c417245e7e27c47739118ce192f5e96187fbf84ea9",
+      "source_normalized_sha256": "5395e6ef554f4c85fec724ec7f947a65a6d7fd84c1e943351ea246faeae9caed",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+      "review_note": "A same-onset unknown-end cue corroborates a finite bracket; a separate release remains mandatory, and contradictory finite endpoints or later repeated downs remain diagnostic. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history."
     },
     "ScorePedalDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePedalDetector.java",
@@ -1493,12 +1493,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "55b8c2903bb7d848f9adf2f885c8382691195aaf60023801f0360feb52a078ea",
-      "source_normalized_sha256": "88ee4043817c6fe6ccfda8ebf1ad764a4dd1e05adaf4aea29558ea20a825f595",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
-      "review_note": "Recognition31 invalidates derived recognition caches; physical guide284 and audio78 unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
-      "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "source_sha256": "502386ab10b63214e228c102c3d043c874b7c19c5432ce333d002041413c52c2",
+      "source_normalized_sha256": "eff71418b1544089edf4965e14d014d68dcf39d35e17ac4307c8d0c0db44d549",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "review_note": "Recognition32 invalidates affected derived recognition caches at unchanged physical guide284; matching audio cache epoch79. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
+      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+      "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
       "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
     },
     "BeamInkConnectivity.java": {
@@ -1555,12 +1555,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "3efa9a84ae7ac7913e39941ca5d07d90dc4269e613156bd9eb2ef4def757f8f7",
-      "source_normalized_sha256": "b2d01ccb56496643e28e4975c0d1ebeafac5e9155251f907d56eefa6b2443b31",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
-      "review_note": "Recognition cache revision31 only; the guide284 record layout is unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
-      "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      "source_sha256": "bb04949a3cdfcf74be8a2a13b17796d77844ecf1cd6278df88152784af9b33f8",
+      "source_normalized_sha256": "86b950683657f6547d91d574ce0142a778f91799e1b78216ca0b0df3fed4fbff",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+      "review_note": "Recognition cache revision32 only; physical guide284 record layout unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
+      "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1964,15 +1964,15 @@
     },
     "src/sheet_interpreter/performance.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "0c7bebbe98923c6916f089679451a8e94a78f993b21077b1420a026b170eca20",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
+      "reviewed_sha256": "afe435a81abbf5cedac1587af5f07698c80df7c47dd0e48e2d04fb8522cd3153",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls."
     },
     "src/sheet_interpreter/musicxml.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "ded90003bc95c0ab86b64dc315914566d4a2e0717aac42a0ab76fb7266b98c6c",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
+      "reviewed_sha256": "c7e20d442179d96a37a05171ef26c6826916ef13ee808fca92ad69afc3e53fb8",
+      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls."
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
@@ -5006,5 +5006,76 @@
         "scope": "Original-PDF/bitmap/OCR adapter for explicit metadata review; reusable pixel/title helpers are mapped separately."
       }
     ]
+  },
+  "literal_pedal_word_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+    "recognition_revision": 32,
+    "guide_layout": 284,
+    "audio_epoch": 79,
+    "models_changed": false,
+    "java_sources": [
+      "ScoreExpressionDetector.java",
+      "PedalPerformance.java"
+    ],
+    "standalone_python_sources": [
+      "src/sheet_interpreter/performance.py",
+      "src/sheet_interpreter/musicxml.py"
+    ],
+    "app_only_exporter": {
+      "path": "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java",
+      "sha256": "855ff9d4c02648554d8b18acaa2230465b4f11e69ece458b7058ec5937880145",
+      "reason": "Android app exporter counterpart reviewed separately; standalone MusicXML implements the same literal-cue behavior."
+    },
+    "original_regressions": [
+      "PrintedPedalWordTest",
+      "PedalWordBracketCoexistenceTest",
+      "test_literal_pedal_words.py"
+    ],
+    "scope": "Complete printed pedal phrases own contained OCR tokens; isolated or separate cues remain independent. Literal words print below the staff without guessing bracket duration or release. Same-onset unknown-end cues corroborate finite brackets, while conflicting endpoints and later repeated downs remain diagnostic. A separate release remains mandatory for sound. Private score evidence excluded.",
+    "reviewed_sources": [
+      "ScoreExpressionDetector.java",
+      "PedalPerformance.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "prior_mapped_origins": {
+      "ScoreExpressionDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
+        "source_sha256": "355686ec984f50c43fa81bd639c8a3f2df528f8f54ffd909e8ad4cdaec19407e",
+        "source_normalized_sha256": "3640d085823c86512c542b95da7ceaacc45a37c3dc79427746fc50eec7147daf",
+        "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      },
+      "PedalPerformance.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PedalPerformance.java",
+        "source_sha256": "77b37763ae041fe34c8d627fd5b9132e73668315c6f2223b808baeaef079276d",
+        "source_normalized_sha256": "77b37763ae041fe34c8d627fd5b9132e73668315c6f2223b808baeaef079276d",
+        "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "55b8c2903bb7d848f9adf2f885c8382691195aaf60023801f0360feb52a078ea",
+        "source_normalized_sha256": "88ee4043817c6fe6ccfda8ebf1ad764a4dd1e05adaf4aea29558ea20a825f595",
+        "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+        "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "3efa9a84ae7ac7913e39941ca5d07d90dc4269e613156bd9eb2ef4def757f8f7",
+        "source_normalized_sha256": "b2d01ccb56496643e28e4975c0d1ebeafac5e9155251f907d56eefa6b2443b31",
+        "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+        "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      }
+    },
+    "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+    "reviewed_compliant_commit": "3bc1c0457e133778d3893d0de0a23b3ddb66c213",
+    "executable_parity": {
+      "ScoreExpressionDetector.java": "c295e1e1002652ad735f371789cc4cc22548cea946a09854987f4e5a81593b7b",
+      "PedalPerformance.java": "44d6c16490fee06da39b0e8bbaac6af79d535cf343b556e16b7d27a62143dc72",
+      "SheetMusicXml.java": "7dfb41fe9a2bd52576964235df582c62d6a591c0e1c8ff250002e2375c45283b",
+      "PrintedPedalWordTest.java": "225e7dd8a34fe17dbf58a372e37324d6f83ff09da982d94236948a25585bb6a5",
+      "PedalWordBracketCoexistenceTest.java": "d35f459324a332b50b22b975e9113ea93a03bd20b26bd0ae5c946dc4c68b47d3"
+    },
+    "native_audio_validation": "Four original synthetic notes: literal cue pair, finite bracket pair and combined corroboration produced identical PCM; plain preview remained identical before first written release and total score frames were unchanged."
   }
 }

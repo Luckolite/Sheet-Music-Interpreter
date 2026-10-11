@@ -74,7 +74,16 @@ def expression_direction(measure, mark, offset):
     direction = element(measure, 'direction', placement='below' if kind in ('PEDAL_DOWN', 'PEDAL_UP') else 'above')
     type_node = element(direction, 'direction-type')
     if kind in ('PEDAL_DOWN', 'PEDAL_UP'):
-        element(type_node, 'pedal', type='start' if kind == 'PEDAL_DOWN' else 'stop', line='yes', sign='no')
+        literal = (mark.get('targetEventId') or '').startswith('expression-column:') and any(
+            e.get('sourceId') == 'printed-expression-word' for e in mark.get('evidence', []))
+        if literal:
+            printed = next((e['printedText'] for e in mark.get('evidence', []) if e.get('printedText')), None)
+            if not printed:
+                measure.remove(direction)
+                return
+            element(type_node, 'words', printed)
+        else:
+            element(type_node, 'pedal', type='start' if kind == 'PEDAL_DOWN' else 'stop', line='yes', sign='no')
     elif kind == 'METRIC_MODULATION':
         fields = mark.get('qualifierText', '').split(':')
         if len(fields) != 3 or fields[0] != 'metric-pulse-v1':
