@@ -1492,11 +1492,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8d2425055f8848b0fadb5f65ed042b736009ab041d124ff5bfcd894c885d2074",
-      "source_normalized_sha256": "1afaac24ebb7bdd51e1c33505833eb7fd40936029b2c75ac38da3a36332d4d86",
-      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "source_sha256": "072438c28bb62ab554271301c6679f61bf132b1f2c197da1517949d736a51a23",
+      "source_normalized_sha256": "7951bc3deedcce77dee32d2fe2b1680429b436ada508722ea3293d1903203822",
+      "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
       "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
-      "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
+      "reviewed_source_state": "Reviewed shaft continuity witness and recognition29 invalidation; original synthetic regressions and complete standalone suite.",
       "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
       "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
     },
@@ -1554,12 +1554,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "ae5ca17db0e6967faa0d16256c71ab54e5fc505567d0425014dbd8d26bbd4402",
-      "source_normalized_sha256": "ee733b8a65cf9937a6da9ac09dfb4af8993f31c64f0270f81f18f0afb4b3dc36",
-      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
-      "reviewed_source_state": "Recognition28 cache revision; guide284 writer body unchanged apart from revision. Existing license header and package import adaptations reviewed.",
+      "source_sha256": "8b9a7c7579dcc8a25cf516085bd366a4c774af4f60b5bb406f3e5d57895a92c1",
+      "source_normalized_sha256": "7694bd72e6dfd99f16cf5cc3fca6219f1a61cd75032de56972c9f9d1d4916344",
+      "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
+      "reviewed_source_state": "Recognition29 cache revision; reviewed writer delta is only the matching revision constant, format284 record layout unchanged.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0"
+      "scoped_reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1763,11 +1763,11 @@
     },
     "SharedStemBeamOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SharedStemBeamOwnership.java",
-      "reviewed_app_commit": "88c70428c55bbf045a949716be8a2a6032350139",
-      "source_sha256": "4d63499f4693c1c05787e1b5406c6054c17bbfac844307136aacddde9de18efe",
-      "source_normalized_sha256": "b876b2d6ebe8618658ed095b29b550fe4e2a886081459fe78bf4e1fe680de3a8",
-      "reviewed_source_state": "Reviewed recognition18 delta on maintained personal88c704; historical extraction commits retained.",
-      "review_note": "Original Apache-2.0 raw shaft/face/rail ownership helper with conservative uncertainty, ledger-only foreign-shaft rejection, short secondary beams, both directions and near-coincident quarter protection. Uses existing JDK/labels/raw gray, no new weights or dependency. Thick segmented staff rules are explicitly excluded from beam-band evidence, preventing ordinary notes from borrowing staff lines as additional rails."
+      "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
+      "source_sha256": "3366e26c1196bea249f0810fc767f9226cf004be787e1392941237350cfeb979",
+      "source_normalized_sha256": "7dde0aa64e7cc7a696843e5a5bc555e13dbdf43b921e00ea75dcb4cb22c83fd2",
+      "reviewed_source_state": "Reviewed shaft continuity witness and recognition29 invalidation; original synthetic regressions and complete standalone suite.",
+      "review_note": "Original Apache-2.0 raw shaft/face/rail ownership helper with conservative uncertainty, ledger-only foreign-shaft rejection, short secondary beams, both directions and near-coincident quarter protection. Uses existing JDK/labels/raw gray, no new weights or dependency. Thick segmented staff rules are explicitly excluded from beam-band evidence, preventing ordinary notes from borrowing staff lines as additional rails. Nearby independent noteheads do not establish shared voice ownership unless their own raw shaft reaches the current head row. Original synthetic mirrored controls reject the prior override; no private raster or new dependency."
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",

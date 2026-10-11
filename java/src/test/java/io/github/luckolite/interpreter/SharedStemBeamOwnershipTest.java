@@ -290,4 +290,20 @@ public class SharedStemBeamOwnershipTest {
         draw(1, false, true);
         assertEquals(1, caller(true));
     }
+
+    @Test
+    public void nearbyIndependentHeadDoesNotEstablishSharedShaft() {
+        draw(2, false, false);
+        oval(X - 24, Y - 32);
+        rect(X - 13, X - 11, Y - 96, Y - 32, 1);
+        assertEquals(-1, count(false));
+    }
+
+    @Test
+    public void mirroredIndependentHeadDoesNotEstablishSharedShaft() {
+        draw(2, false, false);
+        oval(X - 24, Y - 32);
+        rect(X - 13, X - 11, Y - 96, Y - 32, 1);
+        assertEquals(-1, count(true));
+    }
 }

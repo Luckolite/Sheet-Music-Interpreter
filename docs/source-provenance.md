@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Shared-stem beam ownership requires raw shaft continuity from the second head to
+the current head row. Nearby independent heads leave the ordinary beam detector
+in charge. Original mirrored synthetic regressions retain true shared voices;
+recognition29 invalidates derived guides without changing format284 or models.
+
 Bibliographic metadata has twelve pure-Java counterparts with complete
 executable-token parity after package adaptation and AOSP formatting. The port
 includes heading and credit evidence, original-pixel word spacing, embedded-text

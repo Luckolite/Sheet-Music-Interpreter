@@ -108,7 +108,8 @@ final class SharedStemBeamOwnership {
                         for (int x = Math.max(0, stem - Math.round(gap * 1.8f));
                                 x <= Math.min(w - 1, stem + Math.round(gap * 1.8f));
                                 x++)
-                            if (labels[y * w + x] == OmrMeasurePostProcessor.NOTEHEAD) {
+                            if (labels[y * w + x] == OmrMeasurePostProcessor.NOTEHEAD
+                                    && shaftReachesHead(gray, w, h, x, y, start, gap)) {
                                 nearbyHead = true;
                                 break;
                             }
@@ -226,6 +227,25 @@ final class SharedStemBeamOwnership {
                     roots.add(railRoot);
             }
         return Math.min(3, roots.size());
+    }
+
+    /** A neighboring oval is ambiguous only when its own shaft reaches this head's row.
+     * Nearby notes on ordinary sloped beams must not replace their written beam count. */
+    private static boolean shaftReachesHead(
+            byte[] gray, int w, int h, int x, int headY, int row, float gap) {
+        int distance = Math.abs(row - headY);
+        if (distance < gap * 1.3f) return false;
+        int hits = 0, blanks = 0, longestBlank = 0;
+        for (int y = Math.min(row, headY); y <= Math.max(row, headY); y++) {
+            if (ink(gray, w, h, x, y)) {
+                hits++;
+                blanks = 0;
+            } else {
+                blanks++;
+                longestBlank = Math.max(longestBlank, blanks);
+            }
+        }
+        return hits >= (distance + 1) * .85f && longestBlank <= Math.max(1, Math.round(gap * .3f));
     }
 
     private static boolean attachedFace(
