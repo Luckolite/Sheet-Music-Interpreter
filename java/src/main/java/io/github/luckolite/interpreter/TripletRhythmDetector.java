@@ -388,7 +388,10 @@ final class TripletRhythmDetector {
                 || width < 1
                 || height < 1
                 || gray.length != width * height) return notes;
-        List<ScoreNoteEvent> result = new ArrayList<>(notes);
+        // A complete printed seven-note group owns its attacks before a smaller candidate.
+        List<ScoreNoteEvent> result =
+                new ArrayList<>(
+                        beamedTuplets(notes, measures, gray, width, height, 7, virtualStart));
         List<Glyph> clearThrees = new ArrayList<>();
         List<OwnedPrintedThree> ownedPrintedThrees = new ArrayList<>();
         List<RawStaffLineDetector.StaffLines> printedStaffs =

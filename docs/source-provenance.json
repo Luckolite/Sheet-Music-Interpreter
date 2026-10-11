@@ -364,15 +364,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "5929deedbfeaa5e48a7510f0f3e66b7f68927496d6c3c61385bf9d3274765677",
-      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package and existing portable Diagnostics-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
-      "source_normalized_sha256": "40e51062374ebbbbbf4b99d44391c28a36c238ee1db695cd1840b4d882a67321",
+      "source_sha256": "ab72bbe77f71b2d4aac3d8df4643a301623f5b71d2bf18657ff834a852978497",
+      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+      "source_normalized_sha256": "2a7d16d8720d19c4ca2265879154bc91f7a0954d8ead21953e1dc47b2fe556ff",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
-      "standalone_sha256": "b28198bdf30bc13b143264f938bc00e95704e3a976dcd7507f724704010430c2",
-      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+      "standalone_sha256": "cb9afe7c99f6330dd41b3fa1ff0cea7a0a6f0968a1fd1eac010096a3c3ebc2d6",
+      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -486,13 +486,15 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "81f0fe7b994178bdbf0726393e59db731ee86d3d8ead04fa0ad6b44da88c5569",
-      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
-      "source_normalized_sha256": "f3b8d9b5d71a39a3408c7050b6d2c7e7918c4b59fdda046ca46fafbaf76552c3",
-      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
+      "source_sha256": "1085429c812d0510ef2484252ee2cd0d13b217936c6af00a9cd410c7e63dee0f",
+      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "source_normalized_sha256": "619ee8042330fabc5542b3cc53dbe50dedff7261d55e8fe0464fd89b4bbff37d",
+      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
-      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
+      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "standalone_sha256": "7c1eb7115944596ed741fa86e99ac70c3c4fe7f64de6749ca04fefac7975dc0e"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1494,14 +1496,14 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "10aff5b4b3410c1d08a0321637b4607bf7d6810253a5bc8982e8df3f955b68c9",
-      "source_normalized_sha256": "c5b9556ff73bff61f3154f497df6b83e57a0aa488d20db6c8f53c36404a613c6",
-      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
-      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
-      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "standalone_sha256": "e08e6a2c0fd62880a76794e86ade2fd928d490e0cbc5d8eb80a5c83d7770a267",
-      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+      "source_sha256": "3b7684ca34dfcec562fdb318e3f0540d43a5dcb625a3e6f30d1222a535add414",
+      "source_normalized_sha256": "a9b4a4066ac1ff83db5f9f1b07ebb366780fffb0cb204671fbd7d8b509724561",
+      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "standalone_sha256": "eb086e4e87a643d58e7c2e92bc796c4e91932bef0b899d402c9850125aa3a872",
+      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1557,14 +1559,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "3d4e5052ec0916ceffe5851fc659c49149ebf707f2fb02c8ca38bdf1e874c66f",
-      "source_normalized_sha256": "745be05e6913a758878236437071f04226df91c4924708b819d5e0382b423bde",
-      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
-      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
-      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab",
-      "standalone_sha256": "15ae484534f69419cd4abb4dbf53d6d63ec9d91b4a1cd590b6dd0b89b4a52b02"
+      "source_sha256": "5ae396e5f6913312d746936d97797dddb1c720fd45f6fc5afc01543d108982ea",
+      "source_normalized_sha256": "8208305f5f0d8ce71ef7224fb782d0ee4f935ba9890ba04d281d594a612080a3",
+      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "standalone_sha256": "220b045e0f286585b6d123df67955ffb0cc5985d4bc81d5aa6ebd85a88a907dc"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -5236,5 +5238,86 @@
       "GuideCacheIdentityTest.java": "38174a3febf48422f0fc27bbded98fd6ce48ce04ac79dcdc5d8db97dfd01418f",
       "guide_writer.py": "15ae484534f69419cd4abb4dbf53d6d63ec9d91b4a1cd590b6dd0b89b4a52b02"
     }
+  },
+  "seven_precedence_and_head_beam_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+    "prior_mapped_origins": {
+      "OmrScoreInterpreter.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
+        "source_sha256": "5929deedbfeaa5e48a7510f0f3e66b7f68927496d6c3c61385bf9d3274765677",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package and existing portable Diagnostics-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+        "source_normalized_sha256": "40e51062374ebbbbbf4b99d44391c28a36c238ee1db695cd1840b4d882a67321",
+        "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+        "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+        "standalone_sha256": "b28198bdf30bc13b143264f938bc00e95704e3a976dcd7507f724704010430c2",
+        "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+      },
+      "TripletRhythmDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
+        "source_sha256": "81f0fe7b994178bdbf0726393e59db731ee86d3d8ead04fa0ad6b44da88c5569",
+        "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+        "source_normalized_sha256": "f3b8d9b5d71a39a3408c7050b6d2c7e7918c4b59fdda046ca46fafbaf76552c3",
+        "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
+        "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+        "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
+        "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "10aff5b4b3410c1d08a0321637b4607bf7d6810253a5bc8982e8df3f955b68c9",
+        "source_normalized_sha256": "c5b9556ff73bff61f3154f497df6b83e57a0aa488d20db6c8f53c36404a613c6",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+        "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+        "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "standalone_sha256": "e08e6a2c0fd62880a76794e86ade2fd928d490e0cbc5d8eb80a5c83d7770a267",
+        "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "3d4e5052ec0916ceffe5851fc659c49149ebf707f2fb02c8ca38bdf1e874c66f",
+        "source_normalized_sha256": "745be05e6913a758878236437071f04226df91c4924708b819d5e0382b423bde",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+        "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+        "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab",
+        "standalone_sha256": "15ae484534f69419cd4abb4dbf53d6d63ec9d91b4a1cd590b6dd0b89b4a52b02"
+      }
+    },
+    "reviewed_sources": [
+      "OmrScoreInterpreter.java",
+      "TripletRhythmDetector.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "original_regressions": [
+      "PrintedSeptupletPrecedenceTest",
+      "SmallHeadFallbackBeamTest"
+    ],
+    "original_controls": 14,
+    "focused_existing_and_original_controls": 1637,
+    "recognition_revision": 34,
+    "guide_layout": 284,
+    "audio_epoch": 79,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "private_score_fixtures_included": false,
+    "executable_parity": {
+      "OmrScoreInterpreter.java": "cb9afe7c99f6330dd41b3fa1ff0cea7a0a6f0968a1fd1eac010096a3c3ebc2d6",
+      "TripletRhythmDetector.java": "7c1eb7115944596ed741fa86e99ac70c3c4fe7f64de6749ca04fefac7975dc0e",
+      "SmallHeadFallbackBeamTest.java": "e2e9db8e6e10e2ed5bb8698e96746b2745b0f323a7180ce13bd9d3a97f1ab4cf",
+      "PrintedSeptupletPrecedenceTest.java": "e6ba0a77664394660f8dea825056b41a2b0c6ccd9cf561fc0c8c1fcc874489a3",
+      "GuideCacheIdentity.java": "eb086e4e87a643d58e7c2e92bc796c4e91932bef0b899d402c9850125aa3a872",
+      "GuideCacheIdentityTest.java": "b8c6fac4aa7a80bef55bed65888316eed2a0d7eaed2a49ee5788d18d07f94203",
+      "guide_writer.py": "220b045e0f286585b6d123df67955ffb0cc5985d4bc81d5aa6ebd85a88a907dc"
+    },
+    "app_only_adapters_changed": false,
+    "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+    "reviewed_compliant_commit": "626bcc5ee3c82dfe247acab58c27219783a2c1b1",
+    "portable_diagnostics_review": "Existing Diagnostics.log and relative-import writer adaptation retained. Exact package/diagnostics token and writer AST parity verified at adoption319; no new platform dependencies or helper changes."
   }
 }

@@ -10891,8 +10891,9 @@ final class OmrScoreInterpreter {
             DetectedNote a = detected.get(i), principal = detected.get(i + 1);
             float gap = a.staffGap;
             if ((events.get(i).articulations() & NoteOrnament.GRACE) != 0
-                    || !(smallGraceHead(a) || roundedBeamedGraceHead(a, gray, width, height)
-                            && !extendsMetricalBeam(gray, width, height, detected, i))
+                    || !(smallGraceHead(a)
+                            || roundedBeamedGraceHead(a, gray, width, height)
+                                    && !extendsMetricalBeam(gray, width, height, detected, i))
                     || a.event.beamCount() > 1
                     || !sameGraceVoice(a, principal)
                     || smallGraceHead(principal)
@@ -17037,7 +17038,7 @@ final class OmrScoreInterpreter {
             // the semantic occlusion when raw ink really spans it; otherwise end the band.
             if (staffLine && !smallHead && run >= minimumHorizontal) continue;
             if (staffLine) run = 0;
-            if (!smallHead
+            if ((!smallHead || attached == null)
                     && gray != null
                     && run >= minimumHorizontal
                     && HeadInkBeamExclusion.onlyHead(

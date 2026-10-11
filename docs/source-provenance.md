@@ -1053,3 +1053,13 @@ The app-only MuseScore voice-label adapter was reviewed separately: it requires
 a unique complete written pitch/time/staff/grace signature and then repeats
 the unchanged strict owner checks. No commercial score pixels or library data
 are included. Models and their lineage remain unchanged.
+
+## Complete tuplets and head-only beam ink
+
+A complete independently proved printed seven-note group claims its attacks
+before smaller triplet candidates. When no raw shaft is recovered for a small
+head, the existing head-only ink exclusion prevents the head itself from adding
+a beam; genuine runs extending beyond the head remain evidence. Fourteen
+original procedural controls accompany these global repairs. Recognition34
+invalidates derived guides. Guide284/audio79 layouts, models and dependencies
+remain unchanged; no commercial scans or private library data are included.
