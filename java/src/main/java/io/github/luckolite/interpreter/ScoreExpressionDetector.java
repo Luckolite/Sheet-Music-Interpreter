@@ -87,27 +87,10 @@ public final class ScoreExpressionDetector {
                             word.top() * height,
                             word.bottom() * height);
             if (staff == null) continue;
-            ScoreNoteEvent closest = null;
-            float distance = Float.MAX_VALUE;
-            for (var note : score.notes()) {
-                if (note.staffIndex() != staff.index() || note.staffCount() != staff.count())
-                    continue;
-                var region = score.measures().get(note.measureIndex());
-                float center = (staff.top() + staff.bottom()) * .5f / height;
-                if (center < region.top() - staff.gap() / height
-                        || center > region.bottom() + staff.gap() / height) continue;
-                float nx =
-                        (region.left()
-                                        + note.positionInMeasure()
-                                                * (region.right() - region.left()))
-                                * width;
-                if (release && nx > x + staff.gap() * .2f) continue;
-                float d = Math.abs(nx - x);
-                if (d < distance && d <= staff.gap() * 3) {
-                    closest = note;
-                    distance = d;
-                }
-            }
+            ScoreNoteEvent closest = closestDirectionNote(score, staff, width, height, x, x);
+            if (closest == null && word.right() > word.left())
+                closest =
+                        closestDirectionNote(score, staff, width, height, x, word.right() * width);
             if (closest == null) continue;
             String target =
                     target(
@@ -151,6 +134,33 @@ public final class ScoreExpressionDetector {
     }
 
     private record Column(int measure, int staff, int count, float position) {}
+
+    private static ScoreNoteEvent closestDirectionNote(
+            ScorePageInterpretation score,
+            PlayingTechniqueDetector.Staff staff,
+            int width,
+            int height,
+            float left,
+            float right) {
+        ScoreNoteEvent closest = null;
+        float distance = Float.MAX_VALUE;
+        for (var note : score.notes()) {
+            if (note.staffIndex() != staff.index() || note.staffCount() != staff.count()) continue;
+            var region = score.measures().get(note.measureIndex());
+            float center = (staff.top() + staff.bottom()) * .5f / height;
+            if (center < region.top() - staff.gap() / height
+                    || center > region.bottom() + staff.gap() / height) continue;
+            float nx =
+                    (region.left() + note.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            float d = Math.max(0, Math.max(left - nx, nx - right));
+            if (d < distance && d <= staff.gap() * 3) {
+                closest = note;
+                distance = d;
+            }
+        }
+        return closest;
+    }
 
     private static String target(int measure, int staff, int count, float position) {
         return TARGET + measure + ":" + staff + ":" + count + ":" + Float.floatToIntBits(position);

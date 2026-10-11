@@ -46,7 +46,7 @@ public final class ExpressiveDirectionText {
                             "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"
                                     + "|scherzando|agitato|festoso|espressivo|dolce(?:\\s+e\\s+cantabile)?"
                                     + "|cantabile|con\\s+(?:brio|fuoco|anima)|tranquillo|grazioso"
-                                    + "|giocoso|maestoso|appassionato|leggiero"));
+                                    + "|giocoso|maestoso|appassionato|leggiero|free\\s+time"));
 
     private ExpressiveDirectionText() {}
 

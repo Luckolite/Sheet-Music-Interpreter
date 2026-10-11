@@ -118,6 +118,14 @@ final class PrintedDirectionStaff {
                             ? ScoreDynamicsDetector.directionOwner(
                                     List.of(local), top, bottom, notes, measures, height)
                             : local;
+            if (owner == null
+                    && requireOwner
+                    && bottom <= local.top() - local.gap() * .25f
+                    && witness.pageY() * height < local.top()) {
+                float ceiling = witness.pageY() * height - local.gap() * 1.5f;
+                float above = (ceiling - bottom) / local.gap() + .75f;
+                if (top >= 0 && above >= 0 && above <= 4.5f) owner = local;
+            }
             if (owner == null) continue;
             float distance =
                     requireOwner

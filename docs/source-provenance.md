@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Ledger headings require complete bilateral staff rails and a nearby written
+ledger note. Existing left-edge direction anchors retain precedence. Free time
+is an unresolved direction; numeric tempo and playback timing are unchanged.
+Curved cover helpers use pixel geometry, literal source anchors and agreement
+between two readers at three scales; contributor preservation gates selection.
+Only pure-JDK helpers and original fictional/procedural regressions are shared.
+Android PDF/bitmap/OCR adapters remain app-only. Recognition31 invalidates
+derived guides at unchanged layout284 and audio78. Models are unchanged.
+
 Opposed printed voices retain independent beam/numeral ownership: shared-shaft
 chord heads count as one attack. Repeated coincident distinct heads and complete
 written durations corroborate independent clocks; ambiguous or incomplete lanes

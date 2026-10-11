@@ -1045,11 +1045,11 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "379d2875fe6a5e028f3bba8314f0936f54f2066694e45e7b542b463f721403a0",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "4cd34a04dc0eaa2ce401445a8024449e640eafca400b356b287fa34f65519026",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
+      "source_sha256": "fc4360ed4eb0c31ee3f16c3bfe16a5cd4a71ecbe0911209e29dfd84abe2082ba",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "source_normalized_sha256": "195a0327072af92c64f913ab82c16c7c9693ce1c0e42f072f84f7cad268226bd",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+      "review_note": "Retains Free time as an unresolved printed direction without guessing BPM. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history."
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
@@ -1262,10 +1262,11 @@
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
-      "source_sha256": "6683eedae3b44abbfa6e7654f686aa96a1e90b640909eaf8f46a50816610af4e",
-      "source_normalized_sha256": "6683eedae3b44abbfa6e7654f686aa96a1e90b640909eaf8f46a50816610af4e",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "2c6ec7d214ec8ea7c725b89b3711d39388cfba64091d1d8dd53df0ba071b70be",
+      "source_normalized_sha256": "b92896135115fd8bd8fa787e4c3e16d48403cb52e530cd277f45299a4f24f547",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+      "review_note": "Complete bilateral five-line rails and a nearby ledger note corroborate bounded heading ownership; missing/cross-staff/remote evidence declines. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
@@ -1385,11 +1386,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "5525f3d374ef8077bebb80de72590d6be0d198bce95978e81842aca59bd1b547",
-      "source_normalized_sha256": "520ea8dc2e111a0bacece54121657f8c00347e0d1ed45df317b551f08cbcb3ad",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "source_sha256": "355686ec984f50c43fa81bd639c8a3f2df528f8f54ffd909e8ad4cdaec19407e",
+      "source_normalized_sha256": "3640d085823c86512c542b95da7ceaacc45a37c3dc79427746fc50eec7147daf",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+      "review_note": "Preserves existing left-edge direction anchors; a word-span fallback applies only when the old search finds no written head. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
     },
     "ScoreExpressionNotation.java": {
@@ -1492,12 +1493,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "00c272e9ec37b5001df0a03172fe5af4f45c1da48a6666393fa8eb3ce73f05d8",
-      "source_normalized_sha256": "0a8fcef5a5724676d2153d71b7b37e9589087e3cc636b5273fb7c2e0a0a00134",
-      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
-      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
-      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
-      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+      "source_sha256": "55b8c2903bb7d848f9adf2f885c8382691195aaf60023801f0360feb52a078ea",
+      "source_normalized_sha256": "88ee4043817c6fe6ccfda8ebf1ad764a4dd1e05adaf4aea29558ea20a825f595",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "review_note": "Recognition31 invalidates derived recognition caches; physical guide284 and audio78 unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+      "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
       "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
     },
     "BeamInkConnectivity.java": {
@@ -1554,12 +1555,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f90ada723c9c29f5e86b8ec2d82e8ea45dfd898faa59e31a0189e744e294a853",
-      "source_normalized_sha256": "3b66b494a2be3ac680e97f9b796065a025eac77b6f5ff3855031afcf90f5fd5e",
-      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
-      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
-      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
-      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
+      "source_sha256": "3efa9a84ae7ac7913e39941ca5d07d90dc4269e613156bd9eb2ef4def757f8f7",
+      "source_normalized_sha256": "b2d01ccb56496643e28e4975c0d1ebeafac5e9155251f907d56eefa6b2443b31",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+      "review_note": "Recognition cache revision31 only; the guide284 record layout is unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "scoped_reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2202,6 +2203,26 @@
       "standalone_sha256": "154ba6ebae007a2b943d4fd0bbc3a95ab796d5a12dba119b1aa37fd94eb42d6d",
       "license": "Apache-2.0",
       "review_note": "Original source title review helpers; executable-token parity after package and AOSP formatting. Fictional geometry/text regressions only; no private score, model, signing material or new dependency."
+    },
+    "CurvedCoverRows.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CurvedCoverRows.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurvedCoverRows.java",
+      "license": "Apache-2.0",
+      "source_sha256": "9c774de404e1afa2e9e9da887e5ca9c80003ebe94c402080701a8c23e8d175f2",
+      "source_normalized_sha256": "3ef9c251508c39711d78fe9fdd2451247c36a4736a20bfa1e1e9df3730a25321",
+      "review_note": "Pure-JDK pixel-only bounded curved row extraction; deterministic geometry, input preservation and original procedural raster controls. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged."
+    },
+    "CurvedTitleCompletion.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CurvedTitleCompletion.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurvedTitleCompletion.java",
+      "license": "Apache-2.0",
+      "source_sha256": "6038f6b5c42627e2a488136570a2e6e2695729f09ee41b8cd486d39041fdd9c9",
+      "source_normalized_sha256": "96b6f95e0c9ec3214a21d5d11601a1309c9180623423a8c1a08b4433e432c9ec",
+      "review_note": "Pure-JDK literal title completion using matching two-reader, three-scale evidence, same physical row and full-document contributor preservation; fictional original controls. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged."
     }
   },
   "interpreter_speedup_review": {
@@ -4896,5 +4917,94 @@
         "commentOnlyCleanup": true
       }
     }
+  },
+  "ledger_heading_curved_cover_review": {
+    "license": "Apache-2.0",
+    "reviewed_sources": [
+      "ExpressiveDirectionText.java",
+      "ScoreExpressionDetector.java",
+      "PrintedDirectionStaff.java",
+      "CurvedCoverRows.java",
+      "CurvedTitleCompletion.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "reviewed_app_base_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+    "recognition_revision": 31,
+    "guide_layout": 284,
+    "audio_timing_epoch": 78,
+    "models_changed": false,
+    "scope": "Free time is retained as an unresolved direction without guessing tempo. Complete bilateral five-line rails and nearby ledger note ownership are required; established left-edge direction anchors retain precedence. Pixel-only curved cover rows and matching two-reader, three-scale title completion require literal source anchors and whole-document contributor preservation. Android original-PDF review adapters remain app-only.",
+    "original_synthetic_regressions": [
+      "LedgerHeadingDirectionTest",
+      "ExistingDirectionAnchorTest",
+      "FreeTimeTextTest",
+      "CurvedTitleCompletionSyntheticTest",
+      "CurvedCoverRowsSyntheticTest"
+    ],
+    "private_evidence_excluded": true,
+    "prior_mapped_origins": {
+      "ExpressiveDirectionText.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
+        "source_sha256": "379d2875fe6a5e028f3bba8314f0936f54f2066694e45e7b542b463f721403a0",
+        "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+        "source_normalized_sha256": "4cd34a04dc0eaa2ce401445a8024449e640eafca400b356b287fa34f65519026"
+      },
+      "ScoreExpressionDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
+        "source_sha256": "5525f3d374ef8077bebb80de72590d6be0d198bce95978e81842aca59bd1b547",
+        "source_normalized_sha256": "520ea8dc2e111a0bacece54121657f8c00347e0d1ed45df317b551f08cbcb3ad",
+        "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
+      },
+      "PrintedDirectionStaff.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
+        "source_sha256": "6683eedae3b44abbfa6e7654f686aa96a1e90b640909eaf8f46a50816610af4e",
+        "source_normalized_sha256": "6683eedae3b44abbfa6e7654f686aa96a1e90b640909eaf8f46a50816610af4e"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "00c272e9ec37b5001df0a03172fe5af4f45c1da48a6666393fa8eb3ce73f05d8",
+        "source_normalized_sha256": "0a8fcef5a5724676d2153d71b7b37e9589087e3cc636b5273fb7c2e0a0a00134",
+        "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+        "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "f90ada723c9c29f5e86b8ec2d82e8ea45dfd898faa59e31a0189e744e294a853",
+        "source_normalized_sha256": "3b66b494a2be3ac680e97f9b796065a025eac77b6f5ff3855031afcf90f5fd5e",
+        "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+        "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
+      }
+    },
+    "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+    "reviewed_compliant_commit": "65b4a834f4bc4d8c63579ddd7a68d5ea8ebb2077",
+    "executable_parity": {
+      "ExpressiveDirectionText.java": "fb71ca06bfa27303272f45c892f7e65a611045dba65fc0b2d60db6fb4ec118dc",
+      "ScoreExpressionDetector.java": "4af12714eddeee92911714bb70458cea7b1d8e21bd1d6b21043653adb7d3140e",
+      "PrintedDirectionStaff.java": "933a9dff4c7a991962aeffd24f1cec9370439aea4cea44b62b088d85ab13cb38",
+      "LedgerHeadingDirectionTest.java": "b8728bad537d39cb548e9a8b9907ba54583bb75b704cda7bdc50ae195f67c095",
+      "ExistingDirectionAnchorTest.java": "ceaca2a7146102e01bcbd773d8461d5ff202fd746044f54521012debcafc030a",
+      "CurvedCoverRows.java": "0baac44fa15bb31c8b9c44e87f5cc951341315b9b61ff4be8244db8511bdac3b",
+      "CurvedTitleCompletion.java": "c4f1e7073969f6771bc9f44ba543deccc3e794095107c51c2ac107fca2f8789c",
+      "CurvedTitleCompletionSyntheticTest.java": "be968876a921e497f88167e4d6bcbc52cb2a194bc0e36f83b7f68ba88c9df3d7",
+      "FreeTimeTextTest.java": "1dcd2776033751259e06ff384e028be287ed53b99a28b219394cd5e98075f57e",
+      "CurvedCoverRowsSyntheticTest.java": "7033a78e9eeff1d0b182c0ee99ee9d85dbab1819154b83a6b04020aec8180326",
+      "GuideCacheIdentity.java": "ba5eb133c9cd29b4123003842d3c9887c1d6549d8b52d846a55d9ced47b2a346",
+      "guide_writer.py": "a7288acbcb25344eb1ef02415443b389e63c79deee40a889dd88730d0a71c228"
+    },
+    "app_only_adapters": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/OriginalTitleReviewReader.java",
+        "source_sha256": "a61b2be8acc12b3fca58d8e04a822431a19e5cd6af69fbe784d02226130e3969",
+        "license": "Apache-2.0",
+        "scope": "Original-PDF/bitmap/OCR adapter for explicit metadata review; reusable pixel/title helpers are mapped separately."
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/CurvedTitleReviewReader.java",
+        "source_sha256": "e8c5fe1b106633d38253ddd465c484a6accef2fa0b67d109bca34cd582ec9ec8",
+        "license": "Apache-2.0",
+        "scope": "Original-PDF/bitmap/OCR adapter for explicit metadata review; reusable pixel/title helpers are mapped separately."
+      }
+    ]
   }
 }
