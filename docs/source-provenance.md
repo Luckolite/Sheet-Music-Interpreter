@@ -1029,3 +1029,14 @@ ends and later repeated downs remain diagnostic. The matching original standalon
 Python exporters and Android exporter were reviewed separately. Recognition32 and
 audio79 invalidate affected derived caches at unchanged guide layout284. Original
 procedural regressions contain no commercial scans or private library material.
+
+## Curved cover credit review
+
+A separately printed curved cover name can remain unclassified for explicit
+manual review after the existing title selection. Two readers and three scales
+must corroborate the same physical row. Raw OCR lines, later pages, all four
+assigned fields and existing contributors stay unchanged. Original fictional
+text and procedural geometry provide the regression; no private scans or
+library data are included. Android PDF/bitmap adapters and scanner byte guards
+were reviewed separately. Recognition32, guide284 and audio79 are unchanged
+because ordinary recognition, retained guide and audio inputs do not change.

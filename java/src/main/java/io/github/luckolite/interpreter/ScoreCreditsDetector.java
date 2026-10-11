@@ -3712,6 +3712,27 @@ public final class ScoreCreditsDetector {
         splitCorroboratedContributors(artists);
         splitCorroboratedContributors(composers);
         splitCorroboratedContributors(arrangers);
+        // The OCR producer can retain one separate name on the opening cover only.
+        if (!pages.isEmpty()) {
+            Page opening = pages.get(0);
+            List<String> retained =
+                    opening.reviewCredits.stream()
+                            .map(
+                                    evidence ->
+                                            CurvedCoverCreditReview.retainedValue(
+                                                    opening, evidence))
+                            .filter(value -> !value.isEmpty())
+                            .toList();
+            if (retained.size() == 1) {
+                String value = retained.get(0);
+                if (!containsPrintedPhrase(title.isEmpty() ? fallback : title, value)
+                        && artists.stream().noneMatch(name -> containsPrintedPhrase(name, value))
+                        && composers.stream().noneMatch(name -> containsPrintedPhrase(name, value))
+                        && arrangers.stream().noneMatch(name -> containsPrintedPhrase(name, value))
+                        && other.stream().noneMatch(name -> containsPrintedPhrase(name, value)))
+                    other.add(value);
+            }
+        }
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
