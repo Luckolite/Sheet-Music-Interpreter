@@ -198,6 +198,20 @@ public final class MeterChangeDetector {
         return List.copyOf(result);
     }
 
+    /** Reapply written-bar evidence to old sources which predate captured timing.
+     * Explicit timing is authoritative, even when optical durations disagree. */
+    public static ScorePageInterpretation repairLegacyInterpretation(
+            ScorePageInterpretation score, boolean hasRetainedTiming) {
+        if (hasRetainedTiming) return score;
+        var meters = filterWholeNoteOcrReadings(
+                score.meterChanges(), score.notes(), score.measures().size());
+        if (meters.equals(score.meterChanges())) return score;
+        return new ScorePageInterpretation(score.measures(), score.notes(),
+                score.firstMeasureNumber(), score.keyChanges(), score.tempoChanges(), meters,
+                score.rests(), score.techniqueChanges(), score.dynamicChanges(),
+                score.playbackDirections(), score.expressiveEvents());
+    }
+
     public static List<Crop> candidates(byte[] labels, byte[] gray, int width, int height) {
         return candidates(labels, gray, width, height, crop -> true);
     }

@@ -298,10 +298,10 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "d59a920289d19b2ab62910330d868ba6c5d7af8ef8b636a678df8852133b160e",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Apply existing note/header/accidental ownership before the48-crop OCR budget. Legacy raw-candidate API, crop geometry and thresholds remain unchanged. Original same-staff and later-staff crowding controls prove recovery without unbounded OCR.",
-      "source_normalized_sha256": "e91f03749ae7fab9c65a7985767d7af16bec301dffec39647637aaaedb110f31",
+      "source_sha256": "fee817cda6e220bc7baa7315f13fb14f6685fdd23ac7b6b9b2f7af1c6c816efd",
+      "reviewed_app_commit": "6df0969574f3f2de5a327ed27fe3f56703f19431",
+      "review_note": "Add retained-source repair using existing multi-bar OCR contradiction evidence; explicit captured timing bypasses repair. Recognition thresholds and raw OCR APIs unchanged. Original synthetic regression only.",
+      "source_normalized_sha256": "c3630575bd6277ff92e4d82101d9a024d0aa8f78c78dfc4ed1c67a57922f95d8",
       "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
@@ -4744,5 +4744,15 @@
     "title_source_caption_page_layout_changed": false,
     "title_source_caption_scope": "Only first-page nonphotographic staff-header geometry with a unique nearby generic source caption and unambiguous title owner. Three strong identical original-PDF reads at fixed tight-heading padding (max4px or .1 line height)/scales1/2/4 establish literal correction. Shared competing-heading guard also gates the bounded .35 heading-height overlap exception. Other words, roles, identifiers and later-page behavior remain guarded.",
     "title_source_caption_tight_crop_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6"
+  },
+  "legacy_conversion_meter_repair_review": {
+    "reviewed_app_commit": "6df0969574f3f2de5a327ed27fe3f56703f19431",
+    "standalone_counterpart": "java/src/main/java/io/github/luckolite/interpreter/MeterChangeDetector.java",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/LegacyMeterRepairTest.java",
+    "android_adapter": "app/src/main/java/com/musicsheets/app/pdf/SheetConversionState.java",
+    "adapter_sha256": "51395ffbc2f43c0da0ab8e4ca09436f147f93f086807d82046d36c623a527534",
+    "adapter_review": "Only saved sources with old render versions and no captured placement or boundary fields are eligible. Load is read-only; normal successful regeneration persists the repaired source and existing edits. Captured timing remains authoritative.",
+    "private_material_published": false,
+    "models_or_wire_layouts_changed": false
   }
 }
