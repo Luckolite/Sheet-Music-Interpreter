@@ -1040,3 +1040,16 @@ text and procedural geometry provide the regression; no private scans or
 library data are included. Android PDF/bitmap adapters and scanner byte guards
 were reviewed separately. Recognition32, guide284 and audio79 are unchanged
 because ordinary recognition, retained guide and audio inputs do not change.
+
+## Rounded slashed grace heads
+
+A reduced rounded head can use the existing slashed-grace recovery only with
+its own short shaft, independently printed slash and flag, a larger nearby
+principal on the same staff, and no extension of an ordinary metrical beam.
+Eight original procedural controls accompany the public decoder repair.
+Recognition revision33 invalidates derived guides; physical guide284 and audio79
+remain unchanged. Audio performance identities already include note records.
+The app-only MuseScore voice-label adapter was reviewed separately: it requires
+a unique complete written pitch/time/staff/grace signature and then repeats
+the unchanged strict owner checks. No commercial score pixels or library data
+are included. Models and their lineage remain unchanged.

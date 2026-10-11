@@ -10891,7 +10891,8 @@ final class OmrScoreInterpreter {
             DetectedNote a = detected.get(i), principal = detected.get(i + 1);
             float gap = a.staffGap;
             if ((events.get(i).articulations() & NoteOrnament.GRACE) != 0
-                    || !smallGraceHead(a)
+                    || !(smallGraceHead(a) || roundedBeamedGraceHead(a, gray, width, height)
+                            && !extendsMetricalBeam(gray, width, height, detected, i))
                     || a.event.beamCount() > 1
                     || !sameGraceVoice(a, principal)
                     || smallGraceHead(principal)

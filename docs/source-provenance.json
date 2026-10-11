@@ -364,14 +364,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ce7f9109f63c89b31fdef290bfc81a3089e6e16598dfeb622e0e949d8f989de3",
-      "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
-      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
-      "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
-      "source_normalized_sha256": "1aa38a454469b13b27e028a6c2859a66153a7c9128987427f04bc65aeacd3506",
+      "source_sha256": "5929deedbfeaa5e48a7510f0f3e66b7f68927496d6c3c61385bf9d3274765677",
+      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package and existing portable Diagnostics-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+      "source_normalized_sha256": "40e51062374ebbbbbf4b99d44391c28a36c238ee1db695cd1840b4d882a67321",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
-      "standalone_sha256": "17e4cbacd60e6b3430e434c74c9e195bb1bfa577b256d4b370b93166497ec392"
+      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+      "standalone_sha256": "b28198bdf30bc13b143264f938bc00e95704e3a976dcd7507f724704010430c2",
+      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1493,13 +1494,14 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "502386ab10b63214e228c102c3d043c874b7c19c5432ce333d002041413c52c2",
-      "source_normalized_sha256": "eff71418b1544089edf4965e14d014d68dcf39d35e17ac4307c8d0c0db44d549",
-      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "review_note": "Recognition32 invalidates affected derived recognition caches at unchanged physical guide284; matching audio cache epoch79. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
-      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
-      "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
+      "source_sha256": "10aff5b4b3410c1d08a0321637b4607bf7d6810253a5bc8982e8df3f955b68c9",
+      "source_normalized_sha256": "c5b9556ff73bff61f3154f497df6b83e57a0aa488d20db6c8f53c36404a613c6",
+      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "standalone_sha256": "e08e6a2c0fd62880a76794e86ade2fd928d490e0cbc5d8eb80a5c83d7770a267",
+      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1555,12 +1557,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "bb04949a3cdfcf74be8a2a13b17796d77844ecf1cd6278df88152784af9b33f8",
-      "source_normalized_sha256": "86b950683657f6547d91d574ce0142a778f91799e1b78216ca0b0df3fed4fbff",
-      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
-      "review_note": "Recognition cache revision32 only; physical guide284 record layout unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
-      "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2"
+      "source_sha256": "3d4e5052ec0916ceffe5851fc659c49149ebf707f2fb02c8ca38bdf1e874c66f",
+      "source_normalized_sha256": "745be05e6913a758878236437071f04226df91c4924708b819d5e0382b423bde",
+      "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+      "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
+      "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+      "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab",
+      "standalone_sha256": "15ae484534f69419cd4abb4dbf53d6d63ec9d91b4a1cd590b6dd0b89b4a52b02"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -5147,6 +5151,90 @@
       "CurvedCoverCreditReview.java": "8c14e5d8c108310864eef3f6b7ca6c9713031989af0a043434194ed7611d4143",
       "ScoreCreditsDetector.java": "211304d112430adb414c12c60d3f6f585d7fb32522e4ef42b5eeaa901bcff9e3",
       "CurvedCoverCreditReviewSyntheticTest.java": "d77cfff464d0f2aaf44e566884ab4dfe80bb2ac561a7308c440614972799075c"
+    }
+  },
+  "rounded_slashed_grace_and_renderer_voice_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab",
+    "prior_mapped_origins": {
+      "OmrScoreInterpreter.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
+        "source_sha256": "ce7f9109f63c89b31fdef290bfc81a3089e6e16598dfeb622e0e949d8f989de3",
+        "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+        "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+        "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
+        "source_normalized_sha256": "1aa38a454469b13b27e028a6c2859a66153a7c9128987427f04bc65aeacd3506",
+        "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+        "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
+        "standalone_sha256": "17e4cbacd60e6b3430e434c74c9e195bb1bfa577b256d4b370b93166497ec392"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "502386ab10b63214e228c102c3d043c874b7c19c5432ce333d002041413c52c2",
+        "source_normalized_sha256": "eff71418b1544089edf4965e14d014d68dcf39d35e17ac4307c8d0c0db44d549",
+        "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+        "review_note": "Recognition32 invalidates affected derived recognition caches at unchanged physical guide284; matching audio cache epoch79. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
+        "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+        "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+        "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "bb04949a3cdfcf74be8a2a13b17796d77844ecf1cd6278df88152784af9b33f8",
+        "source_normalized_sha256": "86b950683657f6547d91d574ce0142a778f91799e1b78216ca0b0df3fed4fbff",
+        "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
+        "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
+        "review_note": "Recognition cache revision32 only; physical guide284 record layout unchanged. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
+        "scoped_reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2"
+      }
+    },
+    "reviewed_sources": [
+      "OmrScoreInterpreter.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "original_regressions": [
+      "RoundedSlashedGracePrefixTest"
+    ],
+    "original_grace_controls": 8,
+    "existing_private_focused_controls_including_new": 94,
+    "app_only_voice_identity_controls": 20,
+    "app_only_adapters": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/MuseScoreVoiceIdentity.java",
+        "source_sha256": "afd2a48a5f9df357838d6799c6a4936c07065f7aec064adb2e1ed4c61b8b00f8",
+        "scope": "App renderer note identity only. Full unique source-written pitch/time/staff/grace signatures restore voice labels, followed by all unchanged strict note-owner checks. No approximate pitch/time match and no ambiguous voice recovery.",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/MuseScoreNoteLayout.java",
+        "source_sha256": "c9b44d2aa612bf9074a26684910fb5ba6bc91e5ce16a0497429d66dcbe2e583a",
+        "scope": "App renderer note identity only. Full unique source-written pitch/time/staff/grace signatures restore voice labels, followed by all unchanged strict note-owner checks. No approximate pitch/time match and no ambiguous voice recovery.",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConverter.java",
+        "source_sha256": "277eae07b8b1169f2762a0ee364fd407d0eddef17ff0148ad9db444a43b6e61b",
+        "scope": "App renderer note identity only. Full unique source-written pitch/time/staff/grace signatures restore voice labels, followed by all unchanged strict note-owner checks. No approximate pitch/time match and no ambiguous voice recovery.",
+        "android_compatibility": "Read original MusicXML using Files.readAllBytes and explicit UTF-8; no newer Files.readString Android API required.",
+        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
+      }
+    ],
+    "recognition_revision": 33,
+    "guide_layout": 284,
+    "audio_epoch": 79,
+    "cache_reason": "Recognition changes invalidate derived guides at revision33. Audio performance fingerprints already include all note records including GRACE flags; audio engine/format unchanged. Renderer voice alignment changes only verified labels before the unchanged strict owner checks.",
+    "models_changed": false,
+    "private_score_fixtures_included": false,
+    "portable_diagnostics_review": "Existing Diagnostics.log retained; exact package/Diagnostics Java token parity and existing relative-import adapted native writer AST parity verified in public-parity277-retry1. No Android dependency introduced into the standalone core.",
+    "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+    "reviewed_compliant_commit": "71158d83bf0b23f597656aa5d74b39affd076ff6",
+    "executable_parity": {
+      "OmrScoreInterpreter.java": "b28198bdf30bc13b143264f938bc00e95704e3a976dcd7507f724704010430c2",
+      "GuideCacheIdentity.java": "e08e6a2c0fd62880a76794e86ade2fd928d490e0cbc5d8eb80a5c83d7770a267",
+      "RoundedSlashedGracePrefixTest.java": "69c946f33d6a42732d4afcc2deaae155e084dde2b2cf27b71e79acb87886cb5f",
+      "GuideCacheIdentityTest.java": "38174a3febf48422f0fc27bbded98fd6ce48ce04ac79dcdc5d8db97dfd01418f",
+      "guide_writer.py": "15ae484534f69419cd4abb4dbf53d6d63ec9d91b4a1cd590b6dd0b89b4a52b02"
     }
   }
 }
