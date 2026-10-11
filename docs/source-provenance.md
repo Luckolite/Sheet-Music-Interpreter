@@ -23,6 +23,8 @@ includes heading and credit evidence, original-pixel word spacing, embedded-text
 geometry, crop caching and recognition-band coordinates. Original fictional
 regressions cover title envelopes, section and direction scope, contributor
 boundaries, review retention, audio-access badges and tracked lettering.
+Ten original fictional controls cover single-page narrative artwork: keep the
+imported title and retain the full quotation for review under bounded geometry.
 Source-work caption controls cover contextual composer inference while retaining
 unresolved dates and independently printed arranger roles. Android
 PDF rendering, bitmap ownership, ML Kit calls and recognizer-only inference remain

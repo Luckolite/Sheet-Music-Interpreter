@@ -3374,6 +3374,9 @@ public final class ScoreCreditsDetector {
 
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
         String fallback = clean(titleHint);
+        String narrativeArtwork = ambiguousNarrativeArtwork(fallback, pages);
+        if (!narrativeArtwork.isEmpty())
+            return new Result(fallback, "", "", "", List.of(narrativeArtwork));
         Set<String> artists = new LinkedHashSet<>(), composers = new LinkedHashSet<>();
         Set<String> arrangers = new LinkedHashSet<>(), other = new LinkedHashSet<>();
         String title = "";
@@ -3715,6 +3718,65 @@ public final class ScoreCreditsDetector {
                 String.join("; ", composers),
                 String.join("; ", arrangers),
                 List.copyOf(other));
+    }
+
+    /** A standalone narrative quotation does not identify the artwork's work title. */
+    private static String ambiguousNarrativeArtwork(String hint, List<Page> pages) {
+        if (hint.isEmpty() || pages.size() != 1) return "";
+        Page page = pages.get(0);
+        if (page.creditsOnly
+                || page.notationTop > 0
+                || !page.reviewCredits.isEmpty()
+                || !Float.isFinite(page.width)
+                || !Float.isFinite(page.height)
+                || !Float.isFinite(page.notationTop)
+                || page.width <= 0
+                || page.height <= 0) return "";
+        List<Line> lines =
+                page.lines.stream()
+                        .filter(l -> !clean(l.text).isEmpty())
+                        .sorted(Comparator.comparingDouble((Line l) -> l.top))
+                        .toList();
+        if (lines.size() != 2) return "";
+        for (Line line : lines) {
+            if (!Float.isFinite(line.left)
+                    || !Float.isFinite(line.top)
+                    || !Float.isFinite(line.right)
+                    || !Float.isFinite(line.bottom)
+                    || line.left < 0
+                    || line.top < 0
+                    || line.right > page.width
+                    || line.bottom > page.height
+                    || line.right <= line.left
+                    || line.bottom <= line.top
+                    || line.height() < page.width * .04f
+                    || line.height() > page.width * .14f
+                    || line.right - line.left < page.width * .2f
+                    || line.right - line.left > page.width * .9f
+                    || Math.abs(line.center() - page.width * .5f) > page.width * .08f
+                    || credit(line.text) != null
+                    || LEGAL.matcher(line.text).find()
+                    || line.text
+                            .codePoints()
+                            .anyMatch(c -> Character.isISOControl(c) || c == 0x2028 || c == 0x2029))
+                return "";
+        }
+        Line first = lines.get(0), second = lines.get(1);
+        String opening = clean(first.text), reply = clean(second.text);
+        if (first.top < page.height * .18f
+                || second.bottom > page.height * .9f
+                || second.top < first.bottom
+                || second.top - first.bottom > first.height() * 1.5f
+                || second.height() < first.height() * .75f
+                || second.height() > first.height() * 1.25f
+                || opening.split("\\h+").length < 5
+                || reply.split("\\h+").length < 3
+                || (opening + " " + reply).split("\\h+").length < 9
+                || !opening.matches(
+                        "(?iu)^(?:I|we|he|she|they|you)\\h+.+\\h+"
+                                + "(?:said|says|asked|whispered|told\\h+(?:me|us|him|her|them))[:;]?$"))
+            return "";
+        return opening + " " + reply;
     }
 
     /** Smaller names beside an opening score heading remain evidence for role review. */

@@ -2007,15 +2007,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "73769dfc41f3b45f6ffb3edd76a374bd170d472e6df825ba18ba91cadf35d7f2",
-      "source_normalized_sha256": "73769dfc41f3b45f6ffb3edd76a374bd170d472e6df825ba18ba91cadf35d7f2",
+      "source_sha256": "311581455e0e3b78e1b82f021613c8e13df5a707cd0a34c8851d1425dbab02f9",
+      "source_normalized_sha256": "d51c3d54934b9832cb25698d2b74415c43d4c00548583df98c37c01946607049",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
       "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "cbc7565c4dde8ec8dc6d3e615c80eb3f38dfac66cb9c74deedd118feaff12a27",
+      "standalone_sha256": "a470ef204009a5a59ef3d5598a49ca78b64d2d5104b83a86b13754d3f0ab0430",
       "license": "Apache-2.0",
-      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence. Inline Arrangement/Arrangements followed by a name is a prefix credit eligible for the existing guarded original-source reread path; only empty arrangement labels search for a name above. No new name-similarity merge or consensus policy. Existing damaged arranger-label nomination may use a role-only fallback with case-sensitive identical literal contributor payload in original and all three readings, bounded label variations, and an actually observed exact Arranged by reading. Competing valid inflections are rejected. Source geometry, identifiers and contributor counts remain guarded; no name completion, model changes or new Android helpers. A unique separated footer on a nonphotographic staff-free opening cover remains unresolved literal review text. Exactly three strong source readings gate bounded anchor-preserving I/L and fragmented-spacing refinement; initials, combining marks, identifiers and caption exclusions remain guarded. No attributed roles, model changes or page layout changes. A nearby generic motion-picture source caption on the first nonphotographic notation page can refine one four-ASCII connector substitution only when three strong original-PDF readings agree on the complete observed phrase. The small overlap exception requires unique caption ownership, preserves other-caption geometry and rejects competing headings. No new role, model or Page layout.",
-      "reviewed_app_commit": "f5d79deaaa9e75715024edb37deadcdbdb6d0909"
+      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence. Inline Arrangement/Arrangements followed by a name is a prefix credit eligible for the existing guarded original-source reread path; only empty arrangement labels search for a name above. No new name-similarity merge or consensus policy. Existing damaged arranger-label nomination may use a role-only fallback with case-sensitive identical literal contributor payload in original and all three readings, bounded label variations, and an actually observed exact Arranged by reading. Competing valid inflections are rejected. Source geometry, identifiers and contributor counts remain guarded; no name completion, model changes or new Android helpers. A unique separated footer on a nonphotographic staff-free opening cover remains unresolved literal review text. Exactly three strong source readings gate bounded anchor-preserving I/L and fragmented-spacing refinement; initials, combining marks, identifiers and caption exclusions remain guarded. No attributed roles, model changes or page layout changes. A nearby generic motion-picture source caption on the first nonphotographic notation page can refine one four-ASCII connector substitution only when three strong original-PDF readings agree on the complete observed phrase. The small overlap exception requires unique caption ownership, preserves other-caption geometry and rejects competing headings. No new role, model or Page layout. On a narrowly bounded single-page staff-free narrative artwork layout with a nonempty import hint, retain the imported title and the complete literal quotation as unresolved review text. No contributor roles, OCR, page layout, model or filename-specific rules are added.",
+      "reviewed_app_commit": "1ad0103f25b1528c0dcbca49ab941821bd054074"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -4710,8 +4710,8 @@
   },
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
-    "source_adaptation": "15 production classes and 20 original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
-    "synthetic_tests": 178,
+    "source_adaptation": "15 production classes and 21 original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
+    "synthetic_tests": 188,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
       "app/src/main/java/com/musicsheets/app/importer/HorizontalHeadingScanner.java",
@@ -4743,7 +4743,9 @@
     "title_source_caption_app_commit": "f5d79deaaa9e75715024edb37deadcdbdb6d0909",
     "title_source_caption_page_layout_changed": false,
     "title_source_caption_scope": "Only first-page nonphotographic staff-header geometry with a unique nearby generic source caption and unambiguous title owner. Three strong identical original-PDF reads at fixed tight-heading padding (max4px or .1 line height)/scales1/2/4 establish literal correction. Shared competing-heading guard also gates the bounded .35 heading-height overlap exception. Other words, roles, identifiers and later-page behavior remain guarded.",
-    "title_source_caption_tight_crop_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6"
+    "title_source_caption_tight_crop_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6",
+    "narrative_artwork_app_commit": "1ad0103f25b1528c0dcbca49ab941821bd054074",
+    "narrative_artwork_scope": "Ten original fictional controls cover bounded standalone narrative artwork, imported title retention and complete literal review text. No role, provider, model or page-record changes."
   },
   "legacy_conversion_meter_repair_review": {
     "reviewed_app_commit": "6df0969574f3f2de5a327ed27fe3f56703f19431",

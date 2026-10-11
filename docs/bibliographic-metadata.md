@@ -120,6 +120,14 @@ without Android dependencies. The Android adapter additionally owns bitmap
 lifetimes, original-PDF crop rendering, provider calls and timeout handling.
 Those platform operations are not supplied by this Java API.
 
+For a single staff-free page, a large centered two-line narrative quotation can
+retain the nonempty imported title. The complete quotation remains unresolved
+review text, with no contributor role assigned. This requires a bounded English
+speech opening, enough words and matching nearby line geometry. Additional
+printed text, an explicit credit, malformed bounds or later score pages keep
+the ordinary title-selection path. This rule does not depend on a particular
+filename or quotation.
+
 Regression examples use fictional text, generated rectangles and synthetic ink.
 They do not establish accuracy on arbitrary PDFs. No commercial score scans,
 private library records, device logs, signing material or new model weights are
