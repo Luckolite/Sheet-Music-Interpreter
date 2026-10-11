@@ -4754,5 +4754,18 @@
     "adapter_review": "Only saved sources with old render versions and no captured placement or boundary fields are eligible. Load is read-only; normal successful regeneration persists the repaired source and existing edits. Captured timing remains authoritative.",
     "private_material_published": false,
     "models_or_wire_layouts_changed": false
+  },
+  "android_cache_rejected_input_handle_review": {
+    "documentation_path": "docs/cache-input-handle-review.md",
+    "reviewed_app_commit": "a71d41523e8e627a2dc9391b06b3d9e1cb43aad2",
+    "scope": "Android-only disposable cache input lifecycle; retained originals and musical interpretation unchanged. Historical adapter reviews remain preserved.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PdfPageRenderCache.java",
+        "source_sha256": "0f89ae2be829fe77792ad0595b7361630d952a46c8068d0e89e3ff296fb8ad20"
+      }
+    ],
+    "regression": "Original synthetic malformed-note geometry verifies deletion after input close and byte-preserving retained-source recovery; existing malformed-measure controls retained.",
+    "standalone_change": "No standalone algorithm, model, or binary format change."
   }
 }
