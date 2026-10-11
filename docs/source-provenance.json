@@ -485,13 +485,13 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "source_normalized_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+      "source_sha256": "81f0fe7b994178bdbf0726393e59db731ee86d3d8ead04fa0ad6b44da88c5569",
+      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+      "source_normalized_sha256": "f3b8d9b5d71a39a3408c7050b6d2c7e7918c4b59fdda046ca46fafbaf76552c3",
+      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
+      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1492,12 +1492,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "072438c28bb62ab554271301c6679f61bf132b1f2c197da1517949d736a51a23",
-      "source_normalized_sha256": "7951bc3deedcce77dee32d2fe2b1680429b436ada508722ea3293d1903203822",
-      "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
-      "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
-      "reviewed_source_state": "Reviewed shaft continuity witness and recognition29 invalidation; original synthetic regressions and complete standalone suite.",
-      "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+      "source_sha256": "00c272e9ec37b5001df0a03172fe5af4f45c1da48a6666393fa8eb3ce73f05d8",
+      "source_normalized_sha256": "0a8fcef5a5724676d2153d71b7b37e9589087e3cc636b5273fb7c2e0a0a00134",
+      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
+      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
+      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
       "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
     },
     "BeamInkConnectivity.java": {
@@ -1518,13 +1518,13 @@
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
-      "source_sha256": "a4eb36ae23f0dc79ed8df111d902a5b472b2c41d794f1819a611ca5ecc25bf13",
-      "source_normalized_sha256": "3ea745e72f5b9e9735573dc4df4b695ba28929f59192e99ab88595ecf672a9b6",
-      "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
-      "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
-      "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+      "source_sha256": "0fdd5b0994bf8cc1807b9c2e2425e45c8ab7210d741a5a3344c1a51597d1ac2c",
+      "source_normalized_sha256": "755dc19dccde31d1db1b18b557913eb9227514e004e5e0f6aaa2b2ab580e874b",
+      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
+      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
     },
     "PrintedCClef.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCClef.java",
@@ -1554,12 +1554,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "8b9a7c7579dcc8a25cf516085bd366a4c774af4f60b5bb406f3e5d57895a92c1",
-      "source_normalized_sha256": "7694bd72e6dfd99f16cf5cc3fca6219f1a61cd75032de56972c9f9d1d4916344",
-      "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
-      "reviewed_source_state": "Recognition29 cache revision; reviewed writer delta is only the matching revision constant, format284 record layout unchanged.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "scoped_reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1"
+      "source_sha256": "f90ada723c9c29f5e86b8ec2d82e8ea45dfd898faa59e31a0189e744e294a853",
+      "source_normalized_sha256": "3b66b494a2be3ac680e97f9b796065a025eac77b6f5ff3855031afcf90f5fd5e",
+      "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+      "reviewed_source_state": "Committed recognition30 opposed-voice repair, unchanged guide284 record layout; matching app/desktop audio78 timing identity.",
+      "review_note": "Reviewed printed lane and chord attack ownership plus independently corroborated written clocks, with original synthetic regressions and package-adapted executable parity. Guide writer revision only; models, dependencies and record layouts unchanged. Prior mapped origins retained in opposed_printed_voice_review.",
+      "scoped_reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -4820,5 +4820,81 @@
     ],
     "regression": "Original synthetic malformed-note geometry verifies deletion after input close and byte-preserving retained-source recovery; existing malformed-measure controls retained.",
     "standalone_change": "No standalone algorithm, model, or binary format change."
+  },
+  "opposed_printed_voice_review": {
+    "license": "Apache-2.0",
+    "reviewed_sources": [
+      "TripletRhythmDetector.java",
+      "ParallelTripletClock.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "original_synthetic_regressions": [
+      "OpposedChordTripletOwnershipTest",
+      "OpposedChordTupletBoundaryTest",
+      "CompleteOpposedWrittenClockTest"
+    ],
+    "recognition_revision": 30,
+    "guide_layout": 284,
+    "audio_timing_epoch": 78,
+    "models_changed": false,
+    "scope": "Printed-beam ownership groups chord attacks; repeated distinct coincident heads corroborate complete opposed written voices. Unknown stems, missing anchors, contradictory chronology and incomplete lanes retain existing timing.",
+    "prior_mapped_origins": {
+      "TripletRhythmDetector.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
+        "source_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
+        "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
+        "source_normalized_sha256": "d4a9233d0504b9d6db95db21530ac8563bab60c22f647dbf1debe3d4647a903f",
+        "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+        "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+        "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+        "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      },
+      "ParallelTripletClock.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
+        "source_sha256": "a4eb36ae23f0dc79ed8df111d902a5b472b2c41d794f1819a611ca5ecc25bf13",
+        "source_normalized_sha256": "3ea745e72f5b9e9735573dc4df4b695ba28929f59192e99ab88595ecf672a9b6",
+        "reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4",
+        "reviewed_source_state": "Committed recognition24 component-owned rest and explicit rest-first triplet repair; namespace-only Java port and existing writer adaptation reviewed.",
+        "review_note": "Actual connected rest ink supplies contour evidence while untouched pixels retain printed beam, shaft, head, text and dot guards. Verified five-line spacing and a complete rest bracket own endpoint-aligned numerals. A complete explicit triplet lane with one opening rest preserves independent quarter attacks. Original generated controls and exhaustive parity differences reviewed; models, dependencies, public APIs and guide282 wire layout unchanged. Private source material excluded.",
+        "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
+        "scoped_reviewed_app_commit": "6d966d3454cc212afe90acd4828ff476d78d98d4"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "072438c28bb62ab554271301c6679f61bf132b1f2c197da1517949d736a51a23",
+        "source_normalized_sha256": "7951bc3deedcce77dee32d2fe2b1680429b436ada508722ea3293d1903203822",
+        "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
+        "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
+        "reviewed_source_state": "Reviewed shaft continuity witness and recognition29 invalidation; original synthetic regressions and complete standalone suite.",
+        "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+        "standalone_sha256": "361d605d0b016e5b15050f788575a6fce82a6f6cd7359f6e342d1ad621e4ceb8"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "8b9a7c7579dcc8a25cf516085bd366a4c774af4f60b5bb406f3e5d57895a92c1",
+        "source_normalized_sha256": "7694bd72e6dfd99f16cf5cc3fca6219f1a61cd75032de56972c9f9d1d4916344",
+        "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
+        "reviewed_source_state": "Recognition29 cache revision; reviewed writer delta is only the matching revision constant, format284 record layout unchanged.",
+        "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
+        "scoped_reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1"
+      }
+    },
+    "reviewed_app_commit": "0b998dbb45fd7fc5cae29ddb951768d57f3e6320",
+    "reviewed_compliant_commit": "0028bdff53aa2f28fb7be0de1ed42656d3c20d82",
+    "executable_parity": {
+      "TripletRhythmDetector.java": {
+        "executableTokensSha256": "f4696d3df1666e8c5b813d984145b5bbbc9dbbb2cec86b04754165d93d196175",
+        "commentOnlyCleanup": true
+      },
+      "ParallelTripletClock.java": {
+        "executableTokensSha256": "0e90c6e5c84575079a33b7de950aed582a8cd623462ffd4f5529a269d0cae742",
+        "commentOnlyCleanup": true
+      },
+      "GuideCacheIdentity.java": {
+        "executableTokensSha256": "72eb456afd94f253034ecf3e4f6e2a89e0622b3c8dc355e93541e08209a6c899",
+        "commentOnlyCleanup": true
+      }
+    }
   }
 }

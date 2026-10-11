@@ -13,6 +13,8 @@ final class ParallelTripletClock {
     static Clock find(ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
         if (target == null || bar == null || !Double.isFinite(beats) || beats < 2 || beats > 4)
             return null;
+        Clock completeWritten = findCompleteOpposedWrittenVoices(target, bar, beats);
+        if (completeWritten != null) return completeWritten;
         Clock bridged = findCrossStaff(target, bar, beats);
         if (bridged != null) return bridged;
         Clock continued = findCompleteCrossStaffPhrase(target, bar, beats);
@@ -36,6 +38,94 @@ final class ParallelTripletClock {
         for (var quarter : prefix.quarters()) attacks.add(new Attack(quarter, Double.NaN));
         return new Clock(
                 prefix.members(), prefix.groups(), prefix.unit(), beats, List.copyOf(attacks));
+    }
+
+    /** Repeated coincident attacks corroborate independent written voice clocks. */
+    private static Clock findCompleteOpposedWrittenVoices(
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        var attacks = new ArrayList<Attack>();
+        var totals = new ArrayList<Double>();
+        var lanes = new ArrayList<List<List<ScoreNoteEvent>>>();
+        for (int direction : new int[] {-1, 1}) {
+            var notes = new ArrayList<ScoreNoteEvent>();
+            for (var n : bar) {
+                if (n.staffIndex() != target.staffIndex() || n.staffCount() != target.staffCount())
+                    continue;
+                if (n.stemDirection() == 0
+                        || n.crossStaffBeam()
+                        || (n.articulations() & NoteOrnament.GRACE) != 0) return null;
+                if (n.stemDirection() == direction) notes.add(n);
+            }
+            if (notes.size() < 2) return null;
+            var groups = columns(notes);
+            lanes.add(groups);
+            double cursor = groups.get(0).get(0).leadingRestBeats();
+            if (!Double.isFinite(cursor) || cursor < 0) return null;
+            for (int i = 0; i < groups.size(); i++) {
+                var group = groups.get(i);
+                var first = group.get(0);
+                double duration = ScoreNoteTiming.writtenDurationBeats(first),
+                        silence = first.followingRestBeats();
+                if (!Double.isFinite(duration)
+                        || duration <= 0
+                        || !Double.isFinite(silence)
+                        || silence < 0) return null;
+                for (var n : group) {
+                    if (Math.abs(ScoreNoteTiming.writtenDurationBeats(n) - duration) > .001
+                            || Math.abs(n.followingRestBeats() - silence) > .001
+                            || Math.abs(
+                                            n.leadingRestBeats()
+                                                    - (i == 0
+                                                            ? groups.get(0)
+                                                                    .get(0)
+                                                                    .leadingRestBeats()
+                                                            : 0))
+                                    > .001) return null;
+                    attacks.add(new Attack(n, cursor));
+                }
+                cursor += duration + silence;
+            }
+            if (cursor > beats + .001) return null;
+            totals.add(cursor);
+        }
+        if (totals.stream().noneMatch(t -> Math.abs(t - beats) < .001)) return null;
+        var shifted = new ArrayList<Attack>();
+        for (var attack : attacks) {
+            int lane = attack.note().stemDirection() == -1 ? 0 : 1;
+            shifted.add(
+                    new Attack(
+                            attack.note(), attack.onset() + Math.max(0, beats - totals.get(lane))));
+        }
+        attacks = shifted;
+        final var alignedAttacks = attacks;
+        int anchors = 0;
+        for (var a : lanes.get(0))
+            for (var b : lanes.get(1)) {
+                var first = a.get(0);
+                var second = b.get(0);
+                double aa =
+                        alignedAttacks.stream()
+                                .filter(x -> x.note() == first)
+                                .findFirst()
+                                .orElseThrow()
+                                .onset();
+                double bb =
+                        alignedAttacks.stream()
+                                .filter(x -> x.note() == second)
+                                .findFirst()
+                                .orElseThrow()
+                                .onset();
+                float dx = first.positionInMeasure() - second.positionInMeasure();
+                if (Math.abs(dx) <= SAME) {
+                    if (Math.abs(aa - bb) > .001) return null;
+                    if (first.staffStep() != second.staffStep()
+                            && Float.isFinite(first.pageY())
+                            && Float.isFinite(second.pageY())
+                            && Math.abs(first.pageY() - second.pageY()) > .00001f) anchors++;
+                } else if (aa < bb - .001 && dx > 0 || bb < aa - .001 && dx < 0) return null;
+            }
+        if (anchors < 2) return null;
+        return new Clock(List.of(), List.of(), Double.NaN, beats, List.copyOf(attacks));
     }
 
     private static Clock findCrossStaff(

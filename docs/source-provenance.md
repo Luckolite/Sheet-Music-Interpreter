@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Opposed printed voices retain independent beam/numeral ownership: shared-shaft
+chord heads count as one attack. Repeated coincident distinct heads and complete
+written durations corroborate independent clocks; ambiguous or incomplete lanes
+retain existing timing. Original procedural raster and written-rhythm regressions
+cover chord membership, missing numerals, input order, rests and conflicting voices.
+Recognition30 invalidates derived guides at unchanged layout284; the paired app
+and desktop use audio78 to reject WAVs from the preceding timing policy.
+Models and dependencies are unchanged.
+
 Shared-stem beam ownership requires raw shaft continuity from the second head to
 the current head row. Nearby independent heads leave the ordinary beam detector
 in charge. Original mirrored synthetic regressions retain true shared voices;

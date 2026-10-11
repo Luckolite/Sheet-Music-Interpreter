@@ -24,7 +24,8 @@ final class TripletRhythmDetector {
             int height) {
         if (rests == null || rests.isEmpty())
             return new Rhythm(apply(notes, measures, gray, width, height), rests);
-        List<ScoreNoteEvent> slots = new ArrayList<>(notes);
+        List<ScoreNoteEvent> slots =
+                new ArrayList<>(isolatedPrintedLanes(notes, measures, gray, width, height));
         List<Integer> restIndices = new ArrayList<>();
         for (int restIndex = 0; restIndex < rests.size(); restIndex++) {
             ScoreRestEvent rest = rests.get(restIndex);
@@ -263,7 +264,114 @@ final class TripletRhythmDetector {
             byte[] gray,
             int width,
             int height) {
-        return apply(notes, measures, gray, width, height, Integer.MAX_VALUE);
+        return apply(
+                isolatedPrintedLanes(notes, measures, gray, width, height),
+                measures,
+                gray,
+                width,
+                height,
+                Integer.MAX_VALUE);
+    }
+
+    /** Resolve a connected printed voice before interleaved opposing attacks. */
+    private static List<ScoreNoteEvent> isolatedPrintedLanes(
+            List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height) {
+        if (notes == null || measures == null || gray == null || gray.length != width * height)
+            return notes;
+        var result = new ArrayList<>(notes);
+        var visited = new java.util.HashSet<String>();
+        var laneStaffs = RawStaffLineDetector.detect(gray, width, height);
+        for (var first : notes) {
+            String key = first.measureIndex() + ":" + first.staffIndex() + ":" + first.staffCount();
+            if (!visited.add(key)
+                    || first.measureIndex() < 0
+                    || first.measureIndex() >= measures.size()) continue;
+            var bar = notes.stream().filter(n -> sameVoice(first, n)).toList();
+            if (bar.stream().anyMatch(n -> n.stemDirection() == 0)
+                    || bar.stream().filter(n -> n.stemDirection() == 1).count() < 2
+                    || bar.stream().filter(n -> n.stemDirection() == -1).count() < 2) continue;
+            var region = measures.get(first.measureIndex());
+            float fallbackGap =
+                    Math.max(
+                            4,
+                            (region.bottom() - region.top()) * height / (8 * first.staffCount()));
+            float gap = printedRestTupletGap(laneStaffs, region, first, height, fallbackGap);
+            for (int direction : new int[] {-1, 1}) {
+                var lane =
+                        notes.stream()
+                                .filter(
+                                        n ->
+                                                n.staffIndex() == first.staffIndex()
+                                                        && n.staffCount() == first.staffCount()
+                                                        && n.measureIndex() <= first.measureIndex()
+                                                        && n.stemDirection() == direction)
+                                .sorted(
+                                        java.util.Comparator.comparingInt(
+                                                        ScoreNoteEvent::measureIndex)
+                                                .thenComparingDouble(
+                                                        ScoreNoteEvent::positionInMeasure))
+                                .toList();
+                if (lane.size() < 3) continue;
+                var marked = apply(lane, measures, gray, width, height, Integer.MAX_VALUE);
+                var owned = new ArrayList<Integer>();
+                for (int i = 0; i < lane.size(); i++)
+                    if (lane.get(i).measureIndex() == first.measureIndex()
+                            && lane.get(i).tupletDivisor() == 1
+                            && marked.get(i).tupletDivisor() == 3) owned.add(i);
+                var attackGroups = new ArrayList<List<Integer>>();
+                for (int index : owned) {
+                    if (attackGroups.isEmpty()
+                            || lane.get(index).positionInMeasure()
+                                            - lane.get(
+                                                            attackGroups
+                                                                    .get(attackGroups.size() - 1)
+                                                                    .get(0))
+                                                    .positionInMeasure()
+                                    > .018f) attackGroups.add(new ArrayList<>());
+                    attackGroups.get(attackGroups.size() - 1).add(index);
+                }
+                if (attackGroups.size() != 3) continue;
+                boolean connected = true;
+                for (int i = 1; i < attackGroups.size(); i++) {
+                    boolean pairConnected = false;
+                    for (int left : attackGroups.get(i - 1))
+                        for (int right : attackGroups.get(i)) {
+                            var a = lane.get(left);
+                            var b = lane.get(right);
+                            if (a.beamCount() > 0
+                                    && a.beamCount() == b.beamCount()
+                                    && PrintedTupletBeamOwner.connectedHeads(
+                                            gray,
+                                            width,
+                                            height,
+                                            (region.left()
+                                                            + a.positionInMeasure()
+                                                                    * (region.right()
+                                                                            - region.left()))
+                                                    * width,
+                                            a.pageY() * height,
+                                            (region.left()
+                                                            + b.positionInMeasure()
+                                                                    * (region.right()
+                                                                            - region.left()))
+                                                    * width,
+                                            b.pageY() * height,
+                                            gap,
+                                            direction)) pairConnected = true;
+                        }
+                    connected &= pairConnected;
+                }
+                if (connected)
+                    for (int index : owned)
+                        for (int j = 0; j < notes.size(); j++)
+                            if (notes.get(j) == lane.get(index)) result.set(j, marked.get(index));
+            }
+        }
+        return result;
     }
 
     private static List<ScoreNoteEvent> apply(
