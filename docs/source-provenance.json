@@ -2187,12 +2187,12 @@
     },
     "OriginalTitleCorroboration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/OriginalTitleCorroboration.java",
-      "source_sha256": "240f0613b9c6e6a40e472acd2be7f8e4c081aea05943ca50240daf0e6d470321",
-      "source_normalized_sha256": "240f0613b9c6e6a40e472acd2be7f8e4c081aea05943ca50240daf0e6d470321",
+      "source_sha256": "099b0a2754f6ed85597538ec6a4f161a5afccbf40a380171ec12563e705b6f97",
+      "source_normalized_sha256": "099b0a2754f6ed85597538ec6a4f161a5afccbf40a380171ec12563e705b6f97",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OriginalTitleCorroboration.java",
-      "standalone_sha256": "ab86f41814fc7050b896d2fc8caa2c6a589920ebb580266cddd3bf615347fd4b",
+      "standalone_sha256": "f8409325d693344b6aee48288afbc5558958611d6d0d7168df35449eaa362929",
       "license": "Apache-2.0",
-      "review_note": "Original source title review helpers; executable-token parity after package and AOSP formatting. Fictional geometry/text regressions only; no private score, model, signing material or new dependency."
+      "review_note": "Original source title review helpers; executable-token parity after package and AOSP formatting. Fictional geometry/text regressions only; no private score, model, signing material or new dependency. Android API26 compatibility: StringBuilder length replaces API35 CharSequence.isEmpty, with the same empty/nonempty decision."
     },
     "OriginalTitleReview.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/OriginalTitleReview.java",

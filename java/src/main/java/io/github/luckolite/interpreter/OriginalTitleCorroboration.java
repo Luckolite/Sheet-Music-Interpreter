@@ -165,7 +165,7 @@ public final class OriginalTitleCorroboration {
                     || word.bottom() > line.bottom()
                     || word.left() < end
                     || clean(word.text()).split("\\h+").length != 1) return null;
-            if (!words.isEmpty()) words.append(' ');
+            if (words.length() != 0) words.append(' ');
             words.append(word.text());
             end = word.right();
         }
