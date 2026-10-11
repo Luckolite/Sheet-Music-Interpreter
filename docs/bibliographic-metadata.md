@@ -128,6 +128,32 @@ printed text, an explicit credit, malformed bounds or later score pages keep
 the ordinary title-selection path. This rule does not depend on a particular
 filename or quotation.
 
+`OriginalTitleCorroboration.propose` offers a review suggestion for an already
+located, unique heading on a photographic cover without notation. Three strong
+portable readings of the same original-PDF crop at scales 1, 2 and 4 must agree.
+The largest native reading must match the suggested words; the middle native
+reading must independently recover at least one original zero in each affected
+word, preserving any remaining zeros only at their original positions. Only
+bounded internal zero-to-O repairs in letter words qualify. Work identifiers,
+other digits, accents, punctuation and geometry remain guarded. Confidence is
+an evidence threshold, not a calibrated accuracy estimate.
+
+Every `Proposal` retains `literalOriginal` and sets `requiresReview`. The source
+page remains available in `OriginalTitleReview.Evidence`; the candidate changes
+only the nominated line text and retains its bounds, page flags and review
+credits. After collecting all pages, call `OriginalTitleReview.select` with the
+actual caller title hint and both original and candidate page lists. Any change
+to artist, composer, arranger or unresolved credits restores the entire original
+input and result. Consume its selected pages when replaying the result.
+
+The Android adapter exposes this only through the named `scanForReview` entry
+point; ordinary scans retain their existing behavior. It renders the original
+PDF crop at scales 1, 2 and 4 with a 1.5 horizontal stretch and a 20-million-pixel
+limit. Native tasks finish before bitmap release. Diagnostic observer bitmaps
+are borrowed synchronously, read-only, and must not be retained or recycled;
+final observed pages reflect document selection. The app's autofill flow requires
+review, selection and an explicit save before changing stored metadata.
+
 Regression examples use fictional text, generated rectangles and synthetic ink.
 They do not establish accuracy on arbitrary PDFs. No commercial score scans,
 private library records, device logs, signing material or new model weights are

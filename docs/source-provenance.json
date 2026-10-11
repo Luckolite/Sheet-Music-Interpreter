@@ -2184,6 +2184,24 @@
       "license": "Apache-2.0",
       "review_note": "Three guarded agreeing strong original-PDF readings retain an already nominated photographic heading independently of the import label. Merge only into the unchanged source line; ordinary covers and unstable fallback evidence remain separate.",
       "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+    },
+    "OriginalTitleCorroboration.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/OriginalTitleCorroboration.java",
+      "source_sha256": "240f0613b9c6e6a40e472acd2be7f8e4c081aea05943ca50240daf0e6d470321",
+      "source_normalized_sha256": "240f0613b9c6e6a40e472acd2be7f8e4c081aea05943ca50240daf0e6d470321",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OriginalTitleCorroboration.java",
+      "standalone_sha256": "ab86f41814fc7050b896d2fc8caa2c6a589920ebb580266cddd3bf615347fd4b",
+      "license": "Apache-2.0",
+      "review_note": "Original source title review helpers; executable-token parity after package and AOSP formatting. Fictional geometry/text regressions only; no private score, model, signing material or new dependency."
+    },
+    "OriginalTitleReview.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/OriginalTitleReview.java",
+      "source_sha256": "e0a63d502cef6cf22e5fc3d68cfd9ef66fc4e17d603043df21a6f25357d9896e",
+      "source_normalized_sha256": "e0a63d502cef6cf22e5fc3d68cfd9ef66fc4e17d603043df21a6f25357d9896e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OriginalTitleReview.java",
+      "standalone_sha256": "154ba6ebae007a2b943d4fd0bbc3a95ab796d5a12dba119b1aa37fd94eb42d6d",
+      "license": "Apache-2.0",
+      "review_note": "Original source title review helpers; executable-token parity after package and AOSP formatting. Fictional geometry/text regressions only; no private score, model, signing material or new dependency."
     }
   },
   "interpreter_speedup_review": {
@@ -4710,7 +4728,7 @@
   },
   "bibliographic_metadata_review": {
     "scope": "Pure Java title/artist/composer/arranger and unresolved-credit extraction, geometric crop/cover evidence and literal heading word spacing.",
-    "source_adaptation": "15 production classes and 21 original synthetic regression classes retain executable token parity after package/import/header and AOSP-format changes.",
+    "source_adaptation": "Production classes and original synthetic regression classes retain executable-token parity after package/import/header adaptation and AOSP formatting.",
     "synthetic_tests": 188,
     "platform_adapters_reviewed": [
       "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
@@ -4745,7 +4763,40 @@
     "title_source_caption_scope": "Only first-page nonphotographic staff-header geometry with a unique nearby generic source caption and unambiguous title owner. Three strong identical original-PDF reads at fixed tight-heading padding (max4px or .1 line height)/scales1/2/4 establish literal correction. Shared competing-heading guard also gates the bounded .35 heading-height overlap exception. Other words, roles, identifiers and later-page behavior remain guarded.",
     "title_source_caption_tight_crop_app_commit": "885fabed5f3be626a08948725bf4c8fd8774fda6",
     "narrative_artwork_app_commit": "1ad0103f25b1528c0dcbca49ab941821bd054074",
-    "narrative_artwork_scope": "Ten original fictional controls cover bounded standalone narrative artwork, imported title retention and complete literal review text. No role, provider, model or page-record changes."
+    "narrative_artwork_scope": "Ten original fictional controls cover bounded standalone narrative artwork, imported title retention and complete literal review text. No role, provider, model or page-record changes.",
+    "review_only_zero_corroboration": {
+      "helpers": [
+        "java/src/main/java/io/github/luckolite/interpreter/OriginalTitleCorroboration.java",
+        "java/src/main/java/io/github/luckolite/interpreter/OriginalTitleReview.java"
+      ],
+      "regression_sources": [
+        "java/src/test/java/io/github/luckolite/interpreter/OriginalTitleCorroborationTest.java",
+        "java/src/test/java/io/github/luckolite/interpreter/OriginalTitleCorroborationBoundaryReviewTest.java",
+        "java/src/test/java/io/github/luckolite/interpreter/OriginalTitleReviewTest.java"
+      ],
+      "new_synthetic_tests": 65,
+      "fixture_provenance": "Original fictional titles, service labels and generated rectangles; no source PDFs, private records or device logs.",
+      "semantic_boundary": "Only a review suggestion from bounded original-PDF witnesses. Literal source retained. Document selection compares artist, composer, arranger and unresolved credits using the actual caller title hint; any change restores original pages and result.",
+      "android_adapters": [
+        {
+          "path": "app/src/main/java/com/musicsheets/app/importer/OriginalTitleReviewReader.java",
+          "sha256": "18e154462b261a007f04dab90ffb291f3840a90637899f0315ae3437f6c1e377"
+        },
+        {
+          "path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+          "sha256": "2b9ed6f5baa287d0614622993dca00f75107aa4130314e07c61253f491b1224e"
+        },
+        {
+          "path": "app/src/main/java/com/musicsheets/app/ui/SongDetailsEditorView.java",
+          "sha256": "bffa522584fe25bf022624999528b28a06812945716da92993eafbc8ad67da9d"
+        }
+      ],
+      "platform_boundary": "Named scanForReview opt-in; ordinary scan unchanged. Original PDF render scales 1/2/4, width stretch 1.5, 20M pixel guard, terminal ML Kit task ownership and bitmap cleanup. Observer pixels are borrowed synchronously and final observed pages match document selection. UI requires Review autofill, Add selected and Save.",
+      "weights_changed": false,
+      "production_dependencies_changed": false,
+      "guide_or_native_record_layout_changed": false,
+      "accuracy_limit": "Synthetic regressions and bounded review rules do not establish arbitrary-PDF or whole-library accuracy."
+    }
   },
   "legacy_conversion_meter_repair_review": {
     "reviewed_app_commit": "6df0969574f3f2de5a327ed27fe3f56703f19431",

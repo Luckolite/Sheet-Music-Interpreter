@@ -17,7 +17,7 @@ the current head row. Nearby independent heads leave the ordinary beam detector
 in charge. Original mirrored synthetic regressions retain true shared voices;
 recognition29 invalidates derived guides without changing format284 or models.
 
-Bibliographic metadata has twelve pure-Java counterparts with complete
+Bibliographic metadata has pure-Java counterparts with complete
 executable-token parity after package adaptation and AOSP formatting. The port
 includes heading and credit evidence, original-pixel word spacing, embedded-text
 geometry, crop caching and recognition-band coordinates. Original fictional
@@ -30,6 +30,10 @@ unresolved dates and independently printed arranger roles. Android
 PDF rendering, bitmap ownership, ML Kit calls and recognizer-only inference remain
 platform adapters; their source crop and consensus boundaries are reviewed
 separately. Models, dependencies and musical/native record layouts are unchanged.
+Two original-source title helpers add 65 fictional controls for review-only
+zero-to-letter suggestions, identifier protection, witness geometry and
+whole-document contributor preservation. Package-adapted executable tokens
+match the Android helpers; platform rendering and review UI remain adapters.
 See the [bibliographic API](bibliographic-metadata.md).
 
 Guitar-tab triplets own onset columns, including chords, muted strums and rests;
