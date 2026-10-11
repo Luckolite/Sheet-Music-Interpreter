@@ -118,6 +118,12 @@ final class PrintedDirectionStaff {
                             ? ScoreDynamicsDetector.directionOwner(
                                     List.of(local), top, bottom, notes, measures, height)
                             : local;
+            // Vertical clearance is measured from ink edges; the ranking penalty below
+            // must not consume the permitted gap. Complete rails and a head remain mandatory.
+            if (owner == null
+                    && requireOwner
+                    && bottom <= local.top() - local.gap() * .25f
+                    && (local.top() - bottom) / local.gap() <= 4.5f) owner = local;
             if (owner == null
                     && requireOwner
                     && bottom <= local.top() - local.gap() * .25f

@@ -34,8 +34,8 @@ public final class GuideCacheIdentityTest {
     }
 
     @Test
-    public void currentRecognitionThirtyFourRejectsAllPriorEpochsAtLayout284() {
-        assertEquals(34, GuideCacheIdentity.RECOGNITION_REVISION);
+    public void currentRecognitionThirtyFiveRejectsAllPriorEpochsAtLayout284() {
+        assertEquals(35, GuideCacheIdentity.RECOGNITION_REVISION);
         String source = "same source", variant = "0|unchanged cleanup";
         String portable =
                 GuideCacheIdentity.portable(
@@ -43,8 +43,8 @@ public final class GuideCacheIdentityTest {
         String local =
                 GuideCacheIdentity.local(
                         source, 0, "clean", 284, GuideCacheIdentity.RECOGNITION_REVISION);
-        assertEquals("guide|284|0|same source|0|unchanged cleanup|recognition=34", portable);
-        assertEquals("same source|page=0|cleanup=clean|engine=284|recognition=34", local);
+        assertEquals("guide|284|0|same source|0|unchanged cleanup|recognition=35", portable);
+        assertEquals("same source|page=0|cleanup=clean|engine=284|recognition=35", local);
         for (int older = 0; older < GuideCacheIdentity.RECOGNITION_REVISION; older++) {
             assertNotEquals(portable, GuideCacheIdentity.portable(284, source, variant, older));
             assertNotEquals(local, GuideCacheIdentity.local(source, 0, "clean", 284, older));

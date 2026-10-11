@@ -1063,3 +1063,13 @@ a beam; genuine runs extending beyond the head remain evidence. Fourteen
 original procedural controls accompany these global repairs. Recognition34
 invalidates derived guides. Guide284/audio79 layouts, models and dependencies
 remain unchanged; no commercial scans or private library data are included.
+
+## English character marks and staff ink clearance
+
+Complete printed freely/gently character marks retain their text without guessed
+tempo or loudness. Above-staff ownership measures physical ink clearance apart
+from ranking penalties, while requiring complete bilateral rails and a notehead.
+Sixteen original procedural controls cover vocabulary, unrelated prose, geometry
+and multiple scales. Recognition35 invalidates derived guides. Guide284/audio79
+layouts, models and dependencies remain unchanged; no private score fixtures
+are included.

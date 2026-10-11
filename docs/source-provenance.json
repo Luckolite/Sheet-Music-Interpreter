@@ -1048,11 +1048,13 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "fc4360ed4eb0c31ee3f16c3bfe16a5cd4a71ecbe0911209e29dfd84abe2082ba",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
-      "source_normalized_sha256": "195a0327072af92c64f913ab82c16c7c9693ce1c0e42f072f84f7cad268226bd",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
-      "review_note": "Retains Free time as an unresolved printed direction without guessing BPM. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history."
+      "source_sha256": "77e5e10833df724b7c4c94cddc2238c0f9f2d8e883bf06dc9602c0bf99b413db",
+      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "source_normalized_sha256": "fc7046bf5639a2e6ae17c0542ad6002cf2adfb6a12b5b5b6e5c23e428d54d9e8",
+      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
+      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
+      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "standalone_sha256": "d130f4e556841b233e4c1ab8f376ed1fe04e2921f284d09a5e7ebddbc1e1418c"
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
@@ -1265,11 +1267,13 @@
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
-      "source_sha256": "2c6ec7d214ec8ea7c725b89b3711d39388cfba64091d1d8dd53df0ba071b70be",
-      "source_normalized_sha256": "b92896135115fd8bd8fa787e4c3e16d48403cb52e530cd277f45299a4f24f547",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
-      "review_note": "Complete bilateral five-line rails and a nearby ledger note corroborate bounded heading ownership; missing/cross-staff/remote evidence declines. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      "source_sha256": "07e5fbe8b50155d679327cd05c2fe644d455444f1f964a79bd0ecfd5e133e93c",
+      "source_normalized_sha256": "b9cf6afab654c9f86eb088c4b5e3bcf81e3268dc155a5e21b154fb68ededc3e1",
+      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
+      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
+      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "standalone_sha256": "a3ce3af4efedcc0a0e59ab0cb3677a619eb0558c41225034ab90c04c61b24c87"
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
@@ -1496,14 +1500,14 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "3b7684ca34dfcec562fdb318e3f0540d43a5dcb625a3e6f30d1222a535add414",
-      "source_normalized_sha256": "a9b4a4066ac1ff83db5f9f1b07ebb366780fffb0cb204671fbd7d8b509724561",
-      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
-      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
-      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "eb086e4e87a643d58e7c2e92bc796c4e91932bef0b899d402c9850125aa3a872",
-      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
+      "source_sha256": "2460721b0204a07b6a96b337b3b90bb96c26d1baf0fcd6947742c95e82fb17ed",
+      "source_normalized_sha256": "a11028a7523ff70b9d93c4161a975ff4f4a827faed7692db823185f54701e9b7",
+      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
+      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
+      "scoped_reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "standalone_sha256": "f8cd38b41e6ff0c8938a5c139f49dac96daa73fcd157d2f772b41a0eaed473d4",
+      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1559,14 +1563,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "5ae396e5f6913312d746936d97797dddb1c720fd45f6fc5afc01543d108982ea",
-      "source_normalized_sha256": "8208305f5f0d8ce71ef7224fb782d0ee4f935ba9890ba04d281d594a612080a3",
-      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
-      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
-      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "standalone_sha256": "220b045e0f286585b6d123df67955ffb0cc5985d4bc81d5aa6ebd85a88a907dc"
+      "source_sha256": "6b4b44378dfec69eee4d5ca33039401ce12359eb40f755c8773ef13bb1f85cb9",
+      "source_normalized_sha256": "b29b0b467689f12a7f99b9e2145126b83828c2ef1f774cbec6870abd54e0f529",
+      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
+      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
+      "scoped_reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "standalone_sha256": "ad07d7992ad4e876d619f8e112d58d0dbcf5872949504b0bf71c6e69e9b95a75"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -5319,5 +5323,86 @@
     "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
     "reviewed_compliant_commit": "626bcc5ee3c82dfe247acab58c27219783a2c1b1",
     "portable_diagnostics_review": "Existing Diagnostics.log and relative-import writer adaptation retained. Exact package/diagnostics token and writer AST parity verified at adoption319; no new platform dependencies or helper changes."
+  },
+  "english_heading_clearance_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+    "prior_mapped_origins": {
+      "ExpressiveDirectionText.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
+        "source_sha256": "fc4360ed4eb0c31ee3f16c3bfe16a5cd4a71ecbe0911209e29dfd84abe2082ba",
+        "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
+        "source_normalized_sha256": "195a0327072af92c64f913ab82c16c7c9693ce1c0e42f072f84f7cad268226bd",
+        "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+        "review_note": "Retains Free time as an unresolved printed direction without guessing BPM. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history."
+      },
+      "PrintedDirectionStaff.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
+        "source_sha256": "2c6ec7d214ec8ea7c725b89b3711d39388cfba64091d1d8dd53df0ba071b70be",
+        "source_normalized_sha256": "b92896135115fd8bd8fa787e4c3e16d48403cb52e530cd277f45299a4f24f547",
+        "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged.",
+        "review_note": "Complete bilateral five-line rails and a nearby ledger note corroborate bounded heading ownership; missing/cross-staff/remote evidence declines. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
+        "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b"
+      },
+      "GuideCacheIdentity.java": {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
+        "source_sha256": "3b7684ca34dfcec562fdb318e3f0540d43a5dcb625a3e6f30d1222a535add414",
+        "source_normalized_sha256": "a9b4a4066ac1ff83db5f9f1b07ebb366780fffb0cb204671fbd7d8b509724561",
+        "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+        "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+        "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+        "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+        "standalone_sha256": "eb086e4e87a643d58e7c2e92bc796c4e91932bef0b899d402c9850125aa3a872",
+        "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
+      },
+      "guide_writer.py": {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "5ae396e5f6913312d746936d97797dddb1c720fd45f6fc5afc01543d108982ea",
+        "source_normalized_sha256": "8208305f5f0d8ce71ef7224fb782d0ee4f935ba9890ba04d281d594a612080a3",
+        "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+        "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+        "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+        "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+        "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "standalone_sha256": "220b045e0f286585b6d123df67955ffb0cc5985d4bc81d5aa6ebd85a88a907dc"
+      }
+    },
+    "reviewed_sources": [
+      "ExpressiveDirectionText.java",
+      "PrintedDirectionStaff.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "original_regressions": [
+      "EnglishCharacterDirectionTest",
+      "HeadingInkClearanceTest"
+    ],
+    "original_controls": 16,
+    "focused_existing_controls": 189,
+    "recognition_revision": 35,
+    "guide_layout": 284,
+    "audio_epoch": 79,
+    "models_changed": false,
+    "dependencies_changed": false,
+    "private_score_fixtures_included": false,
+    "executable_parity": {
+      "ExpressiveDirectionText.java": "d130f4e556841b233e4c1ab8f376ed1fe04e2921f284d09a5e7ebddbc1e1418c",
+      "PrintedDirectionStaff.java": "a3ce3af4efedcc0a0e59ab0cb3677a619eb0558c41225034ab90c04c61b24c87",
+      "EnglishCharacterDirectionTest.java": "48fcf67f682f1c2bd7f6092a70cbc4b2dd28f8c4a4f3f1b35a728eedaf17dec1",
+      "HeadingInkClearanceTest.java": "653f44bb148ab6c6691ef377354d08a46e185f55a994239d73126a738a1ff4da",
+      "GuideCacheIdentity.java": "f8cd38b41e6ff0c8938a5c139f49dac96daa73fcd157d2f772b41a0eaed473d4",
+      "GuideCacheIdentityTest.java": "2d6b253dc6b06266c8b4a10000b6e912824472008923e7653f89224bc273e81f",
+      "guide_writer.py": "ad07d7992ad4e876d619f8e112d58d0dbcf5872949504b0bf71c6e69e9b95a75",
+      "FreeTimeTextTest.java": "a9cd69c0725c272fa32a3e6e76adc919c24c33631dfd3ca7567415488479ac69"
+    },
+    "app_only_adapters_changed": false,
+    "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+    "reviewed_compliant_commit": "cf4141e2657010b55d7c63ddd2c7b98330bba617",
+    "portable_diagnostics_review": "Existing Diagnostics.log and relative-import writer adaptation retained. Package/diagnostics tokens and writer AST reviewed at adoption389. No new dependencies or model changes.",
+    "existing_test_amendment": {
+      "test": "FreeTimeTextTest.java",
+      "standalone_sha256": "a9cd69c0725c272fa32a3e6e76adc919c24c33631dfd3ca7567415488479ac69",
+      "scope": "Freely moved from obsolete rejection to unresolved-direction positives. Existing prose negatives retained; full prose rejection is additionally covered by original EnglishCharacterDirectionTest."
+    }
   }
 }
