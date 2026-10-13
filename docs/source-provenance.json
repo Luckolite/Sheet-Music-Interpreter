@@ -2350,6 +2350,39 @@
       "standalone_sha256": "741d32c2f4ded50f3240c522380ddd1562b65cacd934c8883f4b96c174f339d0",
       "license": "Apache-2.0",
       "review_note": "Complete literal readings retain source bounds and printed identifiers. Exact work/form/ordinal, person veto, repeated instrument-part and contributor/review ownership gates remain required. Synthetic fictional regression only; no private scores, gold labels, source images, OCR results or model changes."
+    },
+    "PublishedEditionCreditRecovery.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/PublishedEditionCreditRecovery.java",
+      "source_sha256": "8ab7030a39cfd1b72f6406eeb4a7ed73e6c7d67a515344eda2e942ac95ff0943",
+      "source_normalized_sha256": "679b7feb8f40d1b57fdc5cc3bfb193fe363bcaad5d023bcadbd4985c041e207b",
+      "reviewed_app_base_commit": "0fa6005a02c3853c777d4f57d87e4f7969ee1562",
+      "reviewed_source_state": "Exact printed publisher edition/title/role corroboration, bounded terminal-name recovery, and versioned public-fact cache; fresh app/native/full-library qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PublishedEditionCreditRecovery.java",
+      "standalone_sha256": "cffed0741be21d96b8d7332f322b02b57535ea71ba7af51aed3e18ec51782121",
+      "license": "Apache-2.0",
+      "review_note": "Original code and fictional source/HTML/cache/ownership regressions. Public HTTPS requests contain only edition IDs. No private scores, expected library names, HTTP response bodies, phone logs, model changes or per-song conditions included. Repeated clipped rows are reconciled by source-bound name sets; distinct editions can recover distinct authors from the same damaged token."
+    },
+    "HalLeonardPublicationMetadata.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/HalLeonardPublicationMetadata.java",
+      "source_sha256": "1706ec8b0baf2b3b000e2a9ce54d9e6376339c8c8094245f6a4a8c3ed527e0ec",
+      "source_normalized_sha256": "e735b28a54185295148ea65c849626575a0531ab6fa7904c359d701061d77a41",
+      "reviewed_app_base_commit": "0fa6005a02c3853c777d4f57d87e4f7969ee1562",
+      "reviewed_source_state": "Exact printed publisher edition/title/role corroboration, bounded terminal-name recovery, and versioned public-fact cache; fresh app/native/full-library qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HalLeonardPublicationMetadata.java",
+      "standalone_sha256": "a6631ea122c6f26122dc99fb4cf92e02c67fa0b24f397c0fddd9085bd95dd557",
+      "license": "Apache-2.0",
+      "review_note": "Original code and fictional source/HTML/cache/ownership regressions. Public HTTPS requests contain only edition IDs. No private scores, expected library names, HTTP response bodies, phone logs, model changes or per-song conditions included."
+    },
+    "PublishedEditionCacheRecord.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/PublishedEditionCacheRecord.java",
+      "source_sha256": "3f7a97144ea7c8ced07b82d8cfaee2715c09e890cdba4d5ac480d03034cf6cbf",
+      "source_normalized_sha256": "ea0f38e690f1a673477d9faf68e42a72be62a58540aa38f0b2f6e9149e89e742",
+      "reviewed_app_base_commit": "0fa6005a02c3853c777d4f57d87e4f7969ee1562",
+      "reviewed_source_state": "Exact printed publisher edition/title/role corroboration, bounded terminal-name recovery, and versioned public-fact cache; fresh app/native/full-library qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PublishedEditionCacheRecord.java",
+      "standalone_sha256": "5d2aad0ad443436486fd1e3b87f2c4070e72aff123b0396e652865d26dcf1e58",
+      "license": "Apache-2.0",
+      "review_note": "Original code and fictional source/HTML/cache/ownership regressions. Public HTTPS requests contain only edition IDs. No private scores, expected library names, HTTP response bodies, phone logs, model changes or per-song conditions included."
     }
   },
   "interpreter_speedup_review": {
@@ -5555,5 +5588,33 @@
     "license": "Apache-2.0",
     "proceduralControls": "browser/engraving/tests/hairpins.test.html",
     "scope": "Original browser adapters; separately licensed GPL renderer implementation is published by Sheet-Music-Hub."
+  },
+  "android_publication_credit_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_base_commit": "0fa6005a02c3853c777d4f57d87e4f7969ee1562",
+    "scope": "Explicit review-only adapter forwards actual printed edition IDs; private bounded cache stores only validated public credit facts. The original PDF fingerprint is checked again after optional network work. Library fields are not automatically committed.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/PublicationCreditReader.java",
+        "source_sha256": "e2416451d41c1d7e6ce8f8e829cd94b762a03eb57f367d773a6dfe1f1dd4654c",
+        "source_normalized_sha256": "52528bc0caf744d4b8838632922dfee0e0d5fbf0d4786f785645c7d4a38df6c1"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/OriginalTitleReviewReader.java",
+        "source_sha256": "ac1f368dcf8f066cd8d354116ef3edc0a71b0a510368e24dcbc1f46137f1a447",
+        "source_normalized_sha256": "e9b1feaeabaed98c445100cb1060e3f6c0d7c40662e78b43592b3d3e63a5289a"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+        "source_sha256": "e0272f6bccaa66a1e3f30ea938ca3bcf318bd9494abc02451cae472681e41875",
+        "source_normalized_sha256": "187ea447d50ae52d7a5138d236b996dd54ade9c1bd256aab5813c90208d915f7"
+      }
+    ],
+    "shared_pure_helpers": [
+      "PublishedEditionCreditRecovery.java",
+      "HalLeonardPublicationMetadata.java",
+      "PublishedEditionCacheRecord.java"
+    ],
+    "native_record_layout_changes": false
   }
 }
