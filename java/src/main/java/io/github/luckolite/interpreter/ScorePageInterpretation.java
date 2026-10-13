@@ -1,3 +1,5 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 import java.util.List;
@@ -14,7 +16,71 @@ public record ScorePageInterpretation(
         List<ScoreTechniqueChange> techniqueChanges,
         List<ScoreDynamicChange> dynamicChanges,
         List<ScorePlaybackDirection> playbackDirections,
-        List<ScoreExpressiveEvent> expressiveEvents) {
+        List<ScoreExpressiveEvent> expressiveEvents,
+        ScoreSlurSource slurSource) {
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int first,
+            List<ScoreKeyChange> keys,
+            List<ScoreTempoChange> tempos,
+            List<ScoreMeterChange> meters,
+            List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniques,
+            List<ScoreDynamicChange> dynamics,
+            List<ScorePlaybackDirection> directions,
+            List<ScoreExpressiveEvent> expressions) {
+        this(
+                measures,
+                notes,
+                first,
+                keys,
+                tempos,
+                meters,
+                rests,
+                techniques,
+                dynamics,
+                directions,
+                expressions,
+                ScoreSlurSource.empty(notes == null ? 0 : notes.size()));
+    }
+
+    public ScorePageInterpretation withSlurSource(ScoreSlurSource source) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                source);
+    }
+
+    /** Explicit source owners preserve original printed endpoints through a note edit. */
+    public ScorePageInterpretation withNotes(
+            List<ScoreNoteEvent> edited, List<Integer> sourceOwners) {
+        if (edited.size() != sourceOwners.size())
+            throw new IllegalArgumentException("Edited notes and source owners disagree");
+        return new ScorePageInterpretation(
+                measures,
+                edited,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource.edited(sourceOwners));
+    }
+
     public ScorePageInterpretation(
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes,
@@ -65,7 +131,8 @@ public record ScorePageInterpretation(
                 techniqueChanges,
                 dynamicChanges,
                 directions,
-                expressiveEvents);
+                expressiveEvents,
+                slurSource);
     }
 
     public ScorePageInterpretation withExpressiveEvents(List<ScoreExpressiveEvent> events) {
@@ -80,7 +147,8 @@ public record ScorePageInterpretation(
                 techniqueChanges,
                 dynamicChanges,
                 playbackDirections,
-                events);
+                events,
+                slurSource);
     }
 
     public ScorePageInterpretation(
@@ -137,6 +205,9 @@ public record ScorePageInterpretation(
     public ScorePageInterpretation {
         measures = measures == null ? List.of() : List.copyOf(measures);
         notes = notes == null ? List.of() : List.copyOf(notes);
+        java.util.Objects.requireNonNull(slurSource);
+        if (slurSource.noteOrigins().size() != notes.size())
+            throw new IllegalArgumentException("Slur identities do not match retained score notes");
         firstMeasureNumber = Math.max(0, firstMeasureNumber);
         keyChanges = keyChanges == null ? List.of() : List.copyOf(keyChanges);
         tempoChanges = tempoChanges == null ? List.of() : List.copyOf(tempoChanges);

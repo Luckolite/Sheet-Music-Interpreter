@@ -503,6 +503,7 @@ public final class TablatureDecoder {
                 && score.rests().isEmpty()
                 && score.expressiveEvents().isEmpty()
                 && score.playbackDirections().isEmpty()
+                && score.slurSource().spans().isEmpty()
                 && tabs.stream().allMatch(t -> t.standardTop < 0))
             score =
                     new ScorePageInterpretation(
@@ -749,10 +750,19 @@ public final class TablatureDecoder {
                                                             | TabEffect.encode(TabEffect.DEAD, 0)));
                         }
                     }
-        notes.sort(
+        var noteOrder =
                 Comparator.comparingInt(ScoreNoteEvent::measureIndex)
                         .thenComparingDouble(ScoreNoteEvent::positionInMeasure)
-                        .thenComparingInt(ScoreNoteEvent::staffStep));
+                        .thenComparingInt(ScoreNoteEvent::staffStep);
+        // Sets preserve a slot; appended fret-only notes have no prior printed owner.
+        final int retainedCount = score.notes().size();
+        var sourceOwners =
+                java.util.stream.IntStream.range(0, notes.size())
+                        .boxed()
+                        .sorted((a, b) -> noteOrder.compare(notes.get(a), notes.get(b)))
+                        .map(index -> index < retainedCount ? index : -1)
+                        .toList();
+        notes.sort(noteOrder);
         return new ScorePageInterpretation(
                 measures,
                 notes,
@@ -764,7 +774,8 @@ public final class TablatureDecoder {
                 score.techniqueChanges(),
                 score.dynamicChanges(),
                 score.playbackDirections(),
-                score.expressiveEvents());
+                score.expressiveEvents(),
+                score.slurSource().edited(sourceOwners));
     }
 
     /** Whole-measure meaning needs glyph identity, real enclosing bars and a complete silent voice. */

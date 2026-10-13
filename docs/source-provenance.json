@@ -298,10 +298,10 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "fee817cda6e220bc7baa7315f13fb14f6685fdd23ac7b6b9b2f7af1c6c816efd",
-      "reviewed_app_commit": "6df0969574f3f2de5a327ed27fe3f56703f19431",
+      "source_sha256": "ebc01db431a081bd34521f985a172aa1928ced10942d704ea879202d8fd3770c",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
       "review_note": "Add retained-source repair using existing multi-bar OCR contradiction evidence; explicit captured timing bypasses repair. Recognition thresholds and raw OCR APIs unchanged. Original synthetic regression only.",
-      "source_normalized_sha256": "c3630575bd6277ff92e4d82101d9a024d0aa8f78c78dfc4ed1c67a57922f95d8",
+      "source_normalized_sha256": "a2df66248c0e243197951877e0f82fd1ba131c618b393308bc4ade08e28d361e",
       "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
     },
@@ -442,9 +442,9 @@
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
-      "source_sha256": "6538add480c9f8b8e441968f89a2cc2ca20bf3c4f27b1109b218a08fe31a3386",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "6538add480c9f8b8e441968f89a2cc2ca20bf3c4f27b1109b218a08fe31a3386"
+      "source_sha256": "cf7a195fa3d0b94b7e4ad9a2cc8688ba06d34b6a16e75e7dba1824e327a1a47f",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+      "source_normalized_sha256": "90a8c3c8122dec9da1c2574abfa4fc0ae8464c7930858ba0d4f6540e4fa7ee21"
     },
     "ScoreRestEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestEvent.java",
@@ -593,9 +593,9 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "0fc94d9a4c445eb9d534c85aa14778c60fd643623ccaacc8125ce30e27bcf005",
-      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
-      "source_normalized_sha256": "bcdb5aa36e9f9118918f799810ec8fdfcd3c8d4afa022c90943d233f4088f0fb",
+      "source_sha256": "185755deba19482464f6475708f3ba3c70c34cbf1fb516eef3dffb9d567ca5d7",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+      "source_normalized_sha256": "db1a20d44a52960fbdf26eb79c782157a4e9bba3d412befa7f367cfce0dbab06",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
       "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
@@ -661,18 +661,18 @@
     },
     "TabMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabMeter.java",
-      "source_sha256": "f576402fab636eadc376900e9232ad5d4183ff9a658ae95425b9b525d3ed86e8",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "source_normalized_sha256": "f576402fab636eadc376900e9232ad5d4183ff9a658ae95425b9b525d3ed86e8",
+      "source_sha256": "dcf376952b9c1145260a0ff6c23f7c8ccc2ce5539f58b3c5aabe0533caa696cb",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+      "source_normalized_sha256": "131be4c187d0307c3c9679fe623c5cb9292af49af54a0340c2adbba43678c0af",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
       "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
       "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
     },
     "TabTempo.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTempo.java",
-      "source_sha256": "d26210b3cc3b68d9c7de4bb5d194b3c23b71444fa194e303df9cb9288f4ba91c",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "4cad85a0a1b41c60154d4dc3b01906b50fafa19902cee69104608cc22db846de"
+      "source_sha256": "b3e300ea871fce9e93cd568244fa0b206197c1522761b4829942f90326117454",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+      "source_normalized_sha256": "ef676461b8eb8d55eb0c0a37d3b225b562412173320517f144324d352f59bffc"
     },
     "TabPerformanceMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPerformanceMarks.java",
@@ -706,9 +706,9 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "38dc4053f92b48c48c18a5d89ab9da8f16f47c21b1447e3db1b607fe378e977c",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ce744cb787ba70766681792b9e27def354d57bfd3731ddc39d35279765aa0030",
+      "source_sha256": "3dcda269521e9f7c446c77fedea3c3035f3d56bcf0ccaa1c502d3425503483cd",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+      "source_normalized_sha256": "a0869a50e1088ea5eccf031a77a15027dc12c4a956e2de50a916712ee9a56560",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
       "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
@@ -1992,9 +1992,9 @@
     },
     "TabBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabBoundaryTies.java",
-      "source_sha256": "6cf6ae9b2a87d337211ab9c96bdd01ef2e7d5e77415d2e899a8b187518c39a44",
-      "source_normalized_sha256": "44bfea5c03e74a95d28ffc4c65e8dee7c19211e0c742b1dca7a0b319b6b5be8e",
-      "reviewed_app_commit": "45e2ac2fae5c5cdbda4f83f78bf1c71731bccac9",
+      "source_sha256": "a34eb3647e525f1e4b6f98916ff9575f81789aa049e5547686f8d2b389998f96",
+      "source_normalized_sha256": "0623351422be130ca308f3e43840e01b26a004bb5671728b7bb52b5ed614d4a4",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
       "reviewed_source_state": "App941 /1.18.468; complete package-adapted AOSP source parity for the tab tie repair.",
       "standalone_sha256": "9a23522a024ea0fe73560a005d9541a84f2efba803a92e807e1e74b9540ef4ea"
     },
@@ -2383,6 +2383,60 @@
       "standalone_sha256": "5d2aad0ad443436486fd1e3b87f2c4070e72aff123b0396e652865d26dcf1e58",
       "license": "Apache-2.0",
       "review_note": "Original code and fictional source/HTML/cache/ownership regressions. Public HTTPS requests contain only edition IDs. No private scores, expected library names, HTTP response bodies, phone logs, model changes or per-song conditions included."
+    },
+    "ScoreSlurSpan.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurSpan.java",
+      "source_sha256": "e9d6665e284c75b4db9d30f20c3ce8d68bd18952e2f8d997db6e82f12d64d9f1",
+      "source_normalized_sha256": "e9d6665e284c75b4db9d30f20c3ce8d68bd18952e2f8d997db6e82f12d64d9f1",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurOwners.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurOwners.java",
+      "source_sha256": "590dbf957837fa87dbb0ec44cde628b446bd596bc81fdcc950974009affb74f6",
+      "source_normalized_sha256": "590dbf957837fa87dbb0ec44cde628b446bd596bc81fdcc950974009affb74f6",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurPages.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurPages.java",
+      "source_sha256": "5b3ba5376b47a065560d8da6144a447e8b49798d7b1ff403ed967589c9f8a3f5",
+      "source_normalized_sha256": "5b3ba5376b47a065560d8da6144a447e8b49798d7b1ff403ed967589c9f8a3f5",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurPageWire.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurPageWire.java",
+      "source_sha256": "7583255ff9579e60fa35cc6b345c799cb035431f47e942106d928552055811ee",
+      "source_normalized_sha256": "7583255ff9579e60fa35cc6b345c799cb035431f47e942106d928552055811ee",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurSource.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurSource.java",
+      "source_sha256": "128751b318304cdc936174a499820e7c372a0e5bae7d58a57e48df85de177cbb",
+      "source_normalized_sha256": "128751b318304cdc936174a499820e7c372a0e5bae7d58a57e48df85de177cbb",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurSourceWire.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurSourceWire.java",
+      "source_sha256": "a16b2bdf6fea584a47b527c4a897f0abaa8d5d0d0eb4dbd62eb4f9a7e26c42b8",
+      "source_normalized_sha256": "a16b2bdf6fea584a47b527c4a897f0abaa8d5d0d0eb4dbd62eb4f9a7e26c42b8",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurPagesTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ScoreSlurPagesTest.java",
+      "source_sha256": "0d9046b236726811d6570129c3b9bd6e303d19c50afb2d21f5407344a910bdab",
+      "source_normalized_sha256": "0d9046b236726811d6570129c3b9bd6e303d19c50afb2d21f5407344a910bdab",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurPageWireTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ScoreSlurPageWireTest.java",
+      "source_sha256": "9dc9c1e78ae2582aad59340ba31435e91c118b539399964f8e4fc3946b47d78e",
+      "source_normalized_sha256": "9dc9c1e78ae2582aad59340ba31435e91c118b539399964f8e4fc3946b47d78e",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "ScoreSlurSourceTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ScoreSlurSourceTest.java",
+      "source_sha256": "7b55b6411ed09a72d52feac3d4ca32505d1c75fcc2a2fbaef6fc1c20143688de",
+      "source_normalized_sha256": "7b55b6411ed09a72d52feac3d4ca32505d1c75fcc2a2fbaef6fc1c20143688de",
+      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
     }
   },
   "interpreter_speedup_review": {
@@ -5616,5 +5670,14 @@
       "PublishedEditionCacheRecord.java"
     ],
     "native_record_layout_changes": false
+  },
+  "printed_slur_source_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
+    "documentation_path": "docs/slur-source-ownership.md",
+    "scope": "Original printed-slur source ownership, explicit edit/page maps and bounded SLT1/SLP1 retention. No pixel recognition or model change.",
+    "android_app_only": "Android cache/UI/capture and app arrangement/MusicXML adapters stay outside the standalone API; pure source semantics and procedural regressions are ported.",
+    "verification": "8054 standalone Java tests passed. Python suite and PNG/PDF MIDI/MusicXML/MP3 smoke passed; skipped Python cases remain separately reported.",
+    "unadopted_contract": "Guide285 and paired Hub validator are staged separately. Shipped/current app cache format remains284."
   }
 }
