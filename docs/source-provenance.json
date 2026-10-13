@@ -543,12 +543,12 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "d188a60c45bba5068852835e0d12827a03d1836ea0b5a7f69659158bb5438b9a",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "d188a60c45bba5068852835e0d12827a03d1836ea0b5a7f69659158bb5438b9a",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
+      "source_sha256": "15e757c8fe35b42a80482de61f9790e60df07600677096b2f618a892e29c6eea",
+      "reviewed_app_commit": "389465e5a141146b29f5902413a60349b4d78920",
+      "source_normalized_sha256": "970ba6c7b40a77fc29f9cba7eb2a0834f9567b7dfc262ec82d8819b7b6c772ab",
+      "review_note": "Recover a complete recognised octave-word prefix beside an independently proved thin staff-facing terminal hook. Preserve existing whole-word recognition, bare-number/dash rules, wrong-direction and solid-ink rejection, and isolated-attack ownership. Original generated fixtures cover8va/8vb/15ma/15mb and scale;94focused controls pass each namespace. Exact app/public code and literal parity; no model, dependency or record-layout change.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta."
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes."
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",

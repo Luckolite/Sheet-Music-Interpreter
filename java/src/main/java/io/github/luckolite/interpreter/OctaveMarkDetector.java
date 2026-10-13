@@ -396,6 +396,37 @@ final class OctaveMarkDetector {
                             }
                         }
                     }
+                    if (shift == 0 && members.size() >= 2) {
+                        InkBox hook = members.get(members.size() - 1);
+                        if (shortTerminalHook(gray, width, hook, gap, below)) {
+                            int prefixRight = -1, prefixTop = height, prefixBottom = -1;
+                            for (int j = 0; j < members.size() - 1; j++) {
+                                InkBox member = members.get(j);
+                                prefixRight = Math.max(prefixRight, member.right);
+                                prefixTop = Math.min(prefixTop, member.top);
+                                prefixBottom = Math.max(prefixBottom, member.bottom);
+                            }
+                            if (hook.left > prefixRight
+                                    && hook.top >= prefixTop - gap * .25f
+                                    && hook.bottom <= prefixBottom + gap * .25f) {
+                                int prefixShift =
+                                        OctaveWordShapes.match(
+                                                gray,
+                                                width,
+                                                left,
+                                                prefixTop,
+                                                prefixRight,
+                                                prefixBottom);
+                                if (prefixShift != 0
+                                        && (below ? prefixShift < 0 : prefixShift > 0)) {
+                                    shift = prefixShift;
+                                    right = prefixRight;
+                                    a = prefixTop;
+                                    b = prefixBottom;
+                                }
+                            }
+                        }
+                    }
                     if (shift == 0 || (below ? shift > 0 : shift < 0)) continue;
                     String text =
                             switch (shift) {
@@ -431,6 +462,38 @@ final class OctaveMarkDetector {
                                                         && other.bottom() * height
                                                                 >= word.bottom() * height - 1));
         return words;
+    }
+
+    /** A thin staff-facing terminal has a horizontal limb and a right shaft, with a clear interior. */
+    private static boolean shortTerminalHook(
+            byte[] gray, int width, InkBox box, float gap, boolean below) {
+        int w = box.right - box.left + 1, h = box.bottom - box.top + 1;
+        if (w < gap * .35f
+                || w > gap * 1.7f
+                || h < gap * .45f
+                || h > gap * 1.5f
+                || box.area > w * h * .65f) return false;
+        int limb = Math.max(1, Math.round(gap * .18f));
+        int bestBar = 0, bestShaft = 0, outside = 0;
+        for (int y = box.top; y <= box.bottom; y++) {
+            int rowInk = 0;
+            boolean atBar = below ? y > box.bottom - limb : y < box.top + limb;
+            for (int x = box.left; x <= box.right; x++)
+                if ((gray[y * width + x] & 255) < 165) {
+                    rowInk++;
+                    if (!atBar && x <= box.right - limb) outside++;
+                }
+            if (atBar) bestBar = Math.max(bestBar, rowInk);
+        }
+        for (int x = Math.max(box.left, box.right - limb + 1); x <= box.right; x++) {
+            int columnInk = 0;
+            for (int y = box.top; y <= box.bottom; y++)
+                if ((gray[y * width + x] & 255) < 165) columnInk++;
+            bestShaft = Math.max(bestShaft, columnInk);
+        }
+        return bestBar >= w * .75f
+                && bestShaft >= h * .75f
+                && outside <= Math.max(1, box.area * .08f);
     }
 
     // Staff rules can divide an accidental into two apparent counters. A bare
