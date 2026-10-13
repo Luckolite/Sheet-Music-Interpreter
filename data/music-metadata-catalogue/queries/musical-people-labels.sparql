@@ -1,0 +1,10 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+SELECT DISTINCT ?item ?occupation ?label WHERE {
+  VALUES ?occupation { wd:Q36834 wd:Q1643514 wd:Q3355249 }
+  ?item wdt:P106 ?occupation; wdt:P31 wd:Q5; rdfs:label ?label.
+  FILTER(LANG(?label) IN ("en","mul"))
+}

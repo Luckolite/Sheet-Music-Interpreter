@@ -2018,15 +2018,14 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "2983738659b0656e2b6a23285596d81e787b6bb1616af8e678bf4410d06341bd",
-      "source_normalized_sha256": "595840a410eb4bcc88dd644678e15c7354b66ff07b2bcd73b863ffe85d20dbe3",
-      "reviewed_app_base_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "reviewed_source_state": "Committed app960 reviewed opt-in manual curved-cover credit batch. Assigned fields, ordinary recognition, guide/audio layouts and models unchanged.",
+      "source_sha256": "7a56d0bd7ddb69e0697d2f1031b0ee58be6f11ea89f93a5aa994effa59657723",
+      "source_normalized_sha256": "9cd2bd108f06f25997560f98d101e7cb8e41f9e16aa2cb4317db0a359da0a034",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "211304d112430adb414c12c60d3f6f585d7fb32522e4ef42b5eeaa901bcff9e3",
+      "standalone_sha256": "602df2421797fb8059aa6a4e34e659c24e5dbf4fc1ef1a319b788baef6e4fa02",
       "license": "Apache-2.0",
-      "review_note": "Separately printed repeated header titles can establish crop context independently of import-label prefixes. Optional Page.reviewCredits bind pixel-proven service payloads to unchanged OCR lines for unresolved review; four-, five- and six-argument Page constructors remain compatible. Existing identifiers and contributor-role guards remain. Review payloads must match a literal printed suffix after the explicit transcription label and at most one mark token; producers and consumers reject mismatched or stale values before using evidence. Inline Arrangement/Arrangements followed by a name is a prefix credit eligible for the existing guarded original-source reread path; only empty arrangement labels search for a name above. No new name-similarity merge or consensus policy. Existing damaged arranger-label nomination may use a role-only fallback with case-sensitive identical literal contributor payload in original and all three readings, bounded label variations, and an actually observed exact Arranged by reading. Competing valid inflections are rejected. Source geometry, identifiers and contributor counts remain guarded; no name completion, model changes or new Android helpers. A unique separated footer on a nonphotographic staff-free opening cover remains unresolved literal review text. Exactly three strong source readings gate bounded anchor-preserving I/L and fragmented-spacing refinement; initials, combining marks, identifiers and caption exclusions remain guarded. No attributed roles, model changes or page layout changes. A nearby generic motion-picture source caption on the first nonphotographic notation page can refine one four-ASCII connector substitution only when three strong original-PDF readings agree on the complete observed phrase. The small overlap exception requires unique caption ownership, preserves other-caption geometry and rejects competing headings. No new role, model or Page layout. On a narrowly bounded single-page staff-free narrative artwork layout with a nonempty import hint, retain the imported title and the complete literal quotation as unresolved review text. No contributor roles, OCR, page layout, model or filename-specific rules are added. One separately printed curved cover name may be retained as unresolved manual review only after the existing title selection. Two readers and three scales, bounded same-row geometry, full-document contributors, unchanged raw OCR and four assigned fields are mandatory. No role inference or note/audio/cache/model/guide-layout changes; original fictional geometry controls.",
-      "reviewed_app_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2245,6 +2244,94 @@
       "reviewed_source_state": "Committed app960 reviewed opt-in manual curved-cover credit batch. Assigned fields, ordinary recognition, guide/audio layouts and models unchanged.",
       "review_note": " One separately printed curved cover name may be retained as unresolved manual review only after the existing title selection. Two readers and three scales, bounded same-row geometry, full-document contributors, unchanged raw OCR and four assigned fields are mandatory. No role inference or note/audio/cache/model/guide-layout changes; original fictional geometry controls.",
       "reviewed_app_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
+    },
+    "CorroboratedCatalogueWorkTitle.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedCatalogueWorkTitle.java",
+      "source_sha256": "b705efc1cb52687542b2bbf2e07878e79107774d75c547a0df0404370ded7ed3",
+      "source_normalized_sha256": "b705efc1cb52687542b2bbf2e07878e79107774d75c547a0df0404370ded7ed3",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedCatalogueWorkTitle.java",
+      "standalone_sha256": "70069babf04e6f5cd0b9737f0f709235e77f54beafa1376087dcc2e83a17553c",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "CorroboratedPrimaryTitle.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedPrimaryTitle.java",
+      "source_sha256": "cbd16e996cf6f91c2e6633bcb4f92739c6dc705eefc826cd09a64ce3257ae497",
+      "source_normalized_sha256": "4823e5d41d4a6551071a4d8a496f146bc331b42a50d9f884f48323c7433dae05",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedPrimaryTitle.java",
+      "standalone_sha256": "274f513ca5c2d862faa50866e0a0ccd90ffb1c767ff09b9df4fe65fd0787b5d4",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "CorroboratedVersionCaption.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedVersionCaption.java",
+      "source_sha256": "cd9361abdc626c02d891b19b38a36c3cf7ef95c9e282e237dafacb08034cbbae",
+      "source_normalized_sha256": "bfed1c856293a65dae493bc29f4a817fa04791a848c28f235cd1fb0aa4bd2d5f",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedVersionCaption.java",
+      "standalone_sha256": "e50e235b36485707eea47c5ec47a966d620cdd4984a3395a2dec1152623ff043",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "HeaderCropBudget.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/HeaderCropBudget.java",
+      "source_sha256": "90348435a12e5ec7201d2823bee56efdff30adf3aeafd5e9a20790bfe283f778",
+      "source_normalized_sha256": "dfb354b1ad2ee502529c09d657a8f1fef0461e44bfe10b97ad0f13602e0a28d6",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HeaderCropBudget.java",
+      "standalone_sha256": "06f9086228dab5a2a9c859d6d8f341fa49d6bdeb80976e4a933d65fe41df8ca1",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "MusicMetadataCatalogue.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/MusicMetadataCatalogue.java",
+      "source_sha256": "9b34974ce68f27d5564271028614b09a3bffa918e911f18bd4c1091f63ec2df9",
+      "source_normalized_sha256": "9b34974ce68f27d5564271028614b09a3bffa918e911f18bd4c1091f63ec2df9",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MusicMetadataCatalogue.java",
+      "standalone_sha256": "b456cb504821aec2c525ccdac14288ee6b9811f4e96fa8984db7589a72595eb1",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "MusicMetadataCatalogueSnapshot.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/MusicMetadataCatalogueSnapshot.java",
+      "source_sha256": "cddf168c598f3ea4519d86007c8f87e28b4db82074f218f6a4456e740a00217f",
+      "source_normalized_sha256": "cbad2695e75afe8aab4b7e55dd39a5bf5722b4cdc11dca23c32e08530349e5ac",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MusicMetadataCatalogueSnapshot.java",
+      "standalone_sha256": "45101af74a07e2d68f3911a1491d52d9857a3841a61c0befb2b3a098efc3c6cb",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "OpeningWorkHeading.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/OpeningWorkHeading.java",
+      "source_sha256": "0b95a13fce34d3981d183457fd3ad11ae89f97cd26c938ab120784576e9b8235",
+      "source_normalized_sha256": "12c36a9d58ebc496b2f450e39c51942e2b63b919dbc3f7383a81f16117fd4214",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpeningWorkHeading.java",
+      "standalone_sha256": "45c37a6578785ead78b732a2f88de45332962a9ef1f195414349621fd3bf6da1",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+    },
+    "ScoreHeaderReadConsensus.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreHeaderReadConsensus.java",
+      "source_sha256": "a04ba6992880437ddf047fd34b7925eee2abcfd1cf16ac79a4bbb9a6817607d7",
+      "source_normalized_sha256": "6d22032c1d6dbbc3c6075cd913e98b4531ff2c44e444a069573fd9b3cab5a085",
+      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
+      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreHeaderReadConsensus.java",
+      "standalone_sha256": "f079ff723758daa2d8ce9c1d8a01656ed4583a6a1c8b3691841af3329288f9b2",
+      "license": "Apache-2.0",
+      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
     }
   },
   "interpreter_speedup_review": {

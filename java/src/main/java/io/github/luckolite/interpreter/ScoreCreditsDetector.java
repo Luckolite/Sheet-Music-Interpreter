@@ -3420,16 +3420,30 @@ public final class ScoreCreditsDetector {
             List<Line> titleEvidence = withoutContainedTitleFragments(page, lines, titleLimit);
             List<Line> titleLines = withoutDedications(page, titleEvidence, titleLimit);
             Line heading = chooseTitle(fallback, page, titleLines, titleLimit);
+            Line versionCaption =
+                    page == pages.get(0)
+                            ? nearbyVersionTitleCaption(
+                                    page, heading, titleLines, titleLimit, knownNames)
+                            : null;
             String pageTitle =
                     heading == null
                             ? ""
                             : joinTitle(
-                                    page, heading, titleLines, titleLimit, page == pages.get(0));
+                                    page,
+                                    heading,
+                                    titleLines,
+                                    titleLimit,
+                                    page == pages.get(0),
+                                    knownNames);
             if (heading != null && page.photographicCover) {
                 String stacked = photographicStackedTitle(page, heading, titleLines, titleLimit);
-                if (!stacked.isEmpty()) pageTitle = stacked;
+                if (!stacked.isEmpty()
+                        && !containsVersionTitleCaption(pageTitle, heading, versionCaption))
+                    pageTitle = stacked;
             }
-            if (page.notationTop <= 0 && !same(fallback, pageTitle)) {
+            if (page.notationTop <= 0
+                    && !same(fallback, pageTitle)
+                    && !containsVersionTitleCaption(pageTitle, heading, versionCaption)) {
                 String coverTitle =
                         corroboratedCoverTitle(fallback, page, titleEvidence, titleLimit);
                 if (!coverTitle.isEmpty()) pageTitle = coverTitle;
@@ -3672,6 +3686,8 @@ public final class ScoreCreditsDetector {
                                     && line.top <= heading.bottom
                                     && (line.left >= heading.right || line.right <= heading.left);
                     if (claimed.contains(line)
+                            || line.equals(versionCaption)
+                                    && containsPrintedPhrase(title, line.text)
                             || line == heading
                             || line.top < heading.bottom
                                     && !sideHeaderReviewName(page, heading, line)
@@ -4659,8 +4675,73 @@ public final class ScoreCreditsDetector {
                 .toList();
     }
 
+    /** A typed version subtitle is work evidence; a protected name remains review evidence. */
+    private static Line nearbyVersionTitleCaption(
+            Page page, Line heading, List<Line> lines, float limit, Set<String> knownNames) {
+        if (heading == null
+                || page.creditsOnly
+                || knownNames.stream().anyMatch(name -> same(name, heading.text))) return null;
+        List<Line> candidates =
+                lines.stream()
+                        .filter(
+                                line ->
+                                        line != heading
+                                                && versionCaptionText(line.text)
+                                                && line.top < limit
+                                                && line.top
+                                                        >= heading.bottom - heading.height() * .3f
+                                                && line.top - heading.bottom
+                                                        < heading.height() * 1.2f
+                                                && line.height() >= heading.height() * .4f
+                                                && line.height() <= heading.height()
+                                                && Math.abs(line.center() - heading.center())
+                                                        < heading.height() * .8f
+                                                && line.right - line.left
+                                                        < (heading.right - heading.left) * 2.5f
+                                                && knownNames.stream()
+                                                        .noneMatch(name -> same(name, line.text))
+                                                && page.reviewCredits.stream()
+                                                        .noneMatch(
+                                                                review ->
+                                                                        intersects(
+                                                                                        review.line,
+                                                                                        line)
+                                                                                || intersects(
+                                                                                        review.line,
+                                                                                        heading)))
+                        .toList();
+        return candidates.size() == 1 ? candidates.get(0) : null;
+    }
+
+    private static boolean intersects(Line first, Line second) {
+        return Math.min(first.right, second.right) > Math.max(first.left, second.left)
+                && Math.min(first.bottom, second.bottom) > Math.max(first.top, second.top);
+    }
+
+    private static boolean versionCaptionText(String text) {
+        return clean(text)
+                .matches(
+                        "(?iu)^(?:(?:live|concert)\\h+performance|solo|easy|original|piano|violin|guitar|tavern|epic|wedding|concert)\\h+version(?:\\h+[0-9]+)?$");
+    }
+
+    private static boolean containsVersionTitleCaption(String title, Line heading, Line caption) {
+        return heading != null
+                && caption != null
+                && containsPrintedPhrase(title, heading.text)
+                && containsPrintedPhrase(title, caption.text);
+    }
+
     private static String joinTitle(
-            Page page, Line heading, List<Line> lines, float limit, boolean openingPage) {
+            Page page,
+            Line heading,
+            List<Line> lines,
+            float limit,
+            boolean openingPage,
+            Set<String> knownNames) {
+        Line ownedVersionCaption =
+                openingPage
+                        ? nearbyVersionTitleCaption(page, heading, lines, limit, knownNames)
+                        : null;
         List<Line> title = new ArrayList<>();
         title.add(heading);
         float rowLeft = heading.left, rowRight = heading.right;
@@ -4699,9 +4780,7 @@ public final class ScoreCreditsDetector {
                                     < Math.max(heading.height() * 1.6f, (rowRight - rowLeft) * .2f);
             String caption = clean(l.text);
             int captionWords = caption.split("\\h+").length;
-            boolean versionCaption =
-                    caption.matches(
-                            "(?iu)^(?:(?:live|concert)\\h+performance|solo|easy|original|piano|violin|guitar|tavern|epic|wedding|concert)\\h+version(?:\\h+[0-9]+)?$");
+            boolean versionCaption = l.equals(ownedVersionCaption);
             boolean closeSourceCaption =
                     openingPage
                             && motionPictureConnector(caption).equals("from")

@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "license": "CC0-1.0",
+  "licenseSource": "https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/Copyright",
+  "origin": "Wikidata structured data; generic queries via WDQS and its documented QLever mirror",
+  "mirrorDiscoverySource": "https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/Alternative_endpoints",
+  "assets": [
+    {
+      "file": "numbered-work-aliases.tsv",
+      "size": 1825435,
+      "sha256": "d3bdfc63d70608f7de19a56fdcd00d47b303f47cfad2f289bcfe2092334ba7bc"
+    },
+    {
+      "file": "musical-person-labels.tsv",
+      "size": 3599252,
+      "sha256": "789f8147bd86ebe57b8559c49a2ef1b328210d6c41c7b10e73fafa59a460e475"
+    },
+    {
+      "file": "instrument-kind-labels.tsv",
+      "size": 295999,
+      "sha256": "808240f5093d46476b4a75ff75304664d732927a719cb9780297a1c06c6bcdc4"
+    }
+  ],
+  "sources": [
+    {
+      "kind": "numbered-musical-works",
+      "requestUrl": "https://query.wikidata.org/sparql?query=PREFIX+wd%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX+wdt%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX+p%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2F%3E%0APREFIX+pq%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fqualifier%2F%3E%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+skos%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23%3E%0ASELECT+DISTINCT+%3Fitem+%3Fform+%3Fordinal+%3Flabel+%3Falias+%3Fcomposer+WHERE+%7B%0A++%3Fitem+wdt%3AP86+%3Fcomposer%3B+wdt%3AP7937+%3Fform%3B+p%3AP179+%3FseriesStatement.%0A++%3FseriesStatement+pq%3AP1545+%3Fordinal.%0A++%3Fitem+rdfs%3Alabel+%3Flabel.%0A++FILTER%28LANG%28%3Flabel%29+IN+%28%22en%22%2C%22it%22%2C%22fr%22%2C%22de%22%2C%22es%22%2C%22pt%22%2C%22nl%22%29%29%0A++OPTIONAL+%7B+%3Fitem+skos%3AaltLabel+%3Falias.+FILTER%28LANG%28%3Falias%29%3DLANG%28%3Flabel%29%29+%7D%0A%7D&format=json",
+      "requestedUtc": "2026-10-12T06:53:40.107230+00:00",
+      "httpStatus": 200,
+      "responseDate": "Mon, 12 Oct 2026 06:53:53 GMT",
+      "responseSha256": "f44d15cb70f737c28590168f6f58d55dd11d4cb4dd9b732f14d7af4768c2fc3c",
+      "responseRows": 8320,
+      "queryFile": "queries/numbered-musical-works.sparql",
+      "querySha256": "9efb043a858b87bf1275a108e89fad6175e4694aa4c7ed8a5ee29fc8b4f34464"
+    },
+    {
+      "kind": "work-form-labels",
+      "requestUrl": "https://query.wikidata.org/sparql?query=PREFIX+wd%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX+wdt%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0ASELECT+DISTINCT+%3Fform+%3Flabel+WHERE+%7B%0A++VALUES+%3Fform+%7B+wd%3AQ11487510+wd%3AQ131269+wd%3AQ1414262+wd%3AQ1546995+wd%3AQ1746015+wd%3AQ178122+wd%3AQ203005+wd%3AQ208569+wd%3AQ217295+wd%3AQ222910+wd%3AQ24869+wd%3AQ24887304+wd%3AQ2635894+wd%3AQ271802+wd%3AQ336144+wd%3AQ3686129+wd%3AQ388383+wd%3AQ4176708+wd%3AQ633441+wd%3AQ639197+wd%3AQ7366+wd%3AQ7889+wd%3AQ852209+wd%3AQ876812+wd%3AQ951526+wd%3AQ9734+wd%3AQ9748+%7D%0A++%3Fform+rdfs%3Alabel+%3Flabel.%0A++FILTER%28LANG%28%3Flabel%29+IN+%28%22en%22%2C%22it%22%2C%22fr%22%2C%22de%22%2C%22es%22%2C%22pt%22%2C%22nl%22%29%29%0A%7D&format=json",
+      "requestedUtc": "2026-10-13T00:35:50.686305+00:00",
+      "httpStatus": 200,
+      "responseDate": "Tue, 13 Oct 2026 00:35:51 GMT",
+      "responseSha256": "9420d207135e3856438210dcb69b58598d1626c170283fa2c0c20c26e5135289",
+      "responseRows": 177,
+      "queryFile": "queries/work-form-labels.sparql",
+      "querySha256": "a3d5fd34dcf2ee348adc49f22e960b7cb80ea31110007acb8e2fd5857e67ac9c"
+    },
+    {
+      "kind": "musical-people-labels",
+      "requestUrl": "https://qlever.dev/api/wikidata?query=PREFIX+wd%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX+wdt%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX+wikibase%3A+%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0ASELECT+DISTINCT+%3Fitem+%3Foccupation+%3Flabel+WHERE+%7B%0A++VALUES+%3Foccupation+%7B+wd%3AQ36834+wd%3AQ1643514+wd%3AQ3355249+%7D%0A++%3Fitem+wdt%3AP106+%3Foccupation%3B+wdt%3AP31+wd%3AQ5%3B+rdfs%3Alabel+%3Flabel.%0A++FILTER%28LANG%28%3Flabel%29+IN+%28%22en%22%2C%22mul%22%29%29%0A%7D",
+      "requestedUtc": "2026-10-13T00:54:38.133758+00:00",
+      "httpStatus": 200,
+      "responseDate": "Tue, 13 Oct 2026 00:54:39 GMT",
+      "responseSha256": "aea92b12789561c0dea4da32071a5204db8f5f8b3baa5ff96a922bfe1b0bf479",
+      "responseRows": 185989,
+      "queryFile": "queries/musical-people-labels.sparql",
+      "querySha256": "b78355982f645ae7659b1deeb0264c614625585972250442ff15810f0e366f10"
+    },
+    {
+      "kind": "instrument-kind-labels",
+      "requestUrl": "https://qlever.dev/api/wikidata?query=PREFIX+wd%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fentity%2F%3E%0APREFIX+wdt%3A+%3Chttp%3A%2F%2Fwww.wikidata.org%2Fprop%2Fdirect%2F%3E%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0APREFIX+schema%3A+%3Chttp%3A%2F%2Fschema.org%2F%3E%0APREFIX+wikibase%3A+%3Chttp%3A%2F%2Fwikiba.se%2Fontology%23%3E%0ASELECT+DISTINCT+%3Fitem+%3Flabel+WHERE+%7B%0A++%3Fitem+wdt%3AP279%2B+wd%3AQ34379%3B+rdfs%3Alabel+%3Flabel.%0A++FILTER%28LANG%28%3Flabel%29+IN+%28%22en%22%2C%22mul%22%2C%22it%22%2C%22fr%22%2C%22de%22%2C%22es%22%2C%22pt%22%2C%22nl%22%29%29%0A%7D",
+      "requestedUtc": "2026-10-13T00:54:35.009628+00:00",
+      "httpStatus": 200,
+      "responseDate": "Tue, 13 Oct 2026 00:54:37 GMT",
+      "responseSha256": "bef8de2b1defec5b49328f720621b0dde7377cd5c753c3b2afb1b2dfc2ac29d8",
+      "responseRows": 15218,
+      "queryFile": "queries/instrument-kind-labels.sparql",
+      "querySha256": "551ec8c51111b84e6196d392fcaf8d8f529689c2c38e30eea85186bab922482f"
+    }
+  ],
+  "construction": {
+    "selectPrivateNames": false,
+    "selectPrivateTitles": false,
+    "useFilenames": false,
+    "usePrivateGold": false,
+    "deterministicDeduplication": true,
+    "rejectUnsafeControlOrOverlongLabels": true,
+    "rejectedUnsafePersonRows": 0,
+    "rejectedUnsafeInstrumentRows": 0,
+    "workRows": 35027,
+    "usableIntegerWorkRows": 35027,
+    "workEntities": 471,
+    "usableIntegerWorkEntities": 471,
+    "personEntities": 133518,
+    "personLabels": 134505,
+    "instrumentEntities": 5507,
+    "instrumentLabels": 11189
+  },
+  "limitations": [
+    "Incomplete catalogue; an absent name is not evidence that a person does not exist.",
+    "Person labels are positive ownership vetoes, not automatic spelling corrections or identity assertions.",
+    "Work facts attest only exact alias, printed work form and series ordinal; no unprinted canonical text or contributor is inserted.",
+    "Only integer series ordinals in 1..999 are usable; captured other positions are not reconstructed.",
+    "English/multilingual-default person labels and a bounded set of work/instrument languages are represented.",
+    "Sources were observed at the recorded times; query responses are pinned independently, not a single transactional Wikidata revision."
+  ]
+}

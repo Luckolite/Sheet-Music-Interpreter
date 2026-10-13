@@ -1,0 +1,9 @@
+Wikidata structured data: CC0-1.0.
+https://creativecommons.org/publicdomain/zero/1.0/
+https://www.wikidata.org/wiki/Wikidata:SPARQL_query_service/Copyright
+
+These files contain structured labels and bibliographic facts, not article prose,
+score scans, score transcriptions, personal library records, or model weights.
+The accompanying Java implementation and fictional regressions are Apache-2.0.
+The source queries, observation times, transformations and SHA-256 values are
+recorded in manifest.json. No private-score filter is used in their construction.

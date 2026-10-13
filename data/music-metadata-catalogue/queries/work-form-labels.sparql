@@ -1,0 +1,8 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT DISTINCT ?form ?label WHERE {
+  VALUES ?form { wd:Q11487510 wd:Q131269 wd:Q1414262 wd:Q1546995 wd:Q1746015 wd:Q178122 wd:Q203005 wd:Q208569 wd:Q217295 wd:Q222910 wd:Q24869 wd:Q24887304 wd:Q2635894 wd:Q271802 wd:Q336144 wd:Q3686129 wd:Q388383 wd:Q4176708 wd:Q633441 wd:Q639197 wd:Q7366 wd:Q7889 wd:Q852209 wd:Q876812 wd:Q951526 wd:Q9734 wd:Q9748 }
+  ?form rdfs:label ?label.
+  FILTER(LANG(?label) IN ("en","it","fr","de","es","pt","nl"))
+}

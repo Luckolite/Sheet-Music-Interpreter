@@ -12,6 +12,17 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Primary title rereads and typed version captions preserve literal identifiers,
+source-row ownership, contributors and unrelated reviews. Numbered work headings
+above repeated instrument parts require complete literal grids and exact public
+alias/form/ordinal corroboration. The portable pinned snapshot loader verifies
+manifest and TSV bytes; public person labels only veto title ownership. Nine
+pure-Java counterparts have full package-adapted formatted source parity.
+Android PDF/bitmap/model adapters remain platform-specific. Models and native
+record layouts are unchanged. See [work title provenance](catalogue-work-title-corroboration.md)
+and [version captions](version-caption-corroboration.md).
+
+
 Ledger headings require complete bilateral staff rails and a nearby written
 ledger note. Existing left-edge direction anchors retain precedence. Free time
 is an unresolved direction; numeric tempo and playback timing are unchanged.

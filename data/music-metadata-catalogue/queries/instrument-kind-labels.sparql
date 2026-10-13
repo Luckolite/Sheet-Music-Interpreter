@@ -1,0 +1,9 @@
+PREFIX wd: <http://www.wikidata.org/entity/>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX schema: <http://schema.org/>
+PREFIX wikibase: <http://wikiba.se/ontology#>
+SELECT DISTINCT ?item ?label WHERE {
+  ?item wdt:P279+ wd:Q34379; rdfs:label ?label.
+  FILTER(LANG(?label) IN ("en","mul","it","fr","de","es","pt","nl"))
+}
