@@ -1,0 +1,231 @@
+{
+  "license": "Apache-2.0",
+  "origin": "Original procedural Music Sheets fixtures; no third-party score content.",
+  "midiPpq": 480,
+  "noteOffConvention": "Release may precede the source boundary by one MIDI tick.",
+  "cases": [
+    {
+      "name": "before-slash-explicit",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "64": [
+          "1/4",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "after-slash-explicit",
+      "expected": {
+        "64": [
+          "0",
+          "7/4"
+        ],
+        "67": [
+          "7/4",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "before-quarter-budget",
+      "expected": {
+        "67": [
+          "0",
+          "1/2"
+        ],
+        "64": [
+          "1/2",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "after-quarter-budget",
+      "expected": {
+        "64": [
+          "0",
+          "3/2"
+        ],
+        "67": [
+          "3/2",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "before-grouped-budget",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "71": [
+          "1/4",
+          "3/8"
+        ],
+        "64": [
+          "3/8",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "after-grouped-budget",
+      "expected": {
+        "64": [
+          "0",
+          "13/8"
+        ],
+        "67": [
+          "13/8",
+          "15/8"
+        ],
+        "71": [
+          "15/8",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "before-and-after-budget",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "64": [
+          "1/4",
+          "15/8"
+        ],
+        "71": [
+          "15/8",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      }
+    },
+    {
+      "name": "before-slash-chord-inheritance",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "64": [
+          "1/4",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ],
+        "71": [
+          "0",
+          "1/4"
+        ]
+      },
+      "kind": "chord-attribute-inheritance"
+    },
+    {
+      "name": "after-slash-chord-inheritance",
+      "expected": {
+        "64": [
+          "0",
+          "7/4"
+        ],
+        "67": [
+          "7/4",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ],
+        "71": [
+          "7/4",
+          "2"
+        ]
+      },
+      "kind": "chord-attribute-inheritance"
+    },
+    {
+      "name": "before-grouped-chord-inheritance",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "71": [
+          "1/4",
+          "3/8"
+        ],
+        "64": [
+          "3/8",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ],
+        "74": [
+          "0",
+          "1/4"
+        ]
+      },
+      "kind": "chord-attribute-inheritance"
+    },
+    {
+      "name": "both-sides-slashed",
+      "expected": {
+        "67": [
+          "0",
+          "1/4"
+        ],
+        "64": [
+          "1/4",
+          "15/8"
+        ],
+        "71": [
+          "15/8",
+          "2"
+        ],
+        "69": [
+          "2",
+          "4"
+        ]
+      },
+      "kind": "dual-side-slash"
+    }
+  ]
+}

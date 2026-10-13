@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Original wedge numbering follows emitted document order and preserves part-wide
+ownership. Synthetic grace-budget fixtures define the separately licensed native
+renderer contract. See [engraving identity and grace budgets](engraving-grace-budgets.md).
+
 Primary title rereads and typed version captions preserve literal identifiers,
 source-row ownership, contributors and unrelated reviews. Numbered work headings
 above repeated instrument parts require complete literal grids and exact public
