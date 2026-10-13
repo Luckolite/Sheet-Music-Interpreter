@@ -307,12 +307,11 @@
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
-      "source_sha256": "44404bc86c5f266909451433c5c6769aa32039746566d32d95f12cf55c153af2",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "44404bc86c5f266909451433c5c6769aa32039746566d32d95f12cf55c153af2",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
-      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta."
+      "source_sha256": "3ac03acbb1b797a090ef0b706cca8001eb497ee86994095f22c2b155dcb7d6a5",
+      "reviewed_app_commit": "ac322b2a56ff48f68d367b0328ef88e1f967d989",
+      "source_normalized_sha256": "ba24bedf905605e66a7ebae0b654796b081c41237db04bb8ce4ed9a7bc4d8b44",
+      "review_note": "Recover optically proved short bilateral capped-H rests with a local count window; distinguish six/seven glyph topology. Keep the whole-parent note veto, above-staff short-rest count ownership and existing long-bar OCR contract. Original generated positive/rejection controls and retained private stage comparisons. Exact app/public code and literal parity; reuse mapped PrintedRestBarHeads, no new dependency/model or record-layout change.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes."
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
@@ -479,10 +478,11 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "f2eaf1716d5f6ab65ce4b2da47f861608505f79f602edf53c26c02c92bf255f0",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "f2eaf1716d5f6ab65ce4b2da47f861608505f79f602edf53c26c02c92bf255f0",
-      "review_note": "Package-only code/literal parity. Isolated OCR digits require printed equals and independently recognized beat unit; Python numeric-only rejection unchanged. NativePageGuide and standalone SheetInterpreter share the helper; original synthetic controls, no new dependencies. Reuse the already measured digit-box height for its unchanged padded recognition threshold decision. Retain printed equals/unit evidence, original pixel traversal, thresholds, ordered complete tempo results and caller pixels. Original synthetic ownership/threshold regressions; Apache-2.0/JDK-only, no model/dependency/record-layout changes."
+      "source_sha256": "08b16da0ef3d0ad211998036dd5be48b40c909ce13f587ae3820e6cf17310add",
+      "reviewed_app_commit": "ac322b2a56ff48f68d367b0328ef88e1f967d989",
+      "source_normalized_sha256": "c184168fe86f40362f01cf0ebb9fbf44c5dc8dd8f9cb94cab5220e070ff00a57",
+      "review_note": "Printed numeric tempo requires independently recognized equals and beat unit. An augmentation dot must be a complete component inside the vertical crop, excluding clipped score stems. Original geometric tempo-unit, true-dot and competing-stem controls. Exact app/public code and literal parity after package adaptation; Apache-2.0/JDK-only, no model or record-layout change.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes."
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -757,11 +757,11 @@
     },
     "CommonTimeMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CommonTimeMeter.java",
-      "source_sha256": "23dc7595f12365e669e7928887b3007e1ed38472ebd25e04de8745e033685910",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "23dc7595f12365e669e7928887b3007e1ed38472ebd25e04de8745e033685910",
-      "reviewed_source_state": "Reviewed recognition14 scoped working-tree delta; recorded app commit is preserved base.",
-      "review_note": "Original asymmetric circular-terminal C/cut-C regressions; prove a continuous right opening channel when the terminal overlaps the symmetric window. Left bowl, both shoulders/terminals, cut separation, cavity, clef and conflicting-copy guards remain. No score-specific rules, fonts/models/dependencies/private data."
+      "source_sha256": "c2d31046015b660e5739541e99991f45d70af37e550f36e1eff435ed5a9433c4",
+      "reviewed_app_commit": "ac322b2a56ff48f68d367b0328ef88e1f967d989",
+      "source_normalized_sha256": "7f1cec84a9bba2d44db6df9bac6d0d93825a56a85aebf3c5d2eee60e40345cb5",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
+      "review_note": "Prove common/cut-time bowl, opening channel and cut ownership. Two long shafts crossed by two independent overhanging bands identify a key sharp. Original narrow straight, curved and asymmetric C/cut-C controls cover scale and shallow staff slope. Exact app/public code and literal parity after package adaptation; Apache-2.0/JDK-only, no model or record-layout change."
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",

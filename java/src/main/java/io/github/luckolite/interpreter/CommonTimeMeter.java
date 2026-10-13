@@ -83,6 +83,7 @@ final class CommonTimeMeter {
                 || right <= left
                 || left < 0
                 || right >= width) return 0;
+        if (sharpInk(gray, width, height, left, right, firstLine, gap, slope)) return 0;
         float mid = firstLine + 2 * gap;
         int span = right - left + 1;
         int radius = Math.max(1, Math.round(gap * .12f));
@@ -206,6 +207,103 @@ final class CommonTimeMeter {
                         slope);
         if (cavity > gap * gap * (cut ? .30f : .09f)) return 0;
         return cut ? 2 : 4;
+    }
+
+    /** Two long shafts crossed by two overhanging bars belong to a sharp, not a cut-C. */
+    private static boolean sharpInk(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int firstLine,
+            float gap,
+            float slope) {
+        int span = right - left + 1;
+        if (span < gap * .65f || span > gap * 1.75f) return false;
+        int radius = Math.max(1, Math.round(gap * .12f));
+        int lo = Math.round(firstLine - gap), hi = Math.round(firstLine + gap * 5);
+        int[] tops = new int[span], bottoms = new int[span];
+        java.util.Arrays.fill(tops, height);
+        java.util.Arrays.fill(bottoms, -1);
+        for (int x = left; x <= right; x++) {
+            int hits = 0;
+            for (int y = lo; y <= hi; y++) {
+                if (rule(y, firstLine, gap, radius) || !ink(gray, width, height, x, y, slope))
+                    continue;
+                tops[x - left] = Math.min(tops[x - left], y);
+                bottoms[x - left] = Math.max(bottoms[x - left], y);
+                hits++;
+            }
+            int rows = 0;
+            for (int y = tops[x - left]; y <= bottoms[x - left]; y++)
+                if (!rule(y, firstLine, gap, radius)) rows++;
+            if (bottoms[x - left] - tops[x - left] < gap * 2.1f || hits < rows * .85f) {
+                tops[x - left] = height;
+                bottoms[x - left] = -1;
+            }
+        }
+        int wing = Math.max(2, Math.round(gap * .12f));
+        for (int a = left + wing; a <= right - wing; a++) {
+            if (bottoms[a - left] < 0) continue;
+            for (int b = a + Math.max(2, Math.round(gap * .25f));
+                    b <= right - wing && b - a <= gap * .85f;
+                    b++) {
+                if (bottoms[b - left] < 0
+                        || Math.abs(tops[a - left] - tops[b - left]) > gap * .45f
+                        || Math.abs(bottoms[a - left] - bottoms[b - left]) > gap * .45f) continue;
+                int top = Math.max(tops[a - left], tops[b - left]);
+                int bottom = Math.min(bottoms[a - left], bottoms[b - left]);
+                if (bottom - top < gap * 1.9f) continue;
+                var bars = new ArrayList<Integer>();
+                for (int y = top; y <= bottom; y++) {
+                    boolean crossed = false;
+                    for (int dy = -Math.round(gap * .65f); dy <= Math.round(gap * .65f); dy++) {
+                        int hits = 0, total = 0, leftWing = 0, rightWing = 0;
+                        for (int x = left; x <= right; x++) {
+                            int yy = y + Math.round(dy * (x - left) / (float) (span - 1));
+                            if (rule(yy, firstLine, gap, radius)) continue;
+                            total++;
+                            boolean dark =
+                                    ink(gray, width, height, x, yy, slope)
+                                            || !rule(yy - 1, firstLine, gap, radius)
+                                                    && ink(gray, width, height, x, yy - 1, slope)
+                                            || !rule(yy + 1, firstLine, gap, radius)
+                                                    && ink(gray, width, height, x, yy + 1, slope);
+                            if (dark) {
+                                hits++;
+                                if (x < a) leftWing++;
+                                if (x > b) rightWing++;
+                            }
+                        }
+                        if (total >= Math.max(6, span * .35f)
+                                && hits >= total * .86f
+                                && leftWing > 0
+                                && rightWing > 0) {
+                            crossed = true;
+                            break;
+                        }
+                    }
+                    if (crossed) bars.add(y);
+                }
+                // One broad terminal can satisfy several nearby row fits. Staff-rule
+                // masking can split it, so nearby fits still belong to the same band.
+                var centers = new ArrayList<Float>();
+                int join = Math.max(2, (int) Math.ceil(gap * .4f));
+                for (int i = 0; i < bars.size(); ) {
+                    int first = bars.get(i), last = first;
+                    i++;
+                    while (i < bars.size() && bars.get(i) - last <= join) last = bars.get(i++);
+                    centers.add((first + last) * .5f);
+                }
+                for (int i = 0; i < centers.size(); i++)
+                    for (int j = i + 1; j < centers.size(); j++) {
+                        float separation = centers.get(j) - centers.get(i);
+                        if (separation >= gap * .5f && separation <= gap * 1.4f) return true;
+                    }
+            }
+        }
+        return false;
     }
 
     /** A cut-C has a separate left bowl, white channel, and vertical cut in both halves.

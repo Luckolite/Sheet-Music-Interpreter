@@ -521,7 +521,10 @@ final class TempoChangeDetector {
                 float gap = dot[0] - note[1], dy = Math.abs((dot[2] + dot[3]) * .5f - cy);
                 // The light fringe of '=' can extend left of its dark-core bound.
                 // It is clipped by this search window, unlike a complete printed dot.
+                // A score stem clipped at a vertical edge is not a complete tempo dot.
                 if (dot[1] < right
+                        && dot[2] > top
+                        && dot[3] < bottom
                         && gap > 0
                         && gap < unit * .6f
                         && dw >= 2

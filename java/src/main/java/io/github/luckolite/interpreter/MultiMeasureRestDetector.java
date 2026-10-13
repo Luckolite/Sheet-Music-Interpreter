@@ -54,6 +54,11 @@ final class MultiMeasureRestDetector {
             float centerY = (token.top() + token.bottom()) * .5f;
             int measureIndex = containingRestBar(restBars, measures, centerX, centerY);
             if (measureIndex < 0 || claimedMeasures[measureIndex]) continue;
+            // The short-bar fallback can share an opening region with a meter. Its count must
+            // be above that staff; preserve the existing caller-OCR contract for long bars.
+            if (cappedRestWindow(gray, width, height, measures.get(measureIndex)) != null
+                    && !aboveStaff(token, labels, gray, width, height, measures.get(measureIndex)))
+                continue;
             claimedMeasures[measureIndex] = true;
             result.add(token);
         }
@@ -189,8 +194,11 @@ final class MultiMeasureRestDetector {
                         countLabel(labels, width, height, window, OmrMeasurePostProcessor.NOTEHEAD)
                                 - countGlyphHeads(countGlyph, labels, width, height, window);
                 boolean thickBar = hasThickHorizontalBar(gray, width, height, window);
-                if (localHeads <= noteFreeLimit && thickBar)
-                    addOrMerge(result, new RestBarCandidate(index, window));
+                if (localHeads <= noteFreeLimit && thickBar) {
+                    MeasureRegion capped = cappedRestWindow(gray, width, height, window);
+                    addOrMerge(
+                            result, new RestBarCandidate(index, capped != null ? capped : window));
+                }
                 if (windowRight == parentRight) break;
                 if (windowLeft + windowWidth > parentRight)
                     windowLeft = Math.max(windowLeft, parentRight - windowWidth - step);
@@ -209,7 +217,7 @@ final class MultiMeasureRestDetector {
 
     /**
      * ML Kit commonly ignores an isolated one-character OCR crop. Recognize only the distinctive
-     * printed 2/3/4/8/9 shapes above a heavy bar, including mislabeled count ink.
+     * printed 2/3/4/6/7/8/9 shapes above a heavy bar, including mislabeled count ink.
      */
     static MeasureNumberReconciler.NumberToken standaloneCount(
             byte[] gray, int width, int height, RestBarCandidate candidate) {
@@ -220,6 +228,8 @@ final class MultiMeasureRestDetector {
             byte[] gray, int width, int height, RestBarCandidate candidate, boolean contrastRetry) {
         if (gray == null || gray.length != width * height || candidate == null) return null;
         MeasureRegion region = candidate.region;
+        MeasureRegion capped = cappedRestWindow(gray, width, height, region);
+        if (capped != null) region = capped;
         int regionTop = clamp(Math.round(region.top() * height), 0, height - 1);
         int regionBottom = clamp(Math.round(region.bottom() * height), regionTop, height - 1);
         int regionHeight = regionBottom - regionTop + 1;
@@ -318,10 +328,12 @@ final class MultiMeasureRestDetector {
                     }
             }
             int value =
-                    looksLikeEight(gray, width, regionHeight, minX, maxX, minY, maxY)
-                            ? 8
-                            : looksLikeFour(gray, width, regionHeight, area, minX, maxX, minY, maxY)
-                                    ? (looksLikeNine(
+                    looksLikeSix(gray, width, regionHeight, minX, maxX, minY, maxY)
+                            ? 6
+                            : looksLikeSeven(
+                                            gray, width, regionHeight, area, minX, maxX, minY, maxY)
+                                    ? 7
+                                    : looksLikeEight(
                                                     gray,
                                                     width,
                                                     regionHeight,
@@ -329,18 +341,8 @@ final class MultiMeasureRestDetector {
                                                     maxX,
                                                     minY,
                                                     maxY)
-                                            ? 9
-                                            : 4)
-                                    : looksLikeNine(
-                                                    gray,
-                                                    width,
-                                                    regionHeight,
-                                                    minX,
-                                                    maxX,
-                                                    minY,
-                                                    maxY)
-                                            ? 9
-                                            : looksLikeThree(
+                                            ? 8
+                                            : looksLikeFour(
                                                             gray,
                                                             width,
                                                             regionHeight,
@@ -349,18 +351,46 @@ final class MultiMeasureRestDetector {
                                                             maxX,
                                                             minY,
                                                             maxY)
-                                                    ? 3
-                                                    : looksLikeTwo(
+                                                    ? (looksLikeNine(
                                                                     gray,
                                                                     width,
                                                                     regionHeight,
-                                                                    area,
                                                                     minX,
                                                                     maxX,
                                                                     minY,
                                                                     maxY)
-                                                            ? 2
-                                                            : 0;
+                                                            ? 9
+                                                            : 4)
+                                                    : looksLikeNine(
+                                                                    gray,
+                                                                    width,
+                                                                    regionHeight,
+                                                                    minX,
+                                                                    maxX,
+                                                                    minY,
+                                                                    maxY)
+                                                            ? 9
+                                                            : looksLikeThree(
+                                                                            gray,
+                                                                            width,
+                                                                            regionHeight,
+                                                                            area,
+                                                                            minX,
+                                                                            maxX,
+                                                                            minY,
+                                                                            maxY)
+                                                                    ? 3
+                                                                    : looksLikeTwo(
+                                                                                    gray,
+                                                                                    width,
+                                                                                    regionHeight,
+                                                                                    area,
+                                                                                    minX,
+                                                                                    maxX,
+                                                                                    minY,
+                                                                                    maxY)
+                                                                            ? 2
+                                                                            : 0;
             if (value == 0 || !isolatedCountGlyph(gray, width, height, minX, maxX, minY, maxY))
                 continue;
             float distance = Math.abs((minX + maxX) * .5f - restCenterX);
@@ -637,6 +667,111 @@ final class MultiMeasureRestDetector {
         return spine >= h * .45f && bottomWidth >= w * .6f;
     }
 
+    /** A six has one lower bowl and a left spine curving right at its upper terminal. */
+    private static boolean looksLikeSix(
+            byte[] gray, int width, int regionHeight, int left, int right, int top, int bottom) {
+        int w = right - left + 1, h = bottom - top + 1;
+        if (h < regionHeight * .13f || h > regionHeight * .48f || w < h * .4f || w > h * .95f)
+            return false;
+        if (singleBowlCenter(gray, width, left, right, top, bottom) < .55f) return false;
+        int leftSpine = 0, terminalX = 0, terminalInk = 0;
+        for (int x = 0; x <= Math.round(w * .45f); x++) {
+            int ink = 0;
+            for (int y = Math.round(h * .20f); y <= Math.round(h * .80f); y++)
+                if ((gray[(top + y) * width + left + x] & 255) <= 165) ink++;
+            leftSpine = Math.max(leftSpine, ink);
+        }
+        for (int y = 0; y < Math.max(1, Math.round(h * .20f)); y++)
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) <= 165) {
+                    terminalX += x;
+                    terminalInk++;
+                }
+        return leftSpine >= h * .45f
+                && terminalInk > 0
+                && terminalX / (float) terminalInk >= w * .50f;
+    }
+
+    private static float singleBowlCenter(
+            byte[] gray, int width, int left, int right, int top, int bottom) {
+        int w = right - left + 1, h = bottom - top + 1;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        int holes = 0;
+        float center = -1;
+        for (int origin = 0; origin < seen.length; origin++) {
+            if (seen[origin] || (gray[(top + origin / w) * width + left + origin % w] & 255) <= 165)
+                continue;
+            int read = 0, size = 1, area = 0, sumY = 0;
+            boolean edge = false;
+            queue[0] = origin;
+            seen[origin] = true;
+            while (read < size) {
+                int at = queue[read++], x = at % w, y = at / w;
+                area++;
+                sumY += y;
+                edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                for (int next : new int[] {at - 1, at + 1, at - w, at + w})
+                    if (next >= 0
+                            && next < seen.length
+                            && !seen[next]
+                            && Math.abs(next % w - x) + Math.abs(next / w - y) == 1
+                            && (gray[(top + next / w) * width + left + next % w] & 255) > 165) {
+                        seen[next] = true;
+                        queue[size++] = next;
+                    }
+            }
+            if (!edge && area >= w * h * .035f) {
+                holes++;
+                center = sumY / (float) area / h;
+            }
+        }
+        return holes == 1 ? center : -1;
+    }
+
+    /** A seven has a broad top stroke and a narrow descending diagonal, not a lower bowl. */
+    private static boolean looksLikeSeven(
+            byte[] gray,
+            int width,
+            int regionHeight,
+            int area,
+            int left,
+            int right,
+            int top,
+            int bottom) {
+        int w = right - left + 1, h = bottom - top + 1;
+        if (h < regionHeight * .13f
+                || h > regionHeight * .48f
+                || w < h * .35f
+                || w > h * 1.10f
+                || area < w * h * .12f
+                || area > w * h * .70f) return false;
+        int topSpan = 0, lowerSpan = 0, upperX = -1, lowerX = -1, rightSpine = 0;
+        int[] columns = new int[w];
+        for (int y = 0; y < h; y++) {
+            int first = w, last = -1;
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) <= 165) {
+                    first = Math.min(first, x);
+                    last = Math.max(last, x);
+                    columns[x]++;
+                }
+            if (last < first) continue;
+            if (y < h * .20f) topSpan = Math.max(topSpan, last - first + 1);
+            if (y > h * .65f) lowerSpan = Math.max(lowerSpan, last - first + 1);
+            if (y >= h * .30f && y <= h * .45f) upperX = Math.max(upperX, first + last);
+            if (y >= h * .75f) lowerX = Math.max(lowerX, first + last);
+        }
+        for (int x = Math.round(w * .55f); x < w; x++)
+            rightSpine = Math.max(rightSpine, columns[x]);
+        return topSpan >= w * .70f
+                && lowerSpan <= w * .65f
+                && upperX >= w
+                && lowerX >= 0
+                && lowerX < upperX - w * .25f
+                && rightSpine < h * .60f;
+    }
+
     /** Kept as a narrow compatibility seam for the original four-shape regression tests. */
     static MeasureNumberReconciler.NumberToken standaloneFour(
             byte[] gray, int width, int height, RestBarCandidate candidate) {
@@ -894,7 +1029,48 @@ final class MultiMeasureRestDetector {
             consecutive = longest >= requiredRun ? consecutive + 1 : 0;
             if (consecutive >= requiredThickness) return true;
         }
-        return false;
+        return cappedRestWindow(gray, width, height, region) != null;
+    }
+
+    /** A short H-rest can be much narrower than the surrounding empty engraved measure. */
+    private static MeasureRegion cappedRestWindow(
+            byte[] gray, int width, int height, MeasureRegion region) {
+        int left = clamp(Math.round(region.left() * width), 0, width - 1);
+        int right = clamp(Math.round(region.right() * width), left, width - 1);
+        int top = clamp(Math.round(region.top() * height), 0, height - 1);
+        int bottom = clamp(Math.round(region.bottom() * height), top, height - 1);
+        int regionHeight = bottom - top + 1;
+        for (int y = top + Math.round(regionHeight * .18f);
+                y <= bottom - Math.round(regionHeight * .12f);
+                y++) {
+            for (int x = left; x <= right; x++) {
+                if ((gray[y * width + x] & 255) > 150) continue;
+                int start = x;
+                while (x < right && (gray[y * width + x + 1] & 255) <= 150) x++;
+                int end = x, span = end - start + 1;
+                if (span < 12 || span > regionHeight * 2.4f) continue;
+                int bandTop = y, bandBottom = y;
+                while (bandTop > top && filledBarRow(gray, width, start, end, bandTop - 1))
+                    bandTop--;
+                while (bandBottom < bottom && filledBarRow(gray, width, start, end, bandBottom + 1))
+                    bandBottom++;
+                if (!PrintedRestBarHeads.proved(
+                        gray, width, height, start, bandTop, end, bandBottom)) continue;
+                int padding = Math.max(2, Math.round(regionHeight * .08f));
+                return new MeasureRegion(
+                        Math.max(left, start - padding) / (float) width,
+                        Math.min(right, end + padding) / (float) width,
+                        region.top(),
+                        region.bottom());
+            }
+        }
+        return null;
+    }
+
+    private static boolean filledBarRow(byte[] gray, int width, int left, int right, int y) {
+        int ink = 0;
+        for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) <= 150) ink++;
+        return ink >= (right - left + 1) * .80f;
     }
 
     private static int clamp(int value, int minimum, int maximum) {
