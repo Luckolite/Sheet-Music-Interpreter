@@ -275,6 +275,7 @@ final class OctaveMarkDetector {
                 boolean[] used = new boolean[boxes.size()];
                 var bareBoxes = new ArrayList<>(boxes);
                 bareBoxes.addAll(attachedEightBoxes(gray, width, height, top, bottom, gap));
+                words.addAll(ledgerAttachedWords(gray, width, height, boxes, gap, below));
                 for (var box : bareBoxes) {
                     if (centeredInStaff(box, staffs)) continue;
                     int bw = box.right - box.left + 1, bh = box.bottom - box.top + 1;
@@ -462,6 +463,154 @@ final class OctaveMarkDetector {
                                                         && other.bottom() * height
                                                                 >= word.bottom() * height - 1));
         return words;
+    }
+
+    /** A long thin ink neck separates a complete octave word from the preceding written note. */
+    private static List<PlayingTechniqueDetector.Word> ledgerAttachedWords(
+            byte[] gray, int width, int height, List<InkBox> boxes, float gap, boolean below) {
+        var words = new ArrayList<PlayingTechniqueDetector.Word>();
+        int thickness = Math.max(1, Math.round(gap * .15f));
+        for (var parent : boxes) {
+            if (parent.right - parent.left < gap * 1.5f || parent.bottom - parent.top < gap * .8f)
+                continue;
+            int span = parent.right - parent.left + 1;
+            int[] totalCount = new int[span];
+            for (int y = parent.top; y <= parent.bottom; y++)
+                for (int x = parent.left; x <= parent.right; x++)
+                    if ((gray[y * width + x] & 255) < 165) totalCount[x - parent.left]++;
+            var tried = new java.util.HashSet<InkBox>();
+            int radius = Math.max(thickness + 1, Math.round(gap * .4f));
+            for (int seedRow = parent.top; seedRow <= parent.bottom; seedRow++) {
+                int[] first = new int[span], last = new int[span], count = new int[span];
+                java.util.Arrays.fill(first, height);
+                java.util.Arrays.fill(last, -1);
+                for (int x = parent.left; x <= parent.right; x++) {
+                    if ((gray[seedRow * width + x] & 255) >= 165) continue;
+                    for (int y = Math.max(parent.top, seedRow - radius);
+                            y <= Math.min(parent.bottom, seedRow + radius);
+                            y++)
+                        if ((gray[y * width + x] & 255) < 165) {
+                            int c = x - parent.left;
+                            first[c] = Math.min(first[c], y);
+                            last[c] = y;
+                            count[c]++;
+                        }
+                }
+                for (int column = 0; column < span; column++) {
+                    if (count[column] == 0 || last[column] - first[column] + 1 > thickness)
+                        continue;
+                    int start = column, end = column, top = first[column], bottom = last[column];
+                    while (end + 1 < span
+                            && count[end + 1] > 0
+                            && last[end + 1] - first[end + 1] + 1 <= thickness
+                            && Math.abs(first[end + 1] - top) <= 1
+                            && Math.abs(last[end + 1] - bottom) <= 1) end++;
+                    column = end;
+                    if (end - start + 1 < gap * .65f || span - end < gap * .4f) continue;
+                    int leftInk = 0;
+                    for (int i = 0; i < start; i++) leftInk += totalCount[i];
+                    if (leftInk < gap * gap * .2f) continue;
+                    var word =
+                            rightConnectedWord(gray, width, parent, parent.left + end + 1, seedRow);
+                    if (word == null
+                            || word.bottom - word.top < gap * .65f
+                            || word.bottom - word.top > gap * 2.5f
+                            || word.right - word.left < gap * .4f
+                            || !tried.add(word)) continue;
+                    var reading =
+                            completeAttachedWord(
+                                    gray, width, height, word, parent, boxes, gap, below);
+                    if (reading != null && !words.contains(reading)) words.add(reading);
+                }
+            }
+        }
+        return words;
+    }
+
+    /** Follow only the connected right-side ink, excluding a separate following notehead. */
+    private static InkBox rightConnectedWord(
+            byte[] gray, int width, InkBox parent, int cut, int seedY) {
+        int w = parent.right - cut + 1, h = parent.bottom - parent.top + 1;
+        if (w <= 0 || h <= 0) return null;
+        if ((gray[seedY * width + cut] & 255) >= 165) {
+            if (seedY > parent.top && (gray[(seedY - 1) * width + cut] & 255) < 165) seedY--;
+            else if (seedY < parent.bottom && (gray[(seedY + 1) * width + cut] & 255) < 165)
+                seedY++;
+            else return null;
+        }
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        int size = 1, take = 0;
+        queue[0] = (seedY - parent.top) * w;
+        seen[queue[0]] = true;
+        int left = width, right = -1, top = parent.bottom + 1, bottom = -1, area = 0;
+        while (take < size) {
+            int at = queue[take++], x = at % w, y = at / w;
+            area++;
+            left = Math.min(left, cut + x);
+            right = Math.max(right, cut + x);
+            top = Math.min(top, parent.top + y);
+            bottom = Math.max(bottom, parent.top + y);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                    int next = yy * w + xx;
+                    if (seen[next] || (gray[(parent.top + yy) * width + cut + xx] & 255) >= 165)
+                        continue;
+                    seen[next] = true;
+                    queue[size++] = next;
+                }
+        }
+        return new InkBox(left, top, right, bottom, area);
+    }
+
+    private static PlayingTechniqueDetector.Word completeAttachedWord(
+            byte[] gray,
+            int width,
+            int height,
+            InkBox initial,
+            InkBox parent,
+            List<InkBox> boxes,
+            float gap,
+            boolean below) {
+        int right = initial.right, top = initial.top, bottom = initial.bottom;
+        int prefixRight = right, prefixTop = top, prefixBottom = bottom;
+        InkBox last = null;
+        for (var next : boxes) {
+            if (next == parent || next.left <= initial.right) continue;
+            if (next.left > right + gap * .7f) break;
+            if (next.right < right
+                    || Math.min(bottom, next.bottom) - Math.max(top, next.top) < gap * .3f
+                    || next.right - initial.left > gap * 8) continue;
+            prefixRight = right;
+            prefixTop = top;
+            prefixBottom = bottom;
+            last = next;
+            right = next.right;
+            top = Math.min(top, next.top);
+            bottom = Math.max(bottom, next.bottom);
+        }
+        int shift = OctaveWordShapes.match(gray, width, initial.left, top, right, bottom);
+        if (shift == 0 && last != null && shortTerminalHook(gray, width, last, gap, below)) {
+            shift =
+                    OctaveWordShapes.match(
+                            gray, width, initial.left, prefixTop, prefixRight, prefixBottom);
+            if (shift != 0 && (shift < 0) != below) shift = 0;
+            if (shift != 0) {
+                right = prefixRight;
+                top = prefixTop;
+                bottom = prefixBottom;
+            }
+        }
+        if (shift == 0) return null;
+        String text = shift == 1 ? "8va" : shift == -1 ? "8vb" : shift == 2 ? "15ma" : "15mb";
+        return new PlayingTechniqueDetector.Word(
+                text,
+                initial.left / (float) width,
+                top / (float) height,
+                (right + 1) / (float) width,
+                (bottom + 1) / (float) height);
     }
 
     /** A thin staff-facing terminal has a horizontal limb and a right shaft, with a clear interior. */

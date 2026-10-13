@@ -1117,3 +1117,15 @@ retain priority. Original geometric controls and licensed Bravura numeral aliase
 cover scales, rests, notes, duplicated rest rectangles and conflicting signatures.
 No private score pixels, models, dependencies or record layouts changed. Final
 app/Hub/worker packaging and real-score runtime acceptance remain pending.
+
+## Ledger-attached octave words
+
+A complete octave word joined to preceding note ink through a long thin ledger
+neck is recognized from its connected right-side ink and suffix. Local thickness
+keeps a notehead above the ledger from obscuring the connection. The existing
+word matcher and terminal-hook evidence remain authoritative; bare numerals,
+structural counters and dash-chain thresholds are unchanged. Existing decoder
+word ownership then excludes the numeral's false head before note timing. Seven
+original regression methods cover both octave distances and directions at three
+scales, nearby ink, thick bridges, bare numbers and neighboring real notes.
+No private score fixtures, models, dependencies or record layouts changed.
