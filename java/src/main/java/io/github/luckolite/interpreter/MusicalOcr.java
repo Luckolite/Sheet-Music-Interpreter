@@ -44,7 +44,7 @@ public final class MusicalOcr {
         var readings = new TreeMap<Integer, Map<String, Integer>>();
         var decisive = new HashSet<Integer>();
         for (var change :
-                MeterChangeDetector.commonTimeReadings(
+                MeterChangeDetector.rasterMeterCandidates(
                         labels, gray, width, height, measures, notes)) {
             readings.computeIfAbsent(change.measureIndex(), ignored -> new HashMap<>())
                     .merge(change.numerator() + "/" + change.denominator(), 1, Integer::sum);

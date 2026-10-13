@@ -19,6 +19,49 @@ public final class MeterChangeDetector {
             int height,
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes) {
+        return uniqueRasterReadings(
+                rasterCandidates(labels, gray, width, height, measures, notes, false));
+    }
+
+    /** Raster C, cut-C and complete stacked fours share one conflict decision per measure. */
+    public static List<ScoreMeterChange> rasterMeterReadings(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        return uniqueRasterReadings(
+                rasterMeterCandidates(labels, gray, width, height, measures, notes));
+    }
+
+    /** Preserve competing raster choices until the caller has merged its OCR evidence. */
+    public static List<ScoreMeterChange> rasterMeterCandidates(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes) {
+        return rasterCandidates(labels, gray, width, height, measures, notes, true);
+    }
+
+    private static List<ScoreMeterChange> uniqueRasterReadings(List<ScoreMeterChange> candidates) {
+        var counts = new java.util.HashMap<Integer, Integer>();
+        for (var candidate : candidates) counts.merge(candidate.measureIndex(), 1, Integer::sum);
+        return candidates.stream()
+                .filter(candidate -> counts.get(candidate.measureIndex()) == 1)
+                .toList();
+    }
+
+    private static List<ScoreMeterChange> rasterCandidates(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            boolean numeric) {
         if (labels == null
                 || gray == null
                 || labels.length != width * height
@@ -43,12 +86,28 @@ public final class MeterChangeDetector {
                 readings.computeIfAbsent(measure, ignored -> new java.util.HashSet<>())
                         .add(reading.numerator());
             }
+        if (numeric)
+            for (var crop : candidates(labels, gray, width, height, measures, notes)) {
+                boolean four = false;
+                for (int x = crop.left(); x < crop.right() && !four; x++)
+                    four =
+                            OmrMeasurePostProcessor.stackedFourMeterCounters(
+                                    gray,
+                                    width,
+                                    height,
+                                    x,
+                                    crop.firstLine(),
+                                    Math.round(crop.firstLine() + 4 * crop.gap()),
+                                    crop.gap());
+                if (!four) continue;
+                int measure = followingMeasure(crop, width, height, measures);
+                if (measure >= 0)
+                    readings.computeIfAbsent(measure, ignored -> new java.util.HashSet<>()).add(4);
+            }
         var result = new ArrayList<ScoreMeterChange>();
         for (var entry : readings.entrySet())
-            if (entry.getValue().size() == 1) {
-                int value = entry.getValue().iterator().next();
+            for (int value : new java.util.TreeSet<>(entry.getValue()))
                 result.add(new ScoreMeterChange(entry.getKey(), value, value));
-            }
         return List.copyOf(result);
     }
 

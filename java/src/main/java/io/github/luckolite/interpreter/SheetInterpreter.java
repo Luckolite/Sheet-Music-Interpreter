@@ -236,12 +236,13 @@ public final class SheetInterpreter {
                 if (meters.stream()
                         .noneMatch(explicit -> explicit.measureIndex() == meter.measureIndex()))
                     meters.add(meter);
-        for (var meter :
-                MeterChangeDetector.commonTimeReadings(
-                        labels, gray, width, height, measures, notes))
-            if (meters.stream()
-                    .noneMatch(explicit -> explicit.measureIndex() == meter.measureIndex()))
-                meters.add(meter);
+        if (ocr == null)
+            for (var meter :
+                    MeterChangeDetector.rasterMeterReadings(
+                            labels, gray, width, height, measures, notes))
+                if (meters.stream()
+                        .noneMatch(explicit -> explicit.measureIndex() == meter.measureIndex()))
+                    meters.add(meter);
         meters.sort(java.util.Comparator.comparingInt(ScoreMeterChange::measureIndex));
         var dynamicDetection =
                 ScoreDynamicsDetector.detectWithEvidence(

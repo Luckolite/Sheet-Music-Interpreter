@@ -298,12 +298,13 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "ebc01db431a081bd34521f985a172aa1928ced10942d704ea879202d8fd3770c",
-      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
-      "review_note": "Add retained-source repair using existing multi-bar OCR contradiction evidence; explicit captured timing bypasses repair. Recognition thresholds and raw OCR APIs unchanged. Original synthetic regression only.",
-      "source_normalized_sha256": "a2df66248c0e243197951877e0f82fd1ba131c618b393308bc4ade08e28d361e",
-      "reviewed_source_state": "Reviewed recognition16 delta on maintained personal042079b; historical extraction commit retained.",
-      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained."
+      "source_sha256": "e2f0f58e9601b2e931ea9a9d6e8283e76820458516a853b94193b2010541e1b3",
+      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
+      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
+      "source_normalized_sha256": "202f4201c7f642b89f8ed9e6e67c506b0c9f83f98cceff59439dbf71db075a7d",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "reviewed_app_state": "Scoped meter source committed; unrelated app source and index ownership preserved.",
+      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -347,12 +348,13 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "a4362a29782493c3f17d3f7e0038a3809e89557a7d00ac52b21296e61f56041d",
-      "source_normalized_sha256": "7e24de264b9a229cde2cab83651fd685af31204b308031ef7c555561110ea510",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
+      "source_sha256": "3b361da7204aede9725eadb6e5236a58dd9b3bc44c667cedc0138f71ba4968d8",
+      "source_normalized_sha256": "df1139830566bb4ebacaa315c50a7e82b119630ee3da1a65f0b4f12cb9d51b3b",
+      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d"
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
+      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -1081,12 +1083,12 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "2f1ecc10d13190813201fab081ccff6ec5a51965986a83e767a02d33a7f13304",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "3c228270047e1580653d40df5d1a3e324ab683d2883159228d6b1d503fcf20f6",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "review_note": "Use note-eligible bounded candidate overload; caller-owned standalone inference and existing consensus/conflict guards remain unchanged.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "source_sha256": "7e843ee768ec510b6e3c39f2748903fde986cfec563e6a3cc3692486bd634649",
+      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
+      "source_normalized_sha256": "77d5337f806645e03ff3e32cfd7373f516f64e3fd31c0f7cd6bd4f6b66ac477c",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
+      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -5719,5 +5721,35 @@
     "limits": "Current-model accuracy, broad recall and false-positive review, curved-staff integration, final page pipeline and paired cache285 adoption remain unproven.",
     "runtime": "Recognition revision, guide284 and audio79 remain unchanged because no production call site invokes these preparatory helpers.",
     "model": "No model, dependency, weight, lineage or checksum change."
+  },
+  "numeric_four_meter_review": {
+    "license": "Apache-2.0",
+    "scope": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
+    "mapped_sources": [
+      "MeterChangeDetector.java",
+      "OmrMeasurePostProcessor.java",
+      "MusicalOcr.java"
+    ],
+    "adapter_review": {
+      "MusicalOcr.java": "meters method has exact executable-token parity with NativeMusicalOcr.meters.",
+      "OmrMeasureAnalyzer.java": "Uses raw raster choices and marks initial conflicting measures before existing written-bar resolution; Android OCR acquisition and clocks preserved.",
+      "SheetInterpreter.java": "Explicit meter annotations retain priority. Raster fallback runs only if optional OCR is absent, preventing resurrection of rejected conflicts."
+    },
+    "original_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/RasterMeterReadingsTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/RasterMeterConsumerTest.java"
+    ],
+    "focused_tests": {
+      "app": 186,
+      "portable": 191
+    },
+    "models_changed": false,
+    "production_dependencies_changed": false,
+    "record_layout_changed": false,
+    "boundaries": "Source-only checks; complete score, final app/Hub/worker runtime and Library publication acceptance remain pending.",
+    "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
+    "app_only_sources": {
+      "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java": "c0a29a4b01db371c0f7d7440e01542728e8be5191184d3984c0d37ac952d39f0"
+    }
   }
 }

@@ -1103,3 +1103,17 @@ stays unresolved; exact ties remain distinct. These helpers are unhooked, so
 recognition35, guide284 and audio79 remain unchanged. Final recognition context,
 paired persistence and real-score/rendered verification remain incomplete. See
 [recognition preparation](printed-slur-recognition.md).
+
+## Complete numeric four-four meter
+
+Complete closed fours can supply a raster 4/4 reading when digit OCR omits them.
+Counter widening is compared at integer-pixel resolution only for this meter
+proof; continuing shafts, crossbars and clear lower interiors are independently
+required. Other structural counter callers retain their strict thresholds.
+Common, cut-time and numeric choices remain available until OCR consensus and
+conflict handling finish. The standalone fallback runs only without OCR, so it
+cannot restore a reading that OCR rejected as conflicting. Explicit annotations
+retain priority. Original geometric controls and licensed Bravura numeral aliases
+cover scales, rests, notes, duplicated rest rectangles and conflicting signatures.
+No private score pixels, models, dependencies or record layouts changed. Final
+app/Hub/worker packaging and real-score runtime acceptance remain pending.

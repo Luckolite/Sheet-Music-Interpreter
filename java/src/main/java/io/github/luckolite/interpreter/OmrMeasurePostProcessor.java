@@ -1806,6 +1806,76 @@ final class OmrMeasurePostProcessor {
                 && b[1] > (top + bottom) * .5f + gap * .2f;
     }
 
+    static boolean stackedFourMeterCounters(
+            byte[] gray, int width, int height, int column, int top, int bottom, float gap) {
+        var counters =
+                triangularStaffCounters(gray, width, height, column, top, bottom, gap, false, true);
+        if (counters.size() != 2) return false;
+        float[] a = counters.get(0), b = counters.get(1);
+        return Math.abs(a[0] - b[0]) <= gap * .25f
+                && b[1] - a[1] >= gap * 1.65f
+                && b[1] - a[1] <= gap * 2.35f
+                && a[1] < (top + bottom) * .5f - gap * .2f
+                && b[1] > (top + bottom) * .5f + gap * .2f;
+    }
+
+    /** A counter alone is insufficient: a four also has a continuing right shaft and crossbar. */
+    private static boolean completeFourCounter(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int firstLine,
+            float gap) {
+        int radius = Math.max(1, Math.round(gap * .12f));
+        for (int shaft = right + 1;
+                shaft <= Math.min(width - 1, Math.round(right + gap * .45f));
+                shaft++) {
+            int total = 0, ink = 0, below = 0;
+            for (int y = Math.max(0, Math.round(top - gap * .5f));
+                    y <= Math.min(height - 1, Math.round(bottom + gap * .55f));
+                    y++) {
+                if (onMeterRule(y, firstLine, gap, radius)) continue;
+                total++;
+                if ((gray[y * width + shaft] & 255) < 160) {
+                    ink++;
+                    if (y > bottom + gap * .2f) below++;
+                }
+            }
+            if (total < gap * .6f || ink < total * .85f || below < gap * .15f) continue;
+            for (int bar = bottom + 1;
+                    bar <= Math.min(height - 1, Math.round(bottom + gap * .25f));
+                    bar++) {
+                if (onMeterRule(bar, firstLine, gap, radius)) continue;
+                int end = Math.min(width - 1, Math.round(shaft + gap * .15f));
+                int count = 0;
+                for (int x = left; x <= end; x++) if ((gray[bar * width + x] & 255) < 160) count++;
+                if (count < (end - left + 1) * .85f) continue;
+                int clear = 0, area = 0;
+                for (int y = Math.round(bottom + gap * .3f);
+                        y <= Math.min(height - 1, Math.round(bottom + gap * .55f));
+                        y++) {
+                    if (onMeterRule(y, firstLine, gap, radius)) continue;
+                    for (int x = left; x < right - Math.round(gap * .1f); x++) {
+                        area++;
+                        if ((gray[y * width + x] & 255) >= 160) clear++;
+                    }
+                }
+                if (area > 0 && clear >= area * .8f) return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean onMeterRule(int y, int first, float gap, int radius) {
+        for (int i = 0; i < 5; i++)
+            if (Math.abs(y - (first + Math.round(i * gap))) <= radius) return true;
+        return false;
+    }
+
     private static List<float[]> triangularStaffCounters(
             byte[] gray, int width, int height, int column, int top, int bottom, float gap) {
         return triangularStaffCounters(gray, width, height, column, top, bottom, gap, false);
@@ -1820,6 +1890,20 @@ final class OmrMeasurePostProcessor {
             int bottom,
             float gap,
             boolean allowClipped) {
+        return triangularStaffCounters(
+                gray, width, height, column, top, bottom, gap, allowClipped, false);
+    }
+
+    private static List<float[]> triangularStaffCounters(
+            byte[] gray,
+            int width,
+            int height,
+            int column,
+            int top,
+            int bottom,
+            float gap,
+            boolean allowClipped,
+            boolean quantizedMeter) {
         int left = Math.max(0, column - Math.round(gap * 1.6f)),
                 right = Math.min(width - 1, column + Math.round(gap * .5f));
         int first = Math.max(0, top - Math.round(gap * .2f)),
@@ -1880,8 +1964,22 @@ final class OmrMeasurePostProcessor {
                 lower += rows[maxY - j];
             }
             // Parallel double bars enclose rectangular spaces, not widening counters.
-            if ((lower - upper) / Math.max(1, half) < Math.max(1f, gap * (clipped ? .05f : .1f)))
-                continue;
+            float required = Math.max(1f, gap * (clipped ? .05f : .1f));
+            // Meter-only proof compares an integral pixel excess at its representable resolution.
+            if (quantizedMeter
+                    ? lower - upper < Math.round(required * Math.max(1, half))
+                    : (lower - upper) / Math.max(1, half) < required) continue;
+            if (quantizedMeter
+                    && !completeFourCounter(
+                            gray,
+                            width,
+                            height,
+                            left + minX,
+                            first + minY,
+                            left + maxX,
+                            first + maxY,
+                            top,
+                            gap)) continue;
             counters.add(new float[] {left + (minX + maxX) * .5f, first + (minY + maxY) * .5f});
         }
         return counters;
