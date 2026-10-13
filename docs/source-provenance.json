@@ -2247,14 +2247,14 @@
     },
     "CorroboratedCatalogueWorkTitle.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedCatalogueWorkTitle.java",
-      "source_sha256": "b705efc1cb52687542b2bbf2e07878e79107774d75c547a0df0404370ded7ed3",
-      "source_normalized_sha256": "b705efc1cb52687542b2bbf2e07878e79107774d75c547a0df0404370ded7ed3",
-      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "source_sha256": "1dd935af5177f99bdaa634279e5dee443f13b267ef679c39c7750269f01a91d5",
+      "source_normalized_sha256": "540e53f1e64dce29fb83c5cd0eb24729c75b1658281a76151d751e6bead37fd5",
+      "reviewed_app_base_commit": "875c633f6aad212d45f5a0eaec7ff6d8515cfdd0",
+      "reviewed_source_state": "Original-pixel complementary caption modes and independent complete-axis numbered-work readings; full runtime and whole-library qualification remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedCatalogueWorkTitle.java",
-      "standalone_sha256": "70069babf04e6f5cd0b9737f0f709235e77f54beafa1376087dcc2e83a17553c",
+      "standalone_sha256": "7cc4f51574677d94744020726f716e13a6a3596e128d01708c12ce6d89e85665",
       "license": "Apache-2.0",
-      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+      "review_note": "Complete literal readings retain source bounds and printed identifiers. Exact work/form/ordinal, person veto, repeated instrument-part and contributor/review ownership gates remain required. Synthetic fictional regression only; no private scores, gold labels, source images, OCR results or model changes."
     },
     "CorroboratedPrimaryTitle.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedPrimaryTitle.java",
@@ -2269,14 +2269,14 @@
     },
     "CorroboratedVersionCaption.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedVersionCaption.java",
-      "source_sha256": "cd9361abdc626c02d891b19b38a36c3cf7ef95c9e282e237dafacb08034cbbae",
-      "source_normalized_sha256": "bfed1c856293a65dae493bc29f4a817fa04791a848c28f235cd1fb0aa4bd2d5f",
-      "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "source_sha256": "761dd4b0d01b8b4bce92b08007d58e05c95f8874e15fc0f0222ba4454fea14d6",
+      "source_normalized_sha256": "075a67725137f419987f120abfe57a3914c5d4efafac74f823efed2d2115f7ec",
+      "reviewed_app_base_commit": "875c633f6aad212d45f5a0eaec7ff6d8515cfdd0",
+      "reviewed_source_state": "Original-pixel complementary caption modes and independent complete-axis numbered-work readings; full runtime and whole-library qualification remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedVersionCaption.java",
-      "standalone_sha256": "e50e235b36485707eea47c5ec47a966d620cdd4984a3395a2dec1152623ff043",
+      "standalone_sha256": "b4564587d5de1b3f25ee382964274375bcb8f0751a0552b3b34e22c9378a316d",
       "license": "Apache-2.0",
-      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+      "review_note": "Complete literal readings retain source bounds and printed identifiers. Exact work/form/ordinal, person veto, repeated instrument-part and contributor/review ownership gates remain required. Synthetic fictional regression only; no private scores, gold labels, source images, OCR results or model changes."
     },
     "HeaderCropBudget.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/HeaderCropBudget.java",
@@ -2339,6 +2339,17 @@
       "source_normalized_sha256": "601d448c763b04afed64a439c7d636b9b12d85609b40f09d9c73c7a99f7c6e56",
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinNumbering.java",
       "source_sha256": "601d448c763b04afed64a439c7d636b9b12d85609b40f09d9c73c7a99f7c6e56"
+    },
+    "CoherentNumberedWorkReadConsensus.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/CoherentNumberedWorkReadConsensus.java",
+      "source_sha256": "3fddf8d6750db1e4544f882f427ec8e495e5a57e1add56a19722fafe64dc8832",
+      "source_normalized_sha256": "63124900b1a813c1454839c585763de0b37d7e7151ee3279ca70a49fa52dab3e",
+      "reviewed_app_base_commit": "875c633f6aad212d45f5a0eaec7ff6d8515cfdd0",
+      "reviewed_source_state": "Original-pixel complementary caption modes and independent complete-axis numbered-work readings; full runtime and whole-library qualification remain separate.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CoherentNumberedWorkReadConsensus.java",
+      "standalone_sha256": "741d32c2f4ded50f3240c522380ddd1562b65cacd934c8883f4b96c174f339d0",
+      "license": "Apache-2.0",
+      "review_note": "Complete literal readings retain source bounds and printed identifiers. Exact work/form/ordinal, person veto, repeated instrument-part and contributor/review ownership gates remain required. Synthetic fictional regression only; no private scores, gold labels, source images, OCR results or model changes."
     }
   },
   "interpreter_speedup_review": {

@@ -115,20 +115,42 @@ public final class CorroboratedCatalogueWorkTitle {
             Set<String> names,
             Map<ScoreCreditsDetector.Line, List<ScoreHeaderReadConsensus.Reading>> medium,
             MusicMetadataCatalogue catalogue) {
+        return select(hint, original, names, medium, Map.of(), catalogue);
+    }
+
+    private static String literal(
+            ScoreCreditsDetector.Line row,
+            Map<ScoreCreditsDetector.Line, List<ScoreHeaderReadConsensus.Reading>> medium,
+            Map<ScoreCreditsDetector.Line, List<ScoreHeaderReadConsensus.Reading>> secondary) {
+        String selected = ScoreHeaderReadConsensus.select(medium.get(row));
+        return selected.isEmpty()
+                ? CoherentNumberedWorkReadConsensus.select(medium.get(row), secondary.get(row))
+                : selected;
+    }
+
+    public static Selection select(
+            String hint,
+            List<ScoreCreditsDetector.Page> original,
+            Set<String> names,
+            Map<ScoreCreditsDetector.Line, List<ScoreHeaderReadConsensus.Reading>> medium,
+            Map<ScoreCreditsDetector.Line, List<ScoreHeaderReadConsensus.Reading>> secondary,
+            MusicMetadataCatalogue catalogue) {
         if (hint == null
                 || !valid(original)
                 || names == null
                 || names.stream().anyMatch(Objects::isNull)
                 || medium == null
+                || secondary == null
                 || catalogue == null
                 || !OpeningWorkHeading.hasGeometryNominee(original.get(0))) return null;
         var first = original.get(0);
-        if (!first.lines().containsAll(medium.keySet())) return null;
+        if (!first.lines().containsAll(medium.keySet())
+                || !first.lines().containsAll(secondary.keySet())) return null;
         // Work ownership must be evaluated independently of the baseline name classifier.
         // A possible name may be reread; an explicit credit may never lose its role label.
         var literalRows = new ArrayList<ScoreCreditsDetector.Line>();
         for (var row : first.lines()) {
-            String literal = ScoreHeaderReadConsensus.select(medium.get(row));
+            String literal = literal(row, medium, secondary);
             literalRows.add(
                     literal.isEmpty()
                             ? row
@@ -169,9 +191,9 @@ public final class CorroboratedCatalogueWorkTitle {
                         rawCaption.text(), pair.caption().text())
                 || !CreditOcrIdentifierGuard.preservesIdentifiers(
                         rawHeading.text(), pair.heading().text())) return null;
-        if (!ScoreHeaderReadConsensus.select(medium.get(rawHeading)).equals(pair.heading().text())
-                || !ScoreHeaderReadConsensus.select(medium.get(rawCaption))
-                        .equals(pair.caption().text())) return null;
+        if (!literal(rawHeading, medium, secondary).equals(pair.heading().text())
+                || !literal(rawCaption, medium, secondary).equals(pair.caption().text()))
+            return null;
         var before = ScoreCreditsDetector.detect(hint, original, names);
         var selectedHeaders =
                 first.lines().stream()

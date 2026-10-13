@@ -191,8 +191,20 @@ public final class CorroboratedVersionCaption {
         String winner = "";
         for (var group : groups.entrySet()) {
             var exact = group.getValue();
+            // A complete literal from the independent reader can supply the other crop
+            // mode. Both readers must see the complete caption; a near spelling cannot
+            // create that missing view. English still needs three literals and two
+            // strong scales, and the medium grid must independently support the prefix.
+            var exactViews = new ArrayList<>(exact);
+            for (var reading : medium)
+                if (reading.confidence() >= .9
+                        && key(decorated(reading.text())).equals(group.getKey()))
+                    exactViews.add(reading);
             if (exact.size() < 3
-                    || exact.stream().map(ScoreHeaderReadConsensus.Reading::mode).distinct().count()
+                    || exactViews.stream()
+                                    .map(ScoreHeaderReadConsensus.Reading::mode)
+                                    .distinct()
+                                    .count()
                             < 2
                     || exact.stream()
                                     .filter(r -> r.confidence() >= .9)
