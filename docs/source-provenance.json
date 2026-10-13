@@ -2445,6 +2445,30 @@
       "reviewed_app_commit": "aa9b9e0a310a937a7eca5b9aafa788896d38e212",
       "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
       "review_note": "Original pure-JDK optical numeral/rule/independent-beam ownership helper. Only an already-counted strong extra band can be removed; preserve sole and genuine short secondary beams. Exact app/public code and literal parity; original generated tests, no private score data/model/dependency/record-layout change."
+    },
+    "PrintedSlurContours.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContours.java",
+      "source_sha256": "9cd43294536b3fa7cd0482494e2761477e530f0504dd3e06691e004bf7c02a53",
+      "source_normalized_sha256": "9cd43294536b3fa7cd0482494e2761477e530f0504dd3e06691e004bf7c02a53",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+    },
+    "PrintedSlurOwners.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
+      "source_sha256": "ff11d19e0b9d8f5884b9c1caa9a257dc70f0fd0fc09c9dad0d0b142485dfef1b",
+      "source_normalized_sha256": "ff11d19e0b9d8f5884b9c1caa9a257dc70f0fd0fc09c9dad0d0b142485dfef1b",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+    },
+    "PrintedSlurPageCapture.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
+      "source_sha256": "789b16897abe29508a07343cc4e02cb8756ec9c9614e76f49410ff11e75dc196",
+      "source_normalized_sha256": "789b16897abe29508a07343cc4e02cb8756ec9c9614e76f49410ff11e75dc196",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+    },
+    "PrintedSlurContext.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContext.java",
+      "source_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
+      "source_normalized_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
     }
   },
   "interpreter_speedup_review": {
@@ -5687,5 +5711,13 @@
     "android_app_only": "Android cache/UI/capture and app arrangement/MusicXML adapters stay outside the standalone API; pure source semantics and procedural regressions are ported.",
     "verification": "8054 standalone Java tests passed. Python suite and PNG/PDF MIDI/MusicXML/MP3 smoke passed; skipped Python cases remain separately reported.",
     "unadopted_contract": "Guide285 and paired Hub validator are staged separately. Shipped/current app cache format remains284."
+  },
+  "printed_slur_recognition_preparation": {
+    "license": "Apache-2.0",
+    "scope": "Original thin-bow geometry, explicit endpoint ownership, physical-page capture and finalized written-context adapters; not hooked to the production pipeline.",
+    "regressions": "43 original procedural Java controls; no private scans, guide files, diagnostic probes or library material.",
+    "limits": "Current-model accuracy, broad recall and false-positive review, curved-staff integration, final page pipeline and paired cache285 adoption remain unproven.",
+    "runtime": "Recognition revision, guide284 and audio79 remain unchanged because no production call site invokes these preparatory helpers.",
+    "model": "No model, dependency, weight, lineage or checksum change."
   }
 }

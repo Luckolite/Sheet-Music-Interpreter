@@ -932,7 +932,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260–282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260â€“282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.
@@ -1093,3 +1093,13 @@ Sixteen original procedural controls cover vocabulary, unrelated prose, geometry
 and multiple scales. Recognition35 invalidates derived guides. Guide284/audio79
 layouts, models and dependencies remain unchanged; no private score fixtures
 are included.
+
+## Preparatory printed-slur recognition
+
+Four original pure Java helpers qualify thin raw bows, explicit endpoint ownership,
+physical-page capture and finalized written-context adapters. Forty-three original
+procedural controls contain no private score material. Unknown musical evidence
+stays unresolved; exact ties remain distinct. These helpers are unhooked, so
+recognition35, guide284 and audio79 remain unchanged. Final recognition context,
+paired persistence and real-score/rendered verification remain incomplete. See
+[recognition preparation](printed-slur-recognition.md).
