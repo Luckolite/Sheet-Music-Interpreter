@@ -363,13 +363,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ab72bbe77f71b2d4aac3d8df4643a301623f5b71d2bf18657ff834a852978497",
-      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "source_sha256": "9895206690a24e12ab6f9c11e8e2d95f1fdf7a51e73fb94a1bba04079b107e9a",
+      "reviewed_app_commit": "aa9b9e0a310a937a7eca5b9aafa788896d38e212",
       "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
-      "source_normalized_sha256": "2a7d16d8720d19c4ca2265879154bc91f7a0954d8ead21953e1dc47b2fe556ff",
+      "review_note": "Preserve existing platform diagnostics adapter. Reviewed disjoint deltas require beam support at both ordinary-beam endpoints for grace ownership, and exclude optically proved numeral/staff-rule contamination from extra strong beam bands. Exact app/public changed-code and literal parity; original synthetic controls. No score-copy/slur method, model, dependency or record-layout change.",
+      "source_normalized_sha256": "54cc42f0671c2ee2b0456bccef215369892291caf350d0b5f2b5efd1c611a324",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
       "standalone_sha256": "cb9afe7c99f6330dd41b3fa1ff0cea7a0a6f0968a1fd1eac010096a3c3ebc2d6",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
@@ -2437,6 +2437,14 @@
       "source_sha256": "7b55b6411ed09a72d52feac3d4ca32505d1c75fcc2a2fbaef6fc1c20143688de",
       "source_normalized_sha256": "7b55b6411ed09a72d52feac3d4ca32505d1c75fcc2a2fbaef6fc1c20143688de",
       "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+    },
+    "TupletNumeralBeamBand.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralBeamBand.java",
+      "source_sha256": "05678ada6990767f6fc554c2f471783fbad946e26c8d61b6b6a45388feb6ab62",
+      "source_normalized_sha256": "b6ad5fad32b8b5fd7de38028dbaff965b80d0c6dbba0b33bbc9689ecaaf5000e",
+      "reviewed_app_commit": "aa9b9e0a310a937a7eca5b9aafa788896d38e212",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
+      "review_note": "Original pure-JDK optical numeral/rule/independent-beam ownership helper. Only an already-counted strong extra band can be removed; preserve sole and genuine short secondary beams. Exact app/public code and literal parity; original generated tests, no private score data/model/dependency/record-layout change."
     }
   },
   "interpreter_speedup_review": {

@@ -8817,11 +8817,25 @@ final class OmrScoreInterpreter {
             Component first,
             Component next,
             float gap) {
+        return graceStemsShareBeam(labels, gray, width, height, first, next, gap, false);
+    }
+
+    private static boolean graceStemsShareBeam(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component first,
+            Component next,
+            float gap,
+            boolean requireEndpoints) {
         int[] a = attachedRawStem(gray, width, height, first, gap * .65f),
                 b = attachedRawStem(gray, width, height, next, gap * .65f);
         if (a == null || b == null || a[2] != b[2] || b[0] - a[0] < gap * .6f) return false;
         for (int offset = 0; offset <= Math.round(gap * .8f); offset++) {
             int hits = 0, clear = 0, samples = 0;
+            int nearFirst = 0, nearLast = 0, firstInk = 0, lastInk = 0;
+            int endpointWindow = Math.max(4, Math.round(gap * .3f));
             for (int x = a[0] + 2; x <= b[0] - 2; x++) {
                 float t = (x - a[0]) / (float) (b[0] - a[0]);
                 int y = Math.round(a[1] + t * (b[1] - a[1]) - a[2] * offset);
@@ -8840,8 +8854,25 @@ final class OmrScoreInterpreter {
                 samples++;
                 if (ink) hits++;
                 if (nonStaff) clear++;
+                if (x <= a[0] + endpointWindow) {
+                    nearFirst++;
+                    if (ink) firstInk++;
+                }
+                if (x >= b[0] - endpointWindow) {
+                    nearLast++;
+                    if (ink) lastInk++;
+                }
             }
-            if (samples >= 6 && hits >= samples * .85f && clear >= samples * .65f) return true;
+            // Ordinary-beam ownership must reach both independently found shafts.
+            // Dense nearby beam/tuplet ink cannot hide a white gap at either end.
+            boolean endpoints =
+                    !requireEndpoints
+                            || nearFirst > 0
+                                    && nearLast > 0
+                                    && firstInk * 3 >= nearFirst * 2
+                                    && lastInk * 3 >= nearLast * 2;
+            if (samples >= 6 && hits >= samples * .85f && clear >= samples * .65f && endpoints)
+                return true;
         }
         return false;
     }
@@ -10852,7 +10883,7 @@ final class OmrScoreInterpreter {
             if (prior < 0) return false;
             DetectedNote previous = detected.get(prior);
             if (!graceStemsShareBeam(
-                    null, gray, width, height, previous.head, next.head, first.staffGap))
+                    null, gray, width, height, previous.head, next.head, first.staffGap, true))
                 return false;
             int[] stem = attachedRawStem(gray, width, height, previous.head, first.staffGap * .65f);
             if (stem != null && Math.abs(stem[1] - previous.head.centerY) > first.staffGap * 4.8f)
@@ -19115,7 +19146,7 @@ final class OmrScoreInterpreter {
                 rightShift[i] = Math.round(staff.pitchTrack.at(x + dx)[0] - track[0]);
             }
         int bands = 0, strongBands = 0, run = 0, staffRows = 0;
-        int provedRuleBands = 0;
+        int provedRuleBands = 0, numeralRuleBands = 0;
         for (int y = top; y <= bottom + 1; y++) {
             boolean ink =
                     y <= bottom
@@ -19267,6 +19298,13 @@ final class OmrScoreInterpreter {
                     strongBands++;
                 if (provedRuleBand && run >= Math.max(3, Math.ceil(gap * .30f)) && rooted)
                     provedRuleBands++;
+                if (!provedRuleBand
+                        && !onlyStaff
+                        && rooted
+                        && run >= Math.max(3, Math.ceil(gap * .30f))
+                        && TupletNumeralBeamBand.matches(
+                                gray, width, height, x, y - run, y - 1, top, bottom, lineTop, gap,
+                                threshold)) numeralRuleBands++;
                 run = 0;
                 staffRows = 0;
             }
@@ -19275,7 +19313,7 @@ final class OmrScoreInterpreter {
         // thickness threshold so a thinner slur terminal cannot shorten the note.
         int result = bands > 1 ? Math.max(1, strongBands) : bands;
         // Additional rule proof can remove an extra band, never the sole surviving beam.
-        return result > 1 ? Math.max(1, result - provedRuleBands) : result;
+        return result > 1 ? Math.max(1, result - provedRuleBands - numeralRuleBands) : result;
     }
 
     /** A blurred rule may gain two fringe rows at the outer beam probe, while
