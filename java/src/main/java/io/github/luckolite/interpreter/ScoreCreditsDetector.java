@@ -5770,6 +5770,7 @@ public final class ScoreCreditsDetector {
                 && line.height() < page.height * .025f
                 && line.bottom >= page.notationTop - page.height * .12f
                 && text.matches("(?iu)^(?:rock(?:\\h+swing)?|ballad|waltz|fanfare)$")) return true;
+        if (medleyContentsSubtitle(page, heading, line, lines)) return true;
         if (paragraphLine(page, line, lines) || collectionListEntry(page, line, lines)) return true;
         if (MOVEMENT_SUBTITLE.matcher(text).matches()) return true;
         if (text.matches(
@@ -6035,8 +6036,85 @@ public final class ScoreCreditsDetector {
     }
 
     /** Collection captions and aligned contents columns describe works, not contributors. */
+
+    /** A repeated column of page-numbered entries identifies contents independently of OCR labels. */
+    private static boolean numberedContentsEntry(Page page, Line candidate, List<Line> lines) {
+        if (page.photographicCover
+                || candidate.top < page.height * .2f
+                || candidate.bottom > page.height * .8f
+                || candidate.height() > page.height * .03f
+                || credit(candidate.text) != null
+                || !clean(candidate.text).matches(".*\\p{L}{2}.*")) return false;
+        boolean playback = lines.stream().anyMatch(l -> playbackControlSequence(l.text));
+        if (page.notationTop > 0 && !playback) return false;
+        List<Line> column =
+                lines.stream()
+                        .filter(
+                                l ->
+                                        l.top > page.height * .2f
+                                                && l.bottom < page.height * .8f
+                                                && l.height() >= candidate.height() * .6f
+                                                && l.height() <= candidate.height() * 1.5f
+                                                && credit(l.text) == null
+                                                && clean(l.text).matches(".*\\p{L}{2}.*")
+                                                && Math.abs(l.left - candidate.left)
+                                                        < page.width * .035f)
+                        .toList();
+        int numbered = 0;
+        for (Line row : column) {
+            if (clean(row.text).matches("^[0-9]{1,3}\\h+\\p{L}.*")) {
+                numbered++;
+                continue;
+            }
+            if (lines.stream()
+                    .anyMatch(
+                            n ->
+                                    clean(n.text).matches("^[.·…]*[0-9]{1,3}$")
+                                            && Math.abs(
+                                                            (n.top
+                                                                            + n.bottom
+                                                                            - row.top
+                                                                            - row.bottom)
+                                                                    * .5f)
+                                                    < Math.max(n.height(), row.height()) * .65f
+                                            && (n.right <= row.left
+                                                            && row.left - n.right
+                                                                    < page.width * .09f
+                                                    || n.left >= row.right
+                                                            && n.left - row.right
+                                                                    < page.width * .4f)))
+                numbered++;
+        }
+        return column.contains(candidate) && numbered >= 4;
+    }
+
+    /** A centered item list beneath a medley heading is work content, above a separate byline. */
+    private static boolean medleyContentsSubtitle(
+            Page page, Line heading, Line line, List<Line> lines) {
+        String text = clean(line.text);
+        if (page.notationTop <= 0
+                || !clean(heading.text).matches("(?iu).*\\bmedley\\b.*")
+                || line.top < heading.bottom
+                || line.top - heading.bottom > page.height * .05f
+                || line.height() > heading.height() * .7f
+                || Math.abs(line.center() - heading.center()) > page.width * .08f
+                || credit(text) != null
+                || text.split("\\h+").length < 5
+                || !(text.indexOf('•') >= 0 || text.chars().filter(c -> c == ',').count() >= 2))
+            return false;
+        return lines.stream()
+                .anyMatch(
+                        l ->
+                                l.top >= line.bottom
+                                        && l.bottom < page.notationTop
+                                        && l.top - line.bottom < page.height * .06f
+                                        && l.height() < heading.height() * .7f
+                                        && (credit(l.text) != null || properReviewName(l.text)));
+    }
+
     private static boolean collectionListEntry(Page page, Line candidate, List<Line> lines) {
         String text = clean(candidate.text);
+        if (numberedContentsEntry(page, candidate, lines)) return true;
         // A printed playback panel plus a repeated title column identifies collection front matter,
         // even when the page detector mistakes footer rules for a staff.
         if ((page.notationTop <= 0 || page.notationTop > page.height * .75f)
@@ -6084,8 +6162,10 @@ public final class ScoreCreditsDetector {
                                                         && l.height() <= page.height * .03f
                                                         && l.right - l.left <= page.width * .4f
                                                         && credit(l.text) == null
-                                                        && Math.abs(l.right - candidate.right)
-                                                                < page.width * .025f)
+                                                        && (Math.abs(l.right - candidate.right)
+                                                                        < page.width * .025f
+                                                                || Math.abs(l.left - candidate.left)
+                                                                        < page.width * .025f))
                                 .count();
                 if (entries >= 5) {
                     boolean pairedCapitalCredit =

@@ -398,6 +398,93 @@ final class NoteArticulationDetector {
         return hits >= g.count * .9f && interior < g.count * .08f + 1 && a >= 9 && b >= 9 && c >= 9;
     }
 
+    private static boolean ruleJoinedAccent(
+            Anchor note,
+            List<Anchor> notes,
+            List<Glyph> context,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height) {
+        float gap = note.gap;
+        if (!Float.isFinite(gap) || gap < 6 || gap > 64) return false;
+        int left = Math.max(0, Math.round(note.x - gap * 1.6f)),
+                right = Math.min(width - 1, Math.round(note.x + gap * 1.6f));
+        int top = Math.max(0, Math.round(note.y - gap * 5.8f)),
+                bottom = Math.min(height - 1, Math.round(note.y + gap * 5.8f));
+        int w = right - left + 1, h = bottom - top + 1;
+        if (w <= 0 || h <= 0) return false;
+        boolean[] rules = new boolean[h], seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        for (int y = top; y <= bottom; y++)
+            rules[y - top] = recoveryStaffRule(gray, width, height, Math.round(note.x), y, gap);
+        for (int seed = 0; seed < seen.length; seed++) {
+            int sx = seed % w, sy = seed / w;
+            if (seen[seed] || rules[sy] || (gray[(top + sy) * width + left + sx] & 255) >= 155)
+                continue;
+            int take = 0, size = 1, minX = sx, maxX = sx, minY = sy, maxY = sy;
+            boolean clipped = false, touches = false;
+            queue[0] = seed;
+            seen[seed] = true;
+            while (take < size) {
+                int at = queue[take++], x = at % w, y = at / w;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+                clipped |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                        int p = yy * w + xx;
+                        if ((gray[(top + yy) * width + left + xx] & 255) >= 155) continue;
+                        if (rules[yy]) {
+                            touches = true;
+                            continue;
+                        }
+                        if (!seen[p]) {
+                            seen[p] = true;
+                            queue[size++] = p;
+                        }
+                    }
+            }
+            float gw = maxX - minX + 1,
+                    gh = maxY - minY + 1,
+                    gx = left + (minX + maxX) * .5f,
+                    gy = top + (minY + maxY) * .5f;
+            if (clipped
+                    || !touches
+                    || gw < gap * .75f
+                    || gw > gap * 2.1f + 1
+                    || gh < gap * .35f
+                    || gh > gap * 1.25f
+                    || Math.abs(gx - note.x) > gap * .7f
+                    || Math.abs(gy - note.y) < gap * .7f
+                    || Math.abs(gy - note.y) > gap * 5.5f) continue;
+            int[] pixels = new int[size];
+            int notation = 0;
+            for (int i = 0; i < size; i++) {
+                int p = (top + queue[i] / w) * width + left + queue[i] % w;
+                pixels[i] = p;
+                byte label = labels[p];
+                if (label == OmrMeasurePostProcessor.NOTEHEAD
+                        || label == OmrMeasurePostProcessor.STEM_OR_REST
+                        || label == OmrMeasurePostProcessor.CLEF_OR_KEY) notation++;
+            }
+            if (notation > size * .25f
+                    || !OpenChevron.matches(
+                            pixels, width, left + minX, top + minY, left + maxX, top + maxY))
+                continue;
+            Glyph g = new Glyph(left + minX, top + minY, left + maxX, top + maxY, size, pixels);
+            if (nearHead(g, notes)
+                    || detachedThreeOwns(g, context, width, gap)
+                    || completeBowOwns(g, gray, width, height, gap)) continue;
+            return true;
+        }
+        return false;
+    }
+
     private static boolean recoveryStaffRule(
             byte[] gray, int width, int height, int x, int y, float gap) {
         if (horizontalRuleInk(gray, width, height, x, y, gap, 155, .85f)) return true;
@@ -825,6 +912,13 @@ final class NoteArticulationDetector {
         if (raw)
             for (int i = 0; i < notes.size(); i++) {
                 Anchor note = notes.get(i);
+                if ((result[i] & NoteArticulation.ACCENT) == 0
+                        && ruleJoinedAccent(
+                                note, notes, originalGlyphs, labels, gray, width, height))
+                    for (int j = 0; j < notes.size(); j++)
+                        if (notes.get(j).staff == note.staff
+                                && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
+                            result[j] |= NoteArticulation.ACCENT;
                 if ((result[i] & NoteArticulation.MARCATO) == 0
                         && ruleJoinedMarcato(note, labels, gray, width, height))
                     for (int j = 0; j < notes.size(); j++)

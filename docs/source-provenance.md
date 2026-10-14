@@ -1321,3 +1321,13 @@ Thirty-six original synthetic tests cover these boundaries. App commit `d762f50e
 is reviewed. No private score fixtures, dependencies, models or wire changes are included.
 Source tests and saved-input replay do not establish whole-library accuracy, device
 behavior or matching desktop-worker deployment.
+
+## Contents columns and staff-joined accents
+
+Aligned cover lists, numbered contents columns and medley subtitles
+exclude work titles from unlabelled credits. Complete right-pointing accents
+joined to proved staff rules retain shape, notation-pixel and ownership guards.
+Twenty-seven original synthetic tests cover these boundaries.
+App commit `6d8fc558a467bececc966fdce99204b560c1a533` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.
