@@ -1152,3 +1152,21 @@ existing staff-rule/beam proof is preserved. The app native source manifest also
 admits the previously ported numeral beam helper. No private score fixtures,
 models, dependencies or record layouts changed. Source checks and conditional
 gray-stage replay remain separate from final recognition and paired runtime gates.
+
+## Fitted white-paper ledgers and merged tempo equations
+
+A complete five-rule staff supplies the physical spacing for a ledger proof. The
+note phase, candidate ledger alignment and every intervening short ledger must
+agree; the earlier shaded-paper proof and center/phase caps are retained. Original
+procedural controls retain real tenutos and reject incomplete, irregular or broad
+staff-like bands.
+
+Explicit equals-prefixed merged OCR words need separate bounded digit components
+and the existing full printed equals/beat-note proof. The printed beat note owns
+the direction start. Equal vertical staff distances use the actual horizontal
+start owner so a neighboring bar margin cannot steal the event. Original equations
+cover merged text/bow ink, two/three digits, duplicate evidence, missing symbols,
+ranges, decimals and neighboring-bar ownership. Standalone-digit recovery and the
+old beat-unit API remain intact. No private score fixtures, models, dependencies
+or record layouts changed. Conditional retained-stage evidence is separate from
+full native recognition, assembled timing and paired runtime acceptance.

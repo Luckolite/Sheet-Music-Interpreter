@@ -718,6 +718,19 @@ final class NoteArticulationDetector {
                                 glyph.pixels)) continue;
                 if (candidate == NoteArticulation.TENUTO && nearHead(glyph, notes)) continue;
                 if (raw
+                        && candidate == NoteArticulation.TENUTO
+                        && ShadedLedgerMarkOwnership.provedWhite(
+                                gray,
+                                width,
+                                height,
+                                note.x,
+                                note.y,
+                                note.gap,
+                                glyph.left,
+                                glyph.top,
+                                glyph.right,
+                                glyph.bottom)) continue;
+                if (raw
                         && paperCandidates.contains(glyph)
                         && candidate == NoteArticulation.TENUTO
                         && ShadedLedgerMarkOwnership.proved(

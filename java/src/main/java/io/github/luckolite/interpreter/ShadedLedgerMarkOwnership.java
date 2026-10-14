@@ -8,6 +8,95 @@ import java.util.Arrays;
 final class ShadedLedgerMarkOwnership {
     private ShadedLedgerMarkOwnership() {}
 
+    /** A white-paper ledger core must join a recovered complete staff and every intervening ledger. */
+    static boolean provedWhite(
+            byte[] gray,
+            int w,
+            int h,
+            float nx,
+            float ny,
+            float gap,
+            int left,
+            int top,
+            int right,
+            int bottom) {
+        if (gray == null
+                || w <= 0
+                || h <= 0
+                || gray.length != (long) w * h
+                || !Float.isFinite(nx)
+                || !Float.isFinite(ny)
+                || !Float.isFinite(gap)
+                || gap < 8
+                || gap > h * .2f
+                || left < 0
+                || top < 0
+                || right >= w
+                || bottom >= h
+                || right < left
+                || bottom < top) return false;
+        float cx = (left + right) * .5f, cy = (top + bottom) * .5f;
+        if (bottom - top + 1 > gap * .35f
+                || right - left + 1 < gap * .6f
+                || Math.abs(cx - nx) > gap * .65f) return false;
+        float distance = (cy - ny) / gap;
+        if (Math.abs(distance) < .7f || Math.abs(distance) > 3.2f) return false;
+        int radius = Math.round(gap), x = Math.round(nx), y = Math.round(cy);
+        if (x - radius < 0 || x + radius >= w || y - radius < 0 || y + radius >= h) return false;
+        int[] tones = new int[(2 * radius + 1) * (2 * radius + 1)];
+        int n = 0;
+        for (int yy = y - radius; yy <= y + radius; yy++)
+            for (int xx = x - radius; xx <= x + radius; xx++) tones[n++] = gray[yy * w + xx] & 255;
+        Arrays.sort(tones);
+        if (tones[(n - 1) * 75 / 100] < 185) return false;
+        int direction = distance < 0 ? -1 : 1;
+        for (int first = 1; first <= 3; first++)
+            for (int extent = 4; extent <= 5; extent++) {
+                float[] rows = new float[5];
+                rows[0] = longRule(gray, w, h, nx, cy + direction * first * gap, gap, extent);
+                rows[1] = longRule(gray, w, h, nx, cy + direction * (first + 1) * gap, gap, extent);
+                float local = direction * (rows[1] - rows[0]);
+                if (!Float.isFinite(local) || local < gap * .82f || local > gap * 1.18f) continue;
+                boolean complete = true;
+                for (int line = 2; line < 5; line++) {
+                    rows[line] =
+                            longRule(
+                                    gray,
+                                    w,
+                                    h,
+                                    nx,
+                                    rows[line - 1] + direction * local,
+                                    local,
+                                    extent);
+                    float step = direction * (rows[line] - rows[line - 1]);
+                    if (!Float.isFinite(step) || Math.abs(step - local) > local * .15f) {
+                        complete = false;
+                        break;
+                    }
+                    local = direction * (rows[line] - rows[0]) / line;
+                }
+                if (!complete || local < gap * .82f || local > gap * 1.18f) continue;
+                for (int line = 0; line < 5; line++)
+                    if (Math.abs(rows[line] - rows[0] - direction * line * local) > local * .12f)
+                        complete = false;
+                float markSteps = direction * (rows[0] - cy) / local,
+                        headSteps = direction * (rows[0] - ny) / local;
+                if (!complete
+                        || Math.abs(markSteps - first) > .2f
+                        || headSteps < first + .7f
+                        || Math.abs(headSteps * 2 - Math.round(headSteps * 2)) > .25f) continue;
+                int ledgers = (int) Math.floor(headSteps - .2f);
+                if (ledgers < first || ledgers > 6) continue;
+                for (int line = 1; line <= ledgers; line++)
+                    if (!shortRule(gray, w, h, nx, rows[0] - direction * line * local, local)) {
+                        complete = false;
+                        break;
+                    }
+                if (complete) return true;
+            }
+        return false;
+    }
+
     static boolean proved(
             byte[] gray,
             int w,

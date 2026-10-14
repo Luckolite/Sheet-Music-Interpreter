@@ -322,14 +322,14 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "d2ad372f3ee15ce6425528972c520c541895a30189bcae31d550cca3df117955",
-      "review_note": "A complete detached numeral3 owns its darker core and bounded disconnected left terminals. Require two open bowls and a returning waist; ownership of fragments requires actual pixel membership. Preserve existing beam/rule proof and all genuine mark gates. Admit the previously ported TupletNumeralBeamBand helper in the native source manifest.",
-      "source_normalized_sha256": "991075de1b1a8dc6f1fd9b847ad9d32a2b1cc75449e9c51cb1c7e1e6e873ec2a",
+      "source_sha256": "3b7abab3323d8b9ade54fb20c1b629733f280b8fa2514047fbc5f8f96e304673",
+      "review_note": "Recover all five independent thin staff rules, fit their physical spacing and prove note phase, candidate alignment and every intervening short ledger. Preserve old shaded-paper proof and existing center/phase caps.",
+      "source_normalized_sha256": "c91255c83d38f3a8cb56136ea51188a3290ace965a317f814a8ebfa6b039ec69",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
       "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
-      "reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e",
-      "scoped_reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e"
+      "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef",
+      "scoped_reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -480,11 +480,12 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "08b16da0ef3d0ad211998036dd5be48b40c909ce13f587ae3820e6cf17310add",
-      "reviewed_app_commit": "ac322b2a56ff48f68d367b0328ef88e1f967d989",
-      "source_normalized_sha256": "c184168fe86f40362f01cf0ebb9fbf44c5dc8dd8f9cb94cab5220e070ff00a57",
-      "review_note": "Printed numeric tempo requires independently recognized equals and beat unit. An augmentation dot must be a complete component inside the vertical crop, excluding clipped score stems. Original geometric tempo-unit, true-dot and competing-stem controls. Exact app/public code and literal parity after package adaptation; Apache-2.0/JDK-only, no model or record-layout change.",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes."
+      "source_sha256": "abf45c308f31de3783a5553c3c04b85920b96c0f3eec430594e0f9eff09bff74",
+      "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef",
+      "source_normalized_sha256": "b3daf067f7a3b03532856cb5734c2d4be8896d36bb6714aff335e4a39a76dfdb",
+      "review_note": "Recover explicit equals-prefixed merged OCR numeric runs only from separate bounded digit components plus existing complete printed equals/beat-note proof. Anchor at the proved beat-note glyph. For equal vertical staff distances, prefer the actual annotation start horizontal owner over a neighboring bar margin. Preserve standalone-digit path and old beat-unit API.",
+      "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
+      "scoped_reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -1713,11 +1714,12 @@
     },
     "ShadedLedgerMarkOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedLedgerMarkOwnership.java",
-      "source_sha256": "783a84f06d8365d627e62126c0c6739b5f4ca043db95168fdc70790d3e3dda50",
-      "source_normalized_sha256": "783a84f06d8365d627e62126c0c6739b5f4ca043db95168fdc70790d3e3dda50",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "source_sha256": "e30c6828a9c89dccdc9ca2d7b83d4bdf658565e6329225474990c4b6af3f3290",
+      "source_normalized_sha256": "b9564495e884d705fe10772e6642fc7b246c3d87d9f890631d9f38e93535ac9b",
+      "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef",
+      "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
+      "review_note": "Recover all five independent thin staff rules, fit their physical spacing and prove note phase, candidate alignment and every intervening short ledger. Preserve old shaded-paper proof and existing center/phase caps.",
+      "scoped_reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
     },
     "ShadedLedgerRule.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedLedgerRule.java",
@@ -5791,5 +5793,29 @@
     "boundary": "Source-only checks; no cumulative app/worker build, exact native recognition/timing/audio/device acceptance or paired deployment.",
     "reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e",
     "test_font_resolution": "Identical licensed fixture resolved from public root, app root or Android module;16affected tests pass from each namespace actual cwd."
+  },
+  "fitted_white_ledger_and_merged_tempo_review": {
+    "license": "Apache-2.0",
+    "scope": {
+      "white-ledger-fitted-staff": "Recover all five independent thin staff rules, fit their physical spacing and prove note phase, candidate alignment and every intervening short ledger. Preserve old shaded-paper proof and existing center/phase caps.",
+      "equals-prefixed-tempo-ocr": "Recover explicit equals-prefixed merged OCR numeric runs only from separate bounded digit components plus existing complete printed equals/beat-note proof. Anchor at the proved beat-note glyph. For equal vertical staff distances, prefer the actual annotation start horizontal owner over a neighboring bar margin. Preserve standalone-digit path and old beat-unit API."
+    },
+    "original_regressions": [
+      "java/src/test/java/io/github/luckolite/interpreter/FittedWhiteLedgerTenutoTest.java",
+      "java/src/test/java/io/github/luckolite/interpreter/MergedTempoEquationTest.java"
+    ],
+    "checks": {
+      "ledgerPublicFocused": 433,
+      "tempoPublicFocused": 91,
+      "newRegressionMethods": 16,
+      "appFocused": 32,
+      "baselineLedgerFailingMethods": 1,
+      "baselineTempoFailingMethods": 6
+    },
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "boundary": "Exact private paired source overlays replay retained raw-gray/OCR and reconstructed anchors/existing decoded measures. No original native semantic masks/pitch tracks, new inference, assembled timing/audio/device or final runtime/deployment acceptance.",
+    "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
   }
 }

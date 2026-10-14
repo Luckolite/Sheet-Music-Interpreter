@@ -21,28 +21,145 @@ final class TempoChangeDetector {
         if (gray == null || gray.length != width * height) return List.copyOf(result);
         for (var word : words) {
             String text = word.text().trim();
-            if (!text.matches("[0-9]{2,3}")) continue;
-            int value = Integer.parseInt(text);
-            if (value < 30 || value > 400) continue;
-            var token =
-                    new MeasureNumberReconciler.NumberToken(
-                            value, word.left(), word.top(), word.right(), word.bottom());
+            boolean merged = !text.matches("[0-9]{2,3}");
+            MeasureNumberReconciler.NumberToken token;
+            if (merged) {
+                token = equalsPrefixedDigits(word, gray, width, height);
+                if (token == null) continue;
+            } else {
+                int value = Integer.parseInt(text);
+                if (value < 30 || value > 400) continue;
+                token =
+                        new MeasureNumberReconciler.NumberToken(
+                                value, word.left(), word.top(), word.right(), word.bottom());
+            }
+            int value = token.value();
             int equals = equalsSignLeft(token, gray, width, height);
             if (equals < 0) continue;
             var bounded = printedDigitBounds(token, gray, width, height);
-            if (!Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 200))
+            if (merged) {
+                int[] anchor = {-1};
+                int digitHeight = printedDigitHeight(bounded, gray, width, height);
+                double unit =
+                        printedBeatUnitWithDigitHeight(
+                                bounded, gray, width, height, equals, 200, digitHeight, anchor);
+                if (!Double.isFinite(unit))
+                    unit =
+                            printedBeatUnitWithDigitHeight(
+                                    bounded, gray, width, height, equals, 165, digitHeight, anchor);
+                if (!Double.isFinite(unit) || anchor[0] < 0) continue;
+                // The printed beat note owns the direction start, before OCR's equals/digit edge.
+                token =
+                        new MeasureNumberReconciler.NumberToken(
+                                value,
+                                bounded.left(),
+                                bounded.top(),
+                                bounded.right(),
+                                bounded.bottom(),
+                                anchor[0] / (float) width);
+            } else if (!Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 200))
                     && !Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 165)))
                 continue;
+            final var accepted = token;
             if (result.stream()
                     .noneMatch(
                             old ->
-                                    old.value() == value
+                                    old.value() == accepted.value()
                                             && old.left() < word.right()
                                             && old.right() > word.left()
                                             && old.top() < word.bottom()
-                                            && old.bottom() > word.top())) result.add(token);
+                                            && old.bottom() > word.top())) result.add(accepted);
         }
         return List.copyOf(result);
+    }
+
+    /** Explicit equals-prefixed OCR still needs separate printed digits and a complete equation. */
+    private static MeasureNumberReconciler.NumberToken equalsPrefixedDigits(
+            PlayingTechniqueDetector.Word word, byte[] gray, int width, int height) {
+        String text = word.text().trim();
+        var match = java.util.regex.Pattern.compile("^=\\s*([0-9]{2,3})(?![0-9])").matcher(text);
+        if (!match.find() || text.substring(match.end()).trim().matches("[-–—/].*|[.,]\\s*[0-9].*"))
+            return null;
+        int value = Integer.parseInt(match.group(1)), digits = match.group(1).length();
+        if (value < 30
+                || value > 400
+                || width < 1
+                || height < 1
+                || gray.length != (long) width * height
+                || !Float.isFinite(word.left())
+                || !Float.isFinite(word.right())
+                || !Float.isFinite(word.top())
+                || !Float.isFinite(word.bottom())
+                || word.left() < 0
+                || word.top() < 0
+                || word.right() > 1
+                || word.bottom() > 1) return null;
+        int left = Math.round(word.left() * width),
+                right = Math.min(width - 1, Math.round(word.right() * width));
+        int top = Math.round(word.top() * height),
+                bottom = Math.min(height - 1, Math.round(word.bottom() * height));
+        int w = right - left + 1, h = bottom - top + 1;
+        if (w < 1 || h < 3 || (long) w * h > 500_000) return null;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        List<int[]> parts = new ArrayList<>();
+        for (int sy = 0; sy < h; sy++)
+            for (int sx = 0; sx < w; sx++) {
+                int seed = sy * w + sx;
+                if (seen[seed] || (gray[(top + sy) * width + left + sx] & 255) > 155) continue;
+                int read = 0, count = 1, minX = sx, maxX = sx, minY = sy, maxY = sy;
+                seen[seed] = true;
+                queue[0] = seed;
+                while (read < count) {
+                    int at = queue[read++], x = at % w, y = at / w;
+                    minX = Math.min(minX, x);
+                    maxX = Math.max(maxX, x);
+                    minY = Math.min(minY, y);
+                    maxY = Math.max(maxY, y);
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int nx = x + dx, ny = y + dy;
+                            if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                            int next = ny * w + nx;
+                            if (!seen[next]
+                                    && (gray[(top + ny) * width + left + nx] & 255) <= 155) {
+                                seen[next] = true;
+                                queue[count++] = next;
+                            }
+                        }
+                }
+                if (count >= 3)
+                    parts.add(new int[] {left + minX, top + minY, left + maxX, top + maxY, count});
+            }
+        parts.sort(Comparator.comparingInt(p -> p[0]));
+        int[] first = null, previous = null;
+        int n = 0, l = width, r = -1, t = height, b = -1;
+        for (int[] part : parts) {
+            int pw = part[2] - part[0] + 1, ph = part[3] - part[1] + 1;
+            if (ph < h * .35f) continue;
+            if (pw > ph * .95f) return null;
+            if (first == null) first = part;
+            int fh = first[3] - first[1] + 1;
+            if (Math.abs(part[1] - first[1]) > Math.max(2, fh * .2f)
+                    || Math.abs(part[3] - first[3]) > Math.max(2, fh * .2f)
+                    || previous != null
+                            && (part[0] <= previous[2] || part[0] - previous[2] > fh * .65f))
+                return null;
+            l = Math.min(l, part[0]);
+            r = Math.max(r, part[2]);
+            t = Math.min(t, part[1]);
+            b = Math.max(b, part[3]);
+            previous = part;
+            if (++n == digits) break;
+        }
+        return n == digits
+                ? new MeasureNumberReconciler.NumberToken(
+                        value,
+                        l / (float) width,
+                        t / (float) height,
+                        r / (float) width,
+                        b / (float) height)
+                : null;
     }
 
     static List<ScoreTempoChange> detect(
@@ -232,7 +349,7 @@ final class TempoChangeDetector {
                     && centerY < staff.bottom()) return -1;
         }
         int best = -1;
-        float bestDistance = Float.MAX_VALUE;
+        float bestDistance = Float.MAX_VALUE, bestHorizontal = Float.MAX_VALUE;
         for (int index = 0; index < measures.size(); index++) {
             MeasureRegion measure = measures.get(index);
             float rowHeight = measure.bottom() - measure.top();
@@ -244,8 +361,16 @@ final class TempoChangeDetector {
                     || token.bottom() > measure.top() + Math.min(.002f, rowHeight * .05f)
                     || token.bottom() < measure.top() - Math.max(.015f, rowHeight * 1.1f)) continue;
             float distance = Math.abs(measure.top() - token.bottom());
-            if (distance < bestDistance) {
+            float horizontal =
+                    Math.max(
+                            0,
+                            Math.max(
+                                    measure.left() - token.left(), token.left() - measure.right()));
+            // Equal staff-row distances must not let a neighboring bar's margin steal the start.
+            if (distance < bestDistance
+                    || distance == bestDistance && horizontal < bestHorizontal) {
                 bestDistance = distance;
+                bestHorizontal = horizontal;
                 best = index;
             }
         }
@@ -437,6 +562,19 @@ final class TempoChangeDetector {
             int equalsLeft,
             int inkLimit,
             int unit) {
+        return printedBeatUnitWithDigitHeight(
+                token, gray, width, height, equalsLeft, inkLimit, unit, null);
+    }
+
+    private static double printedBeatUnitWithDigitHeight(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int equalsLeft,
+            int inkLimit,
+            int unit,
+            int[] anchor) {
         int left = Math.max(0, equalsLeft - unit * 3), right = equalsLeft - 1;
         int top = Math.max(0, Math.round(token.top() * height) - unit);
         int bottom = Math.min(height - 1, Math.round(token.bottom() * height) + unit / 3);
@@ -516,6 +654,7 @@ final class TempoChangeDetector {
             boolean flagged = flaggedRows >= Math.max(3, Math.round(unit * .25f));
             if (hollow && flagged) continue;
             double beat = hollow ? 2 : flagged ? .5 : 1;
+            if (anchor != null) anchor[0] = note[0];
             for (int[] dot : parts) {
                 int dw = dot[1] - dot[0] + 1, dh = dot[3] - dot[2] + 1;
                 float gap = dot[0] - note[1], dy = Math.abs((dot[2] + dot[3]) * .5f - cy);
