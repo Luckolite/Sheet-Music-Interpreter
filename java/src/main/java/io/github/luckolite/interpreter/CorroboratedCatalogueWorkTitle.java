@@ -263,7 +263,8 @@ public final class CorroboratedCatalogueWorkTitle {
                         before.artist(),
                         before.composer(),
                         before.arranger(),
-                        unownedReviews);
+                        unownedReviews,
+                        before.creditConflicts());
         return new Selection(
                 before, after, List.copyOf(original), List.copyOf(pages), pair, witness);
     }

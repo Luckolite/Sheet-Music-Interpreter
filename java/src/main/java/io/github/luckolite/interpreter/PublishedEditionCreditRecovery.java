@@ -412,6 +412,11 @@ public final class PublishedEditionCreditRecovery {
                 expected.artist(),
                 after.composer(),
                 after.arranger(),
-                expected.unclassifiedCredits());
+                expected.unclassifiedCredits(),
+                java.util.stream.Stream.concat(
+                                expected.creditConflicts().stream(),
+                                after.creditConflicts().stream())
+                        .distinct()
+                        .toList());
     }
 }

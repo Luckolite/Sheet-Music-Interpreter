@@ -2090,15 +2090,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "bbbee6dac9f574ee69f0521245545ece19a05b7ae9e1659317b068a60f3026a3",
-      "source_normalized_sha256": "190d205e7f86fcca147a1363dbcd038bb4ccea735b9f13783f9f2e1cd2a4e2d1",
+      "source_sha256": "1b782089d10143eb45e95712d532e4058e5c186f4e18a91dae32bd5bf141a18c",
+      "source_normalized_sha256": "b149558a08451549df3fded1f17552afa924380800c2695ecca4d21ebd89459c",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "a64beae38d50a98f8bd6e4b4bdf78f4762c8b2664ff365b0aeb9c7a1d0d9b837",
+      "standalone_sha256": "1a39a3434a6baa1f5e92fee51c5015130137afc7052627a4fc547405a9cec35f",
       "license": "Apache-2.0",
-      "review_note": "A centered subtitle between an independently printed conversion credit and smaller contributor is source-work context. Preserve known names and ambiguous arrangements. Five original synthetic regressions; no private score fixtures, names dictionary or model changes.",
-      "reviewed_app_commit": "e406b3e612c23f31d95cca546e45d0036ef08ce2",
+      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes.",
+      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -2321,14 +2321,15 @@
     },
     "CorroboratedCatalogueWorkTitle.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedCatalogueWorkTitle.java",
-      "source_sha256": "1dd935af5177f99bdaa634279e5dee443f13b267ef679c39c7750269f01a91d5",
-      "source_normalized_sha256": "540e53f1e64dce29fb83c5cd0eb24729c75b1658281a76151d751e6bead37fd5",
+      "source_sha256": "640d321984c582d70e7ae236430bbbdd70647031254ea1469a574c496fdd8b3c",
+      "source_normalized_sha256": "30f48bbd1152753884d8c9e048e30cbe024afb2e3f5c7174b79314cb1568048a",
       "reviewed_app_base_commit": "875c633f6aad212d45f5a0eaec7ff6d8515cfdd0",
       "reviewed_source_state": "Original-pixel complementary caption modes and independent complete-axis numbered-work readings; full runtime and whole-library qualification remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedCatalogueWorkTitle.java",
-      "standalone_sha256": "7cc4f51574677d94744020726f716e13a6a3596e128d01708c12ce6d89e85665",
+      "standalone_sha256": "cf79c6bdfc8df860aba38a3f4ac909df0d49350247518af88010c4c3190e02df",
       "license": "Apache-2.0",
-      "review_note": "Complete literal readings retain source bounds and printed identifiers. Exact work/form/ordinal, person veto, repeated instrument-part and contributor/review ownership gates remain required. Synthetic fictional regression only; no private scores, gold labels, source images, OCR results or model changes."
+      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes.",
+      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903"
     },
     "CorroboratedPrimaryTitle.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedPrimaryTitle.java",
@@ -2427,14 +2428,15 @@
     },
     "PublishedEditionCreditRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/PublishedEditionCreditRecovery.java",
-      "source_sha256": "8ab7030a39cfd1b72f6406eeb4a7ed73e6c7d67a515344eda2e942ac95ff0943",
-      "source_normalized_sha256": "679b7feb8f40d1b57fdc5cc3bfb193fe363bcaad5d023bcadbd4985c041e207b",
+      "source_sha256": "c1a6a5c3912a88952cd8ce9771a93afbec546f7a9b783b6755aabd147adeda12",
+      "source_normalized_sha256": "74bc92079600abbeed6afcc7915ac6da7c606f54a177e3964c888f4bf7bc70df",
       "reviewed_app_base_commit": "0fa6005a02c3853c777d4f57d87e4f7969ee1562",
       "reviewed_source_state": "Exact printed publisher edition/title/role corroboration, bounded terminal-name recovery, and versioned public-fact cache; fresh app/native/full-library qualification remains separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PublishedEditionCreditRecovery.java",
-      "standalone_sha256": "cffed0741be21d96b8d7332f322b02b57535ea71ba7af51aed3e18ec51782121",
+      "standalone_sha256": "2553c7bf7282d82350bea1ee5fb9da3017b52ec877e4fb5a1b1e6de5e1c04642",
       "license": "Apache-2.0",
-      "review_note": "Original code and fictional source/HTML/cache/ownership regressions. Public HTTPS requests contain only edition IDs. No private scores, expected library names, HTTP response bodies, phone logs, model changes or per-song conditions included. Repeated clipped rows are reconciled by source-bound name sets; distinct editions can recover distinct authors from the same damaged token."
+      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes.",
+      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903"
     },
     "HalLeonardPublicationMetadata.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/HalLeonardPublicationMetadata.java",
@@ -2845,14 +2847,14 @@
     },
     "TerminalCreditStroke.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/TerminalCreditStroke.java",
-      "source_sha256": "e6ae143db282a70e3539e21ff36a9ff0fe56c94dd9a27de8cfe24b6a1fad6074",
-      "source_normalized_sha256": "e3378fe0239e655aa83876ae5ca46b89c053d1573c1ffb3a640a33fca7028301",
+      "source_sha256": "ec6eb1a0b918cacbbaa971bd5c779c8f15049ae3443a16fdb37cc9d09951f2cb",
+      "source_normalized_sha256": "70a2474f2c688fb0eba559006fdd73c5ee46f1c367931e94602d06600e599178",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TerminalCreditStroke.java",
-      "standalone_sha256": "ff9ba6b6291bb6cbb16eb761dc47fc288460cd49256cfba28827eb9fe2d91bd5",
+      "standalone_sha256": "ebc2ac2c622a8b83cf3ee60775e7429bef527925406e7b7026ff19ef29a991fa",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
+      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
-      "review_note": "Bounded original-pixel terminal-stroke evidence plus three-scale OCR agreement; no name dictionary, score-specific rule, model, or wire change."
+      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes."
     },
     "MetadataStaffBoundary.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/MetadataStaffBoundary.java",

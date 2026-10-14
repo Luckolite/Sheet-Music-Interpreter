@@ -78,7 +78,27 @@ public final class ScoreCreditsDetector {
             String artist,
             String composer,
             String arranger,
-            List<String> unclassifiedCredits) {}
+            List<String> unclassifiedCredits,
+            List<CreditConflict> creditConflicts) {
+        public Result(
+                String title,
+                String artist,
+                String composer,
+                String arranger,
+                List<String> unclassifiedCredits) {
+            this(title, artist, composer, arranger, unclassifiedCredits, List.of());
+        }
+
+        public Result {
+            creditConflicts = creditConflicts == null ? List.of() : List.copyOf(creditConflicts);
+        }
+    }
+
+    public record CreditConflict(String role, String work, List<String> printedCredits) {
+        public CreditConflict {
+            printedCredits = List.copyOf(printedCredits);
+        }
+    }
 
     private static final List<String> DISPLAY_ROLE_LABELS =
             List.of(
@@ -3924,7 +3944,8 @@ public final class ScoreCreditsDetector {
                 roles.artist,
                 roles.composer,
                 roles.arranger,
-                roles.unclassifiedCredits);
+                roles.unclassifiedCredits,
+                roles.creditConflicts);
     }
 
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
@@ -4618,12 +4639,34 @@ public final class ScoreCreditsDetector {
                 repeatedInferredNames.add(name);
         discardRepeatedRoleSpellingEcho(
                 other, pages, artists, composers, arrangers, repeatedInferredNames);
+        var conflicts =
+                combinePrintedComposerCredits(pages, composers, inferredCredits, repeatedCredits);
+        if (!conflicts.isEmpty()) {
+            var resolvedNames =
+                    conflicts.stream()
+                            .flatMap(c -> c.printedCredits.stream())
+                            .flatMap(value -> contextualAuthorNames(value).stream())
+                            .toList();
+            other.removeIf(
+                    value -> {
+                        var names = contextualAuthorNames(value);
+                        return !names.isEmpty()
+                                && names.stream()
+                                        .allMatch(
+                                                name ->
+                                                        resolvedNames.stream()
+                                                                .anyMatch(
+                                                                        known ->
+                                                                                same(name, known)));
+                    });
+        }
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
                 String.join("; ", composers),
                 String.join("; ", arrangers),
-                List.copyOf(other));
+                List.copyOf(other),
+                conflicts);
     }
 
     /** A standalone narrative quotation does not identify the artwork's work title. */
@@ -7519,7 +7562,46 @@ public final class ScoreCreditsDetector {
                                         && (credit(l.text) != null || properReviewName(l.text)));
     }
 
+    /** Repeated imprints below a hits list identify pictured publications on a collection cover. */
+    private static boolean picturedPublicationReview(Page page, Line candidate, List<Line> lines) {
+        if (page.notationTop > 0
+                || candidate.top < page.height * .3f
+                || candidate.bottom > page.height * .82f
+                || credit(candidate.text) != null) return false;
+        boolean catalogue =
+                lines.stream()
+                        .anyMatch(
+                                line ->
+                                        line.bottom < page.height * .28f
+                                                && clean(line.text)
+                                                        .matches(
+                                                                "(?iu)^[0-9]+\\h+of\\h+(?:the|her|his|their)\\h+(?:biggest|greatest|favorite)\\h+hits:.*"));
+        if (!catalogue) return false;
+        for (Line imprint : lines) {
+            String text = clean(imprint.text), key = fold(text);
+            if (imprint.bottom > page.height * .08f
+                    || key.length() < 8
+                    || key.length() > 30
+                    || !text.equals(text.toUpperCase(Locale.ROOT))) continue;
+            var repeats =
+                    lines.stream()
+                            .filter(
+                                    line ->
+                                            line.top > page.height * .55f
+                                                    && line.bottom < page.height * .98f
+                                                    && fold(line.text).length() >= 8
+                                                    && editDistance(key, fold(line.text)) <= 1)
+                            .toList();
+            if (repeats.size() >= 2
+                    && repeats.stream().anyMatch(line -> line.top > page.height * .9f)
+                    && repeats.stream().anyMatch(line -> line.bottom < page.height * .8f))
+                return true;
+        }
+        return false;
+    }
+
     private static boolean collectionListEntry(Page page, Line candidate, List<Line> lines) {
+        if (picturedPublicationReview(page, candidate, lines)) return true;
         String text = clean(candidate.text);
         if (numberedContentsEntry(page, candidate, lines)) return true;
         // A printed playback panel plus a repeated title column identifies collection front matter,
@@ -7688,6 +7770,116 @@ public final class ScoreCreditsDetector {
             }
             if (matches.size() == 1) composers.remove(candidate);
         }
+    }
+
+    private static String printedComposerText(String text) {
+        text = clean(text).replaceFirst("(?iu),\\h*produced\\h+by\\h+.+$", "");
+        Credit label = credit(text);
+        return clean(label != null && label.role == Role.COMPOSER ? label.value : text)
+                .replaceFirst("(?iu)^(?:and|&)\\h+", "");
+    }
+
+    private record PrintedComposerGroup(String work, List<String> names) {}
+
+    /** Repeated parts can print distinct spellings; retain each supported version for review. */
+    private static List<CreditConflict> combinePrintedComposerCredits(
+            List<Page> pages,
+            Set<String> composers,
+            List<RepeatedCredit> inferred,
+            List<RepeatedCredit> labelled) {
+        var anchors = new ArrayList<RepeatedCredit>();
+        anchors.addAll(inferred);
+        anchors.addAll(labelled);
+        var groups = new ArrayList<PrintedComposerGroup>();
+        for (Page page : pages) {
+            if (page.photographicCover || page.notationTop <= 0) continue;
+            Line heading = chooseTitle("", page, page.lines, page.notationTop);
+            if (heading == null) continue;
+            var candidates =
+                    page.lines.stream()
+                            .filter(
+                                    line ->
+                                            line != heading
+                                                    && line.left > page.width * .55f
+                                                    && line.top >= heading.top
+                                                    && line.bottom < page.notationTop
+                                                    && line.height() < heading.height() * .85f
+                                                    && (credit(line.text) == null
+                                                            || credit(line.text).role
+                                                                    == Role.COMPOSER)
+                                                    && !contextualAuthorNames(
+                                                                    printedComposerText(line.text))
+                                                            .isEmpty())
+                            .sorted(Comparator.comparingDouble(Line::top))
+                            .toList();
+            for (int i = 0; i < candidates.size(); i++) {
+                Line first = candidates.get(i), last = first;
+                String text = printedComposerText(first.text);
+                while (i + 1 < candidates.size()) {
+                    Line next = candidates.get(i + 1);
+                    if ((!text.endsWith(",") && !clean(next.text).matches("(?iu)^(?:and|&)\\h+.*"))
+                            || next.top - last.bottom > Math.max(last.height(), next.height())
+                            || next.top < last.bottom
+                            || Math.abs(next.right - last.right) > page.width * .08f) break;
+                    text = text.replaceFirst(",$", "") + ", " + printedComposerText(next.text);
+                    last = next;
+                    i++;
+                }
+                List<String> names = contextualAuthorNames(text);
+                if (names.size() < 2) continue;
+                var workNames =
+                        anchors.stream()
+                                .filter(
+                                        anchor ->
+                                                anchor.role == Role.COMPOSER
+                                                        && equivalentPartWork(
+                                                                anchor.work, heading.text))
+                                .flatMap(anchor -> anchor.names.stream())
+                                .distinct()
+                                .toList();
+                boolean supported =
+                        names.stream()
+                                        .filter(
+                                                name ->
+                                                        workNames.stream()
+                                                                .anyMatch(n -> same(n, name)))
+                                        .count()
+                                >= 2;
+                if (supported) groups.add(new PrintedComposerGroup(clean(heading.text), names));
+            }
+        }
+        var out = new ArrayList<CreditConflict>();
+        var visited = new LinkedHashSet<String>();
+        for (PrintedComposerGroup first : groups) {
+            if (!visited.add(partWorkKey(first.work))) continue;
+            var related =
+                    groups.stream().filter(g -> equivalentPartWork(first.work, g.work)).toList();
+            var variants = new ArrayList<List<String>>();
+            for (var group : related) {
+                addNames(composers, group.names);
+                if (variants.stream()
+                        .noneMatch(
+                                v ->
+                                        v.size() == group.names.size()
+                                                && v.stream()
+                                                        .allMatch(
+                                                                n ->
+                                                                        group.names.stream()
+                                                                                .anyMatch(
+                                                                                        m ->
+                                                                                                same(
+                                                                                                        n,
+                                                                                                        m)))))
+                    variants.add(group.names);
+            }
+            if (variants.size() > 1)
+                out.add(
+                        new CreditConflict(
+                                "Composer",
+                                first.work,
+                                variants.stream().map(v -> String.join("; ", v)).toList()));
+        }
+        return List.copyOf(out);
     }
 
     private static boolean sameOuterNames(String a, String b) {

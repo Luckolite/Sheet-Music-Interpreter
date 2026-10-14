@@ -13,6 +13,81 @@ public final class TerminalCreditStroke {
 
     public record Prepared(int width, int height, int[] pixels) {}
 
+    /** Local contrast preserves faint terminal ink against a nonuniform paper background. */
+    public static Prepared prepareAdaptive(int width, int height, int[] pixels) {
+        if (pixels == null
+                || width < 20
+                || height < 16
+                || width < height
+                || (long) width * height != pixels.length
+                || pixels.length > 4_000_000)
+            throw new IllegalArgumentException("Invalid adaptive credit crop");
+        if (pixels.length > 400000) return prepare(width, height, pixels);
+        int block = Math.max(3, (height / 2) | 1), radius = block / 2;
+        int stride = width + radius * 2 + 1;
+        long cells = (long) stride * (height + radius * 2 + 1);
+        if (cells > 4_000_000) return prepare(width, height, pixels);
+        long[] integral = new long[(int) cells];
+        int[] gray = new int[pixels.length];
+        for (int i = 0; i < pixels.length; i++) {
+            int p = pixels[i];
+            gray[i] =
+                    ((p >>> 16 & 255) * 299 + (p >>> 8 & 255) * 587 + (p & 255) * 114 + 500) / 1000;
+        }
+        for (int y = 0; y < height + radius * 2; y++) {
+            long row = 0;
+            int sy = Math.max(0, Math.min(height - 1, y - radius));
+            for (int x = 0; x < width + radius * 2; x++) {
+                row += gray[sy * width + Math.max(0, Math.min(width - 1, x - radius))];
+                integral[(y + 1) * stride + x + 1] = integral[y * stride + x + 1] + row;
+            }
+        }
+        int[] binary = new int[pixels.length];
+        long area = (long) block * block;
+        for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++) {
+                long sum =
+                        integral[(y + block) * stride + x + block]
+                                - integral[y * stride + x + block]
+                                - integral[(y + block) * stride + x]
+                                + integral[y * stride + x];
+                int threshold = (int) ((sum + area / 2) / area) - 12;
+                binary[y * width + x] = gray[y * width + x] <= threshold ? 0xff000000 : 0xffffffff;
+            }
+        removeUpperRules(binary, width, height);
+        int pad = Math.max(3, height / 8), w = width + pad * 2, h = height + pad * 2;
+        int[] out = new int[w * h];
+        java.util.Arrays.fill(out, 0xffffffff);
+        for (int y = 0; y < height; y++)
+            System.arraycopy(binary, y * width, out, (y + pad) * w + pad, width);
+        return new Prepared(w, h, out);
+    }
+
+    private static void removeUpperRules(int[] binary, int width, int height) {
+        boolean[] seen = new boolean[binary.length];
+        for (int start = 0; start < binary.length; start++) {
+            if (seen[start] || !dark(binary[start])) continue;
+            var pending = new ArrayDeque<Integer>();
+            var component = new ArrayList<Integer>();
+            pending.add(start);
+            seen[start] = true;
+            int left = width, right = -1, bottom = -1;
+            while (!pending.isEmpty()) {
+                int at = pending.removeFirst(), x = at % width, y = at / width;
+                component.add(at);
+                left = Math.min(left, x);
+                right = Math.max(right, x);
+                bottom = Math.max(bottom, y);
+                if (x > 0) visit(at - 1, binary, seen, pending);
+                if (x + 1 < width) visit(at + 1, binary, seen, pending);
+                if (y > 0) visit(at - width, binary, seen, pending);
+                if (y + 1 < height) visit(at + width, binary, seen, pending);
+            }
+            if (right - left + 1 > width * .5f && bottom + 1 < height * .5f)
+                for (int at : component) binary[at] = 0xffffffff;
+        }
+    }
+
     public static Prepared prepare(int width, int height, int[] pixels) {
         if (pixels == null
                 || width < 20
