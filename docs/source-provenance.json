@@ -563,13 +563,13 @@
     },
     "PrintedMeasureRhythmGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
-      "source_sha256": "e9b84229d53041d9d36da5091619d68f81a3d00bfc2068e24243e36c8765342b",
-      "reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
-      "source_normalized_sha256": "2f2d70cde541ec53a533f6f3398d3f7358ef33c94875b930693e501b89d4037a",
-      "reviewed_source_state": "Committed paired recognition51/guide286/audio84 sources; cumulative deployment and runtime validation pending.",
-      "review_note": "Prove a connected thick staff-rule band using bilateral horizontal witnesses before preserving complete-rest measure boundaries. Keep exterior stem clearance outside the proved band.",
-      "scoped_reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
-      "standalone_sha256": "274d73ce7d4cce020532869b85bca1920def9aa7e77fc3354402f6ef035328f6"
+      "source_sha256": "79514ecc3339981066645a2e36f88f024b9ff39b19d9e26f7eed5371093bfe2b",
+      "reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "source_normalized_sha256": "d30201fb8fc97818cbeb5a6ef48da7ad53467fcb355e7f475922db1d0bd673d6",
+      "reviewed_source_state": "Committed paired recognition55/guide286/audio88 sources; final packaged deployment and runtime verification pending.",
+      "review_note": "Preserve a final single full-measure rest against density-inferred cuts only with no notes and no printed internal barlines; retain repeated multi-rest geometry.",
+      "scoped_reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "standalone_sha256": "ff49673813ee766ab0583295dbe4b0d6050856128ed17d594e976371e492a2bd"
     },
     "PrintedPageEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",
@@ -1567,13 +1567,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "9fe12202b22584d50d717610c87c52cccae2464b4967f3783c3d48958b3ac064",
-      "source_normalized_sha256": "9fe12202b22584d50d717610c87c52cccae2464b4967f3783c3d48958b3ac064",
-      "reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "review_note": "Advance recognition53 to54 for five global recovery repairs; guide286 record layout unchanged, paired audio87 invalidates stale previews.",
-      "reviewed_source_state": "Committed paired recognition54/guide286/audio87 sources; final packaged deployment and runtime verification pending.",
-      "scoped_reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "standalone_sha256": "9ebcb94a65d2d55e685e6661d6c70999b95b5cf1203cebc17d1f2aa57b5fabc6",
+      "source_sha256": "3abaab03ca7ef9a58bca7a294321d0c085f5bb9b280591209b551bf782b48dfd",
+      "source_normalized_sha256": "3abaab03ca7ef9a58bca7a294321d0c085f5bb9b280591209b551bf782b48dfd",
+      "reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "review_note": "Advance recognition54 to55 and audio87 to88 for corrected conversion and rest timing; guide286 record layout unchanged.",
+      "reviewed_source_state": "Committed paired recognition55/guide286/audio88 sources; final packaged deployment and runtime verification pending.",
+      "scoped_reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "standalone_sha256": "31110f39f3c0671832f80bbf88236118948403c1c4e35a04206fa4226686e630",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1631,14 +1631,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "4f3112f3416ebd1f6107f25bbe68d133499c6629872942cd87f736d4d4acd9c9",
-      "source_normalized_sha256": "9847105a64059594c013e506e535d319cffdd6bd41a727c5043e1e62073008bf",
-      "reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "reviewed_source_state": "Committed paired recognition54/guide286/audio87 sources; final packaged deployment and runtime verification pending.",
-      "review_note": "Match recognition54 identity while retaining the guide286 record layout.",
-      "scoped_reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
+      "source_sha256": "99850af516ce383c9319320e725c0cff5b502e6576c4fa884a553d3926fcc5a3",
+      "source_normalized_sha256": "11f1fca489326a36ff917c2f721b7ca1d7d7fc8b3e7508a1d1fc404a2c67515b",
+      "reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "reviewed_source_state": "Committed paired recognition55/guide286/audio88 sources; final packaged deployment and runtime verification pending.",
+      "review_note": "Match recognition55 identity while retaining guide286 record layout.",
+      "scoped_reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "ecb1441533e8d4311bfc1890bf786160dea9dfef5517e48d7cb0283fd4d34390",
+      "standalone_sha256": "bd12c737b0b72c1d0efe2e32cfddb834bef075ad6bf7acc5ed9da940a6051aeb",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2833,13 +2833,13 @@
     },
     "PrintedRepeatNavigation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRepeatNavigation.java",
-      "source_sha256": "84b8eb75f94cfd0db29aa716c0d3fa940ede17b8536d6571e97eeadd0d2991f7",
-      "source_normalized_sha256": "7e9ec3339bb22080bcb26fa6967d74a8435b85a2bcd573cd44535b06197354b0",
-      "reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "scoped_reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "standalone_sha256": "1af05d2ca6ba821f900199ce980ab88edea4a28a382a7d5a76c9ec173fb4f05f",
-      "review_note": "Original local repeat ownership assembler preserves printed evidence, complete pass coverage, distinct backward ending edges and nested groups. Incomplete or implicit/cross-page ownership remains explicitly unresolved.",
-      "reviewed_source_state": "Committed paired recognition49/guide286/audio82 sources; final cumulative package/deployment/runtime verification pending."
+      "source_sha256": "9a27ab09eb1b87d15da9eb295f47b2d80bef4e2a2c2fcbd24513560d3d6e1e0e",
+      "source_normalized_sha256": "190dd2be0449f706b97e2a00766185dd7587702a57d25b81a8a5b671ad2e2168",
+      "reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "scoped_reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+      "standalone_sha256": "ae41d5b4779c969adf9f58dbe3bc69551bd37241ba91828ea7e5a70639c178b6",
+      "review_note": "Coalesce identical unresolved logical signs while retaining each staff witness; reject incompatible identities and preserve unresolved navigation ownership.",
+      "reviewed_source_state": "Committed paired recognition55/guide286/audio88 sources; final packaged deployment and runtime verification pending."
     },
     "LetterboxedArtworkEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/LetterboxedArtworkEvidence.java",
@@ -6910,5 +6910,40 @@
     "crop_source_sha256": "b1223e2dd223cb3c5a7cfd6b1fec7c17bbb2e825c576bf86a49794e2a528ef8c",
     "boundary": "App-only original-PDF bitmap adapters retain cancellation, bounds and recycling. Printed repeated-letter reads use 1x/2x/4x; unresolved terminal-stroke retry uses 2x/3x/4x with unchanged ink and confidence gates. Public selection/consensus ported. No native metadata caller, model or record-layout change. Android runtime and paired deployment pending.",
     "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff"
+  },
+  "repeat_witness_final_rest_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "d545929217e2533dc35cf7c719ff46e19ade1324",
+    "scope": "Two global repairs with original paired-staff repeat rasters and final-rest/real-barline/multi-rest controls. Both failing repeat pages and final-rest target pass adopted replay; full frozen-model candidate checks retained. No private score pixels, titles, identifiers, logs, library data, fonts or model changes published. Unresolved repeat evidence remains unresolved; no cross-page navigation is guessed. Full current-model, document playback and packaged app/Hub/worker acceptance remain pending.",
+    "reviewed_sources": [
+      {
+        "source_path": "tools/native-worker/NativeMusicalOcr.java",
+        "source_sha256": "d17e3c29c8e60c213cf8b28ff4c55385b773ef7eeca8e700d8484161faa94f62"
+      },
+      {
+        "source_path": "tools/native-worker/NativePageGuide.java",
+        "source_sha256": "9339a4c8bf690922193e477190102e0d21ab8a435bfc439c83c356fdffc10dac"
+      },
+      {
+        "source_path": "tools/native-worker/NativeAudioTrack.java",
+        "source_sha256": "2878cd60770a27bae87f04a4102d7898fc2af5cd7057ede005deaf84392f593a"
+      },
+      {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "99850af516ce383c9319320e725c0cff5b502e6576c4fa884a553d3926fcc5a3"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java",
+        "source_sha256": "dbf6af9fb620ada086e60a852857fb63a0b21b7bfac01f4a9199591778b3cd62"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "b792a28e6f8ebe10f348b02d5abbc61feb90f89c93e60ee607d4e2ac6b7a9acc"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeAudioWorker.cs",
+        "source_sha256": "4b82e4a36b96473ea4b99335c716adcfcd8dd986e17d87c35ec1342651d3eed8"
+      }
+    ]
   }
 }

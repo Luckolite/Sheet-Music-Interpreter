@@ -43,7 +43,8 @@ final class PrintedRepeatNavigation {
                             + mark.boundary()
                             + ":"
                             + mark.outgoing();
-            expressions.add(
+            addUnresolved(
+                    expressions,
                     unresolved(
                             id,
                             "Printed repeat needs document-level ownership",
@@ -68,7 +69,8 @@ final class PrintedRepeatNavigation {
                             + mark.start()
                             + ":"
                             + mark.text();
-            expressions.add(
+            addUnresolved(
+                    expressions,
                     unresolved(
                             id,
                             "Printed ending needs unambiguous repeat ownership: " + mark.text(),
@@ -81,6 +83,44 @@ final class PrintedRepeatNavigation {
                                     mark.text())));
         }
         return score.withPlaybackDirections(directions).withExpressiveEvents(expressions);
+    }
+
+    /** Repeated staff witnesses describe one unresolved logical sign; retain every witness. */
+    static void addUnresolved(List<ScoreExpressiveEvent> events, ScoreExpressiveEvent event) {
+        for (int i = 0; i < events.size(); i++) {
+            var old = events.get(i);
+            if (!old.eventId().equals(event.eventId())) continue;
+            if (old.kind() != ScoreExpressiveEvent.Kind.UNRESOLVED_DIRECTION
+                    || event.kind() != old.kind()
+                    || event.scope() != old.scope()
+                    || event.scope() != ScoreExpressiveEvent.Scope.UNRESOLVED
+                    || !event.start().equals(old.start())
+                    || !event.end().equals(old.end())
+                    || !event.targetEventId().equals(old.targetEventId())
+                    || event.strength() != old.strength()
+                    || event.staffCount() != old.staffCount()
+                    || !event.qualifierText().equals(old.qualifierText()))
+                throw new IllegalArgumentException("Conflicting unresolved printed sign identity");
+            var evidence = new ArrayList<>(old.evidence());
+            for (var witness : event.evidence())
+                if (!evidence.contains(witness)) evidence.add(witness);
+            events.set(
+                    i,
+                    new ScoreExpressiveEvent(
+                            old.eventId(),
+                            old.kind(),
+                            old.start(),
+                            old.end(),
+                            old.scope(),
+                            old.staffIndex(),
+                            old.staffCount(),
+                            old.targetEventId(),
+                            old.strength(),
+                            old.qualifierText(),
+                            evidence));
+            return;
+        }
+        events.add(event);
     }
 
     private static ScoreExpressiveEvent unresolved(

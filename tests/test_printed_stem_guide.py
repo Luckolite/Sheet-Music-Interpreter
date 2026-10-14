@@ -43,7 +43,7 @@ class PrintedStemGuideTests(unittest.TestCase):
         with self.assertRaises(ValueError):wire.encode(original_score(),287)
 
     def test_current286_keeps_kind_source_and_pickup_after_legacy281(self):
-        self.assertEqual(54, wire.RECOGNITION_REVISION)
+        self.assertEqual(55, wire.RECOGNITION_REVISION)
         self.assertEqual(286,wire.GUIDE_VERSION)
         score=original_score();score['notes'][0]['stemDirection']=1
         legacy=wire.encode(score,281);encoded=wire.encode(score)

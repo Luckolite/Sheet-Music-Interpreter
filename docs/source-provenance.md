@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition55 retains multiple staff witnesses for one unresolved printed repeat
+without duplicate event identities or guessed navigation. A final row containing
+one full-measure rest, no notes and no internal printed barline is preserved when
+earlier-system density would subdivide it. Original procedural regressions cover
+real boundaries, repeated multi-rest geometry, sounding notes and conflicting
+evidence. Guide286 layout is unchanged; audio88 invalidates stale previews.
+Packaged deployment, device and whole-document acceptance remain pending.
+
 Recognition54 recovers medium-contrast dynamic glyph components, note-prefixed
 tempo equations, complete clefs crossing a measure boundary, and compact or
 vertically offset meter numerals. Physical staff geometry, existing confidence

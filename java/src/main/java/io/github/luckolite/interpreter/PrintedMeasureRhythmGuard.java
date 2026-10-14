@@ -21,6 +21,7 @@ final class PrintedMeasureRhythmGuard {
         fitted = rejectOverlappingRows(fitted);
         fitted = preservePrintedBoundaries(raw, fitted, gray, width, height);
         fitted = rejectUnprintedRows(raw, fitted, labels, gray, width, height);
+        fitted = preserveFinalRestRow(raw, fitted, labels, gray, width, height);
         final var guarded = fitted;
         boolean split = raw.stream().anyMatch(region -> fragments(region, guarded).size() == 2);
         if (!split && mergedOpening(raw, fitted).isEmpty()) return fitted;
@@ -29,6 +30,54 @@ final class PrintedMeasureRhythmGuard {
         if (!split) return preserved;
         var aligned = alignPrintedSeparators(raw, preserved, notes, gray, width, height);
         return preserveCompleteRuns(raw, aligned, notes, gray, width, height);
+    }
+
+    /** A sole printed full-measure rest contradicts density-inferred final-row subdivisions. */
+    static List<MeasureRegion> preserveFinalRestRow(
+            List<MeasureRegion> raw,
+            List<MeasureRegion> fitted,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height) {
+        if (raw.isEmpty()
+                || gray == null
+                || labels == null
+                || gray.length != (long) width * height
+                || labels.length != gray.length) return fitted;
+        MeasureRegion last = raw.get(raw.size() - 1);
+        if (raw.stream().filter(r -> sameRow(last, r)).count() != 1) return fitted;
+        var pieces = fragments(last, fitted);
+        if (pieces.size() < 2
+                || Math.abs(pieces.get(0).left() - last.left()) > .006f
+                || Math.abs(pieces.get(pieces.size() - 1).right() - last.right()) > .006f)
+            return fitted;
+        for (int i = 1; i < pieces.size(); i++) {
+            var a = pieces.get(i - 1);
+            var b = pieces.get(i);
+            // Expanded multi-rests repeat geometry and must retain every logical bar.
+            if (b.left() < a.right()
+                    || b.left() - a.right() > .015f
+                    || printedBarline(last, (a.right() + b.left()) * .5f, gray, width, height))
+                return fitted;
+        }
+        var score = OmrScoreInterpreter.analyze(labels, gray, width, height, List.of(last));
+        if (!score.notes().isEmpty() || score.rests().size() != 1) return fitted;
+        var rest = score.rests().get(0);
+        if (!rest.isFullMeasure()
+                || rest.staffCount() != 1
+                || rest.positionInMeasure() < .25f
+                || rest.positionInMeasure() > .75f) return fitted;
+        List<MeasureRegion> result = new ArrayList<>();
+        boolean added = false;
+        for (var region : fitted) {
+            if (!pieces.contains(region)) result.add(region);
+            else if (!added) {
+                result.add(last);
+                added = true;
+            }
+        }
+        return List.copyOf(result);
     }
 
     /** Ledger lines below a staff can resemble a short, overlapping second system. */
