@@ -20,8 +20,43 @@ final class PrintedStaffEnd {
                 || bars.size() < 3
                 || rules == null) return null;
         int end = bars.get(bars.size() - 1);
-        for (int i = bars.size() - 2; i >= Math.max(1, bars.size() - 4); i--) {
-            int cut = bars.get(i);
+        var cuts = new java.util.LinkedHashSet<Integer>();
+        for (int i = bars.size() - 2; i >= Math.max(1, bars.size() - 4); i--) cuts.add(bars.get(i));
+        // A missing semantic closing bar may leave only a later artwork boundary.
+        // Search the bounded final tail, then apply the same rail/background proofs below.
+        var endRules =
+                PrintedStaffAdmission.evidence(
+                        gray,
+                        width,
+                        height,
+                        Math.round(end - gap * 4),
+                        Math.round(end - gap * .1f),
+                        gap,
+                        rules);
+        if (!printedClosingBar(gray, width, height, end, gap, rules)
+                || endRules.alignedColumns() < endRules.columns() * .7f
+                || endRules.longestRun() < gap * 2.4f) {
+            for (int x = Math.max(bars.get(bars.size() - 2) + 1, Math.round(end - gap * 8));
+                    x < end - gap * 2.5f;
+                    x++) {
+                Integer printed = printedClosingColumn(gray, width, height, x, gap, rules);
+                if (printed != null) {
+                    var contact =
+                            PrintedStaffAdmission.evidence(
+                                    gray,
+                                    width,
+                                    height,
+                                    Math.round(printed - gap * .35f),
+                                    Math.round(printed - gap * .1f),
+                                    gap,
+                                    rules);
+                    if (contact.columns() >= gap * .15f
+                            && contact.alignedColumns() >= contact.columns() * .7f)
+                        cuts.add(printed);
+                }
+            }
+        }
+        for (int cut : cuts) {
             if (end - cut < gap * 2.5f) continue;
             var left =
                     PrintedStaffAdmission.evidence(
@@ -69,6 +104,16 @@ final class PrintedStaffEnd {
             int cut,
             float gap,
             PrintedStaffAdmission.Rules rules) {
+        return printedClosingColumn(gray, width, height, cut, gap, rules) != null;
+    }
+
+    private static Integer printedClosingColumn(
+            byte[] gray,
+            int width,
+            int height,
+            int cut,
+            float gap,
+            PrintedStaffAdmission.Rules rules) {
         int radius = Math.max(1, Math.round(gap * .6f)), flank = Math.max(2, Math.round(gap * .4f));
         for (int x = Math.max(flank, cut - radius);
                 x <= Math.min(width - flank - 1, cut + radius);
@@ -80,9 +125,9 @@ final class PrintedStaffEnd {
                 if ((gray[y * width + x - flank] & 255) >= ink + 8
                         && (gray[y * width + x + flank] & 255) >= ink + 8) hits++;
             }
-            if (hits >= (bottom - top + 1) * .85f) return true;
+            if (hits >= (bottom - top + 1) * .85f) return x;
         }
-        return false;
+        return null;
     }
 
     private static boolean variedBackground(

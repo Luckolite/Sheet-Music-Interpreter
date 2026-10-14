@@ -5091,7 +5091,14 @@ final class OmrScoreInterpreter {
                                     || firstInRow
                                             && candidate.label == OmrMeasurePostProcessor.SYMBOL
                                             && completeHeaderTreble(c, staff))
-                            && c.maxX < boundary
+                            && (c.maxX < boundary
+                                    || firstInRow
+                                            && candidate.label
+                                                    == OmrMeasurePostProcessor.CLEF_OR_KEY
+                                            && c.minX >= boundary
+                                            && c.minX - boundary <= staff.gap * 4
+                                            && c.maxX - boundary <= staff.gap * 7
+                                            && completeHeaderTreble(c, staff))
                             && c.maxX > boundary - staff.gap * (firstInRow ? 16 : 10)
                             && (c.maxY - c.minY > staff.gap * 4.5f
                                             && c.maxX - c.minX > staff.gap * 1.1f
@@ -5253,6 +5260,7 @@ final class OmrScoreInterpreter {
                     }
                 }
                 glyphs.sort(Comparator.comparingDouble(SignatureGlyph::x));
+
                 List<SignatureGlyph> singleBarRun =
                         singleBarCancellationRun(
                                 labels,
@@ -9184,10 +9192,13 @@ final class OmrScoreInterpreter {
     }
 
     private static boolean narrowShadedLedgerCrossing(
-            byte[] gray, int width, int height, int x, int y, float gap) {
+            byte[] gray, int width, int height, int x, int y, float gap, int inkLimit) {
         int core = 255;
         for (int yy = y - 1; yy <= y + 1; yy++) core = Math.min(core, gray[yy * width + x] & 255);
-        if (core >= BeamInkThreshold.at(gray, width, height, x, y, y, gap) + 15) return false;
+        if (core
+                >= Math.max(
+                        inkLimit > 160 ? inkLimit : 0,
+                        BeamInkThreshold.at(gray, width, height, x, y, y, gap) + 15)) return false;
         int maximum = Math.max(1, Math.round(gap * .18f));
         int left = 0, right = 0;
         for (int d = 1; d <= maximum + 1; d++) {
@@ -9209,8 +9220,18 @@ final class OmrScoreInterpreter {
         boolean shadedLedger =
                 ShadedLedgerRule.shaded(
                         gray, width, height, head.minX, head.minY, head.maxX, head.maxY, gap);
-        boolean stemless = attachedRawStem(gray, width, height, head, gap) == null;
         int[] limits = ledgerInkLimits(gray, width, height, head, staff.pitchGap);
+        // Match the ledger's contrast when proving a pale shaft crossing its rules.
+        boolean stemless =
+                attachedRawStem(
+                                gray,
+                                width,
+                                height,
+                                head,
+                                gap,
+                                Math.max(1, Math.round(gap * .16f)),
+                                Math.min(limits[1], limits[0] + 10))
+                        == null;
         boolean reduced = roundedGrace || reducedLedgerHead(gray, width, height, head, gap);
         float minimum = ledgerRunMinimum(head, gap, reduced);
         float direction = head.centerY < staff.top ? 1 : -1;
@@ -9245,13 +9266,20 @@ final class OmrScoreInterpreter {
                                     || (gray[y * width + x] & 255) < limits[1]
                                     || (gray[(y - 1) * width + x] & 255) < limits[1]
                                     || (gray[(y + 1) * width + x] & 255) < limits[1];
-                    if (shadedLedger || distance > gap * 4.5f) {
+                    // Relaxed contrast also admits broad illustration strokes on light paper.
+                    // Require a thin printed rule, retaining a bounded shaft crossing.
+                    if (shadedLedger || limits[0] > 160 || distance > gap * 4.5f) {
                         boolean thin = ShadedLedgerRule.thin(gray, width, height, x, y, gap);
                         // A real shaft or flag can cross its own inner ledger.
-                        // Bridge only a narrow crossing within the head's span,
+                        // Bridge only a narrow crossing at the head or its stem edge,
                         // with a thin horizontal rule visible on both sides.
-                        if (!thin && !stemless && x >= head.minX && x <= head.maxX)
-                            thin = narrowShadedLedgerCrossing(gray, width, height, x, y, gap);
+                        if (!thin
+                                && !stemless
+                                && x >= head.minX - gap * .18f
+                                && x <= head.maxX + gap * .18f)
+                            thin =
+                                    narrowShadedLedgerCrossing(
+                                            gray, width, height, x, y, gap, limits[0]);
                         strong &= thin;
                         dark &= thin;
                     }

@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition52 verifies staff connector contact and missing printed endpoints,
+recovers contrast-supported triplets, and rejects bracket numeral and illustration
+fragments as notes. Complete opening clefs retain their signatures, while adaptive
+ledger checks preserve real faint shaft crossings. The191original synthetic
+scenarios contain no private score material. Guide286 layout is unchanged; audio85
+invalidates stale previews. Packaged deployment and runtime acceptance remain pending.
+
 Recognition51 preserves complete-rest boundaries across verified thick staff rules,
 parses full dynamic markings with known delivery qualifiers, and excludes shallow
 detached notation above dynamic text while retaining connected-stem rejection.

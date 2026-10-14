@@ -1428,6 +1428,187 @@ final class TripletRhythmDetector {
                         glyph, a, heads, bar, measures, gray, width, height, gap, distance);
     }
 
+    /** A complete printed bracket can own a numeral before its intervening rest is read. */
+    private static boolean printedBracketOwnsPair(
+            Glyph glyph,
+            ScoreNoteEvent a,
+            ScoreNoteEvent b,
+            List<ScoreNoteEvent> notes,
+            MeasureRegion bar,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap) {
+        if (a.beamCount() < 1
+                || a.beamCount() != b.beamCount()
+                || a.stemDirection() == 0
+                || a.stemDirection() != b.stemDirection()
+                || a.crossStaffBeam()
+                || b.crossStaffBeam()
+                || insideOtherSystem(glyph, bar, measures, width, height)) return false;
+        float top = Math.min(a.pageY(), b.pageY()) * height;
+        float bottom = Math.max(a.pageY(), b.pageY()) * height;
+        // The existing bounded retry requires real deficit from local paper. Its
+        // rule cleanup only removes ink; it cannot create a shaft or bracket.
+        var ink =
+                TupletNumeralInk.window(gray, width, height, firstX, lastX, top, bottom, gap, 165);
+        if (ink == null) return false;
+        int l = ink.left(), t = ink.top();
+        if (!bracketArm(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        Math.round(firstX - gap * .3f) - l,
+                        glyph.left() - 2 - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap * .25f)
+                || !bracketArm(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        glyph.right() + 2 - l,
+                        Math.round(lastX + gap * .3f) - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap * .25f)
+                || !connectedBracketHook(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        firstX - gap * .3f - l,
+                        glyph.left() - 2 - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap)
+                || !connectedBracketHook(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        lastX + gap * .3f - l,
+                        glyph.right() + 2 - l,
+                        glyph.top() - t,
+                        glyph.bottom() - t,
+                        gap)) return false;
+        List<ScoreNoteEvent> heads = notes;
+        float ax = (bar.left() + a.positionInMeasure() * (bar.right() - bar.left())) * width;
+        float bx = (bar.left() + b.positionInMeasure() * (bar.right() - bar.left())) * width;
+        float distance =
+                PrintedTupletBeamOwner.bracketedDistance(
+                        ink.pixels(),
+                        ink.width(),
+                        ink.height(),
+                        ax - l,
+                        a.pageY() * height - t,
+                        bx - l,
+                        b.pageY() * height - t,
+                        gap,
+                        a.stemDirection(),
+                        glyph.left() - l,
+                        glyph.top() - t,
+                        glyph.right() - l,
+                        glyph.bottom() - t);
+        if (!Float.isFinite(distance) && a.beamCount() == 1 && b.beamCount() == 1) {
+            float first =
+                    printedFlaggedShaftDistance(
+                            ink.pixels(),
+                            ink.width(),
+                            ink.height(),
+                            ax - l,
+                            a.pageY() * height - t,
+                            gap,
+                            a.stemDirection(),
+                            glyph.top() - t,
+                            glyph.bottom() - t);
+            float last =
+                    printedFlaggedShaftDistance(
+                            ink.pixels(),
+                            ink.width(),
+                            ink.height(),
+                            bx - l,
+                            b.pageY() * height - t,
+                            gap,
+                            b.stemDirection(),
+                            glyph.top() - t,
+                            glyph.bottom() - t);
+            if (Float.isFinite(first) && Float.isFinite(last)) distance = Math.max(first, last);
+        }
+        return Float.isFinite(distance)
+                && !hasCompetingBeamOwner(glyph, a, heads, bar, gray, width, height, gap, distance)
+                && !otherSystemBeamOwns(
+                        glyph, a, heads, bar, measures, gray, width, height, gap, distance);
+    }
+
+    /** Offset hooks must still join the numeral's own printed arm. */
+    private static boolean connectedBracketHook(
+            byte[] gray,
+            int width,
+            int height,
+            float endpoint,
+            int nearGlyph,
+            int top,
+            int bottom,
+            float gap) {
+        for (int x = Math.max(0, Math.round(endpoint - gap * .7f));
+                x <= Math.min(width - 1, Math.round(endpoint + gap * .7f));
+                x++) {
+            int run = 0;
+            for (int y = Math.max(0, Math.round(top - gap * .5f));
+                    y <= Math.min(height - 1, Math.round(bottom + gap * .5f));
+                    y++) {
+                run = dark(gray, width, x, y) ? run + 1 : 0;
+                if (run >= Math.max(3, Math.round(gap * .65f))
+                        && bracketArm(
+                                gray,
+                                width,
+                                height,
+                                Math.min(x, nearGlyph),
+                                Math.max(x, nearGlyph),
+                                top,
+                                bottom,
+                                gap * .25f)) return true;
+            }
+        }
+        return false;
+    }
+
+    /** Separate flagged shafts may share a printed bracket without a connecting beam. */
+    private static float printedFlaggedShaftDistance(
+            byte[] gray,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            int direction,
+            int numeralTop,
+            int numeralBottom) {
+        float nearest = Float.POSITIVE_INFINITY;
+        int center = Math.round(headX + direction * gap * .3f),
+                radius = Math.max(1, Math.round(gap * .5f));
+        for (int x = Math.max(0, center - radius); x <= Math.min(width - 1, center + radius); x++) {
+            int total = 0, hits = 0, blank = 0, lastInk = -1;
+            for (int d = Math.round(gap * .6f); d <= gap * 6; d++) {
+                int y = Math.round(headY) - direction * d;
+                if (y < 0 || y >= height) break;
+                total++;
+                if ((gray[y * width + x] & 255) < 165) {
+                    hits++;
+                    blank = 0;
+                    lastInk = y;
+                } else if (++blank > Math.max(1, Math.round(gap * .16f))) break;
+            }
+            if (lastInk < 0 || hits < gap * 2.2f || hits < (total - blank) * .92f) continue;
+            float distance = direction > 0 ? lastInk - numeralBottom : numeralTop - lastInk;
+            if (distance >= gap * .2f && distance <= gap * 2.6f)
+                nearest = Math.min(nearest, distance);
+        }
+        return nearest;
+    }
+
     private static Glyph findOwnedNumeral(
             byte[] gray,
             int width,
@@ -1954,7 +2135,7 @@ final class TripletRhythmDetector {
             int width,
             int height) {
         if (notes == null
-                || notes.size() < 4
+                || notes.size() < 3
                 || measures == null
                 || gray == null
                 || width < 1
@@ -1987,6 +2168,67 @@ final class TripletRhythmDetector {
                                             * (region.right() - region.left()))
                             * width;
             float candidateY = candidate.pageY() * height;
+            if (candidate.stemDirection() == 0) {
+                boolean printedNumeral = false;
+                for (int i = 0; i + 1 < groups.size(); i++) {
+                    Onset left = groups.get(i), right = groups.get(i + 1);
+                    if (left.indices().size() != 1 || right.indices().size() != 1) continue;
+                    ScoreNoteEvent a = voice.get(left.indices().get(0));
+                    ScoreNoteEvent b = voice.get(right.indices().get(0));
+                    float x1 =
+                            (region.left()
+                                            + a.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width;
+                    float x2 =
+                            (region.left()
+                                            + b.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width;
+                    float y1 = Math.min(a.pageY(), b.pageY()) * height;
+                    float y2 = Math.max(a.pageY(), b.pageY()) * height;
+                    if (x2 - x1 < gap * 2
+                            || x2 - x1 > gap * 18
+                            || candidateX <= x1
+                            || candidateX >= x2
+                            || candidateY >= y1 - gap && candidateY <= y2 + gap) continue;
+                    // Pitched stem-direction fields are populated after this cleanup.
+                    // The bracket side supplies a hypothesis; raw shafts must prove it.
+                    int direction = candidateY < y1 ? 1 : -1;
+                    if (a.stemDirection() != 0 && a.stemDirection() != direction
+                            || b.stemDirection() != 0 && b.stemDirection() != direction) continue;
+                    final ScoreNoteEvent ownedA = a.withStemDirection(direction);
+                    final ScoreNoteEvent ownedB = b.withStemDirection(direction);
+                    Glyph glyph =
+                            findContrastedNumeral(
+                                    gray,
+                                    width,
+                                    height,
+                                    x1,
+                                    x2,
+                                    y1,
+                                    y2,
+                                    gap,
+                                    true,
+                                    candidateX,
+                                    candidateY,
+                                    3,
+                                    false,
+                                    found ->
+                                            printedBracketOwnsPair(
+                                                    found, ownedA, ownedB, voice, region, measures,
+                                                    gray, width, height, x1, x2, gap));
+                    if (glyph != null) {
+                        printedNumeral = true;
+                        break;
+                    }
+                }
+                if (printedNumeral) {
+                    result.remove(candidate);
+                    continue;
+                }
+            }
+
             for (int i = 0; i + 2 < groups.size(); i++) {
                 for (List<Onset> group :
                         triples(groups.get(i), groups.get(i + 1), groups.get(i + 2), voice, true)) {
@@ -2208,7 +2450,7 @@ final class TripletRhythmDetector {
         Glyph candidate = null;
         int candidateLevel = -1;
         for (int pass = 0; pass < 2; pass++)
-            for (int level : new int[] {165, 140, 120, 190, 210}) {
+            for (int level : new int[] {165, 140, 120, 190, 210, 150}) {
                 var local =
                         pass == 0
                                 ? TupletNumeralInk.window(

@@ -532,6 +532,7 @@ final class OmrMeasurePostProcessor {
                         staff.boundaries.stream()
                                 .filter(x -> x <= closing)
                                 .collect(java.util.stream.Collectors.toList());
+                if (!bars.contains(closing)) bars.add(closing);
                 result.set(
                         index,
                         new StaffRun(
@@ -2328,7 +2329,18 @@ final class OmrMeasurePostProcessor {
                     int yy = Math.round(top + line * gap + slope * (xx - width * .5f));
                     if (thinHorizontalInk(gray, width, height, xx, yy, radius, gap)) hits++;
                 }
-                if (samples >= gap * 2 && hits >= samples * .35f) supported++;
+                int nearSamples = 0, nearHits = 0;
+                for (int offset = 0; offset <= Math.round(gap); offset++) {
+                    int xx = x + side * offset;
+                    if (xx < 0 || xx >= width) continue;
+                    nearSamples++;
+                    int yy = Math.round(top + line * gap + slope * (xx - width * .5f));
+                    if (thinHorizontalInk(gray, width, height, xx, yy, radius, gap)) nearHits++;
+                }
+                if (samples >= gap * 2
+                        && hits >= samples * .35f
+                        && nearSamples >= gap * .5f
+                        && nearHits >= nearSamples * .6f) supported++;
             }
             if (supported >= 3) return true;
         }
