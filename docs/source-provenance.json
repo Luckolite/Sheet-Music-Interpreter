@@ -372,14 +372,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "690912b6c9a37aa088780feebfb012a3d505832b46e323915acf000673db1647",
-      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
-      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
-      "review_note": "Require continuity within claimed sharp spines while preserving small raster gaps. Six original procedural controls reject disconnected fragments without changing model weights or public diagnostics.",
-      "source_normalized_sha256": "5dcdc14ce88a29b732b79c92453e066b44e038a2eda1c9f500204ec9e31fb762",
+      "source_sha256": "56353bc1054bded09d0cad2d0465ad7ad3a1a3e6d4fa32c3dcd7b1efde2092d1",
+      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
+      "source_normalized_sha256": "9c8d6928619ad93b548981af04bd90389a81026ff4cfba65f5c2c6820d3f08e9",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
-      "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
+      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
+      "standalone_sha256": "c70b566200aee2c775f9d60d5ca533e43ed3249f5b738a6655a8a082e82c19b4",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -1522,13 +1522,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "d51af20cca32fe84abacb77072e6eabfb1538aee70b7bebdf7ce224775c50696",
-      "source_normalized_sha256": "94889b4342f1e0fe3a9db1707a80758b4786a9ed2117ec0f0a1eb64a2dd71df3",
-      "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
-      "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
-      "standalone_sha256": "f243205702be13c4dc5846697dc757f5c73d3898aa608f67ec9af732dd051f79",
+      "source_sha256": "1cea43e32db0b58617ef48ae2601a88e8edc41b2a27a3cff9a5a87f191def25d",
+      "source_normalized_sha256": "1e56e96338891a2241c95106339468ce2db46902f051e9c556d65a77c47dc972",
+      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
+      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
+      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "standalone_sha256": "ab4ae9f11616d067368e7b39693789c5b764034c4c875ce27fb0d100afc303c6",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1586,14 +1586,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "4b474af161780b40c88ff47dd55847c34a6f43e296355afa863bf910b4897645",
-      "source_normalized_sha256": "1beb6ec339c10f52acf589532e060bca10fad89438bc479c24a15fbb3d8e8ae6",
-      "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
-      "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
+      "source_sha256": "2545258b2682f53ce492d2cb54193d9b6696a0bd01d3630b49a0905e10780ed4",
+      "source_normalized_sha256": "84bbbf47d38b182672c6696d5676b1f267141046374a29b82b233df828b814c1",
+      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
+      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
+      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "9a06da08f9e1f36dd5ec62b4b311eaf53c7461a1787f3955ef3d8c7c70c9b0c0",
+      "standalone_sha256": "8f72e3941062b3f2ea18b2976a8672012ed3d554f40ebe7436795f025f14046d",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -6214,5 +6214,24 @@
     "memory": "Scan already ordered attacks and retain only actual clef changes, rather than a map/set per onset.",
     "qualification": "All46MusicXML and11unpitched export controls pass. Three original baseline/fixed renderer pairs retain alto, octave-treble and mid-measure changes with exact parsed MIDI.",
     "boundary": "Standalone exporter-specific source repair; no app/native worker/model/guide/recognition/audio change, no deployment, no broad score/device accuracy claim."
+  },
+  "thin_flag_sampling_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+    "scope": "One hasCurvedFlag left-edge sampling expression plus paired recognition38 cache epoch and original procedural regressions.",
+    "originalRegression": "FlagWindowCoverageTest.java",
+    "originalTests": 5,
+    "baselineFailures": 1,
+    "privateFocusedTestsIncludingNewControls": 267,
+    "guardPolicy": "Returning-bow, notehead, staff-rule and proximal-root exclusions retained; no arbitrary duration shortening or song-specific rule.",
+    "recognitionRevision": 38,
+    "guideFormat": 285,
+    "audioVersion": 79,
+    "reviewedAdaptations": [
+      "Existing Diagnostics.log replaces Android Log.i and tag; no numerical difference",
+      "Package/header namespace",
+      "Python package-relative imports"
+    ],
+    "boundary": "Private fresh-page counterfactual changes one duration owner with other source fields unchanged and removes five unwanted fragments while retaining the original cross-bar tie. Narrow evidence, not broad accuracy or device acceptance. Private source pixels/names are not fixtures; packaged paired rollout remains deferred."
   }
 }

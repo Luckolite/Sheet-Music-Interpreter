@@ -1519,3 +1519,24 @@ context must agree. Eight original synthetic tests cover these boundaries.
 App commit `324049c961ed142df8fa08ec51bdaddc4ac03776` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Thin rooted flag sampling
+
+Scoped app commit `887152d60e74566926974d0fe4e16cb3863c8391` changes only the left sample edge
+of hasCurvedFlag to include the pixel intersected by its continuous quarter-gap
+boundary. Rounding previously lost a thin proximal root at half-pixel coordinates,
+turning a flagged eighth into a quarter and causing unwanted continuation ink.
+Root, returning-bow, head-ink and staff-rule guards are unchanged.
+
+Five original procedural controls reproduce one baseline failure and pass with
+the repair;262existing flag/beam controls also pass. Private fresh-mask replay
+changes one duration owner while preserving other source fields; the actual
+app writer/HTML renderer removes five extra fragments and retains the original
+cross-bar tie. No private pixels, source names, scans or model weights are
+published, and this is not a whole-library accuracy claim.
+
+Recognition38invalidates older guides across app, Hub and both writers. Guide285
+and audio79are unchanged. Java counterparts match after namespace/header and
+the existing Android Log.i to Diagnostics.log adaptation; Python writer AST
+matches after package-relative import normalization. Full packaged app/paired
+worker rollout remains user-deferred.

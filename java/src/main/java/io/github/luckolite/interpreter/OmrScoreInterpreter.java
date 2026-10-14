@@ -19818,7 +19818,7 @@ final class OmrScoreInterpreter {
             int end,
             boolean upward,
             boolean pale) {
-        int left = Math.max(0, Math.round(stemX + gap * .25f));
+        int left = Math.max(0, (int) Math.floor(stemX + gap * .25f));
         int right = Math.min(width - 1, Math.round(stemX + gap * 1.5f));
         int top = Math.max(0, Math.round(upward ? end : end - gap * 2.3f));
         int bottom = Math.min(height - 1, Math.round(upward ? end + gap * 2.3f : end));
