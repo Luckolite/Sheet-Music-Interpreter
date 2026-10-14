@@ -1740,3 +1740,27 @@ Only the standalone adapter's source fingerprint changes. Recognition, model,
 wire, guide and audio identities and mapped-source hashes remain unchanged.
 The public Java artifact is rebuilt for the optional metadata; cumulative APK
 and packaged Hub/worker deployment remain user-deferred.
+
+## App auxiliary ornament export parity
+
+App commit `726e58c2c48cf67a0ea2fe57bb2d26a1feb71fc5` now preserves the same
+explicit above/below flat, natural and sharp flags already supported by the
+original standalone ornament adapter. Eight original app controls cover the
+five glyph types, both sides, explicit natural signs, differing chord heads,
+default-key behavior and tied-fragment ownership. All 72 focused app controls
+pass; five positive controls fail against the old writer. Two additional
+standalone scalar controls verify all six side/sign encodings and absence of
+invented default-key signs. Written pitch and clock identity are preserved.
+
+The separate GPL-3.0-only renderer source packet in
+[Sheet-Music-Hub commit 8b3a184](https://github.com/Luckolite/Sheet-Music-Hub/commit/8b3a1842ad56609b9263bfb64f6d8153dc4a7f2b)
+retains plain-ornament auxiliaries in parser/native fields, ink bounds and XML
+export. Its extracted-function and geometry controls and Qt syntax checks do
+not prove a newly linked renderer's runtime. The existing app bundle ignores
+the additional source XML marks and retains exact synthetic PNG/MIDI/native/XML
+output. Visible support, native lifecycle/font/layout verification and render
+cache invalidation remain queued for final renderer adoption. Wavy trill
+auxiliaries, delayed-turn placement and auxiliary pitch realization remain open.
+
+No GPL implementation is copied into this Apache-2.0 repository. No recognition,
+model, mapped source hash, wire, guide or audio identity changes are included.

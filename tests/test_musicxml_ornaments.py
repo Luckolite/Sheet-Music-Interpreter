@@ -44,6 +44,17 @@ class MusicXmlOrnamentTests(unittest.TestCase):
         root=self.export(document([(1<<5)|(2<<9)]))
         self.assertEqual('natural',root.findtext('.//accidental-mark'))
 
+    def test_source_auxiliary_side_flags_match_app_export(self):
+        for flag,side,value in [(512,'above','flat'),(1024,'above','natural'),(1536,'above','sharp'),
+                                (2048,'below','flat'),(4096,'below','natural'),(6144,'below','sharp')]:
+            root=self.export(document([32|flag]))
+            marks=root.findall('.//accidental-mark')
+            self.assertEqual([(side,value)],[(m.get('placement'),m.text) for m in marks])
+
+    def test_key_default_does_not_invent_auxiliary_on_supported_glyphs(self):
+        for kind in range(1,6):
+            self.assertEqual([],self.export(document([kind<<5])).findall('.//accidental-mark'))
+
     def test_single_tremolo_keeps_printed_beam_count(self):
         for beams in (1,2,3,4):
             root=self.export(document([beams<<16],duration=2))
