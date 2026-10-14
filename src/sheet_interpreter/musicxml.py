@@ -8,7 +8,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export
+from . import clef_export, articulation_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -129,7 +129,8 @@ def expression_direction(measure, mark, offset):
 
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
-              gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False):
+              gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
+              articulation_flags=0):
     node = element(measure, 'note')
     if chord:
         element(node, 'chord')
@@ -167,7 +168,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     effect = event.get('guitarEffect') if event else None
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
-    if stop or start or effect or symbols or gliss_start or gliss_stop:
+    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags:
         notation = element(node, 'notations')
         for active, kind in ((stop, 'stop'), (start, 'start')):
             if active:
@@ -184,6 +185,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
             if effect.get('vibrato'):
                 description += ' vibrato'
             element(notation, 'other-notation', description, type='single')
+        if articulation_flags:
+            articulation_export.write(notation, articulation_flags)
         for symbol in symbols:
             kind = symbol['kind']
             if kind == 'FERMATA':
@@ -286,7 +289,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if duration <= 0 or start + duration > local_start + 2:
                 raise ValueError('MusicXML note duration lies outside the page timeline')
             events.append(dict(n, start=offset+start, end=offset+min(local_start,start+duration), tie_stop=False, tie_start=False,
-                               sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index)))
+                               sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
+                               retainedArticulations=articulation_export.retained(page, note_index)))
         from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
         def absolute(anchor):
             if anchor is None:
@@ -473,6 +477,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 for (start, end), chord in sorted(segments.items()):
                     if start > cursor:
                         emit_rest_gap(measure, cursor, start, voice, rest_symbols, literal_edges)
+                    articulation_flags = articulation_export.chord_marks(chord, start)
                     for ci, n in enumerate(chord):
                         if start == n['start'] and start in clef_changes and start not in emitted_clefs:
                             clef_export.write(element(measure, 'attributes'), clef_changes[start])
@@ -480,7 +485,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                         emitted = emit_note(measure, end-start, voice, n, chord=ci>0,
                                   stop=n['start']<a or n['tie_stop'], start=n['end']>b or n['tie_start'], flats=bar['key']<0,
                                   gliss_start=end==n['end'] and 'gliss_start' in n,
-                                  gliss_stop=start==n['start'] and 'gliss_stop' in n, fragment_end=end)
+                                  gliss_stop=start==n['start'] and 'gliss_stop' in n, fragment_end=end,
+                                  articulation_flags=articulation_flags[ci])
                         if start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
                             slur_attacks[n['sourceIdentity']] = emitted
                     cursor = end

@@ -68,6 +68,11 @@ endpoints do not borrow replacement notes. Cross-part slurs require an explicit
 part mapping; this staff-per-part exporter reports that limitation rather than
 silently dropping a confirmed phrase.
 
+MusicXML preserves retained accents, marcato, staccato, tenuto and staccatissimo
+on their original attack fragments. Common shared-stem chord marks appear once;
+differing head marks and independent voices remain distinct. Unrelated or partial
+event lists cannot borrow marks from source notes.
+
 MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
 clefs from the retained note context, including changes inside measures. Note
 pitches and playback stay unchanged. Without reliable source clef metadata, the

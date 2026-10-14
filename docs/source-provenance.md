@@ -1642,3 +1642,20 @@ Recognition42 invalidates prior guides across the app, Hub and both writers.
 Guide285/audio79 and their record layouts remain unchanged. The native decoder
 source list explicitly includes the new helper. Packaged app/worker rollout
 remains user-deferred.
+
+## Standalone basic articulation export
+
+The original Python `articulation_export.py` adapter retains the five basic
+`NoteArticulation` flags from raw source heads only when the decoded event count,
+source index and measure/staff context agree. Ornament and guitar-effect bits
+are excluded. Marks attach to the original attack fragment, not artificial tied
+continuations. Common shared-stem chord flags appear once; differing head flags
+and independent voices remain intact. This changes exported glyphs without
+altering written pitches, voices, ties or clocks.
+
+Ten original logical-score controls cover all five glyphs, marcato orientation,
+shared and independent voices, cross-bar fragments, stale source identity,
+invalid flags, unpitched heads and exact structural preservation outside the
+added glyphs. Seven controls fail against the previous exporter. No private
+score material or external implementation was used. Java recognition, model,
+wire and cache identities remain unchanged; packaged rollout remains deferred.
