@@ -1509,3 +1509,13 @@ variants remain unresolved. Twenty-one original synthetic tests cover these boun
 App commit `12b953e7db0a0ae0604191a63e9c32765bea3004` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Collection opening section titles
+
+Medley and suite opening section titles beside tempo markings belong to the score,
+preventing duplicate contributor suggestions. Explicit roles, known names and located
+review evidence remain protected. Collection headings, nearby tempo and first-staff
+context must agree. Eight original synthetic tests cover these boundaries.
+App commit `324049c961ed142df8fa08ec51bdaddc4ac03776` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.

@@ -2045,15 +2045,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "ea228bcd85a00ac326649967fca4a5b19ae1f7844c62c150f8d31d2e4825e6cf",
-      "source_normalized_sha256": "5880d48ec97dc95ffcd38e22767fdeed0b82207a43f45e3841204da957b42edf",
+      "source_sha256": "7095b9258f9ae7f2011ea22ebaeaa799ff605a2c43e8c326f3e0864f37c130ac",
+      "source_normalized_sha256": "7c1b21f4d972771b86aa72dab921a965f57f462d0ba9661711cf6cd94def2fe3",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "dddc633cb3e27cffaa1e76b66d5dcf355ad5d57923ce879d82a819ffb0d89a40",
+      "standalone_sha256": "d4439b64ef0875e7772f0e48843807b68be26b006ad35d3587ae3aefe9aa6b0a",
       "license": "Apache-2.0",
-      "review_note": "Engraved instrument-part and numbered-work title layout; context-anchored mixed-case coauthors. Original synthetic controls preserve independent names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
-      "reviewed_app_commit": "12b953e7db0a0ae0604191a63e9c32765bea3004",
+      "review_note": "Collection opening section ownership requires medley or suite context, tempo and staff geometry; original controls preserve independent names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
+      "reviewed_app_commit": "324049c961ed142df8fa08ec51bdaddc4ac03776",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

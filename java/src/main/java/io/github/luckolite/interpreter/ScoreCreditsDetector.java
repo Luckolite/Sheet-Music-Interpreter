@@ -3892,6 +3892,7 @@ public final class ScoreCreditsDetector {
                                             .noneMatch(r -> intersects(r.line, line))
                             || compoundInstrumentationCaption(line.text)
                             || centeredWorkSubtitle(page, heading, line, knownNames)
+                            || collectionOpeningSection(page, heading, line, lines, knownNames)
                             || instructionalDocumentHeading(page, heading, lines)
                                     && paragraphLine(page, line, lines)
                             || staffCharacterDirection(page, line, lines, titleLimit)
@@ -4126,6 +4127,42 @@ public final class ScoreCreditsDetector {
     /** Smaller names beside an opening score heading remain evidence for role review. */
 
     /** Parenthetical source-work and catalogue subtitles occupy the heading column. */
+
+    /** A collection's opening movement label belongs to the staff, not its contributors. */
+    private static boolean collectionOpeningSection(
+            Page page, Line heading, Line line, List<Line> lines, Set<String> knownNames) {
+        if (page.photographicCover
+                || page.notationTop <= 0
+                || heading == null
+                || line.top <= heading.bottom
+                || line.bottom > page.notationTop
+                || line.top < page.notationTop - page.height * .09f
+                || line.center() > page.width * .4f
+                || line.height() >= heading.height() * .85f
+                || knownNames.stream().anyMatch(n -> same(n, line.text))
+                || page.reviewCredits.stream().anyMatch(r -> intersects(r.line, line)))
+            return false;
+        boolean collection =
+                lines.stream()
+                        .anyMatch(
+                                l ->
+                                        l.bottom <= heading.bottom + page.height * .035f
+                                                && clean(l.text)
+                                                        .matches(
+                                                                "(?iu).*\\b(?:medley|suite)\\b.*"));
+        if (!collection) return false;
+        return lines.stream()
+                .anyMatch(
+                        l ->
+                                l != line
+                                        && l.top > heading.bottom
+                                        && Math.abs(l.top - line.top) < page.height * .045f
+                                        && l.center() < page.width * .4f
+                                        && clean(l.text)
+                                                .matches(
+                                                        "(?iu)^(?:andante|allegro|adagio|moderato|slowly|fanfare|con\\h+bravura|sostenuto)\\b.*"));
+    }
+
     private static boolean centeredWorkSubtitle(
             Page page, Line heading, Line line, Set<String> knownNames) {
         String text = clean(line.text);
