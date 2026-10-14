@@ -3488,8 +3488,38 @@ public final class ScoreCreditsDetector {
                 && CreditOcrIdentifierGuard.preservesIdentifiers(before, printed);
     }
 
+    /** A lone name-shaped photograph heading has no independent work-title evidence. */
+    private static String isolatedPhotographicHeading(String fallback, List<Page> pages) {
+        if (fallback.isEmpty() || pages.size() != 1) return "";
+        Page p = pages.get(0);
+        if (!p.photographicCover
+                || p.creditsOnly
+                || p.notationTop > 0
+                || !p.reviewCredits.isEmpty()) return "";
+        List<Line> text = p.lines.stream().filter(l -> !clean(l.text).isEmpty()).toList();
+        if (text.size() != 1) return "";
+        Line l = text.get(0);
+        String value = clean(l.text);
+        int words = value.split("\\h+").length;
+        if (words < 2
+                || words > 3
+                || !properReviewName(value)
+                || credit(value) != null
+                || LEGAL.matcher(value).find()
+                || NOT_TITLE.matcher(value).find()
+                || same(fallback, value)
+                || corroboratesTitleHint(fallback, value)
+                || l.top < 0
+                || l.bottom > p.height * .5f
+                || l.height() < p.width * .025f) return "";
+        return value;
+    }
+
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
         String fallback = clean(titleHint);
+        String isolatedPhotoName = isolatedPhotographicHeading(fallback, pages);
+        if (!isolatedPhotoName.isEmpty())
+            return new Result(fallback, "", "", "", List.of(isolatedPhotoName));
         String narrativeArtwork = ambiguousNarrativeArtwork(fallback, pages);
         if (!narrativeArtwork.isEmpty()) return new Result(fallback, "", "", "", List.of());
         Set<String> artists = new LinkedHashSet<>(), composers = new LinkedHashSet<>();

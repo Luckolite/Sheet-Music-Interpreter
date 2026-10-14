@@ -1829,3 +1829,13 @@ No mapped source, Java bridge, recognition/model, wire, guide or audio identity
 changes are included. No private score material or GPL implementation is used.
 These checks prove exporter glyph/ratio/clock structure, not notation-reader
 rest/tuplet-group layout or rebuilt renderer MIDI output.
+
+## Ambiguous photograph headings
+
+A lone uncorroborated name-shaped photograph heading retains the imported title,
+keeping the printed text for review without assigning a role. Matching titles and
+explicit credits retain normal handling; non-photographic pages are unaffected.
+Eight original synthetic tests cover these boundaries.
+App commit `290ad49ea4b779aa16b82191e0f36efab62895a0` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.

@@ -2082,15 +2082,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "fd5cec200f6026047c562ff89f897b1a67ae0e2a2337f48980c40e936122122f",
-      "source_normalized_sha256": "1f0ca801dc6d9b4420d903a4e4b6545582d276f08476abc622fb0db02b575cd3",
+      "source_sha256": "28a094d019cc47168027a8bd29bad811ea3e4c58698ccddaf51eea9d3ca50ba0",
+      "source_normalized_sha256": "636a38f3663c3f062ca8c1490a027a6106109f802b7b107fc3f0179353c4d94f",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "4db1ecd2191580395a92933a864f4bcb6230c10e06e362709054cf3fe3a76d95",
+      "standalone_sha256": "80253b58e3b1d7eb0ba015987efaef50b3cf0224b0d7771f5d27830616cc22f8",
       "license": "Apache-2.0",
-      "review_note": "Accompaniment captions recognize tunes, songs and pieces under existing audio-context and aligned-list guards. Original synthetic controls preserve ambiguous names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
-      "reviewed_app_commit": "1239c897ab24cc30d7cc0ded46c2bc57ebb6ce38",
+      "review_note": "Single ambiguous photograph headings preserve the caller title and unresolved text. Original controls preserve matching titles, explicit credits and non-photographic behavior. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
+      "reviewed_app_commit": "290ad49ea4b779aa16b82191e0f36efab62895a0",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
