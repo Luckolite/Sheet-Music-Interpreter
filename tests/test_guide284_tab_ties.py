@@ -29,9 +29,13 @@ class TypedTabTieWriterTests(unittest.TestCase):
         original = score()
         old = wire.encode(original, 283)
         new = wire.encode(original)
-        self.assertEqual(284, struct.unpack_from('>i', new)[0])
-        self.assertEqual(35, wire.RECOGNITION_REVISION)
-        self.assertEqual(old[4:], new[4:])
+        self.assertEqual(285, struct.unpack_from('>i', new)[0])
+        self.assertEqual(36, wire.RECOGNITION_REVISION)
+        from sheet_interpreter import slur_wire
+        empty = slur_wire.encode_source(None, len(original['notes']))
+        self.assertEqual(old[4:], new[4:-len(empty)])
+        self.assertTrue(new.endswith(empty))
+        self.assertEqual(24,len(empty))
         original['notes'][0]['boundaryTies'] = identity()
         typed = wire.encode(original)
         self.assertEqual(len(new), len(typed))
@@ -80,4 +84,4 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
     def test_future_format_rejects(self):
         with self.assertRaises(ValueError):
-            wire.encode(score(), 285)
+            wire.encode(score(), 286)

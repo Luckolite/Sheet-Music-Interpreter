@@ -21,11 +21,11 @@ public class PrintedSlurPageCaptureTest {
         return gray;
     }
 
-    private PrintedSlurPageCapture.Frame frame(int voice, int endPitch) {
+    private PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head> frame(int voice, int endPitch) {
         var track =
                 StaffPitchTrack.fromVerifiedSamples(
                         List.of(new float[] {0, 150, 12}, new float[] {W - 1, 150, 12}));
-        return new PrintedSlurPageCapture.Frame(
+        return new PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head>(
                 0,
                 20,
                 W - 1,

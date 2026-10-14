@@ -234,3 +234,31 @@ gain ownership; it is always true for a shared-staff broadcast. Renderers must
 preserve these flags and apply these semantics before consuming projected dynamics.
 
 Double-sharp notes use `writtenAccidental: 3` (two sounding semitones); `2` remains the no-local-accidental sentinel. A treble clef with an 8 above uses `clefBottomDiatonic: 37` (E5), and ends at the next printed clef. MIDI events already include these pitch changes.
+## Printed slur source identities
+
+Use the explicit physical-page Java overload when retaining printed arc evidence:
+
+```java
+ScorePageInterpretation page = SheetInterpreter.analyze(
+    labels, gray, width, height, annotations, ocr, physicalPageIndex);
+```
+
+`physicalPageIndex` is a nonnegative source-page index. Legacy overloads retain
+unknown page ownership. The input pixels and retained note fields stay unchanged.
+
+`page.slurSource().spans()` contains confirmed phrases. `candidates()` contains
+geometrically owned arcs whose musical classification remains unresolved. Unknown
+meter, key, pitch or timing does not supply invented musical evidence. Original
+page/note anchors survive selections, reordered notes, page joins and deleted
+endpoints; an inserted note cannot borrow an original identity.
+
+Once score assembly has a consistent written tick clock, grace ordering, proved
+sounding pitches and exact tie owners, `ScoreSlurClassification.resolve` can
+promote candidates. Exact sounding ties are already represented; ambiguous
+same-pitch reattacks, missing owners and unavailable context remain deferred.
+Previously confirmed intent survives later pitch edits.
+
+Guide285 appends bounded source framing after the semantic sections. SLT1 bytes
+remain unchanged for confirmed-only data; SLT2 carries a separate deferred arc
+section. The Python `guide_writer` accepts both source shapes, and older guide
+formats reject a downgrade that would lose retained source evidence.

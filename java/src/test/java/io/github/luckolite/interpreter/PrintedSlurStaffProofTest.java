@@ -28,7 +28,9 @@ public class PrintedSlurStaffProofTest {
         assertTrue(t.verified());
         assertEquals(210, t.at(600)[0], .1);
         assertEquals(10, t.at(600)[1], .1);
-        var f = new PrintedSlurPageCapture.Frame(0, 100, W - 1, 260, t, List.of());
+        var f =
+                new PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head>(
+                        0, 100, W - 1, 260, t, List.of());
         var r = PrintedSlurPageCapture.capture(9, 0, g, null, W, H, List.of(f), Set.of());
         assertFalse(r.limitReached());
         assertTrue(r.source().spans().isEmpty());
@@ -128,7 +130,9 @@ public class PrintedSlurStaffProofTest {
                 List.of(
                         new PrintedSlurOwners.Head(0, 200, 145, 0, 1, 0, 0, 83),
                         new PrintedSlurOwners.Head(1, 350, 155, 0, 1, 0, 10080, 79));
-        var frame = new PrintedSlurPageCapture.Frame(0, 90, W - 1, 260, t, heads);
+        var frame =
+                new PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head>(
+                        0, 90, W - 1, 260, t, heads);
         var r = PrintedSlurPageCapture.capture(9, 2, g, null, W, H, List.of(frame), Set.of());
         assertEquals(1, r.source().spans().size());
         assertEquals(new ScoreSlurPages.Anchor(9, 0), r.source().spans().get(0).start());

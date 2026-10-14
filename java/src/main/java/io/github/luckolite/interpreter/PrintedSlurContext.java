@@ -78,6 +78,37 @@ final class PrintedSlurContext {
         return List.copyOf(result);
     }
 
+    static List<PrintedSlurOwners.GeometryHead> geometryHeads(
+            List<ScoreNoteEvent> notes, List<MeasureRegion> measures, int width, int height) {
+        if (width <= 0 || height <= 0)
+            throw new IllegalArgumentException("Invalid source pixel dimensions");
+        var result = new ArrayList<PrintedSlurOwners.GeometryHead>();
+        for (int owner = 0; owner < notes.size(); owner++) {
+            var note = notes.get(owner);
+            if (note.measureIndex() >= measures.size())
+                throw new IllegalArgumentException("Printed head has no retained measure");
+            var region = measures.get(note.measureIndex());
+            if (!Float.isFinite(region.left() + region.right() + region.top() + region.bottom())
+                    || region.left() < 0
+                    || region.right() > 1
+                    || region.right() <= region.left()
+                    || region.top() < 0
+                    || region.bottom() > 1
+                    || region.bottom() <= region.top())
+                throw new IllegalArgumentException("Printed head has invalid measure geometry");
+            float x =
+                    (region.left() + (region.right() - region.left()) * note.positionInMeasure())
+                            * width;
+            float y = note.pageY() * height;
+            if (!Float.isFinite(x + y) || x < 0 || x >= width || y < 0 || y >= height)
+                throw new IllegalArgumentException("Printed head lies outside its source pixels");
+            result.add(
+                    new PrintedSlurOwners.GeometryHead(
+                            owner, x, y, note.staffIndex(), note.staffCount()));
+        }
+        return List.copyOf(result);
+    }
+
     private static void validateEvidence(
             Map<Integer, Integer> values, int count, int minimum, int maximum, String kind) {
         Objects.requireNonNull(values);

@@ -9,13 +9,8 @@ final class PrintedSlurPageCapture {
     private static final int MAX_FRAMES = 512;
     private static final long MAX_SCAN_PIXELS = 128L * 1024 * 1024;
 
-    record Frame(
-            int left,
-            int top,
-            int right,
-            int bottom,
-            StaffPitchTrack track,
-            List<PrintedSlurOwners.Head> heads) {
+    record Frame<T extends PrintedSlurOwners.Location>(
+            int left, int top, int right, int bottom, StaffPitchTrack track, List<T> heads) {
         Frame {
             Objects.requireNonNull(track);
             heads = List.copyOf(heads);
@@ -44,8 +39,34 @@ final class PrintedSlurPageCapture {
             byte[] labels,
             int width,
             int height,
-            List<Frame> frames,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
             Set<PrintedSlurOwners.Tie> retainedTies) {
+        return captureInternal(
+                physicalPage, noteCount, gray, labels, width, height, frames, retainedTies, false);
+    }
+
+    static Result captureGeometry(
+            int physicalPage,
+            int noteCount,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames) {
+        return captureInternal(
+                physicalPage, noteCount, gray, labels, width, height, frames, Set.of(), true);
+    }
+
+    private static Result captureInternal(
+            int physicalPage,
+            int noteCount,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            Set<PrintedSlurOwners.Tie> retainedTies,
+            boolean geometryOnly) {
         if (physicalPage < 0
                 || noteCount < 0
                 || noteCount > ScoreSlurSource.MAX_NOTES
@@ -69,6 +90,9 @@ final class PrintedSlurPageCapture {
                             (long) (frame.right() - frame.left() + 1)
                                     * (frame.bottom() - frame.top() + 1));
             for (var head : frame.heads()) {
+                if (!geometryOnly && !(head instanceof PrintedSlurOwners.Head))
+                    throw new IllegalArgumentException(
+                            "Musical classification requires explicit timed heads");
                 if (head.owner() >= noteCount
                         || head.x() >= width
                         || head.y() >= height
@@ -84,6 +108,7 @@ final class PrintedSlurPageCapture {
             return new Result(ScoreSlurSource.empty(noteCount), Map.of(), true);
 
         var spans = new ArrayList<ScoreSlurPages.Span>();
+        var candidates = new ArrayList<ScoreSlurPages.Span>();
         var statuses =
                 new EnumMap<PrintedSlurOwners.Status, Integer>(PrintedSlurOwners.Status.class);
         int ordinal = 0;
@@ -108,12 +133,29 @@ final class PrintedSlurPageCapture {
                 return new Result(ScoreSlurSource.empty(noteCount), statuses, true);
             for (var bow : raw.bows()) {
                 String id = "printed-page-" + physicalPage + "-arc-" + ordinal++;
+                if (geometryOnly) {
+                    var bound =
+                            PrintedSlurOwners.bind(
+                                    id,
+                                    physicalPage,
+                                    bow,
+                                    frame.heads(),
+                                    gray,
+                                    width,
+                                    height,
+                                    frame.track());
+                    statuses.merge(bound.status(), 1, Integer::sum);
+                    bound.span().ifPresent(candidates::add);
+                    continue;
+                }
                 var owned =
                         PrintedSlurOwners.resolve(
                                 id,
                                 physicalPage,
                                 bow,
-                                frame.heads(),
+                                frame.heads().stream()
+                                        .map(h -> (PrintedSlurOwners.Head) h)
+                                        .toList(),
                                 retainedTies,
                                 gray,
                                 width,
@@ -121,11 +163,28 @@ final class PrintedSlurPageCapture {
                                 frame.track());
                 statuses.merge(owned.status(), 1, Integer::sum);
                 owned.span().ifPresent(spans::add);
+                if (owned.status() == PrintedSlurOwners.Status.UNPITCHED_UNRESOLVED
+                        || owned.status() == PrintedSlurOwners.Status.SAME_PITCH_UNRESOLVED
+                        || owned.status() == PrintedSlurOwners.Status.TIE_PITCH_CONFLICT) {
+                    PrintedSlurOwners.bind(
+                                    id,
+                                    physicalPage,
+                                    bow,
+                                    frame.heads(),
+                                    gray,
+                                    width,
+                                    height,
+                                    frame.track())
+                            .span()
+                            .ifPresent(candidates::add);
+                }
             }
         }
         return new Result(
                 ScoreSlurSource.capture(
-                        spans, List.of(new ScoreSlurPages.Page(physicalPage, noteCount))),
+                        spans,
+                        candidates,
+                        List.of(new ScoreSlurPages.Page(physicalPage, noteCount))),
                 statuses,
                 false);
     }

@@ -6,7 +6,15 @@ import java.util.*;
 
 /** Immutable printed arcs and the original identities of the current retained note slots. */
 public record ScoreSlurSource(
-        List<ScoreSlurPages.Span> spans, List<Optional<ScoreSlurPages.Anchor>> noteOrigins) {
+        List<ScoreSlurPages.Span> spans,
+        List<Optional<ScoreSlurPages.Anchor>> noteOrigins,
+        List<ScoreSlurPages.Span> candidates) {
+    /** Existing callers supply only confirmed phrases. Deferred geometry never engraves directly. */
+    public ScoreSlurSource(
+            List<ScoreSlurPages.Span> spans, List<Optional<ScoreSlurPages.Anchor>> noteOrigins) {
+        this(spans, noteOrigins, List.of());
+    }
+
     static final int MAX_NOTES = 1000000;
 
     private static final class UnownedOrigins extends AbstractList<Optional<ScoreSlurPages.Anchor>>
@@ -33,6 +41,7 @@ public record ScoreSlurSource(
         if (noteOrigins.size() > MAX_NOTES)
             throw new IllegalArgumentException("Too many retained source note identities");
         spans = List.copyOf(spans);
+        candidates = List.copyOf(candidates);
         if (!(noteOrigins instanceof UnownedOrigins)) {
             noteOrigins = List.copyOf(noteOrigins);
             if (noteOrigins.stream().allMatch(Optional::isEmpty))
@@ -42,6 +51,9 @@ public record ScoreSlurSource(
         for (var span : spans)
             if (!ids.add(span.id()))
                 throw new IllegalArgumentException("Duplicate source slur identity");
+        for (var candidate : candidates)
+            if (!ids.add(candidate.id()))
+                throw new IllegalArgumentException("Duplicate source arc identity");
         var origins = new HashSet<ScoreSlurPages.Anchor>();
         if (!(noteOrigins instanceof UnownedOrigins))
             for (var origin : noteOrigins)
@@ -57,16 +69,26 @@ public record ScoreSlurSource(
 
     public static ScoreSlurSource capture(
             List<ScoreSlurPages.Span> spans, List<ScoreSlurPages.Page> orderedPages) {
-        // Validate duplicate pages, spans and joined count before allocating origins.
-        var joined = ScoreSlurPages.join(spans, orderedPages);
+        return capture(spans, List.of(), orderedPages);
+    }
+
+    /** Captures physical endpoints while their musical classification is still unknown. */
+    public static ScoreSlurSource capture(
+            List<ScoreSlurPages.Span> spans,
+            List<ScoreSlurPages.Span> candidates,
+            List<ScoreSlurPages.Page> orderedPages) {
+        // Validate all IDs jointly before allocating original identities.
+        var arcs = new ArrayList<ScoreSlurPages.Span>(spans);
+        arcs.addAll(candidates);
+        var joined = ScoreSlurPages.join(arcs, orderedPages);
         if (joined.noteCount() > MAX_NOTES)
             throw new IllegalArgumentException("Too many captured source note identities");
-        if (spans.isEmpty()) return empty(joined.noteCount());
+        if (arcs.isEmpty()) return empty(joined.noteCount());
         var origins = new ArrayList<Optional<ScoreSlurPages.Anchor>>(joined.noteCount());
         for (var page : orderedPages)
             for (int note = 0; note < page.noteCount(); note++)
                 origins.add(Optional.of(new ScoreSlurPages.Anchor(page.pageIndex(), note)));
-        return new ScoreSlurSource(spans, origins);
+        return new ScoreSlurSource(spans, origins, candidates);
     }
 
     /** New list order is explicit; -1 denotes a new note without a printed source identity. */
@@ -80,7 +102,7 @@ public record ScoreSlurSource(
                 throw new IllegalArgumentException("Ambiguous retained edit note owner");
             origins.add(owner == -1 ? Optional.empty() : noteOrigins.get(owner));
         }
-        return new ScoreSlurSource(spans, origins);
+        return new ScoreSlurSource(spans, origins, candidates);
     }
 
     /** Missing endpoints remain in spans; only fully owned arcs are eligible for engraving. */
@@ -135,6 +157,7 @@ public record ScoreSlurSource(
     /** Join original identities without rewriting physical page ownership to output page numbers. */
     public static ScoreSlurSource join(List<ScoreSlurSource> pages) {
         var spans = new LinkedHashMap<String, ScoreSlurPages.Span>();
+        var candidates = new LinkedHashMap<String, ScoreSlurPages.Span>();
         var origins = new ArrayList<Optional<ScoreSlurPages.Anchor>>();
         int total = 0;
         for (var page : pages) {
@@ -142,14 +165,26 @@ public record ScoreSlurSource(
             if (total > MAX_NOTES)
                 throw new IllegalArgumentException("Too many joined source notes");
             for (var span : page.spans()) {
-                var prior = spans.putIfAbsent(span.id(), span);
-                if (prior != null && !prior.equals(span))
-                    throw new IllegalArgumentException("Conflicting source slur identities");
+                if (candidates.containsKey(span.id()))
+                    throw new IllegalArgumentException("Conflicting source arc classification");
+                merge(spans, span);
+            }
+            for (var candidate : page.candidates()) {
+                if (spans.containsKey(candidate.id()))
+                    throw new IllegalArgumentException("Conflicting source arc classification");
+                merge(candidates, candidate);
             }
         }
-        if (spans.isEmpty()) return empty(total);
+        if (spans.isEmpty() && candidates.isEmpty()) return empty(total);
         for (var page : pages) origins.addAll(page.noteOrigins());
-        return new ScoreSlurSource(List.copyOf(spans.values()), origins);
+        return new ScoreSlurSource(
+                List.copyOf(spans.values()), origins, List.copyOf(candidates.values()));
+    }
+
+    private static void merge(Map<String, ScoreSlurPages.Span> arcs, ScoreSlurPages.Span arc) {
+        var prior = arcs.putIfAbsent(arc.id(), arc);
+        if (prior != null && !prior.equals(arc))
+            throw new IllegalArgumentException("Conflicting source arc identities");
     }
 
     public record Resolution(List<ScoreSlurSpan> resolved, List<ScoreSlurPages.Span> unresolved) {

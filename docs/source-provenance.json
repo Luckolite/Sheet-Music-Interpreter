@@ -86,10 +86,12 @@
     },
     "semantic_wire.py": {
       "source_path": "tools/native-worker/semantic_wire.py",
-      "source_sha256": "2d9428c7ac80e40e1bab703efba81167c864b3d8034cd142488af56b5c607abd",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "5755e32d726bf08aebf4ac0da629fc7cae11dc770b4dc33760f9eb3d354cd181",
-      "review_note": "Exact shared Python semantic implementation: append stable kind19, validate typed pulse payload, explicit277 reader/writer gating. Legacy bytes retained, old headers reject new kind; original wire regressions."
+      "source_sha256": "1296e3deb7f01cc22dddf1e45450df426557032d7e54090af2a408cd82fe1f60",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "source_normalized_sha256": "a104e9ba41ac9e5a5c93dfbd48bc7a3e2979931814bf06e5f3a42a6983cfae71",
+      "review_note": "Expose bounded prefix decoding so the following source section has its own framing. Existing complete semantic decode remains strict. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending."
     },
     "HalfRestRuleBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HalfRestRuleBody.java",
@@ -527,9 +529,11 @@
       "source_sha256": "54cafed9873680ddd87712abf2b5d90932beaa39873caa63a57bc13264861565",
       "source_normalized_sha256": "b471cc5a73ffcf1350066b75193f28d445bab0d6dba8e91648982433699728a4",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes.",
-      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
-      "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending"
+      "review_note": "Previously published independently proved raw staff factory now committed with its actual caller. Existing detection paths and pitch numbers remain unchanged. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
@@ -716,12 +720,13 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "3dcda269521e9f7c446c77fedea3c3035f3d56bcf0ccaa1c502d3425503483cd",
-      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973",
-      "source_normalized_sha256": "a0869a50e1088ea5eccf031a77a15027dc12c4a956e2de50a916712ee9a56560",
+      "source_sha256": "07a21eef1f022e2a501ecf84c33de5476fcdf936e16cb91acfe629077a73172a",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "source_normalized_sha256": "866a1997f65762aa688481c64b3a62fbcaf60e1da7cd8d9f37820cdf7e7ae104",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
-      "reviewed_source_state": "Reviewed app903 source with matched standalone changed-token delta and original synthetic controls."
+      "review_note": "Expose the unchanged pitch helper within the package for shared final-note policy; pitch/tie numerical behavior unchanged. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
     },
     "ScoreTempoSelection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/playback/ScoreTempoSelection.java",
@@ -1513,12 +1518,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "2460721b0204a07b6a96b337b3b90bb96c26d1baf0fcd6947742c95e82fb17ed",
-      "source_normalized_sha256": "a11028a7523ff70b9d93c4161a975ff4f4a827faed7692db823185f54701e9b7",
-      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
-      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
-      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
-      "scoped_reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "source_sha256": "cc891552fb50a42e2cab6e64458c004328a732684852c8d7181d7dabd781715a",
+      "source_normalized_sha256": "69661cba290d80527294700a533759a52878edc9bd5cb4da78ee4140af0df6c1",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "review_note": "Guide285 and recognition36 invalidate prior page results while retaining old artifacts. App/Hub/Python writer contract agrees; audio79 unchanged. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
       "standalone_sha256": "f8cd38b41e6ff0c8938a5c139f49dac96daa73fcd157d2f772b41a0eaed473d4",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9"
     },
@@ -1576,12 +1581,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "6b4b44378dfec69eee4d5ca33039401ce12359eb40f755c8773ef13bb1f85cb9",
-      "source_normalized_sha256": "b29b0b467689f12a7f99b9e2145126b83828c2ef1f774cbec6870abd54e0f529",
-      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
-      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
-      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
-      "scoped_reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "source_sha256": "a0dadddf6540db90a2e44c40a266e4117317bde8994f90a0ea913b0d11603c40",
+      "source_normalized_sha256": "7646a07e377a4a3a8a191901e9548a63a1ef12aed9fe1b897bfacf6ce1b40d33",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Guide285 writes actual source framing; original260..284bytes stay unchanged for losslessly empty source. Owned/deferred data cannot be silently downgraded. Recognition36 matches app/Hub. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "standalone_sha256": "ad07d7992ad4e876d619f8e112d58d0dbcf5872949504b0bf71c6e69e9b95a75"
     },
@@ -2427,15 +2432,21 @@
     },
     "ScoreSlurSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurSource.java",
-      "source_sha256": "128751b318304cdc936174a499820e7c372a0e5bae7d58a57e48df85de177cbb",
-      "source_normalized_sha256": "128751b318304cdc936174a499820e7c372a0e5bae7d58a57e48df85de177cbb",
-      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+      "source_sha256": "832996aaee29f40c753647fe2a1db6d5f7c1a9a6f2e73cc63c395dce6e7460d1",
+      "source_normalized_sha256": "7b7842e3f9d252576cfd8373756ba8f880e73de9027bd3611e241a0257a53565",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Separate confirmed phrases and deferred geometric candidates; preserve immutable original page/note owners through edits, selections and joins, with joint ID uniqueness and compatible2argument construction. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
     "ScoreSlurSourceWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurSourceWire.java",
-      "source_sha256": "a16b2bdf6fea584a47b527c4a897f0abaa8d5d0d0eb4dbd62eb4f9a7e26c42b8",
-      "source_normalized_sha256": "a16b2bdf6fea584a47b527c4a897f0abaa8d5d0d0eb4dbd62eb4f9a7e26c42b8",
-      "reviewed_app_commit": "e4552477d7aa77b5e257ce0b0954ac670255b973"
+      "source_sha256": "f0980b77fc838ee8efe1dab596eda3278c7257854f1f8e12fde5bfd7beeab7f0",
+      "source_normalized_sha256": "54da919032872aa882f41b5c012b04ea3114c10ee56aa90a795000d75af92c2c",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Preserve exact SLT1 encoding without candidates; bounded SLT2 adds a separate SLP1candidate section. Original note counts, duplicate IDs, truncations and extra bytes validate strictly. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
     "ScoreSlurPagesTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/ScoreSlurPagesTest.java",
@@ -2469,26 +2480,40 @@
       "source_sha256": "7ce5ab87370175790dbb61b791b856906575ee74c9662c58afe28829112c8181",
       "source_normalized_sha256": "b4c3555edb89b0008f8faba52d70e397854ebb2c05a3780d7ab0a023d2a812b9",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
-      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes."
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Previously published raw bow and white-cap proof now committed with its actual caller; no source pixels are synthesized. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
-      "source_sha256": "6f5b26d452d2b25a729f55c18445f73cae3b6f2e2b0861b2532c30ea98016179",
-      "source_normalized_sha256": "6f5b26d452d2b25a729f55c18445f73cae3b6f2e2b0861b2532c30ea98016179",
-      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+      "source_sha256": "ca5f9476eefb07bb79da8310af3ea06d75cbce88e3bc3eec9d861b4cbbbf2774",
+      "source_normalized_sha256": "fc43ad102e3eb0f4f0d63f1785361efbf2e824bda8cb49a847a32d109f398182",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Separate raw endpoint geometry proof from pitch/clock/tie classification. GeometryHead has no invented voice, attack or pitch; existing physical staff, ink and ambiguity guards retained. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
     "PrintedSlurPageCapture.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
-      "source_sha256": "789b16897abe29508a07343cc4e02cb8756ec9c9614e76f49410ff11e75dc196",
-      "source_normalized_sha256": "789b16897abe29508a07343cc4e02cb8756ec9c9614e76f49410ff11e75dc196",
-      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+      "source_sha256": "d8bdcf51c097f1c5e4b957fa1fd0dda3d11b145598ca63c0753810e7fecb3541",
+      "source_normalized_sha256": "e8711eaa01ca9d3a2c32773a5010da184d964c1a986c3c5e73d7700653bafeb4",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Persist uniquely bound raw geometry when musical evidence is unavailable; partial scans remain discarded at bounded admission/run limits. Exact retained ties do not add duplicate phrases. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
     "PrintedSlurContext.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContext.java",
-      "source_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
-      "source_normalized_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
-      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+      "source_sha256": "7706eee4c460f4e760fbf609de44763b9650cf24bf42b7054e9de2b6b1707ec0",
+      "source_normalized_sha256": "6b1c95a489f0bd2fc49ba62a2a44dc9fe98a1c70188edf0191965ce42983c92b",
+      "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Build geometry-only owners from retained note/measure coordinates when opening meter is absent. Timed heads retain explicit written-clock and pitch requirements. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
     "LocatedCoverHeadingExpansion.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingExpansion.java",
@@ -2503,11 +2528,13 @@
     },
     "PrintedSlurFrames.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurFrames.java",
-      "source_sha256": "4e97654b52d42558cfd30585b207e3c7d402e8c16f7567d542a662d8f6de21ab",
-      "source_normalized_sha256": "23aaa268b210171ef9c072df90c2f3b9bcdde5870d7b9fcf7475ffbf2cc57eb0",
+      "source_sha256": "2604c1ba4c248265c86fcc4ad8627fd7610d95fcd2337369a92cc3f589a6dc0f",
+      "source_normalized_sha256": "e84a07469aab553f47a72335f50e0a156c2d0d1c59359fa2e9261016d454abfe",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
-      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes."
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Use common independently verified staff frames for geometry-only or timed heads. Repeated systems require unique physical phase; duplicate/stale owners reject. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
     },
     "PrintedRestDirection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestDirection.java",
@@ -2535,6 +2562,42 @@
       "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
       "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
       "review_note": "Original Apache-2.0 helper: complete preceding barline, no semantic heads, owned symbol ink, complete lower8counter pair and distinct upper numeral proof. Native source registration included. No private score pages, masks, library records, weights or new wire layout are published."
+    },
+    "ScoreSlurClassification.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurClassification.java",
+      "source_sha256": "745a9140ef62819865ac2b059feaf0eb84a889f7f1db75589f0e7e2c6b9f8dd5",
+      "source_normalized_sha256": "745a9140ef62819865ac2b059feaf0eb84a889f7f1db75589f0e7e2c6b9f8dd5",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Require actual assembled note owners, written clock/grace order, sounding pitches and exact ties. Missing/ambiguous evidence remains deferred; confirmed user intent is retained. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+    },
+    "PrintedSlurRecognition.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurRecognition.java",
+      "source_sha256": "d957705ba89f8560fba43940fd3dfcf14f1d5c24a5dbf574ed0ed6918d3cd91c",
+      "source_normalized_sha256": "7c50baa68e88a590b24b3dd5e9d4d72b17899be6dc824aa3d08f7ab8fe5b80b3",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Hook finalized page slots with explicit physical page context; unknown opening meter retains geometry and unknown key/pitch retains candidates. Existing retained/edited source is not replaced. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+    },
+    "slur_wire.py": {
+      "source_path": "tools/native-worker/slur_wire.py",
+      "source_sha256": "e5f48a39e8ac07c8c6b404ec935add519f926eff401d26b3f2352b95f3a50ce0",
+      "source_normalized_sha256": "f6a15fc450d93d06b963d4a39e336e560669b7b07346eb6f5a5358ed37e84cef",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Original Apache-2.0 Python SLT1/SLT2 and SLP1implementation; Java/Python bytes and C#validators independently qualified. Package import adaptation only. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+    },
+    "SheetInterpreter.java": {
+      "source_path": "tools/native-worker/NativePageGuide.java",
+      "source_sha256": "002d28680e00a5d7fd73a8f12c51c1cc67acecdff1c3056477d4e0120bff40e5",
+      "source_normalized_sha256": "4803bcde61595c0796f799b56430fe80808e43e148f1638bb1eb462a9a7de03c",
+      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_source_state": "Explicit standalone Java page facade adapted from the committed native analysis path.",
+      "review_note": "Legacy overloads preserve unknown physical ownership; explicit7argument overload forwards caller page identity to the same capture helper. Native CLI has its own explicit page option; model loading/inference ownership, file bridge and logging remain platform adapters. No default page zero or private input is introduced."
     }
   },
   "interpreter_speedup_review": {
@@ -6010,5 +6073,37 @@
       "scope": "One new MeterOnlyCourtesyTail helper, sorted manifest; all231selected sources and actual NativeMeterFont/NativeMusicalOcr compile without numerical rewrites or model inference."
     },
     "boundary": "Focused synthetic controls and captured-stage comparisons are distinct from fresh complete inference, assembled tempo, paired worker packaging/deployment and device acceptance."
+  },
+  "printed_slur_context_and_source285_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+    "scope": "Explicit physical-page raw slur evidence, deferred context, immutable original owners, assembled classification and actual guide285source framing.",
+    "guideFormat": 285,
+    "recognitionRevision": 36,
+    "audioVersion": 79,
+    "originalRegressions": [
+      "DeferredSourceTest.java",
+      "ScoreSlurClassificationTest.java",
+      "PrintedSlurRecognitionTest.java",
+      "StandaloneSlurPageTest.java",
+      "test_guide285_deferred_slurs.py",
+      "test_guide285_legacy_slurs.py"
+    ],
+    "adapters": [
+      "OmrMeasureAnalyzer one-shot explicit page admission",
+      "NativePageGuide explicit page arguments",
+      "SheetInterpreter legacy overload plus explicit page facade",
+      "Python package imports",
+      "App MusicXML actual final clocks/pitches/ties; fallback key/meter/clef cannot confirm candidates",
+      "Hub framing/cache-planning and mechanically extracted native audio guide reader"
+    ],
+    "nativeManifest": {
+      "path": "tools/native-worker/decoder-sources.txt",
+      "sha256": "13a043929a593e334536c4f1bd47dfd34ac7dcb53f9b5b237c28a31f617eae01",
+      "selectedSources": 242,
+      "sourceCompiledWithoutNumericalRewrite": true,
+      "courtesyMeterHelperRetained": true
+    },
+    "boundary": "Source and scoped synthetic/cache/renderer checks are distinct from fresh whole-library inference, full app HTML/style rendering, packaged worker/audio self-tests, deployment and device acceptance. These rollout checks remain pending."
   }
 }

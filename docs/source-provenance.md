@@ -1363,3 +1363,30 @@ pages, model masks, personal library records, private logs, new weights or
 wire layout are included. All231selected decoder sources and the actual
 native OCR/font callers compile. Full current inference, assembled tempo,
 packaged paired worker deployment and device behavior remain separate.
+
+## Explicit page slurs and deferred musical context
+
+Scoped app commit `48c63effa5905c396dde62b847e064573516f047` hooks the independently proved raw
+slur helpers into finalized Android/native page recognition and the explicit
+standalone Java page overload. Legacy overloads preserve unknown ownership.
+Geometry-only heads carry no invented pitch, voice or attack. Missing key,
+meter or pitch leaves candidate evidence for later score assembly. Original
+anchors survive edits and joins; removed endpoints cannot borrow new notes.
+
+Guide285retains confirmed-only SLT1bytes and adds bounded SLT2only for
+deferred candidates. Java/Python codecs and Hub validators agree. All older
+260..284layouts remain available and reject loss of retained ownership.
+The original284golden fixtures are unchanged; current fixtures include
+real source records. Recognition36is paired across app, Hub and both Python
+writers. The actual native audio reader accepts both source layouts; audio79
+is unchanged. All242selected decoder sources compile, including the
+previous courtesy-meter helper. Hub format negotiation, current/prior epoch
+rollback, planning and readers have scoped actual-source checks.
+
+App MusicXML classifies from final musical owners and preserves playback
+events; fallback key, meter or clef supplies no confirming evidence. The
+public classifier exposes this same deferred-source policy without Android
+dependencies. Model weights, lineage and third-party licenses are unchanged.
+No commercial pages, private library data, masks or logs are published.
+Full app styling, fresh whole-library accuracy, packaged paired worker/audio
+verification, deployment and device acceptance remain separate.

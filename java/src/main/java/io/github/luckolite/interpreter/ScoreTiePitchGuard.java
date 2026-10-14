@@ -171,7 +171,7 @@ final class ScoreTiePitchGuard {
         }
     }
 
-    private static int midi(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
+    static int midi(ScoreNoteEvent note, List<ScoreKeyChange> keys) {
         if (note.kind() != ScoreNoteEvent.Kind.PITCHED
                 || note.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN)
             return Integer.MIN_VALUE;

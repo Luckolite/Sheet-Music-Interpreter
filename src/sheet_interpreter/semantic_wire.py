@@ -242,7 +242,7 @@ class Reader:
             raise ValueError('Unexpected semantic bytes')
 
 
-def decode(data, measures, guide_version=277):
+def decode_prefix(data, measures, guide_version=277):
     source = Reader(data); directions, expressions = [], []; ids = set()
     for _ in range(source.count(min(100000, (measures + 1) * 64))):
         r = source.frame(); boundary, kind, offset = r.take('iid')
@@ -264,5 +264,11 @@ def decode(data, measures, guide_version=277):
         if row['eventId'] in ids:
             raise ValueError('Duplicate expressive identity')
         ids.add(row['eventId']); expressions.append(row)
-    source.finish()
+    return directions, expressions, source.offset
+
+
+def decode(data, measures, guide_version=277):
+    directions, expressions, consumed = decode_prefix(data, measures, guide_version)
+    if consumed != len(data):
+        raise ValueError('Unexpected semantic bytes')
     return directions, expressions

@@ -6,6 +6,33 @@ import java.util.*;
 
 /** Binds a proved raw bow to explicit printed heads and written attacks, independently of ties. */
 final class PrintedSlurOwners {
+    interface Location {
+        int owner();
+
+        float x();
+
+        float y();
+
+        int staffIndex();
+
+        int staffCount();
+    }
+
+    /** Pixel ownership only; no invented voice, attack or pitch. */
+    record GeometryHead(int owner, float x, float y, int staffIndex, int staffCount)
+            implements Location {
+        GeometryHead {
+            if (owner < 0
+                    || !Float.isFinite(x + y)
+                    || x < 0
+                    || y < 0
+                    || staffCount < 1
+                    || staffIndex < 0
+                    || staffIndex >= staffCount)
+                throw new IllegalArgumentException("Invalid printed geometry ownership");
+        }
+    }
+
     record Head(
             int owner,
             float x,
@@ -15,7 +42,8 @@ final class PrintedSlurOwners {
             int voice,
             long attack,
             int graceOrder,
-            int soundingPitch) {
+            int soundingPitch)
+            implements Location {
         Head(
                 int owner,
                 float x,
@@ -55,6 +83,7 @@ final class PrintedSlurOwners {
 
     enum Status {
         RESOLVED,
+        GEOMETRY_OWNED,
         NO_START_OWNER,
         NO_END_OWNER,
         AMBIGUOUS_START,
@@ -78,7 +107,16 @@ final class PrintedSlurOwners {
         }
     }
 
-    private record Candidate(Head head, double distance) {}
+    record Binding(Status status, Optional<ScoreSlurPages.Span> span) {
+        Binding {
+            Objects.requireNonNull(status);
+            Objects.requireNonNull(span);
+            if ((status == Status.GEOMETRY_OWNED) != span.isPresent())
+                throw new IllegalArgumentException("Geometry binding status disagrees with source");
+        }
+    }
+
+    private record Candidate(Location head, double distance) {}
 
     private PrintedSlurOwners() {}
 
@@ -92,9 +130,40 @@ final class PrintedSlurOwners {
             int width,
             int height,
             StaffPitchTrack track) {
+        Objects.requireNonNull(ties);
+        var binding = bind(id, page, bow, heads, gray, width, height, track);
+        if (binding.span().isEmpty()) return absent(binding.status());
+        var arc = binding.span().orElseThrow();
+        var byOwner = new HashMap<Integer, Head>();
+        for (var head : heads) byOwner.put(head.owner(), head);
+        Head a = byOwner.get(arc.start().noteIndex()), b = byOwner.get(arc.end().noteIndex());
+        // A printed slur may connect voices within the same proved physical staff.
+        // Unique raw endpoints and written order identify it without assigning a voice.
+        int order = Long.compare(a.attack(), b.attack());
+        if (order == 0) order = Integer.compare(a.graceOrder(), b.graceOrder());
+        if (order >= 0) return absent(Status.REVERSED_CLOCK);
+        if (a.soundingPitch() < 0 || b.soundingPitch() < 0)
+            return absent(Status.UNPITCHED_UNRESOLVED);
+        if (ties.contains(new Tie(a.owner(), b.owner())))
+            return absent(
+                    a.soundingPitch() == b.soundingPitch()
+                            ? Status.TIE_ALREADY_RETAINED
+                            : Status.TIE_PITCH_CONFLICT);
+        if (a.soundingPitch() == b.soundingPitch()) return absent(Status.SAME_PITCH_UNRESOLVED);
+        return new Result(Status.RESOLVED, Optional.of(arc));
+    }
+
+    static Binding bind(
+            String id,
+            int page,
+            PrintedSlurContours.Bow bow,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
         Objects.requireNonNull(id);
         Objects.requireNonNull(bow);
-        Objects.requireNonNull(ties);
         if (id.isBlank() || page < 0)
             throw new IllegalArgumentException("Invalid source arc identity");
         if (gray == null
@@ -111,27 +180,14 @@ final class PrintedSlurOwners {
                 throw new IllegalArgumentException("Duplicate printed head identity");
         var start = candidates(bow.start(), bow.above(), true, heads, gray, width, height, track);
         var end = candidates(bow.end(), bow.above(), false, heads, gray, width, height, track);
-        if (start.isEmpty()) return absent(Status.NO_START_OWNER);
-        if (end.isEmpty()) return absent(Status.NO_END_OWNER);
-        if (ambiguous(start)) return absent(Status.AMBIGUOUS_START);
-        if (ambiguous(end)) return absent(Status.AMBIGUOUS_END);
-        Head a = start.get(0).head(), b = end.get(0).head();
-        if (a.owner() == b.owner()) return absent(Status.SAME_OWNER);
+        if (start.isEmpty()) return new Binding(Status.NO_START_OWNER, Optional.empty());
+        if (end.isEmpty()) return new Binding(Status.NO_END_OWNER, Optional.empty());
+        if (ambiguous(start)) return new Binding(Status.AMBIGUOUS_START, Optional.empty());
+        if (ambiguous(end)) return new Binding(Status.AMBIGUOUS_END, Optional.empty());
+        Location a = start.get(0).head(), b = end.get(0).head();
+        if (a.owner() == b.owner()) return new Binding(Status.SAME_OWNER, Optional.empty());
         if (a.staffIndex() != b.staffIndex() || a.staffCount() != b.staffCount())
-            return absent(Status.DIFFERENT_LANES);
-        // A printed slur may connect voices within the same proved physical staff.
-        // Unique raw endpoints and written order identify it without assigning a voice.
-        int order = Long.compare(a.attack(), b.attack());
-        if (order == 0) order = Integer.compare(a.graceOrder(), b.graceOrder());
-        if (order >= 0) return absent(Status.REVERSED_CLOCK);
-        if (a.soundingPitch() < 0 || b.soundingPitch() < 0)
-            return absent(Status.UNPITCHED_UNRESOLVED);
-        if (ties.contains(new Tie(a.owner(), b.owner())))
-            return absent(
-                    a.soundingPitch() == b.soundingPitch()
-                            ? Status.TIE_ALREADY_RETAINED
-                            : Status.TIE_PITCH_CONFLICT);
-        if (a.soundingPitch() == b.soundingPitch()) return absent(Status.SAME_PITCH_UNRESOLVED);
+            return new Binding(Status.DIFFERENT_LANES, Optional.empty());
         var span =
                 new ScoreSlurPages.Span(
                         id,
@@ -146,7 +202,7 @@ final class PrintedSlurOwners {
                                         bow.start().y() / height,
                                         bow.end().x() / (float) width,
                                         bow.end().y() / height)));
-        return new Result(Status.RESOLVED, Optional.of(span));
+        return new Binding(Status.GEOMETRY_OWNED, Optional.of(span));
     }
 
     private static Result absent(Status status) {
@@ -155,8 +211,12 @@ final class PrintedSlurOwners {
 
     /** Bounded per-column head hints; no synthetic pixels or full-page mask allocation. */
     static PrintedSlurContours.HeadEvidence headEvidence(
-            List<Head> heads, byte[] gray, int width, int height, StaffPitchTrack track) {
-        record Visible(Head head, float gap) {}
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        record Visible(Location head, float gap) {}
         var columns = new ArrayList<List<Visible>>(Collections.nCopies(width, null));
         for (var head : heads) {
             float gap = track.at(head.x())[1];
@@ -210,7 +270,7 @@ final class PrintedSlurOwners {
             PrintedSlurContours.Point cap,
             boolean above,
             boolean start,
-            List<Head> heads,
+            List<? extends Location> heads,
             byte[] gray,
             int width,
             int height,
@@ -239,7 +299,7 @@ final class PrintedSlurOwners {
         return result;
     }
 
-    private static boolean headBody(byte[] gray, int width, int height, Head head, float gap) {
+    private static boolean headBody(byte[] gray, int width, int height, Location head, float gap) {
         int rows = 0, minimum = Math.max(3, (int) Math.ceil(gap * .25f));
         for (int y = Math.max(0, Math.round(head.y() - gap * .4f));
                 y < height && y <= head.y() + gap * .4f;
@@ -255,7 +315,7 @@ final class PrintedSlurOwners {
 
     private static boolean shaftSupports(
             PrintedSlurContours.Point cap,
-            Head head,
+            Location head,
             boolean above,
             byte[] gray,
             int width,

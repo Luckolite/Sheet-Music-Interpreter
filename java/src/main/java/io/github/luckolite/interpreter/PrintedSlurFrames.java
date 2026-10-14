@@ -6,8 +6,8 @@ import java.util.*;
 
 /** Builds page-local arc frames from independently proved raw staff tracks and final note slots. */
 final class PrintedSlurFrames {
-    record Result(
-            List<PrintedSlurPageCapture.Frame> frames,
+    record Result<T extends PrintedSlurOwners.Location>(
+            List<PrintedSlurPageCapture.Frame<T>> frames,
             Set<Integer> unboundOwners,
             int unprovedStaffs) {
         Result {
@@ -18,13 +18,13 @@ final class PrintedSlurFrames {
 
     private PrintedSlurFrames() {}
 
-    static Result prepare(
+    static <T extends PrintedSlurOwners.Location> Result<T> prepare(
             byte[] gray,
             int width,
             int height,
             List<PlayingTechniqueDetector.Staff> staffs,
             List<ScoreNoteEvent> notes,
-            List<PrintedSlurOwners.Head> heads) {
+            List<T> heads) {
         if (width <= 0 || height <= 0 || gray == null || gray.length != (long) width * height)
             throw new IllegalArgumentException("Invalid printed frame raster");
         Objects.requireNonNull(staffs);
@@ -33,7 +33,7 @@ final class PrintedSlurFrames {
         if (staffs.size() > 512)
             throw new IllegalArgumentException("Too many printed staff frames");
         var tracks = new ArrayList<StaffPitchTrack>();
-        var groups = new ArrayList<List<PrintedSlurOwners.Head>>();
+        var groups = new ArrayList<List<T>>();
         int unproved = 0;
         for (var staff : staffs) {
             if (staff.index() < 0 || staff.count() < 1 || staff.index() >= staff.count())
@@ -76,7 +76,7 @@ final class PrintedSlurFrames {
             if (owner < 0) unbound.add(head.owner());
             else groups.get(owner).add(head);
         }
-        var frames = new ArrayList<PrintedSlurPageCapture.Frame>();
+        var frames = new ArrayList<PrintedSlurPageCapture.Frame<T>>();
         for (int i = 0; i < staffs.size(); i++) {
             var group = groups.get(i);
             if (group.isEmpty()) continue;
@@ -91,9 +91,9 @@ final class PrintedSlurFrames {
                     last = Math.min(height - 1, (int) Math.ceil(bottom));
             if (last <= first) throw new IllegalArgumentException("Empty printed staff scan frame");
             frames.add(
-                    new PrintedSlurPageCapture.Frame(
+                    new PrintedSlurPageCapture.Frame<T>(
                             0, first, width - 1, last, tracks.get(i), group));
         }
-        return new Result(frames, unbound, unproved);
+        return new Result<>(frames, unbound, unproved);
     }
 }

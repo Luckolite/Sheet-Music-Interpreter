@@ -82,6 +82,8 @@ or bundled in this repository's Apache-2.0 source/model artifacts.
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`
 from Java. See [API examples and output format](docs/integration.md).
+The explicit Java page overload retains printed slur evidence, including arcs
+that need inherited key or meter context before classification.
 The Java [bibliographic metadata API](docs/bibliographic-metadata.md) extracts
 titles and contributor credits from caller-supplied OCR text and page geometry.
 An optional [native Java decoding service](docs/native-decoder.md) supports

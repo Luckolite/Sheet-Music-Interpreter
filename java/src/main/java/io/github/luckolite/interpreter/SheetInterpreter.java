@@ -106,6 +106,20 @@ public final class SheetInterpreter {
             Annotations annotations,
             MusicalOcr ocr)
             throws Exception {
+        return analyze(labels, gray, width, height, annotations, ocr, -1);
+    }
+
+    /** Explicit physical page for retained printed arcs; legacy calls do not assume page zero. */
+    public static ScorePageInterpretation analyze(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Annotations annotations,
+            MusicalOcr ocr,
+            int physicalPage)
+            throws Exception {
+        if (physicalPage < -1) throw new IllegalArgumentException("Invalid physical source page");
         long pixels = (long) width * height;
         if (width <= 0
                 || height <= 0
@@ -315,11 +329,28 @@ public final class SheetInterpreter {
                         width,
                         height,
                         GlyphResources.expressions());
-        return TabBoundaryTies.apply(
-                ScorePedalDetector.apply(withExpressions, gray, width, height, staffs),
-                tabs,
-                tabSourceGray,
-                width,
-                height);
+        var finalInterpretation =
+                TabBoundaryTies.apply(
+                        ScorePedalDetector.apply(withExpressions, gray, width, height, staffs),
+                        tabs,
+                        tabSourceGray,
+                        width,
+                        height);
+        if (physicalPage >= 0)
+            try {
+                var captured =
+                        PrintedSlurRecognition.captureObserved(
+                                finalInterpretation,
+                                physicalPage,
+                                gray,
+                                labels,
+                                width,
+                                height,
+                                staffs);
+                if (captured.isPresent()) return captured.get().score();
+            } catch (RuntimeException unavailable) {
+                Diagnostics.log("Printed phrase capture unavailable: " + unavailable.getMessage());
+            }
+        return finalInterpretation;
     }
 }

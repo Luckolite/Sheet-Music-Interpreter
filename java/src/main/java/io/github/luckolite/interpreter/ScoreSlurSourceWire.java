@@ -8,6 +8,7 @@ import java.util.*;
 /** Length-framed source identities and original page-local arcs, independent of edit history. */
 public final class ScoreSlurSourceWire {
     private static final int MAGIC = 0x534c5431; // SLT1
+    private static final int DEFERRED_MAGIC = 0x534c5432; // SLT2
     private static final int MAX_NOTES = ScoreSlurSource.MAX_NOTES;
     private static final int MAX_BYTES = 32 * 1024 * 1024;
 
@@ -26,9 +27,10 @@ public final class ScoreSlurSourceWire {
                 frame.writeInt(origin.map(ScoreSlurPages.Anchor::noteIndex).orElse(-1));
             }
         ScoreSlurPageWire.write(frame, source.spans());
+        if (!source.candidates().isEmpty()) ScoreSlurPageWire.write(frame, source.candidates());
         frame.flush();
         if (bytes.size() > MAX_BYTES) throw new IOException("Retained slur source too large");
-        out.writeInt(MAGIC);
+        out.writeInt(source.candidates().isEmpty() ? MAGIC : DEFERRED_MAGIC);
         out.writeInt(bytes.size());
         out.write(bytes.toByteArray());
     }
@@ -36,7 +38,9 @@ public final class ScoreSlurSourceWire {
     public static ScoreSlurSource read(DataInput in, int expectedNotes) throws IOException {
         if (expectedNotes < 0 || expectedNotes > MAX_NOTES)
             throw new IOException("Invalid expected retained note count");
-        if (in.readInt() != MAGIC) throw new IOException("Unknown retained slur source layout");
+        int magic = in.readInt();
+        if (magic != MAGIC && magic != DEFERRED_MAGIC)
+            throw new IOException("Unknown retained slur source layout");
         int length = in.readInt();
         if (length < 0 || length > MAX_BYTES)
             throw new IOException("Invalid retained slur source length");
@@ -57,7 +61,12 @@ public final class ScoreSlurSourceWire {
                 if (page == -1 && note == -1) origins.add(Optional.empty());
                 else origins.add(Optional.of(new ScoreSlurPages.Anchor(page, note)));
             }
-            var source = new ScoreSlurSource(ScoreSlurPageWire.read(frame), origins);
+            var spans = ScoreSlurPageWire.read(frame);
+            var candidates =
+                    magic == DEFERRED_MAGIC
+                            ? ScoreSlurPageWire.read(frame)
+                            : List.<ScoreSlurPages.Span>of();
+            var source = new ScoreSlurSource(spans, origins, candidates);
             if (frame.available() != 0)
                 throw new IOException("Unexpected retained slur source bytes");
             return source;

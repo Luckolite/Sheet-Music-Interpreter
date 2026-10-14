@@ -133,7 +133,7 @@ public class PrintedSlurVoiceOwnershipTest {
     @Test
     public void pageCaptureRetainsUnknownVoiceSourceOwners() {
         var frame =
-                new PrintedSlurPageCapture.Frame(
+                new PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head>(
                         0, 20, W - 1, H - 1, track(), List.of(first(0, 0, 60), last(0, 100, 62)));
         var result =
                 PrintedSlurPageCapture.capture(
