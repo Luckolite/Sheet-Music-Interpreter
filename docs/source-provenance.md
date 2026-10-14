@@ -1870,3 +1870,17 @@ and counterexamples; app commit `362fce0d5558b82e64627b98cc2d53a8d442c49f` is re
 No private score fixtures, models, dependencies or wire changes are included.
 Saved detector replay and source tests do not establish complete current Android
 or native runtime accuracy, APK installation or paired worker deployment.
+
+## Split credit names and overlapping text
+
+Collection captions and confirmed title fragments remain distinct from contributors.
+Stacked names identified by presentation or band-leader context remain review credits.
+Raised-o typography requires corroborating words elsewhere on the same score.
+Original-PDF repairs retain source letters and roles: paired collection names allow
+one inserted capital after three matching readings; accent-only credit changes
+require six matching high-confidence readings from expanded and neighboring-line
+separated crops. The Android adapter retains cancellation and bitmap cleanup.
+Thirty-eight original synthetic controls accompany app commit `be077efc2a165af54b700ba731cc6ee4358f0be0`.
+No private scans, fixtures, models, dependencies or wire changes are included.
+Saved replay and source checks do not establish current whole-library Android
+accuracy, APK/runtime behavior or matching desktop worker deployment.

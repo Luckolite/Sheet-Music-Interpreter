@@ -1290,6 +1290,76 @@ public final class ScoreCreditsDetector {
     /** Reread damaged contributor punctuation or an uppercase explicit credit in its tight box. */
 
     /** Cover letterspacing is recoverable without changing a single printed letter. */
+    public static List<Line> overlappingAccentCreditCandidates(Page page) {
+        if (page.photographicCover || page.creditsOnly || page.width <= 0 || page.height <= 0)
+            return List.of();
+        return page.lines.stream()
+                .filter(
+                        l ->
+                                l.top >= 0
+                                        && l.height() > 0
+                                        && l.height() < page.width * .04f
+                                        && l.bottom
+                                                < (page.notationTop > 0
+                                                        ? page.notationTop
+                                                        : page.height * .3f)
+                                        && !withoutDiacritics(clean(l.text)).equals(clean(l.text))
+                                        && (credit(clean(l.text)) != null
+                                                || clean(l.text)
+                                                        .matches("(?iu)^produced\\h+by\\h+.+"))
+                                        && creditOverlapRegion(page, l) != null)
+                .limit(4)
+                .toList();
+    }
+
+    public static Refinement creditOverlapRegion(Page page, Line line) {
+        float top = line.top;
+        for (Line other : page.lines) {
+            if (other == line
+                    || other.top >= line.top
+                    || other.bottom < line.top
+                    || other.bottom - line.top > line.height() * .1f
+                    || other.left >= line.right
+                    || other.right <= line.left
+                    || !clean(other.text).matches(".*\\p{L}{2}.*")) continue;
+            top = Math.max(top, other.bottom + page.width / 1800f);
+        }
+        if (top <= line.top || top - line.top > line.height() * .15f) return null;
+        return new Refinement(line.left, top, line.right, line.bottom, 3);
+    }
+
+    private static boolean confidentAccentReadings(List<String> text, List<Float> confidence) {
+        return text != null
+                && confidence != null
+                && text.size() == 3
+                && confidence.size() == 3
+                && text.stream().allMatch(t -> t != null && !t.isBlank())
+                && confidence.stream()
+                        .allMatch(c -> c != null && Float.isFinite(c) && c >= .98f && c <= 1);
+    }
+
+    public static List<Line> mergeOverlappingAccentCredit(
+            Page page,
+            Line original,
+            List<String> expanded,
+            List<Float> expandedConfidence,
+            List<String> separated,
+            List<Float> separatedConfidence) {
+        if (!overlappingAccentCreditCandidates(page).contains(original)
+                || !confidentAccentReadings(expanded, expandedConfidence)
+                || !confidentAccentReadings(separated, separatedConfidence)) return page.lines;
+        String candidate = clean(expanded.get(0)), before = clean(original.text);
+        if (expanded.stream().anyMatch(t -> !clean(t).equals(candidate))
+                || separated.stream().anyMatch(t -> !clean(t).equals(candidate))
+                || !withoutDiacritics(before).equals(withoutDiacritics(candidate))
+                || before.equals(candidate)) return page.lines;
+        var result = new ArrayList<>(page.lines);
+        result.set(
+                result.indexOf(original),
+                new Line(candidate, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(result);
+    }
+
     public static List<Line> coverSpacingCandidates(Page page) {
         if (page.notationTop > 0 && !page.photographicCover || page.creditsOnly) return List.of();
         return page.lines.stream()
@@ -1361,14 +1431,58 @@ public final class ScoreCreditsDetector {
                                                         ? page.notationTop
                                                         : page.height * .62f)
                                         && line.height() > 0
-                                        && line.height() < page.width * .04f
+                                        && line.height()
+                                                < page.width
+                                                        * (presentedNameLines(page).contains(line)
+                                                                ? .12f
+                                                                : .04f)
                                         && (page.notationTop > 0
                                                         && (puncturedContributor(page, line)
                                                                 || uppercasePrefixCredit(
                                                                         page, line))
                                                 || printedCreditContinuation(page, line) != null
-                                                || conversionServiceCandidate(line.text)))
+                                                || conversionServiceCandidate(line.text)
+                                                || pairedCollectionContributor(page, line)
+                                                || presentedNameLines(page).contains(line)))
                 .toList();
+    }
+
+    private static boolean countedInstrumentAudioCaption(String text) {
+        return clean(text)
+                .matches(
+                        "(?iu)^[0-9]{1,2}\\h*(?:violin|piano|flute|cello|guitar|vocal)\\h+sol[o0b]s\\h+with\\h+authentic\\h+CD\\h+tracks$");
+    }
+
+    private static boolean pairedCollectionContributor(Page page, Line line) {
+        if (page.notationTop > 0
+                || page.photographicCover
+                || page.creditsOnly
+                || !clean(line.text).matches("\\p{Lu}{5,20}")
+                || line.left < page.width * .65f
+                || line.height() > page.width * .03f) return false;
+        boolean caption =
+                page.lines.stream()
+                        .anyMatch(
+                                l -> l.bottom < line.top && countedInstrumentAudioCaption(l.text));
+        return caption
+                && page.lines.stream()
+                        .anyMatch(
+                                l ->
+                                        l != line
+                                                && l.top < line.top
+                                                && Math.abs(l.right - line.right)
+                                                        < page.width * .025f
+                                                && Math.abs(line.top - l.bottom)
+                                                        < line.height() * .5f
+                                                && clean(l.text).matches(".*\\p{Ll}.*")
+                                                && credit(l.text) == null);
+    }
+
+    private static boolean oneInsertedCapital(String before, String after) {
+        if (!after.matches("\\p{Lu}{6,21}") || after.length() != before.length() + 1) return false;
+        for (int i = 0; i < after.length(); i++)
+            if ((after.substring(0, i) + after.substring(i + 1)).equals(before)) return true;
+        return false;
     }
 
     private static boolean conversionServiceCandidate(String text) {
@@ -1432,7 +1546,13 @@ public final class ScoreCreditsDetector {
             return page.lines;
         String before = clean(original.text), candidate = clean(readings.get(0));
         if (readings.stream().anyMatch(r -> !clean(r).equals(candidate))) return page.lines;
-        if (conversionServiceCandidate(before)) {
+        if (presentedNameLines(page).contains(original)) {
+            if (!before.matches("\\p{Lu}\\p{Ll}{2,20}")
+                    || !candidate.matches("\\p{Lu}\\p{Ll}{2,20}")
+                    || editDistance(fold(before), fold(candidate)) > 2) return page.lines;
+        } else if (pairedCollectionContributor(page, original)) {
+            if (!oneInsertedCapital(before, candidate)) return page.lines;
+        } else if (conversionServiceCandidate(before)) {
             if (!matchingConversionRepair(before, candidate)) return page.lines;
         } else if (puncturedContributor(page, original)) {
             if (!candidate.equals(before.replace("(", ""))) return page.lines;
@@ -4125,6 +4245,62 @@ public final class ScoreCreditsDetector {
         }
         inferRepeatedCoverAuthor(pages, composers, arrangers, artists, other);
         restoreReviewHeaderSpacing(other, pages, title, fallback);
+        Set<String> typographicReview = new LinkedHashSet<>();
+        for (String value : other) typographicReview.add(normalizeRaisedOReview(value, pages));
+        other.clear();
+        other.addAll(typographicReview);
+        for (Page p : pages) {
+            List<Line> presented = presentedNameLines(p);
+            if (presented.size() == 2) {
+                other.removeIf(v -> presented.stream().anyMatch(l -> same(l.text, v)));
+                String name = clean(presented.get(0).text) + " " + clean(presented.get(1).text);
+                if (artists.stream().noneMatch(n -> same(n, name))
+                        && composers.stream().noneMatch(n -> same(n, name))
+                        && arrangers.stream().noneMatch(n -> same(n, name))) other.add(name);
+            }
+        }
+        for (Page page : pages) {
+            List<Line> name = photographicBandLeader(page);
+            if (name.size() == 3) {
+                other.removeIf(value -> name.stream().anyMatch(l -> same(l.text, value)));
+                String combined = clean(name.get(0).text) + " " + clean(name.get(1).text);
+                if (artists.stream().noneMatch(n -> same(n, combined))
+                        && composers.stream().noneMatch(n -> same(n, combined))
+                        && arrangers.stream().noneMatch(n -> same(n, combined)))
+                    other.add(combined);
+            }
+        }
+
+        String finalTitle = title.isEmpty() ? fallback : title;
+        other.removeIf(
+                value ->
+                        value.matches("[A-Z]{8,}")
+                                && Arrays.stream(finalTitle.toUpperCase(Locale.ROOT).split("\\h+"))
+                                        .anyMatch(
+                                                word ->
+                                                        word.equals(value)
+                                                                || word.equals(value + "S"))
+                                && pages.stream()
+                                        .anyMatch(
+                                                p ->
+                                                        p.notationTop <= 0
+                                                                && !p.photographicCover
+                                                                && p.lines.stream()
+                                                                        .anyMatch(
+                                                                                l ->
+                                                                                        same(
+                                                                                                        l.text,
+                                                                                                        value)
+                                                                                                && l
+                                                                                                                .height()
+                                                                                                        >= p.width
+                                                                                                                * .04f))
+                                && !knownNames.stream().anyMatch(n -> same(n, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e ->
+                                                        e.names.stream()
+                                                                .anyMatch(n -> same(n, value))));
         other.removeIf(
                 value ->
                         !knownNames.stream().anyMatch(name -> same(name, value))
@@ -5222,6 +5398,104 @@ public final class ScoreCreditsDetector {
     }
 
     /** Bare photograph bylines are retained for review without assigning a contributor role. */
+    private static String normalizeRaisedOReview(String value, List<Page> pages) {
+        if (!value.matches("\\p{Lu}[°º]\\p{Ll}{1,12}\\p{Lu}\\p{Ll}{2,20}")) return value;
+        for (Page p : pages) {
+            if (p.photographicCover
+                    || p.creditsOnly
+                    || p.notationTop <= 0
+                    || p.lines.stream()
+                            .noneMatch(
+                                    l ->
+                                            same(l.text, value)
+                                                    && l.bottom < p.notationTop
+                                                    && l.height() < p.width * .04f)) continue;
+            Set<String> evidence = new LinkedHashSet<>();
+            Pattern word = Pattern.compile("\\p{Ll}+[°º]\\p{Ll}+");
+            for (Line l : p.lines)
+                if (l.top > p.notationTop) {
+                    Matcher m = word.matcher(l.text);
+                    while (m.find()) evidence.add(m.group());
+                }
+            if (evidence.size() < 2) continue;
+            String name =
+                    value.replace('°', 'o')
+                            .replace('º', 'o')
+                            .replaceAll("(?<=\\p{Ll})(?=\\p{Lu})", " ");
+            if (properReviewName(name)) return name;
+        }
+        return value;
+    }
+
+    private static List<Line> presentedNameLines(Page p) {
+        if (p.photographicCover || p.creditsOnly) return List.of();
+        List<Line> result = List.of();
+        for (Line label : p.lines) {
+            if (!clean(label.text).equalsIgnoreCase("present")) continue;
+            for (Line first : p.lines) {
+                if (!clean(first.text).matches("\\p{Lu}\\p{Ll}{2,20}")
+                        || first.height() < p.width * .04f
+                        || first.height() > p.width * .12f
+                        || first.top < label.bottom
+                        || first.top - label.bottom > label.height()
+                        || Math.abs(first.center() - label.center()) > first.height() * .5f)
+                    continue;
+                for (Line last : p.lines) {
+                    if (!clean(last.text).matches("\\p{Lu}{2,20}")
+                            || last.top < first.bottom
+                            || last.top - first.bottom > first.height() * .3f
+                            || last.height() < first.height() * .5f
+                            || last.height() > first.height() * 1.5f
+                            || Math.abs(last.center() - first.center()) > first.height() * .5f)
+                        continue;
+                    boolean context =
+                            p.lines.stream()
+                                    .anyMatch(
+                                            l ->
+                                                    l.top >= last.bottom
+                                                            && l.top - last.bottom < last.height()
+                                                            && Math.abs(l.center() - last.center())
+                                                                    < last.height()
+                                                            && clean(l.text)
+                                                                    .matches(
+                                                                            "(?iu)^in\\h+a\\h+new\\h*musical\\b.*"));
+                    if (!context) continue;
+                    if (!result.isEmpty()) return List.of();
+                    result = List.of(first, last);
+                }
+            }
+        }
+        return result;
+    }
+
+    private static List<Line> photographicBandLeader(Page page) {
+        if (!page.photographicCover || page.creditsOnly || page.notationTop > 0) return List.of();
+        List<Line> result = List.of();
+        for (Line band : page.lines) {
+            if (!clean(band.text).matches("(?iu)^&\\h+(?:his|her|their)\\h+band$")) continue;
+            for (Line last : page.lines) {
+                if (!clean(last.text).matches("\\p{Lu}{2,20}")
+                        || last.height() < page.width * .04f
+                        || Math.abs(band.top - last.bottom) > last.height() * .5f
+                        || band.left < last.left
+                        || band.right > last.right + last.height() * .3f) continue;
+                for (Line first : page.lines) {
+                    if (first == last
+                            || !clean(first.text).matches("\\p{Lu}{2,20}")
+                            || first.top >= last.top
+                            || Math.abs(first.bottom - last.top) > last.height() * .35f
+                            || first.height() < last.height() * .65f
+                            || first.height() > last.height() * 1.5f
+                            || Math.abs(first.center() - last.center()) > last.height() * .5f
+                            || !properReviewName(first.text + " " + last.text)) continue;
+                    if (!result.isEmpty()) return List.of();
+                    result = List.of(first, last, band);
+                }
+            }
+        }
+        return result;
+    }
+
     private static boolean photographicReviewByline(Page page, Line line, Line heading) {
         if (!page.photographicCover
                 || page.creditsOnly
@@ -6261,6 +6535,7 @@ public final class ScoreCreditsDetector {
             Page page, Line heading, Line line, List<Line> lines) {
         String text = clean(line.text);
         if (scoreFormatCaption(text)) return true;
+        if (countedInstrumentAudioCaption(text)) return true;
         if (layoutReviewCaption(page, heading, line, lines)) return true;
         if (!page.photographicCover
                 && line.left < page.width * .15f
