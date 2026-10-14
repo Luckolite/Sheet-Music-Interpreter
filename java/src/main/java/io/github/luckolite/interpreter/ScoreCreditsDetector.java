@@ -7295,6 +7295,14 @@ public final class ScoreCreditsDetector {
                 "(?iu)^(?:[A-G]\\h+string|solo|solo\\h+violin|vocal\\h+parts|guitar/celli|accent;\\h*play\\h+forcefully)$"))
             return true;
         if (text.matches("(?iu)^\\(?cymbal\\)?\\h+\\(?voice\\)?$")) return true;
+        // Bow division abbreviations are execution marks inside a notation system.
+        if (page.notationTop > 0
+                && line.top > page.height * .35f
+                && line.height() < page.width * .025f
+                && Math.abs(line.bottom - page.notationTop) < page.height * .07f
+                && text.matches(
+                        "(?iu)^(?:H\\.?\\h*B\\.?\\h*[ulm]\\.?|W\\.?\\h*B\\.?|S\\.?\\h*St\\.?\\h*[ulm]\\.?)$"))
+            return true;
         String instrument =
                 "(?:violin|viola|piano|organ|guitar|cello|flute|clarinet|oboe|bassoon|timpani|brass|synth\\.?|harp|voice|cymbal|bass|drum|electric\\h+piano|glockenspiel|harpsichord|mandolin|vibes|vin\\.)";
         if (text.matches(

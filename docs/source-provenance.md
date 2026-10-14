@@ -1933,3 +1933,5 @@ A damaged header coauthor credit requires agreement at three padded PDF render s
 ## Metadata staff boundaries and directions
 
 An earlier metadata boundary requires continuous support for four staff lines across the original raster and an existing staff detection. The pure geometry gate is shared; Android candidate detection stays an adapter. Collection captions and notation directions remain outside contributor credits. Original geometry and detector regressions accompany the change. App source commit `804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.
+
+Bow-division abbreviations follow the explanations on printed page 34 of [Spohr, Violin School](https://www.justviolin.org/uploads/2/6/8/0/26802979/violin_school_spohr.pdf). The exclusion requires small mid-page text near notation; header initials and explicit composer credits remain intact. Eight original synthetic regressions accompany the app/public source pair.

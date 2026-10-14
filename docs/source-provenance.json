@@ -2090,15 +2090,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "831d72c4ba0e0f4f7993c56b09e61e9fd969a24c3e0a546fa180d72edd75a300",
-      "source_normalized_sha256": "b4b5f4769df18a6f1a3648d016723adbb142891a1cbb23f9a1b77c2e5caa799f",
+      "source_sha256": "3b5a914d5733f9df01154165e0f901d48b8d9db2d10fc8f9b1dab38e85244c75",
+      "source_normalized_sha256": "16f3258fadab811a1c4bf55531b4506f67dbcb1370bea60e2475e841cf9f348a",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "b25eeab2988cbda51661bdedc7a5177b6e9b1f420c9ea53dfe15c7264efe41c0",
+      "standalone_sha256": "14d84ba987ca6fe8ca0b3fd92b51d70891226c5a9c472075eebaed991cb01e8f",
       "license": "Apache-2.0",
-      "review_note": "Continuous five-line raster support can advance an existing staff boundary; collection captions and notation directions retain their roles. No score-specific rules, models or wire changes.",
-      "reviewed_app_commit": "804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff",
+      "review_note": "Exclude bow-division execution marks only in small mid-page notation context; retain header initials and explicit composer credits. Eight original synthetic regressions; no private score fixtures or model changes.",
+      "reviewed_app_commit": "311383675c345feb40e7ec3e459c39a81dccc4ab",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
