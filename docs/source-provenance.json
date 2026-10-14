@@ -469,14 +469,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "6f0016706c7e8a3914a5fa501b6f3c65fbb2723daa50e876d19da137b7b95ade",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "source_normalized_sha256": "6f0016706c7e8a3914a5fa501b6f3c65fbb2723daa50e876d19da137b7b95ade",
+      "source_sha256": "77f4ad7146900b334ad0ea7f8b4f2e9bfef6c4a46ab0c9b4b02be5367e4e77b9",
+      "reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a",
+      "review_note": "Preserve a strictly positive middle turn of a complete quarter-rest zigzag and compare its existing proportional threshold with a half-raster-pixel allowance, symmetric with the preceding peak-to-valley allowance. Complete body/phase/contrast and note/flag ownership remain unchanged. Nine independent licensed Bravura quarter rasters reproduce baseline omissions; original regression retains accidental and flat-middle rejection.1142selected portable checks and16app focused checks pass. No model/dependency/record-layout change.",
+      "source_normalized_sha256": "80a65e1404f19064bdf9aa192f8f13e64da5bb68ab6ae69dcf25d87cc61bac8b",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by raw and normalized source hashes.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16"
+      "scoped_reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -5763,5 +5763,15 @@
     "ownership": "The existing decoder removes proved printed-word heads before note timing, then existing isolated-direction application selects the surviving attack.",
     "boundary": "Original synthetic checks and bounded source-stage replay only; final full recognition/timing/audio/device and paired app/Hub/worker acceptance remain pending.",
     "reviewed_app_commit": "d33a4072b1b1fa841ff743567dff5da3b282031d"
+  },
+  "quarter_middle_turn_review": {
+    "license": "Apache-2.0",
+    "scope": "Preserve a strictly positive middle turn of a complete quarter-rest zigzag and compare its existing proportional threshold with a half-raster-pixel allowance, symmetric with the preceding peak-to-valley allowance. Complete body/phase/contrast and note/flag ownership remain unchanged. Nine independent licensed Bravura quarter rasters reproduce baseline omissions; original regression retains accidental and flat-middle rejection.1142selected portable checks and16app focused checks pass. No model/dependency/record-layout change.",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/QuarterRestMiddleTurnTest.java",
+    "models_changed": false,
+    "production_dependencies_changed": false,
+    "record_layout_changed": false,
+    "boundary": "Original glyph/control checks and a conditional raw-gray rest-stage replay with reconstructed staff geometry. No original semantic masks or full recognition/timing/audio/device/paired deployment acceptance.",
+    "reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a"
   }
 }

@@ -3192,7 +3192,8 @@ final class SixteenthRestDetector {
         if (b - a > gap * .10
                 && b > c
                 && b - c + .5 > gap * .055
-                && d - c > gap * .055
+                && d > c
+                && d - c + .5 > gap * .055
                 && d - e > gap * .12
                 && f - e > gap * .10) return true;
         // Some engravings end the lower hook with a straight downstroke, without a curled foot.

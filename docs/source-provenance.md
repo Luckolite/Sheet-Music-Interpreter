@@ -1129,3 +1129,14 @@ word ownership then excludes the numeral's false head before note timing. Seven
 original regression methods cover both octave distances and directions at three
 scales, nearby ink, thick bridges, bare numbers and neighboring real notes.
 No private score fixtures, models, dependencies or record layouts changed.
+
+## Quarter-rest middle-turn raster rounding
+
+A complete quarter-rest zigzag keeps its independently positive middle turn while
+allowing half a raster pixel at the existing proportional turn threshold, matching
+the neighboring peak-to-valley rounding rule. All other body, phase, contrast and
+notation-owner gates remain unchanged. Original regression uses nine independent
+SIL-OFL Bravura raster quarters and rejects accidentals and flat-middle strokes.
+No private score fixtures, models, dependencies or record layouts changed.
+Conditional rest-stage replay is separate from final full recognition and runtime
+acceptance.
