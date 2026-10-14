@@ -35,11 +35,38 @@ final class PrintedRestBarHeads {
                         queue[size++] = next;
                     }
             }
-            if (!proved(gray, w, h, minX, minY, maxX, maxY)) continue;
+            if (!proved(gray, w, h, minX, minY, maxX, maxY)
+                    && !fragment(gray, w, h, minX, minY, maxX, maxY)) continue;
             if (result == labels) result = labels.clone();
             for (int i = 0; i < size; i++) result[queue[i]] = 0;
         }
         return result;
+    }
+
+    static boolean fragment(byte[] gray, int w, int h, int left, int top, int right, int bottom) {
+        int x = (left + right) / 2, y = (top + bottom) / 2;
+        int limit =
+                Math.min(
+                        150,
+                        BeamInkThreshold.at(
+                                gray, w, h, x, top, bottom, Math.max(8, bottom - top + 1)));
+        if ((gray[y * w + x] & 255) >= limit) return false;
+        int t = y, b = y;
+        while (t > 0 && y - t < 48 && (gray[(t - 1) * w + x] & 255) < limit) t--;
+        while (b < h - 1 && b - y < 48 && (gray[(b + 1) * w + x] & 255) < limit) b++;
+        int bh = b - t + 1;
+        if (bh < 4 || bh > 48 || top < t - 1 || bottom > b + 1) return false;
+        int l = x, r = x;
+        while (l > 0 && x - l < bh * 12 && solidColumn(gray, w, l - 1, t, b, limit)) l--;
+        while (r < w - 1 && r - x < bh * 12 && solidColumn(gray, w, r + 1, t, b, limit)) r++;
+        if (left < l - 1 || right > r + 1) return false;
+        return proved(gray, w, h, l, t, r, b);
+    }
+
+    private static boolean solidColumn(byte[] gray, int w, int x, int top, int bottom, int limit) {
+        int n = 0;
+        for (int y = top; y <= bottom; y++) if ((gray[y * w + x] & 255) < limit) n++;
+        return n >= (bottom - top + 1) * .85f;
     }
 
     static boolean proved(byte[] gray, int w, int h, int left, int top, int right, int bottom) {

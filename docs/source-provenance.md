@@ -1238,3 +1238,30 @@ original generated controls cover the new grammar and guards. App source is pinn
 to `980ee1dff1b1c597a760d0778fb14486202ec90b`. Numeric BPM/pulse recovery does
 not yet preserve approximation wording. Final cache/native worker and runtime
 acceptance remain separate from source qualification.
+
+## Collection captions and corroborated cover authors
+
+Counted song/theme captions and their aligned lists retain collection ownership.
+A classical cover author requires matching notated author/work running-header
+evidence; arrangement and artist ownership remain separate. Interior surname
+particles and split adaptation labels resolve consistently during extraction and
+inference. Twenty-eight original fictional-name/layout controls accompany the
+scoped app source commit `be94044eac030a3c5af08189992f4336144cae24`.
+
+## Stem-crossing tuplets and fragmented multimeasure-rest bars
+
+Joined repeated-tuplet matching requires visible glyph ink beyond an independently
+proved long stem; staff rows and shafts cannot supply an otherwise absent three.
+Six original procedural controls preserve real numerals and staff crossings. App
+source is pinned to `75d762b7d23c834f6b61cc18632bbcb6b53815dd`.
+
+A raw solid body may recover a multimeasure-rest bar around fragmented semantic
+heads only after the existing complete bilateral-cap proof. Seven original
+procedural controls preserve one-sided beams, uncapped bodies, real nearby heads
+and caller pixels. App source is pinned to
+`ce68cb11a00a4585760be6be707db607b492a1cc`.
+
+All eight paired source/test paths preserve executable token/literal parity after
+namespace, existing license header and format adaptation. No private score assets,
+new helper/dependency, model or record layout is included. Final recognition cache
+invalidation, paired app/Hub/worker rollout and runtime acceptance remain open.

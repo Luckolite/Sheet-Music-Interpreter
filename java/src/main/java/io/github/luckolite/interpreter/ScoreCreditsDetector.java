@@ -3665,18 +3665,10 @@ public final class ScoreCreditsDetector {
                         Pattern.compile("(?iu)^(.+?)[,;]\\h*(arranged\\h+by\\h+.+)$")
                                 .matcher(clean(line.text));
                 if (embeddedArrangement.matches()) other.add(clean(embeddedArrangement.group(1)));
-                if (credit.role == Role.COMPOSER && clean(line.text).matches("(?iu)^by\\h+.+")) {
-                    for (Line prior : lines)
-                        if (clean(prior.text)
-                                        .matches(
-                                                "(?iu)^(?:adp\\.?|adapted)\\h+from\\h+(?:the\\h+)?arrangement$")
-                                && line.top >= prior.bottom
-                                && line.top - prior.bottom < prior.height() * 1.5f
-                                && Math.abs(line.left - prior.left) < prior.height()) {
-                            credit = new Credit(Role.ARRANGER, credit.value, false);
-                            claimed.add(prior);
-                            break;
-                        }
+                Line arrangementPrelude = adaptedArrangementPrelude(line, lines);
+                if (credit.role == Role.COMPOSER && arrangementPrelude != null) {
+                    credit = new Credit(Role.ARRANGER, credit.value, false);
+                    claimed.add(arrangementPrelude);
                 }
                 String value =
                         separateDatedAttributionColumn(page, line, clean(credit.value), lines);
@@ -3905,6 +3897,7 @@ public final class ScoreCreditsDetector {
                     other.add(value);
             }
         }
+        inferRepeatedCoverAuthor(pages, composers, arrangers, artists, other);
         restoreReviewHeaderSpacing(other, pages, title, fallback);
         return new Result(
                 title.isEmpty() ? fallback : title,
@@ -3915,6 +3908,67 @@ public final class ScoreCreditsDetector {
     }
 
     /** A standalone narrative quotation does not identify the artwork's work title. */
+
+    /** A classical cover author is corroborated by a notated author-work running header. */
+    private static void inferRepeatedCoverAuthor(
+            List<Page> pages,
+            Set<String> composers,
+            Set<String> arrangers,
+            Set<String> artists,
+            Set<String> other) {
+        if (pages.isEmpty() || !composers.isEmpty()) return;
+        Page cover = pages.get(0);
+        if (cover.photographicCover || cover.creditsOnly || cover.notationTop > 0) return;
+        Set<String> authors = new LinkedHashSet<>(), subtitles = new LinkedHashSet<>();
+        for (Line work : cover.lines) {
+            if (!clean(work.text)
+                    .matches(
+                            "(?iu)^(?:sonata|concerto|symphony|suite)\\h+in\\h+[A-G](?:[- ]?(?:flat|sharp))?\\h+(?:major|minor)$"))
+                continue;
+            for (Line name : cover.lines) {
+                String value = clean(name.text);
+                if (name.bottom >= work.top
+                        || work.top - name.bottom > cover.height * .08f
+                        || Math.abs(name.center() - work.center()) > cover.width * .08f
+                        || name.height() < work.height() * .5f
+                        || name.height() > work.height() * 1.2f
+                        || !properReviewName(value)
+                        || value.split("\\h+").length < 2
+                        || arrangers.stream().anyMatch(n -> same(n, value))
+                        || artists.stream().anyMatch(n -> same(n, value))) continue;
+                String[] words = value.split("\\h+");
+                String surname = words[words.length - 1];
+                for (Page page : pages) {
+                    if (page.notationTop <= 0 || page.photographicCover) continue;
+                    for (Line header : page.lines) {
+                        if (header.bottom >= page.notationTop || header.top > page.height * .2f)
+                            continue;
+                        String[] parts = clean(header.text).split("\\h+[-–—]\\h+", 3);
+                        if (parts.length < 2
+                                || !(same(parts[0], value) || same(parts[0], surname))
+                                || !same(parts[1], work.text)) continue;
+                        authors.add(value);
+                        if (parts.length == 3)
+                            for (Line subtitle : cover.lines)
+                                if (same(subtitle.text, parts[2])
+                                        && subtitle.top >= work.bottom
+                                        && subtitle.top - work.bottom < cover.height * .06f
+                                        && Math.abs(subtitle.center() - work.center())
+                                                < cover.width * .08f)
+                                    subtitles.add(clean(subtitle.text));
+                    }
+                }
+            }
+        }
+        if (authors.size() != 1) return;
+        String author = authors.iterator().next();
+        addNames(composers, List.of(author));
+        other.removeIf(
+                value ->
+                        same(value, author)
+                                || subtitles.stream().anyMatch(subtitle -> same(value, subtitle)));
+    }
+
     private static String ambiguousNarrativeArtwork(String hint, List<Page> pages) {
         if (hint.isEmpty() || pages.size() != 1) return "";
         Page page = pages.get(0);
@@ -4025,7 +4079,11 @@ public final class ScoreCreditsDetector {
                         .replaceFirst("[,.;]+$", "");
         String word =
                 "(?:\\p{Lu}[\\p{Ll}\\p{M}]*(?:['’–-]\\p{Lu}?[\\p{Ll}\\p{M}]+)*|\\p{Lu}{2,}|\\p{Lu}\\.)";
-        return name.matches(word + "(?:\\h+" + word + "){0,5}")
+        return name.matches(
+                        word
+                                + "(?:(?:\\h+(?:van|von|de|del|della|di|da|dos|du|la|le)){0,2}\\h+"
+                                + word
+                                + "){0,5}")
                 && Arrays.stream(name.split("\\h+"))
                         .noneMatch(value -> NOT_TITLE.matcher(value).matches())
                 && !compoundInstrumentationCaption("for " + name);
@@ -5575,6 +5633,20 @@ public final class ScoreCreditsDetector {
     }
 
     /** An original author block needs work evidence or a separate aligned arrangement label. */
+
+    /** Resolve a split adaptation credit consistently during extraction and inference. */
+    private static Line adaptedArrangementPrelude(Line line, List<Line> lines) {
+        if (!clean(line.text).matches("(?iu)^by\\h+.+")) return null;
+        for (Line prior : lines)
+            if (clean(prior.text)
+                            .matches(
+                                    "(?iu)^(?:adp\\.?|adapted)\\h+from\\h+(?:the\\h+)?arrangement$")
+                    && line.top >= prior.bottom
+                    && line.top - prior.bottom < prior.height() * 1.5f
+                    && Math.abs(line.left - prior.left) < prior.height()) return prior;
+        return null;
+    }
+
     private static boolean contextualOriginalAuthor(
             Page page, Line heading, Line name, List<Line> lines) {
         String text =
@@ -5610,6 +5682,20 @@ public final class ScoreCreditsDetector {
                             "(?iu).*(?:\\bop(?:us)?\\.?|\\bWoO|\\bBWV|\\bK(?:V)?|\\bRV|\\bHWV)[.]?\\h*[0-9]+.*"))
                 return true;
 
+            if (context == heading
+                    && name.center() > page.width * .55f
+                    && value.matches(
+                            "(?iu)^(?:sonata|symphony|concerto|suite)\\h+(?:no[.]?|number)\\h*[0-9]+(?:\\h+in\\h+[A-G](?:[- ]?(?:flat|sharp))?\\h+(?:major|minor))?$")
+                    && lines.stream()
+                            .noneMatch(
+                                    other ->
+                                            other != name
+                                                    && other.bottom < page.notationTop
+                                                    && credit(other.text) != null
+                                                    && credit(other.text).role == Role.COMPOSER
+                                                    && adaptedArrangementPrelude(other, lines)
+                                                            == null)) return true;
+
             if (name.center() < page.width * .35f
                     && text.split("\\h+").length >= 2
                     && context.center() > page.width * .65f
@@ -5623,7 +5709,9 @@ public final class ScoreCreditsDetector {
                                             other.top >= heading.top
                                                     && other.bottom < page.notationTop
                                                     && credit(other.text) != null
-                                                    && credit(other.text).role == Role.COMPOSER)
+                                                    && credit(other.text).role == Role.COMPOSER
+                                                    && adaptedArrangementPrelude(other, lines)
+                                                            == null)
                     && lines.stream()
                             .noneMatch(
                                     other ->
@@ -5832,15 +5920,17 @@ public final class ScoreCreditsDetector {
 
         Pattern collectionCaption =
                 Pattern.compile(
-                        "(?iu)^(?:solo\\h+arrangements\\h+of\\h+[0-9]+\\h+.*songs\\h+including:?|[0-9]+\\h+solo\\h+arrangements\\h+with\\h+.*accompaniment|music\\h+from\\h+the\\h+motion\\h+picture\\h+soundtrack)$");
+                        "(?iu)^(?:solo\\h+arrangements\\h+of\\h+[0-9]+\\h+.*(?:songs|hits)\\h+including:?|[0-9]+\\h+solo\\h+arrangements\\h+with\\h+.*accompaniment|music\\h+from\\h+the\\h+motion\\h+picture\\h+soundtrack|includes\\h+[0-9]+\\h+(?:hit\\h+)?songs\\h+from\\h+the\\h+soundtrack(?::.*)?|[0-9]+\\h+themes\\h+from\\h+the\\h+(?:game|series|film)|[0-9]+\\h+of\\h+(?:the|her|his|their)\\h+(?:biggest|greatest|favorite)\\h+hits(?::.*)?)$");
         if (collectionCaption.matcher(text).matches()) return true;
         for (Line label : lines)
             if (collectionCaption.matcher(clean(label.text)).matches()
                     && candidate.top >= label.bottom
                     && candidate.top - label.bottom < page.height * .065f
                     && candidate.height() < label.height() * 1.6f
-                    && Math.abs(candidate.center() - label.center()) < page.width * .15f)
-                return true;
+                    && (Math.abs(candidate.center() - label.center()) < page.width * .15f
+                            || candidate.text.indexOf('•') >= 0
+                                    && candidate.left >= page.width * .2f
+                                    && candidate.right <= page.width * .98f)) return true;
         if (page.notationTop > 0) return false;
         boolean heading =
                 lines.stream()

@@ -1660,11 +1660,12 @@
     },
     "PrintedRestBarHeads.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestBarHeads.java",
-      "source_sha256": "4a44f01e8e1d93e10da9304fdd624c881a6371d7a5c1e52918309d182c88b646",
-      "source_normalized_sha256": "4a44f01e8e1d93e10da9304fdd624c881a6371d7a5c1e52918309d182c88b646",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "source_sha256": "e2be1774e275bb7b2cb0d8071dd2f164e4ce6dcc4c0747654a3035c507e6e464",
+      "source_normalized_sha256": "6dcb6c3ba902974878b6ab42cfe5736411e422f21a623098d3747f07a8b316ff",
+      "reviewed_app_commit": "ce68cb11a00a4585760be6be707db607b492a1cc",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Recover a physical solid bar body around fragmented semantic heads, retaining the existing complete bilateral-cap proof. Only proved interior fragments are removed; genuine neighboring heads remain. Seven original procedural controls; no API/model/dependency/wire changes. Standalone package/licensing-header/format adaptation only. Final native/paired runtime acceptance remains separate.",
+      "scoped_reviewed_app_commit": "ce68cb11a00a4585760be6be707db607b492a1cc"
     },
     "PrintedStaffAdmission.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStaffAdmission.java",
@@ -1789,12 +1790,12 @@
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
-      "reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
-      "source_sha256": "d533d4c30f2315225bd2ac21f080cb61a89f376fa28ab9fb3438e03920a26c8b",
-      "source_normalized_sha256": "5db42440c83d376281706c85a093d645e2fae703af54b8afe8c0d8a86238d4fe",
-      "reviewed_source_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
-      "review_note": "Compute final-stem tip candidates once per connected-head check. Reject numeral shape, occlusion, contrast and joined-text failures before invoking the unchanged synchronous beam-owner predicate. Every accepted numeral still passes all original proofs in the same raster order. The only production caller is the pure ownership predicate in TripletRhythmDetector. No helper dependencies, models, weights, record layouts or recognition cache revision changed. Original generated filled-beam control rejects 1911 unnecessary owner calls; a valid-shape control still requires ownership. Private score pixels/logs stay outside this repository.",
-      "scoped_reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4"
+      "reviewed_app_commit": "75d762b7d23c834f6b61cc18632bbcb6b53815dd",
+      "source_sha256": "741bbc62ee7203be7446eb119372e7a57064847bfb40dc152990551050ebf0d3",
+      "source_normalized_sha256": "d9a6a74b6fac798cd25c812bd97b658869ab49596ded0351b6e22fb60edc87d4",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Joined repeated-tuplet matching requires independently visible glyph ink beyond a proved long stem. Existing raw row/occlusion/template guards retained. Six original procedural controls; no API/model/dependency/wire changes. Standalone package/licensing-header/format adaptation only. Final native/paired runtime acceptance remains separate.",
+      "scoped_reviewed_app_commit": "75d762b7d23c834f6b61cc18632bbcb6b53815dd"
     },
     "RegionalStaffSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",
@@ -2025,15 +2026,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "8fd4aadc03ae523bdb9487fe0bc2f4d8e8e333a0e015e996fb6c479323dda48a",
-      "source_normalized_sha256": "6053daf1f2bd37600cebca9ff69944224f5dbb1d891e54eb9055ba7e8f4f2e49",
+      "source_sha256": "37208931b17846c32a4504a93f6502f84aae15650e96d2cf03473d99a59990a6",
+      "source_normalized_sha256": "a87b01e780a25ede6438b0c1544f9cdc65022322d48377078444429d33dd2cba",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
       "standalone_sha256": "0e6fd7c97870ef9bd5e3da806ec32bbc2c57762eacc9a3c9eaaab1c196b763cf",
       "license": "Apache-2.0",
-      "review_note": "Global title, contributor, catalogue, instruction and repeated-credit evidence. Bounded original-pixel outside-letter and mixed-case echo recovery requires agreeing high-confidence readings. No song-specific exceptions, private fixtures, model or wire-layout changes.",
-      "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20"
+      "review_note": "Counted collection-caption geometry, corroborated classical cover/running-header authors, interior surname particles and consistent split-adaptation roles. Original fictional names/layouts only. No scanner/helper/dependency/model/wire changes. Standalone package/licensing-header/format adaptation only. Final native/paired runtime acceptance remains separate.",
+      "reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24",
+      "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -5914,5 +5916,27 @@
     "regression": "ApproximateTempoEquationTest.java:17original procedural controls;98focused per namespace supplied by paired author.",
     "boundary": "Numeric BPM/pulse only; approximation-word fidelity remains open. No model/dependency/wire change. Final cache revision invalidation, verified app/Hub/worker rollout, current-model and device acceptance remain pending.",
     "caller_compilation": "Current Android analyzer/helper and desktop page bridge/helper compile against cached dependencies; standalone SheetInterpreter compiles in full Java build. Android annotation metadata warning is non-fatal. No APK/package/deployment or inference runtime acceptance."
+  },
+  "collection_and_running_header_metadata_review": {
+    "reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24",
+    "license": "Apache-2.0",
+    "scope": "Counted collection-caption geometry, corroborated classical cover/running-header authors, interior surname particles and consistent split-adaptation roles. Original fictional names/layouts only. No scanner/helper/dependency/model/wire changes.",
+    "originalNewControls": 28,
+    "privacy": "Original fictional names and procedural layouts only; no private score/library/checkpoint or scan assets.",
+    "boundary": "Source and saved-input metadata regression evidence, not final native worker or Android runtime acceptance."
+  },
+  "stem_crossing_tuplet_review": {
+    "reviewed_app_commit": "75d762b7d23c834f6b61cc18632bbcb6b53815dd",
+    "license": "Apache-2.0",
+    "scope": "Joined repeated-tuplet matching requires independently visible glyph ink beyond a proved long stem. Existing raw row/occlusion/template guards retained. Six original procedural controls; no API/model/dependency/wire changes.",
+    "originalNewControls": 6,
+    "boundary": "Private retained-page ratio comparisons are separate from final current-model/native audio/render/device acceptance."
+  },
+  "fragmented_multirest_bar_review": {
+    "reviewed_app_commit": "ce68cb11a00a4585760be6be707db607b492a1cc",
+    "license": "Apache-2.0",
+    "scope": "Recover a physical solid bar body around fragmented semantic heads, retaining the existing complete bilateral-cap proof. Only proved interior fragments are removed; genuine neighboring heads remain. Seven original procedural controls; no API/model/dependency/wire changes.",
+    "originalNewControls": 7,
+    "boundary": "Original pixel controls and private source-stage geometry comparisons; no broad accuracy claim or final paired runtime acceptance."
   }
 }

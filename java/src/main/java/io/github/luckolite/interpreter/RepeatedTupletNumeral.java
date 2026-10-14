@@ -148,6 +148,7 @@ final class RepeatedTupletNumeral {
                     if (covered[yy]) hidden++;
                 }
                 if (hidden > rh * .45f) continue;
+                if (ownedJoined && !visibleBeyondLongStem(gray, w, h, x, y, rw, rh, gap, covered)) continue;
                 int visibleInk = 0, visiblePaper = 0, clearPaper = 0;
                 for (int i = 0; i < ni; i++) if (!covered[ink[i] / rw]) visibleInk++;
                 for (int i = 0; i < np; i++)
@@ -171,6 +172,42 @@ final class RepeatedTupletNumeral {
             }
         }
         return null;
+    }
+
+    private static boolean visibleBeyondLongStem(
+            byte[] gray, int w, int h, int x, int y, int rw, int rh, float gap, boolean[] covered) {
+        boolean[] stems = new boolean[rw];
+        boolean found = false;
+        for (int xx = 0; xx < rw; xx++) {
+            int ink = 0;
+            for (int yy = 0; yy < rh; yy++) if ((gray[(y + yy) * w + x + xx] & 255) < 190) ink++;
+            if (ink < rh * .9f) continue;
+            int outside = 0;
+            for (int yy = y - 1;
+                    yy >= Math.max(0, y - Math.round(gap)) && (gray[yy * w + x + xx] & 255) < 190;
+                    yy--) outside++;
+            for (int yy = y + rh;
+                    yy < Math.min(h, y + rh + Math.round(gap))
+                            && (gray[yy * w + x + xx] & 255) < 190;
+                    yy++) outside++;
+            if (outside < gap * .5f) continue;
+            found = true;
+            for (int dx = Math.max(0, xx - 1); dx <= Math.min(rw - 1, xx + 1); dx++)
+                stems[dx] = true;
+        }
+        if (!found) return true;
+        int residual = 0, rows = 0;
+        for (int yy = 0; yy < rh; yy++) {
+            if (covered[yy]) continue;
+            boolean ink = false;
+            for (int xx = 0; xx < rw; xx++)
+                if (!stems[xx] && (gray[(y + yy) * w + x + xx] & 255) < 165) {
+                    residual++;
+                    ink = true;
+                }
+            if (ink) rows++;
+        }
+        return residual >= Math.max(3, rh * .25f) && rows >= 2;
     }
 
     private static boolean visibleOpening(
