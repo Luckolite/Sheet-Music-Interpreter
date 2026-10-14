@@ -8,7 +8,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export, articulation_export, ornament_export
+from . import clef_export, articulation_export, ornament_export, grace_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -156,8 +156,10 @@ def expression_direction(measure, mark, offset):
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
               gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
-              articulation_flags=0, attack_fragment=True):
+              articulation_flags=0, attack_fragment=True, grace=None):
     node = element(measure, 'note')
+    if grace is not None:
+        element(node, 'grace', **{('steal-time-previous' if grace['afterGrace'] else 'steal-time-following'): grace['stealPercent']})
     if chord:
         element(node, 'chord')
     if event is None:
@@ -178,7 +180,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         if alter:
             element(pitch, 'alter', alter)
         element(pitch, 'octave', midi // 12 - 1)
-    element(node, 'duration', duration)
+    if grace is None:
+        element(node, 'duration', duration)
     for active, kind in ((stop, 'stop'), (start, 'start')):
         if active:
             element(node, 'tie', type=kind)
@@ -189,6 +192,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         element(node, 'type', 'whole')
     else:
         note_type(node, duration, event)
+    if grace is not None and node.find('type') is None:
+        raise ValueError('Grace note has no exact written type')
     if event is not None and event_kind(event) == 'UNPITCHED':
         element(node, 'notehead', 'x')
     effect = event.get('guitarEffect') if event and attack_fragment else None
@@ -314,16 +319,25 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if bar['start'] <= start < end <= bar['start']+bar['length']:
                 literal_rests.append(dict(row, start=start, end=end))
         first_event = len(events)
+        written = grace_export.plan(page, ticks)
         for note_index, n in enumerate(page['events']):
             if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
                 raise ValueError('MusicXML note pitch must be a MIDI integer in 0..127')
             start, duration = ticks(n['startBeat']), ticks(n['durationBeats'])
-            if duration <= 0 or start + duration > local_start + 2:
+            placement = written.get(note_index)
+            if placement is not None:
+                start, duration = placement['start'], placement['duration']
+            is_grace = placement is not None and placement['grace']
+            if duration <= 0 or (start if is_grace else start + duration) > local_start + 2:
                 raise ValueError('MusicXML note duration lies outside the page timeline')
-            events.append(dict(n, start=offset+start, end=offset+min(local_start,start+duration), tie_stop=False, tie_start=False,
+            events.append(dict(n, start=offset+start, end=offset+(start if is_grace else min(local_start,start+duration)), tie_stop=False, tie_start=False,
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
                                retainedArticulations=articulation_export.retained(page, note_index),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index)))
+            if is_grace:
+                events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
+                                  stealPercent=placement['steal'], graceWrittenDuration=duration,
+                                  principalSourceIdentity=first_event+placement['principal'])
         from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
         def absolute(anchor):
             if anchor is None:
@@ -396,13 +410,15 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         literal_edges = {tick for row in literal_rests if same_staff(row)
                          for tick in (row['start'], row['end'])}
         for index, n in enumerate(notes):
+            if n.get('grace', False):
+                continue
             gliss = n.get('glissando')
             if gliss is None:
                 continue
             if (not isinstance(gliss,dict) or gliss.get('style') != 'white_keys'
                     or type(gliss.get('targetMidi')) is not int or not 0 <= gliss['targetMidi'] <= 127):
                 raise ValueError('Unsupported glissando notation')
-            targets = [target for target in notes if abs(target['start']-n['end']) <= 2]
+            targets = [target for target in notes if not target.get('grace', False) and abs(target['start']-n['end']) <= 2]
             if len(targets) == 1 and event_kind(targets[0]) == 'PITCHED' and targets[0]['midi'] == gliss['targetMidi']:
                 n['gliss_start'] = index % 16 + 1
                 targets[0]['gliss_stop'] = n['gliss_start']
@@ -427,7 +443,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     rest_symbols.append(symbol)
                     rendered.add(mark['identity'])
                 continue
-            eligible = [n for n in notes if n['end'] == release and not n.get('durationFallback', False)
+            eligible = [n for n in notes if not n.get('grace', False) and n['end'] == release and not n.get('durationFallback', False)
                         and (not mark['ownerIds'] or n['sourceIdentity'] in mark['ownerIds'])]
             if eligible:
                 selected = (min if symbol['inverted'] else max)(eligible, key=(
@@ -437,7 +453,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 rendered.add(mark['identity'])
         previous = {}
         for n in notes:
-            if event_kind(n) == 'UNPITCHED':
+            if n.get('grace', False) or event_kind(n) == 'UNPITCHED':
                 continue
             prior = previous.get(n['midi'])
             if n.get('tiedFromPrevious') and prior and abs(prior['end']-n['start']) <= 2:
@@ -446,7 +462,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             previous[n['midi']] = n
         groups = defaultdict(list)
         for n in notes:
-            groups[n['start'], n['end']].append(n)
+            if not n.get('grace', False):
+                groups[n['start'], n['end']].append(n)
         voice_ends = []
         for (start, end), chord in sorted(groups.items()):
             voice = next((i for i, at in enumerate(voice_ends) if at <= start), len(voice_ends))
@@ -456,6 +473,23 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 voice_ends[voice] = end
             for n in chord:
                 n['voice'] = voice + 1
+        by_source = {n['sourceIdentity']: n for n in notes}
+        grace_groups = defaultdict(list)
+        for n in notes:
+            if n.get('grace', False):
+                owner = by_source.get(n['principalSourceIdentity'])
+                if owner is None or owner.get('grace', False):
+                    raise ValueError('Grace principal is outside exported part')
+                n['voice'] = owner['voice']
+                grace_groups[n['principalSourceIdentity'], n['afterGrace']].append(n)
+        def emit_graces(measure, chord, after, anchor, flats):
+            pending = [g for n in chord if anchor == (n['end'] if after else n['start'])
+                       for g in grace_groups.get((n['sourceIdentity'], after), ())]
+            for g in sorted(pending, key=lambda g: (g['graceOrdinal'], g['sourceIdentity'])):
+                emitted = emit_note(measure, g['graceWrittenDuration'], g['voice'], g, flats=flats,
+                                    articulation_flags=g['retainedArticulations'], grace=g)
+                if g['sourceIdentity'] in requested_slur_owners:
+                    slur_attacks[g['sourceIdentity']] = emitted
         for index, bar in enumerate(bars):
             measure = element(part, 'measure', number=index+1)
             attributes = element(measure, 'attributes')
@@ -489,7 +523,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 if mark['identity'] not in rendered and (a <= mark['startTick'] < b
                         or index == len(bars)-1 and mark['kind'] == 'PEDAL_UP' and mark['startTick'] == b):
                     expression_direction(measure, mark, mark['startTick']-a)
-            present = [n for n in notes if n['start'] < b and n['end'] > a]
+            present = [n for n in notes if not n.get('grace', False) and n['start'] < b and n['end'] > a]
             bar_rests = [r for r in silent if r['barIndex'] == index]
             voices = sorted({n['voice'] for n in present}) or ([] if bar_rests else [1])
             rest_voices = {max(1000, len(voice_ends))+i+1: row for i, row in enumerate(bar_rests)}
@@ -513,11 +547,12 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     fragment_start = start
                     for duration in duration_parts(end-start, chord):
                         fragment_end = fragment_start + duration
+                        if any(fragment_start == n['start'] for n in chord) and start in clef_changes and start not in emitted_clefs:
+                            clef_export.write(element(measure, 'attributes'), clef_changes[start])
+                            emitted_clefs.add(start)
+                        emit_graces(measure, chord, False, fragment_start, bar['key']<0)
                         articulation_flags = articulation_export.chord_marks(chord, fragment_start)
                         for ci, n in enumerate(chord):
-                            if fragment_start == n['start'] and start in clef_changes and start not in emitted_clefs:
-                                clef_export.write(element(measure, 'attributes'), clef_changes[start])
-                                emitted_clefs.add(start)
                             emitted = emit_note(measure, duration, voice, n, chord=ci>0,
                                       stop=fragment_start > n['start'] or n['tie_stop'],
                                       start=fragment_end < n['end'] or n['tie_start'], flats=bar['key']<0,
@@ -527,6 +562,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                       attack_fragment=fragment_start==n['start'])
                             if fragment_start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
                                 slur_attacks[n['sourceIdentity']] = emitted
+                        emit_graces(measure, chord, True, fragment_end, bar['key']<0)
                         fragment_start = fragment_end
                     cursor = end
                 if cursor < b:

@@ -132,7 +132,13 @@ public final class Main {
                         physicalPage < 0
                                 ? SheetInterpreter.analyze(labels, gray, width, height, annotations)
                                 : SheetInterpreter.analyze(
-                                        labels, gray, width, height, annotations, null, physicalPage),
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        annotations,
+                                        null,
+                                        physicalPage),
                         initialKey);
         float[] beats = new float[score.measures().size()];
         Arrays.fill(beats, initialMeter.quarterBeats());
@@ -233,6 +239,7 @@ public final class Main {
                 event.put("y", note.pageY() * height);
                 events.add(event);
             }
+            attachWrittenPlacements(score.notes(), events, beats);
         }
         attachNotePerformance(score.notes(), events);
         var result = new LinkedHashMap<String, Object>();
@@ -309,6 +316,20 @@ public final class Main {
         }
         identity.put("clefInferred", guessed);
         return identity;
+    }
+
+    /** Optional source engraving context; existing event clocks remain the playback clock. */
+    static void attachWrittenPlacements(
+            List<ScoreNoteEvent> notes, List<Map<String, Object>> events, float[] beats) {
+        if (notes.stream().noneMatch(n -> (n.articulations() & NoteOrnament.GRACE) != 0)) return;
+        if (notes.size() != events.size())
+            throw new IllegalArgumentException("Written placement needs one event per source head");
+        for (int i = 0; i < notes.size(); i++) {
+            var note = notes.get(i);
+            var placement =
+                    ScoreNoteTiming.writtenPlacement(note, notes, beats[note.measureIndex()]);
+            if (placement.isPresent()) events.get(i).put("writtenPlacement", placement.get());
+        }
     }
 
     static void attachNotePerformance(

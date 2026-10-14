@@ -57,7 +57,9 @@ class MusicXmlOrnamentTests(unittest.TestCase):
             self.assertEqual([],self.export(document([beams<<16])).findall('.//ornaments'))
 
     def test_articulation_grace_and_guitar_bits_do_not_invent_ornament(self):
-        root=self.export(document([1|(1<<15)|(1<<24)]))
+        from sheet_interpreter.ornament_export import retained
+        self.assertEqual(0,retained(document([1|(1<<15)|(1<<24)])['pages'][0],0))
+        root=self.export(document([1|(1<<24)]))
         self.assertEqual([],root.findall('.//ornaments'))
         self.assertEqual(1,len(root.findall('.//accent')))
 

@@ -6412,5 +6412,18 @@
     ],
     "verification": "35 original helper/crop/font/conflict controls, pinned page-stage comparisons and a private real-crop Android instrumentation check. No private raster, test APK, logs or source-specific rule is included.",
     "boundary": "Full current-model page decoding, assembled playback and paired packaged deployment remain pending."
+  },
+  "standalone_written_grace_export_review": {
+    "license": "Apache-2.0",
+    "source": "Original standalone adapters and logical score controls using the existing mapped written-placement API",
+    "files": {
+      "java/src/main/java/io/github/luckolite/interpreter/Main.java": "a1e69ecb69fb0e6e86d76d05548aa14923701f21e4d5d7dc750ba3d696342a1d",
+      "java/src/test/java/io/github/luckolite/interpreter/MainWrittenPlacementExportTest.java": "22e34a799f0f2a25886f34e8cb4b963279ec092c475a614c593dd21ce4b32584",
+      "src/sheet_interpreter/grace_export.py": "4d9476ef465773128341e109cfedd152b8e3d3bf423fdd75e161cd6475bbb9a3",
+      "tests/test_musicxml_grace.py": "ce124e9f55bc009e9e0d9055cd5bae2c17a11222420a8ffd2b9e2186d341e727"
+    },
+    "scope": "Optional notation metadata only on grace-bearing pages; existing recognition and playback fields unchanged. Source-owned prefix/trailing groups, principal written clocks and slur order retained.",
+    "verification": "37 focused Java and 90 MusicXML controls; 525-test Python pass before three additional focused cross-bar/clef controls; saved two-page exact recognition/playback replay; native prefix/trailing and PNG/PDF smoke checks.",
+    "boundary": "No mapped Java, model, wire or cache change. Cumulative app/paired worker packaging and deployment remain user-deferred."
   }
 }

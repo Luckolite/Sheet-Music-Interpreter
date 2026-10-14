@@ -1701,3 +1701,33 @@ limitations; valid source XML does not prove those renderer paths complete.
 The existing app already writes base ornament glyphs. No recognition, Java,
 model, wire or cache identity changes are included. Packaged rollout remains
 user-deferred. No private score content or external implementation was used.
+
+## Standalone written grace export
+
+The standalone Java `Main` adapter adds optional written-placement records on
+grace-bearing pages using the existing mapped `ScoreNoteTiming.writtenPlacement`
+API. It preserves all existing recognition and playback JSON fields. Ordinary
+pages retain their prior JSON shape. The original Python `grace_export.py`
+adapter validates source-slot correspondence, principal and staff context,
+written anchors, complete group ordinals and finite steal percentages before
+engraving. Unknown ownership is not inferred from page spacing.
+
+MusicXML emits prefix or trailing grace heads without metric duration, inherits
+the principal's voice, preserves its full written clock through tied fragments,
+and binds slurs using the retained grace order. Unpitched grace semantics remain
+unsupported. Existing app engraving already uses the same written-placement
+API, so this adapter repair requires no app timing or recognition change.
+
+Six original Java adapter controls and twelve original Python logical-score
+controls cover metadata separation, prefix/trailing ownership, ordinary JSON,
+unowned and stale evidence, group validation, cross-bar fragments and slurs.
+Focused Java checks and the Python suite pass. Saved-label replay on two private
+pages preserves the complete prior decoded JSON after removing the added
+metadata; four original grace heads now survive the MusicXML export. Actual
+bundled-renderer controls preserve both prefix and trailing groups and their
+playback order. No private score material was incorporated into public fixtures.
+
+Only the standalone adapter's source fingerprint changes. Recognition, model,
+wire, guide and audio identities and mapped-source hashes remain unchanged.
+The public Java artifact is rebuilt for the optional metadata; cumulative APK
+and packaged Hub/worker deployment remain user-deferred.

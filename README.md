@@ -87,6 +87,15 @@ they do not replace it with performed subdivisions. Unpitched tonal ornaments
 still require explicit instrument semantics. Older notation readers may not
 display delayed inverted turns or auxiliary accidentals.
 
+Grace-bearing pages include optional `events[].writtenPlacement` from the shared
+written timing API. Existing `startBeat`/`durationBeats` remain playback clocks.
+MusicXML uses the written onset, duration, principal index, ordinal and steal
+percentage to preserve prefix and trailing grace groups without consuming
+measure time or shortening the principal's written note. Grace slurs retain
+their attack order. Missing or contradictory ownership is reported rather than
+converted into ordinary notes; regenerate older grace-bearing decoded JSON
+with the current Java bridge to obtain the written metadata.
+
 MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
 clefs from the retained note context, including changes inside measures. Note
 pitches and playback stay unchanged. Without reliable source clef metadata, the

@@ -66,7 +66,7 @@ class ArticulationExportTests(unittest.TestCase):
         self.assertEqual([], self.marks(self.export(doc)))
 
     def test_ornament_bits_are_not_reinterpreted_as_basic_marks(self):
-        self.assertEqual(['accent'], self.marks(self.export(document([(0,1,60,1|(1<<15)|(1<<24))]))))
+        self.assertEqual(['accent'], self.marks(self.export(document([(0,1,60,1|(1<<14)|(1<<24))]))))
 
     def test_invalid_source_flags_refused(self):
         for flags in (True, -1, 1.5, '1', 1<<32):

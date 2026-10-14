@@ -3,6 +3,7 @@
 """Retained printed-slur ownership and document-order MusicXML numbering."""
 import xml.etree.ElementTree as ET
 from .slur_wire import anchor, encode_source
+from .grace_export import order as musical_order
 
 
 def retained_spans(pages):
@@ -53,7 +54,7 @@ def apply(root, spans, attacks, events):
         start, end = attacks.get(start_owner), attacks.get(end_owner)
         if start is None or end is None:
             raise ValueError('Missing retained slur attack fragment')
-        if events[start_owner]['start'] >= events[end_owner]['start']:
+        if musical_order(events[start_owner]) >= musical_order(events[end_owner]):
             raise ValueError('Retained slur endpoints are not in musical order')
         if parts[start] is not parts[end]:
             raise ValueError('Cross-part slur needs an explicit part mapping')
