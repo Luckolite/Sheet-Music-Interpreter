@@ -165,7 +165,8 @@ final class PrintedSlurPageCapture {
                 owned.span().ifPresent(spans::add);
                 if (owned.status() == PrintedSlurOwners.Status.UNPITCHED_UNRESOLVED
                         || owned.status() == PrintedSlurOwners.Status.SAME_PITCH_UNRESOLVED
-                        || owned.status() == PrintedSlurOwners.Status.TIE_PITCH_CONFLICT) {
+                        || owned.status() == PrintedSlurOwners.Status.TIE_PITCH_CONFLICT
+                        || owned.status() == PrintedSlurOwners.Status.REVERSED_CLOCK) {
                     PrintedSlurOwners.bind(
                                     id,
                                     physicalPage,

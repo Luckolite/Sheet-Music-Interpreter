@@ -1390,3 +1390,14 @@ dependencies. Model weights, lineage and third-party licenses are unchanged.
 No commercial pages, private library data, masks or logs are published.
 Full app styling, fresh whole-library accuracy, packaged paired worker/audio
 verification, deployment and device acceptance remain separate.
+
+## Preliminary slur timing conflicts
+
+App commit `3762d6ecaead39b460ed0c65b1220b8ee09abc39` retains uniquely proved pixel endpoints as deferred
+evidence when the preliminary attacks are reversed or equal. The original
+procedural regression fails before the repair. Final assembled timing must
+still prove forward order and distinct sounding pitches before promotion;
+unknown/reversed final timing remains pending and source input is immutable.
+Recognition37 invalidates prior36 guides across app, Hub and both writers.
+Guide285 records and audio79 are unchanged. This is source/model-free evidence;
+packaged Android and paired native worker rollout remain pending.

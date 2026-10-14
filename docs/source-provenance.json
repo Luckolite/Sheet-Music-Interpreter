@@ -1518,14 +1518,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "cc891552fb50a42e2cab6e64458c004328a732684852c8d7181d7dabd781715a",
-      "source_normalized_sha256": "69661cba290d80527294700a533759a52878edc9bd5cb4da78ee4140af0df6c1",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "review_note": "Guide285 and recognition36 invalidate prior page results while retaining old artifacts. App/Hub/Python writer contract agrees; audio79 unchanged. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "source_sha256": "d51af20cca32fe84abacb77072e6eabfb1538aee70b7bebdf7ce224775c50696",
+      "source_normalized_sha256": "94889b4342f1e0fe3a9db1707a80758b4786a9ed2117ec0f0a1eb64a2dd71df3",
+      "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
+      "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
       "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "standalone_sha256": "f8cd38b41e6ff0c8938a5c139f49dac96daa73fcd157d2f772b41a0eaed473d4",
-      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9"
+      "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
+      "standalone_sha256": "f243205702be13c4dc5846697dc757f5c73d3898aa608f67ec9af732dd051f79",
+      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1581,14 +1582,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "a0dadddf6540db90a2e44c40a266e4117317bde8994f90a0ea913b0d11603c40",
-      "source_normalized_sha256": "7646a07e377a4a3a8a191901e9548a63a1ef12aed9fe1b897bfacf6ce1b40d33",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "source_sha256": "4b474af161780b40c88ff47dd55847c34a6f43e296355afa863bf910b4897645",
+      "source_normalized_sha256": "1beb6ec339c10f52acf589532e060bca10fad89438bc479c24a15fbb3d8e8ae6",
+      "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
       "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Guide285 writes actual source framing; original260..284bytes stay unchanged for losslessly empty source. Owned/deferred data cannot be silently downgraded. Recognition36 matches app/Hub. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
+      "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "ad07d7992ad4e876d619f8e112d58d0dbcf5872949504b0bf71c6e69e9b95a75"
+      "standalone_sha256": "9a06da08f9e1f36dd5ec62b4b311eaf53c7461a1787f3955ef3d8c7c70c9b0c0",
+      "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2497,13 +2499,14 @@
     },
     "PrintedSlurPageCapture.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
-      "source_sha256": "d8bdcf51c097f1c5e4b957fa1fd0dda3d11b145598ca63c0753810e7fecb3541",
-      "source_normalized_sha256": "e8711eaa01ca9d3a2c32773a5010da184d964c1a986c3c5e73d7700653bafeb4",
-      "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "source_sha256": "c2d8aacb416a6a286593a69c93ef1bf38e63937806ccc70bcad894d56ba6a918",
+      "source_normalized_sha256": "04201ceb292b1ca121f9919bcf8fa8fff4c8f978f8ff6c0345fc5ff945e5f113",
+      "source_state": "Committed source; paired packaged rollout remains pending.",
+      "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
+      "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
       "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Persist uniquely bound raw geometry when musical evidence is unavailable; partial scans remain discarded at bounded admission/run limits. Exact retained ties do not add duplicate phrases. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+      "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
+      "standalone_sha256": "36e65cf4ebf6e5c1c08449d675c2b615834f390535e511998d7d6bbe59304547"
     },
     "PrintedSlurContext.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContext.java",
@@ -6105,5 +6108,16 @@
       "courtesyMeterHelperRetained": true
     },
     "boundary": "Source and scoped synthetic/cache/renderer checks are distinct from fresh whole-library inference, full app HTML/style rendering, packaged worker/audio self-tests, deployment and device acceptance. These rollout checks remain pending."
+  },
+  "preliminary_slur_clock_retention_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
+    "regression": "PrintedSlurPageCaptureTest.contradictedPreliminaryClockRetainsGeometryUntilFinalAssembly",
+    "baselineFails": true,
+    "reverseAndEqualClockCovered": true,
+    "recognitionRevision": 37,
+    "guideFormat": 285,
+    "audioVersion": 79,
+    "boundary": "Source and model-free controls only; packaged Android/paired worker deployment and fresh real-score accuracy remain pending."
   }
 }

@@ -92,4 +92,35 @@ public class PrintedSlurPageCaptureTest {
     public void pageLocalHeadCannotEscapeRetainedNoteCount() {
         PrintedSlurPageCapture.capture(0, 1, pixels(), null, W, H, List.of(frame(1, 62)), Set.of());
     }
+
+    @Test
+    public void contradictedPreliminaryClockRetainsGeometryUntilFinalAssembly() {
+        for (long endAttack : new long[] {0, 100}) {
+            var frame = frame(1, 62);
+            var heads = List.of(
+                    new PrintedSlurOwners.Head(0, 40, 85, 0, 1, 1, 100, 60),
+                    new PrintedSlurOwners.Head(1, 190, 95, 0, 1, 1, endAttack, 62));
+            var captured = PrintedSlurPageCapture.capture(
+                    9, 2, pixels(), null, W, H,
+                    List.of(new PrintedSlurPageCapture.Frame<>(
+                            frame.left(), frame.top(), frame.right(), frame.bottom(), frame.track(), heads)),
+                    Set.of());
+            assertEquals(Integer.valueOf(1), captured.statuses().get(PrintedSlurOwners.Status.REVERSED_CLOCK));
+            var source = captured.source();
+            assertTrue(source.spans().isEmpty());
+            assertEquals(1, source.candidates().size());
+            assertEquals(new ScoreSlurPages.Anchor(9, 0), source.candidates().get(0).start());
+            assertEquals(new ScoreSlurPages.Anchor(9, 1), source.candidates().get(0).end());
+            assertEquals(source, ScoreSlurClassification.resolve(source, List.of(
+                    new ScoreSlurClassification.Note(0, 100, 0, 60),
+                    new ScoreSlurClassification.Note(1, endAttack, 0, 62)), Set.of()));
+            var finalSource = ScoreSlurClassification.resolve(source, List.of(
+                    new ScoreSlurClassification.Note(0, 0, 0, 60),
+                    new ScoreSlurClassification.Note(1, 100, 0, 62)), Set.of());
+            assertEquals(source.candidates(), finalSource.spans());
+            assertEquals(source.noteOrigins(), finalSource.noteOrigins());
+            assertTrue(finalSource.candidates().isEmpty());
+            assertTrue(source.spans().isEmpty());
+        }
+    }
 }
