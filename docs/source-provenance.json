@@ -2096,15 +2096,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "1b782089d10143eb45e95712d532e4058e5c186f4e18a91dae32bd5bf141a18c",
-      "source_normalized_sha256": "b149558a08451549df3fded1f17552afa924380800c2695ecca4d21ebd89459c",
+      "source_sha256": "24a95c7ed39c5fc7030a23c0412c2a893c124ca76b51ddf704e9d652432d2fb1",
+      "source_normalized_sha256": "1a98b38c0a53aeb79742ac38c8e9bb245927597b801312aacc34218064e3a723",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
+      "reviewed_source_state": "Package-only port verified. Three original-PDF readings must agree; runtime qualification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "1a39a3434a6baa1f5e92fee51c5015130137afc7052627a4fc547405a9cec35f",
+      "standalone_sha256": "12c775ab142ad4f16639e66e78e3f64edb61e73f53298644ca1169ff62b1b021",
       "license": "Apache-2.0",
-      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes.",
-      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903",
+      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes.",
+      "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -2883,6 +2883,17 @@
       "reviewed_source_state": "Exact package-only standalone counterpart verified against the committed app source.",
       "review_note": "Explicit description role parser with original synthetic tests. Channel identity is not a musical credit. Service credits remain unresolved for review. Android importer and downloader adapters are app-only.",
       "reviewed_app_commit": "2931b984c09217db73dd8235d2addf15cf57d0cb"
+    },
+    "RepeatedCreditLetterConsensus.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/RepeatedCreditLetterConsensus.java",
+      "source_sha256": "8a781da35134b75869e70410183724045d6cf3e1d3e933490f7596aa291bc0ff",
+      "source_normalized_sha256": "1b329a23289d796395e546233aee48b1a49ae738c11f64b3c2f487174639e71a",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RepeatedCreditLetterConsensus.java",
+      "standalone_sha256": "ba3c75b72e601909b145bf4a17755646040e4b107d2740f13d588078d8269e11",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "Package-only port verified. Three original-PDF readings must agree; runtime qualification pending.",
+      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes.",
+      "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff"
     }
   },
   "interpreter_speedup_review": {
@@ -6891,5 +6902,13 @@
         "source_sha256": "199ce76ab2c303bf1a1ef7fa989950fd580d138359a8e61aac618256506d0d68"
       }
     ]
+  },
+  "metadata_repeated_letter_adapter_review": {
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "f16e4fc04c90005af04aa684efaf08a0a51c03047f2f9ce8cf7f31acc0e7ebcd",
+    "crop_source_path": "app/src/main/java/com/musicsheets/app/pdf/BibliographicPdfCrop.java",
+    "crop_source_sha256": "b1223e2dd223cb3c5a7cfd6b1fec7c17bbb2e825c576bf86a49794e2a528ef8c",
+    "boundary": "App-only original-PDF bitmap adapters retain cancellation, bounds and recycling. Printed repeated-letter reads use 1x/2x/4x; unresolved terminal-stroke retry uses 2x/3x/4x with unchanged ink and confidence gates. Public selection/consensus ported. No native metadata caller, model or record-layout change. Android runtime and paired deployment pending.",
+    "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff"
   }
 }

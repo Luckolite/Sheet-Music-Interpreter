@@ -1561,6 +1561,49 @@ public final class ScoreCreditsDetector {
     }
 
     /** Malformed mixed-case text in a small contributor position needs fresh pixels. */
+    /** Reread located printed names; this does not assign or change a contributor role. */
+    public static List<Line> repeatedCreditLetterCandidates(Page page) {
+        if (page.photographicCover || page.notationTop <= 0) return List.of();
+        Line title = chooseTitle("", page, page.lines, page.notationTop);
+        if (title == null) return List.of();
+        return page.lines.stream()
+                .filter(
+                        line -> {
+                            if (line.equals(title)
+                                    || line.top < title.bottom
+                                    || line.bottom >= page.notationTop
+                                    || line.bottom >= page.height * .3f
+                                    || line.height() < 16
+                                    || line.height() > page.width * .04f
+                                    || notationReviewLabel(page, line)) return false;
+                            if (bibliographicCreditLineNeedsHorizontalMargins(page, line))
+                                return true;
+                            if (line.left <= page.width * .55f) return false;
+                            String[] names =
+                                    clean(line.text).replaceFirst("[,;]+$", "").split("[,;]\\h*");
+                            return names.length >= 2
+                                    && names.length <= 6
+                                    && Arrays.stream(names)
+                                            .allMatch(
+                                                    n ->
+                                                            properReviewName(n)
+                                                                    && n.trim().contains(" "));
+                        })
+                .toList();
+    }
+
+    public static List<Line> mergeRepeatedCreditLetter(
+            Page page, Line line, List<String> readings, List<Float> confidence) {
+        if (!repeatedCreditLetterCandidates(page).contains(line)) return page.lines;
+        String text = RepeatedCreditLetterConsensus.restore(line.text, readings, confidence);
+        if (text.equals(line.text) || !preservesBibliographicIdentifiers(page, line, text))
+            return page.lines;
+        var result = new ArrayList<>(page.lines);
+        result.set(
+                result.indexOf(line), new Line(text, line.left, line.top, line.right, line.bottom));
+        return List.copyOf(result);
+    }
+
     public static List<Line> malformedHeaderCreditCandidates(Page page) {
         if (page.photographicCover || page.notationTop <= 0) return List.of();
         Line title = chooseTitle("", page, page.lines, page.notationTop);
