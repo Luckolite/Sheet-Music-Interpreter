@@ -65,7 +65,7 @@ class WrittenDurationPartsTests(unittest.TestCase):
         for beats in (.5,1,1.5,1.75,2,3,3.5,4,1/3,4/5,4/7):
             duration=round(beats*DIVISIONS)
             self.assertEqual((duration,),duration_parts(duration))
-        self.assertEqual((25200,),duration_parts(25200,[dict(tupletActualNotes=3,tupletNormalNotes=2)]))
+        self.assertEqual((13440,),duration_parts(13440,[dict(tupletActualNotes=3,tupletNormalNotes=2)]))
 
     def test_unproved_fractional_clock_is_not_rounded_or_reinterpreted(self):
         self.assertEqual((10081,),duration_parts(10081))

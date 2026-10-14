@@ -2,6 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 """MusicXML 4.0 concert-pitch export of the decoded performance (not source engraving)."""
 from collections import defaultdict
+from functools import lru_cache
+from math import gcd
+from fractions import Fraction
 from decimal import Decimal
 import math
 from pathlib import Path
@@ -45,6 +48,7 @@ def note_type(node, duration, event=None):
                     element(modification, 'actual-notes', actual)
                     element(modification, 'normal-notes', normal)
                     return
+        return  # An explicit ratio must not silently become ordinary or a different tuplet.
     for denominator, name in ((1, 'whole'), (2, 'half'), (4, 'quarter'), (8, 'eighth'),
                               (16, '16th'), (32, '32nd'), (64, '64th')):
         base = DIVISIONS * 4 // denominator
@@ -63,25 +67,62 @@ def note_type(node, duration, event=None):
                 return
 
 
-def duration_parts(duration, events=()):
-    """Split exact binary spans that have no single written glyph.
-
-    Preserve existing single values and explicit tuplet notation. Arbitrary
-    inferred clocks cannot justify inventing a tuplet or rounding its duration.
-    """
-    probe = ET.Element('note')
-    note_type(probe, duration)
-    if probe.find('type') is not None or any(n.get('tupletActualNotes', 1) != 1 for n in events):
-        return (duration,)
-    quantum = DIVISIONS // 16  # A written 64th; all ordinary values are exact here.
+@lru_cache(maxsize=256)
+def exact_written_parts(duration, values):
+    """Fewest exact glyphs from a proved duration vocabulary; no clock rounding."""
+    if not values or duration <= 0:
+        return None
+    quantum = 0
+    for value in values:
+        quantum = gcd(quantum, value)
     if duration % quantum:
-        return (duration,)
-    values = sorted({base * numerator // 4
-                     for base in (DIVISIONS * 4 // d for d in (1, 2, 4, 8, 16, 32, 64))
-                     for numerator in (4, 6, 7)
-                     if base * numerator % 4 == 0}, reverse=True)
+        return None
+    target = duration // quantum
+    units = tuple(value // quantum for value in values)
+    unreachable = target + 1
+    count, choice = [unreachable] * (target + 1), [0] * (target + 1)
+    count[0] = 0
+    for amount in range(1, target + 1):
+        for unit in units:
+            if unit <= amount and count[amount-unit] + 1 < count[amount]:
+                count[amount], choice[amount] = count[amount-unit] + 1, unit
+    if not choice[target]:
+        return None
     parts = []
-    remaining = duration
+    while target:
+        parts.append(choice[target] * quantum)
+        target -= choice[target]
+    return tuple(sorted(parts, reverse=True))
+
+
+def duration_parts(duration, events=()):
+    """Split exact composite spans while retaining each head's explicit ratio."""
+    heads = tuple(events) or (None,)
+    probes = []
+    for event in heads:
+        probe = ET.Element('note')
+        note_type(probe, duration, event)
+        probes.append(probe)
+    if all(probe.find('type') is not None for probe in probes):
+        return (duration,)
+    written_values = {Fraction(DIVISIONS * 4, denominator) * Fraction(numerator, 4)
+                      for denominator in (1, 2, 4, 8, 16, 32, 64)
+                      for numerator in (4, 6, 7)}
+    if any(event and event.get('tupletActualNotes', 1) != 1 for event in heads):
+        common = None
+        for event in heads:
+            actual = event.get('tupletActualNotes', 1) if event else 1
+            normal = event.get('tupletNormalNotes', 1) if event else 1
+            values = {int(value * normal / actual) for value in written_values
+                      if (value * normal / actual).denominator == 1}
+            common = values if common is None else common & values
+        parts = exact_written_parts(duration, tuple(sorted(common, reverse=True)))
+        return parts if parts is not None else (duration,)
+    # Keep the existing inferred-clock boundary: only ordinary 64th-grid spans split.
+    if duration % (DIVISIONS // 16):
+        return (duration,)
+    values = sorted((int(value) for value in written_values if value.denominator == 1), reverse=True)
+    parts, remaining = [], duration
     while remaining:
         value = next(v for v in values if v <= remaining)
         parts.append(value)

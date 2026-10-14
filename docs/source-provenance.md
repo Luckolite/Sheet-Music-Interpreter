@@ -1803,3 +1803,29 @@ source identity, invalid types and tied-fragment clock/ornament ownership. These
 are exporter controls, not a rebuilt native ornament-playback verification.
 No mapped interpreter source, recognition, model, wire, guide or audio identity
 changes are included.
+
+## Explicit composite tuplet durations
+
+The original Apache-2.0 MusicXML exporter previously refused to split explicit
+composite tuplet spans, leaving some notes without a written type. It could also
+fall through to an ordinary or inferred note type and silently drop the declared
+ratio. Explicit note typing now stays inside the declared actual/normal counts.
+Composite spans use an exact integer vocabulary of binary/dotted written values
+scaled by those ratios. Shared chord fragments use the intersection of each
+head's vocabulary. A cached shortest-cover calculation preserves the total
+integer clock without rounding and handles non-greedy covers. Ordinary inferred
+clock behavior is unchanged; this does not infer new tuplet rest-group evidence.
+
+Twelve original scalar controls in `test_musicxml_tuplet_parts.py` cover triplets,
+quintuplets, sextuplets, septuplets, nonstandard normal counts, mixed chord ratios,
+shared chord clocks, attack marks, cross-bar ties, exact sums and unsupported
+clock fallback. Ten fail against the previous exporter and all pass with this
+repair. The existing single-explicit-tuplet control now supplies a genuinely
+single written half-note triplet duration; its old duration was composite and
+incorrectly asserted that it must stay unsplit. Explicit composite cases are
+covered independently by the new controls.
+
+No mapped source, Java bridge, recognition/model, wire, guide or audio identity
+changes are included. No private score material or GPL implementation is used.
+These checks prove exporter glyph/ratio/clock structure, not notation-reader
+rest/tuplet-group layout or rebuilt renderer MIDI output.

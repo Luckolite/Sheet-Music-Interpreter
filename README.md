@@ -77,8 +77,11 @@ Exact binary spans without a single ordinary glyph are split into written
 values, tied for sustained notes. Chord heads share each fragment's clock;
 articulations, guitar text and phrase endpoints remain on the original attack,
 and release symbols remain on the final fragment. Existing single values and
-explicit tuplets are preserved. Arbitrary inferred clocks are not rounded into
-new rhythmic evidence.
+explicit tuplet ratios are preserved. Composite explicit tuplet spans use the
+fewest exact tied glyphs supported by every chord head's ratio. An explicit ratio
+never silently falls back to an ordinary note or a different ratio. Arbitrary
+inferred clocks are not rounded into new rhythmic evidence; unsupported clocks
+and unproved tuplet rest-group reconstruction remain separate limitations.
 
 Retained trills, turns, inverted turns, both mordent forms and single-note
 tremolo also survive MusicXML export. Delayed turns and explicit auxiliary
