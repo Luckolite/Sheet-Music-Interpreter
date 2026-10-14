@@ -4311,6 +4311,58 @@ public final class ScoreCreditsDetector {
         return work.matches("(?u)^\\p{Lu}[\\p{L}\\p{M}’'–-]*(?:\\h+[\\p{L}\\p{M}’'–-]+){1,9}$");
     }
 
+    /** Part designations precede the first system and identify instruments rather than works. */
+    private static boolean instrumentalPartHeading(Page page, Line line) {
+        if (page.notationTop <= 0
+                || line.top > page.notationTop
+                || line.bottom > page.notationTop + page.height * .025f) return false;
+        String[] words = clean(line.text).split("\\h+");
+        if (words.length != 2
+                || !words[0].matches("(?iu)violino?|viola|violoncello|flauto|oboe|fagotto|corno"))
+            return false;
+        String part = fold(words[1]);
+        return part.matches("solo|primo|secondo|i|ii|iii")
+                || part.length() >= 9 && editDistance(part, "principale") <= 1;
+    }
+
+    /** Numbered work labels may sit beside, rather than above, an engraved opening staff. */
+    private static JoinedTitle engravedPartWorkTitle(
+            Page page, Line heading, List<Line> lines, Set<String> knownNames) {
+        if (heading == null
+                || page.photographicCover
+                || page.notationTop <= 0
+                || page.notationTop > page.height * .25f
+                || heading.center() > page.width * .35f
+                || knownNames.stream().anyMatch(n -> same(n, heading.text))
+                || lines.stream().noneMatch(l -> instrumentalPartHeading(page, l))) return null;
+        Pattern work =
+                Pattern.compile(
+                        "(?iu)^(concerto|sonata|sinfonia)\\h*(?:no\\.?\\h*)?([IVX]{1,6}|[1-9][0-9]?)$");
+        var labels =
+                lines.stream()
+                        .filter(
+                                l ->
+                                        l != heading
+                                                && work.matcher(clean(l.text)).matches()
+                                                && l.top >= heading.bottom
+                                                && l.top - heading.bottom < page.height * .035f
+                                                && l.bottom <= page.notationTop + page.height * .06f
+                                                && l.left < page.width * .2f
+                                                && l.left <= heading.left + page.width * .08f
+                                                && l.right >= heading.right
+                                                && l.right < page.width * .5f
+                                                && l.height() >= heading.height() * .8f
+                                                && l.height() <= heading.height() * 2.2f)
+                        .toList();
+        if (labels.size() != 1) return null;
+        Line label = labels.get(0);
+        Matcher match = work.matcher(clean(label.text));
+        if (!match.matches()) return null;
+        return new JoinedTitle(
+                clean(heading.text) + " " + match.group(1) + " " + match.group(2),
+                List.of(heading, label));
+    }
+
     private static Line chooseTitle(String hint, Page page, List<Line> lines, float limit) {
         Line best = null;
         double bestScore = -1;
@@ -4341,12 +4393,14 @@ public final class ScoreCreditsDetector {
                     || DATED_AUTHOR.matcher(clean(l.text)).matches()
                     || paragraphLine(page, l, lines)
                     || clippedInstrumentLabel(page, l)
+                    || instrumentalPartHeading(page, l)
                     || (!confirmedHint && staffCharacterDirection(page, l, lines, limit))) continue;
             double score =
                     4 * l.height() / maximum
                             + Math.max(0, 1 - Math.abs(l.center() / page.width - .5) * 2)
                             + .2 * (1 - l.top / page.height);
             if (confirmedHint || instructionalDocumentHeading(page, l, lines)) score += 8;
+            if (engravedPartWorkTitle(page, l, lines, Set.of()) != null) score += 8;
             if (prominentArticleHeading(page, l, lines, limit, maximum)) score += 1.5;
             if (score > bestScore) {
                 best = l;
@@ -5215,6 +5269,9 @@ public final class ScoreCreditsDetector {
             float limit,
             boolean openingPage,
             Set<String> knownNames) {
+        JoinedTitle engraved =
+                openingPage ? engravedPartWorkTitle(page, heading, lines, knownNames) : null;
+        if (engraved != null) return engraved;
         Line ownedVersionCaption =
                 openingPage
                         ? nearbyVersionTitleCaption(page, heading, lines, limit, knownNames)
@@ -6468,17 +6525,33 @@ public final class ScoreCreditsDetector {
     }
 
     /** Role-supported author lists may include a one-word or hyphen-initial stage name. */
+
+    /** An independently recognizable full name anchors unusual case in a coauthor mononym. */
+    private static boolean mixedCaseCoauthor(String name) {
+        return name.matches("\\p{Lu}[\\p{L}\\p{M}]{2,30}")
+                && name.codePoints().filter(Character::isUpperCase).count() >= 2
+                && name.codePoints().anyMatch(Character::isLowerCase)
+                && !NOT_TITLE.matcher(name).find()
+                && !LEGAL.matcher(name).find()
+                && !compoundInstrumentationCaption("for " + name);
+    }
+
     private static List<String> contextualAuthorNames(String value) {
         List<String> names =
                 Arrays.stream(clean(value).split("\\h*(?:[,;]|\\band\\b|&)\\h*"))
                         .map(n -> clean(n).replaceAll("(?<=\\p{L})[-–]\\h+(?=\\p{Lu})", "-"))
                         .filter(n -> !n.isEmpty())
                         .toList();
+        boolean anchored =
+                names.size() >= 2
+                        && names.size() <= 6
+                        && names.stream().anyMatch(n -> n.contains(" ") && properReviewName(n));
         if (names.isEmpty()
                 || names.stream()
                         .anyMatch(
                                 n ->
                                         !(properReviewName(n)
+                                                || anchored && mixedCaseCoauthor(n)
                                                 || INITIALLED_NAME.matcher(n).matches()
                                                 || n.matches("\\p{Lu}\\p{Ll}{2,30}-\\p{Lu}"))))
             return List.of();

@@ -2045,15 +2045,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "0224f252eb986bba9eb9bec58769749ba473a6877f8f001fca9f0afbd42b7160",
-      "source_normalized_sha256": "bc304e577ee058028edda5fd0cfd1efeed246a04e9b307eac3de1dc75d2e60bc",
+      "source_sha256": "ea228bcd85a00ac326649967fca4a5b19ae1f7844c62c150f8d31d2e4825e6cf",
+      "source_normalized_sha256": "5880d48ec97dc95ffcd38e22767fdeed0b82207a43f45e3841204da957b42edf",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "8fd122d96d2cb68a9c37c0ef5c674737f2ab13322e591ba21ac48bada062f8a0",
+      "standalone_sha256": "dddc633cb3e27cffaa1e76b66d5dcf355ad5d57923ce879d82a819ffb0d89a40",
       "license": "Apache-2.0",
-      "review_note": "Dense preface columns and educational-method catalogue inventories; original controls preserve explicit credits and ordinary work headings. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
-      "reviewed_app_commit": "86e88c7de262c9e682024b3920cabdd038c12ba5",
+      "review_note": "Engraved instrument-part and numbered-work title layout; context-anchored mixed-case coauthors. Original synthetic controls preserve independent names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
+      "reviewed_app_commit": "12b953e7db0a0ae0604191a63e9c32765bea3004",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

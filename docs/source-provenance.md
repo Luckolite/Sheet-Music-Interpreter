@@ -1499,3 +1499,13 @@ and11unpitched export controls pass. Three original renderer comparisons retain
 alto, octave-treble and mid-measure changes with identical parsed MIDI. This
 standalone reconstruction adapter changes presentation only; no recognition,
 model, Main JSON, app/native wire, guide or audio identity changes.
+
+## Engraved work titles and mixed-case coauthors
+
+Instrument-part labels and nearby numbered work labels identify engraved titles,
+including labels overlapping the detected first staff. Mixed-case coauthors require
+an independently valid name and existing author-role context. Conflicting printed
+variants remain unresolved. Twenty-one original synthetic tests cover these boundaries.
+App commit `12b953e7db0a0ae0604191a63e9c32765bea3004` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.
