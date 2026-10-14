@@ -3803,6 +3803,10 @@ public final class ScoreCreditsDetector {
                             || REVIEW_DIRECTION.matcher(clean(line.text)).matches()
                             || unlabelledReviewNoise(page, heading, line, lines)
                             || publicationAudioAccessBadge(page, line, lines)
+                            || alignedChordReviewFragment(page, line, lines)
+                                    && knownNames.stream().noneMatch(n -> same(n, line.text))
+                                    && page.reviewCredits.stream()
+                                            .noneMatch(r -> intersects(r.line, line))
                             || compoundInstrumentationCaption(line.text)
                             || centeredWorkSubtitle(page, heading, line, knownNames)
                             || instructionalDocumentHeading(page, heading, lines)
@@ -4117,7 +4121,7 @@ public final class ScoreCreditsDetector {
         if (line.height() <= 0
                 || line.height() > page.width * .04f
                 || !(caption.equals("audio")
-                        || caption.equals("access")
+                        || caption.matches("access{1,2}")
                         || caption.equals("playback")
                         || publicationIncludedCaption(caption))) return false;
         Line audio = null, access = null, included = null;
@@ -4127,7 +4131,7 @@ public final class ScoreCreditsDetector {
                     || Math.abs(nearby.top - line.top) > line.height() * 5) continue;
             String value = clean(nearby.text);
             if (value.equalsIgnoreCase("audio")) audio = nearby;
-            else if (value.equalsIgnoreCase("access")) access = nearby;
+            else if (value.toLowerCase(Locale.ROOT).matches("access{1,2}")) access = nearby;
             else if (publicationIncludedCaption(value.toLowerCase(Locale.ROOT))) included = nearby;
         }
         return audio != null
@@ -4540,6 +4544,31 @@ public final class ScoreCreditsDetector {
             }
         }
         return lines;
+    }
+
+    /** Small chord-like readings need two separate clean chord anchors on the same row. */
+    private static boolean alignedChordReviewFragment(Page page, Line line, List<Line> lines) {
+        if (page.notationTop <= 0
+                || line.height() <= 0
+                || line.height() > page.width * .035f
+                || line.right - line.left > page.width * .14f) return false;
+        String chord = "[A-G](?:#|b|♯|♭)?(?:m|maj|dim|sus)?[0-9]*(?:/[A-G](?:#|b|♯|♭)?)?";
+        String fragment = "(?:" + chord + "|[A-G](?:[^\\s]m[0-9]*|[$h][0-9]*))";
+        if (!clean(line.text).matches(fragment + "(?:\\h+" + fragment + ")*")) return false;
+        int anchors = 0;
+        float left = line.left, right = line.right;
+        for (Line other : lines) {
+            if (other == line
+                    || other.height() < line.height() * .65f
+                    || other.height() > line.height() * 1.5f
+                    || Math.abs(other.bottom - line.bottom) > line.height() * .6f
+                    || other.left < line.right && other.right > line.left
+                    || !clean(other.text).matches(chord + "(?:\\h+" + chord + ")*")) continue;
+            anchors++;
+            left = Math.min(left, other.left);
+            right = Math.max(right, other.right);
+        }
+        return anchors >= 2 && right - left >= page.width * .2f;
     }
 
     private static float chordLyricsStart(Page page, List<Line> lines) {
@@ -5930,7 +5959,7 @@ public final class ScoreCreditsDetector {
             for (Line caption : lines) {
                 if (!clean(caption.text)
                         .matches(
-                                "(?iu)^p(?:la|a)y\\h*[0-9&]?.*\\b(?:favorites|selections|solos)\\b.*sound[- ]alike\\b.*"))
+                                "(?iu)^p(?:la|a)y\\h*[0-9&]?.*\\b(?:favorites|selections|solos|themes)\\b.*sound[- ]alike\\b.*"))
                     continue;
                 if (candidate == caption) return true;
                 if (candidate.top < caption.bottom
@@ -5987,7 +6016,7 @@ public final class ScoreCreditsDetector {
 
         Pattern collectionCaption =
                 Pattern.compile(
-                        "(?iu)^(?:solo\\h+arrangements\\h+of\\h+[0-9]+\\h+.*(?:songs|hits)\\h+including:?|[0-9]+\\h+solo\\h+arrangements\\h+with\\h+.*accompaniment|music\\h+from\\h+the\\h+motion\\h+picture\\h+soundtrack|includes\\h+[0-9]+\\h+(?:hit\\h+)?songs\\h+from\\h+the\\h+soundtrack(?::.*)?|[0-9]+\\h+themes\\h+from\\h+the\\h+(?:game|series|film)|[0-9]+\\h+of\\h+(?:the|her|his|their)\\h+(?:biggest|greatest|favorite)\\h+hits(?::.*)?)$");
+                        "(?iu)^(?:solo\\h+arrangements\\h+of\\h+[0-9]+\\h+.*(?:songs|hits)\\h+including:?|[0-9]+\\h+solo\\h+arrangements\\h+with\\h+.*accompaniment|musi[ce]\\h+from\\h+the\\h+motion\\h+picture\\h+soundtrack|includes\\h+[0-9]+\\h+(?:hit\\h+)?songs\\h+from\\h+the\\h+soundtrack(?::.*)?|[0-9]+\\h+themes\\h+from\\h+the\\h+(?:game|series|film)|[0-9]+\\h+of\\h+(?:the|her|his|their)\\h+(?:biggest|greatest|favorite)\\h+hits(?::.*)?)$");
         if (collectionCaption.matcher(text).matches()) return true;
         for (Line label : lines)
             if (collectionCaption.matcher(clean(label.text)).matches()

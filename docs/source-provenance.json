@@ -2026,15 +2026,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "e84cef39a1d4391f9049de4b7ea03db5b9e440c9c90031bbf4a91a8cf667f616",
-      "source_normalized_sha256": "13f5cb95e7157408bf3ba48fae9c0728e0102a772359d4875df06f36af3b55a3",
+      "source_sha256": "04d1b6ae6b5eca22c93d2ac264c7065d9ef8dba394f72cf3841e9cf0e18d51c4",
+      "source_normalized_sha256": "ffe4a5d8b1a86737ad21141a2875b56056a3ec05323733696c1d052608ed2c89",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "a623c9c0a73bcb5defce239827e8d1c48cbbe7d7d52842a47c694430ecea0325",
+      "standalone_sha256": "432fd8038d86362169a0b8b434c0d875ad5e7eeb293fa21357dc0c21823f705a",
       "license": "Apache-2.0",
-      "review_note": "Exact title-source ownership and tempo-anchored instructions; original synthetic controls preserve independent names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
-      "reviewed_app_commit": "05a62546a90085396c7256856384725d3f99d126",
+      "review_note": "Chord-row anchors, spatial audio badges and collection-caption context; original synthetic controls preserve independent names and explicit roles. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
+      "reviewed_app_commit": "3c3e6dc45c9efb69b5ea68a1a1a9f66ce58ff496",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

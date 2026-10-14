@@ -1275,3 +1275,13 @@ instructions. Twenty-four original synthetic tests cover these boundaries.
 App commit `05a62546a90085396c7256856384725d3f99d126` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Metadata chord rows and collection captions
+
+Two clean aligned chord anchors identify small chord-like review fragments,
+and complete audio badges and collection captions exclude publication noise. Explicit roles, known names and located
+review evidence remain protected. Spatial and grammatical context constrain these
+exclusions. Twenty-five original synthetic tests cover these boundaries.
+App commit `3c3e6dc45c9efb69b5ea68a1a1a9f66ce58ff496` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.
