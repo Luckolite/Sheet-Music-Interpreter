@@ -1287,6 +1287,80 @@ public final class ScoreCreditsDetector {
         return observedExact;
     }
 
+    /** Reread damaged contributor punctuation or an uppercase explicit credit in its tight box. */
+    public static List<Line> tightCreditRepairCandidates(Page page) {
+        if (page.photographicCover || page.notationTop <= 0) return List.of();
+        return page.lines.stream()
+                .filter(
+                        line ->
+                                line.bottom < page.notationTop
+                                        && line.height() > 0
+                                        && line.height() < page.width * .04f
+                                        && (puncturedContributor(page, line)
+                                                || uppercasePrefixCredit(page, line)))
+                .toList();
+    }
+
+    private static boolean uppercasePrefixCredit(Page page, Line line) {
+        Credit role = credit(clean(line.text));
+        return role != null
+                && !role.suffix
+                && bibliographicLineCandidate(page, line)
+                && role.value.equals(role.value.toUpperCase(Locale.ROOT))
+                && !creditNames(role.value).isEmpty()
+                && role.value.matches(".*\\p{Lu}{2,}$");
+    }
+
+    private static boolean puncturedContributor(Page page, Line line) {
+        String before = clean(line.text);
+        int p = before.indexOf('(');
+        if (p < 1
+                || p != before.lastIndexOf('(')
+                || before.indexOf(')') >= 0
+                || before.charAt(p - 1) != ' '
+                || p + 1 >= before.length()
+                || !Character.isUpperCase(before.codePointAt(p + 1))) return false;
+        String repaired = before.substring(0, p) + before.substring(p + 1);
+        if (!properReviewName(repaired)) return false;
+        Line heading = chooseTitle("", page, page.lines, page.notationTop);
+        return heading != null
+                && line != heading
+                && contextualOriginalAuthor(
+                        page,
+                        heading,
+                        new Line(repaired, line.left, line.top, line.right, line.bottom),
+                        page.lines);
+    }
+
+    public static List<Line> mergeTightCreditRepairConsensus(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!tightCreditRepairCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || readings.stream().anyMatch(r -> r == null || r.isBlank())
+                || confidence.stream()
+                        .anyMatch(c -> c == null || !Float.isFinite(c) || c < .98f || c > 1))
+            return page.lines;
+        String before = clean(original.text), candidate = clean(readings.get(0));
+        if (readings.stream().anyMatch(r -> !clean(r).equals(candidate))) return page.lines;
+        if (puncturedContributor(page, original)) {
+            if (!candidate.equals(before.replace("(", ""))) return page.lines;
+        } else {
+            if (!candidate.startsWith(before)
+                    || candidate.length() != before.length() + 1
+                    || !Character.isLetter(candidate.charAt(candidate.length() - 1)))
+                return page.lines;
+            return mergeBibliographicLineConsensus(page, original, readings);
+        }
+        var merged = new ArrayList<>(page.lines);
+        merged.set(
+                merged.indexOf(original),
+                new Line(candidate, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(merged);
+    }
+
     /** A separately expanded original-PDF crop may resolve a case-mismatched edge echo. */
     public static List<Line> creditBoundaryEchoCandidates(Page page) {
         return page.lines.stream()
@@ -1666,7 +1740,7 @@ public final class ScoreCreditsDetector {
                             + "|performed\\h+by|recorded\\h+by|played\\h+by|featuru?ing|feat\\.?|artists?"
                             + "|words\\h+(?:and|&)\\h+music\\h+by|words\\h+by|music\\h+(?:and|&)\\h+lyr?ics\\h+by|music\\h+by|composed\\h+by|written\\h+by|composers?|by"
                             + "|using\\h+the\\h+arrangement\\h+of|(?:and\\h+the\\h+)?adaptation\\h+by|(?:and\\h+the\\h+)?arrangement\\h+for\\h+[^:;]{1,60}?\\h+by"
-                            + "|arranged\\h+for\\h+[^:;]{1,60}?\\h+by|arranged\\h+by|arrangements?\\h+by|transcribed\\h+by|transc(?:r)?iption\\h+by|transcr\\.?\\h+by|transcr\\.?|arrangers?|arr\\.?\\h+by|ar\\.\\h+by|arr\\.?|arrangements?"
+                            + "|arranged\\h+for\\h+[^:;]{1,60}?\\h+by|arranged\\h+by|arrangements?\\h+by|transcribed\\h+by|transc(?:r)?iption\\h+by|transcr\\.?\\h+by|transcr\\.?|arrangers?|arr[.,]?\\h+by|ar\\.\\h+by|arr\\.?|arrangements?"
                             + "|(?:additional\\h+)?lyrics?\\h+by)\\b[\\h.:=–—-]*(.*)$");
     private static final Pattern COMBINED_COMPOSITION_ARRANGEMENT =
             Pattern.compile(
@@ -3631,7 +3705,11 @@ public final class ScoreCreditsDetector {
                 if (LEGAL.matcher(line.text).find() || !inCreditHeader(page, line)) continue;
                 if (line != heading
                         && INITIALLED_NAME.matcher(clean(line.text)).matches()
-                        && !(page.notationTop > 0 && notationReviewLabel(page, line)))
+                        && !(page.notationTop > 0 && notationReviewLabel(page, line))
+                        && (!numberedMovementSubtitle(page, heading, line)
+                                || knownNames.stream().anyMatch(n -> same(n, line.text))
+                                || page.reviewCredits.stream()
+                                        .anyMatch(r -> intersects(r.line, line))))
                     other.add(clean(line.text));
                 Matcher featured = FEATURED.matcher(clean(line.text));
                 if (featured.matches() && !collectionDescription(featured.group(2))) {
@@ -3803,6 +3881,10 @@ public final class ScoreCreditsDetector {
                             || REVIEW_DIRECTION.matcher(clean(line.text)).matches()
                             || unlabelledReviewNoise(page, heading, line, lines)
                             || publicationAudioAccessBadge(page, line, lines)
+                            || numberedMovementSubtitle(page, heading, line)
+                                    && knownNames.stream().noneMatch(n -> same(n, line.text))
+                                    && page.reviewCredits.stream()
+                                            .noneMatch(r -> intersects(r.line, line))
                             || alignedChordReviewFragment(page, line, lines)
                                     && knownNames.stream().noneMatch(n -> same(n, line.text))
                                     && page.reviewCredits.stream()
@@ -4649,7 +4731,12 @@ public final class ScoreCreditsDetector {
     }
 
     private static boolean clippedInstrumentLabel(Page page, Line line) {
-        String key = fold(line.text);
+        String key =
+                fold(
+                        page.notationTop > 0
+                                ? clean(line.text)
+                                        .replaceFirst("(?iu)\\h+(?:[ivx]{1,4}|[1-9]|u)$", "")
+                                : line.text);
         if (line.left > page.width * .04f || line.center() > page.width * .1f || key.length() < 3)
             return false;
         for (String instrument :
@@ -4662,7 +4749,10 @@ public final class ScoreCreditsDetector {
                         "guitar",
                         "clarinet",
                         "recorder"))
-            if (instrument.length() > key.length() && instrument.endsWith(key)) return true;
+            if (instrument.length() > key.length()
+                    && instrument.endsWith(key)
+                    && (key.equals(fold(line.text)) || instrument.length() == key.length() + 1))
+                return true;
         return false;
     }
 
@@ -5842,6 +5932,25 @@ public final class ScoreCreditsDetector {
         return false;
     }
 
+    /** A numbered movement name needs a separate larger work heading above it. */
+    private static boolean numberedMovementSubtitle(Page page, Line heading, Line line) {
+        if (page.notationTop <= 0
+                || heading == null
+                || heading == line
+                || line.top < heading.bottom
+                || line.bottom >= page.notationTop
+                || line.top - heading.bottom > page.height * .06f
+                || line.height() < heading.height() * .5f
+                || line.height() > heading.height() * .9f
+                || Math.abs(line.center() - heading.center()) > page.width * .12f) return false;
+        return clean(line.text)
+                        .matches(
+                                "(?iu)^[IVX]{1,5}[.]\\h+(?:alborada|allegro|allegretto|andante|andantino|adagio|scherzo|rondo|minuet|menuetto|largo|presto|finale)(?:\\h+(?:molto|moderato|con|brio|ma|non|troppo|vivace|cantabile))*$")
+                && clean(heading.text)
+                        .matches(
+                                "(?iu)^(?:capriccio|concerto|symphony|sonata|suite|quartet|quintet|sextet|overture)\\b.*");
+    }
+
     /** Small labels beside the staff describe instrumentation and execution. */
     private static boolean notationReviewLabel(Page page, Line line) {
         if (line.height() > page.height * .035f) return false;
@@ -6213,7 +6322,7 @@ public final class ScoreCreditsDetector {
     private static List<String> contextualAuthorNames(String value) {
         List<String> names =
                 Arrays.stream(clean(value).split("\\h*(?:[,;]|\\band\\b|&)\\h*"))
-                        .map(ScoreCreditsDetector::clean)
+                        .map(n -> clean(n).replaceAll("(?<=\\p{L})[-–]\\h+(?=\\p{Lu})", "-"))
                         .filter(n -> !n.isEmpty())
                         .toList();
         if (names.isEmpty()

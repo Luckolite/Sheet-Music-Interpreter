@@ -1308,3 +1308,16 @@ have exact executable token/literal parity after package, existing license-heade
 and format adaptation. No private source-page material, weights, dependency or
 serialized record-layout change is included. Final cache invalidation and verified
 paired app/Hub/worker rollout remain separate from this source publication.
+
+## Contributor names and movement headings
+
+Hyphen-gap normalization and arranger punctuation recover contributor roles.
+Layout guards distinguish clipped numbered instrument parts and movement subtitles
+from contributor names while preserving known names and located review evidence.
+Tight credit repair requires three agreeing original-PDF readings at confidence
+at least 0.98, constrained to a clipped final letter or supported stray punctuation.
+The Android adapter retains exact crop geometry, cancellation and bitmap cleanup.
+Thirty-six original synthetic tests cover these boundaries. App commit `d762f50e47de06a3815c63e6ef1f51be9f447028`
+is reviewed. No private score fixtures, dependencies, models or wire changes are included.
+Source tests and saved-input replay do not establish whole-library accuracy, device
+behavior or matching desktop-worker deployment.
