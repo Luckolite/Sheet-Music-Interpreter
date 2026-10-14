@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Optical guards reject converging expression strokes as outer staffs, require
+printed evidence for pale staff endings, and reject disconnected sharp spines.
+Complete opening tempo equations retain bounded first-staff ownership. Twenty-nine
+original procedural controls accompany paired app/public sources and the explicit
+native decoder manifest. Models, dependencies and record layouts are unchanged.
+Final cumulative app/native runtime validation remains pending.
+
 Isolated meter numerators use recognition only inside already located numeral slots,
 with three matching high-confidence readings and an independently corroborated
 denominator. Mixed cancellation signatures can follow a printed single bar when

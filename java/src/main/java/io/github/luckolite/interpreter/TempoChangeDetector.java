@@ -230,6 +230,10 @@ final class TempoChangeDetector {
             // Only a complete OCR/optical equation may use that retained measure envelope.
             if (measureIndex < 0 && provedApproximation)
                 measureIndex = approximateFollowingMeasure(anchor, measures);
+            if (measureIndex < 0)
+                measureIndex =
+                        provedOpeningTempo(
+                                token, gray, width, height, equalsLeft, directionMeasures);
             if (measureIndex < 0) continue;
             MeasureRegion measure = directionMeasures.get(measureIndex);
             float position =
@@ -256,6 +260,41 @@ final class TempoChangeDetector {
             deduplicated.add(change);
         }
         return List.copyOf(deduplicated);
+    }
+
+    /** A complete equation may precede the playable edge of the opening system. */
+    private static int provedOpeningTempo(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int equals,
+            List<MeasureRegion> measures) {
+        if (measures.isEmpty()) return -1;
+        int first = 0;
+        for (int i = 1; i < measures.size(); i++) {
+            var a = measures.get(i);
+            var b = measures.get(first);
+            if (a.top() < b.top() - .002f
+                    || Math.abs(a.top() - b.top()) <= .002f && a.left() < b.left()) first = i;
+        }
+        var opening = measures.get(first);
+        for (var staff : RawStaffLineDetector.detect(gray, width, height)) {
+            if (Math.abs(staff.top() - opening.top() * height) > staff.gap() * .3f
+                    || staff.bottom() > opening.bottom() * height) continue;
+            float y = token.bottom() * height;
+            if (y >= staff.top() || staff.top() - y > staff.gap() * 8) continue;
+            float left = opening.left() * width - staff.gap() * 10;
+            float right = opening.right() * width;
+            for (var m : measures)
+                if (Math.abs(m.top() - opening.top()) * height < staff.gap())
+                    right = Math.max(right, m.right() * width);
+            if (token.annotationLeft() * width < left || token.right() * width > right) continue;
+            if (Double.isFinite(printedBeatUnit(token, gray, width, height, equals, 200))
+                    || Double.isFinite(printedBeatUnit(token, gray, width, height, equals, 165)))
+                return first;
+        }
+        return -1;
     }
 
     private static int approximateFollowingMeasure(

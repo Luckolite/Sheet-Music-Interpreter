@@ -124,13 +124,29 @@ final class RawStaffLineDetector {
         staffs.removeIf(
                 staff ->
                         (staff.bottom() < firstPrinted || staff.top() > lastPrinted)
-                                && printedRuleCount(
-                                                new Candidate(staff.rows(), staff.gap(), 0),
-                                                gray,
-                                                width,
-                                                height,
-                                                230)
-                                        == 0
+                                && (printedRuleCount(
+                                                        new Candidate(staff.rows(), staff.gap(), 0),
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        230)
+                                                == 0
+                                        || printedRuleCount(
+                                                                new Candidate(
+                                                                        staff.rows(),
+                                                                        staff.gap(),
+                                                                        0),
+                                                                gray,
+                                                                width,
+                                                                height,
+                                                                230)
+                                                        <= 2
+                                                && ConvergingStaffStrokes.matches(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        staff.rows(),
+                                                        staff.gap()))
                                 && !hasLocalContrastedRule(staff, gray, width, height)
                                 && StaffPitchTrack.detectForMeasures(
                                                 gray,

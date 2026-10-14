@@ -372,11 +372,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "8ca1d1b326280f300e8f30939f330138572f05801ec995cccf6da4018715e8c1",
-      "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
-      "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
-      "review_note": "Recognize mixed cancellation/new-signature runs after a printed single bar with family and pitch order, bounded transition spacing and pre-note clearance. Twelve original procedural controls include wrong pitches, local notes, short stems and missing semantic bar labels. Existing diagnostic adaptation preserved; no score-specific rules.",
-      "source_normalized_sha256": "e7ab6b7f257de867a249a54ccbf5913f2ae284e23742410e55706850f684ac0e",
+      "source_sha256": "690912b6c9a37aa088780feebfb012a3d505832b46e323915acf000673db1647",
+      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "review_note": "Require continuity within claimed sharp spines while preserving small raster gaps. Six original procedural controls reject disconnected fragments without changing model weights or public diagnostics.",
+      "source_normalized_sha256": "5dcdc14ce88a29b732b79c92453e066b44e038a2eda1c9f500204ec9e31fb762",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
       "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
@@ -391,12 +391,12 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "14ba4f7980718827cd66bb5bc95ea1a96c1ca777a247ba7bd2fc93de057a078c",
-      "source_normalized_sha256": "99fd052ecfe80465ac3cc6a089cc1cdb3f932873122d44dc23a29fc290094c9f",
+      "source_sha256": "65a02bdb3d558ae69a823c94831434196c08994db01b9283c727bb8c2e1bca87",
+      "source_normalized_sha256": "de222c1baf79f2b1a44ea1ec3e74295be26bc3d8c8981c43290bb522526d2d31",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reject unsupported outer semantic staff groups only with two independently printed staff witnesses. Preserve pale, partial, short and curved printed rules using parallel local contrast and existing pitch tracking. Nine original procedural controls; no private score pixels, new dependencies, models or records.",
-      "reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
-      "scoped_reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
+      "review_note": "Reject outer false staff groups with at most two raw rules only when independently proven converging expression strokes supply those rules. Preserve local parallel staff and pitch-track guards.",
+      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
       "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
     },
     "ScoreDynamicChange.java": {
@@ -491,12 +491,12 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "e39e70c50678b6ad5da1ba8f1419b0c4bf5edc5518c2f266dc9846172ed8207f",
-      "reviewed_app_commit": "980ee1dff1b1c597a760d0778fb14486202ec90b",
-      "source_normalized_sha256": "e0312f25e51e1339db51adf67841b8c7a4c8918840daa41c92975477adbf03fb",
-      "review_note": "Explicit ca./circa OCR grammar with separately proved digit groups, equals and printed beat note. Narrow complete-equation section-envelope ownership, existing plain detect behavior preserved. Original procedural regressions; no private score assets/model/dependency/wire changes. Numeric representation does not yet retain approximation wording.",
-      "reviewed_source_state": "Committed app helper at reviewed_app_commit; exact bytes pinned.",
-      "scoped_reviewed_app_commit": "980ee1dff1b1c597a760d0778fb14486202ec90b"
+      "source_sha256": "d20af295f8b15524f08182fd00a9f23953e5457cbbc0cb552cdfc84510fa909b",
+      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "source_normalized_sha256": "1aa19b28ae8d9835d188ace797b0fdccb3e04e7690e0f587fd14814960958e55",
+      "review_note": "Assign complete optically proven opening tempo equations to an independently printed first staff within a bounded header envelope. Six original controls; existing later direction ownership unchanged.",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
+      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98"
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -1695,11 +1695,12 @@
     },
     "PrintedStaffEnd.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStaffEnd.java",
-      "source_sha256": "4efa5bc4c2368968621941b9ae61c1997ed800fd552d22af30a63d951bf71c83",
-      "source_normalized_sha256": "4efa5bc4c2368968621941b9ae61c1997ed800fd552d22af30a63d951bf71c83",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "source_sha256": "48abf713f09ad17b989abe4c7e5fe70abfe1de43185cb633f43fe96f22725745",
+      "source_normalized_sha256": "99536a9368ec727f0d8a70a3da3794d6f9289051a7dcfdfaac454dd188c96a88",
+      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
+      "review_note": "Pale ending recovery requires sustained parallel rules before a contrasting printed closing bar, absence of continuation and varied background after it. Ten original procedural controls; existing dark path retained.",
+      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98"
     },
     "PrintedVoiceMeasureCut.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedVoiceMeasureCut.java",
@@ -2613,6 +2614,15 @@
       "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
       "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
       "review_note": "Original recognition-only fallback for already located numeral slots. Require three exact high-confidence readings per slot and an independently corroborated denominator. Preserve inference ownership, weights and dependencies. Twelve procedural controls with fake inference; no private pixels.",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
+    },
+    "ConvergingStaffStrokes.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ConvergingStaffStrokes.java",
+      "source_sha256": "4c18d641138925f275fa3b5d2215aba22b9d2b02a33b83e043cc4ef90452e8c3",
+      "source_normalized_sha256": "9e65584c3b6d841ff7bc22b9f6d48d443476595ab29a65c7d6220fec24668087",
+      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
+      "review_note": "Original bounded optical evidence for two continuous linear arms converging across a staff-scaled window. Seven original procedural controls include parallel, curved and interrupted counterexamples; no private pixels.",
       "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
     }
   },

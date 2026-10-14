@@ -14474,7 +14474,7 @@ final class OmrScoreInterpreter {
                 int required = Math.max(1, Math.round(glyphHeight * .05f));
                 int firstTop = -1, firstBottom = -1;
                 for (int spine : new int[] {leftSpine, rightSpine}) {
-                    int above = 0, below = 0, top = -1, bottom = -1;
+                    int above = 0, below = 0, top = -1, bottom = -1, blank = 0, longestBlank = 0;
                     for (int row = 0; row < glyphHeight; row++) {
                         boolean ink = false;
                         for (int col = Math.max(0, spine - radius);
@@ -14486,11 +14486,16 @@ final class OmrScoreInterpreter {
                         if (ink) {
                             if (top < 0) top = row;
                             bottom = row;
+                            longestBlank = Math.max(longestBlank, blank);
+                            blank = 0;
                         }
+                        if (!ink && top >= 0) blank++;
                         if (ink && row < firstCrossbar) above++;
                         if (ink && row > lastCrossbar) below++;
                     }
-                    if (above < required || below < required) continue pair;
+                    if (above < required
+                            || below < required
+                            || longestBlank > Math.max(2, Math.round(gap * .22f))) continue pair;
                     if (firstTop < 0) {
                         firstTop = top;
                         firstBottom = bottom;
