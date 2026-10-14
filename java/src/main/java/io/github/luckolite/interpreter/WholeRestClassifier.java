@@ -382,6 +382,18 @@ final class WholeRestClassifier {
         while (last + 1 < h
                 && last - first < gap * .8f
                 && ink(g, w, l, r, last + 1) >= bodyWidth * .85f) last++;
+        // A rasterized rectangle may end with one inset corner row. The body above remains
+        // rectangular, and the ordinary clear-space checks still apply below this edge.
+        if (last - first + 1 >= Math.max(3, Math.round(gap * .23f)) && last + 1 < h) {
+            int inset = Math.max(1, Math.round(gap * .15f));
+            int edgeLeft = l, edgeRight = r;
+            while (edgeLeft <= r && !dark(g, w, edgeLeft, last + 1)) edgeLeft++;
+            while (edgeRight >= l && !dark(g, w, edgeRight, last + 1)) edgeRight--;
+            if (edgeLeft - l <= inset
+                    && r - edgeRight <= inset
+                    && edgeRight >= edgeLeft
+                    && ink(g, w, edgeLeft, edgeRight, last + 1) == edgeRight - edgeLeft + 1) last++;
+        }
         int depth = last - first + 1, margin = Math.max(2, Math.round(gap * .25f));
         if (depth < Math.max(3, Math.round(gap * .23f))
                 || depth > gap * .65f
@@ -391,7 +403,7 @@ final class WholeRestClassifier {
         for (int row = first; row <= last; row++)
             if (ink(g, w, l - margin, l - 1, row) > 1
                     || ink(g, w, r + 1, r + margin, row) > 1
-                    || ink(g, w, l, r, row) < bodyWidth * .85f) return null;
+                    || row < last && ink(g, w, l, r, row) < bodyWidth * .85f) return null;
         for (int row = last + 1; row <= last + margin; row++)
             if (ink(g, w, l - margin, r + margin, row) > 1) return null;
         return new Plate(l, r, rule, first, last, gap, support);

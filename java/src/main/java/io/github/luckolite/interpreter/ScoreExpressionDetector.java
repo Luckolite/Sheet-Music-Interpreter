@@ -33,6 +33,7 @@ public final class ScoreExpressionDetector {
     private static final String SOURCE = "printed-expression-word";
     private static final String SYMBOL = "printed-expression-symbol";
     private static final String TARGET = "expression-column:";
+    private static final String REST_TARGET = "expression-rest-column:";
     private static final Set<Kind> KINDS =
             EnumSet.of(
                     Kind.RITARDANDO,
@@ -112,24 +113,46 @@ public final class ScoreExpressionDetector {
                             x,
                             word.top() * height,
                             word.bottom() * height);
-            if (staff == null) continue;
-            ScoreNoteEvent closest = closestDirectionNote(score, staff, width, height, x, x);
-            if (closest == null && word.right() > word.left())
+            ScoreNoteEvent closest =
+                    staff == null ? null : closestDirectionNote(score, staff, width, height, x, x);
+            if (closest == null && staff != null && word.right() > word.left())
                 closest =
                         closestDirectionNote(score, staff, width, height, x, word.right() * width);
-            if (closest == null) continue;
+            var rest =
+                    closest == null
+                            ? PrintedRestDirection.find(score, staffs, word, gray, width, height)
+                            : null;
+            if (closest == null && rest == null) continue;
+            var anchor =
+                    closest != null
+                            ? new Column(
+                                    closest.measureIndex(),
+                                    closest.staffIndex(),
+                                    closest.staffCount(),
+                                    closest.positionInMeasure(),
+                                    false)
+                            : new Column(
+                                    rest.measureIndex(),
+                                    rest.staffIndex(),
+                                    rest.staffCount(),
+                                    rest.positionInMeasure(),
+                                    true);
             String target =
                     target(
-                            closest.measureIndex(),
-                            closest.staffIndex(),
-                            closest.staffCount(),
-                            closest.positionInMeasure());
+                            anchor.measure(),
+                            anchor.staff(),
+                            anchor.count(),
+                            anchor.position(),
+                            anchor.rest());
             for (var direction : directions) {
+                if (anchor.rest() && !PrintedRestDirection.allows(direction.kind())) continue;
                 String id =
                         "printed-expression:"
                                 + direction.kind()
                                 + ":"
-                                + target.substring(TARGET.length());
+                                + (anchor.rest() ? "rest:" : "")
+                                + target.substring(
+                                        anchor.rest() ? REST_TARGET.length() : TARGET.length());
                 if (direction.kind() == Kind.UNRESOLVED_DIRECTION)
                     id += ":word:" + direction.printedText().trim();
                 String eventId = id;
@@ -141,8 +164,8 @@ public final class ScoreExpressionDetector {
                                 Optional.empty(),
                                 Optional.empty(),
                                 Scope.UNRESOLVED,
-                                closest.staffIndex(),
-                                closest.staffCount(),
+                                anchor.staff(),
+                                anchor.count(),
                                 Optional.of(target),
                                 direction.strength(),
                                 direction.qualifierText(),
@@ -151,15 +174,15 @@ public final class ScoreExpressionDetector {
                                                 symbols.contains(word) ? SYMBOL : SOURCE,
                                                 0,
                                                 word.left(),
-                                                closest.staffIndex(),
-                                                closest.staffCount(),
+                                                anchor.staff(),
+                                                anchor.count(),
                                                 direction.printedText()))));
             }
         }
         return resolve(score.withExpressiveEvents(events), Float.NaN);
     }
 
-    private record Column(int measure, int staff, int count, float position) {}
+    private record Column(int measure, int staff, int count, float position, boolean rest) {}
 
     private static ScoreNoteEvent closestDirectionNote(
             ScorePageInterpretation score,
@@ -188,8 +211,15 @@ public final class ScoreExpressionDetector {
         return closest;
     }
 
-    private static String target(int measure, int staff, int count, float position) {
-        return TARGET + measure + ":" + staff + ":" + count + ":" + Float.floatToIntBits(position);
+    private static String target(int measure, int staff, int count, float position, boolean rest) {
+        return (rest ? REST_TARGET : TARGET)
+                + measure
+                + ":"
+                + staff
+                + ":"
+                + count
+                + ":"
+                + Float.floatToIntBits(position);
     }
 
     private static Optional<Column> column(ScoreExpressiveEvent event) {
@@ -197,16 +227,24 @@ public final class ScoreExpressionDetector {
                 || event.evidence().stream()
                         .noneMatch(e -> e.sourceId().equals(SOURCE) || e.sourceId().equals(SYMBOL))
                 || event.targetEventId().isEmpty()
-                || !event.targetEventId().get().startsWith(TARGET)) return Optional.empty();
+                || !(event.targetEventId().get().startsWith(TARGET)
+                        || event.targetEventId().get().startsWith(REST_TARGET)))
+            return Optional.empty();
         try {
-            var fields = event.targetEventId().get().substring(TARGET.length()).split(":");
+            boolean rest = event.targetEventId().get().startsWith(REST_TARGET);
+            var fields =
+                    event.targetEventId()
+                            .get()
+                            .substring(rest ? REST_TARGET.length() : TARGET.length())
+                            .split(":");
             if (fields.length != 4) return Optional.empty();
             var value =
                     new Column(
                             Integer.parseInt(fields[0]),
                             Integer.parseInt(fields[1]),
                             Integer.parseInt(fields[2]),
-                            Float.intBitsToFloat(Integer.parseInt(fields[3])));
+                            Float.intBitsToFloat(Integer.parseInt(fields[3])),
+                            rest);
             if (value.measure() < 0
                     || value.staff() != event.staffIndex()
                     || value.count() != event.staffCount()
@@ -238,7 +276,8 @@ public final class ScoreExpressionDetector {
                                 Math.addExact(c.measure(), offset),
                                 c.staff(),
                                 c.count(),
-                                c.position())),
+                                c.position(),
+                                c.rest())),
                 event.strength(),
                 event.qualifierText(),
                 event.evidence().stream()
@@ -295,6 +334,7 @@ public final class ScoreExpressionDetector {
                         noteLanes == null
                                 ? targetIndicesForColumn(score, c.get())
                                 : targetIndicesForColumn(score, c.get(), noteLanes);
+                if (c.get().rest()) indices = List.of();
                 firstColumn = false;
                 double start = -1, release = -1;
                 boolean proved = !indices.isEmpty();
@@ -316,6 +356,21 @@ public final class ScoreExpressionDetector {
                                             || Math.abs(end - release) > 1e-7)) proved = false;
                     start = onset;
                     release = end;
+                }
+                if (c.get().rest()) {
+                    start =
+                            PrintedRestDirection.onset(
+                                    score,
+                                    c.get().measure(),
+                                    c.get().staff(),
+                                    c.get().count(),
+                                    c.get().position(),
+                                    meter.beatsInMeasure(c.get().measure()));
+                    proved =
+                            PrintedRestDirection.allows(event.kind())
+                                    && Double.isFinite(start)
+                                    && start >= 0
+                                    && start < meter.beatsInMeasure(c.get().measure());
                 }
                 boolean breath = event.kind() == Kind.BREATH || event.kind() == Kind.CAESURA;
                 boolean attack =
@@ -357,7 +412,7 @@ public final class ScoreExpressionDetector {
     public static List<Integer> targetIndices(
             ScorePageInterpretation score, ScoreExpressiveEvent event) {
         var c = column(event);
-        if (c.isEmpty()) return List.of();
+        if (c.isEmpty() || c.get().rest()) return List.of();
         return targetIndicesForColumn(score, c.get());
     }
 

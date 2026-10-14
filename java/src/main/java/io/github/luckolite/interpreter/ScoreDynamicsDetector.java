@@ -237,6 +237,12 @@ final class ScoreDynamicsDetector {
         // OCR can merge the sudden-dynamic qualifier with its level. Only accept
         // a complete qualified level, so ordinary words and lyrics stay excluded.
         token = token.replaceFirst("^(?:subito|sub)\\.?\\s*(?=(?:ppp|pp|p|mp|mf|fff|ff|f)$)", "");
+        // OCR may retain a printed level and its subdued-delivery qualifier in one box.
+        // Only a complete leading level with this musical suffix carries numeric loudness.
+        token =
+                token.replaceFirst(
+                        "^(ppp|pp|p|mp|mf|fff|ff|f)\\s+sotto(?:\\s+voce)?(?:\\s+e\\s+(?:dolce|cantabile|espressivo|lacrimoso))?$",
+                        "$1");
         return switch (token) {
             case "ppp" -> -18;
             case "pp" -> -12;
@@ -253,10 +259,11 @@ final class ScoreDynamicsDetector {
 
     static boolean dynamicLine(String text) {
         return text != null
-                && text.trim()
-                        .toLowerCase(Locale.ROOT)
-                        .matches(
-                                "(?:(?:subito|sub|sempre|poco|a|più|piu|cantabile|sostenuto|marcato|dolce|tranquillo|espressivo|crescendo|diminuendo|cresc|dim|decresc|ppp|pp|p|mp|m|mf|fff|ff|f)[.,:;]?\\s*)+");
+                && (Float.isFinite(level(text))
+                        || text.trim()
+                                .toLowerCase(Locale.ROOT)
+                                .matches(
+                                        "(?:(?:subito|sub|sempre|poco|a|più|piu|cantabile|sostenuto|marcato|dolce|tranquillo|espressivo|crescendo|diminuendo|cresc|dim|decresc|ppp|pp|p|mp|m|mf|fff|ff|f)[.,:;]?\\s*)+"));
     }
 
     static List<String> packedLevels(String text) {

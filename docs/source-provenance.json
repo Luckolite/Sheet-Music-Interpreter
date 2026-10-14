@@ -398,13 +398,14 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "c8485132d05942c8990034bf541cb44bc79ef1bc1f5d4c1c3673a2bbde4f63f6",
-      "source_normalized_sha256": "c8485132d05942c8990034bf541cb44bc79ef1bc1f5d4c1c3673a2bbde4f63f6",
-      "review_note": "Global raw-ink ownership for aligned opposing beams, shaded ties/hairpins/dynamic words and supported stem endpoints; complete continued triplet lanes with held-voice and written-rest accounting. Original Apache generated positive/rejection regressions; complete native/standalone token parity under established package/diagnostics adapters. Helpers use existing JDK/interpreter APIs. No private score, phone data, model, dependency or guide282 layout change.",
+      "source_sha256": "ec366364eecce2b8b3d859fb501ec8fee418e1b3d538838b53c225dcb606a892",
+      "source_normalized_sha256": "a98fe0376abf74940228bec91596157c69caddb267339608bc3dad76766805dc",
+      "review_note": "A complete leading literal dynamic plus sotto/voce and bounded Italian character suffix retains that literal numeric level and original OCR evidence. Character-only/partial text does not supply loudness. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
+      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
-      "reviewed_source_state": "Reviewed recognition12 working-tree port; app commit identifies preserved base, not the uncommitted scoped delta."
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117"
     },
     "HairpinContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinContinuation.java",
@@ -1273,13 +1274,14 @@
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
-      "source_sha256": "07e5fbe8b50155d679327cd05c2fe644d455444f1f964a79bd0ecfd5e133e93c",
-      "source_normalized_sha256": "b9cf6afab654c9f86eb088c4b5e3bcf81e3268dc155a5e21b154fb68ededc3e1",
-      "reviewed_source_state": "Committed app963 whole printed English character directions and physical above-staff ink clearance, with recognition35 cache invalidation. Guide284/audio79 record layouts, models and dependencies unchanged.",
-      "review_note": "Original whole-mark English vocabulary and staff ownership repair. Complete bilateral five-rule ink and a notehead remain mandatory; physical ink clearance is distinct from owner ranking. Sixteen original procedural controls and package/writer parity reviewed; previous origins retained in english_heading_clearance_review. No model or dependency changes.",
-      "reviewed_app_commit": "7bdd6b57d100296ac9382142d5486829755c2bd1",
+      "source_sha256": "23bf2410f65137d2fa2cd4e2f4631a9f395c057ca8fe4332e42de675e20d58c3",
+      "source_normalized_sha256": "dec824b65a1848682633454989569d5273a92c43d1216e51c243f0b45c38afd0",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Expose the unchanged complete local printed-rule proof to the rest-direction helper; visibility only. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes.",
+      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "a3ce3af4efedcc0a0e59ab0cb3677a619eb0558c41225034ab90c04c61b24c87"
+      "standalone_sha256": "a3ce3af4efedcc0a0e59ab0cb3677a619eb0558c41225034ab90c04c61b24c87",
+      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117"
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
@@ -1399,12 +1401,13 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "35b9eee15754ea523f643a925b173c4668546fcf58cb31861cb44cfb771d6f3b",
-      "source_normalized_sha256": "35bba81188068dee19340e6362c1add8bacfbf4791095bea4b4ab532f3ff262a",
-      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "reviewed_source_state": "Committed app959 literal pedal cue and finite-bracket corroboration batch. Models, dependencies and physical guide layout unchanged.",
-      "review_note": "Complete printed pedal phrases own contained OCR tokens; final written columns establish part ownership. Separate cues remain independent. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in literal_pedal_word_review and Git history.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base."
+      "source_sha256": "423e7b7f889fc18910f4a05ef0a81171ebc9fd75a2792ba2903096a83ebf944d",
+      "source_normalized_sha256": "e22eefaf9dda9b736a8b890855220cd58bdc5e32548838ad5d97efdf7f29b851",
+      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Persist a distinct rest-column target without assigning a note index. Resolve the allowlisted tempo family at the proved silent onset; joins shift the explicit measure while preserving source evidence and unrelated expressions. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes.",
+      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
+      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117"
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -1963,12 +1966,12 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "e2801df4359b34fb443bd22b148aa4d1ef71f28c97fd114309942d2bb1960470",
-      "source_normalized_sha256": "e2801df4359b34fb443bd22b148aa4d1ef71f28c97fd114309942d2bb1960470",
-      "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
-      "reviewed_source_state": "Committed recognition25 typed full-measure rest, owned joined-triplet and incoming-system tie repair; namespace/logger and existing writer adapters reviewed.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes."
+      "source_sha256": "b6441fc28c0df502cb427c9bb81ff55cb42bf35ac7644a94b197d06114e48098",
+      "source_normalized_sha256": "d8e0dfa0c38678aae45f83703da0c8b843ffc1e6641d39572c269e601d6199b2",
+      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Allow one contiguous inset terminal raster row below an otherwise rectangular complete body. Retain internal solidity, bounded depth, side clearance and blank lower margin, preserving actual full-measure identity. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes."
     },
     "WideSystemIncomingTieProof.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",
@@ -2501,6 +2504,15 @@
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
       "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
       "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes."
+    },
+    "PrintedRestDirection.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestDirection.java",
+      "source_sha256": "82f1e1dececc8cd8b24c6b15e3c8a4f8d94a31ed37a942c6a28d3a51df1e1077",
+      "source_normalized_sha256": "a47435b14211a21c22eb78109937bae24c9cbff340c0844132da71957a8f047f",
+      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
+      "review_note": "Original pure-JDK rest-direction ownership helper. Complete local raw rails, unique silent glyph and staff/measure geometry are required. Exact silent-slot onset is resolved only with usable meter; competing rests or notes retain ambiguity. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -5938,5 +5950,23 @@
     "scope": "Recover a physical solid bar body around fragmented semantic heads, retaining the existing complete bilateral-cap proof. Only proved interior fragments are removed; genuine neighboring heads remain. Seven original procedural controls; no API/model/dependency/wire changes.",
     "originalNewControls": 7,
     "boundary": "Original pixel controls and private source-stage geometry comparisons; no broad accuracy claim or final paired runtime acceptance."
+  },
+  "rest_expression_and_sotto_dynamic_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+    "scope": "Explicit rest-owned tempo expression, one-row full-rest edge proof and complete literal dynamic plus sotto qualifier.",
+    "originalNewControls": 25,
+    "regressions": [
+      "RestExpressionOwnershipTest.java",
+      "RoundedWholeRestEdgeTest.java",
+      "SottoQualifiedDynamicTest.java"
+    ],
+    "native_manifest": {
+      "reviewed_app_commit": "8cc7a1a08f8837ea947a1e18d495a004a1087677",
+      "path": "tools/native-worker/decoder-sources.txt",
+      "sha256": "47357dcdddf99db57121ae763612ca3ce8ec8757f48e7d4a23dfa48379de338b",
+      "scope": "Register the single new pure helper PrintedRestDirection; all230selected decoder sources compiled unchanged against existing ONNX dependency, with no model inference/package/deployment."
+    },
+    "boundary": "Saved-source/raw pixel stage comparisons are distinct from fresh inference, assembled timing/rendering and final paired app/Hub/worker/runtime acceptance."
   }
 }

@@ -147,7 +147,7 @@ final class PrintedDirectionStaff {
         return best;
     }
 
-    private static float[] printedRules(
+    static float[] printedRules(
             byte[] gray, int width, int height, float x, float hint, float gap) {
         int radius = Math.round(gap * 3.5f), center = Math.round(x);
         int left = center - radius, right = center + radius;

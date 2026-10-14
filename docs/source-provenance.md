@@ -1285,3 +1285,26 @@ exclusions. Twenty-five original synthetic tests cover these boundaries.
 App commit `3c3e6dc45c9efb69b5ea68a1a1a9f66ce58ff496` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Rest-owned tempo directions and qualified literal dynamics
+
+Complete local raw staff rules and a unique retained silent glyph can own a
+printed tempo expression. The rest-column target persists without inventing a
+note owner; exact onset resolution requires a proved silent slot and usable meter.
+Competing notes/rests remain unresolved. Full-rest identity tolerates one contiguous
+inset terminal row while retaining body solidity, bounded depth and clear margins.
+
+A complete literal dynamic followed by sotto/voce and supported character text
+retains its numeric level and original OCR evidence. Character-only text and
+partial phrases do not invent loudness. Twenty-five original procedural controls
+accompany the scoped app source commit
+`fcee221b71b2bfb309f2d8a78719f78c71370117`.
+
+The new pure-JDK `PrintedRestDirection` helper is separately registered in the
+desktop selected-source manifest at app commit
+`8cc7a1a08f8837ea947a1e18d495a004a1087677`. All230selected sources compile
+without numerical rewrites or model inference. The eight paired source/test paths
+have exact executable token/literal parity after package, existing license-header
+and format adaptation. No private source-page material, weights, dependency or
+serialized record-layout change is included. Final cache invalidation and verified
+paired app/Hub/worker rollout remain separate from this source publication.
