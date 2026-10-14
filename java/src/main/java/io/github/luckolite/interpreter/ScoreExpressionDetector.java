@@ -113,8 +113,64 @@ public final class ScoreExpressionDetector {
                             x,
                             word.top() * height,
                             word.bottom() * height);
+            boolean metric = directions.stream().allMatch(d -> d.kind() == Kind.METRIC_MODULATION);
+            if (metric && staff == null)
+                staff =
+                        PrintedDirectionStaff.at(
+                                staffs,
+                                score.measures(),
+                                score.notes(),
+                                gray,
+                                width,
+                                height,
+                                word.right() * width,
+                                word.top() * height,
+                                word.bottom() * height);
             ScoreNoteEvent closest =
                     staff == null ? null : closestDirectionNote(score, staff, width, height, x, x);
+            boolean metricBoundary = false;
+            if (metric && staff != null) {
+                float center = (staff.top() + staff.bottom()) * .5f / height;
+                int next = -1;
+                float boundary = -1;
+                int boundaryCount = 0;
+                for (int i = 0; i < score.measures().size(); i++) {
+                    var region = score.measures().get(i);
+                    float bx = region.left() * width;
+                    if (center < region.top() - staff.gap() / height
+                            || center > region.bottom() + staff.gap() / height) continue;
+                    if (bx > x && bx < word.right() * width) {
+                        boundaryCount++;
+                        if (bx > boundary) {
+                            boundary = bx;
+                            next = i;
+                        }
+                    }
+                }
+                if (boundaryCount > 1) continue;
+                if (next >= 0) {
+                    metricBoundary = true;
+                    closest = null;
+                    float first = Float.POSITIVE_INFINITY;
+                    for (var note : score.notes())
+                        if (!note.crossStaffBeam()
+                                && note.measureIndex() == next
+                                && note.staffIndex() == staff.index()
+                                && note.staffCount() == staff.count()) {
+                            var region = score.measures().get(next);
+                            float nx =
+                                    (region.left()
+                                                    + note.positionInMeasure()
+                                                            * (region.right() - region.left()))
+                                            * width;
+                            if (nx >= boundary && nx - boundary <= staff.gap() * 8 && nx < first) {
+                                first = nx;
+                                closest = note;
+                            }
+                        }
+                }
+            }
+            if (metricBoundary && closest == null) continue;
             if (closest == null && staff != null && word.right() > word.left())
                 closest =
                         closestDirectionNote(score, staff, width, height, x, word.right() * width);

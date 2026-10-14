@@ -66,6 +66,27 @@ final class PrintedExpressionGlyphs {
             byte[] gray,
             int width,
             int height) {
+        var result = new ArrayList<>(detect(score, staffs, gray, width, height, 175));
+        for (var candidate : detect(score, staffs, gray, width, height, 155)) {
+            if (MetricModulationText.parse(candidate.text()).isEmpty()) continue;
+            boolean overlap = false;
+            for (var old : result)
+                if (old.left < candidate.right
+                        && candidate.left < old.right
+                        && old.top < candidate.bottom
+                        && candidate.top < old.bottom) overlap = true;
+            if (!overlap) result.add(candidate);
+        }
+        return List.copyOf(result);
+    }
+
+    private List<Mark> detect(
+            ScorePageInterpretation score,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            byte[] gray,
+            int width,
+            int height,
+            int threshold) {
         if (gray == null || width < 1 || height < 1 || gray.length != (long) width * height)
             return List.of();
         var result = new ArrayList<Mark>();
@@ -94,7 +115,7 @@ final class PrintedExpressionGlyphs {
                 int x0 = Math.max(0, (int) (left * width - gap * 2)),
                         x1 = Math.min(width, (int) (right * width + gap * 2));
                 if (x1 <= x0) continue;
-                var parts = components(gray, width, x0, top, x1, bottom);
+                var parts = components(gray, width, x0, top, x1, bottom, threshold);
                 var notes = new ArrayList<Pulse>();
                 for (var part : parts) {
                     if (part.height() >= gap * .65f
@@ -190,16 +211,27 @@ final class PrintedExpressionGlyphs {
                         int y0 = Math.min(l.part.top, r.part.top),
                                 y1 = Math.max(l.part.bottom, r.part.bottom);
                         if (PrintedDirectionStaff.at(
-                                        List.of(staff),
-                                        score.measures(),
-                                        score.notes(),
-                                        gray,
-                                        width,
-                                        height,
-                                        l.part.left,
-                                        y0,
-                                        y1)
-                                == null) continue;
+                                                List.of(staff),
+                                                score.measures(),
+                                                score.notes(),
+                                                gray,
+                                                width,
+                                                height,
+                                                l.part.left,
+                                                y0,
+                                                y1)
+                                        == null
+                                && PrintedDirectionStaff.at(
+                                                List.of(staff),
+                                                score.measures(),
+                                                score.notes(),
+                                                gray,
+                                                width,
+                                                height,
+                                                r.part.right,
+                                                y0,
+                                                y1)
+                                        == null) continue;
                         // Every component inside the equation must be a note, equals stroke or dot.
                         boolean extra = false;
                         for (var p : parts)
@@ -250,8 +282,8 @@ final class PrintedExpressionGlyphs {
                 && p.left - b.right < gap * 1.15f
                 && p.width() >= 2
                 && p.height() >= 2
-                && p.width() < gap * .45f
-                && p.height() < gap * .45f
+                && p.width() < gap * .55f
+                && p.height() < gap * .55f
                 && Math.abs(p.cy() - headY) < gap * .55f
                 && p.ink >= p.width() * p.height() * .45f;
     }
@@ -287,7 +319,7 @@ final class PrintedExpressionGlyphs {
     }
 
     private static List<Part> components(
-            byte[] gray, int width, int left, int top, int right, int bottom) {
+            byte[] gray, int width, int left, int top, int right, int bottom, int threshold) {
         int w = right - left, h = bottom - top;
         var seen = new boolean[w * h];
         var queue = new int[w * h];
@@ -295,7 +327,7 @@ final class PrintedExpressionGlyphs {
         for (int y = 0; y < h; y++)
             for (int x = 0; x < w; x++) {
                 int seed = y * w + x;
-                if (seen[seed] || (gray[(top + y) * width + left + x] & 255) > 175) continue;
+                if (seen[seed] || (gray[(top + y) * width + left + x] & 255) > threshold) continue;
                 int read = 0, size = 1, minX = x, maxX = x, minY = y, maxY = y;
                 queue[0] = seed;
                 seen[seed] = true;
@@ -311,7 +343,7 @@ final class PrintedExpressionGlyphs {
                             if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
                             int next = ny * w + nx;
                             if (!seen[next]
-                                    && (gray[(top + ny) * width + left + nx] & 255) <= 175) {
+                                    && (gray[(top + ny) * width + left + nx] & 255) <= threshold) {
                                 seen[next] = true;
                                 queue[size++] = next;
                             }

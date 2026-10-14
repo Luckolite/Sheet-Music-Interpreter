@@ -2490,6 +2490,18 @@ final class OmrMeasurePostProcessor {
             float gap,
             int headTop,
             int headBottom) {
+        if (MeterOnlyCourtesyTail.matches(
+                labels,
+                gray,
+                width,
+                height,
+                left,
+                right,
+                staffTop,
+                staffBottom,
+                gap,
+                headTop,
+                headBottom)) return true;
         if (gray == null
                 || right - left > gap * 6
                 || right - left < gap

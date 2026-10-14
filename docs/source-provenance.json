@@ -351,13 +351,13 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "fac84ea6a5fc0e3bc4017968908a614f14e26b756108b4ad591f0c5bb735724b",
-      "source_normalized_sha256": "972b974557c4006ce824c07d6c8b8b3c8d710c4b70bf3f68b57a8b6e85ce7e01",
-      "review_note": "A complete stacked4/4 plus key ink and a verified single physical ending bar may identify a courtesy-only phantom tail. Existing raw and semantic empty-tail guards preserve played, rest and closed tails. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
+      "source_sha256": "24600ed409c1ec0e99ca9a1707ed7920f5f7ccd0d62dc0f836bf5a65f9e826be",
+      "source_normalized_sha256": "3c27860cd0a08bcbf7d1c05f1cfd2b4c2d6781d7cec58e243f70230f53d1d122",
+      "review_note": "Invoke a separately proved meter-only courtesy tail before the existing key-tail test. Genuine bars and played ink remain protected. No private score pages, masks, library records, weights or new wire layout are published.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
-      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
-      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending."
     },
     "ShortFinalStaff.java": {
@@ -369,13 +369,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "0b893506b5a6692d07867ac526354f07ded546cf60d010297c2819a42de08c76",
-      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
-      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
-      "review_note": "A verified single ending bar may own complete courtesy cancellation naturals. Complete natural proof precedes the sharp classifier; raw and semantic empty-tail guards retain played, rest and closed tails. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
-      "source_normalized_sha256": "232209ac0a8b1e312a7c24a26ee9c9d07233f09f3783eb94ea7a0eb083c175fa",
+      "source_sha256": "6ce1afacf0b1ca04db9f528c293b13362ceafb2fbc30dcc0828175955ee66674",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "review_note": "Preserve the narrow lower8filter; admit a wider complete counter pair only with separate numerator ink and existing full-barline, stem and ownership proof. Original procedural controls, no song exceptions. No private score pages, masks, library records, weights or new wire layout are published.",
+      "source_normalized_sha256": "04e9717e1465c40685a8c8cb57a729b1445bc3213953ba8cdae8f6abe1b83321",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
       "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
@@ -1091,12 +1091,12 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "7e843ee768ec510b6e3c39f2748903fde986cfec563e6a3cc3692486bd634649",
-      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
-      "source_normalized_sha256": "77d5337f806645e03ff3e32cfd7373f516f64e3fd31c0f7cd6bd4f6b66ac477c",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
-      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
-      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
+      "source_sha256": "29d8f079417d5dc9cede8280626f2e1f5c88578ac677394a8ce82523fdbb4268",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "source_normalized_sha256": "fd11db0ec6e7b217be2df785e6deabb94e7c5fa02e34577d76ad5f22a6336f76",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "review_note": "Retain separate upper/lower OCR votes and forward only corroborated digits. Existing whole-meter consensus, contradiction guards and caller-owned standalone inference remain unchanged. No private score pages, masks, library records, weights or new wire layout are published.",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1396,21 +1396,22 @@
     },
     "PrintedExpressionGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedExpressionGlyphs.java",
-      "source_sha256": "1d923f4a3caf74e5672dfa431a2c3325500b1c3d1ce0d8a9ca2050d082ca2313",
-      "source_normalized_sha256": "bbdac94ec5fd3e0a28803fd793654f0f5152764571f8e1c75b8bef46ced11064",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Expressive candidate on frozen871 guide276/audio60 plus guide277/audio61 extension",
-      "review_note": "Whole-file executable token parity after package-only adaptation. Shared detection/ownership/performance or semantic validation; original generated regressions and licensed OFL glyphs. JDK only, no private score/model/signing/history data."
+      "source_sha256": "0365345a4ac7713ad6a7a08fc30f41bf2e5d7106bc49888079710769cfae70e5",
+      "source_normalized_sha256": "9daa71916f241835880db919392c136f50aac19d93945112947d363427671e2b",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "review_note": "Keep the existing contrast pass; add only independently parsed metric equations from a lower-threshold nonoverlapping fallback. Dot aperture and either-end complete staff ownership retain printed equations. No private score pages, masks, library records, weights or new wire layout are published.",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4"
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "423e7b7f889fc18910f4a05ef0a81171ebc9fd75a2792ba2903096a83ebf944d",
-      "source_normalized_sha256": "e22eefaf9dda9b736a8b890855220cd58bdc5e32548838ad5d97efdf7f29b851",
-      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
-      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
-      "review_note": "Persist a distinct rest-column target without assigning a note index. Resolve the allowlisted tempo family at the proved silent onset; joins shift the explicit measure while preserving source evidence and unrelated expressions. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes.",
+      "source_sha256": "a24b89aa4cc176793c8deaa4e781a1f0d08c75213b3e575e8f3fc986d1305333",
+      "source_normalized_sha256": "1f17156165cb395ff4107bfca23182a8d7b8383d1dac74e8df7fb9c26173c1e8",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "review_note": "A metric equation spanning one bar boundary owns the first nearby same-staff attack in the next region. Multiple crossed boundaries or missing attacks abstain; ordinary left-anchor ownership retained. No private score pages, masks, library records, weights or new wire layout are published.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
-      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117"
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4"
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -2516,6 +2517,24 @@
       "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
       "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
       "review_note": "Original pure-JDK rest-direction ownership helper. Complete local raw rails, unique silent glyph and staff/measure geometry are required. Exact silent-slot onset is resolved only with usable meter; competing rests or notes retain ambiguity. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes."
+    },
+    "MeterFontMatcher.java": {
+      "source_path": "tools/native-worker/NativeMeterFont.java",
+      "source_sha256": "d4d81905e89cdc41f9328686dd304735352eb72110e987015d698e5a51b8efe1",
+      "source_normalized_sha256": "713ebe3f219a142282a6a94c1e91c125a8e3c055383ee9eb85d518c9cd022986",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "review_note": "Preserve the existing0.84font score floor; two agreeing OCR scales without a conflicting reading may resolve only the top font candidate runner-up ambiguity. Legacy read overload retained. No private score pages, masks, library records, weights or new wire layout are published."
+    },
+    "MeterOnlyCourtesyTail.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOnlyCourtesyTail.java",
+      "source_sha256": "7f98d2e2582020f23208ff6243a44bccf085f87644835caab0cc42258079a1a0",
+      "source_normalized_sha256": "541a8465f0415f27510ce2e30289bd98562d555694bbae73c4c4ccca3622fe1a",
+      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
+      "review_note": "Original Apache-2.0 helper: complete preceding barline, no semantic heads, owned symbol ink, complete lower8counter pair and distinct upper numeral proof. Native source registration included. No private score pages, masks, library records, weights or new wire layout are published."
     }
   },
   "interpreter_speedup_review": {
@@ -5971,5 +5990,25 @@
       "scope": "Register the single new pure helper PrintedRestDirection; all230selected decoder sources compiled unchanged against existing ONNX dependency, with no model inference/package/deployment."
     },
     "boundary": "Saved-source/raw pixel stage comparisons are distinct from fresh inference, assembled timing/rendering and final paired app/Hub/worker/runtime acceptance."
+  },
+  "corroborated_meter_and_metric_equation_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
+    "scope": "Four global repairs: two-scale corroborated music-font digit, broad printed8counter ownership, metric-equation contrast and next-bar attack, meter-only courtesy tail.",
+    "originalNewControls": 37,
+    "regressions": [
+      "CorroboratedMeterEvidenceTest.java",
+      "WideCounterMeterHeadTest.java",
+      "MetricBoundaryControlTest.java",
+      "MetricGlyphContrastControlTest.java",
+      "MeterOnlyCourtesyTailTest.java"
+    ],
+    "fixtureProvenance": "Original procedural scenes using existing SIL-OFL Bravura glyph sprites. All3Android grayscale arrays independently regenerated byte-exact from the published standalone scenes; existing notices retained.",
+    "nativeSourceManifest": {
+      "path": "tools/native-worker/decoder-sources.txt",
+      "sha256": "a33b31e9e0b52e5f736197d59454e79457d13f8409677d18a6c813259008a226",
+      "scope": "One new MeterOnlyCourtesyTail helper, sorted manifest; all231selected sources and actual NativeMeterFont/NativeMusicalOcr compile without numerical rewrites or model inference."
+    },
+    "boundary": "Focused synthetic controls and captured-stage comparisons are distinct from fresh complete inference, assembled tempo, paired worker packaging/deployment and device acceptance."
   }
 }

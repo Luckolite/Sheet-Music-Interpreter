@@ -1341,3 +1341,25 @@ Twelve original synthetic tests cover prose, catalogue and explicit-credit bound
 App commit `86e88c7de262c9e682024b3920cabdd038c12ba5` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Corroborated meters and metric equation ownership
+
+Two agreeing OCR scales can corroborate the top music-font digit without lowering
+the existing0.84score floor or overriding whole-meter disagreement. A separate
+numerator plus complete lower8counters identifies a broad meter fragment while
+retaining the original narrow test and barline/stem ownership guards.
+
+Metric equations retain separated dots and faint equals strokes. A printed
+equation crossing one bar boundary owns the first nearby same-staff attack
+in the next bar; ambiguous boundaries or missing attacks abstain. A terminal
+meter-only courtesy8needs a complete preceding barline, no played head, owned
+ink, both lower counters and distinct numerator evidence before omitting an
+empty trailing region.
+
+Thirty-seven original controls accompany scoped app commit `31dd74c98df5fa8228ada2369d386ac64b91aed4`.
+The3Android grayscale fixtures regenerate exactly from the standalone
+procedural Bravura scenes; existing SIL-OFL notices remain. No commercial
+pages, model masks, personal library records, private logs, new weights or
+wire layout are included. All231selected decoder sources and the actual
+native OCR/font callers compile. Full current inference, assembled tempo,
+packaged paired worker deployment and device behavior remain separate.

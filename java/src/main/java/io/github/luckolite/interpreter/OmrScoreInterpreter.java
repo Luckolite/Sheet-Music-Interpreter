@@ -3991,6 +3991,12 @@ final class OmrScoreInterpreter {
      * cannot be the two attacks that a semantic notehead mask may suggest. */
     private static boolean inlineEightMeterFragment(
             byte[] gray, int width, int height, Component head, List<Staff> staffs) {
+        return inlineEightMeterFragment(gray, width, height, head, staffs, false)
+                || inlineEightMeterFragment(gray, width, height, head, staffs, true);
+    }
+
+    private static boolean inlineEightMeterFragment(
+            byte[] gray, int width, int height, Component head, List<Staff> staffs, boolean wide) {
         if (gray == null) return false;
         Staff staff = nearestHeadStaff(staffs, head.centerY);
         if (staff == null) return false;
@@ -4020,9 +4026,33 @@ final class OmrScoreInterpreter {
             }
         }
         if (!rule) return false;
-        int left = Math.max(0, Math.round(head.centerX - gap * .95f));
-        int right = Math.min(width - 1, Math.round(head.centerX + gap * .95f));
-        int upper = Math.max(0, Math.round(top + gap * 2f));
+        if (wide) {
+            // A wider counter aperture is admitted only under separate printed numerator ink.
+            int numerator = 0, upperNumerator = 0, lowerNumerator = 0;
+            for (int y = Math.max(0, Math.round(top));
+                    y < Math.min(height, Math.round(top + gap * 1.8f));
+                    y++) {
+                boolean rail = false;
+                for (int row = 0; row < 3; row++)
+                    if (Math.abs(y - (top + row * gap)) <= Math.max(1, gap * .14f)) rail = true;
+                if (rail) continue;
+                for (int x = Math.max(0, Math.round(head.centerX - gap * 1.5f));
+                        x <= Math.min(width - 1, Math.round(head.centerX + gap * 1.5f));
+                        x++)
+                    if ((gray[y * width + x] & 255) < 155) {
+                        numerator++;
+                        if (y < top + gap * .9f) upperNumerator++;
+                        else lowerNumerator++;
+                    }
+            }
+            if (numerator < gap * gap * .7f
+                    || upperNumerator < gap * gap * .2f
+                    || lowerNumerator < gap * gap * .2f) return false;
+        }
+
+        int left = Math.max(0, Math.round(head.centerX - gap * (wide ? 1.45f : .95f)));
+        int right = Math.min(width - 1, Math.round(head.centerX + gap * (wide ? 1.45f : .95f)));
+        int upper = Math.max(0, Math.round(top + gap * (wide ? 1.65f : 2f)));
         int lower = Math.min(height - 1, Math.round(bottom + gap * .2f));
         int w = right - left + 1, h = lower - upper + 1;
         if (w < 3 || h < 3) return false;
@@ -4062,8 +4092,8 @@ final class OmrScoreInterpreter {
                     || minY == 0
                     || maxY == h - 1
                     || area < gap * gap * .055f
-                    || area > gap * gap * .35f
-                    || maxX - minX + 1 > gap * .7f
+                    || area > gap * gap * (wide ? .5f : .35f)
+                    || maxX - minX + 1 > gap * (wide ? .95f : .7f)
                     || maxY - minY + 1 > gap * .8f) continue;
             float cx = left + sx / area, cy = upper + sy / area;
             if (Math.abs(cx - head.centerX) < gap * .35f
@@ -4077,7 +4107,7 @@ final class OmrScoreInterpreter {
                 float dy = Math.abs(first[1] - other[1]);
                 if (Math.abs(first[0] - other[0]) >= gap * .3f
                         || dy < gap * .55f
-                        || dy > gap * 1.1f) continue;
+                        || dy > gap * (wide ? 1.3f : 1.1f)) continue;
                 float midX = (first[0] + other[0]) * .5f, midY = (first[1] + other[1]) * .5f;
                 if (Math.abs(midX - head.centerX) < gap * .35f
                         && (Math.abs(first[1] - head.centerY) < gap * .35f

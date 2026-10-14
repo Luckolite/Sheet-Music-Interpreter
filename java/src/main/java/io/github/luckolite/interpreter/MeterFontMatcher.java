@@ -24,6 +24,18 @@ public final class MeterFontMatcher {
     }
 
     public Reading read(int[] pixels, int width, int height, int middle, int firstLine, float gap) {
+        return read(pixels, width, height, middle, firstLine, gap, "", "");
+    }
+
+    public Reading read(
+            int[] pixels,
+            int width,
+            int height,
+            int middle,
+            int firstLine,
+            float gap,
+            String upperEvidence,
+            String lowerEvidence) {
         if (width < gap * 1.35f || height < 12 || middle < 6 || middle > height - 6)
             return new Reading("", 0, 0);
         Match top =
@@ -35,7 +47,8 @@ public final class MeterFontMatcher {
                         middle,
                         firstLine,
                         gap,
-                        new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
+                        new int[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16},
+                        upperEvidence);
         Match bottom =
                 match(
                         pixels,
@@ -45,7 +58,8 @@ public final class MeterFontMatcher {
                         height,
                         firstLine,
                         gap,
-                        new int[] {2, 4, 8, 16, 32});
+                        new int[] {2, 4, 8, 16, 32},
+                        lowerEvidence);
         if (top.value() == 0 || bottom.value() == 0)
             return new Reading("", top.score(), bottom.score());
         return new Reading(top.value() + "/" + bottom.value(), top.score(), bottom.score());
@@ -59,7 +73,8 @@ public final class MeterFontMatcher {
             int last,
             int firstLine,
             float gap,
-            int[] values) {
+            int[] values,
+            String corroborated) {
         int h = last - first;
         boolean[] source = new boolean[width * h], valid = new boolean[source.length];
         int sourceCount = 0;
@@ -134,8 +149,13 @@ public final class MeterFontMatcher {
         }
         results.sort(Comparator.comparingDouble(Match::score).reversed());
         Match winner = results.get(0);
-        if (winner.score() < .84f || winner.score() - results.get(1).score() < .05f)
+        if (!accepts(winner.value(), winner.score(), results.get(1).score(), corroborated))
             return new Match(0, winner.score());
         return winner;
+    }
+
+    static boolean accepts(int winner, float score, float runnerUp, String corroborated) {
+        return score >= .84f
+                && (score - runnerUp >= .05f || Integer.toString(winner).equals(corroborated));
     }
 }

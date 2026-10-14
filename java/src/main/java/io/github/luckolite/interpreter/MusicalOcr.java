@@ -101,12 +101,16 @@ public final class MusicalOcr {
         MeterCropRaster.prepare(
                 cleaned, cropWidth, cropHeight, top, crop.firstLine(), crop.gap(), false);
         var readings = new ArrayList<String>();
+        var upperReadings = new ArrayList<String>();
+        var lowerReadings = new ArrayList<String>();
         var upperEvidence = new HashSet<String>();
         var lowerEvidence = new HashSet<String>();
         for (int scale : new int[] {3, 4, 5}) {
             String numerator = digits(cleaned, cropWidth, cropHeight, 0, middle - top, scale);
             String denominator =
                     digits(cleaned, cropWidth, cropHeight, middle - top, cropHeight, scale);
+            upperReadings.add(numerator);
+            lowerReadings.add(denominator);
             if (!numerator.isBlank()) upperEvidence.add(numerator);
             if (!denominator.isBlank()) lowerEvidence.add(denominator);
             if (numerator.matches("[0-9]{1,2}") && denominator.matches("[0-9]{1,2}"))
@@ -125,7 +129,9 @@ public final class MusicalOcr {
                             cropHeight,
                             middle - top,
                             Math.round(crop.firstLine()) - top,
-                            crop.gap());
+                            crop.gap(),
+                            corroboratedDigit(upperReadings),
+                            corroboratedDigit(lowerReadings));
             if (TRACE) System.err.println("meter font=" + font);
             String supported =
                     MusicalOcrEvidence.fontMeter(
@@ -147,6 +153,19 @@ public final class MusicalOcr {
             if (!reflowed.isBlank()) return new MeterReading(reflowed, 1);
         }
         return new MeterReading("", 0);
+    }
+
+    static String corroboratedDigit(List<String> readings) {
+        String selected = "";
+        int votes = 0;
+        for (String text : readings) {
+            if (text == null || text.isBlank()) continue;
+            if (!text.matches("[0-9]{1,2}") || !selected.isEmpty() && !selected.equals(text))
+                return "";
+            selected = text;
+            votes++;
+        }
+        return votes >= 2 ? selected : "";
     }
 
     private String reflowedMeter(int[] pixels, int width, int height, int middle) throws Exception {
