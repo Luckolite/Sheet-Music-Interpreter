@@ -1922,3 +1922,7 @@ A missing terminal letter requires bounded original-pixel stem evidence and agre
 ## Padded coauthor credits
 
 A damaged header coauthor credit requires agreement at three padded PDF render scales and corroboration by an explicit composer credit on the page. The detector merge is shared; Android rendering remains an adapter. Fourteen original synthetic controls cover candidate geometry, corroboration and OCR disagreement. App source commit `0a4c2eed69d70ddf0145695d7a4b498b991b41b1`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.
+
+## Metadata staff boundaries and directions
+
+An earlier metadata boundary requires continuous support for four staff lines across the original raster and an existing staff detection. The pure geometry gate is shared; Android candidate detection stays an adapter. Collection captions and notation directions remain outside contributor credits. Original geometry and detector regressions accompany the change. App source commit `804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.

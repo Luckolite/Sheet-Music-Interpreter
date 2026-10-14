@@ -2089,15 +2089,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "321d84cf3f8a767af9465f681d0adefb23fe8607e60199259d714c7448877fec",
-      "source_normalized_sha256": "fa95c8a85d9ffa7febc336716c2a608a373eec00e624c84489718495212b68a0",
+      "source_sha256": "831d72c4ba0e0f4f7993c56b09e61e9fd969a24c3e0a546fa180d72edd75a300",
+      "source_normalized_sha256": "b4b5f4769df18a6f1a3648d016723adbb142891a1cbb23f9a1b77c2e5caa799f",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "f6c84a863564671d757b73565f380185ff83b0cfcac271d16662f25d87641689",
+      "standalone_sha256": "b25eeab2988cbda51661bdedc7a5177b6e9b1f420c9ea53dfe15c7264efe41c0",
       "license": "Apache-2.0",
-      "review_note": "Bounded padded header crops require three-scale agreement and matching explicit composer text on the same page; no score-specific rules or model changes.",
-      "reviewed_app_commit": "0a4c2eed69d70ddf0145695d7a4b498b991b41b1",
+      "review_note": "Continuous five-line raster support can advance an existing staff boundary; collection captions and notation directions retain their roles. No score-specific rules, models or wire changes.",
+      "reviewed_app_commit": "804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -2852,6 +2852,17 @@
       "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "review_note": "Bounded original-pixel terminal-stroke evidence plus three-scale OCR agreement; no name dictionary, score-specific rule, model, or wire change."
+    },
+    "MetadataStaffBoundary.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/MetadataStaffBoundary.java",
+      "source_sha256": "63ef3746a01d66d5046e71b9b23c296ab0d2149089f7bb36d9336d4ca98b533f",
+      "source_normalized_sha256": "9b9d5c953f98b8b7fc289cd34cb7ff8a410a0c016b0bc0f4416ab7f472434cef",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MetadataStaffBoundary.java",
+      "standalone_sha256": "3767f7afe1027ec6ce6388500019d4534ad28e08b492b202b0a9a12b99a5baf4",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff",
+      "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
+      "review_note": "Continuous five-line raster support can advance an existing staff boundary; collection captions and notation directions retain their roles. No score-specific rules, models or wire changes."
     }
   },
   "interpreter_speedup_review": {
@@ -6751,5 +6762,11 @@
     "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
     "source_sha256": "981ef1f48037a06610fb45cc2ef0b08f0383997b1e7becbefaea98a569612f26",
     "boundary": "App-only original-PDF padded crop loop with cancellation and bitmap cleanup. Public detector confirms three readings against an explicit same-page composer credit. No native decoder metadata caller; runtime and deployment remain separate."
+  },
+  "metadata_staff_boundary_adapter_review": {
+    "reviewed_app_commit": "804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff",
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "2ec47d87ad7bd1b5fbb22153294e5260cc8dd7fd8890c522deb00ba9c1b87783",
+    "boundary": "App-only existing staff candidate detection supplies first line, gap, slope, support and original thresholded pixels to public MetadataStaffBoundary. The helper requires continuous lines and advances only an already detected boundary. No models, decoder layouts or native decoder source selection changed. Full current Android pipeline and deployment remain unverified."
   }
 }

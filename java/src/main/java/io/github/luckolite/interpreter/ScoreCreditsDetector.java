@@ -7306,7 +7306,7 @@ public final class ScoreCreditsDetector {
         if (text.matches("(?iu)^(?:first|second|third|fourth|[1-9](?:st|nd|rd|th))\\h+movement$"))
             return true;
         String word =
-                "(?:vivace|misterioso|cresc[.,]?|dim[.,]?|a|lente|grazioso|sempre|mosso|tempo|simply|soul|groove|swing|affettuoso|agitato|animato|legato|espress\\.?|light|and|lively|meno|mezzo|movimento|tranquillo|piz\\.?|port\\.?|sostemuto|sosteńuto|accel\\.?|andante|andantino|allegro|allegretto|adagio|largo|lento|lent|moderato|presto|espressivo|expressively|gently|passionately|sustained|[ec]spressivo|lacrimoso|molto|poco|cantabile|rubato|sostenuto|briskly|delicately|douloureux|con|moto|e|et|free|time)";
+                "(?:strident|pianissimo|senza|sordini|vivace|misterioso|cresc[.,]?|dim[.,]?|a|lente|grazioso|sempre|mosso|tempo|simply|soul|groove|swing|affettuoso|agitato|animato|legato|espress\\.?|light|and|lively|meno|mezzo|movimento|tranquillo|piz\\.?|port\\.?|sostemuto|sosteńuto|accel\\.?|andante|andantino|allegro|allegretto|adagio|largo|lento|lent|moderato|presto|espressivo|expressively|gently|passionately|sustained|[ec]spressivo|lacrimoso|molto|poco|cantabile|rubato|sostenuto|briskly|delicately|douloureux|con|moto|e|et|free|time)";
         return text.matches(
                 "(?iu)^(?:[0-9]+\\h*)?"
                         + word
@@ -7473,7 +7473,8 @@ public final class ScoreCreditsDetector {
             if (aligned >= 5) return true;
         }
 
-        if (page.notationTop <= 0 && credit(candidate.text) == null) {
+        if ((page.notationTop <= 0 || page.notationTop > page.height * .75f)
+                && credit(candidate.text) == null) {
             for (Line caption : lines) {
                 if (!clean(caption.text)
                         .matches(
