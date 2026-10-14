@@ -1839,3 +1839,12 @@ Eight original synthetic tests cover these boundaries.
 App commit `290ad49ea4b779aa16b82191e0f36efab62895a0` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Cover letterspacing
+
+Three agreeing expanded-crop readings at confidence at least 0.98 may repair
+cover spacing only when every letter remains unchanged. Fourteen original controls
+cover clipping, identifiers, confidence, actual scores and photographic false staff
+boundaries. The Android adapter uses the same fixed geometry and retains cancellation
+and bitmap cleanup. App commit `aca75c59ec88eee1c7699c9e7ae59636c81b314e` is reviewed. No private fixtures,
+models or wire changes are included; Android runtime and deployment remain unverified.

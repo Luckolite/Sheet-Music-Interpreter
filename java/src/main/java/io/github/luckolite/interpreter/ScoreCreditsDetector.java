@@ -1288,6 +1288,69 @@ public final class ScoreCreditsDetector {
     }
 
     /** Reread damaged contributor punctuation or an uppercase explicit credit in its tight box. */
+
+    /** Cover letterspacing is recoverable without changing a single printed letter. */
+    public static List<Line> coverSpacingCandidates(Page page) {
+        if (page.notationTop > 0 && !page.photographicCover || page.creditsOnly) return List.of();
+        return page.lines.stream()
+                .filter(
+                        line -> {
+                            String value = clean(line.text);
+                            String letters = value.replaceAll("\\h", "");
+                            if (line.top < 0
+                                    || line.bottom > page.height * .85f
+                                    || line.height() < page.width * .012f
+                                    || line.height() > page.width * .1f
+                                    || !value.matches("[\\p{Lu}\\h]+")
+                                    || letters.length() < 6
+                                    || letters.length() > 60) return false;
+                            String[] words = value.split("\\h+");
+                            return words.length == 1 && letters.length() >= 8
+                                    || words.length >= 3
+                                            && Arrays.stream(words)
+                                                            .filter(w -> w.length() <= 2)
+                                                            .count()
+                                                    >= 3;
+                        })
+                .limit(4)
+                .toList();
+    }
+
+    public static Refinement coverSpacingRegion(Page page, Line line) {
+        float scale = page.width / 1800f;
+        return new Refinement(
+                Math.max(0, line.left - 12 * scale),
+                Math.max(0, line.top - 10 * scale),
+                Math.min(page.width, line.right + 20 * scale),
+                Math.min(page.height, line.bottom + 10 * scale),
+                3);
+    }
+
+    public static List<Line> mergeCoverSpacingConsensus(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!coverSpacingCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || readings.stream().anyMatch(r -> r == null || r.isBlank())
+                || confidence.stream()
+                        .anyMatch(c -> c == null || !Float.isFinite(c) || c < .98f || c > 1))
+            return page.lines;
+        String candidate = clean(readings.get(0));
+        if (!candidate.matches("[\\p{Lu}\\h]+")
+                || readings.stream().anyMatch(r -> !clean(r).equals(candidate))
+                || !candidate
+                        .replaceAll("\\h", "")
+                        .equals(clean(original.text).replaceAll("\\h", ""))
+                || candidate.equals(clean(original.text))) return page.lines;
+        var result = new ArrayList<>(page.lines);
+        result.set(
+                result.indexOf(original),
+                new Line(candidate, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(result);
+    }
+
     public static List<Line> tightCreditRepairCandidates(Page page) {
         if (page.photographicCover || page.notationTop <= 0) return List.of();
         return page.lines.stream()
