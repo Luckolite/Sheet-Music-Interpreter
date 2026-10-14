@@ -2096,15 +2096,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "10bdd126931ec6773d76d5a86365c83998a34790bb9eaa2d36215a5cc8b084ee",
-      "source_normalized_sha256": "bf6ef8fd7bcb4dece9f7dfc90df3ac353e4693d8be11b23ef2ecb396ddfddbf2",
+      "source_sha256": "6601eff9c3a84afb44a79cdc8e1f60b606ff1d6f70dc73ccf46ce24692173099",
+      "source_normalized_sha256": "582f8ab6f8dfa2bbf3cc4b4dd4de76e92fea39d4d6755a659ab13fd92e5d73db",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Exact package-only port; original staff/header controls and saved/fresh metadata differential reviewed. Android verification pending.",
+      "reviewed_source_state": "Exact package-only port; original folk-source and named-credit controls and saved/fresh metadata differential reviewed. Android verification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "f30ca4706d91984c15b0360cc2dcd819dd7a3ab906f4c59847b50f88d8be2be2",
+      "standalone_sha256": "5c2d4de4bba0c086d2e0e5edc2f48f09f05283712c5ce08f4a6efabde9cf5280",
       "license": "Apache-2.0",
-      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected.",
-      "reviewed_app_commit": "1cc23d3fb1eac3adff69c89bf67c71b830a9b563",
+      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected. Geographic folk-song and folk-tune source labels are excluded from person-credit review; mixed bylines and named transcription services remain available.",
+      "reviewed_app_commit": "fb2c50833cd973a348268cfc628f34a67f2bcd5e",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

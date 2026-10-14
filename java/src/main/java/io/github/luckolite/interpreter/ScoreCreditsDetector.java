@@ -4448,6 +4448,8 @@ public final class ScoreCreditsDetector {
                 }
         }
 
+        other.removeIf(ScoreCreditsDetector::folkOriginDescription);
+
         Set<String> separatedReview = new LinkedHashSet<>();
         for (String value : other) {
             Matcher producer =
@@ -4772,6 +4774,19 @@ public final class ScoreCreditsDetector {
                 value ->
                         same(value, author)
                                 || subtitles.stream().anyMatch(subtitle -> same(value, subtitle)));
+    }
+
+    /** Geographic folk-source labels describe provenance, rather than a credited person. */
+    private static boolean folkOriginDescription(String text) {
+        String value =
+                Normalizer.normalize(clean(text), Normalizer.Form.NFD).replaceAll("\\p{M}+", "");
+        // Keep mixed bylines and named services available for review.
+        if (Pattern.compile(
+                        "(?iu)\\b(?:by|and|with|arranged|transcribed|composed|studio|studios|music|publishing|publications|records|ensemble|choir|project|service)\\b|[&/@;]")
+                .matcher(value)
+                .find()) return false;
+        return value.matches(
+                "(?iu)^(?:traditional\\h+)?(?:Irish|Scottish|Welsh|Celtic|English|French|German|Italian|Spanish|Ukrainian|Russian|Polish|Norwegian|Swedish|Finnish|Danish|American|Canadian|Australian|Chinese|Japanese|Korean|Hungarian|Romanian|Bulgarian|Greek|Turkish|Hebrew|Yiddish|African)\\h+folk\\h*(?:song|tune)(?:\\h+[\\p{L}][\\p{L}'’\\-]{0,59}|\\h+[\"“][^\"”]{1,80}[\"”])?$");
     }
 
     private static String ambiguousNarrativeArtwork(String hint, List<Page> pages) {
