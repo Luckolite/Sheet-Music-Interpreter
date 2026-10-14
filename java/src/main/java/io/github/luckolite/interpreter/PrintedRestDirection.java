@@ -65,7 +65,8 @@ final class PrintedRestDirection {
                         || center / h < m.top()
                         || center / h > m.bottom()
                         || Math.abs(rest.pageY() * h - center) > gap * 2.5f
-                        || dx > gap * 3) continue;
+                        || (dx > gap * 3 && !measureStartWholeRest(score, rest, word, gap, w)))
+                    continue;
                 var rules = PrintedDirectionStaff.printedRules(gray, w, h, x, staff.bottom(), gap);
                 if (rules == null
                         || Math.abs(rules[0] - staff.bottom()) > gap * .5f
@@ -90,6 +91,33 @@ final class PrintedRestDirection {
         return best != null
                 ? best
                 : PrintedMultiRestDirection.find(score, staffs, word, gray, w, h);
+    }
+
+    /** A leading direction can precede the centered glyph of an otherwise silent bar. */
+    private static boolean measureStartWholeRest(
+            ScorePageInterpretation score,
+            ScoreRestEvent rest,
+            PlayingTechniqueDetector.Word word,
+            float gap,
+            int width) {
+        if (rest.durationBeats() != 4
+                || rest.positionInMeasure() < .35f
+                || rest.positionInMeasure() > .65f) return false;
+        var measure = score.measures().get(rest.measureIndex());
+        float center =
+                measure.left() + rest.positionInMeasure() * (measure.right() - measure.left());
+        if ((word.left() - measure.left()) * width > 2 * gap || word.right() >= center)
+            return false;
+        for (var n : score.notes())
+            if (n.measureIndex() == rest.measureIndex()
+                    && n.staffIndex() == rest.staffIndex()
+                    && n.staffCount() == rest.staffCount()) return false;
+        for (var r : score.rests())
+            if (r != rest
+                    && r.measureIndex() == rest.measureIndex()
+                    && r.staffIndex() == rest.staffIndex()
+                    && r.staffCount() == rest.staffCount()) return false;
+        return true;
     }
 
     static double onset(

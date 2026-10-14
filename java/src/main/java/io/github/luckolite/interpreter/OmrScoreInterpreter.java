@@ -5178,6 +5178,14 @@ final class OmrScoreInterpreter {
                                             glyph.maxY,
                                             staff.gap);
                     if (printedFlat) accidental = ScoreNoteEvent.ACCIDENTAL_FLAT;
+                    // A detached clef bowl can resemble a flat in the semantic mask.
+                    // Require source evidence before rejecting an overlapping symbol.
+                    if (gray != null
+                            && clef != null
+                            && accidental == ScoreNoteEvent.ACCIDENTAL_FLAT
+                            && glyph.minX <= clef.maxX
+                            && !printedFlat) continue;
+
                     if (!printedFlat
                             && (accidental == ScoreNoteEvent.ACCIDENTAL_FLAT
                                     || accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY
@@ -14495,6 +14503,14 @@ final class OmrScoreInterpreter {
         if (rightSpine - leftSpine < (coreRight - coreLeft + 1) * .28f
                 || columns[leftSpine] < glyphHeight * .46f
                 || columns[rightSpine] < glyphHeight * .46f) return Float.NaN;
+
+        // Two shaft peaks must have a lower-ink column between them. A sheared
+        // flat upright cannot provide both shafts from the same broad peak.
+        boolean separatedSpines = false;
+        for (int column = leftSpine + 1; column < rightSpine; column++)
+            if (columns[column] < Math.min(columns[leftSpine], columns[rightSpine]) * .85f)
+                separatedSpines = true;
+        if (!separatedSpines) return Float.NaN;
 
         // Two thick but disconnected spines are not a crossbar.
         // Require ink to bridge their inner gap before considering row width.

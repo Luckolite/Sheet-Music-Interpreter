@@ -229,15 +229,17 @@ final class CommonTimeMeter {
         for (int x = left; x <= right; x++) {
             int hits = 0;
             for (int y = lo; y <= hi; y++) {
-                if (rule(y, firstLine, gap, radius) || !ink(gray, width, height, x, y, slope))
-                    continue;
+                if (sharpStaffRule(
+                                gray, width, height, left, right, y, firstLine, gap, radius, slope)
+                        || !ink(gray, width, height, x, y, slope)) continue;
                 tops[x - left] = Math.min(tops[x - left], y);
                 bottoms[x - left] = Math.max(bottoms[x - left], y);
                 hits++;
             }
             int rows = 0;
             for (int y = tops[x - left]; y <= bottoms[x - left]; y++)
-                if (!rule(y, firstLine, gap, radius)) rows++;
+                if (!sharpStaffRule(
+                        gray, width, height, left, right, y, firstLine, gap, radius, slope)) rows++;
             if (bottoms[x - left] - tops[x - left] < gap * 2.1f || hits < rows * .85f) {
                 tops[x - left] = height;
                 bottoms[x - left] = -1;
@@ -262,13 +264,19 @@ final class CommonTimeMeter {
                         int hits = 0, total = 0, leftWing = 0, rightWing = 0;
                         for (int x = left; x <= right; x++) {
                             int yy = y + Math.round(dy * (x - left) / (float) (span - 1));
-                            if (rule(yy, firstLine, gap, radius)) continue;
+                            if (sharpStaffRule(
+                                    gray, width, height, left, right, yy, firstLine, gap, radius,
+                                    slope)) continue;
                             total++;
                             boolean dark =
                                     ink(gray, width, height, x, yy, slope)
-                                            || !rule(yy - 1, firstLine, gap, radius)
+                                            || !sharpStaffRule(
+                                                            gray, width, height, left, right,
+                                                            yy - 1, firstLine, gap, radius, slope)
                                                     && ink(gray, width, height, x, yy - 1, slope)
-                                            || !rule(yy + 1, firstLine, gap, radius)
+                                            || !sharpStaffRule(
+                                                            gray, width, height, left, right,
+                                                            yy + 1, firstLine, gap, radius, slope)
                                                     && ink(gray, width, height, x, yy + 1, slope);
                             if (dark) {
                                 hits++;
@@ -293,17 +301,44 @@ final class CommonTimeMeter {
                 for (int i = 0; i < bars.size(); ) {
                     int first = bars.get(i), last = first;
                     i++;
-                    while (i < bars.size() && bars.get(i) - last <= join) last = bars.get(i++);
+                    while (i < bars.size() && bars.get(i) - last <= join) {
+                        boolean maskedRule = true;
+                        for (int y = last + 1; y < bars.get(i); y++)
+                            if (!sharpStaffRule(
+                                    gray, width, height, left, right, y, firstLine, gap, radius,
+                                    slope)) maskedRule = false;
+                        if (!maskedRule) break;
+                        last = bars.get(i++);
+                    }
                     centers.add((first + last) * .5f);
                 }
                 for (int i = 0; i < centers.size(); i++)
                     for (int j = i + 1; j < centers.size(); j++) {
                         float separation = centers.get(j) - centers.get(i);
-                        if (separation >= gap * .5f && separation <= gap * 1.4f) return true;
+                        // Both fitted band centers can shift by one antialiased edge pixel.
+                        if (separation >= gap * .5f && separation <= gap * 1.4f + 2) return true;
                     }
             }
         }
         return false;
+    }
+
+    /** Remove only staff ink witnessed outside the accidental, retaining its crossbars. */
+    private static boolean sharpStaffRule(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int y,
+            int firstLine,
+            float gap,
+            int radius,
+            float slope) {
+        if (!rule(y, firstLine, gap, radius)) return false;
+        int a = Math.round(left - gap), b = Math.round(right + gap);
+        if (a < 0 || b >= width) return true;
+        return ink(gray, width, height, a, y, slope) && ink(gray, width, height, b, y, slope);
     }
 
     /** A cut-C has a separate left bowl, white channel, and vertical cut in both halves.

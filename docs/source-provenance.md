@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition53 distinguishes sharp ink from common/cut time using printed staff
+geometry, rejects clef-overlap flat evidence, and requires two separated shafts
+for sharp recognition. Leading tempo directions can belong to a sole centered
+whole rest without inventing meter or timing. The original synthetic regressions
+contain no private score material. Guide286 layout is unchanged; audio86
+invalidates stale previews. Packaged deployment and runtime acceptance remain pending.
+
 Recognition52 verifies staff connector contact and missing printed endpoints,
 recovers contrast-supported triplets, and rejects bracket numeral and illustration
 fragments as notes. Complete opening clefs retain their signatures, while adaptive
