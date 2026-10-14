@@ -117,10 +117,10 @@ final class PrintedSlurOwners {
         if (ambiguous(end)) return absent(Status.AMBIGUOUS_END);
         Head a = start.get(0).head(), b = end.get(0).head();
         if (a.owner() == b.owner()) return absent(Status.SAME_OWNER);
-        if (a.staffIndex() != b.staffIndex()
-                || a.staffCount() != b.staffCount()
-                || a.voice() != b.voice()) return absent(Status.DIFFERENT_LANES);
-        if (a.voice() == 0) return absent(Status.VOICE_UNRESOLVED);
+        if (a.staffIndex() != b.staffIndex() || a.staffCount() != b.staffCount())
+            return absent(Status.DIFFERENT_LANES);
+        // A printed slur may connect voices within the same proved physical staff.
+        // Unique raw endpoints and written order identify it without assigning a voice.
         int order = Long.compare(a.attack(), b.attack());
         if (order == 0) order = Integer.compare(a.graceOrder(), b.graceOrder());
         if (order >= 0) return absent(Status.REVERSED_CLOCK);

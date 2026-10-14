@@ -66,13 +66,11 @@ public class PrintedSlurPageCaptureTest {
     }
 
     @Test
-    public void unresolvedLanesNeverCreateASourceArc() {
+    public void distinctVoiceLabelsKeepTheProvedPrintedSourceArc() {
         var result = capture(0, 2, 62, Set.of());
-        assertTrue(result.source().spans().isEmpty());
+        assertEquals(1, result.source().spans().size());
         assertEquals(2, result.source().noteOrigins().size());
-        assertEquals(
-                Integer.valueOf(1),
-                result.statuses().get(PrintedSlurOwners.Status.DIFFERENT_LANES));
+        assertEquals(Integer.valueOf(1), result.statuses().get(PrintedSlurOwners.Status.RESOLVED));
     }
 
     @Test

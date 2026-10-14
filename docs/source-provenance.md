@@ -932,7 +932,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260â€“282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260Ã¢â‚¬â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.
@@ -1170,3 +1170,29 @@ ranges, decimals and neighboring-bar ownership. Standalone-digit recovery and th
 old beat-unit API remain intact. No private score fixtures, models, dependencies
 or record layouts changed. Conditional retained-stage evidence is separate from
 full native recognition, assembled timing and paired runtime acceptance.
+
+## Voice-independent printed-slur ownership
+
+The preparatory endpoint resolver retains uniquely proved same-staff phrase heads
+without requiring equal or assigned voice labels. It does not infer voices. Ten
+original controls retain explicit physical page/note identities and preserve
+ambiguous-head, different-staff, written-clock, pitch and exact-tie guards. The
+helper remains unhooked; this repair alone changes no production recognition,
+record layout, model or dependency. No private score material is included.
+
+## Courtesy endings and isolated octave ties
+
+A verified single staff-ending bar can own complete courtesy natural cancellation.
+Complete natural proof takes priority over sharp classification. Complete stacked
+4/4, key ink and the physical bar can also identify a courtesy-only phantom tail;
+raw and semantic evidence preserve played, rest and closed tails.
+
+An isolated octave direction carries through unique explicit same-written-pitch
+ties on the same staff. Rests, reattacks, ambiguous unisons, contradictory
+accidentals, new directions and printed dashed endpoints retain their guards.
+Octave glyph recognition and templates are unchanged. The three original Apache
+regression classes contain31new controls. App source is pinned to scoped commit
+`5b4890dea64f1f5055bac51c97ee04f1462da127`; standalone adaptation preserves the
+existing package and diagnostics boundary. No private score material, model,
+dependency or wire-layout change is included. Combined source checks remain
+separate from cache invalidation, paired native deployment and runtime acceptance.

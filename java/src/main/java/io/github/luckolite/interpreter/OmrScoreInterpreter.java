@@ -5348,7 +5348,12 @@ final class OmrScoreInterpreter {
             var next = measures.get(last + 1);
             if (next.top() <= measure.top() + gap * 3 / height) continue;
             float boundary = measure.right() * width;
-            if (!hasDoubleBar(labels, gray, width, height, boundary, staff)) continue;
+            if (!hasDoubleBar(labels, gray, width, height, boundary, staff)) {
+                boundary =
+                        provedNaturalCourtesyBoundary(
+                                labels, gray, width, height, boundary, staff, candidates);
+                if (!Float.isFinite(boundary)) continue;
+            }
             var glyphs = new ArrayList<SignatureGlyph>();
             for (var candidate : candidates) {
                 var c = candidate.component;
@@ -5361,7 +5366,10 @@ final class OmrScoreInterpreter {
                 float sx = printedSignatureSharpCenter(gray, width, height, candidate, gap);
                 int accidental = ScoreNoteEvent.ACCIDENTAL_FROM_KEY;
                 float y = Float.NaN;
-                if (Float.isFinite(sx)) {
+                if (isNaturalGlyph(labels, width, height, candidate, gap)) {
+                    sx = c.centerX;
+                    accidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
+                } else if (Float.isFinite(sx)) {
                     accidental = ScoreNoteEvent.ACCIDENTAL_SHARP;
                     y = printedSignatureSharp(gray, width, height, candidate, gap, true);
                 } else {
@@ -5414,6 +5422,89 @@ final class OmrScoreInterpreter {
             } else if (!conflicted.contains(last + 1)) result.put(last + 1, fifths);
         }
         return result;
+    }
+
+    // A complete natural beyond an unplayed physical staff ending cancels the key.
+    private static float provedNaturalCourtesyBoundary(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            float regionRight,
+            Staff staff,
+            List<AccidentalCandidate> candidates) {
+        if (gray == null) return Float.NaN;
+        float gap = staff.gap;
+        for (var candidate : candidates) {
+            var c = candidate.component;
+            if (c.centerX < regionRight - gap * 4
+                    || c.centerX > regionRight + gap * 2
+                    || c.centerY < staff.top - gap * 2
+                    || c.centerY > staff.bottom + gap * 2
+                    || !isNaturalGlyph(labels, width, height, candidate, gap)) continue;
+            int cx = Math.round(c.maxX + gap), cy = Math.round(c.centerY);
+            Component crop = new Component(1, cx, cx, cy, cy, cx, c.centerY);
+            if (!rawNaturalAtSeed(gray, width, height, c, crop, gap)) continue;
+            int right = Math.min(width - 1, Math.round(c.minX - gap * .25f));
+            int left = Math.max(0, Math.round(c.minX - gap * 1.5f));
+            for (int x = right; x >= left; x--) {
+                if (!fullStaffRule(gray, width, height, x, staff)) continue;
+                int barLeft = x;
+                while (barLeft > left && fullStaffRule(gray, width, height, barLeft - 1, staff))
+                    barLeft--;
+                if (x - barLeft + 1 > gap * .35f) {
+                    x = barLeft;
+                    continue;
+                }
+                boolean played = false;
+                int top = Math.max(0, Math.round(staff.top - gap * 2));
+                int bottom = Math.min(height - 1, Math.round(staff.bottom + gap * 2));
+                for (int y = top; y <= bottom && !played; y++)
+                    for (int xx = x + 1; xx < width; xx++)
+                        if (labels[y * width + xx] == OmrMeasurePostProcessor.NOTEHEAD
+                                || xx > x + gap * .25f
+                                        && !(xx >= c.minX
+                                                && xx <= c.maxX
+                                                && y >= c.minY
+                                                && y <= c.maxY)
+                                        && labels[y * width + xx]
+                                                == OmrMeasurePostProcessor.STEM_OR_REST) {
+                            played = true;
+                            break;
+                        }
+                int unownedInk = 0;
+                for (int y = top; y <= bottom && !played; y++) {
+                    float line = (y - staff.top) / gap;
+                    if (line >= -.18f && line <= 4.18f && Math.abs(line - Math.round(line)) < .18f)
+                        continue;
+                    for (int xx = Math.min(width - 1, Math.round(x + gap * .25f));
+                            xx < width;
+                            xx++) {
+                        if ((gray[y * width + xx] & 255) >= 180) continue;
+                        boolean owned = xx >= c.minX && xx <= c.maxX && y >= c.minY && y <= c.maxY;
+                        for (int yy = Math.max(0, y - 1);
+                                yy <= Math.min(height - 1, y + 1) && !owned;
+                                yy++)
+                            for (int nx = Math.max(0, xx - 1);
+                                    nx <= Math.min(width - 1, xx + 1);
+                                    nx++) {
+                                byte label = labels[yy * width + nx];
+                                if (label == OmrMeasurePostProcessor.CLEF_OR_KEY
+                                        || label == OmrMeasurePostProcessor.SYMBOL) {
+                                    owned = true;
+                                    break;
+                                }
+                            }
+                        if (!owned && ++unownedInk > gap * gap * .15f) {
+                            played = true;
+                            break;
+                        }
+                    }
+                }
+                if (!played) return (barLeft + x) * .5f;
+            }
+        }
+        return Float.NaN;
     }
 
     private static List<Component> sharpCrossbarHeads(

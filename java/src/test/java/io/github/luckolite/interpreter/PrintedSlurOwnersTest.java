@@ -73,13 +73,10 @@ public class PrintedSlurOwnersTest {
     }
 
     @Test
-    public void writtenClockAndVoiceMustAgreeWithThePhraseDirection() {
+    public void writtenClockMustAgreeWithThePhraseDirection() {
         assertEquals(
                 PrintedSlurOwners.Status.REVERSED_CLOCK,
                 resolve(pixels(true), List.of(start(60, 100), end(72, 0, 1)), Set.of()).status());
-        assertEquals(
-                PrintedSlurOwners.Status.DIFFERENT_LANES,
-                resolve(pixels(true), List.of(start(60, 0), end(72, 100, 2)), Set.of()).status());
     }
 
     @Test

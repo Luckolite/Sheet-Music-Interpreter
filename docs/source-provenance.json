@@ -348,13 +348,14 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "3b361da7204aede9725eadb6e5236a58dd9b3bc44c667cedc0138f71ba4968d8",
-      "source_normalized_sha256": "df1139830566bb4ebacaa315c50a7e82b119630ee3da1a65f0b4f12cb9d51b3b",
-      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
+      "source_sha256": "fac84ea6a5fc0e3bc4017968908a614f14e26b756108b4ad591f0c5bb735724b",
+      "source_normalized_sha256": "972b974557c4006ce824c07d6c8b8b3c8d710c4b70bf3f68b57a8b6e85ce7e01",
+      "review_note": "A complete stacked4/4 plus key ink and a verified single physical ending bar may identify a courtesy-only phantom tail. Existing raw and semantic empty-tail guards preserve played, rest and closed tails. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
-      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
-      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
+      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending."
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -365,14 +366,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "9895206690a24e12ab6f9c11e8e2d95f1fdf7a51e73fb94a1bba04079b107e9a",
-      "reviewed_app_commit": "aa9b9e0a310a937a7eca5b9aafa788896d38e212",
-      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "review_note": "Preserve existing platform diagnostics adapter. Reviewed disjoint deltas require beam support at both ordinary-beam endpoints for grace ownership, and exclude optically proved numeral/staff-rule contamination from extra strong beam bands. Exact app/public changed-code and literal parity; original synthetic controls. No score-copy/slur method, model, dependency or record-layout change.",
-      "source_normalized_sha256": "54cc42f0671c2ee2b0456bccef215369892291caf350d0b5f2b5efd1c611a324",
-      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
-      "standalone_sha256": "cb9afe7c99f6330dd41b3fa1ff0cea7a0a6f0968a1fd1eac010096a3c3ebc2d6",
+      "source_sha256": "0b893506b5a6692d07867ac526354f07ded546cf60d010297c2819a42de08c76",
+      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "review_note": "A verified single ending bar may own complete courtesy cancellation naturals. Complete natural proof precedes the sharp classifier; raw and semantic empty-tail guards retain played, rest and closed tails. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
+      "source_normalized_sha256": "232209ac0a8b1e312a7c24a26ee9c9d07233f09f3783eb94ea7a0eb083c175fa",
+      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -546,13 +547,13 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "8c6d9d97a3b433a58f6097fe369215342408f7d1c60efc24425289eb852c4b02",
-      "reviewed_app_commit": "d33a4072b1b1fa841ff743567dff5da3b282031d",
-      "source_normalized_sha256": "b53c8807f8202c50fec4c66d1c6989f2bd298556aac1ec5b5ed1139cb2b8f489",
-      "review_note": "Recover complete octave words joined to preceding ledger/note ink through a physically long thin neck. Follow only connected right-side ink, retain existing full-word matching and terminal-hook proof, and preserve all bare-number/counter/dash thresholds. Original arrangements cover8va/8vb/15ma/15mb at three scales, thin versus thick bridges, bare-number/nearby-ink rejection and printed-word head ownership.101focused methods pass in each namespace; baseline3of7newmethods fail. No model/dependency/record-layout change.",
-      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by hashes.",
-      "scoped_reviewed_app_commit": "d33a4072b1b1fa841ff743567dff5da3b282031d"
+      "source_sha256": "ff9bc3fd9c34c9810ccceabc9d0741d09b0d5cdabd87f644e23be79fdcbc4821",
+      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+      "source_normalized_sha256": "f473f64e37ef441d0cfe95270f32bb8cf150fa33a9c4eb2f8ce30496fc79fcf7",
+      "review_note": "An isolated octave direction carries through unique explicit same-written-pitch/staff ties. Contradictory accidentals, rests, reattacks, ambiguous unisons, new directions and printed dashed endpoints retain ownership guards. Word/glyph recognition is unchanged. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
+      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
+      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127"
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -2460,8 +2461,8 @@
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
-      "source_sha256": "ff11d19e0b9d8f5884b9c1caa9a257dc70f0fd0fc09c9dad0d0b142485dfef1b",
-      "source_normalized_sha256": "ff11d19e0b9d8f5884b9c1caa9a257dc70f0fd0fc09c9dad0d0b142485dfef1b",
+      "source_sha256": "6f5b26d452d2b25a729f55c18445f73cae3b6f2e2b0861b2532c30ea98016179",
+      "source_normalized_sha256": "6f5b26d452d2b25a729f55c18445f73cae3b6f2e2b0861b2532c30ea98016179",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
     },
     "PrintedSlurPageCapture.java": {
@@ -5817,5 +5818,22 @@
     "record_layout_changed": false,
     "boundary": "Exact private paired source overlays replay retained raw-gray/OCR and reconstructed anchors/existing decoded measures. No original native semantic masks/pitch tracks, new inference, assembled timing/audio/device or final runtime/deployment acceptance.",
     "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
+  },
+  "printed_slur_voice_independence": {
+    "license": "Apache-2.0",
+    "scope": "Unique raw endpoints within one proved physical staff retain their printed phrase without requiring equal or assigned voice labels.",
+    "regressions": "Ten original controls; unknown/different voices preserve source owners, while ambiguous heads, different staff ownership, clock/pitch and exact tie guards remain.",
+    "runtime": "Preparatory helper remains unhooked. This change alone does not alter production recognition revision, guide/audio layout, models or dependencies."
+  },
+  "courtesy_and_isolated_octave_tie_review": {
+    "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
+    "license": "Apache-2.0",
+    "scope": "Three bounded paired fixes; no private score fixtures, neural weights, dependencies or wire layout changes.",
+    "regressions": [
+      "SingleBarCancellationTest.java",
+      "SingleBarMeterTailTest.java",
+      "IsolatedOctaveTieTest.java"
+    ],
+    "qualification": "Focused paired controls passed before integration; combined standalone suite is separate from final native worker, cache invalidation, real-score and packaged runtime acceptance."
   }
 }

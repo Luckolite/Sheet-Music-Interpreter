@@ -41,7 +41,12 @@ final class OctaveMarkDetector {
         };
     }
 
-    private record Span(PlayingTechniqueDetector.Staff staff, float left, float right, int shift) {}
+    private record Span(
+            PlayingTechniqueDetector.Staff staff,
+            float left,
+            float right,
+            int shift,
+            boolean isolated) {}
 
     static List<ScoreNoteEvent> apply(
             List<PlayingTechniqueDetector.Word> words,
@@ -80,7 +85,8 @@ final class OctaveMarkDetector {
                             word.top() * height,
                             word.bottom() * height,
                             gap);
-            if (right < 0) {
+            boolean isolated = right < 0;
+            if (isolated) {
                 // An isolated octave direction applies to the nearest attack or chord only.
                 float first = Float.POSITIVE_INFINITY;
                 for (var note : notes)
@@ -93,7 +99,7 @@ final class OctaveMarkDetector {
                 left = first - gap * .35f;
                 right = first + gap * .35f;
             }
-            spans.add(new Span(owner, left, right, shift));
+            spans.add(new Span(owner, left, right, shift, isolated));
         }
         if (spans.isEmpty()) return notes;
         List<Span> ambiguous = new ArrayList<>();
@@ -116,9 +122,11 @@ final class OctaveMarkDetector {
                 if (a.staff.equals(b.staff) && b.left > a.left + a.staff.gap() * .75f)
                     right = Math.min(right, b.left - .01f);
             }
-            if (right != a.right) spans.set(i, new Span(a.staff, a.left, right, a.shift));
+            if (right != a.right)
+                spans.set(i, new Span(a.staff, a.left, right, a.shift, a.isolated));
         }
         List<ScoreNoteEvent> result = new ArrayList<>(notes.size());
+        boolean[] carry = new boolean[notes.size()], explicit = new boolean[notes.size()];
         for (var note : notes) {
 
             if (note.kind() != ScoreNoteEvent.Kind.PITCHED) {
@@ -133,9 +141,64 @@ final class OctaveMarkDetector {
                         && x <= span.right) {
                     if (selected == null || span.left > selected.left) selected = span;
                 }
+            int index = result.size();
+            carry[index] = selected != null && selected.isolated;
+            explicit[index] = selected != null;
             result.add(selected == null ? note : note.withOctaveShift(selected.shift));
         }
+        carryIsolatedTies(notes, result, carry, explicit);
         return List.copyOf(result);
+    }
+
+    private static void carryIsolatedTies(
+            List<ScoreNoteEvent> source,
+            List<ScoreNoteEvent> result,
+            boolean[] carry,
+            boolean[] explicit) {
+        for (int i = 0; i < source.size(); i++) {
+            var current = source.get(i);
+            if (explicit[i]
+                    || current.octaveShift() != 0
+                    || !current.tiedFromPrevious()
+                    || current.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || current.leadingRestBeats() > 0) continue;
+            int owner = -1, copies = 0;
+            for (int j = i - 1; j >= 0; j--) {
+                var earlier = source.get(j);
+                int bars = current.measureIndex() - earlier.measureIndex();
+                if (bars < 0
+                        || bars > 1
+                        || earlier.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || earlier.staffIndex() != current.staffIndex()
+                        || earlier.staffCount() != current.staffCount()
+                        || earlier.staffStep() + earlier.clefBottomDiatonic()
+                                != current.staffStep() + current.clefBottomDiatonic()
+                        || bars == 0
+                                && earlier.positionInMeasure()
+                                        >= current.positionInMeasure() - .018f) continue;
+                if (owner < 0
+                        || earlier.measureIndex() > source.get(owner).measureIndex()
+                        || earlier.measureIndex() == source.get(owner).measureIndex()
+                                && earlier.positionInMeasure()
+                                        > source.get(owner).positionInMeasure() + .018f) {
+                    owner = j;
+                    copies = 1;
+                } else if (earlier.measureIndex() == source.get(owner).measureIndex()
+                        && Math.abs(
+                                        earlier.positionInMeasure()
+                                                - source.get(owner).positionInMeasure())
+                                <= .018f) copies++;
+            }
+            if (owner < 0
+                    || copies != 1
+                    || !carry[owner]
+                    || source.get(owner).followingRestBeats() > 0
+                    || current.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                            && current.writtenAccidental() != source.get(owner).writtenAccidental())
+                continue;
+            result.set(i, current.withOctaveShift(result.get(owner).octaveShift()));
+            carry[i] = true;
+        }
     }
 
     /** Remove dark paper texture from octave text and its dash evidence together. */

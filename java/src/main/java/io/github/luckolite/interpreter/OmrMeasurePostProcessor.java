@@ -2512,6 +2512,64 @@ final class OmrMeasurePostProcessor {
             }
             inBand = bar;
         }
+        if (bands == 1) {
+            int meter = -1;
+            for (int x = Math.max(left, Math.round(right - gap * 1.5f));
+                    x <= Math.min(width - 1, Math.round(right + gap));
+                    x++)
+                if (stackedFourMeterCounters(gray, width, height, x, staffTop, staffBottom, gap)) {
+                    meter = x;
+                    break;
+                }
+            if (meter >= 0
+                    && countLabel(
+                                    labels,
+                                    width,
+                                    height,
+                                    CLEF_OR_KEY,
+                                    left,
+                                    Math.round(meter - gap * .5f),
+                                    headTop,
+                                    headBottom)
+                            >= gap * gap
+                    && countLabel(
+                                    labels,
+                                    width,
+                                    height,
+                                    NOTEHEAD,
+                                    left,
+                                    width - 1,
+                                    headTop,
+                                    headBottom)
+                            == 0) {
+                int unowned = 0;
+                boolean played = false;
+                for (int y = Math.max(0, headTop);
+                        y <= Math.min(height - 1, headBottom) && !played;
+                        y++)
+                    for (int x = Math.max(0, Math.round(left + gap * .25f)); x < width; x++) {
+                        if ((gray[y * width + x] & 255) >= 180) continue;
+                        boolean owned = false;
+                        for (int yy = Math.max(0, y - 1);
+                                yy <= Math.min(height - 1, y + 1) && !owned;
+                                yy++)
+                            for (int xx = Math.max(0, x - 1);
+                                    xx <= Math.min(width - 1, x + 1);
+                                    xx++) {
+                                byte label = labels[yy * width + xx];
+                                if (label == CLEF_OR_KEY || label == SYMBOL || label == STAFF) {
+                                    owned = true;
+                                    break;
+                                }
+                            }
+                        if (!owned && ++unowned > gap * gap * .15f) {
+                            played = true;
+                            break;
+                        }
+                    }
+                if (!played) return true;
+            }
+        }
         return bands == 2 && last - first >= gap * .2f && last - first <= gap * 1.3f;
     }
 
