@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Isolated meter numerators use recognition only inside already located numeral slots,
+with three matching high-confidence readings and an independently corroborated
+denominator. Mixed cancellation signatures can follow a printed single bar when
+glyph pitch order and pre-note clearance establish the signature. Twenty-four
+original procedural controls accompany paired app/public sources. The desktop
+OCR adapter and explicit decoder manifest include the helper; Android SheetOcr
+retains its separate path. Models, dependencies and record layouts are unchanged.
+
 Unsupported outer staff texture requires two independently printed staff witnesses
 before rejection; faint, short, partial and curved rules remain protected. Distant
 ledger notes require intervening thin rules rather than nearby strokes or broad

@@ -5253,7 +5253,22 @@ final class OmrScoreInterpreter {
                     }
                 }
                 glyphs.sort(Comparator.comparingDouble(SignatureGlyph::x));
-                List<SignatureGlyph> run = densestSignatureRun(glyphs, staff.gap);
+                List<SignatureGlyph> singleBarRun =
+                        singleBarCancellationRun(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                glyphs,
+                                recognized,
+                                staff,
+                                boundary,
+                                firstHead);
+                boolean singleBarCancellation = !singleBarRun.isEmpty();
+                List<SignatureGlyph> run =
+                        singleBarCancellation
+                                ? singleBarRun
+                                : densestSignatureRun(glyphs, staff.gap);
                 if (run.isEmpty()) {
                     if (measureIndex == 0
                             && firstInRow
@@ -5280,7 +5295,9 @@ final class OmrScoreInterpreter {
                 List<SignatureGlyph> completeRun = run;
                 // Cancellation naturals precede, rather than replace, the new signature.
                 // Require boundary evidence and a single ordered sharp/flat suffix.
-                if (naturals > 0 && (flats > 0 || sharps > 0) && doubleBar) {
+                if (naturals > 0
+                        && (flats > 0 || sharps > 0)
+                        && (doubleBar || singleBarCancellation)) {
                     int split = 0;
                     while (split < run.size()
                             && run.get(split).accidental == ScoreNoteEvent.ACCIDENTAL_NATURAL)
@@ -5325,7 +5342,8 @@ final class OmrScoreInterpreter {
                 if (strongest > 7
                         || (flats > 0 ? sharps + naturals > 0 : sharps > 0 ? naturals > 0 : false))
                     continue;
-                if (strongest < 2 && !doubleBar && !signatureHeader) continue;
+                if (strongest < 2 && !doubleBar && !signatureHeader && !singleBarCancellation)
+                    continue;
                 if (strongest > 1
                         && !doubleBar
                         && firstHead - run.get(run.size() - 1).x < staff.gap * 1.65f
@@ -6446,6 +6464,78 @@ final class OmrScoreInterpreter {
             sampled += count;
         }
         return sampled > 0 && covered >= sampled * .90f;
+    }
+
+    /** A mixed cancellation run can follow a single printed measure bar.
+     * Its two glyph families must retain their musical fourth/fifth order. */
+    private static List<SignatureGlyph> singleBarCancellationRun(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<SignatureGlyph> glyphs,
+            Map<AccidentalCandidate, Float> recognized,
+            Staff staff,
+            float boundary,
+            float firstHead) {
+        if (glyphs.size() < 2 || glyphs.size() > 14 || gray == null) return List.of();
+        int split = 0;
+        while (split < glyphs.size()
+                && glyphs.get(split).accidental == ScoreNoteEvent.ACCIDENTAL_NATURAL) split++;
+        if (split == 0 || split > 7 || split == glyphs.size() || glyphs.size() - split > 7)
+            return List.of();
+        int family = glyphs.get(split).accidental;
+        if (family != ScoreNoteEvent.ACCIDENTAL_FLAT && family != ScoreNoteEvent.ACCIDENTAL_SHARP)
+            return List.of();
+        if (glyphs.get(0).x - boundary < -staff.gap * .12f
+                || glyphs.get(0).x - boundary > staff.gap * 2
+                || firstHead - glyphs.get(glyphs.size() - 1).x < staff.gap * 1.35f)
+            return List.of();
+        boolean bar = false;
+        for (int x = Math.max(0, Math.round(boundary - staff.gap * .6f));
+                x <= Math.min(width - 1, Math.round(boundary + staff.gap * .6f));
+                x++) bar |= fullStaffRule(gray, width, height, x, staff, 205);
+        if (!bar) return List.of();
+        float first = Float.NaN, previous = Float.NaN;
+        for (int i = 0; i < glyphs.size(); i++) {
+            var glyph = glyphs.get(i);
+            if (i >= split && glyph.accidental != family) return List.of();
+            if (i > 0) {
+                float dx = glyph.x - glyphs.get(i - 1).x;
+                if (dx < staff.gap * .5f || dx > staff.gap * (i == split ? 2.6f : 1.85f))
+                    return List.of();
+            }
+            AccidentalCandidate owner = null;
+            for (var entry : recognized.entrySet())
+                if (Math.abs(entry.getValue() - glyph.x) < staff.gap * .1f) {
+                    owner = entry.getKey();
+                    break;
+                }
+            if (owner == null) return List.of();
+            float y =
+                    i < split
+                            ? owner.component.centerY
+                            : family == ScoreNoteEvent.ACCIDENTAL_FLAT
+                                    ? flatPitchCenter(labels, width, owner, staff.pitchGap)
+                                    : sharpPitchCenter(
+                                            labels, width, height, owner, staff.pitchGap);
+            if (!Float.isFinite(y)) return List.of();
+            if (i == 0) first = y;
+            else {
+                float steps = ((i == split ? first : previous) - y) * 2 / staff.pitchGap;
+                int rounded = Math.round(steps);
+                int expected =
+                        i < split
+                                ? (family == ScoreNoteEvent.ACCIDENTAL_FLAT ? 4 : 3)
+                                : i == split
+                                        ? (family == ScoreNoteEvent.ACCIDENTAL_FLAT ? 3 : 4)
+                                        : (family == ScoreNoteEvent.ACCIDENTAL_FLAT ? 3 : 4);
+                if (Math.abs(steps - rounded) > .55f || Math.floorMod(rounded, 7) != expected)
+                    return List.of();
+            }
+            previous = y;
+        }
+        return glyphs;
     }
 
     private static List<SignatureGlyph> densestSignatureRun(

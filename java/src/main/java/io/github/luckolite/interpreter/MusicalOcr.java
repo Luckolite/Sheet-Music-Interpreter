@@ -8,6 +8,7 @@ import java.util.*;
  * The caller retains responsibility for closing its inference runtime. No models or runtime are loaded here. */
 public final class MusicalOcr {
     private final PortableOcr reader;
+    private final PortableOcr.Inference inference;
     private final NativeDynamicGlyphs glyphs;
     private final MeterFontMatcher meterFont;
     private static final boolean TRACE = "1".equals(System.getenv("NATIVE_MUSICAL_OCR_TRACE"));
@@ -17,6 +18,7 @@ public final class MusicalOcr {
     public MusicalOcr(PortableOcr.Inference inference, MeterFontMatcher meterFont)
             throws java.io.IOException {
         reader = new PortableOcr(Objects.requireNonNull(inference));
+        this.inference = inference;
         glyphs = new NativeDynamicGlyphs();
         this.meterFont = Objects.requireNonNull(meterFont);
     }
@@ -141,6 +143,18 @@ public final class MusicalOcr {
                             upperEvidence,
                             lowerEvidence);
             if (!supported.isBlank()) return new MeterReading(supported, 2);
+        }
+        if (upperEvidence.isEmpty()) {
+            String direct =
+                    MeterDigitRecognizer.read(
+                            cleaned,
+                            cropWidth,
+                            cropHeight,
+                            middle - top,
+                            crop.gap(),
+                            corroboratedDigit(lowerReadings),
+                            inference);
+            if (!direct.isEmpty()) return new MeterReading(direct, 2);
         }
         String single = MeterOcrEvidence.singleReading(readings);
         if (!single.isBlank()) return new MeterReading(single, 1);

@@ -372,11 +372,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "1708ed7a3242a7ca3783bc3fc3e136d529aa5a43099d4a54543d8e1470d35dd9",
-      "reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
-      "scoped_reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
-      "review_note": "Extend distant ledger evidence through the intervening rule chain and require thin local contrast rather than broad decoration. Four original procedural controls include genuine extreme notes and incomplete or shaded non-notation. Existing diagnostic adapter preserved; no private fixtures, models, dependencies or record changes.",
-      "source_normalized_sha256": "1bd55af2409a745f966b564b14da4ae6d9f5aa4747b2f5115d743b42a6e77639",
+      "source_sha256": "8ca1d1b326280f300e8f30939f330138572f05801ec995cccf6da4018715e8c1",
+      "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
+      "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
+      "review_note": "Recognize mixed cancellation/new-signature runs after a printed single bar with family and pitch order, bounded transition spacing and pre-note clearance. Twelve original procedural controls include wrong pitches, local notes, short stems and missing semantic bar labels. Existing diagnostic adaptation preserved; no score-specific rules.",
+      "source_normalized_sha256": "e7ab6b7f257de867a249a54ccbf5913f2ae284e23742410e55706850f684ac0e",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
       "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
@@ -1100,12 +1100,12 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "29d8f079417d5dc9cede8280626f2e1f5c88578ac677394a8ce82523fdbb4268",
-      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "source_normalized_sha256": "fd11db0ec6e7b217be2df785e6deabb94e7c5fa02e34577d76ad5f22a6336f76",
-      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
-      "review_note": "Retain separate upper/lower OCR votes and forward only corroborated digits. Existing whole-meter consensus, contradiction guards and caller-owned standalone inference remain unchanged. No private score pages, masks, library records, weights or new wire layout are published.",
-      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4"
+      "source_sha256": "92fc757c524b3ae2a33f8e2b95a1ce11d8eb642b4e1dccf3b4e525a365ddc26a",
+      "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
+      "source_normalized_sha256": "177b96469961875be21bbbe5944747d99f787dd20d636da508cd6e1a68fc7106",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
+      "review_note": "Call paired MeterDigitRecognizer only when numerator evidence is empty, after existing consensus and font paths. Standalone retains caller-owned inference; desktop retains its owned native inference. Android SheetOcr remains a separate path without a phone runtime claim. Explicit native decoder manifest includes the new shared helper.",
+      "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -2605,6 +2605,15 @@
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
       "reviewed_source_state": "Explicit standalone Java page facade adapted from the committed native analysis path.",
       "review_note": "Legacy overloads preserve unknown physical ownership; explicit7argument overload forwards caller page identity to the same capture helper. Native CLI has its own explicit page option; model loading/inference ownership, file bridge and logging remain platform adapters. No default page zero or private input is introduced."
+    },
+    "MeterDigitRecognizer.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
+      "source_sha256": "e104e72d54fae48367d5d342c9e16f0c7a897982309d29f7e11da48243f81ff6",
+      "source_normalized_sha256": "cd8f9e354be72cac76acc4227bff8c58e479ba6f23c641ccb37b26aa69751cf5",
+      "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
+      "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
+      "review_note": "Original recognition-only fallback for already located numeral slots. Require three exact high-confidence readings per slot and an independently corroborated denominator. Preserve inference ownership, weights and dependencies. Twelve procedural controls with fake inference; no private pixels.",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
     }
   },
   "interpreter_speedup_review": {
