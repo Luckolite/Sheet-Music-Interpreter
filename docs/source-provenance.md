@@ -1548,3 +1548,13 @@ and audio79are unchanged. Java counterparts match after namespace/header and
 the existing Android Log.i to Diagnostics.log adaptation; Python writer AST
 matches after package-relative import normalization. Full packaged app/paired
 worker rollout remains user-deferred.
+
+## Accompaniment cover lists
+
+Accompaniment captions also recognize tunes, songs and pieces,
+preventing list entries becoming contributor suggestions. Printed audio context,
+five aligned rows and staff guards remain required. Explicit credits are preserved;
+eight original synthetic tests cover these boundaries.
+App commit `1239c897ab24cc30d7cc0ded46c2bc57ebb6ce38` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.

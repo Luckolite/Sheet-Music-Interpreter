@@ -6309,7 +6309,7 @@ public final class ScoreCreditsDetector {
             for (Line caption : lines) {
                 if (!clean(caption.text)
                         .matches(
-                                "(?iu)^p(?:la|a)y\\h*[0-9&]?.*\\b(?:favorites|selections|solos|themes)\\b.*sound[- ]alike\\b.*"))
+                                "(?iu)^p(?:la|a)y\\h*[0-9&]?.*\\b(?:favorites|selections|solos|themes|tunes|songs|pieces)\\b.*sound[- ]alike\\b.*"))
                     continue;
                 if (candidate == caption) return true;
                 if (candidate.top < caption.bottom
