@@ -6119,5 +6119,21 @@
     "guideFormat": 285,
     "audioVersion": 79,
     "boundary": "Source and model-free controls only; packaged Android/paired worker deployment and fresh real-score accuracy remain pending."
+  },
+  "standalone_frontend_page_identity_review": {
+    "license": "Apache-2.0",
+    "scope": "Public reader/CLI/Main adapters for the existing explicit physical-page analysis overload; app/native worker forwarding is already present.",
+    "sourceFiles": [
+      "src/sheet_interpreter/reader.py",
+      "src/sheet_interpreter/cli.py",
+      "java/src/main/java/io/github/luckolite/interpreter/Main.java"
+    ],
+    "originalRegressions": [
+      "tests/test_typed_frontend_cli.py",
+      "tests/test_main_typed_cli.py"
+    ],
+    "identity": "CLI one-based sourcePage is unchanged; Python/Java explicit decoder page identity is zero-based. Skipped PDF pages retain original indices.",
+    "compatibility": "Omitted identity retains legacy unknown source. Invalid identity rejects before input/pixel/inference/output access.",
+    "boundary": "Isolated scalar backend establishes actual bridge forwarding and serialization. Generated scale smoke separately uses real recognition; no general slur accuracy or device claim. No guide/model/audio epoch change."
   }
 }

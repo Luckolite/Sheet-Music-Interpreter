@@ -1401,3 +1401,16 @@ unknown/reversed final timing remains pending and source input is immutable.
 Recognition37 invalidates prior36 guides across app, Hub and both writers.
 Guide285 records and audio79 are unchanged. This is source/model-free evidence;
 packaged Android and paired native worker rollout remain pending.
+
+## Standalone frontend physical page forwarding
+
+The standalone Python reader and Java file bridge now expose the existing
+explicit physical-page analysis overload. The PDF CLI forwards original page
+indices rather than compacting selected pages; its existing one-based JSON
+`sourcePage` is unchanged. Direct API calls with no identity retain the legacy
+unknown-page behavior. These are public frontend adapters; the Android/native
+worker already forwards explicit page identity and needs no mirrored change.
+Original procedural bridge controls cover page-zero images, skipped PDF pages,
+legacy unknown identity, retained deferred source JSON and invalid input rejection.
+The isolated scalar backend proves forwarding and serialization, not recognition
+accuracy. The separate generated scale smoke uses the real decoder and models.

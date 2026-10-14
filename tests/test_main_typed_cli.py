@@ -74,6 +74,17 @@ public final class SheetInterpreter {
         }
         return new ScorePageInterpretation(List.of(new MeasureRegion(.1f,.9f,.2f,.4f)),notes);
     }
+    public static ScorePageInterpretation analyze(byte[] labels,byte[] gray,int width,int height,
+            Annotations annotations,MusicalOcr ocr,int physicalPage) {
+        var score=analyze(labels,gray,width,height,annotations);
+        if(labels[0]!=0)return score;
+        var arc=new ScoreSlurPages.Span("original-bridge-page-"+physicalPage,
+                new ScoreSlurPages.Anchor(physicalPage,0),new ScoreSlurPages.Anchor(physicalPage,1),
+                ScoreSlurSpan.Placement.ABOVE,ScoreSlurSpan.LineType.SOLID,
+                List.of(new ScoreSlurSpan.ArcEvidence(physicalPage,.1f,.2f,.5f,.3f)));
+        return score.withSlurSource(ScoreSlurSource.capture(List.of(),List.of(arc),
+                List.of(new ScoreSlurPages.Page(physicalPage,score.notes().size()))));
+    }
 }
 '''
 
@@ -188,5 +199,15 @@ class MainTypedCliTests(unittest.TestCase):
         run=subprocess.run([jdk('java'),'-cp',str(self.real_core),PACKAGE+'.Main',str(page),str(output),'4','4','0'],capture_output=True,text=True,timeout=30)
         self.assertEqual(0,run.returncode,run.stderr)
         self.assertEqual([],json.loads(output.read_text(encoding='utf-8'))['events'])
+    def test_invalid_page_option_rejects_before_input_or_output_access(self):
+        output=self.folder/'protected.json'
+        output.write_text('existing-output',encoding='utf-8')
+        for flag,page in [('--page-index','-1'),('--page-index','100001'),('--page-index','no'),('--unknown','0')]:
+            run=subprocess.run([jdk('java'),'-cp',str(self.classes)+os.pathsep+CORE,PACKAGE+'.Main',
+                    str(self.folder/'missing.page.gz'),str(output),'4','4','0',flag,page],
+                    capture_output=True,text=True,timeout=30)
+            self.assertNotEqual(0,run.returncode)
+            self.assertNotIn('NoSuchFileException',run.stderr)
+            self.assertEqual('existing-output',output.read_text(encoding='utf-8'))
 
 if __name__=='__main__':unittest.main()

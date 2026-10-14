@@ -153,8 +153,11 @@ class Interpreter:
                 confidence[top:top + ch, left:left + cw][wins] = self.edge[:ch, :cw][wins]
         return labels
 
-    def interpret(self, image, *, meter=(4, 4), key_fifths=0, width=2048, annotations=None):
-        """Recognize a PIL image, returning geometry, musical events and optional OCR interpretations."""
+    def interpret(self, image, *, meter=(4, 4), key_fifths=0, width=2048, annotations=None,
+                  page_index=None):
+        """Recognize an image; optional page_index is its zero-based physical source page."""
+        if page_index is not None and (type(page_index) is not int or not 0 <= page_index <= 100000):
+            raise ValueError("page_index must be a zero-based physical page in 0..100000")
         if len(meter) != 2 or not all(isinstance(n, int) for n in meter):
             raise ValueError("meter must be a numerator/denominator integer pair")
         numerator, denominator = meter
@@ -182,8 +185,11 @@ class Interpreter:
             page = Path(folder) / "page.page.gz"
             output = Path(folder) / "score.json"
             write_page(page, labels, gray, annotations)
-            run = subprocess.run([java_executable(), "-Xmx1g", "-jar", str(self.jar), str(page), str(output),
-                                  str(numerator), str(denominator), str(key_fifths)], capture_output=True, text=True)
+            command = [java_executable(), "-Xmx1g", "-jar", str(self.jar), str(page), str(output),
+                       str(numerator), str(denominator), str(key_fifths)]
+            if page_index is not None:
+                command.extend(["--page-index", str(page_index)])
+            run = subprocess.run(command, capture_output=True, text=True)
             if run.returncode:
                 raise RuntimeError("Decoder failed: " + run.stderr.strip())
             result = json.loads(output.read_text(encoding="utf-8"))

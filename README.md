@@ -54,6 +54,13 @@ sheet-interpreter score.pdf --output score.json --midi preview.mid --musicxml sc
 Images work too. `--midi` and `--musicxml` are optional. Use `--meter 3/4`, `--bpm 90`,
 `--key-fifths 2` or `--pages 1,2,3` when needed. Default meter and tempo are 4/4 and 120 BPM.
 
+The CLI forwards each selected physical page to the decoder, preserving printed
+slur ownership in `score.slurSource` even when PDF pages are skipped. JSON
+`sourcePage` and `--pages` remain one-based; the Python API's optional
+`Interpreter.interpret(..., page_index=5)` identifies physical page 6. Omit
+`page_index` when identity is unknown. The Java file bridge accepts the same
+zero-based identity with `--page-index 5`; its original five arguments still work.
+
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
 reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.

@@ -54,7 +54,7 @@ class TypedFrontendCliTests(unittest.TestCase):
     def bridge_run(self,args,**kwargs):
         if '-jar' in args:
             return REAL_RUN([jdk('java'),'-cp',str(self.backend)+os.pathsep+CORE,
-                    PACKAGE+'.Main',*map(str,args[-5:])],**kwargs)
+                    PACKAGE+'.Main',*map(str,args[args.index('-jar')+2:])],**kwargs)
         return REAL_RUN(args,**kwargs)
     def invoke(self,*exports,reject=None):
         args=['sheet-interpreter',str(self.image),'-o',str(self.output),'--annotations',str(self.annotations),*map(str,exports)]
@@ -80,6 +80,42 @@ class TypedFrontendCliTests(unittest.TestCase):
         self.assertEqual([4],page['measureBeats'])
         self.assertEqual(['unpitched:0:1','unpitched:0:2'],[n['sourceId'] for n in unpitched_intervals(value)])
         for e in page['events'][1:]:self.assertNotIn('midi',e)
+    def test_image_frontend_forwards_page_zero_and_retains_deferred_source(self):
+        self.fixture=0
+        page=self.invoke()['pages'][0]
+        source=page['score']['slurSource']
+        self.assertEqual([],source['spans'])
+        self.assertEqual(0,source['candidates'][0]['start']['pageIndex'])
+        self.assertEqual([{'pageIndex':0,'noteIndex':i} for i in range(2)],source['noteOrigins'])
+    def test_pdf_selection_forwards_physical_pages_without_renumbering(self):
+        self.fixture=0
+        self.image=self.folder/'original-six-pages.pdf'
+        import pypdfium2 as pdfium
+        pdf=pdfium.PdfDocument.new()
+        try:
+            for _ in range(6):
+                pdf.new_page(8,8).close()
+            pdf.save(self.image)
+        finally:
+            pdf.close()
+        self.annotations.write_text('[{},{}]',encoding='utf-8')
+        value=self.invoke('--pages','2,6')
+        self.assertEqual([2,6],[p['sourcePage'] for p in value['pages']])
+        self.assertEqual([1,5],[p['score']['slurSource']['candidates'][0]['start']['pageIndex']
+                              for p in value['pages']])
+    def test_invalid_page_identity_rejects_before_pixels_or_inference(self):
+        with patch.object(reader,'grayscale') as pixels:
+            for page in (-1,100001,True,1.5,'2'):
+                with self.assertRaisesRegex(ValueError,'page_index'):
+                    self.engine.interpret(None,page_index=page)
+            pixels.assert_not_called()
+    def test_direct_reader_without_page_identity_preserves_legacy_unknown_source(self):
+        self.fixture=0
+        with patch.object(reader,'grayscale',return_value=np.full((8,8),255,dtype=np.uint8)), \
+             patch.object(reader.subprocess,'run',side_effect=self.bridge_run):
+            page=self.engine.interpret(None,annotations={})
+        self.assertEqual([],page['score']['slurSource']['candidates'])
+        self.assertEqual([None,None],page['score']['slurSource']['noteOrigins'])
     def test_actual_cli_xml_preserves_all_heads_and_written_chord_clocks(self):
         path=self.folder/'written.musicxml'
         value=self.invoke('--musicxml',path)

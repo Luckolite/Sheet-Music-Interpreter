@@ -13,11 +13,14 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 5) {
+        if (args.length != 5 && (args.length != 7 || !args[5].equals("--page-index"))) {
             System.err.println(
-                    "Usage: java -jar interpreter.jar page.page.gz output.json numerator denominator key-fifths");
+                    "Usage: java -jar interpreter.jar page.page.gz output.json numerator denominator key-fifths [--page-index zero-based-page]");
             System.exit(2);
         }
+        int physicalPage = args.length == 7 ? Integer.parseInt(args[6]) : -1;
+        if (args.length == 7 && (physicalPage < 0 || physicalPage > 100000))
+            throw new IllegalArgumentException("Physical source page must be 0..100000");
         int numerator = Integer.parseInt(args[2]), denominator = Integer.parseInt(args[3]);
         var initialMeter = new ScoreMeterChange(0, numerator, denominator);
         int initialKey = Integer.parseInt(args[4]);
@@ -126,7 +129,10 @@ public final class Main {
                     "Tab pitch uses an explicit tuning header when available, otherwise standard six- or seven-string guitar tuning.");
         var score =
                 ScoreTiePitchGuard.withInitialKeyContext(
-                        SheetInterpreter.analyze(labels, gray, width, height, annotations),
+                        physicalPage < 0
+                                ? SheetInterpreter.analyze(labels, gray, width, height, annotations)
+                                : SheetInterpreter.analyze(
+                                        labels, gray, width, height, annotations, null, physicalPage),
                         initialKey);
         float[] beats = new float[score.measures().size()];
         Arrays.fill(beats, initialMeter.quarterBeats());
