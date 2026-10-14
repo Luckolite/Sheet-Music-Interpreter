@@ -1596,3 +1596,24 @@ source names or captures are published.
 
 This export presentation repair changes no recognition, model, wire, guide or
 audio identity. Packaged app and paired worker rollout remains user-deferred.
+
+## Descriptive metronome captions
+
+Scoped app commit `7a28770b9d331e54d769feb96ce7678963f2d41d` preserves descriptive text
+joined by OCR to an already verified metronome marking. Caption extraction
+requires matching marked rate and explicit pulse, one measure/system context,
+and the existing printed staff and note-column proof. It neither infers tempo
+from prose nor repeats the metronome equation as text.
+
+Twelve original controls reproduce four baseline failures; 55 focused direction
+controls and all 8,798 Java/484 Python tests pass (44 expected Python skips).
+The app/native source set, 117 native Python tests and seven Hub source-contract
+routines pass. Private saved-mask replay preserves notes, rests, tempo, meter,
+key, slurs and events, while retaining one missing caption. Actual app HTML
+rendering preserves parsed MIDI and the printed pulse/rate. No private score
+pixels, source names or captures are published.
+
+Recognition42 invalidates prior guides across the app, Hub and both writers.
+Guide285/audio79 and their record layouts remain unchanged. The native decoder
+source list explicitly includes the new helper. Packaged app/worker rollout
+remains user-deferred.

@@ -1424,13 +1424,14 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "a24b89aa4cc176793c8deaa4e781a1f0d08c75213b3e575e8f3fc986d1305333",
-      "source_normalized_sha256": "1f17156165cb395ff4107bfca23182a8d7b8383d1dac74e8df7fb9c26173c1e8",
-      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
-      "review_note": "A metric equation spanning one bar boundary owns the first nearby same-staff attack in the next region. Multiple crossed boundaries or missing attacks abstain; ordinary left-anchor ownership retained. No private score pages, masks, library records, weights or new wire layout are published.",
+      "source_sha256": "1666a0d22a9231fc3667b410dabab72a94f703025e7d9de963848dba3ec1a78d",
+      "source_normalized_sha256": "1666a0d22a9231fc3667b410dabab72a94f703025e7d9de963848dba3ec1a78d",
+      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
+      "review_note": "A metric equation spanning one bar boundary owns the first nearby same-staff attack in the next region. Multiple crossed boundaries or missing attacks abstain; ordinary left-anchor ownership retained. No private score pages, masks, library records, weights or new wire layout are published. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
-      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4"
+      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "standalone_sha256": "2902e9849435dd353fb6440286cec4d4ab7a68a6f5d0097dce563391f1e02a3a"
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -1532,13 +1533,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8374be809894d1c6852d8d2e34ce7024bea3ae003dd92a0c60da243ce7e3c5bb",
-      "source_normalized_sha256": "9db3cc4330f85be850cb9e5062c69f79fbdddbac5be70aa230a8c878d897f6bf",
-      "reviewed_app_commit": "11654b908da5a1cda6bdb351d42b395adf91b6ba",
-      "review_note": "Advance paired recognition revision40 to41; guide285 binary layout and audio79 unchanged.",
-      "reviewed_source_state": "Committed paired recognition41 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "scoped_reviewed_app_commit": "11654b908da5a1cda6bdb351d42b395adf91b6ba",
-      "standalone_sha256": "6e8176a896ae03fa4b73c90fbb38a56f93c635586188302a17bec8af93266971",
+      "source_sha256": "b7dff31c2f6af1fe6c5d604a8cbeef99b0b0a67c6be4f2ae2e4cf054bbc5bae2",
+      "source_normalized_sha256": "89e877845afe25ee329128d713917278cfb74fea95d984ab814018df9147d7fb",
+      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "review_note": "Advance paired recognition revision40 to41; guide285 binary layout and audio79 unchanged. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
+      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
+      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "standalone_sha256": "40b2e996961159e3ffc2f285964315df0620b826e71a133e1273bd1f7313f767",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1596,14 +1597,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "c0dc5726a17d62923045b47dc9179cc1cf96307ea382606207e35da2036c7b0f",
-      "source_normalized_sha256": "91bb4f088e7f1d7324f95dafa91a1278a5f1f28b4d578fb2b50b355d2817773a",
-      "reviewed_app_commit": "11654b908da5a1cda6bdb351d42b395adf91b6ba",
-      "reviewed_source_state": "Committed paired recognition41 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Advance paired writer recognition revision40 to41 with Android and Hub; guide records unchanged.",
-      "scoped_reviewed_app_commit": "11654b908da5a1cda6bdb351d42b395adf91b6ba",
+      "source_sha256": "b86bf0054b48d147593d7b534a75c88e92f6356550ad5f5fcac3e986173394cd",
+      "source_normalized_sha256": "4873ff1cfc0deb57524df64d95e37c851f357225dad271d42bd971ca9226ba55",
+      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
+      "review_note": "Advance paired writer recognition revision40 to41 with Android and Hub; guide records unchanged. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
+      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "30b57dd612f196bbb59cd80c1c2c4c595577666616055f5bd682fd10b5964fe7",
+      "standalone_sha256": "ba57dc3b7131f66e7d0757608c295ca9a3feade5e3ede92cef2e4d9f9626130b",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2645,6 +2646,17 @@
       "standalone_sha256": "7eed63bb9f0ca9434375b062e588778eb3d6064c2d3f6e858eb3a07e1476d16b",
       "review_note": "Original shared JDK helper scans overlapping printed staff header crops through caller-owned OCR. Map validated boxes to page coordinates; only tempo callers consume results. Seven original procedural controls; no score-specific coordinates or data.",
       "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "PrintedTempoCaption.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTempoCaption.java",
+      "origin": "Reviewed Apache-2.0 Music Sheets source; namespace-only standalone port.",
+      "source_sha256": "4abfa6f0512aa8ad8595cf3d0b374f30fc972e19f5d53383d35c2bc42b37d983",
+      "source_normalized_sha256": "4abfa6f0512aa8ad8595cf3d0b374f30fc972e19f5d53383d35c2bc42b37d983",
+      "standalone_sha256": "e9211134841f4fd732c71fce55ffd2c25079361a458dc5c3dc1f51aa16a90d3e",
+      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
+      "review_note": " Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred."
     }
   },
   "interpreter_speedup_review": {
@@ -6277,5 +6289,26 @@
       }
     ],
     "boundary": "Shared helper plus separate Android/native/standalone adapters compile. Retained-page and synthetic source evidence is not current-model whole-library or phone performance proof."
+  },
+  "metronome_caption_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+    "originalRegression": "PrintedTempoCaptionTest.java",
+    "originalTests": 12,
+    "baselineFailures": 4,
+    "focusedDirectionControls": 55,
+    "fullJavaTests": 8798,
+    "fullPythonTests": 484,
+    "pythonSkips": 44,
+    "nativePythonTests": 117,
+    "appNativeSourcesCompiled": 246,
+    "appFocusedTests": 15,
+    "hubSourceContractRoutines": 7,
+    "recognitionRevision": 42,
+    "guideFormat": 285,
+    "audioVersion": 79,
+    "newHelperExplicitlyIncludedInNativeDecoderSources": true,
+    "privateEvidence": "Two saved-mask pages retain pre-regression notes/rests/tempo/meter/key/slur fields and events; one recovered caption only. Actual HTML render preserves parsed MIDI and printed pulse/rate. No private score pixels, source names or captures published.",
+    "boundary": "No APK/device, full packaged worker smoke or live deployment performed; cumulative rollout remains user-deferred."
   }
 }

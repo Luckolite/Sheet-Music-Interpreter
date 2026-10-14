@@ -93,10 +93,15 @@ public final class ScoreExpressionDetector {
         var events = new ArrayList<>(score.expressiveEvents());
         for (var word : words) {
             if (coveredPedalWord(word, words)) continue;
+            var caption = PrintedTempoCaption.from(word, score);
+            String directionText = caption == null ? word.text() : caption.text();
             var directions =
-                    ExpressiveDirectionText.parse(word.text()).stream()
+                    ExpressiveDirectionText.parse(directionText).stream()
                             .filter(d -> KINDS.contains(d.kind()))
                             .toList();
+            if (directions.isEmpty() && caption != null)
+                directions = List.of(new ExpressiveDirectionText.Direction(
+                        Kind.UNRESOLVED_DIRECTION, Strength.UNSPECIFIED, caption.text(), ""));
             if (directions.isEmpty()) continue;
             boolean release =
                     directions.stream()
@@ -179,6 +184,8 @@ public final class ScoreExpressionDetector {
                             ? PrintedRestDirection.find(score, staffs, word, gray, width, height)
                             : null;
             if (closest == null && rest == null) continue;
+            if (caption != null && (closest != null ? closest.measureIndex() : rest.measureIndex())
+                    != caption.measureIndex()) continue;
             var anchor =
                     closest != null
                             ? new Column(
