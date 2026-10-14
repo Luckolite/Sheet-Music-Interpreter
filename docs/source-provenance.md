@@ -1439,3 +1439,21 @@ twice. Eight original procedural tests include faded ledger notes and ambiguous
 ownership. No private score fixtures, models, dependencies or record layouts change.
 App commit `1ca510d845890edaed094ff353d09d741fc0f1f0` is reviewed.
 Assembled silent duration and deployed app/native behavior remain separate checks.
+
+## Standalone retained slur export
+
+The Python MusicXML adapter now writes confirmed retained phrase endpoints on
+the original attack fragments. The app Java exporter already supplies this
+behavior. Ownership follows the existing Main decoded-note/event order contract
+and validates explicit indices and staff/measure correspondence. Deleted or
+unselected original owners remain unresolved; pending geometric candidates do
+not engrave. Full document endpoint intervals govern number reuse across voices,
+matching the app helper. Cross-part spans require explicit mapping and reject
+rather than silently losing a confirmed phrase.
+
+Fourteen original controls cover styles, splits, overlaps, reversed voice order,
+shared stops/starts, source edits/selections and malformed ownership. Three
+synthetic baseline/fixed pairs reproduce lost phrases; all other written musical
+records and parsed renderer MIDI remain exact, and the bundled renderer retains
+all four phrases. These are export/headless controls, not fresh whole-library or
+device evidence. No model, guide, recognition or audio identity changes.

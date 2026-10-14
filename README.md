@@ -61,6 +61,13 @@ slur ownership in `score.slurSource` even when PDF pages are skipped. JSON
 `page_index` when identity is unknown. The Java file bridge accepts the same
 zero-based identity with `--page-index 5`; its original five arguments still work.
 
+MusicXML exports confirmed `score.slurSource` phrases on their original attack
+fragments, preserving placement and line style. Deferred candidates remain
+unengraved until their musical meaning is proved. Removed or unselected original
+endpoints do not borrow replacement notes. Cross-part slurs require an explicit
+part mapping; this staff-per-part exporter reports that limitation rather than
+silently dropping a confirmed phrase.
+
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
 reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.

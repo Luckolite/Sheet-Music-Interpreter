@@ -175,6 +175,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
                     articulations = element(notation, 'articulations')
                 element(articulations, 'caesura' if kind == 'CAESURA' else 'breath-mark',
                         None if kind == 'CAESURA' else symbol.get('value', 'comma'))
+    return node
 
 
 def emit_rest_gap(measure, start, end, voice, symbols):
@@ -199,6 +200,10 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if rest_kind(row) == 'FULL_MEASURE':
                 full_measure_span(page, row)
     document = resolve_boundary_ties(document)
+    from . import slur_export
+    retained_slurs = slur_export.retained_spans(document['pages'])
+    requested_slur_owners = {owner for _, a, b in retained_slurs for owner in (a, b)}
+    slur_attacks = {}
     meter = tuple(document.get('initialMeter', meter))
     key_fifths = document.get('initialKeyFifths', key_fifths)
     bpm = document.get('initialBpm', 120) if bpm is None else bpm
@@ -433,12 +438,15 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     if start > cursor:
                         emit_rest_gap(measure, cursor, start, voice, rest_symbols)
                     for ci, n in enumerate(chord):
-                        emit_note(measure, end-start, voice, n, chord=ci>0,
+                        emitted = emit_note(measure, end-start, voice, n, chord=ci>0,
                                   stop=n['start']<a or n['tie_stop'], start=n['end']>b or n['tie_start'], flats=bar['key']<0,
                                   gliss_start=end==n['end'] and 'gliss_start' in n,
                                   gliss_stop=start==n['start'] and 'gliss_stop' in n, fragment_end=end)
+                        if start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
+                            slur_attacks[n['sourceIdentity']] = emitted
                     cursor = end
                 if cursor < b:
                     emit_rest_gap(measure, cursor, b, voice, rest_symbols)
+    slur_export.apply(root, retained_slurs, slur_attacks, events)
     ET.indent(root)
     ET.ElementTree(root).write(Path(path), encoding='utf-8', xml_declaration=True)
