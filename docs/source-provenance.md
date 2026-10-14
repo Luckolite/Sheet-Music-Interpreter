@@ -1212,3 +1212,29 @@ helpers are included here. App commit `85947bc2dbe00690da14be6d25101ff3d265ca20`
 No private score fixtures, model or wire-layout changes are included. Source tests
 and saved-evidence replay do not establish full-library accuracy, Android runtime
 behavior or paired desktop-worker deployment.
+
+## Raw staff proof and printed-slur frame context
+
+A dedicated fresh raw-track factory proves complete five-rule geometry for printed
+arcs. It retains existing curved and flat-rule proof thresholds, rejects ambiguous
+six-rule phase and leaves the existing detector flags and numerical references
+unchanged. Final retained note slots bind to a unique physical staff phase;
+repeated staff numbers in different systems cannot borrow ownership. Voice labels
+remain unknown when no evidence supplies them.
+
+Real white terminal pixels beside a subpixel rail retain their cap evidence;
+actual dark rail occlusion still resets the blank count. Nineteen original generated
+controls cover these boundaries;81focused checks pass in each namespace. These
+helpers remain preparatory and unhooked, with their app source commit held for
+functional integration. No private score assets or record/model changes are public.
+
+## Approximate tempo equations
+
+Explicit ca./circa OCR words require separate numeral groups and the existing full
+printed equals/beat-note proof. Complete equations may use a retained section
+envelope while physical horizontal measure boundaries retain ownership. The app,
+desktop page bridge and standalone caller share the numeric helper. Seventeen
+original generated controls cover the new grammar and guards. App source is pinned
+to `980ee1dff1b1c597a760d0778fb14486202ec90b`. Numeric BPM/pulse recovery does
+not yet preserve approximation wording. Final cache/native worker and runtime
+acceptance remain separate from source qualification.

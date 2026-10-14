@@ -481,12 +481,12 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "abf45c308f31de3783a5553c3c04b85920b96c0f3eec430594e0f9eff09bff74",
-      "reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef",
-      "source_normalized_sha256": "b3daf067f7a3b03532856cb5734c2d4be8896d36bb6714aff335e4a39a76dfdb",
-      "review_note": "Recover explicit equals-prefixed merged OCR numeric runs only from separate bounded digit components plus existing complete printed equals/beat-note proof. Anchor at the proved beat-note glyph. For equal vertical staff distances, prefer the actual annotation start horizontal owner over a neighboring bar margin. Preserve standalone-digit path and old beat-unit API.",
-      "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
-      "scoped_reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef"
+      "source_sha256": "e39e70c50678b6ad5da1ba8f1419b0c4bf5edc5518c2f266dc9846172ed8207f",
+      "reviewed_app_commit": "980ee1dff1b1c597a760d0778fb14486202ec90b",
+      "source_normalized_sha256": "e0312f25e51e1339db51adf67841b8c7a4c8918840daa41c92975477adbf03fb",
+      "review_note": "Explicit ca./circa OCR grammar with separately proved digit groups, equals and printed beat note. Narrow complete-equation section-envelope ownership, existing plain detect behavior preserved. Original procedural regressions; no private score assets/model/dependency/wire changes. Numeric representation does not yet retain approximation wording.",
+      "reviewed_source_state": "Committed app helper at reviewed_app_commit; exact bytes pinned.",
+      "scoped_reviewed_app_commit": "980ee1dff1b1c597a760d0778fb14486202ec90b"
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -520,11 +520,12 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "35b1e657b954d44d6d010037eb1c8c16eeb8b2210912e3adbeb94109db81ac78",
-      "source_normalized_sha256": "f9ea2e9fc1817e660416f8e5db333492fda56c67d6d6f6ee9af896d1dcb7d1f2",
+      "source_sha256": "54cafed9873680ddd87712abf2b5d90932beaa39873caa63a57bc13264861565",
+      "source_normalized_sha256": "b471cc5a73ffcf1350066b75193f28d445bab0d6dba8e91648982433699728a4",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified"
+      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes.",
+      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
+      "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending"
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
@@ -2456,9 +2457,11 @@
     },
     "PrintedSlurContours.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContours.java",
-      "source_sha256": "9cd43294536b3fa7cd0482494e2761477e530f0504dd3e06691e004bf7c02a53",
-      "source_normalized_sha256": "9cd43294536b3fa7cd0482494e2761477e530f0504dd3e06691e004bf7c02a53",
-      "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+      "source_sha256": "7ce5ab87370175790dbb61b791b856906575ee74c9662c58afe28829112c8181",
+      "source_normalized_sha256": "b4c3555edb89b0008f8faba52d70e397854ebb2c05a3780d7ab0a023d2a812b9",
+      "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
+      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
+      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes."
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
@@ -2488,6 +2491,14 @@
       "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "review_note": "Global title, contributor, catalogue, instruction and repeated-credit evidence. Bounded original-pixel outside-letter and mixed-case echo recovery requires agreeing high-confidence readings. No song-specific exceptions, private fixtures, model or wire-layout changes."
+    },
+    "PrintedSlurFrames.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurFrames.java",
+      "source_sha256": "4e97654b52d42558cfd30585b207e3c7d402e8c16f7567d542a662d8f6de21ab",
+      "source_normalized_sha256": "23aaa268b210171ef9c072df90c2f3b9bcdde5870d7b9fcf7475ffbf2cc57eb0",
+      "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
+      "reviewed_source_state": "Unhooked slur preparation; factory and frame builder are unused by production recognition.",
+      "review_note": "Original raw five-rule proof, unique physical-staff/final-note frame ownership or raw white endpoint preservation beside subpixel rails. Existing detector policy and pitch geometry unchanged; original procedural regressions, no private score assets/model/dependency/wire changes."
     }
   },
   "interpreter_speedup_review": {
@@ -5853,5 +5864,55 @@
     "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
     "source_sha256": "8a3cc89e7b6f84f34aa52b6995e8ea81fc5a5b0d7ab1c720dfe4fa92dd6b4a7f",
     "boundary": "Android PdfRenderer and bitmap lifecycle adapter remains app-only. Public LocatedCoverHeadingExpansion and ScoreCreditsDetector expose matching pure-JDK evidence/merge behavior. Three original-PDF scales, cancellation and recycling retained. Android runtime and matching desktop worker integration pending."
+  },
+  "printed_slur_raw_staff_context_review": {
+    "license": "Apache-2.0",
+    "scope": "Dedicated fresh raw proof plus final slot/physical phase frame builder; real white cap evidence beside a subpixel rail does not disappear merely through reference proximity. Actual dark rail occlusion guards remain.",
+    "tests": "Nineteen new original procedural controls;81focused checks per namespace including retained staff/contour/owner/context guards.",
+    "source_state": "Preparatory app worktree, unhooked and uncommitted by explicit integration ownership hold.",
+    "unchanged": [
+      "existing detector flags and numerical pitch references",
+      "model and dependencies",
+      "cache revision and wire layout"
+    ],
+    "boundary": "No private image/guide/log is public. Not final new-inference, complete runtime or device acceptance."
+  },
+  "approximate_tempo_equation_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "980ee1dff1b1c597a760d0778fb14486202ec90b",
+    "scope": "Full optical equation required for approximate OCR tempo and bounded section-envelope ownership; all three caller paths use the same helper.",
+    "sources": [
+      {
+        "path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
+        "sha256": "e39e70c50678b6ad5da1ba8f1419b0c4bf5edc5518c2f266dc9846172ed8207f"
+      },
+      {
+        "path": "app/src/test/java/com/musicsheets/app/pdf/ApproximateTempoEquationTest.java",
+        "sha256": "8921bac33e0099b815af36367fbf63c2e47a8777a839bbba60d1598ed3075788"
+      },
+      {
+        "path": "java/src/main/java/io/github/luckolite/interpreter/TempoChangeDetector.java",
+        "sha256": "a7de2045e34ea7925b0a8c7ed85bc5b80508a8afcbf09a6a15d94a7387552ac8"
+      },
+      {
+        "path": "java/src/test/java/io/github/luckolite/interpreter/ApproximateTempoEquationTest.java",
+        "sha256": "9b8bf1186a7676dfa13d71cda69acbf1a5a305e6d4f021906c59b853e6bcbc16"
+      },
+      {
+        "path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "sha256": "e24bf9f8f94b855d40eb11c3d3762cea28ade7736f368741e2384aa28d469445"
+      },
+      {
+        "path": "tools/native-worker/NativePageGuide.java",
+        "sha256": "8ebae6e02d0425a74d4e3dfe9c6025278cfb7ce3e7470d8059c8b19cd9f762fe"
+      },
+      {
+        "path": "java/src/main/java/io/github/luckolite/interpreter/SheetInterpreter.java",
+        "sha256": "7add3ebc7f4d8a3c68fe0149bac9fcff755adeae667f0aae43b31d12e0f67d3b"
+      }
+    ],
+    "regression": "ApproximateTempoEquationTest.java:17original procedural controls;98focused per namespace supplied by paired author.",
+    "boundary": "Numeric BPM/pulse only; approximation-word fidelity remains open. No model/dependency/wire change. Final cache revision invalidation, verified app/Hub/worker rollout, current-model and device acceptance remain pending.",
+    "caller_compilation": "Current Android analyzer/helper and desktop page bridge/helper compile against cached dependencies; standalone SheetInterpreter compiles in full Java build. Android annotation metadata warning is non-fatal. No APK/package/deployment or inference runtime acceptance."
   }
 }

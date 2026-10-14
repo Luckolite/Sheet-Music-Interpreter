@@ -254,7 +254,7 @@ public final class SheetInterpreter {
                                 notes,
                                 firstMeasureNumber,
                                 score.keyChanges(),
-                                TempoChangeDetector.detect(
+                                TempoChangeDetector.detectWithWords(
                                         TempoChangeDetector.withIsolatedDigits(
                                                 annotations.tempoNumbers.stream()
                                                         .map(NumberToken::internal)
@@ -263,6 +263,7 @@ public final class SheetInterpreter {
                                                 gray,
                                                 width,
                                                 height),
+                                        words,
                                         gray,
                                         width,
                                         height,

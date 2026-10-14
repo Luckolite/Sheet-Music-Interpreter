@@ -25,3 +25,10 @@ guide284/audio79 layout, model or dependency changes. Production adoption requir
 the finalized page/timing/pitch context, paired cache/writer/Hub layout, public drift
 review, and packaged/real-score rendering verification. System-crossing and dashed
 arcs, chord ownership and same-pitch phrasing remain incomplete.
+
+The preparatory `PrintedSlurFrames` builder uses a dedicated fresh raw staff proof,
+retained owner slots and physical phase to assemble scan frames. It rejects stale
+or duplicated ownership and ambiguous repeated staff matches without inventing
+voices. Existing generic detector flags and pitch references remain unchanged.
+This closes the pure source-context preparation gap; production capture, complete
+page/key/timing context, paired persistence and final runtime adoption remain open.

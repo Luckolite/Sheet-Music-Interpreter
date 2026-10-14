@@ -66,6 +66,47 @@ final class StaffPitchTrack {
         return detect(gray, width, height, top, bottom, gap, true);
     }
 
+    /** A fresh raw five-rule proof for printed arcs; existing pitch tracks keep their policy. */
+    static StaffPitchTrack forPrintedSlurs(
+            byte[] gray, int width, int height, float top, float bottom, float gap) {
+        if (width <= 0
+                || height <= 0
+                || gray == null
+                || gray.length != (long) width * height
+                || !Float.isFinite(top + bottom + gap)
+                || gap < 3
+                || bottom <= top)
+            throw new IllegalArgumentException("Invalid printed staff source");
+        // Curved detection proves sampled five-rule groups against raw ink. Its ordinary
+        // straight-staff fast path returns no track, so independently prove those rules
+        // with the sub-line symbol detector rather than trusting the supplied seed.
+        StaffPitchTrack result = detect(gray, width, height, top, bottom, gap);
+        if (result == null) result = detectForSymbols(gray, width, height, top, bottom, gap);
+        if (result == null) {
+            // Dense note ink can spoil small strips while all five long contrasted
+            // rules still prove one flat staff. Preserve the existing scale/phase caps
+            // and independently reject a sixth neighboring rule before transport.
+            float[] flat = broadStraightPitch(gray, width, height, bottom, gap, false);
+            if (flat != null) {
+                int[] rows = new int[5];
+                for (int i = 0; i < 5; i++) rows[i] = Math.round(flat[0] - (4 - i) * flat[1]);
+                if (completeRules(
+                        gray,
+                        width,
+                        height,
+                        new RawStaffLineDetector.StaffLines(rows, flat[1]),
+                        true))
+                    result =
+                            new StaffPitchTrack(
+                                    List.of(
+                                            new float[] {0, flat[0], flat[1]},
+                                            new float[] {width - 1, flat[0], flat[1]}));
+            }
+        }
+        if (result != null) result.verified = true;
+        return result;
+    }
+
     /** Measure geometry permits a single pixel of projection quantization; pitch tracking stays strict. */
     static StaffPitchTrack detectForMeasures(
             byte[] gray, int width, int height, float top, float bottom, float gap) {

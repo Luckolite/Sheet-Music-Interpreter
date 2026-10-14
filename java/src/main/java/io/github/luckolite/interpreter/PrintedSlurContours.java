@@ -394,7 +394,9 @@ final class PrintedSlurContours {
             boolean rule = false;
             for (int r = 0; r < 5; r++)
                 if (Math.abs(y - (staff[0] - r * staff[1])) <= Math.max(1, gap * .18f)) rule = true;
-            if (rule) {
+            // Proximity to a subpixel rail cannot erase real white termination pixels.
+            // Actual dark rail occlusion still resets the cap's blank evidence.
+            if (rule && (gray[y * width + x] & 255) <= 205) {
                 blank = 0;
                 continue;
             }

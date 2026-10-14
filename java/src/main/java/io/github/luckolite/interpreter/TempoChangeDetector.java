@@ -168,6 +168,16 @@ final class TempoChangeDetector {
             int width,
             int height,
             List<MeasureRegion> measures) {
+        return detectProved(tokens, gray, width, height, measures, java.util.Map.of());
+    }
+
+    private static List<ScoreTempoChange> detectProved(
+            List<MeasureNumberReconciler.NumberToken> tokens,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            java.util.Map<MeasureNumberReconciler.NumberToken, Integer> provedEquals) {
         if (tokens == null
                 || tokens.isEmpty()
                 || gray == null
@@ -187,7 +197,11 @@ final class TempoChangeDetector {
                         : directionMeasures(measures, gray, width, height);
         for (MeasureNumberReconciler.NumberToken token : tokens) {
             if (token.value() < 30 || token.value() > 400) continue;
-            int equalsLeft = equalsSignLeft(token, gray, width, height);
+            boolean provedApproximation = provedEquals.containsKey(token);
+            int equalsLeft =
+                    provedApproximation
+                            ? provedEquals.get(token)
+                            : equalsSignLeft(token, gray, width, height);
             if (equalsLeft < 0) continue;
             if (directionMeasures == null)
                 directionMeasures = directionMeasures(measures, gray, width, height);
@@ -212,6 +226,10 @@ final class TempoChangeDetector {
             // opening staff. Do not relax ink checks or relocate later directions.
             if (measureIndex < 0 && nearestFollowingMeasure(token, directionMeasures, true) == 0)
                 measureIndex = 0;
+            // A section label can enlarge the original direction area above the verified staff.
+            // Only a complete OCR/optical equation may use that retained measure envelope.
+            if (measureIndex < 0 && provedApproximation)
+                measureIndex = approximateFollowingMeasure(anchor, measures);
             if (measureIndex < 0) continue;
             MeasureRegion measure = directionMeasures.get(measureIndex);
             float position =
@@ -238,6 +256,132 @@ final class TempoChangeDetector {
             deduplicated.add(change);
         }
         return List.copyOf(deduplicated);
+    }
+
+    private static int approximateFollowingMeasure(
+            MeasureNumberReconciler.NumberToken anchor, List<MeasureRegion> measures) {
+        int best = nearestFollowingMeasure(anchor, measures, false);
+        if (best < 0) return -1;
+        var row = measures.get(best);
+        float distance = Float.MAX_VALUE;
+        for (int i = 0; i < measures.size(); i++) {
+            var m = measures.get(i);
+            if (Math.abs(m.top() - row.top()) > .002f
+                    || Math.abs(m.bottom() - row.bottom()) > .002f
+                    || nearestFollowingMeasure(anchor, List.of(m), false) < 0) continue;
+            float horizontal =
+                    Math.max(0, Math.max(m.left() - anchor.left(), anchor.left() - m.right()));
+            if (horizontal < distance) {
+                distance = horizontal;
+                best = i;
+            }
+        }
+        return best;
+    }
+
+    static List<ScoreTempoChange> detectWithWords(
+            List<MeasureNumberReconciler.NumberToken> tokens,
+            List<PlayingTechniqueDetector.Word> words,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures) {
+        if (words == null
+                || gray == null
+                || width <= 0
+                || height <= 0
+                || (long) width * height != gray.length)
+            return detect(tokens, gray, width, height, measures);
+        var all = new ArrayList<MeasureNumberReconciler.NumberToken>();
+        if (tokens != null) all.addAll(tokens);
+        var proved = new java.util.HashMap<MeasureNumberReconciler.NumberToken, Integer>();
+        var syntax =
+                java.util.regex.Pattern.compile(
+                        "^[♩♪♫♬√J]?\\s*=\\s*(?:ca\\.?|c\\.|circa)\\s*([0-9]{2,3})$",
+                        java.util.regex.Pattern.CASE_INSENSITIVE);
+        for (var word : words) {
+            if (word == null || word.text() == null) continue;
+            var match = syntax.matcher(word.text().trim());
+            if (!match.matches()) continue;
+            int value = Integer.parseInt(match.group(1)), count = match.group(1).length();
+            if (value < 30
+                    || value > 400
+                    || !Float.isFinite(word.left())
+                    || !Float.isFinite(word.right())
+                    || !Float.isFinite(word.top())
+                    || !Float.isFinite(word.bottom())
+                    || word.left() < 0
+                    || word.top() < 0
+                    || word.right() > 1
+                    || word.bottom() > 1) continue;
+            int left = Math.round(word.left() * width),
+                    right = Math.min(width - 1, Math.round(word.right() * width));
+            int top = Math.round(word.top() * height),
+                    bottom = Math.min(height - 1, Math.round(word.bottom() * height));
+            int h = bottom - top + 1;
+            if (h < 3
+                    || right <= left
+                    || right - left > 12 * h
+                    || (long) (right - left + 1) * h > 500_000) continue;
+            // The final numeral is a bounded sequence of separate vertical ink groups.
+            int groups = 0, digitLeft = -1, digitRight = -1;
+            boolean inside = false;
+            for (int x = right; x >= left; x--) {
+                boolean ink = false;
+                for (int y = top; y <= bottom; y++)
+                    if ((gray[y * width + x] & 255) <= 155) {
+                        ink = true;
+                        break;
+                    }
+                if (ink) {
+                    if (!inside) {
+                        groups++;
+                        if (groups > count) break;
+                    }
+                    if (digitRight < 0) digitRight = x;
+                    digitLeft = x;
+                } else if (inside && groups == count) break;
+                inside = ink;
+            }
+            if (groups != count || digitLeft <= left || digitRight < digitLeft) continue;
+            var digits =
+                    equalsPrefixedDigits(
+                            new PlayingTechniqueDetector.Word(
+                                    "=" + value,
+                                    digitLeft / (float) width,
+                                    word.top(),
+                                    digitRight / (float) width,
+                                    word.bottom()),
+                            gray,
+                            width,
+                            height);
+            if (digits == null) continue;
+            int dh = printedDigitHeight(digits, gray, width, height);
+            if (digitLeft - left > dh * 7) continue;
+            int eq = equalsSignLeft(digits, gray, width, height, 125, left);
+            if (eq < 0) eq = equalsSignLeft(digits, gray, width, height, 175, left);
+            if (eq < left || digitLeft - eq > dh * 6) continue;
+            int[] anchor = {-1};
+            double unit =
+                    printedBeatUnitWithDigitHeight(
+                            digits, gray, width, height, eq, 200, dh, anchor);
+            if (!Double.isFinite(unit))
+                unit =
+                        printedBeatUnitWithDigitHeight(
+                                digits, gray, width, height, eq, 165, dh, anchor);
+            if (!Double.isFinite(unit) || anchor[0] < left || anchor[0] >= eq) continue;
+            var accepted =
+                    new MeasureNumberReconciler.NumberToken(
+                            value,
+                            digits.left(),
+                            digits.top(),
+                            digits.right(),
+                            digits.bottom(),
+                            anchor[0] / (float) width);
+            all.add(accepted);
+            proved.put(accepted, eq);
+        }
+        return detectProved(all, gray, width, height, measures, proved);
     }
 
     private static boolean canDeferStaffSearch(
@@ -420,6 +564,16 @@ final class TempoChangeDetector {
             int width,
             int height,
             int inkLimit) {
+        return equalsSignLeft(token, gray, width, height, inkLimit, -1);
+    }
+
+    private static int equalsSignLeft(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int inkLimit,
+            int provedTextLeft) {
         int tokenLeft = Math.max(0, Math.round(token.left() * width));
         int tokenRight = Math.min(width - 1, Math.round(token.right() * width));
         int tokenTop = Math.max(0, Math.round(token.top() * height));
@@ -438,6 +592,7 @@ final class TempoChangeDetector {
                 }
         if (inkBottom >= inkTop) tokenHeight = Math.max(3, inkBottom - inkTop + 1);
         int left = Math.max(0, tokenLeft - Math.max(tokenWidth, tokenHeight * 2));
+        if (provedTextLeft >= 0) left = Math.max(0, provedTextLeft);
         int right = Math.min(width - 1, tokenLeft - 1);
         int top = Math.max(0, tokenTop - tokenHeight / 4);
         int bottom = Math.min(height - 1, tokenBottom + tokenHeight / 4);
