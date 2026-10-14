@@ -1331,3 +1331,13 @@ Twenty-seven original synthetic tests cover these boundaries.
 App commit `6d8fc558a467bececc966fdce99204b560c1a533` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Preface prose and educational catalogues
+
+Dense aligned columns below preface headings identify narrow multilingual prose,
+including pages whose rules were mistaken for notation. Educational catalogue
+headings require a broad instrument inventory before excluding advertisement text.
+Twelve original synthetic tests cover prose, catalogue and explicit-credit boundaries.
+App commit `86e88c7de262c9e682024b3920cabdd038c12ba5` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.

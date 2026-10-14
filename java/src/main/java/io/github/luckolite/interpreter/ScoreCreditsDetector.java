@@ -3386,6 +3386,7 @@ public final class ScoreCreditsDetector {
 
     /** Product advertisements identify other publications, not contributors to this score. */
     public static boolean isProductCatalogue(Page page) {
+        if (educationalMethodCatalogue(page)) return true;
         String text =
                 page.lines.stream()
                         .map(line -> clean(line.text))
@@ -4706,7 +4707,75 @@ public final class ScoreCreditsDetector {
                                 : page.height * .25f);
     }
 
+    /** Educational catalogue headings plus a broad instrument inventory identify advertisements. */
+    private static boolean educationalMethodCatalogue(Page page) {
+        String text = page.lines.stream().map(l -> clean(l.text)).reduce("", (a, b) -> a + " " + b);
+        if (!text.matches("(?isu).*\\beducational\\h+library\\b.*")
+                || !text.matches("(?isu).*\\belementary\\h+methods\\b.*")
+                || !text.matches("(?isu).*\\bsalient\\h+features\\b.*")) return false;
+        int instruments = 0;
+        for (String instrument :
+                List.of(
+                        "flute",
+                        "clarinet",
+                        "oboe",
+                        "bassoon",
+                        "saxophone",
+                        "trumpet",
+                        "violin",
+                        "viola",
+                        "trombone",
+                        "guitar"))
+            if (Pattern.compile("(?iu)\\b" + instrument + "\\b").matcher(text).find())
+                instruments++;
+        return instruments >= 5;
+    }
+
+    /** Dense aligned prose beneath a preface heading remains prose even across a false staff row. */
+    private static boolean prefaceColumnParagraph(Page page, Line line, List<Line> lines) {
+        if (page.photographicCover
+                || credit(line.text) != null
+                || line.height() > page.height * .025f
+                || clean(line.text).split("\\h+").length < 4
+                || line.right - line.left < page.width * .16f) return false;
+        boolean heading =
+                lines.stream()
+                        .anyMatch(
+                                h ->
+                                        clean(h.text)
+                                                        .matches(
+                                                                "(?iu)^(?:preface|préface|vorwort|foreword|prefacio)$")
+                                                && h.bottom <= line.top
+                                                && line.top - h.bottom < page.height * .22f
+                                                && h.height() > line.height() * 1.1f
+                                                && Math.abs(h.center() - line.center())
+                                                        < page.width * .09f);
+        if (!heading) return false;
+        var column =
+                lines.stream()
+                        .filter(
+                                l ->
+                                        credit(l.text) == null
+                                                && Math.abs(l.left - line.left) < page.width * .03f
+                                                && Math.abs(l.top - line.top) < page.height * .16f
+                                                && l.height() > line.height() * .6f
+                                                && l.height() < line.height() * 1.5f
+                                                && l.right - l.left > page.width * .16f
+                                                && clean(l.text).split("\\h+").length >= 4)
+                        .sorted(Comparator.comparingDouble(l -> l.top))
+                        .toList();
+        int adjacent = 0;
+        for (int i = 1; i < column.size(); i++) {
+            Line a = column.get(i - 1), b = column.get(i);
+            float gap = b.top - a.bottom;
+            if (gap >= -Math.min(a.height(), b.height()) * .2f
+                    && gap < Math.max(a.height(), b.height()) * 1.25f) adjacent++;
+        }
+        return column.contains(line) && adjacent >= 4;
+    }
+
     private static boolean paragraphLine(Page page, Line line, List<Line> lines) {
+        if (prefaceColumnParagraph(page, line, lines)) return true;
         if (clean(line.text).split("\\h+").length < 12 || line.right - line.left < page.width * .5f)
             return false;
         if (line.text.contains("•") || line.text.contains("·")) return true;
