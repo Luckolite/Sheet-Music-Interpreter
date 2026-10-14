@@ -376,6 +376,13 @@ public final class MeterChangeDetector {
                 // Recover a bounded crop only from two aligned triangular counters;
                 // the OCR and note-position checks still decide its meaning.
                 if (span > gap * 3.2f) {
+                    addCandidates(
+                            result,
+                            stackedSymbolMeterCrops(
+                                    labels, width, height, left, last, top, bottom, gap, slope,
+                                    false, true, gray),
+                            eligible);
+
                     for (int xx = left; xx <= last; xx++) {
                         if (ink[xx] < gap * 1.4f) continue;
                         int shift = Math.round(slope * (xx - width * .5f));
@@ -606,10 +613,39 @@ public final class MeterChangeDetector {
             float gap,
             float slope,
             boolean tolerateGlyphHead) {
+        return stackedSymbolMeterCrops(
+                labels,
+                width,
+                height,
+                left,
+                right,
+                top,
+                bottom,
+                gap,
+                slope,
+                tolerateGlyphHead,
+                false,
+                null);
+    }
+
+    private static List<Crop> stackedSymbolMeterCrops(
+            byte[] labels,
+            int width,
+            int height,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            float gap,
+            float slope,
+            boolean tolerateGlyphHead,
+            boolean internal,
+            byte[] gray) {
         var result = new ArrayList<Crop>();
         int start = -1, last = -1, blanks = 0;
         int minSymbol = Math.max(3, Math.round(gap * .25f));
-        for (int x = left; x <= right + 3; x++) {
+        int maximumBlanks = internal ? Math.max(2, Math.round(gap * .3f)) : 2;
+        for (int x = left; x <= right + maximumBlanks + 1; x++) {
             int upper = 0, lower = 0;
             if (x <= right)
                 for (int y = top; y <= bottom; y++) {
@@ -624,10 +660,10 @@ public final class MeterChangeDetector {
                 if (start < 0) start = x;
                 last = x;
                 blanks = 0;
-            } else if (start >= 0 && ++blanks > 2) {
+            } else if (start >= 0 && ++blanks > maximumBlanks) {
                 int glyphWidth = last - start + 1;
                 if (glyphWidth >= gap * .55f && glyphWidth <= gap * 2.6f) {
-                    int head = 0, middleHead = 0, header = 0;
+                    int head = 0, middleHead = 0, header = 0, upperHead = 0;
                     for (int xx = start; xx <= last; xx++)
                         for (int y = top; y <= bottom; y++) {
                             int yy = y + Math.round(slope * (xx - width * .5f));
@@ -636,6 +672,7 @@ public final class MeterChangeDetector {
                                     && labels[yy * width + xx]
                                             == OmrMeasurePostProcessor.NOTEHEAD) {
                                 head++;
+                                if (y < top + gap * 1.8f) upperHead++;
                                 if (Math.abs(y - top - gap * 2) < gap * .4f) middleHead++;
                             }
                         }
@@ -653,15 +690,47 @@ public final class MeterChangeDetector {
                             tolerateGlyphHead
                                     && head < gap * gap * .2f
                                     && middleHead < gap * gap * .05f;
-                    if ((head < gap * gap * .12f || smallGlyphFragment)
-                            && header >= gap * gap * .35f) {
-                        int center = (start + last) / 2, pad = Math.max(2, Math.round(gap * .2f));
+                    boolean barline =
+                            internal
+                                    && completeBarlineBefore(
+                                            gray, width, height, start, top, bottom, gap);
+                    if ((head < gap * gap * .12f
+                                    || smallGlyphFragment
+                                    || barline && upperHead < head * .1f)
+                            && (internal ? barline : header >= gap * gap * .35f)) {
+                        int cropLeft = start, cropRight = last;
+                        if (internal && barline) {
+                            for (int xx = Math.max(left, Math.round(start - gap * .8f));
+                                    xx <= Math.min(right, Math.round(last + gap * .8f));
+                                    xx++) {
+                                int count = 0;
+                                for (int y = top; y <= bottom; y++) {
+                                    int yy = y + Math.round(slope * (xx - width * .5f));
+                                    if (yy >= 0
+                                            && yy < height
+                                            && labels[yy * width + xx]
+                                                    == OmrMeasurePostProcessor.SYMBOL) count++;
+                                }
+                                if (count >= gap * .5f) {
+                                    cropLeft = Math.min(cropLeft, xx);
+                                    cropRight = Math.max(cropRight, xx);
+                                }
+                            }
+                            if (cropRight - cropLeft + 1 > gap * 3.2f) {
+                                start = -1;
+                                last = -1;
+                                blanks = 0;
+                                continue;
+                            }
+                        }
+                        int center = (cropLeft + cropRight) / 2,
+                                pad = Math.max(2, Math.round(gap * .2f));
                         int localTop = top + Math.round(slope * (center - width * .5f));
                         result.add(
                                 new Crop(
-                                        Math.max(0, start - pad),
+                                        Math.max(0, cropLeft - pad),
                                         Math.max(0, localTop - pad),
-                                        Math.min(width, last + pad + 1),
+                                        Math.min(width, cropRight + pad + 1),
                                         Math.min(height, localTop + bottom - top + pad + 1),
                                         localTop,
                                         gap));

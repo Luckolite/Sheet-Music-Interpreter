@@ -300,13 +300,14 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "e2f0f58e9601b2e931ea9a9d6e8283e76820458516a853b94193b2010541e1b3",
-      "reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17",
-      "review_note": "Complete closed4/4 raster proof uses meter-only pixel quantization, independently continuing right shafts, crossbars and clear lower-left interiors. Existing strict counter paths retain their old thresholds. Raw optical choices survive OCR merging; unique standalone fallback runs only without OCR. Original procedural and licensed Bravura alias controls; no commercial score fixtures, model/dependency or record-layout changes.",
-      "source_normalized_sha256": "202f4201c7f642b89f8ed9e6e67c506b0c9f83f98cceff59439dbf71db075a7d",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
+      "source_sha256": "41316e8554147407f8af9c8a46f9f7e4d5da9acb2eea824e63b88bb45869bd85",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "review_note": "Recover bounded stacked internal candidates only beside a complete preceding barline; reject upper notehead contamination, flush terminal candidates and reset rejected runs.",
+      "source_normalized_sha256": "b2c07abc3ace275d15fed36653f92d5c50832ef1ce670020305cc622f2313ea7",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
       "reviewed_app_state": "Scoped meter source committed; unrelated app source and index ownership preserved.",
-      "scoped_reviewed_app_commit": "9a9fafde15b45a5a601855a5dc686177ea389a17"
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "a4bddde23a155b5ff9835d979258040fe226c0388f8cce1c2530911e8c6c685f"
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -1105,13 +1106,13 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "cdac5b6df4a31ab168d3b4cb89b1400496bc536ff1e151bb17a824b3c869dfff",
-      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "source_normalized_sha256": "1df7f6c51ab70c863755cbf25d85ed47baf25f2cb9a662b4cb2c5891f14792d2",
-      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Native and standalone adapters supply their existing grayscale OCR reader to the paired staff-header helper; inference ownership remains unchanged.",
-      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "standalone_sha256": "dc5e37196692459ef2331e72ccfc4f4862b8ccfacd17d1c38324089b04bef415"
+      "source_sha256": "48df813912f5a9fbf13e446d0d69ef28fb9d0e4b15700f2f8765c4a278ceac2e",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "source_normalized_sha256": "a7b4b12ad02dce7e8685f114468b15ee719b2ba47cee76148fda07233deaddb1",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Retry only an unresolved font candidate using independently proved crossing mask, retaining OCR contradiction checks and existing acceptance thresholds.",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "22227d7cfb0a2601b5abae538b1c7730c75bbda6e03ba662569e7083193cd82d"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1533,13 +1534,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "b7dff31c2f6af1fe6c5d604a8cbeef99b0b0a67c6be4f2ae2e4cf054bbc5bae2",
-      "source_normalized_sha256": "89e877845afe25ee329128d713917278cfb74fea95d984ab814018df9147d7fb",
-      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
-      "review_note": "Advance paired recognition revision40 to41; guide285 binary layout and audio79 unchanged. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
-      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
-      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
-      "standalone_sha256": "40b2e996961159e3ffc2f285964315df0620b826e71a133e1273bd1f7313f767",
+      "source_sha256": "60105d91b65a4f505ab70c10948b511f597417477e7d441f06b0231bb7f50191",
+      "source_normalized_sha256": "72655891b2e69bfa1129cacb4ad00a61c072d14f4bb2a1f80bd7ef4e79dd8bdb",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "review_note": "Advance paired recognition42 to43; guide285 layout and audio79 remain unchanged.",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "b94802f18d5ec4f46e2fe135c5ba8fc708a5726e0f71a9a632e184f7812fde00",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1597,14 +1598,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "b86bf0054b48d147593d7b534a75c88e92f6356550ad5f5fcac3e986173394cd",
-      "source_normalized_sha256": "4873ff1cfc0deb57524df64d95e37c851f357225dad271d42bd971ca9226ba55",
-      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
-      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
-      "review_note": "Advance paired writer recognition revision40 to41 with Android and Hub; guide records unchanged. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
-      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
+      "source_sha256": "232af34229663f7aca600dd03dee469949d2bb3130cb36b2ef64776d5a18f02c",
+      "source_normalized_sha256": "eb92d634e3d1db4914909677e0c71a91671b117a819935a99366fcf3c5a0134f",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Advance paired writer recognition42 to43 with Android and Hub; record layouts unchanged.",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "ba57dc3b7131f66e7d0757608c295ca9a3feade5e3ede92cef2e4d9f9626130b",
+      "standalone_sha256": "bcb7c87e92664e39043ad972c541aded50b89915be4f56dd754c2fd86a52be42",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2566,12 +2567,13 @@
     },
     "MeterFontMatcher.java": {
       "source_path": "tools/native-worker/NativeMeterFont.java",
-      "source_sha256": "d4d81905e89cdc41f9328686dd304735352eb72110e987015d698e5a51b8efe1",
-      "source_normalized_sha256": "713ebe3f219a142282a6a94c1e91c125a8e3c055383ee9eb85d518c9cd022986",
-      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
-      "review_note": "Preserve the existing0.84font score floor; two agreeing OCR scales without a conflicting reading may resolve only the top font candidate runner-up ambiguity. Legacy read overload retained. No private score pages, masks, library records, weights or new wire layout are published."
+      "source_sha256": "254e6d139e8c2024586f741a004bbd742050db133f63ccb1e720593e3f0cce3a",
+      "source_normalized_sha256": "76011b309a45112d278039867e25cac8effa6007998a91ae7b5199e111b028ec",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Desktop font raster adapter delegates unchanged scoring to shared helper; existing overloads remain compatible. Original Bravura fixtures contain no private score pixels.",
+      "standalone_sha256": "08e90ae732ba453e9aa1bec3d3226c1d67180207e36c8a1ea5dac27cf837d805"
     },
     "MeterOnlyCourtesyTail.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOnlyCourtesyTail.java",
@@ -2657,6 +2659,42 @@
       "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
       "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
       "review_note": " Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred."
+    },
+    "MeterGlyphMatcher.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterGlyphMatcher.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterGlyphMatcher.java",
+      "license": "Apache-2.0",
+      "source_sha256": "a967fff7747ad35bfb66aecc22492350e1dbd72d3628724c4198e85f9c9adfc9",
+      "source_normalized_sha256": "eb136f1f3d35bba257ee47117a50e7b5ef0df68dd779d5ac6ae70b3507d4ce64",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "630900c63b4b8a00f86727aae147af3cde33c25f6eee467672a11ca058c57ad2",
+      "review_note": "Shared platform-independent font scoring with original confidence and runner-up gates; independently proved stroke pixels excluded without editing source ink.",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "MeterFontEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterFontEvidence.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterFontEvidence.java",
+      "license": "Apache-2.0",
+      "source_sha256": "409d7ab1a64ea79b347f06c82a5b522bdc0ea8e7fd4f40a1ec0d53e652f7a1e8",
+      "source_normalized_sha256": "ec377f813e953d782d8e29d68ccfab1e8a63218a163fff2e8fb760ec6376a2a8",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "7171434e60ee45ec0363b98474596847592ae8d5beb07065d4c98ec804779dd4",
+      "review_note": "Retain OCR digit roles, competing fractions and structural vetoes for the Android font fallback. Original conflict controls; no platform dependency.",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "MeterCrossingStroke.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCrossingStroke.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterCrossingStroke.java",
+      "license": "Apache-2.0",
+      "source_sha256": "e384c41ba00bd0fce11a9806e40565a0e45eb925a4a69c583af766feebc9f87c",
+      "source_normalized_sha256": "f1e37b21b06252f151774e3c6217f6fae693eac17ee4d779cbc8335bdcb8c82a",
+      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "standalone_sha256": "700be4423bc51ba8d5e1ff4183a46bcec640dc0405401c75f76d4f76f93c87c9",
+      "review_note": "Require thin straight crossing ink with independent off-staff support on both flanks, full-span support and a consistent line cluster. Reject curves, competing lines, bands and one-sided support.",
+      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending."
     }
   },
   "interpreter_speedup_review": {
@@ -6310,5 +6348,30 @@
     "newHelperExplicitlyIncludedInNativeDecoderSources": true,
     "privateEvidence": "Two saved-mask pages retain pre-regression notes/rests/tempo/meter/key/slur fields and events; one recovered caption only. Actual HTML render preserves parsed MIDI and printed pulse/rate. No private score pixels, source names or captures published.",
     "boundary": "No APK/device, full packaged worker smoke or live deployment performed; cumulative rollout remains user-deferred."
+  },
+  "crossed_meter_android_adapter_review": {
+    "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+    "license": "Apache-2.0",
+    "scope": "Android font raster adapter uses the same pure scorer as desktop; bounded fallback retains OCR contradictions and structural vetoes. Desktop and Android font rasterizers differ by platform.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/AndroidMeterFont.java",
+        "source_sha256": "2aec9c921ec23c47cbf2c0b5e86aaf3d4f80fb86f360ece0d381070e5cb23d8f"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "e9cc8afc06caac42a0cf4dc0d82909597c717a9cb58a2c28ef87f4a7efc5929d"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetOcr.java",
+        "source_sha256": "1ac79c701bd091be0508dae42e59f065b28035c2f2ef0cfc3bf5101b0b0c2254"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "a78d08a2f5a4ee8a4a958293cadef62612fba1bcb25b5a42368ce1a2e2cb3dcc"
+      }
+    ],
+    "verification": "35 original helper/crop/font/conflict controls, pinned page-stage comparisons and a private real-crop Android instrumentation check. No private raster, test APK, logs or source-specific rule is included.",
+    "boundary": "Full current-model page decoding, assembled playback and paired packaged deployment remain pending."
   }
 }

@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition43 recovers crossed internal stacked meters using independent barline
+and two-flank stroke evidence. Desktop and Android share scoring thresholds;
+Android retains conflicting OCR observations before fallback. Thirty-five original
+controls cover crop ownership, stroke rejection, font scoring and OCR conflict
+preservation. Private captured-page and Android crop checks supplement these
+controls without publishing private inputs. Full-model, document-playback and
+packaged rollout acceptance remain separate. Guide285/audio79 are unchanged.
+
 Recognition41 corrects a wide-rest regression: a complete printed barline plus
 curved ink cannot supply a rest contour. The fixed-column veto applies only
 to wide contours, with nine original controls preserving genuine adjacent and

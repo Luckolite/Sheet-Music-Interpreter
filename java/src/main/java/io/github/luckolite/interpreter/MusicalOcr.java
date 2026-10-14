@@ -23,8 +23,9 @@ public final class MusicalOcr {
         this.meterFont = Objects.requireNonNull(meterFont);
     }
 
-    List<PlayingTechniqueDetector.Word> tempoWords(byte[] gray,int width,int height) throws Exception {
-        return StaffHeaderTempoOcr.words(gray,width,height,reader::readGray);
+    List<PlayingTechniqueDetector.Word> tempoWords(byte[] gray, int width, int height)
+            throws Exception {
+        return StaffHeaderTempoOcr.words(gray, width, height, reader::readGray);
     }
 
     int firstSystemMeasureNumber(
@@ -147,6 +148,41 @@ public final class MusicalOcr {
                             upperEvidence,
                             lowerEvidence);
             if (!supported.isBlank()) return new MeterReading(supported, 2);
+            if (font.text().isBlank()) {
+                boolean[] ignored =
+                        MeterCrossingStroke.mask(
+                                gray,
+                                width,
+                                height,
+                                left,
+                                top,
+                                right,
+                                bottom,
+                                crop.firstLine(),
+                                crop.gap());
+                if (ignored != null) {
+                    var retry =
+                            meterFont.read(
+                                    cleaned,
+                                    cropWidth,
+                                    cropHeight,
+                                    middle - top,
+                                    Math.round(crop.firstLine()) - top,
+                                    crop.gap(),
+                                    corroboratedDigit(upperReadings),
+                                    corroboratedDigit(lowerReadings),
+                                    ignored);
+                    if (TRACE) System.err.println("meter crossing font=" + retry);
+                    String recovered =
+                            MusicalOcrEvidence.fontMeter(
+                                    retry.text(),
+                                    retry.topScore(),
+                                    retry.bottomScore(),
+                                    upperEvidence,
+                                    lowerEvidence);
+                    if (!recovered.isBlank()) return new MeterReading(recovered, 2);
+                }
+            }
         }
         if (upperEvidence.isEmpty()) {
             String direct =
