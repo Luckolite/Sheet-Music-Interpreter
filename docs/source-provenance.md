@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition41 corrects a wide-rest regression: a complete printed barline plus
+curved ink cannot supply a rest contour. The fixed-column veto applies only
+to wide contours, with nine original controls preserving genuine adjacent and
+contact rests. Captured regression output returns exactly to its pre-regression
+score and event clock, while six audit page outputs retain their repairs.
+Guide285, audio79 and model weights are unchanged; final current-model source
+accuracy, assembled playback and packaged rollout remain separate gates.
+
 Recognition40 preserves printed rest rhythms and fermata ownership: text
 ascenders reject false tuplets, complete wider sixteenth-rest contours retain
 their durations, detached bottom-rule remnants cannot stretch proved quarters,

@@ -2007,6 +2007,10 @@ final class SixteenthRestDetector {
                         maxY);
         boolean noteDotRemoved = maxY < fullBottom;
         boolean wideContour = right - left + 1 > gap * 1.6f && !noteDotRemoved;
+        if (wideContour
+                && staffSpanningShaft(
+                        ownershipGray, width, height, left, right, staff.top(), staff.bottom()))
+            return;
         // Shifted voices need the complete raw rectangle and supporting rule;
         // a masked beam fragment can otherwise resemble a half or whole rest.
         boolean half =
@@ -2620,6 +2624,41 @@ final class SixteenthRestDetector {
     }
 
     /** A sharp has two straight shafts; rest tails do not keep two fixed ink columns. */
+    /** A fixed shaft spanning every printed staff space cannot be a wide rest's diagonal tail. */
+    static boolean staffSpanningShaft(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float staffTop,
+            float staffBottom) {
+        if (gray == null
+                || gray.length != (long) width * height
+                || !Float.isFinite(staffTop)
+                || !Float.isFinite(staffBottom)
+                || left < 0
+                || right >= width
+                || right < left
+                || staffTop < 0
+                || staffBottom >= height
+                || staffBottom - staffTop < 16) return false;
+        int top = Math.round(staffTop), bottom = Math.round(staffBottom);
+        if (top < 0 || bottom >= height) return false;
+        for (int x = left; x <= right; x++) {
+            int dark = 0, blank = 0, longest = 0;
+            for (int y = top; y <= bottom; y++)
+                if ((gray[y * width + x] & 255) < 170) {
+                    dark++;
+                    blank = 0;
+                } else longest = Math.max(longest, ++blank);
+            if (dark >= (bottom - top + 1) * .94f
+                    && longest <= Math.max(1, Math.round((staffBottom - staffTop) * .03f)))
+                return true;
+        }
+        return false;
+    }
+
     private static boolean straightShafts(
             byte[] gray,
             int width,
