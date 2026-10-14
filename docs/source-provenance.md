@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition44 restores directions on proved expanded multi-rests and faint
+five-line staffs, and rejects measure boundaries owned by complete quarter-rest
+contours. Forty-one original controls cover silence ownership, local rail evidence,
+blurred rest/barline confusion, malformed input and preservation of real bars.
+Private retained-page comparisons and four pinned-mask page replays supplement
+these controls without publishing score pixels. Full-model accuracy, assembled
+document playback and packaged rollout remain separate. Guide285/audio79 are
+unchanged.
+
 Recognition43 recovers crossed internal stacked meters using independent barline
 and two-flank stroke evidence. Desktop and Android share scoring thresholds;
 Android retains conflicting OCR observations before fallback. Thirty-five original

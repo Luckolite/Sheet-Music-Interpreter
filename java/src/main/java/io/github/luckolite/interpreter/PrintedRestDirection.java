@@ -86,7 +86,10 @@ final class PrintedRestDirection {
                 } else if (Math.abs(distance - rank) <= .1f && best != rest) ambiguous = true;
             }
         }
-        return ambiguous ? null : best;
+        if (ambiguous) return null;
+        return best != null
+                ? best
+                : PrintedMultiRestDirection.find(score, staffs, word, gray, w, h);
     }
 
     static double onset(
@@ -109,7 +112,8 @@ final class PrintedRestDirection {
                 if (target != null) return Double.NaN;
                 target = r;
             }
-        if (target == null) return Double.NaN;
+        if (target == null)
+            return PrintedMultiRestDirection.provedOnset(score, measure, staff, count, position);
         if (target.isFullMeasure()) {
             for (var n : score.notes())
                 if (n.measureIndex() == measure

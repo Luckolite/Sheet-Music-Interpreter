@@ -149,6 +149,20 @@ final class PrintedDirectionStaff {
 
     static float[] printedRules(
             byte[] gray, int width, int height, float x, float hint, float gap) {
+        if (!FaintDirectionRails.valid(gray, width, height, x, hint, gap)) return null;
+        var strict = strictRules(gray, width, height, x, hint, gap);
+        if (strict != null) return strict;
+        var narrow = FaintDirectionRails.read(gray, width, height, x, hint, gap, 3.5f);
+        var wide = FaintDirectionRails.read(gray, width, height, x, hint, gap, 5.5f);
+        if (narrow != null
+                && wide != null
+                && (Math.abs(narrow[0] - wide[0]) > gap * .2f
+                        || Math.abs(narrow[1] - wide[1]) > gap * .08f)) return null;
+        return narrow != null ? narrow : wide;
+    }
+
+    private static float[] strictRules(
+            byte[] gray, int width, int height, float x, float hint, float gap) {
         int radius = Math.round(gap * 3.5f), center = Math.round(x);
         int left = center - radius, right = center + radius;
         int top = (int) Math.floor(hint - gap * 5.5f), bottom = (int) Math.ceil(hint + gap * 1.5f);

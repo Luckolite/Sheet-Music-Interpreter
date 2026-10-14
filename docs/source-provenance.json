@@ -311,12 +311,13 @@
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
-      "source_sha256": "ebe24d19b345dff3e5d63da25c751caee40eb3e29f2fea9adc7fb8990a283527",
-      "reviewed_app_commit": "1ca510d845890edaed094ff353d09d741fc0f1f0",
-      "source_normalized_sha256": "6919088b16267fbdbcf9c02bb1639b36e6865853bfc9f3c46ca0a105de1f5522",
-      "review_note": "Counted rest eligibility reuses existing note-stage ledger evidence for distant semantic heads wholly outside the parent measure. A verified count and heavy rest bar are required; any plausible staff or printed ledger keeps the note veto. Count glyph pixels are excluded from duplicate subtraction. Eight original procedural controls; no private score fixtures, new dependencies, models or record changes.",
-      "reviewed_source_state": "Committed reviewed source; paired executable tokens checked with existing platform diagnostic adapter preserved.",
-      "scoped_reviewed_app_commit": "1ca510d845890edaed094ff353d09d741fc0f1f0"
+      "source_sha256": "00b699acd48fdaf5863172065f46436d317c4b9ba3018cf55d8c614eafecf70c",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "source_normalized_sha256": "ad9e91a61717a5ea2d914f2187997a703351076b3d35fa9a2f1b8d3cfa6da130",
+      "review_note": "Expose the existing thick horizontal multi-rest proof to shared direction ownership without changing its classification.",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "standalone_sha256": "f5ed3ef902b5ea329a24cf44bd0802450eb7837d10a4c39b1b6fbd4e4fda8868"
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
@@ -355,14 +356,15 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "24600ed409c1ec0e99ca9a1707ed7920f5f7ccd0d62dc0f836bf5a65f9e826be",
-      "source_normalized_sha256": "3c27860cd0a08bcbf7d1c05f1cfd2b4c2d6781d7cec58e243f70230f53d1d122",
-      "review_note": "Invoke a separately proved meter-only courtesy tail before the existing key-tail test. Genuine bars and played ink remain protected. No private score pages, masks, library records, weights or new wire layout are published.",
+      "source_sha256": "3877a7c6df8601d5089074f4ac6e5985360ca71a3cb8f8b0cf1814321a326c79",
+      "source_normalized_sha256": "b65e897b6a498d1de63f13c70d260fe7c4f17eb671ea5eeb63aa002bce6c2a30",
+      "review_note": "Reject internal separators owned by complete quarter rests before region creation. Original blurred Bravura regressions fail before and pass after; real barlines remain covered.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Committed reviewed source; scoped paired Java token/literal or documented OCR adapter parity verified.",
-      "reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "scoped_reviewed_app_commit": "31dd74c98df5fa8228ada2369d386ac64b91aed4",
-      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending."
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
+      "standalone_sha256": "60be240f5fc792e904f6eaf364ff00e667cd894bb6cf5f17b1ad6916bfef971f"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -1297,14 +1299,14 @@
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
-      "source_sha256": "23bf2410f65137d2fa2cd4e2f4631a9f395c057ca8fe4332e42de675e20d58c3",
-      "source_normalized_sha256": "dec824b65a1848682633454989569d5273a92c43d1216e51c243f0b45c38afd0",
-      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
-      "review_note": "Expose the unchanged complete local printed-rule proof to the rest-direction helper; visibility only. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes.",
-      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
+      "source_sha256": "9c55a6b18227f31dc26ec9181bb8579d01b30f0f73aafb1c5d69d34873402c0d",
+      "source_normalized_sha256": "972b7b1d2255b839824014793a7f750f98fffa65d5fdb6e79ddd3dfa307d5350",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Preserve strict local staff proof, then permit independently supported faint five-rail evidence with bounded geometry and agreement across crop widths.",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "a3ce3af4efedcc0a0e59ab0cb3677a619eb0558c41225034ab90c04c61b24c87",
-      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117"
+      "standalone_sha256": "0ed2b52de9d3f694e5b40f525590abb9802dbe315d0b88937a62dc1d12730a46",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56"
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
@@ -1534,13 +1536,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "60105d91b65a4f505ab70c10948b511f597417477e7d441f06b0231bb7f50191",
-      "source_normalized_sha256": "72655891b2e69bfa1129cacb4ad00a61c072d14f4bb2a1f80bd7ef4e79dd8bdb",
-      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "review_note": "Advance paired recognition42 to43; guide285 layout and audio79 remain unchanged.",
-      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "standalone_sha256": "b94802f18d5ec4f46e2fe135c5ba8fc708a5726e0f71a9a632e184f7812fde00",
+      "source_sha256": "301e59fa983b5d3052a3824cfba33565bbd9c8cc5251274f29dc3d0d8755c9b8",
+      "source_normalized_sha256": "18c0883c797d8d2f245d4403d5ca60d34b9084557a18a72e5391f5285d9e5580",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "review_note": "Advance paired recognition43 to44; guide285 layout and audio79 remain unchanged.",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "standalone_sha256": "bb6f708cb3b901ffefbff9408aa903650982d9546ff73fa976233fca6739c6fb",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1598,14 +1600,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "232af34229663f7aca600dd03dee469949d2bb3130cb36b2ef64776d5a18f02c",
-      "source_normalized_sha256": "eb92d634e3d1db4914909677e0c71a91671b117a819935a99366fcf3c5a0134f",
-      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Advance paired writer recognition42 to43 with Android and Hub; record layouts unchanged.",
-      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
+      "source_sha256": "3b44dcaf1200aad8bb5949e2f0d03ffe62d8dd9e0a65c8327f14e64d8b5db9cc",
+      "source_normalized_sha256": "80129e29b84620180466223a152239bf0659f90bf7b450e0bca6bf32cba6b34e",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Advance paired writer recognition43 to44 with Android and Hub; record layouts unchanged.",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "bcb7c87e92664e39043ad972c541aded50b89915be4f56dd754c2fd86a52be42",
+      "standalone_sha256": "8b2f2a037b2d9eeccc6a88bff449bae713bed832e65f624552d70602f6cd7ede",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2558,12 +2560,13 @@
     },
     "PrintedRestDirection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestDirection.java",
-      "source_sha256": "82f1e1dececc8cd8b24c6b15e3c8a4f8d94a31ed37a942c6a28d3a51df1e1077",
-      "source_normalized_sha256": "a47435b14211a21c22eb78109937bae24c9cbff340c0844132da71957a8f047f",
-      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
-      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
-      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
-      "review_note": "Original pure-JDK rest-direction ownership helper. Complete local raw rails, unique silent glyph and staff/measure geometry are required. Exact silent-slot onset is resolved only with usable meter; competing rests or notes retain ambiguity. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes."
+      "source_sha256": "534cbee03d7d8c163e4ca2066d5571e4462292844e23b53538e2ce9bf2ef01da",
+      "source_normalized_sha256": "465275db1376978c20605c395d0eec71ca8c3a54452f63953fa5f49ce18cb9b2",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Use proved expanded multi-rest owners when literal rest ownership is absent; resolve the first logical silent bar to beat zero.",
+      "standalone_sha256": "25111140cf6ba6eb6a9c67cb169e0ce709e5c4b328d15a7c106483104cd1c781"
     },
     "MeterFontMatcher.java": {
       "source_path": "tools/native-worker/NativeMeterFont.java",
@@ -2695,6 +2698,42 @@
       "standalone_sha256": "700be4423bc51ba8d5e1ff4183a46bcec640dc0405401c75f76d4f76f93c87c9",
       "review_note": "Require thin straight crossing ink with independent off-staff support on both flanks, full-span support and a consistent line cluster. Reject curves, competing lines, bands and one-sided support.",
       "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "PrintedMultiRestDirection.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMultiRestDirection.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedMultiRestDirection.java",
+      "license": "Apache-2.0",
+      "source_sha256": "18854d252eae3ec6efc00c89ea2fb9dc55c2fbb1891f8933795632275e1faa03",
+      "source_normalized_sha256": "faa566e953ba6231f7a9a0e494ef1dc6362e0acc2fe4aea5826fb451bb07be95",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "standalone_sha256": "72cdee09408e4776d6de59a38ef15f84d6a2d25f2980eb2c40f1cc2dd48e2dbe",
+      "review_note": "Own leading directions only on silent expanded multi-rest runs with raw bar and complete staff proof. No synthetic rest record or altered guide layout.",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "FaintDirectionRails.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintDirectionRails.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintDirectionRails.java",
+      "license": "Apache-2.0",
+      "source_sha256": "56627d89cdcbcc64dd67c15ceb24383ac54ef80869bb578692760244387ffb03",
+      "source_normalized_sha256": "7600298e534487839a5f4d6cad0afc5253717a2eaca0981782a25dc9ff7d28ae",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "standalone_sha256": "9b73d3ca2f081cb6e1b02737ec58fad362a5a52afe0acb21e5514a61fd2b5ee4",
+      "review_note": "Require all five faint rails, bilateral support, consistent spacing and phase. Wider evidence spans local notation occlusion; malformed geometry fails closed.",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "PrintedQuarterRestBoundary.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedQuarterRestBoundary.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedQuarterRestBoundary.java",
+      "license": "Apache-2.0",
+      "source_sha256": "dd09ac48c1e9b646da59da38303f7265f73ac36ab88d99b6f41a1c11c9ce6430",
+      "source_normalized_sha256": "165226658905c61dbf09764437be9a1f9012d3a54fa9c4dc70a2cd8ab36afb4f",
+      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
+      "standalone_sha256": "b9463e226c3f4b1f47f4e123856bc40c3e36c97aeb9538119720d03d48309c66",
+      "review_note": "Veto an internal boundary only when existing quarter-rest classification agrees on a complete contour across two crop widths. No title-specific rules or private crops.",
+      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending."
     }
   },
   "interpreter_speedup_review": {

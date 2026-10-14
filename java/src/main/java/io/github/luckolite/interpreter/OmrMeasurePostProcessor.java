@@ -1202,6 +1202,15 @@ final class OmrMeasurePostProcessor {
         for (int candidate : candidates) {
             if (candidate - boundaries.get(boundaries.size() - 1) < minimumGap) continue;
             if (right - candidate < minimumGap) continue;
+            if (gray != null) {
+                float[] local = track == null ? null : track.at(candidate);
+                float shift = slope * (candidate - width / 2f);
+                float localGap = local == null ? gap : local[1];
+                float localBottom = local == null ? seedRows[4] + shift : local[0];
+                float localTop = local == null ? seedRows[0] + shift : localBottom - localGap * 4;
+                if (PrintedQuarterRestBoundary.owns(
+                        gray, width, height, candidate, localTop, localBottom, localGap)) continue;
+            }
             boundaries.add(candidate);
         }
         boundaries.add(right);

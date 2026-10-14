@@ -1012,8 +1012,7 @@ final class MultiMeasureRestDetector {
     }
 
     /** Staff lines are long but thin. A multi-rest's centered bar stays dark for several rows. */
-    private static boolean hasThickHorizontalBar(
-            byte[] gray, int width, int height, MeasureRegion region) {
+    static boolean hasThickHorizontalBar(byte[] gray, int width, int height, MeasureRegion region) {
         int left = clamp(Math.round(region.left() * width), 0, width - 1);
         int right = clamp(Math.round(region.right() * width), left, width - 1);
         int top = clamp(Math.round(region.top() * height), 0, height - 1);
