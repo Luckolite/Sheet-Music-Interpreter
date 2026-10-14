@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition49 adds original printed repeat/ending recognition with paired-dot,
+five-rule, barline and connected-bracket evidence. Complete local groups preserve
+pass selectors and source evidence, including alternate backward edges and nested
+repeats. Whole OCR selector lines survive platform filtering. Implicit starts and
+cross-page ownership remain explicitly unresolved. Guide286/NAV1 layout is unchanged;
+audio82 invalidates changed performance routes. Original synthetic regressions
+contain no private score material. Final whole-library, packaged app/Hub/worker,
+deployment and runtime acceptance remain pending.
+
 Recognition48 preserves independently proved staff extents when a regional frame
 would otherwise omit printed material. Whole-rest recognition uses local printed
 rule evidence and attached partial raster edges while preserving multiple plates.

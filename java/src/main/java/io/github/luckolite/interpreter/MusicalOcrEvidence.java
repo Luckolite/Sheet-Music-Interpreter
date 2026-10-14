@@ -48,6 +48,21 @@ final class MusicalOcrEvidence {
                 if (NEGATED_DIRECTION
                         .matcher(line.getText().toLowerCase(java.util.Locale.ROOT))
                         .matches()) continue;
+                // Ending selectors must retain the complete OCR line; bracket ink establishes
+                // ownership.
+                if (!PrintedEndingBrackets.passes(line.getText()).isEmpty()) {
+                    var box = line.getBoundingBox();
+                    if (box != null) {
+                        words.add(
+                                new PlayingTechniqueDetector.Word(
+                                        line.getText(),
+                                        box.left / scale / width,
+                                        (top + box.top / scale) / height,
+                                        box.right / scale / width,
+                                        (top + box.bottom / scale) / height));
+                        continue;
+                    }
+                }
                 if (ScoreNavigationDetector.kind(line.getText()) != null) {
                     var box = line.getBoundingBox();
                     if (box != null)

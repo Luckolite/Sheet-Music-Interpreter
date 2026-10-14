@@ -339,6 +339,9 @@ public final class SheetInterpreter {
                         width,
                         height);
         finalInterpretation =
+                PrintedRepeatNavigation.apply(
+                        finalInterpretation, words, staffs, gray, width, height, physicalPage);
+        finalInterpretation =
                 finalInterpretation.withOpeningPickup(
                         firstMeasureNumber <= 1
                                 && MeasureNumberReconciler.provesOpeningPickup(

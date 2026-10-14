@@ -144,6 +144,12 @@ local staff alignment and partial rule edges. Regional staff recovery preserves
 proved opening extents, and narrow articulation carets are distinguished from
 rounded fermata roofs. These checks do not establish whole-score accuracy.
 
+Printed repeat bars require paired dots, five staff rails and ordered barline
+ink. Alternate endings require a connected bracket and explicit pass selectors.
+Complete local groups support combined selectors, multiple backward ending edges
+and nested repeats; source evidence survives. Implicit starts and cross-page
+ownership remain unresolved rather than receiving guessed navigation.
+
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`
