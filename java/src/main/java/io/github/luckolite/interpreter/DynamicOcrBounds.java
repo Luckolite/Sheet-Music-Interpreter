@@ -60,8 +60,21 @@ final class DynamicOcrBounds {
                 }
             }
             if (Float.isFinite(gap)
-                    && continuingStem(gray, width, height, minX, maxX, top, bottom, gap, threshold))
+                    && continuingStem(
+                            gray, width, height, minX, maxX, top, bottom, gap, threshold)) {
+                int detached =
+                        detachedTextTop(gray, width, left, right, top, bottom, gap, threshold);
+                if (detached <= top) continue;
+                var lower =
+                        new PlayingTechniqueDetector.Word(
+                                word.text(),
+                                word.left(),
+                                detached / (float) height,
+                                word.right(),
+                                word.bottom());
+                result.addAll(clean(List.of(lower), gray, width, height, staffs));
                 continue;
+            }
             result.add(
                     new PlayingTechniqueDetector.Word(
                             word.text(),
@@ -94,5 +107,33 @@ final class DynamicOcrBounds {
                 if (hits >= (span + 2) * .90f) return true;
             }
         return false;
+    }
+
+    /** A shallow clipped notation edge may be separated from all text by a full blank band. */
+    private static int detachedTextTop(
+            byte[] gray,
+            int width,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            float gap,
+            int threshold) {
+        int limit = top + Math.min(Math.round(gap * .75f), (bottom - top) / 4);
+        int required = Math.max(2, Math.round(gap * .15f)), blank = 0;
+        boolean priorInk = false;
+        for (int y = top; y < Math.min(bottom, limit); y++) {
+            boolean ink = false;
+            for (int x = left; x < right; x++)
+                if ((gray[y * width + x] & 255) < threshold) {
+                    ink = true;
+                    break;
+                }
+            if (ink) {
+                priorInk = true;
+                blank = 0;
+            } else if (priorInk && ++blank >= required) return y + 1;
+        }
+        return top;
     }
 }

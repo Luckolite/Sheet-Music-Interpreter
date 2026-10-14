@@ -157,6 +157,15 @@ staff refinement can trim verified blank margins without changing OCR conflict
 handling or source pixels. These recognition fixes do not establish whole-score
 accuracy or replace document-level timing and runtime validation.
 
+
+Recognize complete leading dynamic levels with known delivery qualifiers, and
+retain detached text below shallow clipped notation only after a complete blank
+band and a repeated stem check. Preserve source words and pixels. Printed barline
+recovery accounts for verified thick staff rules while testing for stems beyond
+the rule band. Recognition51/audio84 invalidate earlier derived interpretations;
+guide286 record layout remains unchanged. Original synthetic regressions and
+source checks do not establish whole-library accuracy or packaged runtime behavior.
+
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`

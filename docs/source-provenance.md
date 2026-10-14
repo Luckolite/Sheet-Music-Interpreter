@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition51 preserves complete-rest boundaries across verified thick staff rules,
+parses full dynamic markings with known delivery qualifiers, and excludes shallow
+detached notation above dynamic text while retaining connected-stem rejection.
+The259original synthetic scenarios contain no private score material. Guide286
+layout is unchanged; audio84 invalidates stale previews. Source tests and retained
+page comparisons do not establish complete native OCR, whole-library accuracy,
+packaged app/Hub/worker deployment or runtime acceptance.
+
 Recognition50 adds verified small courtesy-signature removal, offset printed
 triplet search and blank-margin correction after bilateral meter staff proof.
 Independent glyph/beam ownership remains required; nearby rest ink is preserved.
@@ -1902,3 +1910,7 @@ remain musical text even when the first staff was missed. Forty-four original
 synthetic controls cover these rules and nearby contributor counterexamples.
 Reviewed app commit `5f0725a35a127f2d85a646d7466db2661da10f6b`; no scanner, model, dependency or wire changes.
 Saved replay and source checks do not establish Android or whole-library runtime accuracy.
+
+## Title ownership and framed artwork
+
+Stacked titles, repeated cover headings, medley labels and explicitly sourced work captions stay out of contributor credits. Small staff-local trill fragments require notation geometry. Single-page framed artwork keeps its imported title while preserving explicit printed credits; both scanner return paths apply the same evidence. The pure-Java image helper is included here. Sixty-one original controls accompany app commit `458a5970892cf497b2e259abafe19847c27a5106`. No private scores, models or wire changes are included. Source checks and saved replay do not establish current whole-library Android accuracy or paired deployment.

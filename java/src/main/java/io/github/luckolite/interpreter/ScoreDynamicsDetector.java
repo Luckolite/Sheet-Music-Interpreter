@@ -243,6 +243,11 @@ final class ScoreDynamicsDetector {
                 token.replaceFirst(
                         "^(ppp|pp|p|mp|mf|fff|ff|f)\\s+sotto(?:\\s+voce)?(?:\\s+e\\s+(?:dolce|cantabile|espressivo|lacrimoso))?$",
                         "$1");
+        // A complete known delivery instruction may share an OCR box with its leading level.
+        token =
+                token.replaceFirst(
+                        "^(ppp|pp|p|mp|mf|fff|ff|f)\\s*(?:animato|scherzando|furioso|legato|espressivo|dolce|cantabile|marcato|sostenuto|tranquillo|agitato)$",
+                        "$1");
         return switch (token) {
             case "ppp" -> -18;
             case "pp" -> -12;

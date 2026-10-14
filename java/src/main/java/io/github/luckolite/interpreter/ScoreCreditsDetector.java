@@ -3726,6 +3726,41 @@ public final class ScoreCreditsDetector {
         return value;
     }
 
+    /** Pixel-confirmed, single-page letterboxed artwork has no inferred song-title evidence. */
+    public static Result detect(
+            String titleHint,
+            List<Page> pages,
+            Set<String> knownNames,
+            boolean letterboxedArtwork) {
+        if (!letterboxedArtwork
+                || pages.size() != 1
+                || pages.get(0).notationTop >= 0
+                || pages.get(0).creditsOnly
+                || clean(titleHint).isEmpty()) return detect(titleHint, pages, knownNames);
+        Page page = pages.get(0);
+        // Explicit bibliographic labels still belong to the document; branding and captions do not.
+        List<Line> credits =
+                page.lines.stream().filter(l -> credit(clean(l.text)) != null).toList();
+        Result roles =
+                detect(
+                        titleHint,
+                        List.of(new Page(page.width, page.height, -1, credits, false, false)),
+                        knownNames);
+        List<String> labelledTitles =
+                page.lines.stream()
+                        .map(l -> clean(l.text))
+                        .filter(t -> t.matches("(?iu)^title\\h*:\\h*\\S.*"))
+                        .map(t -> t.replaceFirst("(?iu)^title\\h*:\\h*", ""))
+                        .distinct()
+                        .toList();
+        return new Result(
+                labelledTitles.size() == 1 ? labelledTitles.get(0) : titleHint,
+                roles.artist,
+                roles.composer,
+                roles.arranger,
+                roles.unclassifiedCredits);
+    }
+
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
         String fallback = clean(titleHint);
         String isolatedPhotoName = isolatedPhotographicHeading(fallback, pages);
@@ -4273,6 +4308,85 @@ public final class ScoreCreditsDetector {
         }
 
         String finalTitle = title.isEmpty() ? fallback : title;
+        other.removeIf(
+                value ->
+                        repeatedLargeTitleFragment(value, pages, finalTitle)
+                                && !knownNames.stream().anyMatch(n -> same(n, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e -> e.names.stream().anyMatch(n -> same(n, value)))
+                                && pages.stream()
+                                        .noneMatch(
+                                                p ->
+                                                        p.reviewCredits.stream()
+                                                                .anyMatch(
+                                                                        r ->
+                                                                                same(
+                                                                                        r.value,
+                                                                                        value))));
+
+        other.removeIf(
+                value ->
+                        staffTrillFragment(value, pages)
+                                && !knownNames.stream().anyMatch(n -> same(n, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e -> e.names.stream().anyMatch(n -> same(n, value)))
+                                && pages.stream()
+                                        .noneMatch(
+                                                p ->
+                                                        p.reviewCredits.stream()
+                                                                .anyMatch(
+                                                                        r ->
+                                                                                same(
+                                                                                        r.value,
+                                                                                        value))));
+
+        other.removeIf(
+                value ->
+                        confirmedSourceWorkCaption(value, pages)
+                                && !knownNames.stream().anyMatch(n -> same(n, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e -> e.names.stream().anyMatch(n -> same(n, value)))
+                                && pages.stream()
+                                        .noneMatch(
+                                                p ->
+                                                        p.reviewCredits.stream()
+                                                                .anyMatch(
+                                                                        r ->
+                                                                                same(
+                                                                                        r.value,
+                                                                                        value))));
+
+        other.removeIf(
+                value ->
+                        !knownNames.stream().anyMatch(n -> same(n, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e -> e.names.stream().anyMatch(n -> same(n, value)))
+                                && pages.stream()
+                                        .noneMatch(
+                                                p ->
+                                                        p.reviewCredits.stream()
+                                                                .anyMatch(
+                                                                        r -> same(r.value, value)))
+                                && pages.stream()
+                                        .anyMatch(
+                                                p ->
+                                                        p.lines.stream()
+                                                                .anyMatch(
+                                                                        l ->
+                                                                                same(l.text, value)
+                                                                                        && (stackedCoverTitleFragment(
+                                                                                                        p,
+                                                                                                        l,
+                                                                                                        finalTitle)
+                                                                                                || repeatedMedleyWorkLabel(
+                                                                                                        p,
+                                                                                                        l,
+                                                                                                        finalTitle)))));
+
         other.removeIf(
                 value ->
                         value.matches("[A-Z]{8,}")
@@ -6542,6 +6656,147 @@ public final class ScoreCreditsDetector {
                                         && Math.abs(line.center() - other.center())
                                                 < Math.max(line.height(), other.height()) * 2
                                         && notationReviewLabel(page, other));
+    }
+
+    private static boolean stackedCoverTitleFragment(Page page, Line line, String title) {
+        if (page.notationTop > 0 || page.creditsOnly || line.height() < page.width * .08f)
+            return false;
+        List<Line> stack =
+                page.lines.stream()
+                        .filter(
+                                l ->
+                                        l.height() >= page.width * .08f
+                                                && clean(l.text)
+                                                        .matches("[\\p{Lu}0-9][\\p{Lu}0-9 ’'!?-]*")
+                                                && credit(l.text) == null
+                                                && Math.abs(l.left - line.left) < page.width * .04f)
+                        .sorted(Comparator.comparingDouble(Line::top))
+                        .toList();
+        if (stack.size() < 2 || stack.size() > 6 || !stack.contains(line)) return false;
+        for (int i = 1; i < stack.size(); i++)
+            if (stack.get(i).top < stack.get(i - 1).bottom) return false;
+        String joined = String.join(" ", stack.stream().map(l -> clean(l.text)).toList());
+        String core = clean(title).split("\\h+[-–—]\\h+", 2)[0];
+        return same(joined, core);
+    }
+
+    private static boolean repeatedMedleyWorkLabel(Page page, Line line, String title) {
+        String text = clean(line.text);
+        if (!clean(title).matches("(?iu).*\\h+medley$")
+                || page.photographicCover
+                || page.creditsOnly
+                || page.notationTop <= 0
+                || line.left > page.width * .4f
+                || line.bottom > page.notationTop
+                || page.notationTop - line.bottom > page.height * .06f
+                || line.height() > page.width * .025f
+                || !text.matches("THE\\h+\\p{Lu}.+(?:\\h+\\p{Lu}.+){1,}")) return false;
+        String work = text.replaceFirst("^THE\\h+", "");
+        String heading =
+                clean(title).replaceFirst("(?iu)^the\\h+", "").replaceFirst("(?iu)\\h+medley$", "");
+        return !same(heading, title) && same(work, heading);
+    }
+
+    private static boolean repeatedLargeTitleFragment(
+            String value, List<Page> pages, String title) {
+        if (!value.matches("[A-Z]{4,12}")) return false;
+        String[] words = clean(title).split("\\h+");
+        if (words.length < 2) return false;
+        String suffix = words[words.length - 1],
+                prefix = String.join(" ", Arrays.copyOf(words, words.length - 1));
+        if (same(value, suffix) || editDistance(fold(value), fold(suffix)) != 1) return false;
+        for (Page p : pages) {
+            if (p.notationTop > 0 || p.creditsOnly) continue;
+            for (Line l : p.lines) {
+                if (!l.text.equals(value)
+                        || l.height() < p.width * .05f
+                        || l.bottom > p.height * .25f) continue;
+                boolean prefixHere =
+                        p.lines.stream()
+                                .anyMatch(
+                                        h ->
+                                                h != l
+                                                        && h.height() >= p.width * .08f
+                                                        && h.top < l.top
+                                                        && Math.abs(h.bottom - l.top)
+                                                                < p.height * .04f
+                                                        && Math.abs(h.center() - l.center())
+                                                                < p.width * .05f
+                                                        && editDistance(fold(h.text), fold(prefix))
+                                                                <= 2);
+                if (!prefixHere) continue;
+                for (Page q : pages) {
+                    if (q == p || q.notationTop > 0 || q.creditsOnly) continue;
+                    for (Line r : q.lines) {
+                        if (!same(r.text, suffix)
+                                || r.height() < q.width * .05f
+                                || Math.abs(l.center() / p.width - r.center() / q.width) > .03f
+                                || Math.abs(l.top / p.height - r.top / q.height) > .03f) continue;
+                        if (q.lines.stream()
+                                .anyMatch(
+                                        h ->
+                                                h != r
+                                                        && same(h.text, prefix)
+                                                        && h.height() >= q.width * .08f
+                                                        && h.top < r.top
+                                                        && Math.abs(h.bottom - r.top)
+                                                                < q.height * .04f
+                                                        && Math.abs(h.center() - r.center())
+                                                                < q.width * .05f)) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean staffTrillFragment(String value, List<Page> pages) {
+        if (!value.matches("tr[mnw~]{0,4}")) return false;
+        return pages.stream()
+                .anyMatch(
+                        p ->
+                                !p.photographicCover
+                                        && !p.creditsOnly
+                                        && p.notationTop > 0
+                                        && p.lines.stream()
+                                                .anyMatch(
+                                                        l ->
+                                                                l.text.equals(value)
+                                                                        && l.top <= p.notationTop
+                                                                        && l.bottom >= p.notationTop
+                                                                        && l.bottom - l.top
+                                                                                <= p.width * .012f
+                                                                        && l.right - l.left
+                                                                                <= p.width * .06f));
+    }
+
+    private static boolean confirmedSourceWorkCaption(String value, List<Page> pages) {
+        String caption = clean(value);
+        if (!caption.matches("\\p{Lu}[\\p{Lu} ’'!-]+\\h+\\p{Lu}[\\p{Lu} ’'!-]+")) return false;
+        for (Page page : pages) {
+            if (page.photographicCover || page.notationTop <= 0) continue;
+            for (Line source : page.lines) {
+                String text = clean(source.text);
+                if (source.bottom >= page.notationTop
+                        || source.bottom > page.height * .3f
+                        || !text.matches("from\\h+\\p{Lu}[\\p{Lu} ’'!-]+\\h+\\p{Lu}[\\p{Lu} ’'!-]+")
+                        || !same(caption, text.substring(5))) continue;
+                boolean independentComposer =
+                        page.lines.stream()
+                                .anyMatch(
+                                        l -> {
+                                            Credit c = credit(clean(l.text));
+                                            return c != null
+                                                    && c.role == Role.COMPOSER
+                                                    && !same(c.value, caption)
+                                                    && l.top >= source.bottom
+                                                    && l.bottom < page.notationTop
+                                                    && l.top - source.bottom < page.height * .06f;
+                                        });
+                if (independentComposer) return true;
+            }
+        }
+        return false;
     }
 
     private static boolean layoutReviewCaption(

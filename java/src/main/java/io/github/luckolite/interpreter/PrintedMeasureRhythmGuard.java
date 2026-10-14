@@ -388,7 +388,9 @@ final class PrintedMeasureRhythmGuard {
                 int a = top + staff.top(), b = top + staff.bottom(), ink = 0;
                 for (int y = a; y <= b; y++) if ((gray[y * width + x] & 255) < 180) ink++;
                 if (ink < (b - a + 1) * .95f) continue;
-                int clearance = Math.max(2, Math.round(staff.gap() * .3f));
+                int clearance =
+                        Math.max(2, Math.round(staff.gap() * .3f))
+                                + Math.max(1, Math.round(staff.gap() * .22f));
                 boolean clean = true;
                 for (int edge : new int[] {a, b})
                     for (int dy = -clearance; dy <= clearance; dy++) {
@@ -397,6 +399,8 @@ final class PrintedMeasureRhythmGuard {
                             clean = false;
                             continue;
                         }
+                        if (verifiedRuleBand(gray, width, height, x, edge, y, staff.gap()))
+                            continue;
                         if ((edge == a && dy < -1) || (edge == b && dy > 1))
                             if ((gray[y * width + x] & 255) < 180) clean = false;
                         // Ignore the printed rule itself; a head spreads laterally off that rule.
@@ -427,5 +431,24 @@ final class PrintedMeasureRhythmGuard {
             if (supported >= 2) return true;
         }
         return false;
+    }
+
+    /** Ignore only the connected rule band independently visible on both sides of the separator. */
+    private static boolean verifiedRuleBand(
+            byte[] gray, int width, int height, int x, int edge, int y, float gap) {
+        if (Math.abs(y - edge) > Math.max(1, Math.round(gap * .22f))) return false;
+        int near = Math.max(3, Math.round(gap * .8f));
+        int far = Math.max(near + 3, Math.round(gap * 2.3f));
+        if (x - far < 0 || x + far >= width) return false;
+        for (int row = Math.min(edge, y); row <= Math.max(edge, y); row++) {
+            if (row < 0 || row >= height) return false;
+            for (int side : new int[] {-1, 1}) {
+                int ink = 0;
+                for (int dx = near; dx <= far; dx++)
+                    if ((gray[row * width + x + side * dx] & 255) < 180) ink++;
+                if (ink < (far - near + 1) * .85f) return false;
+            }
+        }
+        return true;
     }
 }
