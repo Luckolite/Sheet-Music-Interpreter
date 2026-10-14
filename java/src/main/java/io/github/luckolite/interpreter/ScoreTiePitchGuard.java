@@ -45,7 +45,8 @@ final class ScoreTiePitchGuard {
                 score.dynamicChanges(),
                 score.playbackDirections(),
                 score.expressiveEvents(),
-                score.slurSource());
+                score.slurSource(),
+                score.openingPickup());
     }
 
     private static List<ScoreNoteEvent> apply(

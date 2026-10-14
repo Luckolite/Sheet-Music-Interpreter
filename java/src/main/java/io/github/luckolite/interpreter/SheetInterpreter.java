@@ -338,6 +338,11 @@ public final class SheetInterpreter {
                         tabSourceGray,
                         width,
                         height);
+        finalInterpretation =
+                finalInterpretation.withOpeningPickup(
+                        firstMeasureNumber <= 1
+                                && MeasureNumberReconciler.provesOpeningPickup(
+                                        finalInterpretation.measures(), numbers));
         if (physicalPage >= 0)
             try {
                 var captured =

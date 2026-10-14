@@ -148,13 +148,7 @@ public final class Main {
                         .toList())
             Arrays.fill(beats, change.measureIndex(), beats.length, change.quarterBeats());
         if (beats.length > 0) {
-            double pickup =
-                    ScoreOpeningDuration.provedQuarterBeats(
-                            score.notes(),
-                            score.rests(),
-                            score.measures(),
-                            beats[0],
-                            score.firstMeasureNumber());
+            double pickup = ScoreOpeningDuration.provedQuarterBeats(score, beats[0]);
             if (Double.isFinite(pickup)) beats[0] = (float) pickup;
             double closing =
                     ScoreOpeningDuration.provedClosingQuarterBeats(

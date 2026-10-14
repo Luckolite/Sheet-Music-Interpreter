@@ -279,6 +279,35 @@ final class OmrMeasurePostProcessor {
                 lastPrinted = Math.max(lastPrinted, center);
             }
         }
+        var unsupportedInterior = new ArrayList<StaffRun>();
+        for (StaffRun staff : result) {
+            if (staff.track != null) continue;
+            StaffRun above = null, below = null;
+            for (StaffRun witness : result) {
+                if (!admission.get(witness).printed()) continue;
+                if (witness.bottom < staff.top && (above == null || witness.bottom > above.bottom))
+                    above = witness;
+                if (witness.top > staff.bottom && (below == null || witness.top < below.top))
+                    below = witness;
+            }
+            if (above == null || below == null) continue;
+            if (InteriorStaffScaleEvidence.unsupported(
+                            gray,
+                            width,
+                            height,
+                            staff.left,
+                            staff.right,
+                            staff.gap,
+                            (line, x) ->
+                                    staff.top + line * staff.gap + staff.slope * (x - width * .5f),
+                            admission.get(staff),
+                            above.gap,
+                            below.gap)
+                    && StaffPitchTrack.detectForMeasures(
+                                    gray, width, height, staff.top, staff.bottom, staff.gap)
+                            == null) unsupportedInterior.add(staff);
+        }
+        result.removeAll(unsupportedInterior);
         final float first = firstPrinted, last = lastPrinted;
         result.removeIf(
                 staff ->

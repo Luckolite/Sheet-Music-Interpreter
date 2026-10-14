@@ -17,7 +17,55 @@ public record ScorePageInterpretation(
         List<ScoreDynamicChange> dynamicChanges,
         List<ScorePlaybackDirection> playbackDirections,
         List<ScoreExpressiveEvent> expressiveEvents,
-        ScoreSlurSource slurSource) {
+        ScoreSlurSource slurSource,
+        boolean openingPickup) {
+    /** Legacy callers do not carry independent opening-number proof. */
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int first,
+            List<ScoreKeyChange> keys,
+            List<ScoreTempoChange> tempos,
+            List<ScoreMeterChange> meters,
+            List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniques,
+            List<ScoreDynamicChange> dynamics,
+            List<ScorePlaybackDirection> directions,
+            List<ScoreExpressiveEvent> expressions,
+            ScoreSlurSource slurs) {
+        this(
+                measures,
+                notes,
+                first,
+                keys,
+                tempos,
+                meters,
+                rests,
+                techniques,
+                dynamics,
+                directions,
+                expressions,
+                slurs,
+                false);
+    }
+
+    public ScorePageInterpretation withOpeningPickup(boolean proof) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                proof);
+    }
+
     public ScorePageInterpretation(
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes,
@@ -58,7 +106,8 @@ public record ScorePageInterpretation(
                 dynamicChanges,
                 playbackDirections,
                 expressiveEvents,
-                source);
+                source,
+                openingPickup);
     }
 
     /** Explicit source owners preserve original printed endpoints through a note edit. */
@@ -78,7 +127,8 @@ public record ScorePageInterpretation(
                 dynamicChanges,
                 playbackDirections,
                 expressiveEvents,
-                slurSource.edited(sourceOwners));
+                slurSource.edited(sourceOwners),
+                openingPickup);
     }
 
     public ScorePageInterpretation(
@@ -132,7 +182,8 @@ public record ScorePageInterpretation(
                 dynamicChanges,
                 directions,
                 expressiveEvents,
-                slurSource);
+                slurSource,
+                openingPickup);
     }
 
     public ScorePageInterpretation withExpressiveEvents(List<ScoreExpressiveEvent> events) {
@@ -148,7 +199,8 @@ public record ScorePageInterpretation(
                 dynamicChanges,
                 playbackDirections,
                 events,
-                slurSource);
+                slurSource,
+                openingPickup);
     }
 
     public ScorePageInterpretation(
@@ -209,6 +261,8 @@ public record ScorePageInterpretation(
         if (slurSource.noteOrigins().size() != notes.size())
             throw new IllegalArgumentException("Slur identities do not match retained score notes");
         firstMeasureNumber = Math.max(0, firstMeasureNumber);
+        if (openingPickup && (firstMeasureNumber > 1 || measures.isEmpty()))
+            throw new IllegalArgumentException("Pickup proof conflicts with source opening");
         keyChanges = keyChanges == null ? List.of() : List.copyOf(keyChanges);
         tempoChanges = tempoChanges == null ? List.of() : List.copyOf(tempoChanges);
         meterChanges = meterChanges == null ? List.of() : List.copyOf(meterChanges);

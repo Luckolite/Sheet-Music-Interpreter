@@ -30,10 +30,20 @@ final class MeterCropStaff {
         float bottom = a == null ? b[0] : b == null ? a[0] : (a[0] + b[0]) * .5f;
         float gap = a == null ? b[1] : b == null ? a[1] : (a[1] + b[1]) * .5f;
         int first = Math.round(bottom - 4 * gap);
-        if (Math.abs(first - c.firstLine()) > c.gap() * .35f
+        // Two agreeing five-rule witnesses can prove that the existing crop clips an
+        // outer staff rule. Keep the crop pixels fixed and correct only its phase.
+        float last = first + 4 * gap;
+        boolean clipped =
+                a != null
+                        && b != null
+                        && ((first < c.top() && c.top() - first <= c.gap() * .25f)
+                                || (last >= c.bottom() && last - c.bottom() <= c.gap() * .25f));
+        if (Math.abs(first - c.firstLine()) > c.gap() * (clipped ? .5f : .35f)
                 || Math.abs(gap - c.gap()) > c.gap() * .12f
-                || first < c.top()
-                || first + 4 * gap >= c.bottom()) return c;
+                || first < 0
+                || last >= h
+                || first < c.top() - (clipped ? c.gap() * .25f : 0)
+                || last >= c.bottom() + (clipped ? c.gap() * .25f : 0)) return c;
         return new MeterChangeDetector.Crop(c.left(), c.top(), c.right(), c.bottom(), first, gap);
     }
 }

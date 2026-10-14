@@ -279,17 +279,21 @@ public final class ScoreNavigationProjection {
         // Directions have already been consumed: projecting this result cannot repeat the route
         // again.
         return new ScorePageInterpretation(
-                measures,
-                notes,
-                source.firstMeasureNumber(),
-                keys,
-                tempos,
-                meters,
-                rests,
-                techniques,
-                dynamics,
-                List.of(),
-                expressions);
+                        measures,
+                        notes,
+                        source.firstMeasureNumber(),
+                        keys,
+                        tempos,
+                        meters,
+                        rests,
+                        techniques,
+                        dynamics,
+                        List.of(),
+                        expressions)
+                .withOpeningPickup(
+                        source.openingPickup()
+                                && plan.measureCount() > 0
+                                && plan.sourceMeasure(0) == 0);
     }
 
     private static boolean inside(int measure, Run run) {

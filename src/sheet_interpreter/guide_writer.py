@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 46
-GUIDE_VERSION = 285
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285)
+RECOGNITION_REVISION = 47
+GUIDE_VERSION = 286
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -187,6 +187,15 @@ def encode(score, guide_version=GUIDE_VERSION):
         from . import slur_wire
         if not slur_wire.is_empty_source(score["slurSource"], len(score["notes"])):
             raise ValueError("Legacy guide format cannot preserve retained slur source")
+    pickup = score.get("openingPickup", False)
+    if type(pickup) is not bool:
+        raise ValueError("Invalid opening pickup flag")
+    if pickup and (not measures or score["firstMeasureNumber"] > 1):
+        raise ValueError("Opening pickup conflicts with source geometry or numbering")
+    if guide_version >= 286:
+        _pack(output, "B", int(pickup))
+    elif pickup:
+        raise ValueError("Legacy guide format cannot preserve opening pickup proof")
     if output.tell() > MAX_GUIDE_BYTES:
         raise ValueError("Guide exceeds cache limit")
     return output.getvalue()

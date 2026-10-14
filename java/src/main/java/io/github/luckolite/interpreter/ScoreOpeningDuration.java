@@ -11,6 +11,63 @@ public final class ScoreOpeningDuration {
 
     private ScoreOpeningDuration() {}
 
+    /** All source consumers share the same independently proved opening clock. */
+    public static double provedQuarterBeats(ScorePageInterpretation source, float nominal) {
+        if (source == null) return Double.NaN;
+        double silent =
+                provedNumberedSilentPickup(
+                        source.notes(), source.rests(), nominal, source.openingPickup());
+        return Double.isFinite(silent)
+                ? silent
+                : provedQuarterBeats(
+                        source.notes(),
+                        source.rests(),
+                        source.measures(),
+                        nominal,
+                        source.firstMeasureNumber());
+    }
+
+    /** Silent pickups require independent numbering proof and explicit rests on every staff. */
+    public static double provedNumberedSilentPickup(
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> rests,
+            float nominal,
+            boolean numberedPickup) {
+        if (!numberedPickup
+                || notes == null
+                || rests == null
+                || !Float.isFinite(nominal)
+                || nominal <= 0
+                || notes.stream().anyMatch(n -> n != null && n.measureIndex() == 0))
+            return Double.NaN;
+        List<ScoreRestEvent> opening =
+                rests.stream().filter(r -> r != null && r.measureIndex() == 0).toList();
+        if (opening.isEmpty()) return Double.NaN;
+        int count = opening.get(0).staffCount();
+        if (count < 1 || count > 16) return Double.NaN;
+        double[] durations = new double[count];
+        boolean[] present = new boolean[count];
+        for (ScoreRestEvent rest : opening) {
+            if (rest.staffCount() != count
+                    || rest.staffIndex() < 0
+                    || rest.staffIndex() >= count
+                    || rest.isFullMeasure()
+                    || !Float.isFinite(rest.positionInMeasure())
+                    || rest.positionInMeasure() < 0
+                    || rest.positionInMeasure() > 1
+                    || !Double.isFinite(rest.durationBeats())
+                    || rest.durationBeats() <= 0) return Double.NaN;
+            // Multiple rests can represent voices or duplicates: leave ambiguous lanes alone.
+            if (present[rest.staffIndex()]) return Double.NaN;
+            present[rest.staffIndex()] = true;
+            durations[rest.staffIndex()] = rest.durationBeats();
+        }
+        double span = durations[0];
+        for (int staff = 0; staff < count; staff++)
+            if (!present[staff] || Math.abs(durations[staff] - span) > .001) return Double.NaN;
+        return span >= .125 && span < nominal - .001 ? span : Double.NaN;
+    }
+
     /** Returns NaN unless a short layout and every printed staff agree on explicit contents. */
     public static double provedQuarterBeats(
             List<ScoreNoteEvent> notes,

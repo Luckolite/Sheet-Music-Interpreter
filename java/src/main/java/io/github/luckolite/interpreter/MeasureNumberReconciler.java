@@ -194,6 +194,23 @@ final class MeasureNumberReconciler {
      * arrangements that restart at measure 1 without appending another full song to playback.
      * A later trusted row can establish the start even when measure 1 itself is not printed.
      */
+    /** Requires independent printed system numbers to agree on an unnumbered pickup. */
+    static boolean provesOpeningPickup(List<MeasureRegion> reconciled, List<NumberToken> tokens) {
+        List<Row> layout = rows(reconciled == null ? List.of() : reconciled);
+        List<NumberToken> anchors = trustedAnchors(tokens == null ? List.of() : tokens, layout);
+        if (anchors.size() < 2) return false;
+        assignAnchors(layout, anchors);
+        int preceding = 0, support = 0;
+        for (Row row : layout) {
+            if (row.anchor != null) {
+                if (row.anchor.value != preceding) return false;
+                support++;
+            }
+            preceding += row.measures.size();
+        }
+        return support >= 2;
+    }
+
     static int firstMeasureNumber(List<MeasureRegion> reconciled, List<NumberToken> tokens) {
         List<Row> layout = rows(reconciled == null ? List.of() : reconciled);
         List<NumberToken> anchors = trustedAnchors(tokens == null ? List.of() : tokens, layout);

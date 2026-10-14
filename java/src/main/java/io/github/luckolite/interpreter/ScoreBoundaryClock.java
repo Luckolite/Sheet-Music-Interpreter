@@ -34,13 +34,7 @@ public record ScoreBoundaryClock(double openingQuarterBeats, double closingQuart
         int count = source.measures().size();
         if (count == 0) return legacy();
         var nominal = new ScoreMeterMap(openingNominal, source.meterChanges());
-        double opening =
-                ScoreOpeningDuration.provedQuarterBeats(
-                        source.notes(),
-                        source.rests(),
-                        source.measures(),
-                        nominal.beatsInMeasure(0),
-                        source.firstMeasureNumber());
+        double opening = ScoreOpeningDuration.provedQuarterBeats(source, nominal.beatsInMeasure(0));
         double closing =
                 ScoreOpeningDuration.provedClosingQuarterBeats(
                         source.notes(), source.rests(), count, nominal.beatsInMeasure(count - 1));

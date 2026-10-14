@@ -22,6 +22,7 @@ public final class MeterCropRaster {
         int radius = Math.max(1, Math.round(gap * .06f));
         for (int line = 0; line < 5; line++) {
             int y = Math.round(firstLine + line * gap) - sourceTop;
+            if (y + radius < 0 || y - radius >= height) continue;
             for (int x = 0; x < width; x++) {
                 boolean bridge =
                         darkColumn(

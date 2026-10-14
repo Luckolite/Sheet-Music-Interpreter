@@ -12,6 +12,17 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition47 adds conservative interior-staff and clipped-meter evidence, plus
+independently numbered silent pickups. Guide286 stores a strict proof byte after
+the retained slur frame; every reader validates it, legacy reads default false,
+and legacy writes refuse to lose true proof. Source assembly, selections,
+MusicXML and native playback preserve the corrected opening clock while retaining
+printed meter. Audio80 prevents reuse of old pickup timing. Original synthetic
+regressions accompany the logic and framing; no private score material or changed
+weights are included. Native audio reader extraction also preserves wrapped Java
+signatures. These are source-qualified changes, with final paired packages,
+deployment, whole-score accuracy and device/runtime acceptance still pending.
+
 Recognition46 recovers interior printed flats and unresolved meter digits using
 local printed staff geometry and conservative font-weight evidence. Two independent
 raw-pixel staffs can establish the existing exterior artwork-rejection envelope

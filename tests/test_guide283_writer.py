@@ -87,8 +87,8 @@ class WholeRestWriterTest(unittest.TestCase):
         from sheet_interpreter import slur_wire
         current = wire.encode(original)
         source = slur_wire.encode_source(None, len(original['notes']))
-        self.assertEqual(new[4:], current[4:-len(source)])
-        self.assertTrue(current.endswith(source))
+        self.assertEqual(new[4:], current[4:-(len(source)+1)])
+        self.assertTrue(current.endswith(source + b'\x00'))
 
     def test_full_measure_rejects_every_legacy_target(self):
         original = score()
@@ -126,7 +126,7 @@ class WholeRestWriterTest(unittest.TestCase):
     def test_unknown_future_layout_rejects(self):
         for writer in (wire,):
             with self.assertRaises(ValueError):
-                writer.encode(score(), 286)
+                writer.encode(score(), 287)
 
     def test_same_geometry_literal_and_full_remain_distinct_records(self):
         original = score()
@@ -136,12 +136,12 @@ class WholeRestWriterTest(unittest.TestCase):
         self.assertEqual(new[start:start + 32], new[start + 33:start + 65])
         self.assertEqual([0, 1], [new[start + 32], new[start + 65]])
 
-    def test_inputs_remain_exact_and_default_writer_is285(self):
+    def test_inputs_remain_exact_and_default_writer_is286(self):
         original = score()
         original['rests'][0]['kind'] = 'FULL_MEASURE'
         before = copy.deepcopy(original)
         for writer in (wire,):
-            self.assertEqual(writer.encode(original, 285), writer.encode(original))
+            self.assertEqual(writer.encode(original, 286), writer.encode(original))
             self.assertEqual(before, original)
 
     def test_write_new_preserves_previous_candidate(self):

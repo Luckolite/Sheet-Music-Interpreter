@@ -278,7 +278,8 @@ public final class MeterChangeDetector {
                 score.dynamicChanges(),
                 score.playbackDirections(),
                 score.expressiveEvents(),
-                score.slurSource());
+                score.slurSource(),
+                score.openingPickup());
     }
 
     public static List<Crop> candidates(byte[] labels, byte[] gray, int width, int height) {
