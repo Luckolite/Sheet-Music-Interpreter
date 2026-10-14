@@ -4803,6 +4803,27 @@ public final class ScoreCreditsDetector {
                         .anyMatch(name -> same(name, text.replaceAll("^[()]|[()]$", "")))
                 || page.reviewCredits.stream().anyMatch(review -> intersects(review.line, line)))
             return false;
+        // A converted score can retain a centered source subtitle between separate credits.
+        boolean conversion =
+                page.lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other.right < page.width * .35f
+                                                && Math.abs(other.top - line.top) < line.height()
+                                                && conversionServiceCandidate(other.text));
+        boolean contributor =
+                page.lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other.left > page.width * .72f
+                                                && Math.abs(other.top - line.top) < line.height()
+                                                && other.height() < line.height() * .85f
+                                                && other.bottom < page.notationTop
+                                                && credit(other.text) == null
+                                                && properReviewName(other.text)
+                                                && clean(other.text).split("\\h+").length >= 2);
+        if (conversion && contributor && line.right - line.left >= heading.right - heading.left)
+            return true;
         return text.matches("^\\([^()]+\\)$")
                 || text.matches(
                         "(?iu)^(?:sonat[ae]|concerto|symphony|suite)\\b.*\\b(?:K|KV|BWV|RV|HWV|WoO|op)[.]?\\h*[0-9]+.*");
