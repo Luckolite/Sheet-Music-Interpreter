@@ -1481,3 +1481,21 @@ the existing28MusicXML controls pass on current source. Actual bundled renderer
 comparisons confirm the printed marks and exact parsed MIDI in three pairs.
 No model, recognition, guide or audio identity changes; no app/native source
 port is needed because their corresponding presentation is already present.
+
+## Standalone retained clef export
+
+The staff-per-part Python MusicXML adapter now consumes explicit event display
+clefs or aligned original decoded-note context. Pitch-average fallback no longer
+overrides recognized bass, alto, tenor, treble or octave-treble clefs. Initial,
+bar-boundary and mid-measure changes use actual attack clocks, including voice
+backups; tied continuations never repeat a change. Unknown or mismatched source
+context cannot supply a retained clef. Legacy metadata-free exports keep their
+initial heuristic; conflicting simultaneous contexts require explicit staff
+mapping. Only actual changes are stored while scanning already ordered attacks.
+
+Ten original controls reproduce eight failures in the old exporter and cover
+source ownership, silence, changes, backups, ties and ambiguity. All46MusicXML
+and11unpitched export controls pass. Three original renderer comparisons retain
+alto, octave-treble and mid-measure changes with identical parsed MIDI. This
+standalone reconstruction adapter changes presentation only; no recognition,
+model, Main JSON, app/native wire, guide or audio identity changes.

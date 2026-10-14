@@ -8,6 +8,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
+from . import clef_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -258,14 +259,14 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                        start=bar['start'], end=bar['start']+bar['length'],
                                        restIdentity=len(full_rests), releaseSymbols=[]))
         first_event = len(events)
-        for n in page['events']:
+        for note_index, n in enumerate(page['events']):
             if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
                 raise ValueError('MusicXML note pitch must be a MIDI integer in 0..127')
             start, duration = ticks(n['startBeat']), ticks(n['durationBeats'])
             if duration <= 0 or start + duration > local_start + 2:
                 raise ValueError('MusicXML note duration lies outside the page timeline')
             events.append(dict(n, start=offset+start, end=offset+min(local_start,start+duration), tie_stop=False, tie_start=False,
-                               sourceIdentity=len(events)))
+                               sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index)))
         from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
         def absolute(anchor):
             if anchor is None:
@@ -332,6 +333,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         element(element(part_list, 'score-part', id=part_id), 'part-name', name)
         part = element(root, 'part', id=part_id)
         notes = sorted((n for n in events if same_staff(n)), key=lambda n: (n['start'], notation_order(n)))
+        clef_changes = clef_export.plan(notes)
+        emitted_clefs = set()
         silent = [r for r in full_rests if same_staff(r)]
         for index, n in enumerate(notes):
             gliss = n.get('glissando')
@@ -406,21 +409,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 measure.set('implicit', 'yes')
             element(time, 'beats', numerator)
             element(time, 'beat-type', denominator)
-            if index == 0:
-                clef = element(attributes, 'clef')
-                pitched = [n for n in notes if event_kind(n) == 'PITCHED']
-                bass = (sum(n['midi'] for n in pitched)/len(pitched) < 60 if pitched
-                        else bool(notes) and notes[0].get('clefBottomDiatonic') == 18)
-                sign, line = ('F', 4) if bass else ('G', 2)
-                bottom = notes[0].get('clefBottomDiatonic', 30) if notes and not pitched else None
-                if bottom == 24:
-                    sign, line = 'C', 3
-                elif bottom == 22:
-                    sign, line = 'C', 4
-                element(clef, 'sign', sign)
-                element(clef, 'line', line)
-                if bottom == 37:
-                    element(clef, 'clef-octave-change', 1)
+            if bar['start'] in clef_changes:
+                clef_export.write(attributes, clef_changes[bar['start']])
+                emitted_clefs.add(bar['start'])
             tempos = list(bar['tempos'])
             if index == 0 and not any(t['positionInMeasure'] == 0 for t in tempos):
                 tempos.insert(0, dict(bpm=bpm, positionInMeasure=0))
@@ -461,6 +452,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     if start > cursor:
                         emit_rest_gap(measure, cursor, start, voice, rest_symbols)
                     for ci, n in enumerate(chord):
+                        if start == n['start'] and start in clef_changes and start not in emitted_clefs:
+                            clef_export.write(element(measure, 'attributes'), clef_changes[start])
+                            emitted_clefs.add(start)
                         emitted = emit_note(measure, end-start, voice, n, chord=ci>0,
                                   stop=n['start']<a or n['tie_stop'], start=n['end']>b or n['tie_start'], flats=bar['key']<0,
                                   gliss_start=end==n['end'] and 'gliss_start' in n,

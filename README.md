@@ -68,6 +68,12 @@ endpoints do not borrow replacement notes. Cross-part slurs require an explicit
 part mapping; this staff-per-part exporter reports that limitation rather than
 silently dropping a confirmed phrase.
 
+MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
+clefs from the retained note context, including changes inside measures. Note
+pitches and playback stay unchanged. Without reliable source clef metadata, the
+legacy pitch-based initial clef remains available. Conflicting simultaneous
+clefs require an explicit staff mapping rather than a guessed choice.
+
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
 reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML playback use the quarter-note

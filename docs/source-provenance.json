@@ -6197,5 +6197,22 @@
     ],
     "qualification": "Seven initial original controls fail6times against baseline; final8tempo controls plus28existingMusicXML controls pass. Three synthetic baseline/fixed pairs render correctly and retain exact parsed MIDI.",
     "boundary": "Pure standalone export changes; app/native worker already has the pulse presentation helper. No recognition/model/guide/audio revision change, no APK or deployment. Headless synthetic checks are not broad score/device acceptance."
+  },
+  "standalone_retained_clef_export_review": {
+    "license": "Apache-2.0",
+    "scope": "Standalone staff-per-part MusicXML reconstruction adapter consumes retained decoded-note clefs; no recognition/model or app/native wire change.",
+    "sourceFiles": [
+      "src/sheet_interpreter/musicxml.py",
+      "src/sheet_interpreter/clef_export.py"
+    ],
+    "originalRegression": "tests/test_musicxml_clefs.py",
+    "originalControls": 10,
+    "baselineFailures": 8,
+    "ownership": "Use explicit event display clef or aligned original Main note context. Inferred clefs and mismatched note slots cannot supply retained context.",
+    "timeline": "Initial retained clef overrides pitch-average fallback. Bar-boundary and mid-measure changes retain actual attack times through MusicXML voice backups; tied continuations do not duplicate changes.",
+    "compatibility": "Five retained clefs, unchanged note pitches and quarter-note sound timeline. Legacy missing metadata keeps its previous initial clef heuristic; conflicting simultaneous clefs reject until staff mapping is explicit.",
+    "memory": "Scan already ordered attacks and retain only actual clef changes, rather than a map/set per onset.",
+    "qualification": "All46MusicXML and11unpitched export controls pass. Three original baseline/fixed renderer pairs retain alto, octave-treble and mid-measure changes with exact parsed MIDI.",
+    "boundary": "Standalone exporter-specific source repair; no app/native worker/model/guide/recognition/audio change, no deployment, no broad score/device accuracy claim."
   }
 }
