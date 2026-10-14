@@ -372,13 +372,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c9548e9a0d11a149d9b167dd14f0c3eab64b547edcdf2f8df4682cc6e40bfbf3",
-      "reviewed_app_commit": "1ca510d845890edaed094ff353d09d741fc0f1f0",
-      "scoped_reviewed_app_commit": "1ca510d845890edaed094ff353d09d741fc0f1f0",
-      "review_note": "Counted rest eligibility reuses existing note-stage ledger evidence for distant semantic heads wholly outside the parent measure. A verified count and heavy rest bar are required; any plausible staff or printed ledger keeps the note veto. Count glyph pixels are excluded from duplicate subtraction. Eight original procedural controls; no private score fixtures, new dependencies, models or record changes.",
-      "source_normalized_sha256": "3b4cddb960d6ddcafe210dd06dc14b431f125fc27272fd1ea9c0ac41c71b4b25",
+      "source_sha256": "1708ed7a3242a7ca3783bc3fc3e136d529aa5a43099d4a54543d8e1470d35dd9",
+      "reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
+      "scoped_reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
+      "review_note": "Extend distant ledger evidence through the intervening rule chain and require thin local contrast rather than broad decoration. Four original procedural controls include genuine extreme notes and incomplete or shaded non-notation. Existing diagnostic adapter preserved; no private fixtures, models, dependencies or record changes.",
+      "source_normalized_sha256": "1bd55af2409a745f966b564b14da4ae6d9f5aa4747b2f5115d743b42a6e77639",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed reviewed source; paired executable tokens checked with existing platform diagnostic adapter preserved.",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
       "standalone_sha256": "10a272fa23b6d0d589143dc312cfe3b2f4ed96e5759f13ac990bdabf88c07f3f",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
@@ -391,10 +391,13 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "ab820200d111cbc271a088058df71ec06043164dde0735ff9e38d5828bd94013",
-      "source_normalized_sha256": "ab820200d111cbc271a088058df71ec06043164dde0735ff9e38d5828bd94013",
+      "source_sha256": "14ba4f7980718827cd66bb5bc95ea1a96c1ca777a247ba7bd2fc93de057a078c",
+      "source_normalized_sha256": "99fd052ecfe80465ac3cc6a089cc1cdb3f932873122d44dc23a29fc290094c9f",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reviewed app 1.18.375 global printed staff/bar geometry repair. Complete package-only behavior parity; original procedural compressed-staff, connected-stem and independent-cue controls. Pitch tracking retains its strict path. No private pixels, dependencies, weights or record fields changed."
+      "review_note": "Reject unsupported outer semantic staff groups only with two independently printed staff witnesses. Preserve pale, partial, short and curved printed rules using parallel local contrast and existing pitch tracking. Nine original procedural controls; no private score pixels, new dependencies, models or records.",
+      "reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
+      "scoped_reviewed_app_commit": "4b494f6e0389b6e808d1ebc603143823da502b66",
+      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
     },
     "ScoreDynamicChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicChange.java",

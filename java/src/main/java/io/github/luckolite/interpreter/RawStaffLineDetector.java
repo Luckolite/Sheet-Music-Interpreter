@@ -74,6 +74,7 @@ final class RawStaffLineDetector {
                     && printedRuleCount(new Candidate(c.rows(), c.gap(), 0), gray, width, height)
                             >= 4) result.remove(b);
         }
+        rejectUnsupportedAliases(result, gray, width, height);
         return List.copyOf(result);
     }
 
@@ -101,7 +102,77 @@ final class RawStaffLineDetector {
             if (!represented) result.add(proof);
         }
         result.sort(Comparator.comparingInt(StaffLines::top));
+        rejectUnsupportedAliases(result, gray, width, height);
         return List.copyOf(result);
+    }
+
+    /** Two independent printed staves distinguish page notation from unrelated semantic texture. */
+    private static void rejectUnsupportedAliases(
+            List<StaffLines> staffs, byte[] gray, int width, int height) {
+        if (gray == null || gray.length != (long) width * height) return;
+        int proved = 0, first = height, last = -1;
+        for (var staff : staffs)
+            if (printedRuleCount(new Candidate(staff.rows(), staff.gap(), 0), gray, width, height)
+                    >= 4) {
+                proved++;
+                first = Math.min(first, staff.top());
+                last = Math.max(last, staff.bottom());
+            }
+        if (proved < 2) return;
+        final int firstPrinted = first, lastPrinted = last;
+        // Interior gaps may contain faint parts; this rejection only handles outer texture.
+        staffs.removeIf(
+                staff ->
+                        (staff.bottom() < firstPrinted || staff.top() > lastPrinted)
+                                && printedRuleCount(
+                                                new Candidate(staff.rows(), staff.gap(), 0),
+                                                gray,
+                                                width,
+                                                height,
+                                                230)
+                                        == 0
+                                && !hasLocalContrastedRule(staff, gray, width, height)
+                                && StaffPitchTrack.detectForMeasures(
+                                                gray,
+                                                width,
+                                                height,
+                                                staff.top(),
+                                                staff.bottom(),
+                                                staff.gap())
+                                        == null);
+    }
+
+    /** Parallel local contrast preserves faint or short rules without treating unrelated texture as a staff. */
+    private static boolean hasLocalContrastedRule(
+            StaffLines staff, byte[] gray, int width, int height) {
+        int radius = Math.max(1, Math.round(staff.gap() * .35f)),
+                flank = Math.max(2, Math.round(staff.gap() * .35f));
+        int[] hits = new int[width];
+        for (int row : staff.rows())
+            for (int x = 0; x < width; x++) {
+                for (int y = Math.max(flank, row - radius);
+                        y <= Math.min(height - flank - 1, row + radius);
+                        y++) {
+                    int value = gray[y * width + x] & 255;
+                    if ((gray[(y - flank) * width + x] & 255) >= value + 4
+                            && (gray[(y + flank) * width + x] & 255) >= value + 4) {
+                        hits[x]++;
+                        break;
+                    }
+                }
+            }
+        for (int minimum : new int[] {3, 4}) {
+            int count = 0, run = 0, longest = 0;
+            for (int n : hits)
+                if (n >= minimum) {
+                    count++;
+                    longest = Math.max(longest, ++run);
+                } else run = 0;
+            if (count >= Math.max(24, Math.round(staff.gap() * 4))
+                    && longest >= Math.max(12, Math.round(staff.gap() * (minimum == 3 ? 8 : 3))))
+                return true;
+        }
+        return false;
     }
 
     private static List<StaffLines> detectFromStrength(

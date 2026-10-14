@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Unsupported outer staff texture requires two independently printed staff witnesses
+before rejection; faint, short, partial and curved rules remain protected. Distant
+ledger notes require intervening thin rules rather than nearby strokes or broad
+shade. Thirteen original procedural controls accompany the package-adapted pair.
+Models, dependencies and record layouts are unchanged.
+
 Printed slur source maps preserve physical page/note ownership and unresolved
 endpoint evidence through explicit edits and page joins. Original procedural
 fixtures cover bounded SLT1/SLP1 retention; pixel slur recognition and paired cache

@@ -9132,6 +9132,9 @@ final class OmrScoreInterpreter {
         // wider legacy tolerance when a shaft independently owns the head.
         int required =
                 distance > gap * (stemless && !roundedGrace && !reduced ? 2.8f : 3.5f) ? 2 : 1;
+        // Distant ledger notes need the intervening chain, not only strokes beside the oval.
+        if (distance > gap * 4.5f)
+            required = Math.max(required, (int) Math.floor(distance / gap) - 1);
         int left = Math.max(0, Math.round(head.centerX - gap * 1.2f));
         int right = Math.min(width - 1, Math.round(head.centerX + gap * 1.2f));
         float totalStrongSupport = 0;
@@ -9152,7 +9155,7 @@ final class OmrScoreInterpreter {
                                     || (gray[y * width + x] & 255) < limits[1]
                                     || (gray[(y - 1) * width + x] & 255) < limits[1]
                                     || (gray[(y + 1) * width + x] & 255) < limits[1];
-                    if (shadedLedger) {
+                    if (shadedLedger || distance > gap * 4.5f) {
                         boolean thin = ShadedLedgerRule.thin(gray, width, height, x, y, gap);
                         // A real shaft or flag can cross its own inner ledger.
                         // Bridge only a narrow crossing within the head's span,
