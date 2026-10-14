@@ -2591,6 +2591,9 @@ final class OmrMeasurePostProcessor {
             float gap,
             int headTop,
             int headBottom) {
+        if (localSmallCourtesySharp(
+                labels, gray, width, height, left, right, staffBottom, gap, headTop, headBottom))
+            return true;
         if (MeterOnlyCourtesyTail.matches(
                 labels,
                 gray,
@@ -2790,5 +2793,147 @@ final class OmrMeasurePostProcessor {
             this.slope = staff.slope;
             this.lastStaff = staff;
         }
+    }
+
+    private static boolean localSmallCourtesySharp(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int oldBottom,
+            float gap,
+            int headTop,
+            int headBottom) {
+        if (gray == null
+                || gap < 6
+                || right - left < gap
+                || right - left > gap * 4
+                || countLabel(labels, width, height, NOTEHEAD, left, right, headTop, headBottom)
+                        > 0) return false;
+        float[] accepted = null, near = null;
+        for (float distance : new float[] {3.5f, 7.5f}) {
+            float[] witness = null;
+            for (float shift : new float[] {-1, -.75f, -.5f, -.25f, 0, .25f, .5f, .75f, 1}) {
+                var rules =
+                        PrintedDirectionStaff.printedRules(
+                                gray,
+                                width,
+                                height,
+                                left - gap * distance,
+                                oldBottom + shift * gap,
+                                gap);
+                if (rules == null) continue;
+                if (witness != null
+                        && (Math.abs(rules[0] - witness[0]) > gap * .15f
+                                || Math.abs(rules[1] - witness[1]) > gap * .05f)) return false;
+                witness = rules;
+            }
+            if (witness == null) return false;
+            if (accepted != null
+                    && (Math.abs(accepted[0] - witness[0]) > gap * .2f
+                            || Math.abs(accepted[1] - witness[1]) > gap * .06f)) return false;
+            if (accepted == null) near = witness;
+            accepted = witness;
+        }
+        float bottomSlope = (near[0] - accepted[0]) / (4 * gap),
+                gapSlope = (near[1] - accepted[1]) / (4 * gap);
+        if (Math.abs(bottomSlope) > .04f || Math.abs(bottomSlope - 4 * gapSlope) > .04f)
+            return false;
+        float tailBottom = near[0] + 3.5f * gap * bottomSlope,
+                tailGap = near[1] + 3.5f * gap * gapSlope;
+        int top = Math.round(tailBottom - 4 * tailGap), bottom = Math.round(tailBottom);
+        var sharp =
+                OmrScoreInterpreter.verifiedSmallCourtesySharp(
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        left,
+                        right,
+                        Math.max(0, headTop),
+                        Math.min(height - 1, headBottom),
+                        accepted[1]);
+        if (sharp == null) {
+            // Remove only independently witnessed staff rails, preserving vertical crossings.
+            byte[] isolated = gray.clone();
+            int reach = Math.round(gap * 2), probe = Math.max(2, Math.round(gap * .2f));
+            for (int x = Math.max(0, left - reach); x <= Math.min(width - 1, right + reach); x++) {
+                float localBottom = tailBottom + (x - left) * bottomSlope,
+                        localGap = tailGap + (x - left) * gapSlope;
+                for (int line = 0; line < 5; line++) {
+                    int rail = Math.round(localBottom - line * localGap);
+                    for (int y = Math.max(probe, rail - 2);
+                            y <= Math.min(height - probe - 1, rail + 2);
+                            y++) {
+                        if ((gray[(y - probe) * width + x] & 255) > 180
+                                || (gray[(y + probe) * width + x] & 255) > 180)
+                            isolated[y * width + x] = (byte) 255;
+                    }
+                }
+            }
+            sharp =
+                    OmrScoreInterpreter.verifiedSmallCourtesySharp(
+                            labels,
+                            isolated,
+                            width,
+                            height,
+                            left,
+                            right,
+                            Math.max(0, headTop),
+                            Math.min(height - 1, headBottom),
+                            accepted[1]);
+        }
+        if (sharp == null) return false;
+        var bars = new ArrayList<Integer>();
+        boolean prior = false;
+        int first = -1, last = -1;
+        for (int x = Math.max(0, Math.round(left - gap * 1.3f));
+                x <= Math.min(width - 1, Math.round(left + gap * .9f));
+                x++) {
+            int ink = 0;
+            for (int y = Math.max(0, top); y <= Math.min(height - 1, bottom); y++)
+                if ((gray[y * width + x] & 255) < 165) ink++;
+            boolean bar = ink >= (bottom - top + 1) * .9f;
+            if (bar) {
+                bars.add(x);
+                if (!prior) {
+                    if (first < 0) first = x;
+                    else if (last >= 0) return false;
+                    last = first == x ? -1 : x;
+                }
+            }
+            prior = bar;
+        }
+        if (first < 0 || last < 0 || last - first < gap * .2f || last - first > gap * 1.3f)
+            return false;
+        int unknown = 0, pad = Math.max(1, Math.round(gap * .2f));
+        for (int y = Math.max(0, headTop); y <= Math.min(height - 1, headBottom); y++)
+            for (int x = Math.max(0, left); x <= Math.min(width - 1, right); x++) {
+                boolean barOwned = false;
+                for (int bx : bars)
+                    if (Math.abs(x - bx) <= 1 && y >= top - pad && y <= bottom + pad)
+                        barOwned = true;
+                // Thin rests can coincide with a rail or fall below the raw noise-area limit.
+                if (labels[y * width + x] == STEM_OR_REST && !barOwned) return false;
+                if ((gray[y * width + x] & 255) >= 180) continue;
+                if (x >= sharp[0] - pad
+                        && x <= sharp[1] + pad
+                        && y >= sharp[2] - pad
+                        && y <= sharp[3] + pad) continue;
+                boolean owned = false;
+                for (int line = 0; line < 5; line++)
+                    if (Math.abs(
+                                    y
+                                            - (tailBottom
+                                                    + (x - left) * bottomSlope
+                                                    - line * (tailGap + (x - left) * gapSlope)))
+                            <= Math.max(2, gap * .18f)) owned = true;
+                for (int bx : bars)
+                    if (Math.abs(x - bx) <= 1 && y >= top - pad && y <= bottom + pad) owned = true;
+                if (!owned && ++unknown > gap * gap * .12f) return false;
+            }
+        return true;
     }
 }

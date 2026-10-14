@@ -362,15 +362,15 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "d5ba3a836d51a421c81ad498ab275c62cda200ac1089e89c09dc6926cfcc0b25",
-      "source_normalized_sha256": "8636b627897889cb2452a03cc2b1c439f47488ad1e18bf3003d16705b7f15ddd",
-      "review_note": "During regional staff-frame replacement, retain an omitted outer extent only when both frames prove complete printed rules there; rerun ordinary boundary guards on the retained extent.",
+      "source_sha256": "4f2c0a877c9bd7131308a9c854f5389356b55cf82b94392eb8a0d976b7988595",
+      "source_normalized_sha256": "3058e11a4e3bb3bf5224b89cfce133e7667a3ebd41619c36d1668b1e532b288b",
+      "review_note": "Remove narrow terminal courtesy signatures only with two local staff witnesses, a double bar and a verified sharp. Preserve noteheads and stem/rest ink outside the double bar; account for sloping rails without relaxing glyph proof.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
-      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
-      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending.",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "standalone_sha256": "e2c81dfe9795c089a7d8560a0065a0e75559aa07a7aa6bb19bff1223daf32c91"
+      "standalone_sha256": "033f62adf718090add24728a1d4bad2d1cc78251dcb26b10be99b2b157ee0ad0"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -381,14 +381,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "6f5e46afae6f5f40bfea994762f7c74d9f64da94c1284aca2b08bbd6d4aa204d",
-      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
-      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
-      "review_note": "Use independently proved printed-flat shape for already-semantic-flat interior key signatures as well as clef headers; preserve ownership and cancellation guards.",
-      "source_normalized_sha256": "05832d4529dc1683023fc7441ab33dad3e203075e147320b0f95a0baa29dcd55",
+      "source_sha256": "a7363c156d7afe7c415b7a13b257e27e221296f76dec8467920c4cd62afcd7d1",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "review_note": "Verify a small courtesy sharp with semantic shape and independently checked raw strokes. Retain the existing Android/standalone logging adapter distinction.",
+      "source_normalized_sha256": "c3dc3b037b8c520012f5c77cfe36d34b7470a1779ba276e1f37eed2ffa345294",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "standalone_sha256": "6cc2bb32eee712b93108d0fe08fdefc144ef46a330a05697930d8259b3c59d03",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending.",
+      "standalone_sha256": "a02323d0916de9a99a9d526f4e3e6f18f1a70e3231ef99f8946ff1cae0b0c1d2",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -516,15 +516,15 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "1085429c812d0510ef2484252ee2cd0d13b217936c6af00a9cd410c7e63dee0f",
-      "reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "source_normalized_sha256": "619ee8042330fabc5542b3cc53dbe50dedff7261d55e8fe0464fd89b4bbff37d",
-      "review_note": "A complete independently proved printed seven-note group claims its attacks before smaller triplet candidates. Existing raw-run head-only exclusion also covers small heads when the raw shaft is not recovered; ink extending past head bounds retains beam evidence. Fourteen original procedural controls, complete package/diagnostics parity and writer AST reviewed; previous origins retained in seven_precedence_and_head_beam_review. Models, helper dependencies and guide/audio layouts unchanged.",
+      "source_sha256": "df0e719377f6717cb4dd9015756131022568b60034e1005538fe39fd00803761",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "source_normalized_sha256": "e2689253aaca36ff87807331331efc85d3d556435abff0152b8dc5d3ff58b771",
+      "review_note": "Widen bounded numeral search around beamed attacks to include offset printed triplet glyphs. Existing shape, contrast, competing-owner and physical beam checks remain unchanged.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed app962 complete seven-note precedence and small unattached-head beam exclusion, with recognition34 cache invalidation. Guide284/audio79 layouts, models and dependencies unchanged.",
-      "scoped_reviewed_app_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending.",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "standalone_sha256": "7c1eb7115944596ed741fa86e99ac70c3c4fe7f64de6749ca04fefac7975dc0e"
+      "standalone_sha256": "3c21a0f1cd391b34f8e13dce685a6a3646862f6c32c683c46e392e3f46b28313"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1556,13 +1556,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "4efb9e3f5563a4ac80ad64a577b8e672ffb4b6179685d7ac6192848af3a3e89c",
-      "source_normalized_sha256": "4efb9e3f5563a4ac80ad64a577b8e672ffb4b6179685d7ac6192848af3a3e89c",
-      "reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "review_note": "Advance recognition48 to49 for printed navigation; guide286 layout unchanged and audio82 invalidates affected previews.",
-      "reviewed_source_state": "Committed paired recognition49/guide286/audio82 sources; final cumulative package/deployment/runtime verification pending.",
-      "scoped_reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "standalone_sha256": "9390aae4dd11dcc7c62781adbf79792ae61c2dc80fef87fcf67ecb73b2bf4dc1",
+      "source_sha256": "bf15acff605c8057d21e368d0fcb3528be943d6c7a23035e659ef9f17e0585da",
+      "source_normalized_sha256": "bf15acff605c8057d21e368d0fcb3528be943d6c7a23035e659ef9f17e0585da",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "review_note": "Advance recognition49 to50;guide286 layout unchanged;audio83 invalidates previews with stale rhythmic interpretation.",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending.",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "standalone_sha256": "95ac059c6ba70dcc6b1380a571f16c8e4de9a0866623f307d468d3d50cfec3eb",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1620,14 +1620,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e7c3d9a9a9dc298e267aecf4ece989b9d0ca7b17a3292067475f4ec3ee94988a",
-      "source_normalized_sha256": "96898959498a5e143d69f9ca6ac077ea3f2c6b4f138a0f7b3a84279215d95045",
-      "reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "reviewed_source_state": "Committed paired recognition49/guide286/audio82 sources; final cumulative package/deployment/runtime verification pending.",
-      "review_note": "Keep guide286 layout unchanged while advancing recognition identity to49.",
-      "scoped_reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
+      "source_sha256": "f21c0992813747864d66d19e5f110d1e8cb432271f8b7541600f16a9ea32216b",
+      "source_normalized_sha256": "0872f232e60e3e8b4880658e9b197c1eaede765c5c9dab5d69b3dac1833d7d5d",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending.",
+      "review_note": "Keep guide286 wire layout unchanged and advance recognition identity to50.",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "ad6ba9b25a5918f470499fc376b85f470fc543f3eac88d4f8936bde90cc31b55",
+      "standalone_sha256": "80eecbee18ae74b128d0a0ad0eafeef485e9f978e2ace2d61dbb680e72c43b81",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2764,13 +2764,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCropStaff.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterCropStaff.java",
       "license": "Apache-2.0",
-      "source_sha256": "d589a85f0fe404ea16b7be797275dc223b38ca7bc5b864da44b0a77db8d4747d",
-      "source_normalized_sha256": "d589a85f0fe404ea16b7be797275dc223b38ca7bc5b864da44b0a77db8d4747d",
-      "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "standalone_sha256": "d6bf2a3948518012a75ce32e576a93bc1256999aa3c1c4828a1f4d36639595a7",
-      "review_note": "Permit bounded clipped-outer-rule phase correction only from two agreeing independent five-rule witnesses; retain normal confidence and crop bounds.",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending."
+      "source_sha256": "355899bb2d355881d87a753ef02064b15c94fb7246820519ce448d3eff0f5c88",
+      "source_normalized_sha256": "26566a539be7d4af4d3905e1645bd727facbc816e6ddb2c00a2ba39db8633884",
+      "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+      "standalone_sha256": "3f0688b32e06a6d9311c2cb237e9924a95f54681ee772c0967b88c60cbe3cf8e",
+      "review_note": "After bilateral local staff correction, trim only nearly-white outer crop margins. Preserve ink, raster values, crop containment and downstream OCR conflict rules.",
+      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending."
     },
     "InteriorStaffScaleEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InteriorStaffScaleEvidence.java",
@@ -6628,6 +6628,49 @@
       {
         "source_path": "windows-sync-hub/NativeAudioWorker.cs",
         "source_sha256": "45fe5424775924276da558fafefebd2ff08c6fc4efe0f450f16bcb6f334393a5"
+      }
+    ]
+  },
+  "courtesy_tuplet_meter_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
+    "scope": "Generic local geometry and original generated regressions; no source-score pixels, song identifiers, model changes or private library data.49 original focused scenarios cover new behavior. Native target checks and source compilation do not establish whole-library/runtime acceptance.",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "0dfe293accd26dbbdaaadecc7eaea049b84035079e08ec95e923c8ea9beb99b6"
+      },
+      {
+        "source_path": "tools/native-worker/NativePageGuide.java",
+        "source_sha256": "9339a4c8bf690922193e477190102e0d21ab8a435bfc439c83c356fdffc10dac"
+      },
+      {
+        "source_path": "tools/native-worker/NativeMusicalOcr.java",
+        "source_sha256": "4ecc2c033df07e95e6b776b1e1de89f496b0c30a9cd28e56be7ca88330b6c958"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "1f206435c07dc9f08cb68db8a0f19aefaee0c844e3bb6e64d15f737fe3c62cb5"
+      },
+      {
+        "source_path": "tools/native-worker/NativeAudioTrack.java",
+        "source_sha256": "533fae502b977aeb7c016df08f50256ad3eef90b95423f2fc8121dd714d68bd9"
+      },
+      {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "f21c0992813747864d66d19e5f110d1e8cb432271f8b7541600f16a9ea32216b"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java",
+        "source_sha256": "c6b0e9ab5fa02a547787cfec7edf65334255c32a9a6c66bc5f4a89712d959c90"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "e0d08a28f8c6444574b9f19b822560748dd332921e06c131551370e34054855a"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeAudioWorker.cs",
+        "source_sha256": "0a7e5fa982d893e65be143f6d28b2cfc6a083c2612aed93ef92250461ec5b594"
       }
     ]
   }

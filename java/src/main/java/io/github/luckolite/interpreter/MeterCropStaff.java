@@ -31,7 +31,7 @@ final class MeterCropStaff {
         float gap = a == null ? b[1] : b == null ? a[1] : (a[1] + b[1]) * .5f;
         int first = Math.round(bottom - 4 * gap);
         // Two agreeing five-rule witnesses can prove that the existing crop clips an
-        // outer staff rule. Keep the crop pixels fixed and correct only its phase.
+        // outer staff rule. Correct its phase without altering raster values.
         float last = first + 4 * gap;
         boolean clipped =
                 a != null
@@ -44,6 +44,23 @@ final class MeterCropStaff {
                 || last >= h
                 || first < c.top() - (clipped ? c.gap() * .25f : 0)
                 || last >= c.bottom() + (clipped ? c.gap() * .25f : 0)) return c;
-        return new MeterChangeDetector.Crop(c.left(), c.top(), c.right(), c.bottom(), first, gap);
+        int cropTop = c.top(), cropBottom = c.bottom();
+        if (a != null && b != null && first != c.firstLine()) {
+            // Empty padding displaced by a proved staff correction is not numeral evidence.
+            int pad = Math.max(2, Math.round(gap * .25f));
+            int trimTop = Math.min(c.bottom() - 1, Math.max(c.top(), first - pad));
+            int trimBottom =
+                    Math.max(trimTop + 1, Math.min(c.bottom(), Math.round(last) + pad + 1));
+            boolean clearTop = true, clearBottom = true;
+            for (int y = c.top(); y < trimTop; y++)
+                for (int x = c.left(); x < c.right(); x++)
+                    if ((gray[y * w + x] & 255) < 245) clearTop = false;
+            for (int y = trimBottom; y < c.bottom(); y++)
+                for (int x = c.left(); x < c.right(); x++)
+                    if ((gray[y * w + x] & 255) < 245) clearBottom = false;
+            if (clearTop) cropTop = trimTop;
+            if (clearBottom) cropBottom = trimBottom;
+        }
+        return new MeterChangeDetector.Crop(c.left(), cropTop, c.right(), cropBottom, first, gap);
     }
 }

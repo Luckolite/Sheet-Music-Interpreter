@@ -68,7 +68,13 @@ public class BilateralMeterPhaseTest {
         assertEquals(c.left(), r.left());
         assertEquals(c.top(), r.top());
         assertEquals(c.right(), r.right());
-        assertEquals(c.bottom(), r.bottom());
+        assertTrue(r.top() >= c.top());
+        assertTrue(r.bottom() <= c.bottom());
+        assertEquals(161, r.bottom());
+        var pixels = page(true);
+        for (int y = r.bottom(); y < c.bottom(); y++)
+            for (int x = c.left(); x < c.right(); x++)
+                assertEquals(255, pixels[y * W + x] & 255);
     }
 
     @Test

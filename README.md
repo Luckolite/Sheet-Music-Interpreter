@@ -150,6 +150,13 @@ Complete local groups support combined selectors, multiple backward ending edges
 and nested repeats; source evidence survives. Implicit starts and cross-page
 ownership remain unresolved rather than receiving guessed navigation.
 
+Small terminal courtesy sharps require matching semantic/raw glyph evidence,
+a double bar and agreeing local staff geometry; nearby stem/rest ink retains the
+measure. Offset tuplet numeral windows preserve physical ownership checks. Meter
+staff refinement can trim verified blank margins without changing OCR conflict
+handling or source pixels. These recognition fixes do not establish whole-score
+accuracy or replace document-level timing and runtime validation.
+
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`

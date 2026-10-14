@@ -21954,4 +21954,49 @@ final class OmrScoreInterpreter {
 
     private record ArcStats(
             int pixels, int columns, int minX, int maxX, int minY, int maxY, float curvature) {}
+
+    /** A small courtesy sharp still needs semantic shape and independently verified raw strokes. */
+    static int[] verifiedSmallCourtesySharp(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            float gap) {
+        if (left < 0
+                || right >= width
+                || top < 0
+                || bottom >= height
+                || left >= right
+                || top >= bottom) return null;
+        int w = right - left + 1, h = bottom - top + 1;
+        byte[] crop = new byte[w * h];
+        for (int y = 0; y < h; y++)
+            System.arraycopy(labels, (top + y) * width + left, crop, y * w, w);
+        var glyphs = findComponents(crop, w, h, OmrMeasurePostProcessor.CLEF_OR_KEY);
+        if (glyphs.size() != 1) return null;
+        var c = glyphs.get(0);
+        if (c.minX == 0 || c.maxX == w - 1 || c.minY == 0 || c.maxY == h - 1) return null;
+        var glyph =
+                new Component(
+                        c.area,
+                        c.minX + left,
+                        c.maxX + left,
+                        c.minY + top,
+                        c.maxY + top,
+                        c.centerX + left,
+                        c.centerY + top);
+        var candidate = new AccidentalCandidate(glyph, OmrMeasurePostProcessor.CLEF_OR_KEY);
+        if (!isSharpGlyph(labels, width, height, candidate, gap)) return null;
+        float raw = Float.NaN;
+        for (float margin : new float[] {.15f, .3f, .45f, .6f}) {
+            raw = printedSignatureSharpInCrop(gray, width, height, candidate, gap, true, margin);
+            if (Float.isFinite(raw)) break;
+        }
+        if (!Float.isFinite(raw)) return null;
+        return new int[] {glyph.minX, glyph.maxX, glyph.minY, glyph.maxY};
+    }
 }

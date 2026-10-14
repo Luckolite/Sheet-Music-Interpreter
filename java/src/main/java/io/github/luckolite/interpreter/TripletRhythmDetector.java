@@ -2357,8 +2357,8 @@ final class TripletRhythmDetector {
         float centerX = (firstX + lastX) * .5f;
         // Numerals align with the beam/stems, which can sit to one side of the
         // oval centres. Include that offset without clipping an italic 3.
-        int left = Math.max(0, Math.round(centerX - gap * 1.65f));
-        int right = Math.min(width - 1, Math.round(centerX + gap * 1.65f));
+        int left = Math.max(0, Math.round(centerX - gap * 2.1f));
+        int right = Math.min(width - 1, Math.round(centerX + gap * 2.1f));
         int top = Math.max(0, Math.round(firstY - gap * 7));
         int bottom = Math.min(height - 1, Math.round(lastY + gap * 7));
         int localWidth = right - left + 1, localHeight = bottom - top + 1;

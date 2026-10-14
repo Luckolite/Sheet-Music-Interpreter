@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition50 adds verified small courtesy-signature removal, offset printed
+triplet search and blank-margin correction after bilateral meter staff proof.
+Independent glyph/beam ownership remains required; nearby rest ink is preserved.
+The existing Android logging adapter is retained. Guide286 layout is unchanged;
+audio83 invalidates prior previews.49 original synthetic controls contain no
+private score material. Paired source checks do not replace cumulative packaged
+app/Hub/worker deployment, whole-library evaluation or runtime acceptance.
+
 Recognition49 adds original printed repeat/ending recognition with paired-dot,
 five-rule, barline and connected-bracket evidence. Complete local groups preserve
 pass selectors and source evidence, including alternate backward edges and nested
