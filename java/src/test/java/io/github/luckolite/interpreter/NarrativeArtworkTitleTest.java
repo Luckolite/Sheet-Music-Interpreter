@@ -28,10 +28,11 @@ public class NarrativeArtworkTitleTest {
     }
 
     @Test
-    public void narrativeArtworkKeepsImportedTitleAndReviewPhrase() {
+    public void narrativeArtworkKeepsImportedTitleWithoutInventingContributor() {
         var result = detect("Evening Keepsake", List.of(poster()));
         assertEquals("Evening Keepsake", result.title());
-        assertEquals(List.of(FIRST + " " + SECOND), result.unclassifiedCredits());
+        // A narrative quotation is not an unidentified contributor.
+        assertEquals(List.of(), result.unclassifiedCredits());
         assertEquals("", result.artist());
         assertEquals("", result.composer());
         assertEquals("", result.arranger());

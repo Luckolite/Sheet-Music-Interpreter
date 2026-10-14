@@ -1287,6 +1287,47 @@ public final class ScoreCreditsDetector {
         return observedExact;
     }
 
+    /** A separately expanded original-PDF crop may resolve a case-mismatched edge echo. */
+    public static List<Line> creditBoundaryEchoCandidates(Page page) {
+        return page.lines.stream()
+                .filter(
+                        line ->
+                                bibliographicLineCandidate(page, line)
+                                        && printedCreditContinuation(page, line) != null
+                                        && boundaryEchoText(clean(line.text)))
+                .toList();
+    }
+
+    private static boolean boundaryEchoText(String text) {
+        if (!text.matches(".*\\b[\\p{Lu}]{3,}[\\p{Ll}]$")) return false;
+        int last = text.codePointBefore(text.length());
+        int prior = text.codePointBefore(text.length() - Character.charCount(last));
+        return Character.toUpperCase(last) == prior;
+    }
+
+    public static List<Line> mergeCreditBoundaryEchoConsensus(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!creditBoundaryEchoCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || confidence.stream()
+                        .anyMatch(c -> c == null || !Float.isFinite(c) || c < .98f || c > 1)
+                || readings.stream().anyMatch(r -> r == null || r.isBlank())) return page.lines;
+        String before = clean(original.text), candidate = clean(readings.get(0));
+        int last = before.codePointBefore(before.length());
+        if (!candidate.equals(before.substring(0, before.length() - Character.charCount(last)))
+                || readings.stream().anyMatch(r -> !clean(r).equals(candidate))
+                || !preservesBibliographicIdentifiers(page, original, candidate)
+                || !sameConsensusContributorCount(before, candidate)) return page.lines;
+        var merged = new ArrayList<>(page.lines);
+        merged.set(
+                merged.indexOf(original),
+                new Line(candidate, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(merged);
+    }
+
     public static List<Line> mergeBibliographicLineConsensus(
             Page page, Line original, List<String> readings) {
         if (!page.lines.contains(original)
@@ -1626,7 +1667,7 @@ public final class ScoreCreditsDetector {
                             + "|words\\h+(?:and|&)\\h+music\\h+by|words\\h+by|music\\h+(?:and|&)\\h+lyr?ics\\h+by|music\\h+by|composed\\h+by|written\\h+by|composers?|by"
                             + "|using\\h+the\\h+arrangement\\h+of|(?:and\\h+the\\h+)?adaptation\\h+by|(?:and\\h+the\\h+)?arrangement\\h+for\\h+[^:;]{1,60}?\\h+by"
                             + "|arranged\\h+for\\h+[^:;]{1,60}?\\h+by|arranged\\h+by|arrangements?\\h+by|transcribed\\h+by|transc(?:r)?iption\\h+by|transcr\\.?\\h+by|transcr\\.?|arrangers?|arr\\.?\\h+by|ar\\.\\h+by|arr\\.?|arrangements?"
-                            + "|(?:additional\\h+)?lyrics\\h+by)\\b[\\h.:=–—-]*(.*)$");
+                            + "|(?:additional\\h+)?lyrics?\\h+by)\\b[\\h.:=–—-]*(.*)$");
     private static final Pattern COMBINED_COMPOSITION_ARRANGEMENT =
             Pattern.compile(
                     "(?iu)^(?:(?:music|score)(?:\\h+(?:and|&)\\h+(?:title|theme)\\h+song)?\\h+)?"
@@ -1838,7 +1879,7 @@ public final class ScoreCreditsDetector {
                         .find()
                 && !value.matches("(?iu)^(?:this\\h+)?arrangement\\h+(?:1[5-9]|20)[0-9]{2}\\b.*")
                 && !value.matches("(?iu)^by\\h+.*")
-                && !value.matches("(?iu)^(?:additional\\h+)?lyrics\\h+by\\b.*");
+                && !value.matches("(?iu)^(?:additional\\h+)?lyrics?\\h+by\\b.*");
     }
 
     public static List<Line> mergeEmbeddedCredits(List<Line> original, List<Line> embedded) {
@@ -3375,10 +3416,12 @@ public final class ScoreCreditsDetector {
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
         String fallback = clean(titleHint);
         String narrativeArtwork = ambiguousNarrativeArtwork(fallback, pages);
-        if (!narrativeArtwork.isEmpty())
-            return new Result(fallback, "", "", "", List.of(narrativeArtwork));
+        if (!narrativeArtwork.isEmpty()) return new Result(fallback, "", "", "", List.of());
         Set<String> artists = new LinkedHashSet<>(), composers = new LinkedHashSet<>();
         Set<String> arrangers = new LinkedHashSet<>(), other = new LinkedHashSet<>();
+        List<RepeatedCredit> repeatedCredits = new ArrayList<>();
+        List<RepeatedCredit> inferredCredits = new ArrayList<>();
+        Set<String> traditionalWorks = new LinkedHashSet<>();
         String title = "";
         boolean titleConfirmed = false;
         boolean titleFromOpeningCover = false;
@@ -3435,11 +3478,27 @@ public final class ScoreCreditsDetector {
                                     titleLimit,
                                     page == pages.get(0),
                                     knownNames);
+            if (heading != null
+                    && page.notationTop > 0
+                    && lines.stream()
+                            .anyMatch(
+                                    l ->
+                                            l.top >= heading.top
+                                                    && l.bottom < page.notationTop
+                                                    && clean(l.text)
+                                                            .matches("(?iu)^traditional[.]?$")))
+                traditionalWorks.add(pageTitle);
+            List<Line> selectedStackedLines = List.of();
+            String selectedStackedTitle = "";
             if (heading != null && page.photographicCover) {
                 String stacked = photographicStackedTitle(page, heading, titleLines, titleLimit);
                 if (!stacked.isEmpty()
-                        && !containsVersionTitleCaption(pageTitle, heading, versionCaption))
+                        && !containsVersionTitleCaption(pageTitle, heading, versionCaption)) {
                     pageTitle = stacked;
+                    selectedStackedTitle = stacked;
+                    selectedStackedLines =
+                            photographicStackedTitleLines(page, heading, titleLines, titleLimit);
+                }
             }
             if (page.notationTop <= 0
                     && !same(fallback, pageTitle)
@@ -3489,8 +3548,38 @@ public final class ScoreCreditsDetector {
                     page == pages.get(0) ? coverFooterReviewCandidates(page) : List.of();
             for (Line line : lines) {
                 if (scopedClaimed.contains(line)) continue;
+                if (selectedStackedLines.contains(line) && same(pageTitle, selectedStackedTitle)) {
+                    claimed.add(line);
+                    continue;
+                }
+                if (page.photographicCover
+                        && (same(clean(line.text), pageTitle) || same(clean(line.text), fallback))
+                        && clean(line.text).matches("(?iu)^by\\h+.*")) {
+                    claimed.add(line);
+                    continue;
+                }
+                if (heading != null
+                        && page.notationTop <= 0
+                        && !page.creditsOnly
+                        && line.bottom <= heading.top
+                        && properReviewName(line.text)
+                        && clean(line.text).split("\\h+").length >= 2
+                        && line.height() >= heading.height() * .7f
+                        && Math.abs(line.center() - heading.center()) < page.width * .08f
+                        && same(pageTitle, fallback)
+                        && !same(line.text, pageTitle)
+                        && credit(line.text) == null
+                        && !LEGAL.matcher(line.text).find()) {
+                    other.add(canonicalName(clean(line.text), knownNames));
+                    claimed.add(line);
+                    continue;
+                }
+
                 if (coverFooterReview.contains(line)) {
-                    other.add(clean(line.text));
+                    other.add(
+                            photographicReviewByline(page, line, heading)
+                                    ? clean(line.text).replaceFirst("(?iu)^by\\h+", "")
+                                    : clean(line.text));
                     claimed.add(line);
                     continue;
                 }
@@ -3528,12 +3617,17 @@ public final class ScoreCreditsDetector {
                 }
                 if (photographicReviewByline(page, line, heading)
                         || photographicReviewHeadingName(page, line, heading, pageTitle)) {
-                    other.add(clean(line.text));
+                    other.add(
+                            photographicReviewByline(page, line, heading)
+                                    ? clean(line.text).replaceFirst("(?iu)^by\\h+", "")
+                                    : clean(line.text));
                     claimed.add(line);
                     continue;
                 }
                 if (LEGAL.matcher(line.text).find() || !inCreditHeader(page, line)) continue;
-                if (line != heading && INITIALLED_NAME.matcher(clean(line.text)).matches())
+                if (line != heading
+                        && INITIALLED_NAME.matcher(clean(line.text)).matches()
+                        && !(page.notationTop > 0 && notationReviewLabel(page, line)))
                     other.add(clean(line.text));
                 Matcher featured = FEATURED.matcher(clean(line.text));
                 if (featured.matches() && !collectionDescription(featured.group(2))) {
@@ -3657,6 +3751,8 @@ public final class ScoreCreditsDetector {
                 }
                 if ((!inline && (same(value, title) || same(value, pageTitle)))
                         || !creditNameText(value)) continue;
+                repeatedCredits.add(
+                        new RepeatedCredit(pageTitle, credit.role, Set.copyOf(creditNames(value))));
                 switch (credit.role) {
                     case ARTIST -> addNames(artists, creditNames(value));
                     case COMPOSER ->
@@ -3674,10 +3770,13 @@ public final class ScoreCreditsDetector {
                 claimed.add(line);
             }
             // Unlabeled nearby names are evidence for review, not automatic artist roles.
-            if (heading != null && (!page.creditsOnly || datedMovementOpening(page, heading)))
+            if (heading != null)
                 for (Line line : lines) {
                     boolean datedAuthor = DATED_AUTHOR.matcher(clean(line.text)).matches();
-                    if (page.creditsOnly && !datedAuthor) continue;
+                    boolean contextAuthor = contextualOriginalAuthor(page, heading, line, lines);
+                    if (page.creditsOnly
+                            && !contextAuthor
+                            && !(datedAuthor && datedMovementOpening(page, heading))) continue;
                     // A separate side column may start above a shorter catalogue
                     // heading while its birth/death line overlaps that heading.
                     boolean sideDatedAuthor =
@@ -3690,6 +3789,7 @@ public final class ScoreCreditsDetector {
                                     && containsPrintedPhrase(title, line.text)
                             || line == heading
                             || line.top < heading.bottom
+                                    && !contextAuthor
                                     && !sideHeaderReviewName(page, heading, line)
                                     && (!datedAuthor
                                             || line.top < heading.bottom - heading.height() * .2f
@@ -3700,14 +3800,33 @@ public final class ScoreCreditsDetector {
                             || NOT_TITLE.matcher(line.text).find()
                             || LEGAL.matcher(line.text).find()
                             || REVIEW_DIRECTION.matcher(clean(line.text)).matches()
+                            || unlabelledReviewNoise(page, heading, line, lines)
                             || publicationAudioAccessBadge(page, line, lines)
                             || compoundInstrumentationCaption(line.text)
+                            || centeredWorkSubtitle(page, heading, line, knownNames)
                             || instructionalDocumentHeading(page, heading, lines)
                                     && paragraphLine(page, line, lines)
                             || staffCharacterDirection(page, line, lines, titleLimit)
                             || line.height() >= heading.height() * .85f
                                     && !DATED_AUTHOR.matcher(clean(line.text)).matches()) continue;
                     String name = canonicalName(clean(line.text), knownNames);
+                    if (!datedAuthor && contextAuthor) {
+                        String author =
+                                clean(line.text)
+                                        .replaceFirst("(?iu)^(?:and|&)\\h+", "")
+                                        .replaceFirst("\\h*\\((?:1[5-9]|20)[0-9]{2}\\)\\h*$", "");
+                        List<String> inferredNames =
+                                contextualAuthorNames(canonicalName(author, knownNames));
+                        if (conflictingLyricByline(page, lines, inferredNames)) {
+                            addNames(other, inferredNames);
+                            continue;
+                        }
+                        addNames(composers, inferredNames);
+                        inferredCredits.add(
+                                new RepeatedCredit(
+                                        pageTitle, Role.COMPOSER, Set.copyOf(inferredNames)));
+                        continue;
+                    }
                     Matcher dated = DATED_AUTHOR.matcher(clean(line.text));
                     if (dated.matches()) {
                         // Lifespan dates identify the person, not their contribution.
@@ -3725,6 +3844,43 @@ public final class ScoreCreditsDetector {
                             && !artists.contains(name)) other.add(name);
                 }
         }
+
+        Set<String> separatedReview = new LinkedHashSet<>();
+        for (String value : other) {
+            Matcher producer =
+                    Pattern.compile("(?iu)^(?:(.{3,100}?),\\h*)?produced\\h+by\\h+(.{3,100})$")
+                            .matcher(value);
+            Matcher workCredit =
+                    Pattern.compile("(?iu)^(?:film|movie)\\h*:\\h*.+?\\h+[-–—]\\h+(.{3,100})$")
+                            .matcher(value);
+            if (producer.matches()) {
+                if (producer.group(1) != null)
+                    addNames(separatedReview, creditNames(producer.group(1)));
+                addNames(separatedReview, creditNames(producer.group(2)));
+            } else if (workCredit.matches())
+                addNames(separatedReview, creditNames(workCredit.group(1)));
+            else separatedReview.add(value);
+        }
+        other.clear();
+        other.addAll(separatedReview);
+        for (String candidate : List.copyOf(composers)) {
+            List<RepeatedCredit> inferred =
+                    inferredCredits.stream().filter(e -> e.names.contains(candidate)).toList();
+            if (!inferred.isEmpty()
+                    && inferred.stream()
+                            .allMatch(e -> traditionalWorks.stream().anyMatch(t -> same(t, e.work)))
+                    && repeatedCredits.stream()
+                            .noneMatch(
+                                    e -> e.role == Role.COMPOSER && e.names.contains(candidate))) {
+                composers.remove(candidate);
+                other.add(candidate);
+            }
+        }
+        preferExpandedInferredName(composers, inferredCredits, repeatedCredits);
+        preferExplicitCoauthorNames(composers, inferredCredits, repeatedCredits);
+        repairRepeatedCreditDrops(composers, Role.COMPOSER, repeatedCredits);
+        repairRepeatedCreditDrops(arrangers, Role.ARRANGER, repeatedCredits);
+        repairRepeatedCreditDrops(artists, Role.ARTIST, repeatedCredits);
         splitCorroboratedContributors(artists);
         splitCorroboratedContributors(composers);
         splitCorroboratedContributors(arrangers);
@@ -3749,6 +3905,7 @@ public final class ScoreCreditsDetector {
                     other.add(value);
             }
         }
+        restoreReviewHeaderSpacing(other, pages, title, fallback);
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
@@ -3817,6 +3974,31 @@ public final class ScoreCreditsDetector {
     }
 
     /** Smaller names beside an opening score heading remain evidence for role review. */
+
+    /** Parenthetical source-work and catalogue subtitles occupy the heading column. */
+    private static boolean centeredWorkSubtitle(
+            Page page, Line heading, Line line, Set<String> knownNames) {
+        String text = clean(line.text);
+        if (page.photographicCover
+                || page.creditsOnly
+                || page.notationTop <= 0
+                || line.top < heading.bottom
+                || line.bottom >= page.notationTop
+                || line.top - heading.bottom > heading.height() * 1.25f
+                || line.height() < heading.height() * .35f
+                || line.height() >= heading.height() * .85f
+                || Math.abs(heading.center() - page.width * .5f) > page.width * .12f
+                || Math.abs(line.center() - heading.center()) > heading.height() * .8f
+                || credit(text) != null
+                || knownNames.stream()
+                        .anyMatch(name -> same(name, text.replaceAll("^[()]|[()]$", "")))
+                || page.reviewCredits.stream().anyMatch(review -> intersects(review.line, line)))
+            return false;
+        return text.matches("^\\([^()]+\\)$")
+                || text.matches(
+                        "(?iu)^(?:sonat[ae]|concerto|symphony|suite)\\b.*\\b(?:K|KV|BWV|RV|HWV|WoO|op)[.]?\\h*[0-9]+.*");
+    }
+
     private static boolean sideHeaderReviewName(Page page, Line heading, Line line) {
         float headerEnd = page.notationTop > 0 ? page.notationTop : page.height * .2f;
         if (page.creditsOnly
@@ -3853,6 +4035,18 @@ public final class ScoreCreditsDetector {
     // Individual names and explicit performer credits are handled normally.
     private static boolean publicationAudioAccessBadge(Page page, Line line, List<Line> lines) {
         String caption = clean(line.text).toLowerCase(Locale.ROOT);
+        if (line.height() > 0 && line.height() <= page.width * .04f) {
+            if (playbackControlSequence(caption)) return true;
+            if (caption.equals("playback")
+                    && lines.stream()
+                            .anyMatch(
+                                    other ->
+                                            playbackControlSequence(other.text)
+                                                    && Math.abs(other.top - line.bottom)
+                                                            < page.height * .08f
+                                                    && Math.abs(other.center() - line.center())
+                                                            < page.width * .2f)) return true;
+        }
         if (line.height() <= 0
                 || line.height() > page.width * .04f
                 || !(caption.equals("audio")
@@ -4548,10 +4742,19 @@ public final class ScoreCreditsDetector {
     /** A prominent photographed heading may continue in a tightly aligned vertical stack. */
     private static String photographicStackedTitle(
             Page page, Line heading, List<Line> lines, float limit) {
+        return String.join(
+                " ",
+                photographicStackedTitleLines(page, heading, lines, limit).stream()
+                        .map(line -> titlePunctuation(line.text))
+                        .toList());
+    }
+
+    private static List<Line> photographicStackedTitleLines(
+            Page page, Line heading, List<Line> lines, float limit) {
         if (!page.photographicCover
                 || page.creditsOnly
                 || heading.height() < page.width * .06f
-                || heading.right - heading.left < page.width * .2f) return "";
+                || heading.right - heading.left < page.width * .2f) return List.of();
         List<Line> group = new ArrayList<>();
         group.add(heading);
         Line prior = heading;
@@ -4599,14 +4802,11 @@ public final class ScoreCreditsDetector {
             if (candidates.isEmpty()) break;
             Line next = candidates.get(0);
             // Overlapping competing captions require review rather than an arbitrary join.
-            if (candidates.size() > 1 && candidates.get(1).top < next.bottom) return "";
+            if (candidates.size() > 1 && candidates.get(1).top < next.bottom) return List.of();
             group.add(next);
             prior = next;
         }
-        return group.size() < 2
-                ? ""
-                : String.join(
-                        " ", group.stream().map(line -> titlePunctuation(line.text)).toList());
+        return group.size() < 2 ? List.of() : List.copyOf(group);
     }
 
     /** A smaller OCR box inside a complete heading describes the same printed ink. */
@@ -4935,7 +5135,7 @@ public final class ScoreCreditsDetector {
         String text = clean(value);
         Matcher labels =
                 Pattern.compile(
-                                "(?iu)(?<!\\p{L})(?:music\\h+by|lyrics\\h+by|words\\h+by|arranged\\h+by|performed\\h+by)\\b[\\h.:=–—-]*")
+                                "(?iu)(?<!\\p{L})(?:music\\h+by|lyrics?\\h+by|words\\h+by|arranged\\h+by|performed\\h+by)\\b[\\h.:=–—-]*")
                         .matcher(text);
         List<Integer> starts = new ArrayList<>();
         while (labels.find()) starts.add(labels.start());
@@ -5087,7 +5287,7 @@ public final class ScoreCreditsDetector {
                                 || label.contains("adaptation")
                         ? Role.ARRANGER
                         : label.equals("words by")
-                                        || label.startsWith("lyrics")
+                                        || label.startsWith("lyric")
                                         || label.startsWith("additional")
                                 ? Role.LYRICS
                                 : label.contains("performed")
@@ -5261,6 +5461,621 @@ public final class ScoreCreditsDetector {
                                 "(?iu)(?<![\\p{L}\\p{N}])(?:p{1,3}|mp|mf|f{1,3}|sfz)(?![\\p{L}\\p{N}])")
                         .matcher(text);
         return dynamics.find() && dynamics.find();
+    }
+
+    /** Context separates navigation, prose and notation labels from unlabelled bylines. */
+    /** Repeated tempo terms plus aligned prose identify a notation glossary. */
+    private static boolean instructionGlossaryLine(Page page, Line line, List<Line> lines) {
+        if (page.photographicCover || page.notationTop > 0 || line.height() > page.height * .025f)
+            return false;
+        String text = clean(line.text);
+        if (!text.matches("(?iu).*\\b(?:play|notes|bow|slow|fast|loud|expressive)\\b.*")
+                || text.split("\\h+").length < 3) return false;
+        List<Line> terms =
+                lines.stream()
+                        .filter(
+                                l ->
+                                        clean(l.text)
+                                                        .matches(
+                                                                "(?iu)^(?:adagio|andante|allegro|largo|lento|presto|moderato)$")
+                                                && l.height() < page.height * .03f)
+                        .toList();
+        if (terms.stream().map(l -> fold(l.text)).distinct().count() < 4) return false;
+        return terms.stream()
+                        .anyMatch(
+                                term ->
+                                        line.left > term.right
+                                                && line.left - term.right < page.width * .15f
+                                                && Math.abs(line.top - term.top)
+                                                        < Math.max(line.height(), term.height())
+                                                                * 1.3f)
+                || text.matches("(?iu)^.{3,24};\\h*.*\\b(?:play|notes|bow)\\b.*$");
+    }
+
+    private static boolean unlabelledReviewNoise(
+            Page page, Line heading, Line line, List<Line> lines) {
+        String text = clean(line.text);
+        if (scoreFormatCaption(text)) return true;
+        if (!page.photographicCover
+                && line.left < page.width * .15f
+                && line.height() < page.height * .02f
+                && text.matches(
+                        "(?iu)^(?:v[iIl]n[.]|vla[.]|vc[.]|fl[.]|cl[.]|ob[.]|bsn[.]|pno[.]|violin|viola|cello|flute|clarinet|oboe|piano|organ)(?:\\h+(?:[1-9]|I{1,3}))?$")
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && same(other.text, text)
+                                                && Math.abs(other.left - line.left)
+                                                        < page.width * .025f
+                                                && other.height() < page.height * .02f
+                                                && Math.abs(other.top - line.top)
+                                                        > page.height * .08f)) return true;
+
+        if (instructionGlossaryLine(page, line, lines)) return true;
+        if (page.notationTop > 0
+                && line.height() < page.height * .025f
+                && line.bottom >= page.notationTop - page.height * .08f
+                && line.center() < page.width * .7f
+                && text.matches(
+                        "(?iu)^(?:[*]{0,3}muffled,?\\h+with\\h+distortion|count\\h+(?:[0-9]+|one|two|three|four|five|six|seven|eight)\\h+beats?(?:\\h+if)?|solo\\h*[-–]\\h*[0-9]+(?:st|nd|rd|th)\\h+time,\\h*all\\h*[-–]\\h*[0-9]+(?:st|nd|rd|th)\\h+time)$"))
+            return true;
+
+        if (page.notationTop > 0
+                && line.center() < page.width * .4f
+                && line.height() < page.height * .025f
+                && line.bottom >= page.notationTop - page.height * .12f
+                && text.matches("(?iu)^(?:rock(?:\\h+swing)?|ballad|waltz|fanfare)$")) return true;
+        if (paragraphLine(page, line, lines) || collectionListEntry(page, line, lines)) return true;
+        if (MOVEMENT_SUBTITLE.matcher(text).matches()) return true;
+        if (text.matches(
+                "(?iu)^(?:track\\h*[0-9]*|demo\\h+track|the\\h+complete\\h+album|merged\\h+(?:treble|bass)\\h+staves)$"))
+            return true;
+        if (page.notationTop > 0
+                && line.height() < heading.height() * .85f
+                && notationReviewLabel(page, line)) return true;
+        if (text.indexOf('•') >= 0 && text.split("•").length >= 3) return true;
+        if (text.matches("(?iu)^tuning\\h*[:=].*")) return true;
+        if (text.matches(
+                "(?iu)^\\(?from\\h+the\\h+(?:film|movie|netflix\\h+series|series|musical)\\b.*"))
+            return true;
+        boolean nearStaff =
+                page.notationTop > 0 && line.bottom >= page.notationTop - page.height * .065f;
+        if (nearStaff && notationReviewLabel(page, line)) return true;
+        if (nearStaff
+                && text.matches(
+                        "(?iu)^(?:(?:pre[- ]?)?(?:intro|verse|chorus|bridge|outro)(?:\\h+[0-9]+)?|bouncy|misterioso|sostenuto|molto\\h+rubato|(?:mp|mf|p|f)\\h+(?:cresc\\.?|dim\\.?)(?:\\h+.*)?|piano\\h*[-–]\\h*merged\\h+staves|s[-.]gt)$"))
+            return true;
+        if (nearStaff
+                && text.matches(
+                        "(?iu)^[A-G][#♯b♭]?(?:(?:maj|min|dim|aug|sus|add|m)[0-9]*)?(?:[0-9]+)?(?:/[A-G][#♯b♭]?)?$"))
+            return true;
+        for (Line label : lines) {
+            String key = clean(label.text);
+            if (key.matches("(?iu)^(?:contents|table\\h+of\\h+contents)$")
+                    && line.top >= label.top) {
+                if (text.matches(
+                        "(?iu)^(?:contents|table\\h+of\\h+contents|title|page(?:\\h+number)?)$"))
+                    return true;
+                for (Line number : lines)
+                    if (clean(number.text).matches("[0-9]{1,3}")
+                            && number.left > line.right
+                            && Math.abs(number.top - line.top)
+                                    < Math.max(number.height(), line.height())) return true;
+            }
+            if (key.matches("(?iu)^(?:postboks|p\\.?o\\.?\\h+box)\\h+[0-9]+$")
+                    && Math.abs(line.center() - label.center()) < page.width * .12f
+                    && Math.abs(line.top - label.top) < line.height() * 3) {
+                if (text.matches("(?iu).*(?:bibliotek|library)$")
+                        || text.matches("[0-9]{4,6}\\h+.*")
+                        || line == label) return true;
+            }
+        }
+        return false;
+    }
+
+    /** An original author block needs work evidence or a separate aligned arrangement label. */
+    private static boolean contextualOriginalAuthor(
+            Page page, Line heading, Line name, List<Line> lines) {
+        String text =
+                clean(name.text)
+                        .replaceFirst("(?iu)^(?:and|&)\\h+", "")
+                        .replaceFirst("\\h*\\((?:1[5-9]|20)[0-9]{2}\\)\\h*$", "");
+        if (page.photographicCover
+                || page.notationTop <= 0
+                || page.creditsOnly
+                        && (heading.height() < page.width * .02f
+                                || heading.top > page.height * .2f
+                                || heading.bottom > page.notationTop * .8f)
+                || name.bottom >= page.notationTop
+                || name.top < heading.top
+                || name.top < heading.bottom
+                        && name.left
+                                < heading.right - Math.min(name.height(), heading.height()) * .6f
+                || contextualAuthorNames(text).isEmpty()
+                || same(text, heading.text)
+                || text.matches("(?iu)^traditional\\b.*")
+                || text.matches(
+                        "(?iu)^(?:latin|english|french|german|italian|spanish|irish|scottish|welsh)\\h+(?:hymn|carol|folk\\h+(?:song|tune))$")
+                || text.matches(
+                        "(?iu).*\\b(?:from|theme|movement|piano|violin|solo|film|movie|series|produced)\\b.*"))
+            return false;
+        for (Line context : lines) {
+            if (context.top >= page.notationTop
+                    || context.bottom > page.notationTop + page.height * .025f
+                    || context.top < heading.top) continue;
+            String value = clean(context.text);
+            if (name.center() > page.width * .55f
+                    && value.matches(
+                            "(?iu).*(?:\\bop(?:us)?\\.?|\\bWoO|\\bBWV|\\bK(?:V)?|\\bRV|\\bHWV)[.]?\\h*[0-9]+.*"))
+                return true;
+
+            if (name.center() < page.width * .35f
+                    && text.split("\\h+").length >= 2
+                    && context.center() > page.width * .65f
+                    && Math.abs(context.top - name.top)
+                            < Math.max(context.height(), name.height()) * 1.25f
+                    && value.matches(
+                            "(?iu)^(?:arranged\\h+by|arr[.]?|(?:and\\h+the\\h+)?adaptation\\h+by)\\h+.+")
+                    && lines.stream()
+                            .noneMatch(
+                                    other ->
+                                            other.top >= heading.top
+                                                    && other.bottom < page.notationTop
+                                                    && credit(other.text) != null
+                                                    && credit(other.text).role == Role.COMPOSER)
+                    && lines.stream()
+                            .noneMatch(
+                                    other ->
+                                            other != context
+                                                    && other != name
+                                                    && other.center() > page.width * .55f
+                                                    && other.top >= heading.bottom
+                                                    && other.bottom < page.notationTop
+                                                    && other.height() < heading.height()
+                                                    && credit(other.text) == null
+                                                    && !contextualAuthorNames(clean(other.text))
+                                                            .isEmpty()
+                                                    && !notationReviewLabel(page, other)))
+                return true;
+            Credit role = credit(value);
+            if (role != null
+                    && role.role == Role.ARRANGER
+                    && context != name
+                    && !value.matches("(?iu)^(?:transcribed|transcription|transcr\\.?)\\b.*")
+                    && name.center() > page.width * .55f
+                    && ((context.top
+                                            >= name.bottom
+                                                    - Math.min(context.height(), name.height())
+                                                            * .2f
+                                    && context.top - name.bottom < page.height * .07f
+                                    && Math.abs(context.right - name.right) < page.width * .12f)
+                            || (context.center() < page.width * .45f
+                                    && Math.abs(context.top - name.top)
+                                            < Math.max(context.height(), name.height()) * 1.5f)))
+                return true;
+        }
+        return false;
+    }
+
+    /** Small labels beside the staff describe instrumentation and execution. */
+    private static boolean notationReviewLabel(Page page, Line line) {
+        if (line.height() > page.height * .035f) return false;
+        String text =
+                clean(line.text)
+                        .replaceFirst("(?iu)^(?:p{1,3}|mp|mf|f{1,3}|V)\\h+", "")
+                        .replaceAll("^[|\\[\\](]+|[|\\[\\]).]+$", "")
+                        .strip();
+        if (text.matches(
+                "(?iu)^(?:[A-G]\\h+string|solo|solo\\h+violin|vocal\\h+parts|guitar/celli|accent;\\h*play\\h+forcefully)$"))
+            return true;
+        if (text.matches("(?iu)^\\(?cymbal\\)?\\h+\\(?voice\\)?$")) return true;
+        String instrument =
+                "(?:violin|viola|piano|guitar|cello|flute|clarinet|oboe|bassoon|timpani|brass|synth\\.?|harp|voice|cymbal|bass|drum|electric\\h+piano|glockenspiel|harpsichord|mandolin|vibes|vin\\.)";
+        if (text.matches(
+                "(?iu)^"
+                        + instrument
+                        + "(?:\\h*(?:[0-9]+|I{1,3}|solo))?(?:\\h*(?:&|and)\\h*"
+                        + instrument
+                        + ")?$")) return true;
+        if (text.matches("(?iu)^(?:first|second|third|fourth|[1-9](?:st|nd|rd|th))\\h+movement$"))
+            return true;
+        String word =
+                "(?:vivace|misterioso|cresc[.,]?|dim[.,]?|a|lente|grazioso|sempre|mosso|tempo|simply|soul|groove|swing|affettuoso|agitato|animato|legato|espress\\.?|light|and|lively|meno|mezzo|movimento|tranquillo|piz\\.?|port\\.?|sostemuto|sosteńuto|accel\\.?|andante|andantino|allegro|allegretto|adagio|largo|lento|lent|moderato|presto|espressivo|expressively|gently|passionately|sustained|[ec]spressivo|lacrimoso|molto|poco|cantabile|rubato|sostenuto|briskly|delicately|douloureux|con|moto|e|et|free|time)";
+        return text.matches(
+                "(?iu)^(?:[0-9]+\\h*)?"
+                        + word
+                        + "(?:[\\h,;]+"
+                        + word
+                        + ")*(?:\\h*[Jj♩♪=]*\\h*[0-9]+)?$");
+    }
+
+    private record RepeatedCredit(String work, Role role, Set<String> names) {}
+
+    /** A missing internal letter is repairable only inside a repeated same-work coauthor block. */
+    private static void repairRepeatedCreditDrops(
+            Set<String> names, Role role, List<RepeatedCredit> evidence) {
+        Set<String> remove = new LinkedHashSet<>();
+        for (String shortName : names) {
+            List<RepeatedCredit> occurrences =
+                    evidence.stream()
+                            .filter(e -> e.role == role && e.names.contains(shortName))
+                            .toList();
+            if (occurrences.isEmpty()) continue;
+            Set<String> possible = new LinkedHashSet<>();
+            for (String fullName : names) {
+                if (!internalLetterDrop(shortName, fullName)) continue;
+                boolean everyOccurrence = true;
+                for (RepeatedCredit occurrence : occurrences) {
+                    if (occurrence.work.isEmpty() || occurrence.names.size() < 2) {
+                        everyOccurrence = false;
+                        break;
+                    }
+                    Set<String> repaired = new LinkedHashSet<>(occurrence.names);
+                    repaired.remove(shortName);
+                    repaired.add(fullName);
+                    if (repaired.size() != occurrence.names.size()
+                            || evidence.stream()
+                                    .noneMatch(
+                                            e ->
+                                                    e.role == role
+                                                            && same(e.work, occurrence.work)
+                                                            && e.names.equals(repaired))) {
+                        everyOccurrence = false;
+                        break;
+                    }
+                }
+                if (everyOccurrence) possible.add(fullName);
+            }
+            if (possible.size() == 1) remove.add(shortName);
+        }
+        names.removeAll(remove);
+    }
+
+    private static boolean internalLetterDrop(String shorter, String longer) {
+        String a = fold(shorter), b = fold(longer);
+        if (a.length() < 7 || b.length() != a.length() + 1) return false;
+        for (int i = 1; i < b.length() - 1; i++)
+            if (Character.isLetter(b.charAt(i))
+                    && (b.substring(0, i) + b.substring(i + 1)).equals(a)) return true;
+        return false;
+    }
+
+    /** Collection captions and aligned contents columns describe works, not contributors. */
+    private static boolean collectionListEntry(Page page, Line candidate, List<Line> lines) {
+        String text = clean(candidate.text);
+        // A printed playback panel plus a repeated title column identifies collection front matter,
+        // even when the page detector mistakes footer rules for a staff.
+        if ((page.notationTop <= 0 || page.notationTop > page.height * .75f)
+                && candidate.top > page.height * .2f
+                && candidate.bottom < page.height * .72f
+                && candidate.height() < page.height * .03f
+                && credit(text) == null
+                && lines.stream()
+                        .anyMatch(
+                                l ->
+                                        l.top < page.height * .25f
+                                                && playbackControlSequence(l.text))) {
+            long aligned =
+                    lines.stream()
+                            .filter(
+                                    l ->
+                                            l.top > page.height * .2f
+                                                    && l.bottom < page.height * .72f
+                                                    && l.height() < page.height * .03f
+                                                    && credit(l.text) == null
+                                                    && clean(l.text).matches(".*\\p{L}.*")
+                                                    && Math.abs(l.left - candidate.left)
+                                                            < page.width * .06f)
+                            .count();
+            if (aligned >= 5) return true;
+        }
+
+        if (page.notationTop <= 0 && credit(candidate.text) == null) {
+            for (Line caption : lines) {
+                if (!clean(caption.text)
+                        .matches(
+                                "(?iu)^p(?:la|a)y\\h*[0-9&]?.*\\b(?:favorites|selections|solos)\\b.*sound[- ]alike\\b.*"))
+                    continue;
+                if (candidate == caption) return true;
+                if (candidate.top < caption.bottom
+                        || candidate.bottom > page.height * .88f
+                        || candidate.height() > page.height * .03f
+                        || candidate.right - candidate.left > page.width * .4f) continue;
+                long entries =
+                        lines.stream()
+                                .filter(
+                                        l ->
+                                                l.top >= caption.bottom
+                                                        && l.bottom <= page.height * .88f
+                                                        && l.height() <= page.height * .03f
+                                                        && l.right - l.left <= page.width * .4f
+                                                        && credit(l.text) == null
+                                                        && Math.abs(l.right - candidate.right)
+                                                                < page.width * .025f)
+                                .count();
+                if (entries >= 5) {
+                    boolean pairedCapitalCredit =
+                            clean(candidate.text)
+                                            .equals(clean(candidate.text).toUpperCase(Locale.ROOT))
+                                    && lines.stream()
+                                            .anyMatch(
+                                                    previous ->
+                                                            previous != candidate
+                                                                    && previous.top
+                                                                            >= caption.bottom
+                                                                    && previous.top < candidate.top
+                                                                    && Math.abs(
+                                                                                    previous.right
+                                                                                            - candidate
+                                                                                                    .right)
+                                                                            < page.width * .025f
+                                                                    && candidate.top
+                                                                                    - previous.bottom
+                                                                            < Math.max(
+                                                                                            previous
+                                                                                                    .height(),
+                                                                                            candidate
+                                                                                                    .height())
+                                                                                    * .4f
+                                                                    && !clean(previous.text)
+                                                                            .equals(
+                                                                                    clean(
+                                                                                                    previous.text)
+                                                                                            .toUpperCase(
+                                                                                                    Locale
+                                                                                                            .ROOT)));
+                    if (!pairedCapitalCredit) return true;
+                }
+            }
+        }
+
+        Pattern collectionCaption =
+                Pattern.compile(
+                        "(?iu)^(?:solo\\h+arrangements\\h+of\\h+[0-9]+\\h+.*songs\\h+including:?|[0-9]+\\h+solo\\h+arrangements\\h+with\\h+.*accompaniment|music\\h+from\\h+the\\h+motion\\h+picture\\h+soundtrack)$");
+        if (collectionCaption.matcher(text).matches()) return true;
+        for (Line label : lines)
+            if (collectionCaption.matcher(clean(label.text)).matches()
+                    && candidate.top >= label.bottom
+                    && candidate.top - label.bottom < page.height * .065f
+                    && candidate.height() < label.height() * 1.6f
+                    && Math.abs(candidate.center() - label.center()) < page.width * .15f)
+                return true;
+        if (page.notationTop > 0) return false;
+        boolean heading =
+                lines.stream()
+                        .anyMatch(
+                                l ->
+                                        clean(l.text)
+                                                .matches(
+                                                        "(?iu).*\\b(?:contents|solos|selections|songs|arrangements)\\b.*"));
+        if (!heading || candidate.height() > page.height * .025f) return false;
+        List<Line> column =
+                lines.stream()
+                        .filter(
+                                l ->
+                                        l.height() >= candidate.height() * .75f
+                                                && l.height() <= candidate.height() * 1.35f
+                                                && Math.abs(l.left - candidate.left)
+                                                        < page.width * .025f
+                                                && l.top > page.height * .08f
+                                                && l.bottom < page.height * .75f
+                                                && credit(l.text) == null
+                                                && !LEGAL.matcher(l.text).find()
+                                                && clean(l.text).matches(".*\\p{L}{2}.*"))
+                        .sorted(Comparator.comparingDouble(l -> l.top))
+                        .toList();
+        if (!column.contains(candidate) || column.size() < 5) return false;
+        int adjacent = 0;
+        for (int i = 1; i < column.size(); i++) {
+            float gap = column.get(i).top - column.get(i - 1).top;
+            if (gap > candidate.height() * 1.3f && gap < candidate.height() * 4.5f) adjacent++;
+        }
+        return adjacent >= 4;
+    }
+
+    /** Same-work coauthor context corroborates an optional middle name in an inferred byline. */
+    private static void preferExplicitCoauthorNames(
+            Set<String> composers, List<RepeatedCredit> inferred, List<RepeatedCredit> explicit) {
+        for (String candidate : List.copyOf(composers)) {
+            List<RepeatedCredit> occurrences =
+                    inferred.stream().filter(e -> e.names.contains(candidate)).toList();
+            if (occurrences.isEmpty()
+                    || explicit.stream().anyMatch(e -> e.names.contains(candidate))) continue;
+            Set<String> matches = new LinkedHashSet<>();
+            for (String canonical : composers) {
+                if (same(candidate, canonical) || !sameOuterNames(candidate, canonical)) continue;
+                boolean all = true;
+                for (RepeatedCredit occurrence : occurrences) {
+                    Set<String> replaced = new LinkedHashSet<>(occurrence.names);
+                    replaced.remove(candidate);
+                    replaced.add(canonical);
+                    if (replaced.size() < 2
+                            || explicit.stream()
+                                    .noneMatch(
+                                            e ->
+                                                    e.role == Role.COMPOSER
+                                                            && same(e.work, occurrence.work)
+                                                            && e.names.equals(replaced))) {
+                        all = false;
+                        break;
+                    }
+                }
+                if (all) matches.add(canonical);
+            }
+            if (matches.size() == 1) composers.remove(candidate);
+        }
+    }
+
+    private static boolean sameOuterNames(String a, String b) {
+        String[] x = clean(a).split("\\h+"), y = clean(b).split("\\h+");
+        if (x.length < 2 || y.length < 2 || x.length == y.length) return false;
+        return same(x[0], y[0]) && same(x[x.length - 1], y[y.length - 1]);
+    }
+
+    /** Overlapping but different lyrical and bare bylines do not establish a music role. */
+    private static boolean conflictingLyricByline(Page page, List<Line> lines, List<String> names) {
+        for (Line line : lines) {
+            if (line.bottom >= page.notationTop) continue;
+            Credit label = credit(clean(line.text));
+            if (label == null || label.role != Role.LYRICS) continue;
+            List<String> lyrics = creditNames(label.value);
+            if (lyrics.stream().anyMatch(a -> names.stream().anyMatch(b -> same(a, b)))
+                    && (lyrics.size() != names.size()
+                            || lyrics.stream()
+                                    .anyMatch(a -> names.stream().noneMatch(b -> same(a, b)))))
+                return true;
+        }
+        return false;
+    }
+
+    /** A unique expanded byline in the same work resolves a surname or initial-only repeat. */
+    private static void preferExpandedInferredName(
+            Set<String> composers, List<RepeatedCredit> inferred, List<RepeatedCredit> explicit) {
+        for (String shortName : List.copyOf(composers)) {
+            if (explicit.stream()
+                    .anyMatch(e -> e.role == Role.COMPOSER && e.names.contains(shortName)))
+                continue;
+            List<RepeatedCredit> uses =
+                    inferred.stream().filter(e -> e.names.contains(shortName)).toList();
+            if (uses.isEmpty() || uses.stream().anyMatch(e -> e.names.size() != 1)) continue;
+            List<String> expansions =
+                    composers.stream().filter(n -> abbreviatedPerson(shortName, n)).toList();
+            if (expansions.size() != 1) continue;
+            String full = expansions.get(0);
+            if (uses.stream()
+                    .allMatch(
+                            u ->
+                                    inferred.stream()
+                                            .anyMatch(
+                                                    e ->
+                                                            e.names.size() == 1
+                                                                    && e.names.contains(full)
+                                                                    && equivalentPartWork(
+                                                                            u.work, e.work))))
+                composers.remove(shortName);
+        }
+    }
+
+    private static boolean abbreviatedPerson(String shortName, String fullName) {
+        String[] a = clean(shortName).split("\\h+"), b = clean(fullName).split("\\h+");
+        if (same(shortName, fullName)
+                || b.length < 2
+                || a.length > b.length
+                || !same(a[a.length - 1], b[b.length - 1])) return false;
+        if (a.length == 1) return true;
+        if (a.length != b.length) return false;
+        boolean abbreviated = false;
+        for (int i = 0; i < a.length - 1; i++) {
+            String initial = a[i].replace(".", "");
+            if (b[i].replace(".", "").length() < 2
+                    || initial.length() != 1
+                    || !Character.isLetter(initial.charAt(0))
+                    || !b[i].regionMatches(true, 0, initial, 0, 1)) return false;
+            abbreviated = true;
+        }
+        return abbreviated;
+    }
+
+    private static boolean equivalentPartWork(String a, String b) {
+        String x = partWorkKey(a), y = partWorkKey(b);
+        return !x.isEmpty() && x.equals(y);
+    }
+
+    private static String partWorkKey(String work) {
+        return clean(work)
+                .toLowerCase(Locale.ROOT)
+                .replaceFirst("\\h+(?:[1-9][0-9]*(?:st|nd|rd|th)?|lst|[ivx]+)[.]?\\h+movement$", "")
+                .replaceAll("\\b0+([1-9][0-9]*)\\b", "$1")
+                .replaceAll("[^\\p{L}\\p{N}]", "");
+    }
+
+    /** The complete ordered control row is a UI caption; individual words remain valid names. */
+    private static boolean playbackControlSequence(String value) {
+        return clean(value)
+                .replaceAll("[•·|]", " ")
+                .replaceAll("\\h+", " ")
+                .matches("(?iu)^speed (?:[e&] )?pitch balance loop$");
+    }
+
+    /** A repeated work-title/name running header can restore spacing without guessing letters or roles. */
+    private static void restoreReviewHeaderSpacing(
+            Set<String> review, List<Page> pages, String title, String fallback) {
+        Set<String> restored = new LinkedHashSet<>();
+        for (String original : review) {
+            String value = original;
+            String trimmed = clean(value).replaceFirst("[,;]+$", "");
+            if (properReviewName(trimmed)) value = trimmed;
+            Set<String> matches = new LinkedHashSet<>();
+            for (Page page : pages)
+                for (Line line : page.lines) {
+                    String[] parts = clean(line.text).split("\\h*[|]\\h*", -1);
+                    if (parts.length != 2
+                            || !(same(parts[0], title) || same(parts[0], fallback))
+                            || !properReviewName(parts[1])
+                            || !same(parts[1], value)) continue;
+                    matches.add(clean(parts[1]));
+                }
+            if (matches.size() == 1) value = matches.iterator().next();
+            restored.add(value);
+        }
+        review.clear();
+        review.addAll(restored);
+    }
+
+    /** Role-supported author lists may include a one-word or hyphen-initial stage name. */
+    private static List<String> contextualAuthorNames(String value) {
+        List<String> names =
+                Arrays.stream(clean(value).split("\\h*(?:[,;]|\\band\\b|&)\\h*"))
+                        .map(ScoreCreditsDetector::clean)
+                        .filter(n -> !n.isEmpty())
+                        .toList();
+        if (names.isEmpty()
+                || names.stream()
+                        .anyMatch(
+                                n ->
+                                        !(properReviewName(n)
+                                                || INITIALLED_NAME.matcher(n).matches()
+                                                || n.matches("\\p{Lu}\\p{Ll}{2,30}-\\p{Lu}"))))
+            return List.of();
+        return names;
+    }
+
+    /** Complete format and source captions describe the score rather than a contributor. */
+    private static boolean scoreFormatCaption(String value) {
+        String text = clean(value);
+        if (text.matches("(?iu)^\\(?from\\h+[^()]+\\)$")) return true;
+        if (text.matches("(?iu)^(?:theme|music)\\h+from\\h+.+$")) return true;
+        String instrument =
+                "(?:violin|viola|cello|flute|piano|organ|guitar|voice|clarinet|oboe|bassoon|harp|trumpet)";
+        String catalogue =
+                "(?:op[.]|no[.])\\h*[0-9]+[a-z]?(?:\\h*[,;]\\h*(?:op[.]|no[.]|act)\\h*(?:[0-9]+[a-z]?|[ivx]+))*";
+        if (text.matches(
+                "(?iu)^(?:for\\h+)?"
+                        + instrument
+                        + "(?:\\h*(?:&|and|with)\\h*"
+                        + instrument
+                        + ")+(?:,\\h*"
+                        + catalogue
+                        + ")?$")) return true;
+        if (text.matches("(?iu)^" + catalogue + "$")) return true;
+        if (text.matches("(?iu)^[a-z]{1,4}\\h+[0-9]+:[0-9]+;\\h*" + catalogue + "$")) return true;
+        if (text.matches("(?iu)^vocal\\h+parts$")) return true;
+
+        if (text.matches("(?iu)^\\(?from\\h+[\"“‘].+[\"”’](?:\\h+[12][0-9]{3})?\\)?$")) return true;
+        if (text.matches(
+                "(?iu)^\\(?(?:orchestral|piano\\h+accompaniment|pop|acoustic|instrumental)\\h+version\\)?$"))
+            return true;
+        if (text.matches("(?iu)^\\(?main\\h+theme\\)?$")) return true;
+        if (text.matches("(?iu)^(?:piano|violin|guitar)\\h*[-–]\\h*merged\\h+staves$")) return true;
+        if (text.matches("(?iu)^transcribed\\h+melody$")) return true;
+        if (text.matches(
+                "(?iu)^(?:theme\\h+song\\h+)?for\\h+(?:keyboard|flute|violin|piano|guitar|cello)\\h+solo(?:\\h*/\\h*jazz\\h+organ)?$"))
+            return true;
+        if (text.matches(
+                "(?iu)^playing\\h+with\\h+karaoke$|^also\\h+sounds\\h+good\\h+with\\h+pedal$"))
+            return true;
+        return text.matches("(?iu)^[*]?optional\\h+intro\\h*\\(mm[.]?\\h*[0-9]+[-–][0-9]+\\)$");
     }
 
     private static boolean nameText(String value) {

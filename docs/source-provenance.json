@@ -2024,14 +2024,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "7a56d0bd7ddb69e0697d2f1031b0ee58be6f11ea89f93a5aa994effa59657723",
-      "source_normalized_sha256": "9cd2bd108f06f25997560f98d101e7cb8e41f9e16aa2cb4317db0a359da0a034",
+      "source_sha256": "8fd4aadc03ae523bdb9487fe0bc2f4d8e8e333a0e015e996fb6c479323dda48a",
+      "source_normalized_sha256": "6053daf1f2bd37600cebca9ff69944224f5dbb1d891e54eb9055ba7e8f4f2e49",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "602df2421797fb8059aa6a4e34e659c24e5dbf4fc1ef1a319b788baef6e4fa02",
+      "standalone_sha256": "0e6fd7c97870ef9bd5e3da806ec32bbc2c57762eacc9a3c9eaaab1c196b763cf",
       "license": "Apache-2.0",
-      "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
+      "review_note": "Global title, contributor, catalogue, instruction and repeated-credit evidence. Bounded original-pixel outside-letter and mixed-case echo recovery requires agreeing high-confidence readings. No song-specific exceptions, private fixtures, model or wire-layout changes.",
+      "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2476,6 +2477,17 @@
       "source_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
       "source_normalized_sha256": "bbe3243c6077ae53281124bad774a3f1a125c9b2539d20566dd911fb70d9cf3b",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending"
+    },
+    "LocatedCoverHeadingExpansion.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingExpansion.java",
+      "source_sha256": "3523702dc724d06f255610fbbd07a846298a22a4b1f6d008dc24ba0f2cdef018",
+      "source_normalized_sha256": "7a8455fd3a3d78707ba78cbfaa29a3ff68ff7fbcbfda96f1fb2203ad92997cfe",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LocatedCoverHeadingExpansion.java",
+      "standalone_sha256": "5ad5cfc80d31f47f8b45d9102d880c0db84a5538a25fed3e8c639a2644ea4fe2",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20",
+      "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
+      "review_note": "Global title, contributor, catalogue, instruction and repeated-credit evidence. Bounded original-pixel outside-letter and mixed-case echo recovery requires agreeing high-confidence readings. No song-specific exceptions, private fixtures, model or wire-layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -5835,5 +5847,11 @@
       "IsolatedOctaveTieTest.java"
     ],
     "qualification": "Focused paired controls passed before integration; combined standalone suite is separate from final native worker, cache invalidation, real-score and packaged runtime acceptance."
+  },
+  "metadata_original_pixel_adapter_review": {
+    "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20",
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "8a3cc89e7b6f84f34aa52b6995e8ea81fc5a5b0d7ab1c720dfe4fa92dd6b4a7f",
+    "boundary": "Android PdfRenderer and bitmap lifecycle adapter remains app-only. Public LocatedCoverHeadingExpansion and ScoreCreditsDetector expose matching pure-JDK evidence/merge behavior. Three original-PDF scales, cancellation and recycling retained. Android runtime and matching desktop worker integration pending."
   }
 }

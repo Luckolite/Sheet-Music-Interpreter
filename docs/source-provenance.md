@@ -1196,3 +1196,19 @@ regression classes contain31new controls. App source is pinned to scoped commit
 existing package and diagnostics boundary. No private score material, model,
 dependency or wire-layout change is included. Combined source checks remain
 separate from cache invalidation, paired native deployment and runtime acceptance.
+
+## Metadata credit and title evidence
+
+Global layout and repeated-credit rules distinguish contributors from work subtitles,
+instrument labels, collection captions, instructions and narrative artwork. Clear
+original-author context supports composer inference; unresolved service credits
+remain review evidence. Original synthetic regressions protect explicit credits,
+ambiguous names, roles, identifiers and neighboring text.
+
+Bounded original-pixel rereads recover clipped outside heading letters and a narrow
+mixed-case boundary echo only from three agreeing high-confidence readings. The
+Android scanner retains cancellation and bitmap cleanup; matching pure-JDK
+helpers are included here. App commit `85947bc2dbe00690da14be6d25101ff3d265ca20` is reviewed.
+No private score fixtures, model or wire-layout changes are included. Source tests
+and saved-evidence replay do not establish full-library accuracy, Android runtime
+behavior or paired desktop-worker deployment.
