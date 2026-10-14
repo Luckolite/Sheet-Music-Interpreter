@@ -59,6 +59,15 @@ final class TempoChangeDetector {
                                 anchor[0] / (float) width);
             }
             final var accepted = token;
+            // Replace only an overlapping OCR estimate that cannot prove its equals sign.
+            result.removeIf(
+                    old ->
+                            old.value() == accepted.value()
+                                    && old.left() < word.right()
+                                    && old.right() > word.left()
+                                    && old.top() < word.bottom()
+                                    && old.bottom() > word.top()
+                                    && equalsSignLeft(old, gray, width, height) < 0);
             if (result.stream()
                     .noneMatch(
                             old ->
@@ -71,11 +80,14 @@ final class TempoChangeDetector {
         return List.copyOf(result);
     }
 
-    /** Explicit equals-prefixed OCR still needs separate printed digits and a complete equation. */
+    /** Merged OCR still needs separate printed digits and a complete optical tempo equation. */
     private static MeasureNumberReconciler.NumberToken equalsPrefixedDigits(
             PlayingTechniqueDetector.Word word, byte[] gray, int width, int height) {
         String text = word.text().trim();
-        var match = java.util.regex.Pattern.compile("^=\\s*([0-9]{2,3})(?![0-9])").matcher(text);
+        var match =
+                java.util.regex.Pattern.compile(
+                                "^(?:[Jj♩♪]\\s*\\.?\\s*)?=\\s*([0-9]{2,3})(?![0-9])")
+                        .matcher(text);
         if (!match.find() || text.substring(match.end()).trim().matches("[-–—/].*|[.,]\\s*[0-9].*"))
             return null;
         int value = Integer.parseInt(match.group(1)), digits = match.group(1).length();
@@ -135,6 +147,7 @@ final class TempoChangeDetector {
         for (int[] part : parts) {
             int pw = part[2] - part[0] + 1, ph = part[3] - part[1] + 1;
             if (ph < h * .35f) continue;
+            if (first == null && beforePrintedEquals(part, parts, h)) continue;
             if (pw > ph * .95f) return null;
             if (first == null) first = part;
             int fh = first[3] - first[1] + 1;
@@ -158,6 +171,30 @@ final class TempoChangeDetector {
                         r / (float) width,
                         b / (float) height)
                 : null;
+    }
+
+    /** OCR can include the beat glyph even when its text begins at the equals sign. */
+    private static boolean beforePrintedEquals(int[] part, List<int[]> parts, int height) {
+        for (int i = 0; i < parts.size(); i++) {
+            var a = parts.get(i);
+            int aw = a[2] - a[0] + 1, ah = a[3] - a[1] + 1;
+            if (a[0] <= part[2]
+                    || a[0] - part[2] > height
+                    || aw < 3
+                    || aw < ah * 2
+                    || ah > height * .2f) continue;
+            for (int j = i + 1; j < parts.size(); j++) {
+                var b = parts.get(j);
+                int bw = b[2] - b[0] + 1, bh = b[3] - b[1] + 1;
+                if (bw < 3 || bw < bh * 2 || bh > height * .2f) continue;
+                float separation = Math.abs((a[1] + a[3] - b[1] - b[3]) * .5f);
+                int overlap = Math.min(a[2], b[2]) - Math.max(a[0], b[0]) + 1;
+                if (overlap >= Math.max(aw, bw) * .7f
+                        && separation >= 2
+                        && separation <= height * .5f) return true;
+            }
+        }
+        return false;
     }
 
     static List<ScoreTempoChange> detect(

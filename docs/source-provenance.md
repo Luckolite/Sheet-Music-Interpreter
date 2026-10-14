@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition54 recovers medium-contrast dynamic glyph components, note-prefixed
+tempo equations, complete clefs crossing a measure boundary, and compact or
+vertically offset meter numerals. Physical staff geometry, existing confidence
+thresholds and contradictory OCR controls remain in force. Regressions use
+original procedural examples; private source-score evidence is not distributed.
+Guide286 layout is unchanged and audio87 invalidates stale previews. Packaged
+deployment, device behavior and whole-library accuracy remain unverified.
+
 The description-credit parser retains explicit artist, composer and arranger roles,
 keeps service credits unresolved for review, and never treats channel identity as
 a musical credit. The standalone port differs only by package; its regressions

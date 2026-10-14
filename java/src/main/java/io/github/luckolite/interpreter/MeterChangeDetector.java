@@ -512,7 +512,7 @@ public final class MeterChangeDetector {
                 if ((head > gap * gap * .20f && !lowerEightAfterBarline)
                         || upper < gap * 2
                         || lower < gap * 2
-                        || maxY - minY < gap * 3.1f) continue;
+                        || maxY - minY + 1 < gap * 3.1f) continue;
                 // Staggered key-signature flats form two apparent digits after staff removal.
                 // Require both key evidence and staggered glyph centres; real stacked digits
                 // can also be labelled as key ink, and must survive that model error.

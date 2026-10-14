@@ -5095,7 +5095,6 @@ final class OmrScoreInterpreter {
                                     || firstInRow
                                             && candidate.label
                                                     == OmrMeasurePostProcessor.CLEF_OR_KEY
-                                            && c.minX >= boundary
                                             && c.minX - boundary <= staff.gap * 4
                                             && c.maxX - boundary <= staff.gap * 7
                                             && completeHeaderTreble(c, staff))

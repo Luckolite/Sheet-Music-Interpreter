@@ -45,9 +45,21 @@ final class MeterDigitRecognizer {
             PortableOcr.Inference inference)
             throws Exception {
         int left = width, right = -1, first = bottom, last = -1, ink = 0;
+        boolean[] rule = new boolean[height];
+        boolean compact = false;
+        for (int y = top; y < bottom; ) {
+            int start = y;
+            while (y < bottom && fullWidthInk(pixels, width, y)) y++;
+            if (y > start && y - start <= Math.max(1, Math.round(gap * .18f))) {
+                java.util.Arrays.fill(rule, start, y, true);
+                compact = true;
+            }
+            if (y == start) y++;
+        }
+
         for (int y = top; y < bottom; y++)
             for (int x = 0; x < width; x++)
-                if ((pixels[y * width + x] & 255) < 150) {
+                if (!rule[y] && (pixels[y * width + x] & 255) < 150) {
                     left = Math.min(left, x);
                     right = Math.max(right, x);
                     first = Math.min(first, y);
@@ -59,7 +71,7 @@ final class MeterDigitRecognizer {
                 || right - left + 1 < gap * .3f
                 || right - left + 1 > gap * 2.6f) return "";
         String selected = "";
-        for (int margin : new int[] {-1, 1, 3}) {
+        for (int margin : compact ? new int[] {1, 3, 5} : new int[] {-1, 1, 3}) {
             int x0 = margin < 0 ? 0 : Math.max(0, left - margin);
             int x1 = margin < 0 ? width : Math.min(width, right + margin + 1);
             int y0 = margin < 0 ? top : Math.max(top, first - margin);
@@ -82,5 +94,32 @@ final class MeterDigitRecognizer {
             selected = decoded.text();
         }
         return selected;
+    }
+
+    /** Only thin ink running through both crop edges may be excluded from slot bounds.
+     * Pixels stay unchanged; recognition still sees the printed ink inside each tight crop. */
+    private static boolean fullWidthInk(int[] pixels, int width, int y) {
+        if ((pixels[y * width] & 255) >= 150 || (pixels[y * width + width - 1] & 255) >= 150)
+            return false;
+        int ink = 0;
+        for (int x = 0; x < width; x++) if ((pixels[y * width + x] & 255) < 150) ink++;
+        return ink >= width * .9f;
+    }
+
+    /** Three strict direct readings may recover a clipped prefix in one weak detector reading. */
+    static boolean permitsDirect(String direct, List<String> upperReadings) {
+        if (direct == null || !direct.matches("[0-9]{1,2}/(2|4|8|16|32)")) return false;
+        String upper = direct.substring(0, direct.indexOf('/'));
+        int votes = 0;
+        String weak = "";
+        for (String reading : upperReadings) {
+            if (reading == null || reading.isBlank()) continue;
+            if (!reading.matches("[0-9]{1,2}")) return false;
+            if (reading.equals(upper)) continue;
+            if (!weak.isEmpty() && !weak.equals(reading)) return false;
+            weak = reading;
+            votes++;
+        }
+        return votes == 0 || votes == 1 && weak.length() < upper.length() && upper.endsWith(weak);
     }
 }

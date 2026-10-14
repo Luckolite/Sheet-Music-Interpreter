@@ -197,7 +197,7 @@ public final class MusicalOcr {
                 }
             }
         }
-        if (upperEvidence.isEmpty()) {
+        if (corroboratedDigit(upperReadings).isBlank()) {
             String direct =
                     MeterDigitRecognizer.read(
                             cleaned,
@@ -207,7 +207,8 @@ public final class MusicalOcr {
                             crop.gap(),
                             corroboratedDigit(lowerReadings),
                             inference);
-            if (!direct.isEmpty()) return new MeterReading(direct, 2);
+            if (MeterDigitRecognizer.permitsDirect(direct, upperReadings))
+                return new MeterReading(direct, 2);
         }
         String single = MeterOcrEvidence.singleReading(readings);
         if (!single.isBlank()) return new MeterReading(single, 1);

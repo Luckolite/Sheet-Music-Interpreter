@@ -52,6 +52,53 @@ public final class MeterGlyphMatcher {
             String upperEvidence,
             String lowerEvidence,
             boolean[] ignored) {
+        Reading original =
+                readAt(
+                        pixels,
+                        width,
+                        height,
+                        middle,
+                        firstLine,
+                        gap,
+                        upperEvidence,
+                        lowerEvidence,
+                        ignored);
+        if (!original.text().isBlank()
+                || !upperEvidence.isBlank()
+                || !lowerEvidence.isBlank()
+                || !Float.isFinite(gap)
+                || gap < 6) return original;
+        // Engraved numerals may sit below or above the staff midpoint. Keep the
+        // physical rail positions fixed while testing nearby digit boundaries.
+        Reading accepted = null;
+        int agreeing = 0;
+        int step = Math.max(1, Math.round(gap * .14f));
+        int radius = Math.round(gap * .8f);
+        for (int offset = -radius; offset <= radius; offset += step) {
+            if (Math.abs(offset) < step) continue;
+            Reading retry =
+                    readAt(pixels, width, height, middle + offset, firstLine, gap, "", "", ignored);
+            if (retry.text().isBlank()) continue;
+            if (accepted != null && !accepted.text().equals(retry.text())) return original;
+            if (accepted == null
+                    || Math.min(retry.topScore(), retry.bottomScore())
+                            > Math.min(accepted.topScore(), accepted.bottomScore()))
+                accepted = retry;
+            agreeing++;
+        }
+        return agreeing >= 2 ? accepted : original;
+    }
+
+    private Reading readAt(
+            int[] pixels,
+            int width,
+            int height,
+            int middle,
+            int firstLine,
+            float gap,
+            String upperEvidence,
+            String lowerEvidence,
+            boolean[] ignored) {
         if (ignored != null && ignored.length != pixels.length)
             throw new IllegalArgumentException("Meter exclusion size");
         if (width < gap * 1.35f || height < 12 || middle < 6 || middle > height - 6)
