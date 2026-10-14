@@ -2868,6 +2868,16 @@
       "reviewed_app_commit": "804bacc2c6948a9bb7b13e6c547c1a0d23dcfdff",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "review_note": "Continuous five-line raster support can advance an existing staff boundary; collection captions and notation directions retain their roles. No score-specific rules, models or wire changes."
+    },
+    "YoutubeDescriptionCredits.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/playback/YoutubeDescriptionCredits.java",
+      "source_sha256": "0964eb8f617907e003fd0d32f7eba62853c669a5df06f0228fc613f7284346b4",
+      "source_normalized_sha256": "0964eb8f617907e003fd0d32f7eba62853c669a5df06f0228fc613f7284346b4",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/YoutubeDescriptionCredits.java",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "Exact package-only standalone counterpart verified against the committed app source.",
+      "review_note": "Explicit description role parser with original synthetic tests. Channel identity is not a musical credit. Service credits remain unresolved for review. Android importer and downloader adapters are app-only.",
+      "reviewed_app_commit": "2931b984c09217db73dd8235d2addf15cf57d0cb"
     }
   },
   "interpreter_speedup_review": {

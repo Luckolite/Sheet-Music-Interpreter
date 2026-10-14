@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+The description-credit parser retains explicit artist, composer and arranger roles,
+keeps service credits unresolved for review, and never treats channel identity as
+a musical credit. The standalone port differs only by package; its regressions
+use original synthetic descriptions. Android download and import adapters remain
+app-only. No recognition model, score format or native timing change is involved.
+
 Recognition53 distinguishes sharp ink from common/cut time using printed staff
 geometry, rejects clef-overlap flat evidence, and requires two separated shafts
 for sharp recognition. Leading tempo directions can belong to a sole centered
