@@ -197,8 +197,10 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     return node
 
 
-def emit_rest_gap(measure, start, end, voice, symbols):
-    boundaries = sorted({start, end} | {value for s in symbols for value in (s['start'], s['release']) if start < value < end})
+def emit_rest_gap(measure, start, end, voice, symbols, literal_edges=()):
+    boundaries = sorted({start, end}
+                        | {value for s in symbols for value in (s['start'], s['release']) if start < value < end}
+                        | {value for value in literal_edges if start < value < end})
     for a, b in zip(boundaries, boundaries[1:]):
         emit_note(measure, b-a, voice, fragment_end=b, rest_symbols=symbols)
 
@@ -230,7 +232,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         raise ValueError('Invalid MusicXML initial meter')
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
-    bars, events, expressions, full_rests = [], [], [], []
+    bars, events, expressions, full_rests, literal_rests = [], [], [], [], []
     offset = 0
     current_meter, current_key = meter, key_fifths
     for page_index, page in enumerate(document['pages']):
@@ -258,6 +260,24 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 full_rests.append(dict(row, barIndex=bar_index, sourcePageIndex=page_index,
                                        start=bar['start'], end=bar['start']+bar['length'],
                                        restIdentity=len(full_rests), releaseSymbols=[]))
+        # Literal rest columns retain their written subdivisions in proved silence slots.
+        from .performance import _rest_column_span
+        for row in score.get('rests', []):
+            if rest_kind(row) != 'LITERAL' or not all(key in row for key in
+                    ('measureIndex', 'staffIndex', 'staffCount', 'positionInMeasure', 'durationBeats')):
+                continue
+            m = row['measureIndex']
+            if not isinstance(m, int) or not 0 <= m < len(page['measureBeats']):
+                continue
+            span = _rest_column_span(page, m, row['staffIndex'], row['staffCount'],
+                                     row['positionInMeasure'], 0)
+            if span is None:
+                continue
+            bar = bars[first_bar+m]
+            start = bar['start']+ticks(span[0]['quarterBeatOffset'])
+            end = bar['start']+ticks(span[1]['quarterBeatOffset'])
+            if bar['start'] <= start < end <= bar['start']+bar['length']:
+                literal_rests.append(dict(row, start=start, end=end))
         first_event = len(events)
         for note_index, n in enumerate(page['events']):
             if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
@@ -336,6 +356,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         clef_changes = clef_export.plan(notes)
         emitted_clefs = set()
         silent = [r for r in full_rests if same_staff(r)]
+        literal_edges = {tick for row in literal_rests if same_staff(row)
+                         for tick in (row['start'], row['end'])}
         for index, n in enumerate(notes):
             gliss = n.get('glissando')
             if gliss is None:
@@ -450,7 +472,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                         segments[max(a,n['start']),min(b,n['end'])].append(n)
                 for (start, end), chord in sorted(segments.items()):
                     if start > cursor:
-                        emit_rest_gap(measure, cursor, start, voice, rest_symbols)
+                        emit_rest_gap(measure, cursor, start, voice, rest_symbols, literal_edges)
                     for ci, n in enumerate(chord):
                         if start == n['start'] and start in clef_changes and start not in emitted_clefs:
                             clef_export.write(element(measure, 'attributes'), clef_changes[start])
@@ -463,7 +485,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                             slur_attacks[n['sourceIdentity']] = emitted
                     cursor = end
                 if cursor < b:
-                    emit_rest_gap(measure, cursor, b, voice, rest_symbols)
+                    emit_rest_gap(measure, cursor, b, voice, rest_symbols, literal_edges)
     slur_export.apply(root, retained_slurs, slur_attacks, events)
     ET.indent(root)
     ET.ElementTree(root).write(Path(path), encoding='utf-8', xml_declaration=True)

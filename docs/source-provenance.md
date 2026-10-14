@@ -1567,3 +1567,24 @@ eight original synthetic tests cover these boundaries.
 App commit `1239c897ab24cc30d7cc0ded46c2bc57ebb6ce38` is reviewed. No private score fixtures, new dependencies,
 models or wire-format changes are included. Saved-input replay and source tests do not
 establish full-library accuracy or app and desktop-worker runtime behavior.
+
+## Written literal rest boundaries
+
+Scoped app commit `468737f015c777824aa4dc2554b7fc4ebe041c48` is reviewed.
+The app MusicXML adapter and standalone exporter preserve consecutive retained
+literal rests in proved silent slots instead of replacing them with one longer
+dotted rest. Boundary splitting preserves the note and measure clocks, source
+pitches and slurs. Incomplete or ambiguous rest slots retain the existing gap
+notation. Edited app written clocks cannot borrow stale source-rest boundaries;
+unchanged retained clocks remain eligible. Whole-measure silent voices and
+fermata ownership remain separate.
+
+Nine original app controls and seven original standalone controls cover leading,
+internal and trailing rest sequences, unknown silence, incomplete and ambiguous
+columns, full-measure rests and retained written clocks. All 38 existing app
+rest/fermata controls pass. Private full app HTML rendering preserves the rest
+sequence with exact parsed MIDI, pitches and slurs. No private score pixels,
+source names or captures are published.
+
+This export presentation repair changes no recognition, model, wire, guide or
+audio identity. Packaged app and paired worker rollout remains user-deferred.

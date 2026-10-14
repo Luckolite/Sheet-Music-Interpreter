@@ -2017,9 +2017,9 @@
     },
     "src/sheet_interpreter/musicxml.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "c7e20d442179d96a37a05171ef26c6826916ef13ee808fca92ad69afc3e53fb8",
-      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls."
+      "reviewed_sha256": "e9422a868ec9ada2a8d6ace2fb979d4f45f2cdfce2d2073ba0ee2f44d15c0482",
+      "reviewed_app_commit": "468737f015c777824aa4dc2554b7fc4ebe041c48",
+      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls. Reviewed literal-rest boundary repair: preserve exact proved silent-slot subdivisions, keep incomplete/ambiguous slots unchanged and retain independent full-measure rest voices. Nine original app and seven original standalone controls; app written-clock edits cannot borrow stale source boundaries. Existing clef/tempo/slur export adapters reviewed separately; no recognition, guide, audio, model or wire changes."
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
