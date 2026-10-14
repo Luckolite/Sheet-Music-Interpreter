@@ -1918,3 +1918,7 @@ Stacked titles, repeated cover headings, medley labels and explicitly sourced wo
 ## Terminal credit strokes
 
 A missing terminal letter requires bounded original-pixel stem evidence and agreement at three PDF render scales. The pure pixel helper and detector merge are shared; Android rendering remains an adapter. Three original synthetic tests contain 31 controls. App source commit `a75220133cdd15c613f4aeb8a21a0ebecae6a396`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.
+
+## Padded coauthor credits
+
+A damaged header coauthor credit requires agreement at three padded PDF render scales and corroboration by an explicit composer credit on the page. The detector merge is shared; Android rendering remains an adapter. Fourteen original synthetic controls cover candidate geometry, corroboration and OCR disagreement. App source commit `0a4c2eed69d70ddf0145695d7a4b498b991b41b1`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.

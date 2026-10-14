@@ -2089,15 +2089,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "01bb1b6d8b23d0e9d2b9e4dedc64a0a92e9b1c7f5f83add648511823fe6f69d4",
-      "source_normalized_sha256": "85fe5100c2d0da74694a989e41783ed044ede4223dc46d1ffdde940568f51490",
+      "source_sha256": "321d84cf3f8a767af9465f681d0adefb23fe8607e60199259d714c7448877fec",
+      "source_normalized_sha256": "fa95c8a85d9ffa7febc336716c2a608a373eec00e624c84489718495212b68a0",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "d0aa6c5639ef2553266dad62ab2bafa54c98ed66ad12c403bdfd803343e62f75",
+      "standalone_sha256": "f6c84a863564671d757b73565f380185ff83b0cfcac271d16662f25d87641689",
       "license": "Apache-2.0",
-      "review_note": "Bounded original-pixel terminal-stroke evidence plus three-scale OCR agreement; no name dictionary, score-specific rule, model, or wire change.",
-      "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
+      "review_note": "Bounded padded header crops require three-scale agreement and matching explicit composer text on the same page; no score-specific rules or model changes.",
+      "reviewed_app_commit": "0a4c2eed69d70ddf0145695d7a4b498b991b41b1",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -6745,5 +6745,11 @@
     "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
     "source_sha256": "bdb4c6e00577fb5842d85a8a2a2781ef50ee8a9ef175024b55210c419a564e62",
     "boundary": "App-only PDF render and bitmap adapter; cancellation, bounded crops and cleanup retained. Pure pixel and merge logic ported. No metadata caller in native decoder; runtime/deployment separate."
+  },
+  "metadata_padded_coauthor_adapter_review": {
+    "reviewed_app_commit": "0a4c2eed69d70ddf0145695d7a4b498b991b41b1",
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "981ef1f48037a06610fb45cc2ef0b08f0383997b1e7becbefaea98a569612f26",
+    "boundary": "App-only original-PDF padded crop loop with cancellation and bitmap cleanup. Public detector confirms three readings against an explicit same-page composer credit. No native decoder metadata caller; runtime and deployment remain separate."
   }
 }

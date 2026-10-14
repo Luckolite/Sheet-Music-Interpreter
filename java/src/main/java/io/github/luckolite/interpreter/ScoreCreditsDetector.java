@@ -1421,6 +1421,78 @@ public final class ScoreCreditsDetector {
         return List.copyOf(result);
     }
 
+    private static String coauthorKey(String value) {
+        return fold(clean(value).replaceAll("(?iu)\\h+(?:and|&)\\h+|[,;]", " "));
+    }
+
+    private static boolean confirmsCoauthor(Page page, String value) {
+        return page.lines.stream()
+                .map(l -> credit(l.text))
+                .filter(c -> c != null && c.role == Role.COMPOSER)
+                .anyMatch(c -> coauthorKey(c.value).equals(coauthorKey(value)));
+    }
+
+    public static List<Line> paddedCoauthorCandidates(Page page) {
+        if (page.photographicCover || page.creditsOnly || page.notationTop <= 0) return List.of();
+        return page.lines.stream()
+                .filter(
+                        l ->
+                                l.left > page.width * .5f
+                                        && l.bottom < page.notationTop
+                                        && l.bottom < page.height * .3f
+                                        && l.height() < page.width * .04f
+                                        && clean(l.text)
+                                                .matches(
+                                                        "[\\p{L}][\\p{L} .’'-]+[,;]\\h*[\\p{L}][\\p{L} .’'-]+")
+                                        && !confirmsCoauthor(page, l.text)
+                                        && page.lines.stream()
+                                                .map(other -> credit(other.text))
+                                                .filter(c -> c != null && c.role == Role.COMPOSER)
+                                                .anyMatch(
+                                                        c ->
+                                                                editDistance(
+                                                                                coauthorKey(
+                                                                                        c.value),
+                                                                                coauthorKey(l.text))
+                                                                        == 1))
+                .limit(4)
+                .toList();
+    }
+
+    public static Refinement paddedCoauthorRegion(Page page, Line line) {
+        float pad = page.width / 150f;
+        return new Refinement(
+                Math.max(0, line.left - pad),
+                Math.max(0, line.top - pad),
+                Math.min(page.width, line.right + pad),
+                Math.min(page.height, line.bottom + pad),
+                1);
+    }
+
+    public static List<Line> mergePaddedCoauthor(
+            Page page, Line original, List<String> texts, List<Float> confidence) {
+        if (!paddedCoauthorCandidates(page).contains(original)
+                || texts == null
+                || confidence == null
+                || texts.size() != 3
+                || confidence.size() != 3) return page.lines;
+        String expected = clean(texts.get(0));
+        if (!confirmsCoauthor(page, expected)
+                || editDistance(coauthorKey(original.text), coauthorKey(expected)) != 1)
+            return page.lines;
+        for (int i = 0; i < 3; i++)
+            if (confidence.get(i) == null
+                    || !Float.isFinite(confidence.get(i))
+                    || confidence.get(i) < .94f
+                    || confidence.get(i) > 1
+                    || !clean(texts.get(i)).equals(expected)) return page.lines;
+        var lines = new ArrayList<>(page.lines);
+        lines.set(
+                lines.indexOf(original),
+                new Line(expected, original.left, original.top, original.right, original.bottom));
+        return List.copyOf(lines);
+    }
+
     public static List<Line> terminalCreditStrokeCandidates(Page page) {
         if (page.photographicCover || page.creditsOnly) return List.of();
         float limit = page.notationTop > 0 ? page.notationTop : page.height * .3f;
