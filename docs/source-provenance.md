@@ -1857,3 +1857,16 @@ cover clipping, identifiers, confidence, actual scores and photographic false st
 boundaries. The Android adapter uses the same fixed geometry and retains cancellation
 and bitmap cleanup. App commit `aca75c59ec88eee1c7699c9e7ae59636c81b314e` is reviewed. No private fixtures,
 models or wire changes are included; Android runtime and deployment remain unverified.
+
+## Metadata work captions and corroborated names
+
+Work and collection captions, publisher text and performance directions are
+excluded using layout evidence. Explicit credits and known contributors remain
+protected. Role continuation and conversion-service OCR repairs require three
+agreeing high-confidence readings. Conversion services remain unresolved review
+credits. Repeated exact spellings with established composer context can resolve
+a one-letter damaged review echo.64 original synthetic controls cover positive
+and counterexamples; app commit `362fce0d5558b82e64627b98cc2d53a8d442c49f` is reviewed.
+No private score fixtures, models, dependencies or wire changes are included.
+Saved detector replay and source tests do not establish complete current Android
+or native runtime accuracy, APK installation or paired worker deployment.

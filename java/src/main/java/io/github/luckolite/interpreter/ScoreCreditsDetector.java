@@ -1352,16 +1352,40 @@ public final class ScoreCreditsDetector {
     }
 
     public static List<Line> tightCreditRepairCandidates(Page page) {
-        if (page.photographicCover || page.notationTop <= 0) return List.of();
+        if (page.photographicCover) return List.of();
         return page.lines.stream()
                 .filter(
                         line ->
-                                line.bottom < page.notationTop
+                                line.bottom
+                                                < (page.notationTop > 0
+                                                        ? page.notationTop
+                                                        : page.height * .62f)
                                         && line.height() > 0
                                         && line.height() < page.width * .04f
-                                        && (puncturedContributor(page, line)
-                                                || uppercasePrefixCredit(page, line)))
+                                        && (page.notationTop > 0
+                                                        && (puncturedContributor(page, line)
+                                                                || uppercasePrefixCredit(
+                                                                        page, line))
+                                                || printedCreditContinuation(page, line) != null
+                                                || conversionServiceCandidate(line.text)))
                 .toList();
+    }
+
+    private static boolean conversionServiceCandidate(String text) {
+        Matcher m =
+                Pattern.compile("(?iu)^([a-z]{6,11})\\h+by\\h+([\\p{L}][\\p{L} .’'-]{2,80})$")
+                        .matcher(clean(text));
+        return m.matches() && editDistance(m.group(1).toLowerCase(Locale.ROOT), "converted") <= 3;
+    }
+
+    private static boolean matchingConversionRepair(String before, String after) {
+        if (!conversionServiceCandidate(before)
+                || !after.matches("(?iu)^converted\\h+by\\h+[\\p{L}][\\p{L} .’'-]{2,80}$"))
+            return false;
+        String a = before.replaceFirst("(?iu)^\\S+\\h+by\\h+", ""),
+                b = after.replaceFirst("(?iu)^converted\\h+by\\h+", "");
+        return a.split("\\h+").length == b.split("\\h+").length
+                && editDistance(fold(a), fold(b)) <= Math.min(3, Math.max(1, fold(a).length() / 4));
     }
 
     private static boolean uppercasePrefixCredit(Page page, Line line) {
@@ -1408,8 +1432,12 @@ public final class ScoreCreditsDetector {
             return page.lines;
         String before = clean(original.text), candidate = clean(readings.get(0));
         if (readings.stream().anyMatch(r -> !clean(r).equals(candidate))) return page.lines;
-        if (puncturedContributor(page, original)) {
+        if (conversionServiceCandidate(before)) {
+            if (!matchingConversionRepair(before, candidate)) return page.lines;
+        } else if (puncturedContributor(page, original)) {
             if (!candidate.equals(before.replace("(", ""))) return page.lines;
+        } else if (printedCreditContinuation(page, original) != null) {
+            return mergeBibliographicLineConsensus(page, original, readings);
         } else {
             if (!candidate.startsWith(before)
                     || candidate.length() != before.length() + 1
@@ -3747,6 +3775,13 @@ public final class ScoreCreditsDetector {
                     continue;
                 }
 
+                if (clean(line.text)
+                                .matches("(?iu)^converted\\h+by\\h+[\\p{L}][\\p{L} .’'-]{2,80}$")
+                        && inCreditHeader(page, line)) {
+                    other.add(clean(line.text).replaceFirst("(?iu)^converted\\h+by\\h+", ""));
+                    claimed.add(line);
+                    continue;
+                }
                 if (coverFooterReview.contains(line)) {
                     other.add(
                             photographicReviewByline(page, line, heading)
@@ -4033,7 +4068,8 @@ public final class ScoreCreditsDetector {
                     Pattern.compile("(?iu)^(?:(.{3,100}?),\\h*)?produced\\h+by\\h+(.{3,100})$")
                             .matcher(value);
             Matcher workCredit =
-                    Pattern.compile("(?iu)^(?:film|movie)\\h*:\\h*.+?\\h+[-–—]\\h+(.{3,100})$")
+                    Pattern.compile(
+                                    "(?iu)^(?:film|movie|anime)\\h*:\\h*.+?\\h+[-–—]\\h+(.{3,100})$")
                             .matcher(value);
             if (producer.matches()) {
                 if (producer.group(1) != null)
@@ -4089,6 +4125,42 @@ public final class ScoreCreditsDetector {
         }
         inferRepeatedCoverAuthor(pages, composers, arrangers, artists, other);
         restoreReviewHeaderSpacing(other, pages, title, fallback);
+        other.removeIf(
+                value ->
+                        !knownNames.stream().anyMatch(name -> same(name, value))
+                                && repeatedCredits.stream()
+                                        .noneMatch(
+                                                e ->
+                                                        e.names.stream()
+                                                                .anyMatch(
+                                                                        name -> same(name, value)))
+                                && pages.stream()
+                                        .noneMatch(
+                                                p ->
+                                                        p.reviewCredits.stream()
+                                                                .anyMatch(
+                                                                        r -> same(r.value, value)))
+                                && pages.stream()
+                                        .anyMatch(
+                                                page ->
+                                                        !page.creditsOnly
+                                                                && page.notationTop <= 0
+                                                                && page.lines.stream()
+                                                                        .anyMatch(
+                                                                                line ->
+                                                                                        same(
+                                                                                                        line.text,
+                                                                                                        value)
+                                                                                                && collectionListEntry(
+                                                                                                        page,
+                                                                                                        line,
+                                                                                                        page.lines))));
+        Set<String> repeatedInferredNames = new LinkedHashSet<>();
+        for (String name : composers)
+            if (inferredCredits.stream().filter(e -> e.names.contains(name)).count() >= 1)
+                repeatedInferredNames.add(name);
+        discardRepeatedRoleSpellingEcho(
+                other, pages, artists, composers, arrangers, repeatedInferredNames);
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
@@ -5991,10 +6063,205 @@ public final class ScoreCreditsDetector {
                 || text.matches("(?iu)^.{3,24};\\h*.*\\b(?:play|notes|bow)\\b.*$");
     }
 
+    private static void discardRepeatedRoleSpellingEcho(
+            Set<String> review,
+            List<Page> pages,
+            Set<String> artists,
+            Set<String> composers,
+            Set<String> arrangers) {
+        discardRepeatedRoleSpellingEcho(review, pages, artists, composers, arrangers, Set.of());
+    }
+
+    private static void discardRepeatedRoleSpellingEcho(
+            Set<String> review,
+            List<Page> pages,
+            Set<String> artists,
+            Set<String> composers,
+            Set<String> arrangers,
+            Set<String> repeatedInferredNames) {
+        Set<String> assigned = new LinkedHashSet<>();
+        assigned.addAll(artists);
+        assigned.addAll(composers);
+        assigned.addAll(arrangers);
+        for (String candidate : List.copyOf(review)) {
+            if (!properReviewName(candidate) || candidate.split("\\h+").length < 2) continue;
+            List<String> close =
+                    assigned.stream()
+                            .filter(
+                                    name ->
+                                            properReviewName(name)
+                                                    && name.split("\\h+").length
+                                                            == candidate.split("\\h+").length
+                                                    && fold(name).length() >= 10
+                                                    && editDistance(fold(name), fold(candidate))
+                                                            == 1)
+                            .toList();
+            if (close.size() != 1) continue;
+            String name = close.get(0);
+            int evidencePages = 0;
+            for (Page page : pages)
+                if (page.lines.stream()
+                        .anyMatch(
+                                line -> {
+                                    Credit role = credit(line.text);
+                                    return repeatedInferredNames.contains(name)
+                                                    && same(line.text, name)
+                                            || role != null
+                                                    && role.role != Role.LYRICS
+                                                    && creditNames(role.value).stream()
+                                                            .anyMatch(value -> same(value, name));
+                                })) evidencePages++;
+            if (evidencePages >= 2) review.remove(candidate);
+        }
+    }
+
+    private static boolean layoutReviewCaption(
+            Page page, Line heading, Line line, List<Line> lines) {
+        String text = clean(line.text);
+        if (text.matches("(?iu)^(?:theme\\h+from|sel[eEfF]ctions\\h+from)$")) return true;
+        if (text.matches("(?iu)^strum\\h+builder\\h+[0-9]+$")
+                && instructionalDocumentHeading(page, heading, lines)) return true;
+        if (!page.photographicCover
+                && page.notationTop > 0
+                && line.height() < page.height * .025f
+                && line.bottom >= page.notationTop - page.height * .065f
+                && line.top < page.notationTop + page.height * .025f
+                && text.matches("(?iu)^(?:click|[S▶►]\\h+play)$")) return true;
+
+        if (!page.photographicCover
+                && line.left < page.width * .15f
+                && line.height() < page.height * .02f
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && other.top > line.bottom
+                                                && other.top - line.bottom < page.height * .12f
+                                                && Math.abs(other.left - line.left)
+                                                        < page.width * .025f
+                                                && clean(other.text)
+                                                        .matches(
+                                                                "(?iu)^(?:flute|violin|viola|cello|clarinet|oboe|piano|organ)$")
+                                                && editDistance(
+                                                                text.toLowerCase(Locale.ROOT),
+                                                                clean(other.text)
+                                                                        .toLowerCase(Locale.ROOT))
+                                                        == 1)) return true;
+        if (text.matches("(?iu)^[*]+arranged$")
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && clean(other.text).matches("(?iu)^by\\h+.+")
+                                                && other.top >= line.bottom
+                                                && other.top - line.bottom < line.height() * 2
+                                                && Math.abs(other.left - line.left)
+                                                        < line.height() * 2)) return true;
+
+        if (text.matches("^[\"“].+[\"”]$")
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && other.top >= line.bottom
+                                                && other.top - line.bottom < line.height()
+                                                && Math.abs(other.center() - line.center())
+                                                        < line.height() * 2
+                                                && clean(other.text)
+                                                        .matches(
+                                                                "(?iu)^(?:written|composed)\\h+by\\h+.+")))
+            return true;
+        if (page.notationTop > 0
+                && !page.photographicCover
+                && line.top >= heading.bottom
+                && line.bottom < page.notationTop
+                && line.height() < heading.height() * .85f
+                && line.top - heading.bottom < heading.height() * 1.5f
+                && Math.abs(line.center() - heading.center()) < heading.height()
+                && text.matches("(?iu)^.+\\b(?:the\\h+movie|the\\h+film|television\\h+series)$"))
+            return true;
+        if (!page.photographicCover
+                && page.notationTop > 0
+                && line.left < page.width * .4f
+                && line.height() < page.height * .02f
+                && line.bottom >= page.notationTop - page.height * .065f
+                && line.top < page.notationTop + page.height * .025f) {
+            if (text.equalsIgnoreCase("prepare")) return true;
+            if (text.matches("(?iu)^.{0,35}\\bsustained,\\h+.+")
+                    && lines.stream()
+                            .anyMatch(
+                                    other ->
+                                            other != line
+                                                    && other.bottom <= line.top
+                                                    && line.top - other.bottom < line.height()
+                                                    && Math.abs(other.left - line.left)
+                                                            < line.height() * 2
+                                                    && clean(other.text)
+                                                            .matches(".*[=♩]\\h*[0-9]{2,3}.*")))
+                return true;
+        }
+        if (text.matches("(?iu)^in.{0,12}\\bmusical\\h+p[l\\[]ay$")
+                && Math.abs(line.center() - page.width * .5f) < page.width * .12f) return true;
+        if (text.matches("(?iu)^re[cç]ords$")
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && clean(other.text)
+                                                        .matches(
+                                                                "(?iu)^recorded\\h+by\\h+.+\\h+on\\h+.+\\h+records$")
+                                                && intersects(other, line))) return true;
+        if (text.equalsIgnoreCase("present")
+                && line.height() < heading.height()
+                && lines.stream()
+                        .anyMatch(
+                                other ->
+                                        other != line
+                                                && other.bottom <= line.top
+                                                && line.top - other.bottom < line.height()
+                                                && Math.abs(other.center() - line.center())
+                                                        < page.width * .1f
+                                                && clean(other.text).contains("&"))) return true;
+        if (text.matches("(?iu)^s[-.]gt$")
+                && line.left < page.width * .15f
+                && line.height() < page.height * .03f) {
+            for (Line t : lines)
+                if (clean(t.text).equals("T")
+                        && t.left > line.right
+                        && t.left < page.width * .3f
+                        && Math.abs(t.top - line.top) < line.height() * 2)
+                    for (Line aa : lines)
+                        if (clean(aa.text).equals("A")
+                                && aa.top > t.top
+                                && aa.top - t.top < t.height() * 2
+                                && Math.abs(aa.left - t.left) < t.height())
+                            for (Line bb : lines)
+                                if (clean(bb.text).equals("B")
+                                        && bb.top > aa.top
+                                        && bb.top - aa.top < aa.height() * 2
+                                        && Math.abs(bb.left - aa.left) < aa.height()) return true;
+        }
+        for (Line publisher : lines) {
+            String p = clean(publisher.text);
+            if (!p.matches(
+                    "(?iu)^(?:adp\\.?|adapted)\\h+from\\h+.+\\b(?:co\\.?|inc\\.?|ltd\\.?|publishing|publishers)\\b.*$"))
+                continue;
+            if (line == publisher) return true;
+            if (line.top >= publisher.bottom
+                    && line.top - publisher.bottom < publisher.height() * 2
+                    && Math.abs(line.left - publisher.left) < publisher.height() * 2
+                    && text.matches(
+                            "(?iu)^.*\\bseries\\h+of\\h+.+\\b(?:compositions|pieces|works)$"))
+                return true;
+        }
+        return false;
+    }
+
     private static boolean unlabelledReviewNoise(
             Page page, Line heading, Line line, List<Line> lines) {
         String text = clean(line.text);
         if (scoreFormatCaption(text)) return true;
+        if (layoutReviewCaption(page, heading, line, lines)) return true;
         if (!page.photographicCover
                 && line.left < page.width * .15f
                 && line.height() < page.height * .02f

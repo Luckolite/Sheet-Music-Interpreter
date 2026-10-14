@@ -2084,15 +2084,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "c295b64583f7ebbae9c50814e3a92e45caee0565c9a33db651287e6d53dfcd47",
-      "source_normalized_sha256": "0a6d44aee5b20c9613e69c1fff774e345d3d17fcc7768955234dba759e9cfaa1",
+      "source_sha256": "9567e7c66848cd518d59a71a88a9d5deef1a528cb030d0aa50ddae8ae5bd20cd",
+      "source_normalized_sha256": "c57a24414c24b536a5ace015c3fa9bdd6f2751ce9d08c5895583f4f5c56b9e93",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "843290c9fcee424a25819bd69b0d99e98c83a47d3a17aad142a2299aa426a252",
+      "standalone_sha256": "90a067f99b113bd513b9171d8766c0c6d83d0c24dd71687fd58bc667add0ea5e",
       "license": "Apache-2.0",
-      "review_note": "Cover spacing repair requires three agreeing expanded-crop readings at confidence at least0.98 and preserves every letter. Fourteen original synthetic controls cover clipping, confidence, identifiers and false staff boundaries. No private fixtures, dependency, model or wire-layout changes.",
-      "reviewed_app_commit": "aca75c59ec88eee1c7699c9e7ae59636c81b314e",
+      "review_note": "Global work/collection captions, publisher and performance directions are excluded with layout evidence. Known and explicitly credited names remain protected. Role continuation and conversion-service OCR repair require three agreeing high-confidence readings. Repeated exact names and established composer context may resolve a one-letter review echo.64 original controls; no private fixtures, models, wire layouts or dependencies changed.",
+      "reviewed_app_commit": "362fce0d5558b82e64627b98cc2d53a8d442c49f",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -6186,10 +6186,10 @@
     "qualification": "Focused paired controls passed before integration; combined standalone suite is separate from final native worker, cache invalidation, real-score and packaged runtime acceptance."
   },
   "metadata_original_pixel_adapter_review": {
-    "reviewed_app_commit": "aca75c59ec88eee1c7699c9e7ae59636c81b314e",
+    "reviewed_app_commit": "362fce0d5558b82e64627b98cc2d53a8d442c49f",
     "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
     "source_sha256": "64d141a9eaf8b3d7234e84ce2cd6058f9ba31b57322936c317e792228314dc4c",
-    "boundary": "Android PdfRenderer and bitmap lifecycle adapter remains app-only. Public LocatedCoverHeadingExpansion and ScoreCreditsDetector expose matching pure-JDK evidence/merge behavior. Three original-PDF scales, cancellation and recycling retained. Fixed expanded cover spacing geometry and pure-JDK guards change whitespace only; photographic false staff boundaries do not hide cover candidates. Android runtime and matching desktop worker integration pending."
+    "boundary": "Android PdfRenderer and bitmap lifecycle adapter remains app-only. Public LocatedCoverHeadingExpansion and ScoreCreditsDetector expose matching pure-JDK evidence/merge behavior. Three original-PDF scales, cancellation and recycling retained. Android runtime and matching desktop worker integration pending."
   },
   "printed_slur_raw_staff_context_review": {
     "license": "Apache-2.0",
