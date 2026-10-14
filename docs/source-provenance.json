@@ -6181,5 +6181,21 @@
     "compatibility": "Guide285, current recognition revision, audio79, models, Main JSON and app/native worker unchanged. Cross-part confirmed spans reject until explicit part mapping is supported.",
     "qualification": "Three original baseline/fixed synthetic pairs: unchanged written musical records apart from slurs, bundled renderer retains1/1/2phrases, parsed MIDI exact in all3pairs, console clean. No private scores or logs published.",
     "boundary": "Standalone export source and headless renderer evidence; no device, packaged app/worker deployment or broad accuracy claim."
+  },
+  "standalone_tempo_engraving_review": {
+    "license": "Apache-2.0",
+    "scope": "Standalone MusicXML presentation adapter; existing app ScoreTempoMark already preserves printed pulse and above-staff placement.",
+    "sourceFile": "src/sheet_interpreter/musicxml.py",
+    "originalRegression": "tests/test_musicxml_tempo_marks.py",
+    "newOriginalControls": 8,
+    "behavior": [
+      "Tempo directions explicitly above staff",
+      "Preserve source beat-unit glyph, up to two dots and unrounded corresponding marked rate",
+      "Keep quarter-note sound tempo unchanged",
+      "Detected opening tempo replaces fallback initial heading; later changes retain initial heading",
+      "Unsupported valid pulses retain equivalent quarter mark, matching app ScoreTempoMark"
+    ],
+    "qualification": "Seven initial original controls fail6times against baseline; final8tempo controls plus28existingMusicXML controls pass. Three synthetic baseline/fixed pairs render correctly and retain exact parsed MIDI.",
+    "boundary": "Pure standalone export changes; app/native worker already has the pulse presentation helper. No recognition/model/guide/audio revision change, no APK or deployment. Headless synthetic checks are not broad score/device acceptance."
   }
 }

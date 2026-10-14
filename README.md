@@ -70,7 +70,10 @@ silently dropping a confirmed phrase.
 
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
-reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.
+reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML playback use the quarter-note
+tempo directly. MusicXML prints the original beat unit and corresponding marked
+rate above the staff, including dotted pulses. A detected opening mark replaces
+the fallback initial heading; later changes retain the initial tempo.
 Everything runs locally after installation; no account or server is required.
 
 ### MP3 audio previews

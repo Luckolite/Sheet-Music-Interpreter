@@ -1464,3 +1464,20 @@ synthetic baseline/fixed pairs reproduce lost phrases; all other written musical
 records and parsed renderer MIDI remain exact, and the bundled renderer retains
 all four phrases. These are export/headless controls, not fresh whole-library or
 device evidence. No model, guide, recognition or audio identity changes.
+
+## Standalone tempo engraving
+
+The Python MusicXML adapter now matches the existing app ScoreTempoMark
+presentation: above-staff direction, original beat-unit glyph and dots, and
+corresponding marked rate without presentation rounding. Quarter-note sound
+tempo remains unchanged. Unsupported valid pulses use an equivalent quarter
+mark. A source tempo at the opening replaces the fallback heading; later marks
+retain the initial tempo. Invalid source values reject before output is written.
+
+Eight original scalar controls cover placement, opening ownership, later offsets,
+dotted/short pulses, legacy marks, unsupported pulses and numeric precision.
+The initial seven controls fail six times on the old exporter; all eight plus
+the existing28MusicXML controls pass on current source. Actual bundled renderer
+comparisons confirm the printed marks and exact parsed MIDI in three pairs.
+No model, recognition, guide or audio identity changes; no app/native source
+port is needed because their corresponding presentation is already present.

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """MusicXML 4.0 concert-pitch export of the decoded performance (not source engraving)."""
 from collections import defaultdict
+from decimal import Decimal
 import math
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -67,6 +68,23 @@ def metric_pulse(value):
             if value == math.ldexp(4, -i)*scale:
                 return name, dots
     raise ValueError('Unsupported MusicXML metric pulse')
+
+
+def tempo_mark(tempo):
+    """Printed pulse and rate; sound tempo remains quarter notes per minute."""
+    bpm, pulse = tempo['bpm'], tempo.get('beatUnit', 1)
+    if (type(bpm) not in (int, float) or not math.isfinite(bpm) or not 15 <= bpm <= 1600
+            or type(pulse) not in (int, float) or not math.isfinite(pulse) or not 0 < pulse <= 4):
+        raise ValueError('Invalid printed tempo')
+    names = ('whole', 'half', 'quarter', 'eighth', '16th', '32nd', '64th',
+             '128th', '256th', '512th', '1024th')
+    for i, name in enumerate(names):
+        for dots, scale in enumerate((1, 1.5, 1.75)):
+            unit = math.ldexp(4, -i) * scale
+            if abs(unit - pulse) < 1e-9:
+                return name, dots, bpm / unit
+    # Match ScoreTempoMark: unsupported pulses use an equivalent quarter mark.
+    return 'quarter', 0, bpm
 
 
 def expression_direction(measure, mark, offset):
@@ -403,12 +421,17 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 element(clef, 'line', line)
                 if bottom == 37:
                     element(clef, 'clef-octave-change', 1)
-            tempos = ([dict(bpm=bpm, positionInMeasure=0)] if index == 0 else []) + bar['tempos']
+            tempos = list(bar['tempos'])
+            if index == 0 and not any(t['positionInMeasure'] == 0 for t in tempos):
+                tempos.insert(0, dict(bpm=bpm, positionInMeasure=0))
             for tempo in tempos:
-                direction = element(measure, 'direction')
+                unit, dots, marked_bpm = tempo_mark(tempo)
+                direction = element(measure, 'direction', placement='above')
                 metronome = element(element(direction, 'direction-type'), 'metronome')
-                element(metronome, 'beat-unit', 'quarter')
-                element(metronome, 'per-minute', tempo['bpm'])
+                element(metronome, 'beat-unit', unit)
+                for _ in range(dots):
+                    element(metronome, 'beat-unit-dot')
+                element(metronome, 'per-minute', format(Decimal(str(marked_bpm)).normalize(), 'f'))
                 element(direction, 'offset', round(bar['length']*tempo['positionInMeasure']))
                 element(direction, 'sound', tempo=str(tempo['bpm']))
             a, b = bar['start'], bar['start']+bar['length']
