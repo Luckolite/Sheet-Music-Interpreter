@@ -1678,3 +1678,26 @@ logical 2.5-beat note reproduces a missing pitched note in the old export; the
 new export renders the tied half/eighth correctly. No private score content or
 external implementation was incorporated. Recognition, model, wire, guide and
 audio identities are unchanged. Packaged app/worker rollout remains deferred.
+
+## Standalone retained ornament glyphs
+
+The original Python `ornament_export.py` adapter uses the same proved source
+head correspondence as basic articulations. It preserves the five supported
+trill/turn/mordent types and one-note tremolo beam counts 1 through 4. Encoded
+ornament types remain categorical; flags from different chord heads are never
+intersected into a third ornament. Glyphs stay on original attack fragments.
+Delayed turns and explicit flat/natural/sharp auxiliary marks are preserved
+using the MusicXML 4.0 ornament vocabulary. Unsupported slide/glissando bits
+are not assigned invented ornament shapes; existing confirmed glissando export
+remains separate. Unpitched tonal ornament semantics remain rejected.
+
+Twelve original logical-score controls cover glyph types, delayed turns,
+accidentals, tremolo counts, differing chord heads, unrelated flags, stale
+source identity, unpitched safeguards, tied fragments and exact preservation
+outside added ornaments. Actual bundled-renderer comparison confirms all five
+base ornament types and single tremolo survive native import. The bundled
+reader still has separate delayed-inverted-turn/auxiliary accidental display
+limitations; valid source XML does not prove those renderer paths complete.
+The existing app already writes base ornament glyphs. No recognition, Java,
+model, wire or cache identity changes are included. Packaged rollout remains
+user-deferred. No private score content or external implementation was used.

@@ -80,6 +80,13 @@ and release symbols remain on the final fragment. Existing single values and
 explicit tuplets are preserved. Arbitrary inferred clocks are not rounded into
 new rhythmic evidence.
 
+Retained trills, turns, inverted turns, both mordent forms and single-note
+tremolo also survive MusicXML export. Delayed turns and explicit auxiliary
+accidentals are represented separately. These glyphs preserve the source head;
+they do not replace it with performed subdivisions. Unpitched tonal ornaments
+still require explicit instrument semantics. Older notation readers may not
+display delayed inverted turns or auxiliary accidentals.
+
 MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
 clefs from the retained note context, including changes inside measures. Note
 pitches and playback stay unchanged. Without reliable source clef metadata, the

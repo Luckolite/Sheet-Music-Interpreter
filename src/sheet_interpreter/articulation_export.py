@@ -8,7 +8,7 @@ SYMBOLS = ((1, 'accent'), (2, 'strong-accent'), (4, 'staccato'),
 MASK = 31
 
 
-def retained(page, index):
+def source_flags(page, index):
     # Main emits one event per raw head, in the same order. Edited or partial
     # event lists cannot borrow marks from a different source slot.
     events = page['events']
@@ -24,7 +24,11 @@ def retained(page, index):
     flags = source.get('articulations', 0)
     if type(flags) is not int or not 0 <= flags <= 0x7fffffff:
         raise ValueError('Invalid retained articulation flags')
-    return flags & MASK
+    return flags
+
+
+def retained(page, index):
+    return source_flags(page, index) & MASK
 
 
 def chord_marks(chord, start):

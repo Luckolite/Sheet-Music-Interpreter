@@ -8,7 +8,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export, articulation_export
+from . import clef_export, articulation_export, ornament_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -192,9 +192,10 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     if event is not None and event_kind(event) == 'UNPITCHED':
         element(node, 'notehead', 'x')
     effect = event.get('guitarEffect') if event and attack_fragment else None
+    ornament_flags = event.get('retainedOrnamentFlags', 0) if event and attack_fragment else 0
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
-    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags:
+    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags:
         notation = element(node, 'notations')
         for active, kind in ((stop, 'stop'), (start, 'start')):
             if active:
@@ -213,6 +214,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
             element(notation, 'other-notation', description, type='single')
         if articulation_flags:
             articulation_export.write(notation, articulation_flags)
+        if ornament_flags:
+            ornament_export.write(notation, ornament_flags)
         for symbol in symbols:
             kind = symbol['kind']
             if kind == 'FERMATA':
@@ -319,7 +322,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 raise ValueError('MusicXML note duration lies outside the page timeline')
             events.append(dict(n, start=offset+start, end=offset+min(local_start,start+duration), tie_stop=False, tie_start=False,
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
-                               retainedArticulations=articulation_export.retained(page, note_index)))
+                               retainedArticulations=articulation_export.retained(page, note_index),
+                               retainedOrnamentFlags=ornament_export.retained(page, note_index)))
         from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
         def absolute(anchor):
             if anchor is None:
