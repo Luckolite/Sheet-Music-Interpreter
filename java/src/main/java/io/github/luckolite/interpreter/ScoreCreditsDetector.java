@@ -3468,16 +3468,17 @@ public final class ScoreCreditsDetector {
                             ? nearbyVersionTitleCaption(
                                     page, heading, titleLines, titleLimit, knownNames)
                             : null;
-            String pageTitle =
+            JoinedTitle joinedTitle =
                     heading == null
-                            ? ""
-                            : joinTitle(
+                            ? new JoinedTitle("", List.of())
+                            : joinTitleEvidence(
                                     page,
                                     heading,
                                     titleLines,
                                     titleLimit,
                                     page == pages.get(0),
                                     knownNames);
+            String pageTitle = joinedTitle.text;
             if (heading != null
                     && page.notationTop > 0
                     && lines.stream()
@@ -3503,9 +3504,12 @@ public final class ScoreCreditsDetector {
             if (page.notationTop <= 0
                     && !same(fallback, pageTitle)
                     && !containsVersionTitleCaption(pageTitle, heading, versionCaption)) {
-                String coverTitle =
-                        corroboratedCoverTitle(fallback, page, titleEvidence, titleLimit);
-                if (!coverTitle.isEmpty()) pageTitle = coverTitle;
+                JoinedTitle coverTitle =
+                        corroboratedCoverTitleEvidence(fallback, page, titleEvidence, titleLimit);
+                if (!coverTitle.text.isEmpty()) {
+                    pageTitle = coverTitle.text;
+                    joinedTitle = coverTitle;
+                }
             }
             boolean confirmed = corroboratesTitleHint(fallback, pageTitle);
             // Later notation pages may open a new section rather than identify the
@@ -3777,6 +3781,11 @@ public final class ScoreCreditsDetector {
                                     && line.top <= heading.bottom
                                     && (line.left >= heading.right || line.right <= heading.left);
                     if (claimed.contains(line)
+                            || joinedTitle.lines.contains(line)
+                                    && same(pageTitle, joinedTitle.text)
+                                    && knownNames.stream().noneMatch(n -> same(n, line.text))
+                                    && page.reviewCredits.stream()
+                                            .noneMatch(r -> intersects(r.line, line))
                             || line.equals(versionCaption)
                                     && containsPrintedPhrase(title, line.text)
                             || line == heading
@@ -4709,8 +4718,13 @@ public final class ScoreCreditsDetector {
 
     private static String corroboratedCoverTitle(
             String hint, Page page, List<Line> lines, float limit) {
+        return corroboratedCoverTitleEvidence(hint, page, lines, limit).text;
+    }
+
+    private static JoinedTitle corroboratedCoverTitleEvidence(
+            String hint, Page page, List<Line> lines, float limit) {
         String target = fold(hint);
-        if (target.isEmpty()) return "";
+        if (target.isEmpty()) return new JoinedTitle("", List.of());
         List<Line> candidates =
                 lines.stream()
                         .filter(
@@ -4732,9 +4746,11 @@ public final class ScoreCreditsDetector {
                         && previous.top - above.bottom < height * .8f
                         && Math.min(above.height(), previous.height()) >= height * .85f
                         && Math.abs(above.center() - previous.center()) < height * 1.6f)
-                    return clean(previous.text);
+                    return new JoinedTitle(clean(previous.text), List.of(previous));
             }
             StringBuilder text = new StringBuilder(clean(previous.text));
+            List<Line> selected = new ArrayList<>();
+            selected.add(previous);
             float largest = previous.height();
             if (!target.startsWith(fold(text.toString()))) continue;
             for (int next = start + 1; next < candidates.size() && next <= start + 5; next++) {
@@ -4748,14 +4764,17 @@ public final class ScoreCreditsDetector {
                         || Math.min(line.right, previous.right)
                                 <= Math.max(line.left, previous.left)) break;
                 text.append(' ').append(clean(line.text));
+                selected.add(line);
                 String joined = text.toString();
-                if (same(hint, joined)) return joined;
+                if (same(hint, joined)) return new JoinedTitle(joined, List.copyOf(selected));
                 if (!target.startsWith(fold(joined))) break;
                 previous = line;
             }
         }
         var printed = PrintedCoverTitleEvidence.select(hint, page.width, candidates);
-        return printed == null ? "" : printed.text();
+        return printed == null
+                ? new JoinedTitle("", List.of())
+                : new JoinedTitle(printed.text(), printed.lines());
     }
 
     /** Bare photograph bylines are retained for review without assigning a contributor role. */
@@ -4989,7 +5008,19 @@ public final class ScoreCreditsDetector {
                 && containsPrintedPhrase(title, caption.text);
     }
 
+    private record JoinedTitle(String text, List<Line> lines) {}
+
     private static String joinTitle(
+            Page page,
+            Line heading,
+            List<Line> lines,
+            float limit,
+            boolean openingPage,
+            Set<String> knownNames) {
+        return joinTitleEvidence(page, heading, lines, limit, openingPage, knownNames).text;
+    }
+
+    private static JoinedTitle joinTitleEvidence(
             Page page,
             Line heading,
             List<Line> lines,
@@ -5115,7 +5146,8 @@ public final class ScoreCreditsDetector {
         // Preserve explicitly spaced separators and all attribution values.
         String joined = assembled.toString().replaceAll("(?<=\\p{L})/\\h+(?=\\p{L})", "/");
         Matcher enclosingQuotes = Pattern.compile("^[\"“]([^\"“”]+)[\"”]$").matcher(joined);
-        return enclosingQuotes.matches() ? enclosingQuotes.group(1) : joined;
+        return new JoinedTitle(
+                enclosingQuotes.matches() ? enclosingQuotes.group(1) : joined, List.copyOf(title));
     }
 
     private static boolean hyphenTitleFragment(String value) {
@@ -5523,6 +5555,40 @@ public final class ScoreCreditsDetector {
 
     /** Context separates navigation, prose and notation labels from unlabelled bylines. */
     /** Repeated tempo terms plus aligned prose identify a notation glossary. */
+
+    /** Small instructions can precede an opening staff the page detector missed. */
+    private static boolean anchoredPerformanceInstruction(Page page, Line line, List<Line> lines) {
+        if (page.photographicCover
+                || page.notationTop <= 0
+                || line.height() > page.height * .025f
+                || line.center() > page.width * .7f
+                || credit(line.text) != null) return false;
+        String text = clean(line.text);
+        if (line.bottom >= page.notationTop - page.height * .065f
+                && text.matches(
+                        "(?iu)^(?:[mpfM]{1,3}\\h+)?with\\h+(?:driving|gentle|quiet|great|restrained)\\h+(?:intensity|energy|expression)$"))
+            return true;
+        boolean instruction =
+                text.matches("(?iu)^(?:intro|verse|chorus|bridge|outro)(?:\\h+[0-9]+)?$")
+                        || text.matches(
+                                "(?iu)^solo\\h*[-–]\\h*[0-9]+(?:st|nd|rd|th)\\h+time,\\h*all\\h*[-–]\\h*[0-9]+(?:st|nd|rd|th)\\h+time$")
+                        || text.matches("(?iu)^si\\h+deve\\h+suonare\\h+.+");
+        if (!instruction) return false;
+        for (Line tempo : lines) {
+            if (tempo == line
+                    || tempo.height() > page.height * .025f
+                    || tempo.bottom > line.top
+                    || line.top - tempo.bottom > Math.max(tempo.height(), line.height())
+                    || Math.abs(tempo.left - line.left)
+                            > Math.max(tempo.height(), line.height()) * 2) continue;
+            if (clean(tempo.text)
+                    .matches(
+                            "(?iu)^(?:adagio|andante|allegro|allegretto|largo|lento|presto|moderately)(?:\\h+.*|[-=]\\h*[0-9]+)?$"))
+                return true;
+        }
+        return false;
+    }
+
     private static boolean instructionGlossaryLine(Page page, Line line, List<Line> lines) {
         if (page.photographicCover || page.notationTop > 0 || line.height() > page.height * .025f)
             return false;
@@ -5571,6 +5637,7 @@ public final class ScoreCreditsDetector {
                                                         > page.height * .08f)) return true;
 
         if (instructionGlossaryLine(page, line, lines)) return true;
+        if (anchoredPerformanceInstruction(page, line, lines)) return true;
         if (page.notationTop > 0
                 && line.height() < page.height * .025f
                 && line.bottom >= page.notationTop - page.height * .08f
@@ -5759,7 +5826,7 @@ public final class ScoreCreditsDetector {
             return true;
         if (text.matches("(?iu)^\\(?cymbal\\)?\\h+\\(?voice\\)?$")) return true;
         String instrument =
-                "(?:violin|viola|piano|guitar|cello|flute|clarinet|oboe|bassoon|timpani|brass|synth\\.?|harp|voice|cymbal|bass|drum|electric\\h+piano|glockenspiel|harpsichord|mandolin|vibes|vin\\.)";
+                "(?:violin|viola|piano|organ|guitar|cello|flute|clarinet|oboe|bassoon|timpani|brass|synth\\.?|harp|voice|cymbal|bass|drum|electric\\h+piano|glockenspiel|harpsichord|mandolin|vibes|vin\\.)";
         if (text.matches(
                 "(?iu)^"
                         + instrument

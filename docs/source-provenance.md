@@ -1265,3 +1265,13 @@ All eight paired source/test paths preserve executable token/literal parity afte
 namespace, existing license header and format adaptation. No private score assets,
 new helper/dependency, model or record layout is included. Final recognition cache
 invalidation, paired app/Hub/worker rollout and runtime acceptance remain open.
+
+## Metadata title ownership and instructions
+
+Exact selected source lines remain attached to joined and corroborated cover titles,
+preventing duplicate contributor suggestions. Explicit roles, known names and located
+review evidence remain protected. Nearby tempo and staff context identify performance
+instructions. Twenty-four original synthetic tests cover these boundaries.
+App commit `05a62546a90085396c7256856384725d3f99d126` is reviewed. No private score fixtures, new dependencies,
+models or wire-format changes are included. Saved-input replay and source tests do not
+establish full-library accuracy or app and desktop-worker runtime behavior.
