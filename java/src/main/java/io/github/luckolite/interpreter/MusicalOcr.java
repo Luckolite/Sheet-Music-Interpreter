@@ -92,6 +92,19 @@ public final class MusicalOcr {
 
     private MeterReading meter(byte[] gray, int width, int height, MeterChangeDetector.Crop crop)
             throws Exception {
+        MeterReading original = meterAt(gray, width, height, crop);
+        if (original.votes() >= 2) return original;
+        var refined = MeterCropStaff.refine(gray, width, height, crop);
+        if (refined.equals(crop)) return original;
+        MeterReading retry = meterAt(gray, width, height, refined);
+        if (retry.votes() >= 2
+                && (original.text().isBlank() || original.text().equals(retry.text())))
+            return retry;
+        return original;
+    }
+
+    private MeterReading meterAt(byte[] gray, int width, int height, MeterChangeDetector.Crop crop)
+            throws Exception {
         int middle = Math.round(crop.firstLine() + crop.gap() * 2);
         int top = Math.max(0, crop.top()), bottom = Math.min(height, crop.bottom());
         if (middle <= top + 2 || middle >= bottom - 2) return new MeterReading("", 0);

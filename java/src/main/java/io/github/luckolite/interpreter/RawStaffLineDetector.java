@@ -60,8 +60,7 @@ final class RawStaffLineDetector {
     static List<StaffLines> detectFromStrength(
             int[] strength, int minimum, int height, byte[] gray, int width) {
         List<StaffLines> original = detectFromStrength(strength, minimum, height);
-        if (gray == null || width <= 0 || gray.length != width * height || original.size() < 3)
-            return original;
+        if (gray == null || width <= 0 || gray.length != width * height) return original;
         List<StaffLines> result = new ArrayList<>(original);
         for (int i = 1; i + 1 < original.size(); i++) {
             StaffLines a = original.get(i - 1), b = original.get(i), c = original.get(i + 1);
@@ -118,6 +117,24 @@ final class RawStaffLineDetector {
                 first = Math.min(first, staff.top());
                 last = Math.max(last, staff.bottom());
             }
+        // The semantic model can omit every real staff while labeling page artwork.
+        // Independent complete printed staves can still establish the notation envelope.
+        if (proved < 2) {
+            int rawProved = 0, rawFirst = height, rawLast = -1;
+            for (var staff : detect(gray, width, height)) {
+                if (printedRuleCount(
+                                new Candidate(staff.rows(), staff.gap(), 0), gray, width, height)
+                        < 4) continue;
+                rawProved++;
+                rawFirst = Math.min(rawFirst, staff.top());
+                rawLast = Math.max(rawLast, staff.bottom());
+            }
+            if (rawProved >= 2) {
+                proved = rawProved;
+                first = rawFirst;
+                last = rawLast;
+            }
+        }
         if (proved < 2) return;
         rejectIrregularInteriorAliases(staffs, gray, width, height);
         final int firstPrinted = first, lastPrinted = last;

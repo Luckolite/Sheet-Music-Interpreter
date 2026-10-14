@@ -375,14 +375,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "9dfa402e073bd7f65d3bb8385dbb604b87074e9e1bd60c823f806c1346aefa86",
-      "reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
-      "scoped_reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
-      "review_note": "Permit a compact outer scan bulge only with existing natural spine continuity, strong offset endpoints and separated connector proof. Separated sharp crossbars and long outer strokes remain rejected. Six original synthetic controls; no private fixtures or song-specific rules.",
-      "source_normalized_sha256": "d7f9513a7a9136314c836e868ca1dec19f96cdb7181c3dae8e8c00d79e8d6804",
+      "source_sha256": "6f5e46afae6f5f40bfea994762f7c74d9f64da94c1284aca2b08bbd6d4aa204d",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "review_note": "Use independently proved printed-flat shape for already-semantic-flat interior key signatures as well as clef headers; preserve ownership and cancellation guards.",
+      "source_normalized_sha256": "05832d4529dc1683023fc7441ab33dad3e203075e147320b0f95a0baa29dcd55",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed paired recognition45 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "standalone_sha256": "a9702208a6d26aa209a665bcd330fba90db3090070b1102b572d1132e0ca0d13",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "standalone_sha256": "6cc2bb32eee712b93108d0fe08fdefc144ef46a330a05697930d8259b3c59d03",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -394,14 +394,14 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "b29637573e53a049023549ae633b294aa8d0eeb96db859b56a03cbbed53c8f4b",
-      "source_normalized_sha256": "8f6774b0c91ce8e838f26292fae5bc6a029a835e7b6e5fa2c936e136396b0f3e",
+      "source_sha256": "ea6a80909b387a732072fb9e54a6572fb4057da4ffba3e70c3e6eb4db5e8cd68",
+      "source_normalized_sha256": "c3db1b642848c91877213160d919ef23dc93d1f2f5c34998270d8dce569015cf",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reject compressed, irregular interior semantic aliases only between independently printed neighbors without pale long rules, pitch track or five parallel local rules. Preserve regular, faint, short and unsupported-neighbor controls.",
-      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "standalone_sha256": "e48d20ac17dea81905d8509212053aa845ec830328ed96d80a70ffeea8687e40"
+      "review_note": "Allow two complete raw-pixel staffs to supply the existing exterior alias rejection envelope when the semantic model omitted real staffs. Faint, short, curved and local-rule protections remain. Eight original controls.",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "standalone_sha256": "b6da8d5f1906a4c349b270180211cf17c5ef176f2374b3656e92bfcda8cf0334"
     },
     "ScoreDynamicChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicChange.java",
@@ -1108,13 +1108,13 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "48df813912f5a9fbf13e446d0d69ef28fb9d0e4b15700f2f8765c4a278ceac2e",
-      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "source_normalized_sha256": "a7b4b12ad02dce7e8685f114468b15ee719b2ba47cee76148fda07233deaddb1",
-      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Retry only an unresolved font candidate using independently proved crossing mask, retaining OCR contradiction checks and existing acceptance thresholds.",
-      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "standalone_sha256": "22227d7cfb0a2601b5abae538b1c7730c75bbda6e03ba662569e7083193cd82d"
+      "source_sha256": "4ecc2c033df07e95e6b776b1e1de89f496b0c30a9cd28e56be7ca88330b6c958",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "source_normalized_sha256": "9480edda3d6d57d0d9883bc1bccafad4ebf2dcf89432793aebe3c4be01816a84",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Retry only unresolved readings on independently refined local staff geometry; preserve accepted readings and conflicting single votes. Mirrored native-worker adapter.",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "standalone_sha256": "92234bc3ecb18f079fb425121dfff3b962fbcd9aca275e711def7d6c1493bcf5"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1536,13 +1536,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "4881680d48911dfa387d4185a7c07e30a08a8dff517c9e440438e98de6f936ff",
-      "source_normalized_sha256": "a956dae371c1372b8c3950bf023117ce5d31a758951cd4348a9b5f1e43952e8c",
-      "reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
-      "review_note": "Advance paired recognition44 to45; guide285 layout and audio79 unchanged.",
-      "reviewed_source_state": "Committed paired recognition45 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "scoped_reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
-      "standalone_sha256": "f4f6087e3db2ac6c7543a2c2ba58b88abf9d5d2788c3b94b18f4317355ba7f95",
+      "source_sha256": "c99d2e79cf1657f340ce661c9b68837959d8289c2fe0a70bfb929218fe28385c",
+      "source_normalized_sha256": "d123c0f9a385dc73a7d221f4dacad1c499dbaf688c84b35c2a29306d96a0d516",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "review_note": "Advance paired recognition45 to46; guide285 layout and audio79 unchanged.",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "standalone_sha256": "46a7e653accc6b5d324ae27e01001b4af14a9ecb28b6874445cf486a23709f6a",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1600,14 +1600,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "8f11a53b6a03e0fbe846edde6df0dc9936620bda0955b8a6b3b76307e3d33dcb",
-      "source_normalized_sha256": "98707814413068e526ec320afa6b6c2de3befb13f17c67aef7c52b3f1d4435f1",
-      "reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
-      "reviewed_source_state": "Committed paired recognition45 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Advance Android, native, standalone and Hub recognition44 to45; record layouts unchanged.",
-      "scoped_reviewed_app_commit": "6ec3981be807907a826f76e8370fda30c68a59f9",
+      "source_sha256": "45da9edcbe35a86e1be43ceb2fe3cb10666f987335cf16c62fbfd93fc43f878e",
+      "source_normalized_sha256": "42792bb1ead926e1c42621bc1049beb0191dcb29d23d73ec6c4f2ae8610aa677",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Advance Android, native, standalone and Hub recognition45 to46; record layouts unchanged.",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "7d7574f66b3abacb844c1ecd5b5a9e364905d4f008b08c0f6ddc3fa25059458b",
+      "standalone_sha256": "259e37108bfb15c09d8f7e430f44e9236dad88ba71a660cb09355e502471eb75",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2667,13 +2667,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterGlyphMatcher.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterGlyphMatcher.java",
       "license": "Apache-2.0",
-      "source_sha256": "a967fff7747ad35bfb66aecc22492350e1dbd72d3628724c4198e85f9c9adfc9",
-      "source_normalized_sha256": "eb136f1f3d35bba257ee47117a50e7b5ef0df68dd779d5ac6ae70b3507d4ce64",
-      "reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "scoped_reviewed_app_commit": "5e485a719c2b5dbcb8c03a7124b239b7979f4be8",
-      "standalone_sha256": "630900c63b4b8a00f86727aae147af3cde33c25f6eee467672a11ca058c57ad2",
-      "review_note": "Shared platform-independent font scoring with original confidence and runner-up gates; independently proved stroke pixels excluded without editing source ink.",
-      "reviewed_source_state": "Committed paired recognition43 source review; final cumulative package/deployment/runtime checks remain pending."
+      "source_sha256": "6f11fffecb83067341c982c406882f64df0848aec699f9e1475de05776451333",
+      "source_normalized_sha256": "4cd1dc3bc68c2e5997edfd55a23609b7c54d3052e05aaa4017bb7bca58c07d8d",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "standalone_sha256": "560b2fb7667560b5739a45f5bc0e72dc5fa7952d524ad564e42340a3fb9499c7",
+      "review_note": "For unresolved near-matches only, retry one-pixel orthogonal font stroke expansion. Require same winning numeral, increased score and existing confidence/margin gates; normal accepted digits remain unchanged.",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending."
     },
     "MeterFontEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterFontEvidence.java",
@@ -2734,6 +2734,18 @@
       "standalone_sha256": "b9463e226c3f4b1f47f4e123856bc40c3e36c97aeb9538119720d03d48309c66",
       "review_note": "Veto an internal boundary only when existing quarter-rest classification agrees on a complete contour across two crop widths. No title-specific rules or private crops.",
       "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending."
+    },
+    "MeterCropStaff.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCropStaff.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterCropStaff.java",
+      "license": "Apache-2.0",
+      "source_sha256": "9624177177d5fe74211fc9e8b136f1a703a5b8a60c8f0df101b4885deceb5799",
+      "source_normalized_sha256": "0de9ed7609230445b9e4f67a95e8aaef12827149b3e0b0441925d7555f8908a1",
+      "reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "scoped_reviewed_app_commit": "7243905199a5a8e71856731b874b38171dcbffe0",
+      "standalone_sha256": "15cefd4b6d5fec76673407c9ef87623528377f607a952a55f3814cb151628971",
+      "review_note": "Original bounded local five-rule phase proof for unresolved meter crops; no threshold relaxation or crop enlargement.",
+      "reviewed_source_state": "Committed paired recognition46 source review; final cumulative package/deployment/runtime checks remain pending."
     }
   },
   "interpreter_speedup_review": {

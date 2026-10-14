@@ -96,6 +96,58 @@ public final class MeterGlyphMatcher {
             int[] values,
             String corroborated,
             boolean[] ignored) {
+        var normal =
+                matches(
+                        pixels,
+                        width,
+                        height,
+                        first,
+                        last,
+                        firstLine,
+                        gap,
+                        values,
+                        corroborated,
+                        ignored,
+                        false);
+        Match winner = normal.get(0);
+        if (winner.value() == 0) return winner;
+        if (accepts(winner.value(), winner.score(), normal.get(1).score(), corroborated))
+            return winner;
+        if (winner.score() >= .80f) {
+            var weighted =
+                    matches(
+                            pixels,
+                            width,
+                            height,
+                            first,
+                            last,
+                            firstLine,
+                            gap,
+                            values,
+                            corroborated,
+                            ignored,
+                            true);
+            Match retry = weighted.get(0);
+            if (retry.value() == winner.value()
+                    && retry.score() >= winner.score() + .05f
+                    && accepts(retry.value(), retry.score(), weighted.get(1).score(), corroborated))
+                return retry;
+        }
+        return new Match(0, winner.score());
+    }
+
+    private List<Match> matches(
+            int[] pixels,
+            int width,
+            int height,
+            int first,
+            int last,
+            int firstLine,
+            float gap,
+            int[] values,
+            String corroborated,
+            boolean[] ignored,
+            boolean bold) {
         int h = last - first;
         boolean[] source = new boolean[width * h], valid = new boolean[source.length];
         int sourceCount = 0;
@@ -111,7 +163,7 @@ public final class MeterGlyphMatcher {
                 valid[y * width + x] = !onLine;
                 if (!onLine && source[y * width + x]) sourceCount++;
             }
-        if (sourceCount < gap * 3) return new Match(0, 0);
+        if (sourceCount < gap * 3) return List.of(new Match(0, 0));
         List<Match> results = new ArrayList<>();
         int minSize = Math.round(gap * 2.1f), maxSize = Math.round(gap * 5.15f);
         for (int value : values) {
@@ -127,6 +179,7 @@ public final class MeterGlyphMatcher {
                             .toString();
             for (int size = minSize; size <= maxSize; size += Math.max(2, Math.round(gap * .18f))) {
                 Glyph glyph = rasterizer.render(glyphs, size);
+                if (bold) glyph = weighted(glyph);
                 int gw = glyph.width(), gh = glyph.height();
                 if (gw < 1 || gh < 1 || gw > width + 8 || gh > h + 8) continue;
                 boolean[] shape = glyph.ink();
@@ -150,10 +203,21 @@ public final class MeterGlyphMatcher {
             results.add(new Match(value, best));
         }
         results.sort(Comparator.comparingDouble(Match::score).reversed());
-        Match winner = results.get(0);
-        if (!accepts(winner.value(), winner.score(), results.get(1).score(), corroborated))
-            return new Match(0, winner.score());
-        return winner;
+        return results;
+    }
+
+    /** One-pixel orthogonal stroke expansion models heavier printed ink. */
+    private static Glyph weighted(Glyph glyph) {
+        int w = glyph.width() + 2, h = glyph.height() + 2;
+        boolean[] ink = new boolean[w * h];
+        for (int y = 0; y < glyph.height(); y++)
+            for (int x = 0; x < glyph.width(); x++)
+                if (glyph.ink()[y * glyph.width() + x])
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dx = -1; dx <= 1; dx++)
+                            if (Math.abs(dx) + Math.abs(dy) <= 1)
+                                ink[(y + 1 + dy) * w + x + 1 + dx] = true;
+        return new Glyph(w, h, ink);
     }
 
     static boolean accepts(int winner, float score, float runnerUp, String corroborated) {

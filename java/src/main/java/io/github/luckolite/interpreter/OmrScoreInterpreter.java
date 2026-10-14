@@ -5160,7 +5160,7 @@ final class OmrScoreInterpreter {
                     // sharp. Tiny semantic specks can also occur on nearby meter digits.
                     float signatureX = glyph.centerX;
                     boolean printedFlat =
-                            clef != null
+                            (clef != null || accidental == ScoreNoteEvent.ACCIDENTAL_FLAT)
                                     && PrintedFlatGlyph.matches(
                                             gray,
                                             width,

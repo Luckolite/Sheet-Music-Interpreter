@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition46 recovers interior printed flats and unresolved meter digits using
+local printed staff geometry and conservative font-weight evidence. Two independent
+raw-pixel staffs can establish the existing exterior artwork-rejection envelope
+when semantic staff labels are absent. Thirty-eight original controls accompany
+the changes. Android/native OCR adapters and the new native source-list entry were
+reviewed alongside mapped sources. No private scores or model changes are included.
+Guide285/audio79 remain unchanged; full source accuracy, document playback and
+packaged deployment remain pending.
+
 Recognition45 distinguishes compact scan bulges on natural signs from separated
 sharp crossbars. Existing spine continuity, offset endpoints and connector proof
 remain required. Six original synthetic controls cover localized bulges, genuine
