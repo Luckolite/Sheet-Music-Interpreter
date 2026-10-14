@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition48 preserves independently proved staff extents when a regional frame
+would otherwise omit printed material. Whole-rest recognition uses local printed
+rule evidence and attached partial raster edges while preserving multiple plates.
+Narrow angular articulation carets remain distinct from rounded fermata roofs,
+including tall and inverted controls. Guide286 retains its existing record layout;
+audio81 invalidates previews affected by corrected notes and holds. Original
+generated regressions contain no private score material. Whole-score accuracy and
+final app/Hub/worker package, deployment and runtime acceptance remain pending.
+
 Recognition47 adds conservative interior-staff and clipped-meter evidence, plus
 independently numbered silent pickups. Guide286 stores a strict proof byte after
 the retained slur frame; every reader validates it, legacy reads default false,

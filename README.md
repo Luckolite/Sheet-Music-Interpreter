@@ -136,6 +136,11 @@ is needed to export an already decoded document through the Python API.
 FFmpeg is a separate optional dependency with its own license; it is not committed
 or bundled in this repository's Apache-2.0 source/model artifacts.
 
+Whole-measure rest identity uses independently printed staff evidence, including
+local staff alignment and partial rule edges. Regional staff recovery preserves
+proved opening extents, and narrow articulation carets are distinguished from
+rounded fermata roofs. These checks do not establish whole-score accuracy.
+
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`

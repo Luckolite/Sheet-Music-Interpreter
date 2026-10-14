@@ -2414,9 +2414,38 @@ final class NoteArticulationDetector {
                     && Math.abs(l + (minX + maxX) * .5f - dot.x()) <= gap * .35f
                     && l + minX <= dot.x() - gap * .45f
                     && l + maxX >= dot.x() + gap * .45f
+                    && !angularFermataRoof(
+                            new Glyph(minX, minY, maxX, maxY, count, Arrays.copyOf(queue, count)),
+                            w,
+                            gap,
+                            direction < 0)
                     && curvedRoof(queue, count, w, minX, maxX, gap, direction)) return true;
         }
         return false;
+    }
+
+    /** A rounded roof widens near its crown; a narrow two-arm caret does not. */
+    private static boolean angularFermataRoof(Glyph g, int width, float gap, boolean above) {
+        if (classify(g, width, gap, above) != NoteArticulation.MARCATO) return false;
+        int h = g.bottom - g.top + 1, w = g.right - g.left + 1;
+        int[] left = new int[h], right = new int[h];
+        Arrays.fill(left, Integer.MAX_VALUE);
+        Arrays.fill(right, -1);
+        for (int p : g.pixels) {
+            int y = p / width - g.top, x = p % width;
+            left[y] = Math.min(left[y], x);
+            right[y] = Math.max(right[y], x);
+        }
+        int rows = 0;
+        double span = 0;
+        for (int y = 0; y < h; y++) {
+            float depth = (above ? y : h - 1 - y) / (float) Math.max(1, h - 1);
+            if (depth >= .4f && depth <= .6f && right[y] >= left[y]) {
+                span += right[y] - left[y] + 1;
+                rows++;
+            }
+        }
+        return rows >= 2 && span / rows <= w * .62f;
     }
 
     /** Both ends of an arch turn toward its dot; a ledger stripe or beam does not. */

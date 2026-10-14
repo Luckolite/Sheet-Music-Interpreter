@@ -397,6 +397,9 @@ final class OmrMeasurePostProcessor {
                 represented = true;
                 int proofLeft = Math.max(0, Math.min(prior.left, recovered.left));
                 int proofRight = Math.min(width - 1, Math.max(prior.right, recovered.right));
+                int[][] extentComplete = new int[2][2],
+                        extentRun = new int[2][2],
+                        extentLongest = new int[2][2];
                 int[] complete = new int[2], longestComplete = new int[2], completeRun = new int[2];
                 StaffRun[] frames = {prior, recovered};
                 for (int x = proofLeft; x <= proofRight; x++) {
@@ -427,6 +430,16 @@ final class OmrMeasurePostProcessor {
                             }
                             if (printed) support++;
                         }
+                        for (int side = 0; side < 2; side++) {
+                            boolean exterior = side == 0 ? x < recovered.left : x > recovered.right;
+                            if (exterior && support == 5) {
+                                extentComplete[side][frame]++;
+                                extentLongest[side][frame] =
+                                        Math.max(
+                                                extentLongest[side][frame],
+                                                ++extentRun[side][frame]);
+                            } else extentRun[side][frame] = 0;
+                        }
                         if (support == 5) {
                             complete[frame]++;
                             longestComplete[frame] =
@@ -441,7 +454,57 @@ final class OmrMeasurePostProcessor {
                                 && longestComplete[0] >= longestComplete[1];
                 // Equal or stronger complete printed evidence keeps the old
                 // frame and bounds; a new seed still recovers weak or absent rows.
-                if (!established) result.set(index, recovered);
+                // A stronger local frame may still have a shorter dark-ink extent.
+                // Retain an omitted edge only when both frames independently prove
+                // complete printed rules there, then rerun the normal barline guards.
+                if (!established) {
+                    int keepLeft = recovered.left, keepRight = recovered.right;
+                    for (int side = 0; side < 2; side++) {
+                        int span =
+                                side == 0
+                                        ? recovered.left - prior.left
+                                        : prior.right - recovered.right;
+                        if (span <= 0) continue;
+                        boolean proved = true;
+                        for (int frame = 0; frame < 2; frame++)
+                            proved &=
+                                    extentComplete[side][frame]
+                                                    >= Math.max(24, Math.round(span * .08f))
+                                            && extentLongest[side][frame]
+                                                    >= Math.max(
+                                                            8, Math.round(frames[frame].gap * 3));
+                        if (proved) {
+                            if (side == 0) keepLeft = prior.left;
+                            else keepRight = prior.right;
+                        }
+                    }
+                    if (keepLeft != recovered.left || keepRight != recovered.right) {
+                        var kept =
+                                findBoundaries(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        rows,
+                                        seed.gap(),
+                                        keepLeft,
+                                        keepRight,
+                                        seed.slope(),
+                                        track);
+                        if (kept.size() >= 2)
+                            recovered =
+                                    new StaffRun(
+                                            recovered.top,
+                                            recovered.bottom,
+                                            recovered.gap,
+                                            keepLeft,
+                                            keepRight,
+                                            kept,
+                                            recovered.slope,
+                                            recovered.track);
+                    }
+                    result.set(index, recovered);
+                }
             }
             if (!represented) result.add(recovered);
         }

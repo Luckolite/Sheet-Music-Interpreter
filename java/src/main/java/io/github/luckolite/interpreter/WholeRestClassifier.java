@@ -82,12 +82,13 @@ final class WholeRestClassifier {
                 scanSecondRule(gray, width, height, lo, hi, lines.top(), gap, plates);
                 scanRaised(gray, width, height, lo, hi, lines.top(), gap, plates);
                 for (var plate : plates) {
+                    float plateGap = plate.gap();
                     if (ownedByHead(plate, mi, staff, m, width, height, notes)) continue;
                     var dotStaff =
                             new SixteenthRestDetector.Staff(
-                                    plate.rule() - gap,
-                                    plate.rule() + 3 * gap,
-                                    gap,
+                                    plate.rule() - plateGap,
+                                    plate.rule() + 3 * plateGap,
+                                    plateGap,
                                     staff.index(),
                                     staff.count());
                     // Existing body/dot geometry is retained; its broad note-x veto is replaced
@@ -98,7 +99,7 @@ final class WholeRestClassifier {
                     var dots = new ArrayList<SixteenthRestDetector.InkDot>();
                     boolean uncertainDot = false;
                     for (var dot : rawDots) {
-                        int owner = dotOwner(dot, gap, mi, staff, m, width, height, notes);
+                        int owner = dotOwner(dot, plateGap, mi, staff, m, width, height, notes);
                         if (owner == 0) dots.add(dot);
                         else if (owner < 0) uncertainDot = true;
                     }
@@ -130,7 +131,9 @@ final class WholeRestClassifier {
                     float tolerance =
                             Math.min(
                                     .085f,
-                                    Math.max(.035f, gap * .65f / ((m.right() - m.left()) * width)));
+                                    Math.max(
+                                            .035f,
+                                            plateGap * .65f / ((m.right() - m.left()) * width)));
                     if (dots.isEmpty() && Math.abs(pos - .5f) <= tolerance) {
                         String conflict =
                                 conflictReason(
@@ -290,32 +293,98 @@ final class WholeRestClassifier {
         return false;
     }
 
+    /** Require two agreeing complete local staffs before correcting the page-wide phase. */
+    static float[] localRules(byte[] g, int w, int h, int lo, int hi, float top, float gap) {
+        var a =
+                PrintedDirectionStaff.printedRules(
+                        g, w, h, lo + (hi - lo) * .25f, top + 4 * gap, gap);
+        var b =
+                PrintedDirectionStaff.printedRules(
+                        g, w, h, lo + (hi - lo) * .75f, top + 4 * gap, gap);
+        if (a == null
+                || b == null
+                || Math.abs(a[0] - b[0]) > gap * .15f
+                || Math.abs(a[1] - b[1]) > gap * .06f) return null;
+        float localGap = (a[1] + b[1]) * .5f;
+        float localTop = (a[0] + b[0]) * .5f - 4 * localGap;
+        if (Math.abs(localTop - top) > gap * .5f
+                || Math.abs(localGap - gap) > gap * .12f
+                || localTop < 0
+                || localTop + 4 * localGap >= h) return null;
+        return new float[] {localTop, localGap};
+    }
+
     private static void scanSecondRule(
             byte[] g, int w, int h, int lo, int hi, float staffTop, float gap, List<Plate> out) {
         int rule = Math.round(staffTop + gap);
-        if (rule < 2 || rule + gap >= h || ink(g, w, lo, hi, rule) < (hi - lo + 1) * .80f) return;
+        if (rule < 2 || rule + gap >= h) return;
+        if (ink(g, w, lo, hi, rule) < (hi - lo + 1) * .80f) {
+            var local = localRules(g, w, h, lo, hi, staffTop, gap);
+            if (local == null) return;
+            gap = local[1];
+            rule = Math.round(local[0] + gap);
+            if (rule < 2 || rule + gap >= h || ink(g, w, lo, hi, rule) < (hi - lo + 1) * .80f)
+                return;
+        }
         int bottom = rule;
         while (bottom + 1 < h
                 && bottom - rule < gap * .3f
                 && ink(g, w, lo, hi, bottom + 1) >= (hi - lo + 1) * .80f) bottom++;
-        int first = bottom + 1;
-        for (int x = lo; x <= hi; x++) {
-            if (!dark(g, w, x, first) || dark(g, w, x - 1, first)) continue;
-            int right = x;
-            while (right < hi && dark(g, w, right + 1, first)) right++;
-            int left = x;
-            x = right;
-            Plate p =
-                    completePlate(
-                            g, w, h, lo, hi, left, right, rule, first, gap, Support.SECOND_RULE);
-            if (p == null) continue;
-            int arms = Math.round(gap * .5f);
-            if (ink(g, w, left - arms, right + arms, rule) < (right - left + 1 + 2 * arms) * .90f)
-                continue;
-            if (ink(g, w, left - arms, right + arms, rule - Math.max(1, Math.round(gap * .2f))) > 1)
-                continue;
-            out.add(p);
+        // A partial antialiased rule edge may extend past a hanging body. Search only
+        // the thin support band, retaining every distinct plate in this measure.
+        for (int first = bottom + 1; first <= bottom + 1 + Math.round(gap * .2f); first++) {
+            if (first >= h) break;
+            for (int x = lo; x <= hi; x++) {
+                if (!dark(g, w, x, first) || dark(g, w, x - 1, first)) continue;
+                int right = x;
+                while (right < hi && dark(g, w, right + 1, first)) right++;
+                int left = x;
+                x = right;
+                var p =
+                        completePlate(
+                                g,
+                                w,
+                                h,
+                                lo,
+                                hi,
+                                left,
+                                right,
+                                rule,
+                                first,
+                                gap,
+                                Support.SECOND_RULE);
+                if (p == null || !attachedRuleEdge(g, w, lo, hi, left, right, bottom, first, gap))
+                    continue;
+                int arms = Math.round(gap * .5f);
+                if (ink(g, w, left - arms, right + arms, rule)
+                        < (right - left + 1 + 2 * arms) * .90f) continue;
+                if (ink(g, w, left - arms, right + arms, rule - Math.max(1, Math.round(gap * .2f)))
+                        > 1) continue;
+                boolean duplicate = false;
+                for (var prior : out)
+                    if (prior.support() == Support.SECOND_RULE
+                            && prior.last() == p.last()
+                            && prior.left() <= p.right()
+                            && p.left() <= prior.right()) {
+                        duplicate = true;
+                        break;
+                    }
+                if (!duplicate) out.add(p);
+            }
         }
+    }
+
+    private static boolean attachedRuleEdge(
+            byte[] g, int w, int lo, int hi, int l, int r, int bottom, int first, float gap) {
+        for (int y = bottom + 1; y < first; y++) {
+            // Never skip ordinary body rows, a missing connection, or a taper.
+            if (ink(g, w, l, r, y) != r - l + 1) return false;
+            int a = l, b = r;
+            while (a > lo && dark(g, w, a - 1, y)) a--;
+            while (b < hi && dark(g, w, b + 1, y)) b++;
+            if ((l - a) + (b - r) < gap) return false;
+        }
+        return true;
     }
 
     private static void scanRaised(

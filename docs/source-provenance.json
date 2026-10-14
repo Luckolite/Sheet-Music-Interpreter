@@ -333,16 +333,16 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "ade8eee1067cef073ad0ca97966ac61d3983f8a9166572550bbf2b3f1e384d7e",
-      "review_note": "Round only fermata dot bounds outward to whole raster pixels; retain independent connected roof, shape, density and placement proof. Seven original controls, including a baseline-failing complete dot and arch. Staccato classifier unchanged.",
-      "source_normalized_sha256": "c92e41a61ecdcf1c0010c30209079256b8d34e4499ef59128c956689ad3fe91b",
+      "source_sha256": "6b52d6e17ab2ad52e9961bb5f6d05f05c083903698d96b5756e9c16b109e11b4",
+      "review_note": "Reject narrow mid-depth two-arm articulation carets as fermata roofs while retaining rounded, tall and inverted roofs; all other expressive evidence is preserved.",
+      "source_normalized_sha256": "2559f1f2f4e04a1c4b9bd32de1a4e3d627fe9ad75f5ed941ec8e4c4ae9e854f0",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
-      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
+      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "44c4f2352bb88e7724c83f2c6bd03f581b5b38667a2adc906ebd59c743cf637c",
+      "standalone_sha256": "3e1b803e9d7b0bc4195e14074b20cc0b1b5416d71af824a0588c5b05ce368e40",
       "license": "Apache-2.0"
     },
     "OpenChevron.java": {
@@ -362,15 +362,15 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "e703b6085a96a64fdc719737f1135f5a17eb970ac9d33dae34264fe1c423ef25",
-      "source_normalized_sha256": "3d758444fd365ac52a1086f62de6f1df04366055182cb4e0c0986fc2291eb544",
-      "review_note": "Apply conservative interior-scale proof after printed-staff admission while retaining pitch tracks and partial-rule protections.",
+      "source_sha256": "d5ba3a836d51a421c81ad498ab275c62cda200ac1089e89c09dc6926cfcc0b25",
+      "source_normalized_sha256": "8636b627897889cb2452a03cc2b1c439f47488ad1e18bf3003d16705b7f15ddd",
+      "review_note": "During regional staff-frame replacement, retain an omitted outer extent only when both frames prove complete printed rules there; rerun ordinary boundary guards on the retained extent.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending.",
-      "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
+      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
+      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "standalone_sha256": "4fe5d7de46dbca10e7b277480cd1da132018570094f7ddd9d02ad8c32e976b38"
+      "standalone_sha256": "e2c81dfe9795c089a7d8560a0065a0e75559aa07a7aa6bb19bff1223daf32c91"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -1554,13 +1554,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "6d28ef56ec15d881f5e5a4acc86f8e35aaec323ce214924dd1442d7e0c11746b",
-      "source_normalized_sha256": "6d28ef56ec15d881f5e5a4acc86f8e35aaec323ce214924dd1442d7e0c11746b",
-      "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "review_note": "Advance paired recognition46 to47 with implemented guide286 and audio80 source contracts.",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending.",
-      "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "standalone_sha256": "3dfeb4bd3e4fd3ab48e644d36254ea0dd98188ed54f321150cd0757ce98c05c2",
+      "source_sha256": "38dc50393f5a2247f40710c51e206ba83f25c8a6eabdd48e969f77e811da2b79",
+      "source_normalized_sha256": "38dc50393f5a2247f40710c51e206ba83f25c8a6eabdd48e969f77e811da2b79",
+      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "review_note": "Advance paired recognition47 to48 for corrected notes/rests/holds; guide286 layout is unchanged and audio81 invalidates affected previews.",
+      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
+      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "standalone_sha256": "ff393b056d058352f7befbc2ce3c3c4a1e30a67c528ed7501b3a34b47bc1a47d",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1618,14 +1618,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e2a2872a0aea33c05a8c6258359bc7840097035855b9624b67d8a25d491a4551",
-      "source_normalized_sha256": "01e0bc559c7d30c693ccce2c37ae6e303099d487b36e934ab227ab9b1b42ff8c",
-      "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending.",
-      "review_note": "Append real guide286 proof byte after retained slur source; older formats reject true proof rather than dropping it. Recognition47 matches Android/Hub.",
-      "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
+      "source_sha256": "1fbeb9d3f7f99c356bd052f6aceeba08d5e287e080accc038cc7e1c931320ecb",
+      "source_normalized_sha256": "d538afcd7676510f9546e72922ec642e7bf9bce758b73321768610f3665949f3",
+      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
+      "review_note": "Keep the exact guide286 binary layout while advancing the paired recognition identity to48.",
+      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "c5fd4323a7e052c4e786dd58d80a4fd6787ee8fc8fea7225c447c2f5db36f009",
+      "standalone_sha256": "5f3510fb9a5be666e7011eaffe3abc44426e883abaf71b5ae184487348c00cc0",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2016,12 +2016,13 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "b6441fc28c0df502cb427c9bb81ff55cb42bf35ac7644a94b197d06114e48098",
-      "source_normalized_sha256": "d8e0dfa0c38678aae45f83703da0c8b843ffc1e6641d39572c269e601d6199b2",
-      "reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
-      "scoped_reviewed_app_commit": "fcee221b71b2bfb309f2d8a78719f78c71370117",
-      "reviewed_source_state": "Committed reviewed source; exact app raw/LF bytes and paired executable tokens pinned.",
-      "review_note": "Allow one contiguous inset terminal raster row below an otherwise rectangular complete body. Retain internal solidity, bounded depth, side clearance and blank lower margin, preserving actual full-measure identity. Original Apache-2.0 procedural controls; no private fixtures, model, dependency or serialized record-layout changes."
+      "source_sha256": "1b5a830b76026863c410c23b560a5d6245fd54d99bd4c3c63977833c67df2224",
+      "source_normalized_sha256": "e9ab6b5f60398672a444cd89bbc5dd7ad1a8234024329496b6d723462dd87732",
+      "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "scoped_reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+      "reviewed_source_state": "Committed paired recognition48/guide286/audio81 sources; final cumulative package/deployment/runtime verification pending.",
+      "review_note": "Use two agreeing printed local staffs when the page-wide second-rule phase lacks support. Trace hanging plates through thin partial rule edges, require attachment, retain all distinct plates and use their measured gap.",
+      "standalone_sha256": "542f5bef6b76dab550896855a129b72436eb5b55e950a882727afbd3c306aba8"
     },
     "WideSystemIncomingTieProof.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",
@@ -6531,5 +6532,32 @@
       }
     ],
     "standalone_main_sha256": "62153b1e0a54766c318e119284b1d5cb6cc7f6e3abb331324e504e2af41ca009"
+  },
+  "rest_extent_and_fermata_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "4f8cf24badadca9779489f541ae8be30ecfd9452",
+    "scope": "Generic printed staff extent and whole-rest evidence, angular articulation separation, original generated regressions, matching recognition/audio invalidation. No private score assets, source-specific rules, changed model weights or deployment claims.",
+    "reviewed_sources": [
+      {
+        "source_path": "tools/native-worker/NativeAudioTrack.java",
+        "source_sha256": "2d6b54d06fc6f8534c6cb97f3689459e97a20a44abffeba88a6847cbb7c753af"
+      },
+      {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "1fbeb9d3f7f99c356bd052f6aceeba08d5e287e080accc038cc7e1c931320ecb"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java",
+        "source_sha256": "6e5a83eba59f16e0cb17db28ca69183d5020f41b0bb3648f6e67f69328d35e12"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "2915556c08a6b352e6c7c889e3c984b5cc9d930be49282e6ffc37dea3a1f27a5"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeAudioWorker.cs",
+        "source_sha256": "93a4d22b245f1fc48ce6f9a3fbdaf0cc593728d722663d2a378bc3363d299469"
+      }
+    ]
   }
 }
