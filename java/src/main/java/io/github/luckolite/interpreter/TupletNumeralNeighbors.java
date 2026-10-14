@@ -22,7 +22,7 @@ final class TupletNumeralNeighbors {
         if (glyphHeight < 7) return false;
         int margin = Math.max(4, Math.round(glyphHeight * 1.6f));
         int x0 = Math.max(0, left - margin), x1 = Math.min(width - 1, right + margin);
-        int y0 = Math.max(0, top - Math.round(glyphHeight * .3f)),
+        int y0 = Math.max(0, top - Math.round(glyphHeight * .8f)),
                 y1 = Math.min(height - 1, bottom + Math.round(glyphHeight * .3f));
         int w = x1 - x0 + 1, h = y1 - y0 + 1;
         boolean[] seen = new boolean[w * h];
@@ -54,14 +54,21 @@ final class TupletNumeralNeighbors {
             if (minX <= x0 || maxX >= x1 || minY <= y0 || maxY >= y1) continue;
             int separation = maxX < left ? left - maxX : minX > right ? minX - right : -1;
             int cw = maxX - minX + 1, ch = maxY - minY + 1;
+            // Lowercase glyphs may be followed by a taller ascender on the same baseline.
+            boolean alignedAscender =
+                    ch > glyphHeight * 1.35f
+                            && ch <= glyphHeight * 1.9f
+                            && Math.abs(maxY - bottom) <= glyphHeight * .2f;
             if (separation < 1
                     || separation > glyphHeight * .45f
                     || ch < glyphHeight * .65f
-                    || ch > glyphHeight * 1.35f
+                    || ch > glyphHeight * 1.35f && !alignedAscender
                     || cw < Math.max(2, ch * .12f)
                     || cw > ch * .95f
                     || count < cw * ch * .10f
-                    || Math.abs((minY + maxY - top - bottom) * .5f) > glyphHeight * .25f) continue;
+                    || !alignedAscender
+                            && Math.abs((minY + maxY - top - bottom) * .5f) > glyphHeight * .25f)
+                continue;
             return true;
         }
         return false;

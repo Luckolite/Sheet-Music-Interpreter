@@ -325,16 +325,16 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "3171eadc8eb4e4b3a51167b4bf02bae5e8dcf4a3f880f8dc8336aa3e84199115",
-      "review_note": "Layout-backed collection item exclusions and full chevrons touching proved staff rules; original controls protect explicit credits and notation ownership. No song-specific exceptions, private fixtures, dependency, model or wire-layout changes.",
-      "source_normalized_sha256": "bd8f5368e9b818b6405c716a099de8b647a0929bfde8438a29a7c38a7b83c179",
+      "source_sha256": "ade8eee1067cef073ad0ca97966ac61d3983f8a9166572550bbf2b3f1e384d7e",
+      "review_note": "Round only fermata dot bounds outward to whole raster pixels; retain independent connected roof, shape, density and placement proof. Seven original controls, including a baseline-failing complete dot and arch. Staccato classifier unchanged.",
+      "source_normalized_sha256": "c92e41a61ecdcf1c0010c30209079256b8d34e4499ef59128c956689ad3fe91b",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
-      "reviewed_app_commit": "6d8fc558a467bececc966fdce99204b560c1a533",
-      "scoped_reviewed_app_commit": "3a104874af915151d58da2af6e50b1c557b74eef",
+      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "502252bea8239d235aaa16f947cf18c69481ab308aad53d5c4833fc49ed140e7",
+      "standalone_sha256": "44c4f2352bb88e7724c83f2c6bd03f581b5b38667a2adc906ebd59c743cf637c",
       "license": "Apache-2.0"
     },
     "OpenChevron.java": {
@@ -481,14 +481,15 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "77f4ad7146900b334ad0ea7f8b4f2e9bfef6c4a46ab0c9b4b02be5367e4e77b9",
-      "reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a",
-      "review_note": "Preserve a strictly positive middle turn of a complete quarter-rest zigzag and compare its existing proportional threshold with a half-raster-pixel allowance, symmetric with the preceding peak-to-valley allowance. Complete body/phase/contrast and note/flag ownership remain unchanged. Nine independent licensed Bravura quarter rasters reproduce baseline omissions; original regression retains accidental and flat-middle rejection.1142selected portable checks and16app focused checks pass. No model/dependency/record-layout change.",
-      "source_normalized_sha256": "80a65e1404f19064bdf9aa192f8f13e64da5bb68ab6ae69dcf25d87cc61bac8b",
+      "source_sha256": "a007f67141cc61a93b6f2905fb087f595b5f26c886549d2b5cabec7fac33c506",
+      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "review_note": "Allow wider complete two-bulb sixteenth contours only with existing shape and ownership proof; retry quarter contours after removing a narrow detached remnant below a proved bottom staff rule. Nineteen original controls; no private score data or coordinates.",
+      "source_normalized_sha256": "a007f67141cc61a93b6f2905fb087f595b5f26c886549d2b5cabec7fac33c506",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by raw and normalized source hashes.",
+      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "scoped_reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a"
+      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "standalone_sha256": "97fd525ad5b2e00be7da99e29e2a86b8c8754ee50bd49aa0ca8d41dd29f65d6d"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1130,9 +1131,13 @@
     },
     "TupletNumeralNeighbors.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralNeighbors.java",
-      "source_sha256": "a833692181c9d4f6585b04051b8e59809928161834e4466e01da0942d3451823",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "a833692181c9d4f6585b04051b8e59809928161834e4466e01da0942d3451823"
+      "source_sha256": "91ce5932fb61c8a504eedddc9a90b715eabc28d89fd9d098e67c8edd0c900ab5",
+      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "source_normalized_sha256": "3953ae59d0e8eec003b0c41cf46732003440e4855d665dd14a7fef6a100c890f",
+      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "standalone_sha256": "afb15c2ba7dc318905f2ab0c9e2b0219f1a28c5c6af1f1b5192f3e452732a5c1",
+      "review_note": "Reject a false tuplet numeral beside a baseline-aligned text ascender, preserving separate true numerals and thin stems. Nine original controls.",
+      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending."
     },
     "BeamOccludedNatural.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamOccludedNatural.java",
@@ -1527,13 +1532,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "ee50ac7920d0813c8ab52eb47c3922f6467548e28e3f93a9f8841a08bdccd9b4",
-      "source_normalized_sha256": "31db0148dc216472cbca60a25192e8b64e8480ab9d225e0332ff09a58b5e384f",
-      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "review_note": "Advance paired recognition cache revision38 to39; guide285 binary layout and audio79 unchanged.",
-      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "standalone_sha256": "b0938e2ec73a3bc295146b1ed8ef1dbc5e65f9550cd3b84d7344d7e6c369dafb",
+      "source_sha256": "a07a14f6c577f6cee8d6e70d8621e8b194d62344ffb9c5c64224935ac6f7f44f",
+      "source_normalized_sha256": "2db1e15b47d9070d8987f419df4e5ba41f40709307f28a6a77d469492156f682",
+      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "review_note": "Advance paired recognition revision39 to40; guide285 binary layout and audio79 unchanged.",
+      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "standalone_sha256": "5c070fecc8019b6acc9ac786d324f5690f2022888fdbb321a1e97416c2e06be1",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1591,14 +1596,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "c1c95d67923b16170a692572da3f7a2335b9069af7fd2d32213ebd1b3b92ad22",
-      "source_normalized_sha256": "c53920a467c1fada729875c54d0f0b5eeedd043b926e4bca4584fdbde550ebc4",
-      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
-      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Advance paired Python writer recognition revision38 to39 with Android and Hub; physical guide record layout unchanged.",
-      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "source_sha256": "f623b6a9d3090e3d4f4f0af7cec514af30734b99dffc1d49508f06cf35565d08",
+      "source_normalized_sha256": "9a850d8b7c4dfbb04f604673ef8bd4b7e5e443923a192c380807f8bf4ec47cb1",
+      "reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
+      "reviewed_source_state": "Committed paired recognition40 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Advance paired writer recognition revision39 to40 with Android and Hub; guide records unchanged.",
+      "scoped_reviewed_app_commit": "60bf32dc3f70dfc24d72a3c8e43450054d24e8ed",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "8d724d1f91fe0965d8c37a3ab2b2351529fdd5c1ce667fbdeefee94880bba370",
+      "standalone_sha256": "ea92873a456cd933c6cfed4e6ab2da050eabedaffeac3c1f9fd26befa8f695b2",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {

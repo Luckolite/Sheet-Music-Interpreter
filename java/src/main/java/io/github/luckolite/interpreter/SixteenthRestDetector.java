@@ -1988,7 +1988,7 @@ final class SixteenthRestDetector {
             float printedStaffCenter,
             boolean faintShapes) {
         float gap = staff.gap();
-        if (right - left + 1 < gap * .7f || right - left + 1 > gap * 1.85f) return;
+        if (right - left + 1 < gap * .7f || right - left + 1 > gap * 2f) return;
         int minY = bottom + 1, maxY = top - 1;
         int[] ink = new int[bottom - top + 1];
         for (int y = top; y <= bottom; y++)
@@ -2006,7 +2006,7 @@ final class SixteenthRestDetector {
                         width, height, measures, notes, staff, left, right, top, ink, line, minY,
                         maxY);
         boolean noteDotRemoved = maxY < fullBottom;
-        if (right - left + 1 > gap * 1.6f && !noteDotRemoved) return;
+        boolean wideContour = right - left + 1 > gap * 1.6f && !noteDotRemoved;
         // Shifted voices need the complete raw rectangle and supporting rule;
         // a masked beam fragment can otherwise resemble a half or whole rest.
         boolean half =
@@ -2055,6 +2055,8 @@ final class SixteenthRestDetector {
         if (quarterOnly && !quarter) return;
         if (!bulbOnly && !quarter && !half && !whole && !thirtySecond && ordinary) {
             int tail = quarterTailWithoutSpeck(ink, top, minY, maxY, gap);
+            if (tail == maxY)
+                tail = quarterTailWithoutRuleEdge(ink, line, top, minY, maxY, gap, staff.bottom());
             if (tail < maxY
                     && quarterRest(gray, width, staff, top, line, left, right, minY, tail)) {
                 quarter = true;
@@ -2081,6 +2083,8 @@ final class SixteenthRestDetector {
                         && maxY - minY >= (faintShapes ? Math.round(gap * 2.35f) : gap * 2.35f)
                         && maxY - minY <= gap * 3.25f
                         && Math.abs(maxY - staff.bottom()) <= gap * .35f;
+        // Only complete two-bulb rests may exceed the ordinary contour width.
+        if (wideContour && (!sixteenth || quarter || half || whole || thirtySecond)) return;
         if (sixteenth
                 && !quarter
                 && !half
@@ -3131,6 +3135,32 @@ final class SixteenthRestDetector {
         int tail = maxY - 1;
         while (tail >= minY && ink[tail - top] == 0) tail--;
         return tail - minY + 1 >= gap * 2.1f && maxY - tail >= Math.ceil(gap * .25f) ? tail : maxY;
+    }
+
+    /** A detached narrow remnant immediately below a proved bottom rule is not a rest tail. */
+    static int quarterTailWithoutRuleEdge(
+            int[] ink, boolean[] line, int top, int minY, int maxY, float gap, float staffBottom) {
+        if (ink == null
+                || line == null
+                || ink.length != line.length
+                || !Float.isFinite(gap)
+                || !Float.isFinite(staffBottom)
+                || gap < 4
+                || minY < top
+                || maxY <= minY
+                || maxY - top >= ink.length
+                || maxY - top < 1
+                || ink[maxY - top] < 1
+                || ink[maxY - top] > Math.floor(gap * .25f)
+                || !line[maxY - top - 1]
+                || Math.abs(maxY - staffBottom) > gap * .35f) return maxY;
+        int tail = maxY - 1;
+        while (tail >= minY && ink[tail - top] == 0) tail--;
+        return maxY - tail >= Math.ceil(gap * .5f)
+                        && tail - minY + 1 >= gap * 2.1f
+                        && tail < staffBottom - gap * .35f
+                ? tail
+                : maxY;
     }
 
     /** Quarter rests have a narrow zigzag above a left-facing lower hook. */

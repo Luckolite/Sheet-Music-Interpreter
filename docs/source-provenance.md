@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition40 preserves printed rest rhythms and fermata ownership: text
+ascenders reject false tuplets, complete wider sixteenth-rest contours retain
+their durations, detached bottom-rule remnants cannot stretch proved quarters,
+and fermata dots use outward pixel rounding with independent arch proof.
+Thirty-five original controls accompany paired source review. Android, native
+writer, standalone writer and Hub cache revisions agree; guide285 and audio79
+remain unchanged. Captured-page evidence is separate from final current-model
+whole-source accuracy, assembled-document playback and packaged rollout.
+
 Recognition39 adds staff-local tempo discovery and optical onset anchoring,
 rejects horizontally clipped sharp crops, and pairs printed single-staff barline
 preservation with conservative irregular interior-alias rejection. Thirty-three

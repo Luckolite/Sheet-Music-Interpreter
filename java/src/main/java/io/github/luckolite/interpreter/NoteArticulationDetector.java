@@ -76,8 +76,11 @@ final class NoteArticulationDetector {
                 double distance = Math.abs(dot.y() - note.y) / note.gap;
                 if (distance < .55
                         || distance > 8
-                        || classify(dot, width, note.gap, dot.y() < note.y)
-                                != NoteArticulation.STACCATO) continue;
+                        || !fermataDot(
+                                dot.right - dot.left + 1,
+                                dot.bottom - dot.top + 1,
+                                dot.count,
+                                note.gap)) continue;
                 int direction = dot.y() < note.y ? -1 : 1;
                 if (!connectedFermataRoof(dot, labels, gray, width, height, note.gap, direction))
                     continue;
@@ -91,6 +94,21 @@ final class NoteArticulationDetector {
             if (owner >= 0) result.add(new FermataMark(owner, dot.x(), dot.y(), inverted));
         }
         return List.copyOf(result);
+    }
+
+    /** Integer outer pixels round the dot bound outward; its proved roof remains mandatory. */
+    static boolean fermataDot(int w, int h, int count, float gap) {
+        return Float.isFinite(gap)
+                && gap > 0
+                && w >= gap * .26f
+                && h >= gap * .26f
+                && w <= Math.ceil(gap * .62f)
+                && h <= Math.ceil(gap * .62f)
+                && count >= gap * gap * .065f
+                && w / (float) h > .65f
+                && w / (float) h < 1.55f
+                && count / (float) ((long) w * h) > .6f
+                && count <= (long) w * h;
     }
 
     /** Recover an angular mark whose mask was mistaken for a small notehead.
