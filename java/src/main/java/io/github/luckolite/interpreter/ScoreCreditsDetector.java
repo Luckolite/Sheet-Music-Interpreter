@@ -3886,7 +3886,8 @@ public final class ScoreCreditsDetector {
                         && clean(line.text).split("\\h+").length >= 2
                         && line.height() >= heading.height() * .7f
                         && Math.abs(line.center() - heading.center()) < page.width * .08f
-                        && same(pageTitle, fallback)
+                        && (same(pageTitle, fallback)
+                                || coverNameCorroboratedByImport(line.text, fallback, pageTitle))
                         && !same(line.text, pageTitle)
                         && credit(line.text) == null
                         && !LEGAL.matcher(line.text).find()) {
@@ -6389,6 +6390,160 @@ public final class ScoreCreditsDetector {
         }
     }
 
+    /** Imported surnames can corroborate a separately printed name without deciding its role. */
+    private static boolean coverNameCorroboratedByImport(
+            String name, String fallback, String title) {
+        String value = clean(name);
+        if (!properReviewName(value) || containsPrintedPhrase(title, value)) return false;
+        String[] words = value.split("\\h+");
+        if (words.length < 2 || words.length > 4) return false;
+        String surname = words[words.length - 1];
+        if (surname.length() < 4) return false;
+        return Arrays.stream(clean(fallback).split("[^\\p{L}]+"))
+                .anyMatch(word -> word.equalsIgnoreCase(surname));
+    }
+
+    private static boolean duplicateRoleFragment(Line line, List<Line> lines) {
+        String fragment = clean(line.text);
+        if (!fragment.matches("(?iu)^[*]+(?:arranged|composed|performed|transcribed)$")
+                || line.right <= line.left
+                || line.height() <= 0) return false;
+        String role = fragment.replaceFirst("^[*]+", "").toLowerCase(Locale.ROOT);
+        for (Line other : lines) {
+            if (other == line || other.right <= other.left || other.height() <= 0) continue;
+            Credit parsed = credit(clean(other.text));
+            if (parsed == null
+                    || parsed.value.isBlank()
+                    || !clean(other.text).toLowerCase(Locale.ROOT).contains(role)) continue;
+            float width = Math.min(line.right, other.right) - Math.max(line.left, other.left);
+            float height = Math.min(line.bottom, other.bottom) - Math.max(line.top, other.top);
+            if (width >= .8f * Math.max(line.right - line.left, other.right - other.left)
+                    && height >= .8f * Math.max(line.height(), other.height())) return true;
+        }
+        return false;
+    }
+
+    private static boolean scaleStudyCoverCaption(
+            Page page, Line heading, Line line, List<Line> lines) {
+        if (page.photographicCover
+                || page.creditsOnly
+                || page.notationTop > 0
+                || heading == null
+                || line.top < heading.bottom
+                || line.height() >= heading.height() * .85f
+                || Math.abs(line.center() - heading.center()) > page.width * .12f) return false;
+        String text = withoutDiacritics(clean(line.text)).toLowerCase(Locale.ROOT);
+        boolean study =
+                text.matches("(?:tonleiter|skalen)ubungen")
+                        || text.matches("durc?h\\h+alle\\h+dur-?\\h+und\\h+mol{1,2}-?tonarten")
+                        || text.matches("fur\\h+das\\h+tagli(?:c)?he\\h+studium");
+        if (!study) return false;
+        return lines.stream()
+                .anyMatch(
+                        other ->
+                                other != line
+                                        && other.top >= heading.bottom
+                                        && Math.abs(other.top - line.top) < page.height * .15f
+                                        && Math.abs(other.center() - line.center())
+                                                < page.width * .1f
+                                        && withoutDiacritics(clean(other.text))
+                                                .toLowerCase(Locale.ROOT)
+                                                .matches(
+                                                        ".*(?:tonleiter|skalen|tonarten|studium).*"));
+    }
+
+    private static String sectionLabelKey(String text) {
+        return clean(text).toUpperCase(Locale.ROOT).replaceAll("[\\h|]", "");
+    }
+
+    private static boolean damagedSectionLabel(String key, String label) {
+        if (!key.matches("[A-Z0-9]{4,10}")) return false;
+        String normalized = key.replace('0', 'O').replace('3', 'R');
+        boolean shape =
+                normalized.startsWith(label.substring(0, 3))
+                        || normalized.endsWith(label.substring(label.length() - 3));
+        return shape && editDistance(normalized, label) <= (label.length() >= 8 ? 3 : 2);
+    }
+
+    private static boolean pairedSectionLabel(
+            Page page, Line heading, Line line, List<Line> lines) {
+        if (page.photographicCover
+                || page.creditsOnly
+                || page.notationTop <= 0
+                || heading == null
+                || line.top <= heading.bottom
+                || line.left > page.width * .25f
+                || line.right - line.left > page.width * .2f
+                || line.height() >= heading.height() * .7f) return false;
+        String key = sectionLabelKey(line.text);
+        List<String> labels =
+                List.of("INTRO", "INTROSOLO", "HEAD", "VERSE", "CHORUS", "BRIDGE", "OUTRO");
+        boolean exact = labels.contains(key);
+        boolean damaged =
+                key.matches("[A-Z0-9]{4,10}")
+                        && labels.stream().anyMatch(label -> damagedSectionLabel(key, label));
+        if (!exact && !damaged) return false;
+        return lines.stream()
+                .anyMatch(
+                        other ->
+                                other != line
+                                        && other.top > heading.bottom
+                                        && Math.abs(other.left - line.left) < page.width * .06f
+                                        && Math.abs(other.top - line.top)
+                                                > Math.max(line.height(), other.height())
+                                        && Math.abs(other.top - line.top) < page.height * .3f
+                                        && other.right - other.left < page.width * .2f
+                                        && other.height() < heading.height() * .7f
+                                        && (labels.contains(sectionLabelKey(other.text))
+                                                || exact
+                                                        && sectionLabelKey(other.text)
+                                                                .matches("[A-Z0-9]{4,10}")
+                                                        && labels.stream()
+                                                                .anyMatch(
+                                                                        label ->
+                                                                                damagedSectionLabel(
+                                                                                        sectionLabelKey(
+                                                                                                other.text),
+                                                                                        label))));
+    }
+
+    private static boolean damagedDirectionContinuation(Page page, Line line, List<Line> lines) {
+        if (page.photographicCover
+                || page.creditsOnly
+                || page.notationTop <= 0
+                || line.top < 0
+                || line.bottom > page.notationTop
+                || line.left > page.width * .45f
+                || line.height() > page.height * .025f) return false;
+        String text = clean(line.text);
+        if (!text.equals(text.toLowerCase(Locale.ROOT))) return false;
+        String word = text.replaceFirst("^(?:[ypmf]|mp|mf|pp|ff)\\h+", "");
+        if (!word.matches("[a-z]{6,15}")) return false;
+        List<String> directions =
+                List.of(
+                        "lacrimoso",
+                        "espressivo",
+                        "cantabile",
+                        "affettuoso",
+                        "sostenuto",
+                        "grazioso",
+                        "tranquillo",
+                        "agitato",
+                        "animato",
+                        "doloroso");
+        if (directions.stream().noneMatch(d -> editDistance(word, d) <= 1)) return false;
+        return lines.stream()
+                .anyMatch(
+                        other ->
+                                other != line
+                                        && other.bottom <= line.top
+                                        && line.top - other.bottom
+                                                < Math.max(line.height(), other.height())
+                                        && Math.abs(line.center() - other.center())
+                                                < Math.max(line.height(), other.height()) * 2
+                                        && notationReviewLabel(page, other));
+    }
+
     private static boolean layoutReviewCaption(
             Page page, Line heading, Line line, List<Line> lines) {
         String text = clean(line.text);
@@ -6536,6 +6691,10 @@ public final class ScoreCreditsDetector {
         String text = clean(line.text);
         if (scoreFormatCaption(text)) return true;
         if (countedInstrumentAudioCaption(text)) return true;
+        if (duplicateRoleFragment(line, lines)) return true;
+        if (damagedDirectionContinuation(page, line, lines)) return true;
+        if (pairedSectionLabel(page, heading, line, lines)) return true;
+        if (scaleStudyCoverCaption(page, heading, line, lines)) return true;
         if (layoutReviewCaption(page, heading, line, lines)) return true;
         if (!page.photographicCover
                 && line.left < page.width * .15f
@@ -6598,7 +6757,7 @@ public final class ScoreCreditsDetector {
             if (key.matches("(?iu)^(?:contents|table\\h+of\\h+contents)$")
                     && line.top >= label.top) {
                 if (text.matches(
-                        "(?iu)^(?:contents|table\\h+of\\h+contents|title|page(?:\\h+number)?)$"))
+                        "(?iu)^(?:contents|table\\h+of\\h+contents|title|(?:page|track)(?:\\h+number)?|number(?:\\h+number)?)$"))
                     return true;
                 for (Line number : lines)
                     if (clean(number.text).matches("[0-9]{1,3}")

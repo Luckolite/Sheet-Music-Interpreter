@@ -2084,15 +2084,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "fa02c294b0d29996ddcf3612289c9df8fa6d7fccfbe32938b5c70b7430ec62e7",
-      "source_normalized_sha256": "fc474843edd574616f2e9ffeb6d428075acf6b83b5f843916f695105e92fa493",
+      "source_sha256": "b619f8f6885f4239bb02dcda54cc63bc263a14e063115fd7e5150ff0caa79a1a",
+      "source_normalized_sha256": "5ebed820ab401b3046807bddb5c661c133fdfa5c662957ebde15f5d468769478",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "d8a31afbf438be53b8d1c41aa8235c75dc6e62fd2c833318077bc3edcc7f00a4",
+      "standalone_sha256": "4bf0bb27b509520e2d9b6cb91f61cfecc218c1070b4873bdbcc4429c32da3564",
       "license": "Apache-2.0",
-      "review_note": "Collection caption and title ownership, stacked contributor review, same-page corroborated raised-o typography and six-reading accent confirmation from two source crop geometries.38 original controls; exact neighboring-line overlap bounds preserve letters and roles. No private fixtures, dependency, model or wire changes.",
-      "reviewed_app_commit": "be077efc2a165af54b700ba731cc6ee4358f0be0",
+      "review_note": "Overlapping role-fragment suppression, imported-surname corroboration for separate cover names, contents column labels, contextual scale-study captions, paired guitar-tab section labels and damaged direction continuation.44 original synthetic controls. No private fixtures, scanner, model, dependency or wire changes.",
+      "reviewed_app_commit": "5f0725a35a127f2d85a646d7466db2661da10f6b",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

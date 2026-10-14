@@ -1892,3 +1892,13 @@ Thirty-eight original synthetic controls accompany app commit `be077efc2a165af54
 No private scans, fixtures, models, dependencies or wire changes are included.
 Saved replay and source checks do not establish current whole-library Android
 accuracy, APK/runtime behavior or matching desktop worker deployment.
+
+## Cover and musical-direction metadata
+
+Paired source preserves separately printed names for review while excluding
+overlapping role fragments, contents column headings and contextual study captions.
+Aligned section labels and expressions beneath an established tempo direction
+remain musical text even when the first staff was missed. Forty-four original
+synthetic controls cover these rules and nearby contributor counterexamples.
+Reviewed app commit `5f0725a35a127f2d85a646d7466db2661da10f6b`; no scanner, model, dependency or wire changes.
+Saved replay and source checks do not establish Android or whole-library runtime accuracy.
