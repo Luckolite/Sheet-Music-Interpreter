@@ -1914,3 +1914,7 @@ Saved replay and source checks do not establish Android or whole-library runtime
 ## Title ownership and framed artwork
 
 Stacked titles, repeated cover headings, medley labels and explicitly sourced work captions stay out of contributor credits. Small staff-local trill fragments require notation geometry. Single-page framed artwork keeps its imported title while preserving explicit printed credits; both scanner return paths apply the same evidence. The pure-Java image helper is included here. Sixty-one original controls accompany app commit `458a5970892cf497b2e259abafe19847c27a5106`. No private scores, models or wire changes are included. Source checks and saved replay do not establish current whole-library Android accuracy or paired deployment.
+
+## Terminal credit strokes
+
+A missing terminal letter requires bounded original-pixel stem evidence and agreement at three PDF render scales. The pure pixel helper and detector merge are shared; Android rendering remains an adapter. Three original synthetic tests contain 31 controls. App source commit `a75220133cdd15c613f4aeb8a21a0ebecae6a396`. Saved-library replay is separate from current Android runtime accuracy. No private scores or model changes are included.

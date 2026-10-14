@@ -1421,6 +1421,53 @@ public final class ScoreCreditsDetector {
         return List.copyOf(result);
     }
 
+    public static List<Line> terminalCreditStrokeCandidates(Page page) {
+        if (page.photographicCover || page.creditsOnly) return List.of();
+        float limit = page.notationTop > 0 ? page.notationTop : page.height * .3f;
+        Line heading = chooseTitle("", page, page.lines, limit);
+        if (heading == null) return List.of();
+        return page.lines.stream()
+                .filter(
+                        l ->
+                                l != heading
+                                        && l.left >= page.width * .45f
+                                        && l.top >= heading.bottom
+                                        && l.bottom < limit
+                                        && l.bottom < page.height * .3f
+                                        && l.top - heading.bottom < page.height * .10f
+                                        && l.height() > 0
+                                        && l.height() < page.width * .04f
+                                        && clean(l.text)
+                                                .matches(
+                                                        "[-–—]\\h*[A-Z][A-Z'’]*(?:\\h+[A-Z][A-Z'’]*){1,5}")
+                                        && !clean(l.text).endsWith("I")
+                                        && !clean(l.text).endsWith("L"))
+                .limit(4)
+                .toList();
+    }
+
+    public static Refinement terminalCreditStrokeRegion(Page page, Line line) {
+        return new Refinement(
+                Math.max(0, line.left - page.width / 150f),
+                Math.max(0, line.top - page.width / 180f),
+                Math.min(page.width, line.right + page.width / 90f),
+                Math.min(page.height, line.bottom + page.width / 180f),
+                1);
+    }
+
+    public static List<Line> mergeTerminalCreditStroke(
+            Page page, Line line, List<String> text, List<Float> confidence, List<Boolean> ink) {
+        if (!terminalCreditStrokeCandidates(page).contains(line)) return page.lines;
+        String repaired = TerminalCreditStroke.restore(line.text, text, confidence, ink);
+        if (repaired.equals(line.text) || !preservesBibliographicIdentifiers(page, line, repaired))
+            return page.lines;
+        var out = new ArrayList<>(page.lines);
+        out.set(
+                out.indexOf(line),
+                new Line(repaired, line.left, line.top, line.right, line.bottom));
+        return List.copyOf(out);
+    }
+
     public static List<Line> tightCreditRepairCandidates(Page page) {
         if (page.photographicCover) return List.of();
         return page.lines.stream()

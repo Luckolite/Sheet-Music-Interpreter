@@ -2089,15 +2089,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "6ad121abe4dee66d6b0273ef2d66ee8db0cbf13e52fd32d82be6a42e6a20fab3",
-      "source_normalized_sha256": "ec7134c380200cc399d09e3121a763257caf9d4bddb82b48c8da2a5de5bba0fe",
+      "source_sha256": "01bb1b6d8b23d0e9d2b9e4dedc64a0a92e9b1c7f5f83add648511823fe6f69d4",
+      "source_normalized_sha256": "85fe5100c2d0da74694a989e41783ed044ede4223dc46d1ffdde940568f51490",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Paired app/public metadata source with exact package-normalized parity and original synthetic controls. Current whole-library runtime accuracy remains unverified.",
+      "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "aa050c0d73333096348f6ba1232936c3f89ba9bb0860a2cd8d7b820d11f2aa80",
+      "standalone_sha256": "d0aa6c5639ef2553266dad62ab2bafa54c98ed66ad12c403bdfd803343e62f75",
       "license": "Apache-2.0",
-      "review_note": "Original global title ownership, repeated title geometry, explicit source-work context, staff-local trill and framed artwork evidence;61 original controls. No private fixtures, models or wire changes.",
-      "reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
+      "review_note": "Bounded original-pixel terminal-stroke evidence plus three-scale OCR agreement; no name dictionary, score-specific rule, model, or wire change.",
+      "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -2841,6 +2841,17 @@
       "reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
       "review_note": "Original global title ownership, repeated title geometry, explicit source-work context, staff-local trill and framed artwork evidence;61 original controls. No private fixtures, models or wire changes.",
       "reviewed_source_state": "Paired app/public metadata source with exact package-normalized parity and original synthetic controls. Current whole-library runtime accuracy remains unverified."
+    },
+    "TerminalCreditStroke.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/TerminalCreditStroke.java",
+      "source_sha256": "e6ae143db282a70e3539e21ff36a9ff0fe56c94dd9a27de8cfe24b6a1fad6074",
+      "source_normalized_sha256": "e3378fe0239e655aa83876ae5ca46b89c053d1573c1ffb3a640a33fca7028301",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TerminalCreditStroke.java",
+      "standalone_sha256": "ff9ba6b6291bb6cbb16eb761dc47fc288460cd49256cfba28827eb9fe2d91bd5",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
+      "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
+      "review_note": "Bounded original-pixel terminal-stroke evidence plus three-scale OCR agreement; no name dictionary, score-specific rule, model, or wire change."
     }
   },
   "interpreter_speedup_review": {
@@ -6728,5 +6739,11 @@
         "source_sha256": "d835a6505293998949f0459f9449d4970d33ef7dc694bfe27c65aa1e6a80c9a4"
       }
     ]
+  },
+  "metadata_terminal_stroke_adapter_review": {
+    "reviewed_app_commit": "a75220133cdd15c613f4aeb8a21a0ebecae6a396",
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "bdb4c6e00577fb5842d85a8a2a2781ef50ee8a9ef175024b55210c419a564e62",
+    "boundary": "App-only PDF render and bitmap adapter; cancellation, bounded crops and cleanup retained. Pure pixel and merge logic ported. No metadata caller in native decoder; runtime/deployment separate."
   }
 }
