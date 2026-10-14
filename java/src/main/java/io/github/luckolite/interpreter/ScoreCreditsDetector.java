@@ -1540,6 +1540,53 @@ public final class ScoreCreditsDetector {
         return List.copyOf(out);
     }
 
+    /** Malformed mixed-case text in a small contributor position needs fresh pixels. */
+    public static List<Line> malformedHeaderCreditCandidates(Page page) {
+        if (page.photographicCover || page.notationTop <= 0) return List.of();
+        Line title = chooseTitle("", page, page.lines, page.notationTop);
+        if (title == null) return List.of();
+        return page.lines.stream()
+                .filter(
+                        line ->
+                                line != title
+                                        && line.left > page.width * .55f
+                                        && line.top >= title.top
+                                        && line.bottom < page.notationTop
+                                        && line.bottom < page.height * .3f
+                                        && line.height() > 0
+                                        && line.height() < page.width * .04f
+                                        && clean(line.text)
+                                                .matches("[\\p{L}’'-]+(?:\\h+[\\p{L}’'-]+){1,3}")
+                                        && clean(line.text).matches(".*\\p{Ll}{2,}\\p{Lu}.*")
+                                        && credit(line.text) == null
+                                        && !notationReviewLabel(page, line)
+                                        && !properReviewName(line.text))
+                .toList();
+    }
+
+    public static List<Line> mergeMalformedHeaderCredit(
+            Page page, Line original, List<String> readings, List<Float> confidence) {
+        if (!malformedHeaderCreditCandidates(page).contains(original)
+                || readings == null
+                || readings.size() != 3
+                || confidence == null
+                || confidence.size() != 3
+                || confidence.stream()
+                        .anyMatch(c -> c == null || !Float.isFinite(c) || c < .98f || c > 1)
+                || readings.stream().anyMatch(r -> r == null || r.isBlank())) return page.lines;
+        String text = clean(readings.get(0));
+        if (readings.stream().anyMatch(r -> !clean(r).equals(text))
+                || !properReviewName(text)
+                || !text.matches("\\p{Lu}[\\p{Ll}’'-]+(?:\\h+\\p{Lu}[\\p{Ll}’'-]+){1,3}"))
+            return page.lines;
+        Line replacement =
+                new Line(text, original.left, original.top, original.right, original.bottom);
+        if (notationReviewLabel(page, replacement)) return page.lines;
+        var lines = new ArrayList<>(page.lines);
+        lines.set(lines.indexOf(original), replacement);
+        return List.copyOf(lines);
+    }
+
     public static List<Line> tightCreditRepairCandidates(Page page) {
         if (page.photographicCover) return List.of();
         return page.lines.stream()

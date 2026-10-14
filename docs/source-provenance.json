@@ -2090,15 +2090,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "3b5a914d5733f9df01154165e0f901d48b8d9db2d10fc8f9b1dab38e85244c75",
-      "source_normalized_sha256": "16f3258fadab811a1c4bf55531b4506f67dbcb1370bea60e2475e841cf9f348a",
+      "source_sha256": "4bf92d3b5ac67831e9f15ac62acc08fc6d4d80717b9cccb8a20cb3236f44843f",
+      "source_normalized_sha256": "783f27f369435e056cb3765c86e68debb3fa0c6271abbc0a4a4045fa506127fb",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
       "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "14d84ba987ca6fe8ca0b3fd92b51d70891226c5a9c472075eebaed991cb01e8f",
+      "standalone_sha256": "d62fb408ea16ce8cc4bb969387c0cb8a23deaf347d80beb59853a4c015af97b6",
       "license": "Apache-2.0",
-      "review_note": "Exclude bow-division execution marks only in small mid-page notation context; retain header initials and explicit composer credits. Eight original synthetic regressions; no private score fixtures or model changes.",
-      "reviewed_app_commit": "311383675c345feb40e7ec3e459c39a81dccc4ab",
+      "review_note": "Reread malformed mixed-case text only in small right-side header positions using bounded padded original PDF crops. Require three-scale confidence and exact reading agreement. Eight original synthetic regressions; no score-specific names, private fixtures or model changes.",
+      "reviewed_app_commit": "087c2d937405d0909afe6215014cf5e3de65cc71",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
@@ -6800,5 +6800,11 @@
         "source_sha256": "4cca07c51eef4b13cc820ed1ba82410f5c403e7b03ff36ef22b2890f7e500578"
       }
     ]
+  },
+  "metadata_malformed_header_adapter_review": {
+    "reviewed_app_commit": "087c2d937405d0909afe6215014cf5e3de65cc71",
+    "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+    "source_sha256": "b18e1b6e9766030d464c15a2510fef118690104e55b7d415865979096ce53c74",
+    "boundary": "Existing bounded original-PDF renderer at 1x/2x/4x with ten-percent line-height margin, minimum four pixels; same cancellation and bitmap cleanup. Pure selection and consensus logic ported. No native decoder caller, model or wire changes. Current Android runtime and deployment remain unverified."
   }
 }
