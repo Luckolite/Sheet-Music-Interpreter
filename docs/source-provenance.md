@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition45 distinguishes compact scan bulges on natural signs from separated
+sharp crossbars. Existing spine continuity, offset endpoints and connector proof
+remain required. Six original synthetic controls cover localized bulges, genuine
+sharp crossbars, long side strokes, aligned spines and missing connectors. Private
+page replay confirms key cancellation and preserves all other note fields; three
+control pages are unchanged. Full-model/source accuracy, document playback and
+packaged rollout remain separate. Guide285/audio79 are unchanged.
+
 Recognition44 restores directions on proved expanded multi-rests and faint
 five-line staffs, and rejects measure boundaries owned by complete quarter-rest
 contours. Forty-one original controls cover silence ownership, local rail evidence,

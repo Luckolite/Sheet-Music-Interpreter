@@ -14303,8 +14303,15 @@ final class OmrScoreInterpreter {
         if (leftRows < (leftBottom - leftTop + 1) * .65f
                 || rightRows < (rightBottom - rightTop + 1) * .65f) return false;
         if (overhangs
-                && (leftSpine > radius + 1
-                        || glyphWidth - 1 - rightSpine > radius + 1
+                && ((leftSpine > radius + 1 || glyphWidth - 1 - rightSpine > radius + 1)
+                                && !compactNaturalFringe(
+                                        labels,
+                                        width,
+                                        candidate,
+                                        gap,
+                                        leftSpine,
+                                        rightSpine,
+                                        radius)
                         || Math.min(rightTop - leftTop, rightBottom - leftBottom) < gap * .45f))
             return false;
         int endpointOffset = Math.max(1, Math.round(glyphHeight * .05f));
@@ -14346,6 +14353,32 @@ final class OmrScoreInterpreter {
             }
         }
         return false;
+    }
+
+    /** A small scan bulge is confined to one short band on each outer edge.
+     * Two separated sharp crossbars or a long side stroke are not fringe. */
+    private static boolean compactNaturalFringe(
+            byte[] labels,
+            int width,
+            AccidentalCandidate candidate,
+            float gap,
+            int leftSpine,
+            int rightSpine,
+            int radius) {
+        Component glyph = candidate.component;
+        for (boolean left : new boolean[] {true, false}) {
+            int first = -1, last = -1;
+            int from = left ? glyph.minX : glyph.minX + rightSpine + radius + 2;
+            int to = left ? glyph.minX + leftSpine - radius - 2 : glyph.maxX;
+            for (int y = glyph.minY; y <= glyph.maxY; y++)
+                for (int x = from; x <= to; x++)
+                    if (candidate.matches(labels[y * width + x])) {
+                        if (first < 0) first = y;
+                        last = y;
+                    }
+            if (first >= 0 && last - first + 1 > Math.max(2, Math.round(gap * .35f))) return false;
+        }
+        return true;
     }
 
     /** Offset spine endpoints survive partially erased natural and sharp crossbars. */
