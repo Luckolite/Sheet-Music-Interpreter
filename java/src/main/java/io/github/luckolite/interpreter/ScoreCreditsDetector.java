@@ -5455,6 +5455,15 @@ public final class ScoreCreditsDetector {
                 || line.height() <= 0
                 || line.height() > page.width * .035f
                 || line.right - line.left > page.width * .14f) return false;
+        // A compact quality label at the first staff is notation even when OCR drops its tail.
+        if (line.left < page.width * .5f
+                && line.bottom <= page.notationTop
+                && page.notationTop - line.bottom <= line.height()
+                && clean(line.text)
+                        .matches("[A-G](?:#|b|♯|♭)?(?:ma|mi|maj|min|dim|sus|aug)[0-9]*")) {
+            Line heading = chooseTitle("", page, lines, page.notationTop);
+            if (heading != null && !heading.equals(line) && line.top >= heading.bottom) return true;
+        }
         String chord = "[A-G](?:#|b|♯|♭)?(?:m|maj|dim|sus)?[0-9]*(?:/[A-G](?:#|b|♯|♭)?)?";
         String fragment = "(?:" + chord + "|[A-G](?:[^\\s]m[0-9]*|[$h][0-9]*))";
         if (!clean(line.text).matches(fragment + "(?:\\h+" + fragment + ")*")) return false;

@@ -2096,15 +2096,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "24a95c7ed39c5fc7030a23c0412c2a893c124ca76b51ddf704e9d652432d2fb1",
-      "source_normalized_sha256": "1a98b38c0a53aeb79742ac38c8e9bb245927597b801312aacc34218064e3a723",
+      "source_sha256": "10bdd126931ec6773d76d5a86365c83998a34790bb9eaa2d36215a5cc8b084ee",
+      "source_normalized_sha256": "bf6ef8fd7bcb4dece9f7dfc90df3ac353e4693d8be11b23ef2ecb396ddfddbf2",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Package-only port verified. Three original-PDF readings must agree; runtime qualification pending.",
+      "reviewed_source_state": "Exact package-only port; original staff/header controls and saved/fresh metadata differential reviewed. Android verification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "12c775ab142ad4f16639e66e78e3f64edb61e73f53298644ca1169ff62b1b021",
+      "standalone_sha256": "f30ca4706d91984c15b0360cc2dcd819dd7a3ab906f4c59847b50f88d8be2be2",
       "license": "Apache-2.0",
-      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes.",
-      "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff",
+      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected.",
+      "reviewed_app_commit": "1cc23d3fb1eac3adff69c89bf67c71b830a9b563",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {
