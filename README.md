@@ -73,6 +73,13 @@ on their original attack fragments. Common shared-stem chord marks appear once;
 differing head marks and independent voices remain distinct. Unrelated or partial
 event lists cannot borrow marks from source notes.
 
+Exact binary spans without a single ordinary glyph are split into written
+values, tied for sustained notes. Chord heads share each fragment's clock;
+articulations, guitar text and phrase endpoints remain on the original attack,
+and release symbols remain on the final fragment. Existing single values and
+explicit tuplets are preserved. Arbitrary inferred clocks are not rounded into
+new rhythmic evidence.
+
 MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
 clefs from the retained note context, including changes inside measures. Note
 pitches and playback stay unchanged. Without reliable source clef metadata, the

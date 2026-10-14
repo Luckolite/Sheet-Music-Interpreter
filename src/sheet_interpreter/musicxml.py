@@ -63,6 +63,32 @@ def note_type(node, duration, event=None):
                 return
 
 
+def duration_parts(duration, events=()):
+    """Split exact binary spans that have no single written glyph.
+
+    Preserve existing single values and explicit tuplet notation. Arbitrary
+    inferred clocks cannot justify inventing a tuplet or rounding its duration.
+    """
+    probe = ET.Element('note')
+    note_type(probe, duration)
+    if probe.find('type') is not None or any(n.get('tupletActualNotes', 1) != 1 for n in events):
+        return (duration,)
+    quantum = DIVISIONS // 16  # A written 64th; all ordinary values are exact here.
+    if duration % quantum:
+        return (duration,)
+    values = sorted({base * numerator // 4
+                     for base in (DIVISIONS * 4 // d for d in (1, 2, 4, 8, 16, 32, 64))
+                     for numerator in (4, 6, 7)
+                     if base * numerator % 4 == 0}, reverse=True)
+    parts = []
+    remaining = duration
+    while remaining:
+        value = next(v for v in values if v <= remaining)
+        parts.append(value)
+        remaining -= value
+    return tuple(parts)
+
+
 def metric_pulse(value):
     for i, name in enumerate(('whole', 'half', 'quarter', 'eighth', '16th', '32nd')):
         for dots, scale in enumerate((1, 1.5, 1.75)):
@@ -130,7 +156,7 @@ def expression_direction(measure, mark, offset):
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
               gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
-              articulation_flags=0):
+              articulation_flags=0, attack_fragment=True):
     node = element(measure, 'note')
     if chord:
         element(node, 'chord')
@@ -165,7 +191,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         note_type(node, duration, event)
     if event is not None and event_kind(event) == 'UNPITCHED':
         element(node, 'notehead', 'x')
-    effect = event.get('guitarEffect') if event else None
+    effect = event.get('guitarEffect') if event and attack_fragment else None
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
     if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags:
@@ -205,7 +231,10 @@ def emit_rest_gap(measure, start, end, voice, symbols, literal_edges=()):
                         | {value for s in symbols for value in (s['start'], s['release']) if start < value < end}
                         | {value for value in literal_edges if start < value < end})
     for a, b in zip(boundaries, boundaries[1:]):
-        emit_note(measure, b-a, voice, fragment_end=b, rest_symbols=symbols)
+        cursor = a
+        for duration in duration_parts(b-a):
+            cursor += duration
+            emit_note(measure, duration, voice, fragment_end=cursor, rest_symbols=symbols)
 
 
 def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
@@ -477,18 +506,24 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 for (start, end), chord in sorted(segments.items()):
                     if start > cursor:
                         emit_rest_gap(measure, cursor, start, voice, rest_symbols, literal_edges)
-                    articulation_flags = articulation_export.chord_marks(chord, start)
-                    for ci, n in enumerate(chord):
-                        if start == n['start'] and start in clef_changes and start not in emitted_clefs:
-                            clef_export.write(element(measure, 'attributes'), clef_changes[start])
-                            emitted_clefs.add(start)
-                        emitted = emit_note(measure, end-start, voice, n, chord=ci>0,
-                                  stop=n['start']<a or n['tie_stop'], start=n['end']>b or n['tie_start'], flats=bar['key']<0,
-                                  gliss_start=end==n['end'] and 'gliss_start' in n,
-                                  gliss_stop=start==n['start'] and 'gliss_stop' in n, fragment_end=end,
-                                  articulation_flags=articulation_flags[ci])
-                        if start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
-                            slur_attacks[n['sourceIdentity']] = emitted
+                    fragment_start = start
+                    for duration in duration_parts(end-start, chord):
+                        fragment_end = fragment_start + duration
+                        articulation_flags = articulation_export.chord_marks(chord, fragment_start)
+                        for ci, n in enumerate(chord):
+                            if fragment_start == n['start'] and start in clef_changes and start not in emitted_clefs:
+                                clef_export.write(element(measure, 'attributes'), clef_changes[start])
+                                emitted_clefs.add(start)
+                            emitted = emit_note(measure, duration, voice, n, chord=ci>0,
+                                      stop=fragment_start > n['start'] or n['tie_stop'],
+                                      start=fragment_end < n['end'] or n['tie_start'], flats=bar['key']<0,
+                                      gliss_start=fragment_end==n['end'] and 'gliss_start' in n,
+                                      gliss_stop=fragment_start==n['start'] and 'gliss_stop' in n,
+                                      fragment_end=fragment_end, articulation_flags=articulation_flags[ci],
+                                      attack_fragment=fragment_start==n['start'])
+                            if fragment_start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
+                                slur_attacks[n['sourceIdentity']] = emitted
+                        fragment_start = fragment_end
                     cursor = end
                 if cursor < b:
                     emit_rest_gap(measure, cursor, b, voice, rest_symbols, literal_edges)

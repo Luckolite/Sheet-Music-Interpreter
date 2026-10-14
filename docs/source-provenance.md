@@ -1659,3 +1659,22 @@ invalid flags, unpitched heads and exact structural preservation outside the
 added glyphs. Seven controls fail against the previous exporter. No private
 score material or external implementation was used. Java recognition, model,
 wire and cache identities remain unchanged; packaged rollout remains deferred.
+
+## Exact binary export spans
+
+The original standalone MusicXML adapter now decomposes exact binary spans
+that have no single supported written value, such as 2.5 quarter beats. Silent
+gaps become ordinary rests; sustained notes become tied fragments, with chord
+heads emitted together at each fragment. Basic articulations, guitar text and
+slur endpoints retain their original attack ownership. Release marks retain
+their final fragment. Existing single values and explicit tuplet evidence are
+preserved; arbitrary inferred clocks are neither rounded nor assigned invented
+tuplets. The app's existing RhythmWriter already decomposes these spans.
+
+Ten original controls cover exact rest/note lengths, chord clocks, cross-bar
+ties, attack/release ownership, slurs, existing values and all 64th-grid spans
+through eight quarter beats. Actual bundled-renderer comparison on an original
+logical 2.5-beat note reproduces a missing pitched note in the old export; the
+new export renders the tied half/eighth correctly. No private score content or
+external implementation was incorporated. Recognition, model, wire, guide and
+audio identities are unchanged. Packaged app/worker rollout remains deferred.
