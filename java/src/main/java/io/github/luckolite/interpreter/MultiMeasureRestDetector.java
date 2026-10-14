@@ -169,7 +169,20 @@ final class MultiMeasureRestDetector {
             // long beam or staff-line segment in one locally empty window, and a nearby time
             // signature/OCR digit then expands that measure several times. Require the complete
             // parent measure to be note-free before treating any local heavy bar as a rest.
+            int unsupportedLedgerHeads =
+                    countGlyph == null
+                            ? 0
+                            : OmrScoreInterpreter.unsupportedRestLedgerHeads(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    measures,
+                                    parent,
+                                    noteRegions.get(index),
+                                    countGlyph);
             if (noteheadPixels[index]
+                            - unsupportedLedgerHeads
                             - countGlyphHeads(
                                     countGlyph, labels, width, height, noteRegions.get(index))
                     > noteFreeLimit) continue;

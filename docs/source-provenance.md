@@ -1414,3 +1414,14 @@ Original procedural bridge controls cover page-zero images, skipped PDF pages,
 legacy unknown identity, retained deferred source JSON and invalid input rejection.
 The isolated scalar backend proves forwarding and serialization, not recognition
 accuracy. The separate generated scale smoke uses the real decoder and models.
+
+## Counted rests and distant semantic ink
+
+Counted-rest eligibility reuses the note interpreter's existing ledger proof.
+Only model heads wholly outside the parent measure can be excluded, and only
+with a proved count and heavy rest bar. Plausible staff ownership or printed
+ledger support preserves the note veto; count-glyph pixels are never subtracted
+twice. Eight original procedural tests include faded ledger notes and ambiguous
+ownership. No private score fixtures, models, dependencies or record layouts change.
+App commit `1ca510d845890edaed094ff353d09d741fc0f1f0` is reviewed.
+Assembled silent duration and deployed app/native behavior remain separate checks.
