@@ -14557,6 +14557,8 @@ final class OmrScoreInterpreter {
             }
             Component glyph = retainSeedConnectedInk(ink, w, h, seed, left, top);
             if (glyph == null
+                    || glyph.minX == 0
+                    || glyph.maxX == w - 1
                     || rawStrokeLeavesCrop(gray, width, height, ink, w, h, left, top, gap))
                 continue;
             if (isSharpGlyph(
@@ -14576,6 +14578,8 @@ final class OmrScoreInterpreter {
         if (faint != null) {
             Component glyph = retainSeedConnectedInk(faint, w, h, seed, left, top);
             if (glyph != null
+                    && glyph.minX > 0
+                    && glyph.maxX < w - 1
                     && !rawStrokeLeavesCrop(gray, width, height, faint, w, h, left, top, gap)) {
                 float center =
                         sharpPitchCenter(

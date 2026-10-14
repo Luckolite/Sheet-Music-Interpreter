@@ -380,6 +380,36 @@ final class PrintedMeasureRhythmGuard {
         for (int y = top; y <= bottom; y++)
             System.arraycopy(gray, y * width + left, crop, (y - top) * cropWidth, cropWidth);
         var staffs = RawStaffLineDetector.detect(crop, cropWidth, cropHeight);
+        if (staffs.size() == 1) {
+            var staff = staffs.get(0);
+            for (int x = Math.max(left, center - radius);
+                    x <= Math.min(right, center + radius);
+                    x++) {
+                int a = top + staff.top(), b = top + staff.bottom(), ink = 0;
+                for (int y = a; y <= b; y++) if ((gray[y * width + x] & 255) < 180) ink++;
+                if (ink < (b - a + 1) * .95f) continue;
+                int clearance = Math.max(2, Math.round(staff.gap() * .3f));
+                boolean clean = true;
+                for (int edge : new int[] {a, b})
+                    for (int dy = -clearance; dy <= clearance; dy++) {
+                        int y = edge + dy;
+                        if (y < 0 || y >= height) {
+                            clean = false;
+                            continue;
+                        }
+                        if ((edge == a && dy < -1) || (edge == b && dy > 1))
+                            if ((gray[y * width + x] & 255) < 180) clean = false;
+                        // Ignore the printed rule itself; a head spreads laterally off that rule.
+                        if (Math.abs(dy) <= 1) continue;
+                        int reach = Math.max(3, Math.round(staff.gap() * .45f));
+                        for (int dx : new int[] {-reach, reach})
+                            if (x + dx >= 0
+                                    && x + dx < width
+                                    && (gray[y * width + x + dx] & 255) < 180) clean = false;
+                    }
+                if (clean) return true;
+            }
+        }
         if (staffs.size() < 2) return false;
         for (int x = Math.max(left, center - radius); x <= Math.min(right, center + radius); x++) {
             int supported = 0;

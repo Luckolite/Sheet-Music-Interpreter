@@ -261,6 +261,8 @@ public final class SheetInterpreter {
         var dynamicDetection =
                 ScoreDynamicsDetector.detectWithEvidence(
                         dynamicWords, staffs, measures, notes, gray, width, height);
+        var tempoWords = new java.util.ArrayList<>(words);
+        if (ocr != null) tempoWords.addAll(ocr.tempoWords(gray, width, height));
         var decoded =
                 TablatureDecoder.apply(
                         new ScorePageInterpretation(
@@ -273,11 +275,11 @@ public final class SheetInterpreter {
                                                 annotations.tempoNumbers.stream()
                                                         .map(NumberToken::internal)
                                                         .toList(),
-                                                words,
+                                                tempoWords,
                                                 gray,
                                                 width,
                                                 height),
-                                        words,
+                                        tempoWords,
                                         gray,
                                         width,
                                         height,

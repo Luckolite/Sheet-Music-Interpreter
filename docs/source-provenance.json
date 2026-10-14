@@ -372,14 +372,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "56353bc1054bded09d0cad2d0465ad7ad3a1a3e6d4fa32c3dcd7b1efde2092d1",
-      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
-      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
-      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
-      "source_normalized_sha256": "9c8d6928619ad93b548981af04bd90389a81026ff4cfba65f5c2c6820d3f08e9",
+      "source_sha256": "9a433fd90a3a9c594a458ca755205b02d120f42564a55ec21786f971a20a80a6",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "review_note": "Reject sharp recovery glyphs clipped at a horizontal crop edge; retain wider crop retries. Preserve already published fractional flag-window sampling.",
+      "source_normalized_sha256": "9a433fd90a3a9c594a458ca755205b02d120f42564a55ec21786f971a20a80a6",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
-      "standalone_sha256": "c70b566200aee2c775f9d60d5ca533e43ed3249f5b738a6655a8a082e82c19b4",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "standalone_sha256": "b6a5d1ce9a55dfcc3f5f90e8988a480b551bafe04e91651f7e2872d7c9aa2fd8",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -391,13 +391,14 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "65a02bdb3d558ae69a823c94831434196c08994db01b9283c727bb8c2e1bca87",
-      "source_normalized_sha256": "de222c1baf79f2b1a44ea1ec3e74295be26bc3d8c8981c43290bb522526d2d31",
+      "source_sha256": "b29637573e53a049023549ae633b294aa8d0eeb96db859b56a03cbbed53c8f4b",
+      "source_normalized_sha256": "8f6774b0c91ce8e838f26292fae5bc6a029a835e7b6e5fa2c936e136396b0f3e",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Reject outer false staff groups with at most two raw rules only when independently proven converging expression strokes supply those rules. Preserve local parallel staff and pitch-track guards.",
-      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
-      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
-      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
+      "review_note": "Reject compressed, irregular interior semantic aliases only between independently printed neighbors without pale long rules, pitch track or five parallel local rules. Preserve regular, faint, short and unsupported-neighbor controls.",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "standalone_sha256": "e48d20ac17dea81905d8509212053aa845ec830328ed96d80a70ffeea8687e40"
     },
     "ScoreDynamicChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicChange.java",
@@ -491,12 +492,13 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "d20af295f8b15524f08182fd00a9f23953e5457cbbc0cb552cdfc84510fa909b",
-      "reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
-      "source_normalized_sha256": "1aa19b28ae8d9835d188ace797b0fdccb3e04e7690e0f587fd14814960958e55",
-      "review_note": "Assign complete optically proven opening tempo equations to an independently printed first staff within a bounded header envelope. Six original controls; existing later direction ownership unchanged.",
-      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
-      "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98"
+      "source_sha256": "50078109bab3904cc2a0529117b1da58da15cf04b28bd007de9664b2853baf7f",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "source_normalized_sha256": "05cf2123b6272765fbe38d45bd214e32517938965781542828ca371c33585966",
+      "review_note": "Anchor isolated numeric tempo text to the optically detected beat note, preserving true mid-measure ownership.",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "standalone_sha256": "9dbdd9ddd9b9cb65688d853fc97f7f05f283336baa21e5fd156398a8bd28bf36"
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -546,11 +548,13 @@
     },
     "PrintedMeasureRhythmGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
-      "source_sha256": "a2c02d7322fae35bd5c7bfdd5d71bc52d0e7ec0aad941e00b5bc2d618b9f1e07",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "a2c02d7322fae35bd5c7bfdd5d71bc52d0e7ec0aad941e00b5bc2d618b9f1e07",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "source_sha256": "68b1d348b6c053f6daab49857c7973dd2108ccdddf519a586df6f767b6cb9e51",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "source_normalized_sha256": "d09b0f31d2a485f9d0dd2e2cb078a06f71d965e0a8c77ad7b2313d2b74319354",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Preserve complete printed single-staff separator inside padded measure bounds with exact-column coverage and clear endpoints. Publish with irregular interior alias guard to avoid compensating measure errors.",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "standalone_sha256": "e9730fff92b8a335c4900937046130326b8e5995b6e00f14d876967c31c2658a"
     },
     "PrintedPageEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",
@@ -1100,12 +1104,13 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "92fc757c524b3ae2a33f8e2b95a1ce11d8eb642b4e1dccf3b4e525a365ddc26a",
-      "reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678",
-      "source_normalized_sha256": "177b96469961875be21bbbe5944747d99f787dd20d636da508cd6e1a68fc7106",
-      "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending.",
-      "review_note": "Call paired MeterDigitRecognizer only when numerator evidence is empty, after existing consensus and font paths. Standalone retains caller-owned inference; desktop retains its owned native inference. Android SheetOcr remains a separate path without a phone runtime claim. Explicit native decoder manifest includes the new shared helper.",
-      "scoped_reviewed_app_commit": "fe3624a0da82eb5f9711e79cb6a3d5d8303e9678"
+      "source_sha256": "cdac5b6df4a31ab168d3b4cb89b1400496bc536ff1e151bb17a824b3c869dfff",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "source_normalized_sha256": "1df7f6c51ab70c863755cbf25d85ed47baf25f2cb9a662b4cb2c5891f14792d2",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Native and standalone adapters supply their existing grayscale OCR reader to the paired staff-header helper; inference ownership remains unchanged.",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "standalone_sha256": "dc5e37196692459ef2331e72ccfc4f4862b8ccfacd17d1c38324089b04bef415"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1522,13 +1527,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "1cea43e32db0b58617ef48ae2601a88e8edc41b2a27a3cff9a5a87f191def25d",
-      "source_normalized_sha256": "1e56e96338891a2241c95106339468ce2db46902f051e9c556d65a77c47dc972",
-      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
-      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
-      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
-      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
-      "standalone_sha256": "ab4ae9f11616d067368e7b39693789c5b764034c4c875ce27fb0d100afc303c6",
+      "source_sha256": "ee50ac7920d0813c8ab52eb47c3922f6467548e28e3f93a9f8841a08bdccd9b4",
+      "source_normalized_sha256": "31db0148dc216472cbca60a25192e8b64e8480ab9d225e0332ff09a58b5e384f",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "review_note": "Advance paired recognition cache revision38 to39; guide285 binary layout and audio79 unchanged.",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "standalone_sha256": "b0938e2ec73a3bc295146b1ed8ef1dbc5e65f9550cd3b84d7344d7e6c369dafb",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
@@ -1586,14 +1591,14 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "2545258b2682f53ce492d2cb54193d9b6696a0bd01d3630b49a0905e10780ed4",
-      "source_normalized_sha256": "84bbbf47d38b182672c6696d5676b1f267141046374a29b82b233df828b814c1",
-      "reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
-      "reviewed_source_state": "Committed narrow flag sampling repair and paired recognition38 cache identity; final packaged rollout deferred.",
-      "review_note": "Include the pixel intersected by the quarter-gap flag-window edge. Root, returning-bow, notehead and staff-rule exclusions unchanged. App/public match after package/header and existing Android logging adaptation or Python import normalization. Original procedural regression; no private score pixels, names, logs or weight changes published.",
-      "scoped_reviewed_app_commit": "887152d60e74566926974d0fe4e16cb3863c8391",
+      "source_sha256": "c1c95d67923b16170a692572da3f7a2335b9069af7fd2d32213ebd1b3b92ad22",
+      "source_normalized_sha256": "c53920a467c1fada729875c54d0f0b5eeedd043b926e4bca4584fdbde550ebc4",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Advance paired Python writer recognition revision38 to39 with Android and Hub; physical guide record layout unchanged.",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "8f72e3941062b3f2ea18b2976a8672012ed3d554f40ebe7436795f025f14046d",
+      "standalone_sha256": "8d724d1f91fe0965d8c37a3ab2b2351529fdd5c1ce667fbdeefee94880bba370",
       "source_state": "Committed source; paired packaged rollout remains pending."
     },
     "ScorePlacementMap.java": {
@@ -2600,12 +2605,13 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "002d28680e00a5d7fd73a8f12c51c1cc67acecdff1c3056477d4e0120bff40e5",
-      "source_normalized_sha256": "4803bcde61595c0796f799b56430fe80808e43e148f1638bb1eb462a9a7de03c",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "reviewed_source_state": "Explicit standalone Java page facade adapted from the committed native analysis path.",
-      "review_note": "Legacy overloads preserve unknown physical ownership; explicit7argument overload forwards caller page identity to the same capture helper. Native CLI has its own explicit page option; model loading/inference ownership, file bridge and logging remain platform adapters. No default page zero or private input is introduced."
+      "source_sha256": "c8e1de12ba56c85ced5934146ccdaf2fd7f298adadd93e0f5b4a0e0bc41c4d05",
+      "source_normalized_sha256": "c60ed55aedb3cefe9f6a27f394e4430f0e5715d15ecb5bed4e6b9ee9c7dc2caf",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending.",
+      "review_note": "Separate staff-local tempo words from general directions, retaining optical equation validation. NativePageGuide uses the equivalent tempo-only augmentation; Android OmrMeasureAnalyzer uses its existing owned bitmap OCR adapter.",
+      "standalone_sha256": "53f29c4e686c82e06442eb340a8d9d4b5df22fc4a994f04b8de7dbe0de084b7f"
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -2624,6 +2630,16 @@
       "scoped_reviewed_app_commit": "640a1b576ce225bda449799f467c0834e4f74b98",
       "review_note": "Original bounded optical evidence for two continuous linear arms converging across a staff-scaled window. Seven original procedural controls include parallel, curved and interrupted counterexamples; no private pixels.",
       "reviewed_source_state": "Committed paired executable-token review; final cumulative app/native runtime validation pending."
+    },
+    "StaffHeaderTempoOcr.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffHeaderTempoOcr.java",
+      "source_sha256": "9e07c187c0cfac5aa484fc2e1380055bedc257d5a6f2eb81f00f970098889c80",
+      "source_normalized_sha256": "e40666334fa30dfa4de21fb6705c7f3a4e4d49d084c8b9188b787cbddb7582dd",
+      "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "scoped_reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+      "standalone_sha256": "7eed63bb9f0ca9434375b062e588778eb3d6064c2d3f6e858eb3a07e1476d16b",
+      "review_note": "Original shared JDK helper scans overlapping printed staff header crops through caller-owned OCR. Map validated boxes to page coordinates; only tempo callers consume results. Seven original procedural controls; no score-specific coordinates or data.",
+      "reviewed_source_state": "Committed paired recognition39 source review; final cumulative package/deployment/runtime checks remain pending."
     }
   },
   "interpreter_speedup_review": {
@@ -6233,5 +6249,28 @@
       "Python package-relative imports"
     ],
     "boundary": "Private fresh-page counterfactual changes one duration owner with other source fields unchanged and removes five unwanted fragments while retaining the original cross-bar tie. Narrow evidence, not broad accuracy or device acceptance. Private source pixels/names are not fixtures; packaged paired rollout remains deferred."
+  },
+  "staff_header_tempo_adapter_review": {
+    "reviewed_app_commit": "76e7425b947c1208bd3c93347944b88b9826281b",
+    "license": "Apache-2.0",
+    "reviewed_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "e693110777139e3c146e5a96ee52e7ad3b379186c5970163007adb0af7693ea7"
+      },
+      {
+        "source_path": "tools/native-worker/NativeMusicalOcr.java",
+        "source_sha256": "cdac5b6df4a31ab168d3b4cb89b1400496bc536ff1e151bb17a824b3c869dfff"
+      },
+      {
+        "source_path": "tools/native-worker/NativePageGuide.java",
+        "source_sha256": "c8e1de12ba56c85ced5934146ccdaf2fd7f298adadd93e0f5b4a0e0bc41c4d05"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "9a89ff60d44875cd41622303627482158d5267aea738f6728109580e7225f57c"
+      }
+    ],
+    "boundary": "Shared helper plus separate Android/native/standalone adapters compile. Retained-page and synthetic source evidence is not current-model whole-library or phone performance proof."
   }
 }

@@ -23,6 +23,10 @@ public final class MusicalOcr {
         this.meterFont = Objects.requireNonNull(meterFont);
     }
 
+    List<PlayingTechniqueDetector.Word> tempoWords(byte[] gray,int width,int height) throws Exception {
+        return StaffHeaderTempoOcr.words(gray,width,height,reader::readGray);
+    }
+
     int firstSystemMeasureNumber(
             byte[] labels, byte[] gray, int width, int height, List<MeasureRegion> measures)
             throws Exception {

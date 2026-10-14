@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition39 adds staff-local tempo discovery and optical onset anchoring,
+rejects horizontally clipped sharp crops, and pairs printed single-staff barline
+preservation with conservative irregular interior-alias rejection. Thirty-three
+original procedural controls accompany the shared source and adapter review.
+Android, native writer, standalone writer and Hub cache revisions agree; guide285,
+audio79, dependencies and model weights are unchanged. Current-model whole-source
+accuracy and final packaged rollout remain separate completion gates.
+
 Optical guards reject converging expression strokes as outer staffs, require
 printed evidence for pale staff endings, and reject disconnected sharp spines.
 Complete opening tempo equations retain bounded first-staff ownership. Twenty-nine

@@ -119,6 +119,7 @@ final class RawStaffLineDetector {
                 last = Math.max(last, staff.bottom());
             }
         if (proved < 2) return;
+        rejectIrregularInteriorAliases(staffs, gray, width, height);
         final int firstPrinted = first, lastPrinted = last;
         // Interior gaps may contain faint parts; this rejection only handles outer texture.
         staffs.removeIf(
@@ -156,6 +157,71 @@ final class RawStaffLineDetector {
                                                 staff.bottom(),
                                                 staff.gap())
                                         == null);
+    }
+
+    /** Interior semantic texture must contradict both neighboring printed scales before rejection. */
+    private static void rejectIrregularInteriorAliases(
+            List<StaffLines> staffs, byte[] gray, int width, int height) {
+        var original = new ArrayList<>(staffs);
+        for (int i = 1; i + 1 < original.size(); i++) {
+            var a = original.get(i - 1);
+            var b = original.get(i);
+            var c = original.get(i + 1);
+            if (b.gap() >= Math.min(a.gap(), c.gap()) * .85f) continue;
+            int smallest = Integer.MAX_VALUE, largest = 0;
+            for (int j = 1; j < 5; j++) {
+                int delta = b.rows()[j] - b.rows()[j - 1];
+                smallest = Math.min(smallest, delta);
+                largest = Math.max(largest, delta);
+            }
+            if (smallest >= b.gap() * .7f || largest <= b.gap() * 1.2f) continue;
+            if (printedRuleCount(new Candidate(a.rows(), a.gap(), 0), gray, width, height) < 4
+                    || printedRuleCount(new Candidate(c.rows(), c.gap(), 0), gray, width, height)
+                            < 4
+                    || printedRuleCount(
+                                    new Candidate(b.rows(), b.gap(), 0), gray, width, height, 230)
+                            > 0) continue;
+            if (StaffPitchTrack.detectForMeasures(gray, width, height, b.top(), b.bottom(), b.gap())
+                            != null
+                    || hasFiveParallelLocalRules(b, gray, width, height)) continue;
+            staffs.remove(b);
+        }
+    }
+
+    /** Short or pale real staves can retain five parallel rules without a long page projection. */
+    private static boolean hasFiveParallelLocalRules(
+            StaffLines staff, byte[] gray, int width, int height) {
+        int phase = Math.max(1, Math.round(staff.gap() * .5f)),
+                radius = Math.max(1, Math.round(staff.gap() * .15f));
+        int flank = Math.max(2, Math.round(staff.gap() * .35f)),
+                needed = Math.max(12, Math.round(staff.gap() * 4));
+        for (int shift = -phase; shift <= phase; shift++) {
+            int run = 0;
+            for (int x = 0; x < width; x++) {
+                boolean all = true;
+                for (int line = 0; line < 5; line++) {
+                    int center = Math.round(staff.top() + shift + line * staff.gap());
+                    boolean hit = false;
+                    for (int y = Math.max(flank, center - radius);
+                            y <= Math.min(height - flank - 1, center + radius);
+                            y++) {
+                        int value = gray[y * width + x] & 255;
+                        if ((gray[(y - flank) * width + x] & 255) >= value + 4
+                                && (gray[(y + flank) * width + x] & 255) >= value + 4) {
+                            hit = true;
+                            break;
+                        }
+                    }
+                    if (!hit) {
+                        all = false;
+                        break;
+                    }
+                }
+                run = all ? run + 1 : 0;
+                if (run >= needed) return true;
+            }
+        }
+        return false;
     }
 
     /** Parallel local contrast preserves faint or short rules without treating unrelated texture as a staff. */

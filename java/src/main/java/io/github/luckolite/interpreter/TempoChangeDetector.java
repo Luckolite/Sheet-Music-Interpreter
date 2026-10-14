@@ -37,7 +37,7 @@ final class TempoChangeDetector {
             int equals = equalsSignLeft(token, gray, width, height);
             if (equals < 0) continue;
             var bounded = printedDigitBounds(token, gray, width, height);
-            if (merged) {
+            {
                 int[] anchor = {-1};
                 int digitHeight = printedDigitHeight(bounded, gray, width, height);
                 double unit =
@@ -57,9 +57,7 @@ final class TempoChangeDetector {
                                 bounded.right(),
                                 bounded.bottom(),
                                 anchor[0] / (float) width);
-            } else if (!Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 200))
-                    && !Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 165)))
-                continue;
+            }
             final var accepted = token;
             if (result.stream()
                     .noneMatch(
