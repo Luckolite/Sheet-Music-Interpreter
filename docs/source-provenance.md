@@ -1140,3 +1140,15 @@ SIL-OFL Bravura raster quarters and rejects accidentals and flat-middle strokes.
 No private score fixtures, models, dependencies or record layouts changed.
 Conditional rest-stage replay is separate from final full recognition and runtime
 acceptance.
+
+## Detached tuplet numeral articulation ownership
+
+Complete printed threes retain ownership of their darker cores and bounded,
+disconnected left terminals. Two open bowls and a returning waist must be present;
+a recovered fragment must share actual pixels with the proved numeral. Original
+cubic contours and licensed Bravura arrangements cover contrast, weight, tilt and
+raster size while retaining genuine wedges and neighboring mark ownership. The
+existing staff-rule/beam proof is preserved. The app native source manifest also
+admits the previously ported numeral beam helper. No private score fixtures,
+models, dependencies or record layouts changed. Source checks and conditional
+gray-stage replay remain separate from final recognition and paired runtime gates.

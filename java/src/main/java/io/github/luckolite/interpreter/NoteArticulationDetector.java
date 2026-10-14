@@ -3,6 +3,7 @@
 package io.github.luckolite.interpreter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Conservative isolated-ink recognition. Unknown marks never shorten a note. */
@@ -606,6 +607,9 @@ final class NoteArticulationDetector {
                 }
                 if (raw
                         && candidate != 0
+                        && detachedThreeOwns(glyph, originalGlyphs, width, note.gap)) continue;
+                if (raw
+                        && candidate != 0
                         && glyph.y() < note.y
                         && completeBowOwns(glyph, gray, width, height, note.gap)) continue;
                 if (raw && !faint && candidate != 0) {
@@ -829,6 +833,62 @@ final class NoteArticulationDetector {
                             result[j] |= NoteArticulation.STACCATO;
             }
         return result;
+    }
+
+    /** A contrast subset cannot turn ink from a complete printed three into an accent. */
+    private static boolean detachedThreeOwns(
+            Glyph glyph, List<Glyph> originals, int width, float gap) {
+        if (TupletNumeralBeamBand.detachedThree(
+                glyph.pixels, width, glyph.left, glyph.top, glyph.right, glyph.bottom, gap))
+            return true;
+        for (Glyph parent : originals) {
+            int pw = parent.right - parent.left + 1, ph = parent.bottom - parent.top + 1;
+            if (pw < gap * .35f
+                    || pw > gap * 1.6f
+                    || ph < gap * .7f
+                    || ph > gap * 2.2f
+                    || parent.left - gap * .5f > glyph.left
+                    || parent.right < glyph.right
+                    || parent.top - 1 > glyph.top
+                    || parent.bottom + 1 < glyph.bottom) continue;
+            // Engraved threes may print their two left terminals as separate islands.
+            // Only small islands inside the body's vertical extent may join that body.
+            List<Glyph> parts = new ArrayList<>();
+            parts.add(parent);
+            int left = parent.left, top = parent.top, bottom = parent.bottom, count = parent.count;
+            for (Glyph part : originals) {
+                if (part == parent
+                        || part.left < parent.left - gap * .5f
+                        || part.right > parent.right
+                        || part.right > parent.left + pw * .55f
+                        || part.top < parent.top - 1
+                        || part.bottom > parent.bottom + 1
+                        || part.right - part.left + 1 > gap * .6f
+                        || part.bottom - part.top + 1 > ph * .5f) continue;
+                parts.add(part);
+                left = Math.min(left, part.left);
+                top = Math.min(top, part.top);
+                bottom = Math.max(bottom, part.bottom);
+                count += part.count;
+            }
+            int[] owned = new int[count];
+            int used = 0;
+            for (Glyph part : parts) {
+                System.arraycopy(part.pixels, 0, owned, used, part.count);
+                used += part.count;
+            }
+            if (!TupletNumeralBeamBand.detachedThree(
+                    owned, width, left, top, parent.right, bottom, gap)) continue;
+            Arrays.sort(owned);
+            boolean subset = true;
+            for (int pixel : glyph.pixels)
+                if (Arrays.binarySearch(owned, pixel) < 0) {
+                    subset = false;
+                    break;
+                }
+            if (subset) return true;
+        }
+        return false;
     }
 
     /** A filled wedge can meet a staff rule at its pointed end. */

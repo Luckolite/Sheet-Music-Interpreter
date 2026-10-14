@@ -7,6 +7,7 @@ import java.awt.geom.*;
 import java.awt.font.FontRenderContext;
 import java.awt.image.*;
 import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -14,6 +15,16 @@ import static org.junit.Assert.*;
 
 /** Original geometric fours and aliases; licensed Bravura numeral controls, no score pixels. */
 public final class RasterMeterReadingsTest {
+    /** Resolve the same licensed fixture from either repository root or the Android module. */
+    private static Path fontFile() {
+        for (Path candidate : new Path[] {
+                Path.of("java/assets/Bravura.otf"),
+                Path.of("app/src/main/assets/engraving/Bravura.otf"),
+                Path.of("src/main/assets/engraving/Bravura.otf")})
+            if (Files.isRegularFile(candidate)) return candidate;
+        throw new IllegalStateException("Missing licensed Bravura regression fixture");
+    }
+
     static final class Page {
         final int gap, w, h, first;
         final byte[] gray, labels;
@@ -76,7 +87,7 @@ public final class RasterMeterReadingsTest {
 
         void digit(int digit, int index) throws Exception {
             var font =
-                    Font.createFont(Font.TRUETYPE_FONT, Path.of("java/assets/Bravura.otf").toFile())
+                    Font.createFont(Font.TRUETYPE_FONT, fontFile().toFile())
                             .deriveFont(64f);
             Shape glyph =
                     font.createGlyphVector(

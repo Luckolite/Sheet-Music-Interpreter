@@ -8,6 +8,31 @@ import java.util.Arrays;
 final class TupletNumeralBeamBand {
     private TupletNumeralBeamBand() {}
 
+    /** A complete detached three owns its dark core even when that core resembles a wedge. */
+    static boolean detachedThree(
+            int[] pixels, int imageWidth, int left, int top, int right, int bottom, float gap) {
+        int w = right - left + 1, h = bottom - top + 1;
+        if (pixels == null
+                || imageWidth < 1
+                || left < 0
+                || top < 0
+                || right >= imageWidth
+                || !Float.isFinite(gap)
+                || gap < 6
+                || w < gap * .45f
+                || w > gap * 1.6f
+                || h < gap * .7f
+                || h > gap * 2.2f
+                || (long) w * h > Integer.MAX_VALUE) return false;
+        boolean[] ink = new boolean[w * h];
+        for (int pixel : pixels) {
+            int x = pixel % imageWidth - left, y = pixel / imageWidth - top;
+            if (pixel < 0 || x < 0 || x >= w || y < 0 || y >= h) return false;
+            ink[y * w + x] = true;
+        }
+        return three(ink, w, 0, 0, w, h, -1, -1, true);
+    }
+
     static boolean matches(
             byte[] gray,
             int width,
@@ -169,6 +194,19 @@ final class TupletNumeralBeamBand {
             int h,
             int ruleFirst,
             int ruleLast) {
+        return three(ink, stride, left, top, w, h, ruleFirst, ruleLast, false);
+    }
+
+    private static boolean three(
+            boolean[] ink,
+            int stride,
+            int left,
+            int top,
+            int w,
+            int h,
+            int ruleFirst,
+            int ruleLast,
+            boolean detached) {
         int[] min = new int[h], max = new int[h];
         Arrays.fill(min, w);
         Arrays.fill(max, -1);
@@ -179,12 +217,14 @@ final class TupletNumeralBeamBand {
                     max[y] = Math.max(max[y], x);
                 }
         // Interpolate only the missing staff rows inside this connected glyph.
-        int before = ruleFirst - top - 1, after = ruleLast - top + 1;
-        if (before < 0 || after >= h || max[before] < 0 || max[after] < 0) return false;
-        for (int y = before + 1; y < after; y++) {
-            float f = (y - before) / (float) (after - before);
-            min[y] = Math.round(min[before] + f * (min[after] - min[before]));
-            max[y] = Math.round(max[before] + f * (max[after] - max[before]));
+        if (!detached) {
+            int before = ruleFirst - top - 1, after = ruleLast - top + 1;
+            if (before < 0 || after >= h || max[before] < 0 || max[after] < 0) return false;
+            for (int y = before + 1; y < after; y++) {
+                float f = (y - before) / (float) (after - before);
+                min[y] = Math.round(min[before] + f * (min[after] - min[before]));
+                max[y] = Math.round(max[before] + f * (max[after] - max[before]));
+            }
         }
         int upperOpen = 0, lowerOpen = 0, upperEdge = -1, lowerEdge = -1, waist = w, foot = -1;
         for (int y = 0; y < h; y++) {
@@ -202,11 +242,40 @@ final class TupletNumeralBeamBand {
             if (f >= .90f) foot = Math.max(foot, max[y]);
         }
         int required = Math.max(2, h / 12), indentation = Math.max(1, (int) Math.floor(w * .08f));
+        if (detached && detachedLeftLobes(min, max, w, h)) return true;
         return upperOpen >= required
                 && lowerOpen >= required
                 && upperEdge - waist >= indentation
-                && lowerEdge - waist >= indentation
+                && lowerEdge - waist >= (detached ? 0 : indentation)
                 && lowerEdge - foot >= indentation;
+    }
+
+    /** Two separated left-open bowls and a returning waist distinguish a full three from a taper. */
+    private static boolean detachedLeftLobes(int[] left, int[] right, int w, int h) {
+        if (h < 10 || w < 4) return false;
+        double[] edge = new double[h];
+        for (int y = 0; y < h; y++) {
+            if (right[y] < 0) return false;
+            edge[y] = left[y];
+        }
+        int separation = Math.max(2, h / 10);
+        double indentation = Math.max(2, Math.floor(w * .12));
+        for (int upper = Math.max(1, h / 8); upper <= h * .45; upper++)
+            for (int waist = upper + separation; waist <= h * .65; waist++)
+                for (int lower = waist + separation; lower <= h * .86; lower++) {
+                    if (lower - upper < h * .2
+                            || edge[upper] - edge[waist] < indentation
+                            || edge[lower] - edge[waist] < indentation) continue;
+                    double cap = w, foot = w;
+                    for (int y = 0; y <= upper - separation; y++) cap = Math.min(cap, edge[y]);
+                    for (int y = lower + separation; y < h; y++) foot = Math.min(foot, edge[y]);
+                    if (edge[upper] - cap < indentation || edge[lower] - foot < indentation)
+                        continue;
+                    if (right[upper] - right[waist] < 1 || right[lower] < right[waist] - 1)
+                        continue;
+                    return true;
+                }
+        return false;
     }
 
     private static boolean independentBeam(

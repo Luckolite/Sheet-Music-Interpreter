@@ -7,12 +7,23 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
+import java.nio.file.Files;
 import java.util.*;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 /** Independent SIL-OFL Bravura raster contours and original flat-middle stroke controls. */
 public class QuarterRestMiddleTurnTest {
+    /** Resolve the same licensed fixture from either repository root or the Android module. */
+    private static Path fontFile() {
+        for (Path candidate : new Path[] {
+                Path.of("java/assets/Bravura.otf"),
+                Path.of("app/src/main/assets/engraving/Bravura.otf"),
+                Path.of("src/main/assets/engraving/Bravura.otf")})
+            if (Files.isRegularFile(candidate)) return candidate;
+        throw new IllegalStateException("Missing licensed Bravura regression fixture");
+    }
+
     private static final int W = 280, H = 210;
 
     private record Raster(byte[] gray, int left, int right, int top, int bottom, boolean[] lines) {}
@@ -20,7 +31,7 @@ public class QuarterRestMiddleTurnTest {
     private Raster glyph(char code, float gap, int size, float narrow, float phase, int radius)
             throws Exception {
         var font =
-                Font.createFont(Font.TRUETYPE_FONT, Path.of("java/assets/Bravura.otf").toFile())
+                Font.createFont(Font.TRUETYPE_FONT, fontFile().toFile())
                         .deriveFont(100f);
         var outline =
                 font.createGlyphVector(

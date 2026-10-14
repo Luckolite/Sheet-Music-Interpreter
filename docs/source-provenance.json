@@ -322,14 +322,14 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "20dd6feb063d60ab6a484f92c94c2192776cc4c058e3f12a501bd8464dd35c59",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "source_normalized_sha256": "5f8a19d5fe6646d3fc0cc2cf26e8e5c267bf1b5b2c34822af2bec3628641af77",
+      "source_sha256": "d2ad372f3ee15ce6425528972c520c541895a30189bcae31d550cca3df117955",
+      "review_note": "A complete detached numeral3 owns its darker core and bounded disconnected left terminals. Require two open bowls and a returning waist; ownership of fragments requires actual pixel membership. Preserve existing beam/rule proof and all genuine mark gates. Admit the previously ported TupletNumeralBeamBand helper in the native source manifest.",
+      "source_normalized_sha256": "991075de1b1a8dc6f1fd9b847ad9d32a2b1cc75449e9c51cb1c7e1e6e873ec2a",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
+      "reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e",
+      "scoped_reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -2443,11 +2443,12 @@
     },
     "TupletNumeralBeamBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralBeamBand.java",
-      "source_sha256": "05678ada6990767f6fc554c2f471783fbad946e26c8d61b6b6a45388feb6ab62",
-      "source_normalized_sha256": "b6ad5fad32b8b5fd7de38028dbaff965b80d0c6dbba0b33bbc9689ecaaf5000e",
-      "reviewed_app_commit": "aa9b9e0a310a937a7eca5b9aafa788896d38e212",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; source hashes identify exact reviewed app bytes.",
-      "review_note": "Original pure-JDK optical numeral/rule/independent-beam ownership helper. Only an already-counted strong extra band can be removed; preserve sole and genuine short secondary beams. Exact app/public code and literal parity; original generated tests, no private score data/model/dependency/record-layout change."
+      "source_sha256": "8edb65c7f71b530a0f42e4bd0d6e0fdcc70e858bfd22ee416bdd838962508bf9",
+      "source_normalized_sha256": "f18cb5988d9fe2c944e8997f6f657f882dfcb49ef51de754f237c95d36a3ebb4",
+      "reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e",
+      "reviewed_source_state": "Committed reviewed source; exact raw and normalized app bytes pinned.",
+      "review_note": "A complete detached numeral3 owns its darker core and bounded disconnected left terminals. Require two open bowls and a returning waist; ownership of fragments requires actual pixel membership. Preserve existing beam/rule proof and all genuine mark gates. Admit the previously ported TupletNumeralBeamBand helper in the native source manifest.",
+      "scoped_reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e"
     },
     "PrintedSlurContours.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContours.java",
@@ -5773,5 +5774,22 @@
     "record_layout_changed": false,
     "boundary": "Original glyph/control checks and a conditional raw-gray rest-stage replay with reconstructed staff geometry. No original semantic masks or full recognition/timing/audio/device/paired deployment acceptance.",
     "reviewed_app_commit": "f4e9aee29604ba9b117234a26ceff76a22fcf34a"
+  },
+  "detached_three_articulation_review": {
+    "license": "Apache-2.0",
+    "scope": "A complete detached numeral3 owns its darker core and bounded disconnected left terminals. Require two open bowls and a returning waist; ownership of fragments requires actual pixel membership. Preserve existing beam/rule proof and all genuine mark gates. Admit the previously ported TupletNumeralBeamBand helper in the native source manifest.",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/DetachedThreeArticulationTest.java",
+    "font_license": "SIL-OFL Bravura already bundled; original cubic controls are authored geometry",
+    "native_source_manifest": {
+      "path": "tools/native-worker/decoder-sources.txt",
+      "sha256": "f8149233a18ea1252c3ccf1d4b18c029600a677f53d205df90e26086e5171c29",
+      "added_source": "TupletNumeralBeamBand.java"
+    },
+    "models_changed": false,
+    "dependencies_changed": false,
+    "record_layout_changed": false,
+    "boundary": "Source-only checks; no cumulative app/worker build, exact native recognition/timing/audio/device acceptance or paired deployment.",
+    "reviewed_app_commit": "855184dd9588fb2c83d70057c4315f912b5ca56e",
+    "test_font_resolution": "Identical licensed fixture resolved from public root, app root or Android module;16affected tests pass from each namespace actual cwd."
   }
 }
