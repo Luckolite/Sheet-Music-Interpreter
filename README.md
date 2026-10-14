@@ -102,6 +102,13 @@ pitches and playback stay unchanged. Without reliable source clef metadata, the
 legacy pitch-based initial clef remains available. Conflicting simultaneous
 clefs require an explicit staff mapping rather than a guessed choice.
 
+When retained source staff position, clef, accidental and octave shift reproduce
+the exported MIDI pitch exactly, MusicXML preserves that concert-pitch spelling.
+This keeps an ornament's diatonic neighbors attached to the original note letter,
+including double accidentals and octave-crossing spellings such as C-flat.
+Edited pitches or incomplete source mapping retain the legacy spelling fallback.
+Event durations, ties and playback pitches remain unchanged.
+
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
 reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML playback use the quarter-note

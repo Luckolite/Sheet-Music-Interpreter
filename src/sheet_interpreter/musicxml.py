@@ -8,7 +8,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export, articulation_export, ornament_export, grace_export
+from . import clef_export, articulation_export, ornament_export, grace_export, spelling_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -175,11 +175,12 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
                  ('C', 0), ('C', 1), ('D', 0), ('D', 1), ('E', 0), ('F', 0),
                  ('F', 1), ('G', 0), ('G', 1), ('A', 0), ('A', 1), ('B', 0))
         step, alter = names[midi % 12]
+        step, alter, octave = event.get('retainedSpelling') or (step, alter, midi // 12 - 1)
         pitch = element(node, 'pitch')
         element(pitch, 'step', step)
         if alter:
             element(pitch, 'alter', alter)
-        element(pitch, 'octave', midi // 12 - 1)
+        element(pitch, 'octave', octave)
     if grace is None:
         element(node, 'duration', duration)
     for active, kind in ((stop, 'stop'), (start, 'start')):
@@ -330,9 +331,14 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             is_grace = placement is not None and placement['grace']
             if duration <= 0 or (start if is_grace else start + duration) > local_start + 2:
                 raise ValueError('MusicXML note duration lies outside the page timeline')
+            measure_index = n.get('measureIndex')
+            spelling_key = (bars[first_bar+measure_index]['key']
+                            if type(measure_index) is int and 0 <= measure_index < len(page['measureBeats'])
+                            else None)
             events.append(dict(n, start=offset+start, end=offset+(start if is_grace else min(local_start,start+duration)), tie_stop=False, tie_start=False,
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
                                retainedArticulations=articulation_export.retained(page, note_index),
+                               retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index)))
             if is_grace:
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],

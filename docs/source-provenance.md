@@ -1775,3 +1775,22 @@ auxiliaries, delayed-turn placement and auxiliary pitch realization remain open.
 
 No GPL implementation is copied into this Apache-2.0 repository. No recognition,
 model, mapped source hash, wire, guide or audio identity changes are included.
+
+## Retained concert-pitch spelling
+
+The original Apache-2.0 `spelling_export.py` adapter derives a concert-pitch letter,
+alteration and octave from retained decoded-head metadata using the existing
+`Main.noteIdentity` pitch convention. Source head count, index, measure and staff
+must agree, the clef must be known, and the reconstructed MIDI pitch must equal
+the exported event's pitch. Otherwise the existing pitch/key spelling remains.
+This prevents a D-flat principal from becoming C-sharp and thereby changing which
+diatonic neighbor an explicit ornament auxiliary sign describes. Double-sharp
+wire value 3 remains distinct from FROM_KEY value 2. No GPL code is used.
+
+Original scalar controls in `test_musicxml_spelling.py` cover source flats,
+double signs, octave crossings, explicit naturals, key changes and page key
+inheritance, all supported clefs, octave shifts, edited-pitch fallback, incomplete
+source identity, invalid types and tied-fragment clock/ornament ownership. These
+are exporter controls, not a rebuilt native ornament-playback verification.
+No mapped interpreter source, recognition, model, wire, guide or audio identity
+changes are included.
