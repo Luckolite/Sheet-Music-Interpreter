@@ -18807,7 +18807,7 @@ final class OmrScoreInterpreter {
         for (int d = 0; d <= Math.round(gap * 1.15f); d++) {
             int y = end + direction * d;
             if (y < 0 || y >= height) continue;
-            if (rawRuleBeyondFlag(gray, width, y, x, gap, threshold)) continue;
+            if (FlagRootStaffRule.matches(gray, width, height, y, x, gap, threshold)) continue;
             int ink = 0;
             for (int xx = x; xx <= x + span; xx++)
                 if ((gray[y * width + xx] & 255) < threshold) ink++;

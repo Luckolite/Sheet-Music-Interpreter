@@ -361,13 +361,13 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "c4ace71a51918a0e63debf2a3812bfeb1fa5bd29d31388bf6b7b0e60e1bae459",
-      "source_normalized_sha256": "a8ee1d74e4f1fb844b6d1749cc7de4128ff383322b8858015e95fde10085b4bf",
-      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
-      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
-      "standalone_sha256": "e1d9976cf5ba3b59979c5bf9e2c081bbfd0f1f1565ad997386168df4af4bd840",
-      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
-      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+      "source_sha256": "f6eaa3415e19d4873712558d668ba301d280e775764163ffaece996a1e7cbc98",
+      "source_normalized_sha256": "6a6f7ca7377f6f5d3e285998155385424e90c2e150bc4e0ea835fe7077e1d676",
+      "review_note": "Preserve double-bar boundaries when two separately inked straight staff-crossing rules disprove a false numeral-counter veto; retain continuity, branch and ownership guards.",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
+      "standalone_sha256": "ea8e9a38c293b9817930c64c31f8e1aa92d8450bf9a7186120b9fe983cfb8e63",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -378,14 +378,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f8f56cc3ff4c4b7835834bb09a282251ac3db3af96ac1b7eb642c5b72bf693c0",
-      "reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "scoped_reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "review_note": "Accept compact mixed cancellation only with ordered pitch/barline proof and clear final glyph ink separation from first head.",
-      "source_normalized_sha256": "309c9f04fc76c1669feae39ff3fa2e392bb363e4003dbcdc9b0d6f60f56c6ba1",
+      "source_sha256": "1242b5e142a4526d7e57aecec49dcfef37ee81780a646a15af00342aba7ca968",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "review_note": "Reject false pale flag roots supported solely by a raster-quantized staff line; preserve independently rooted flags. Existing Android logging adaptation retained.",
+      "source_normalized_sha256": "aaca64cde90c451491298abf810ba5b4004906ae928ac8928fb3d33dbe3572ee",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed paired recognition56/guide286/audio89 sources; final packaged deployment and runtime verification pending.",
-      "standalone_sha256": "02cf597ba036a500033f19d89a02c2721c6f323ed7579163202372979d21ceca",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
+      "standalone_sha256": "acb256de4f980cd67ff83e8ebbae260cf6e1019b27569866f96c2befe90e4c69",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9"
     },
     "PlayingTechniqueDetector.java": {
@@ -1561,13 +1561,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "78add0cfc1d56f937d000b8436c5138778bf7f1f11b027043bdd1fc470aec1fc",
-      "source_normalized_sha256": "78add0cfc1d56f937d000b8436c5138778bf7f1f11b027043bdd1fc470aec1fc",
-      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
-      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
-      "standalone_sha256": "8cdca7da7d658f063116fdf59c5baecf86ed1e52c85a6697a4dc374d024822b0",
-      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
-      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+      "source_sha256": "5a6c00d3204f08c67acb8bd7a70c8557da7a37c57cbbafe863fd9138efe47d38",
+      "source_normalized_sha256": "5a6c00d3204f08c67acb8bd7a70c8557da7a37c57cbbafe863fd9138efe47d38",
+      "review_note": "Recognition58 invalidates stale recognition results; guide287 record layout unchanged.",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
+      "standalone_sha256": "22f850a32be0dcda1256c7cf6978da3ff2f8812388fb01f0460572386cb49572",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1623,13 +1623,13 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "274639e3dfae0e4a6a3f7cdbac51c9e3629557e91017d1cd249fb7664a9414b2",
-      "source_normalized_sha256": "274639e3dfae0e4a6a3f7cdbac51c9e3629557e91017d1cd249fb7664a9414b2",
-      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
-      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
-      "standalone_sha256": "3e6bde182d1c1afacda9ce460e53801d1b98a60368485cf14aad71e631b23e67",
-      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
-      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+      "source_sha256": "123a312f598a4ecea26e7d66c19952de5c120dfff9c1cdc204ed29ab626600ce",
+      "source_normalized_sha256": "123a312f598a4ecea26e7d66c19952de5c120dfff9c1cdc204ed29ab626600ce",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
+      "review_note": "Recognition58 matches Android/native cache identity; guide287 unchanged.",
+      "standalone_sha256": "9b83cd569bccbdde89a24b1631f2ac29e6578405c0ae33e11f4636e5f1f0e655",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2946,6 +2946,26 @@
       "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
       "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
       "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+    },
+    "ParallelStaffRules.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelStaffRules.java",
+      "source_sha256": "7a43b529184ab0ab63fc19fcc33d28bf5fce5766c04a8a1b54cb993a696754b9",
+      "source_normalized_sha256": "bb01393324370b668dd2f605e522b030ec4edea2ec286e31e5afd8b98d937ee4",
+      "standalone_sha256": "82ed7f4939255009ee002ceffddfff5f6767a4adaf73381eaaccec7a7a9ff653",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "review_note": "Original pixel-geometry proof of two continuous rules separated by clear paper; generated regression controls, no private score material.",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending."
+    },
+    "FlagRootStaffRule.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FlagRootStaffRule.java",
+      "source_sha256": "ef6a03c602b3730ecd6383a52e4214f1a31adc7ba5796c1c51a851b476735a7e",
+      "source_normalized_sha256": "2c42def1ea2cff85df78fb7db20c96e0a514075f57d74726ffcbeb2cca1186e0",
+      "standalone_sha256": "1416ddd2ce7b9f95c126a0c15f989914458440e1668d1da5b63ca7875f536faa",
+      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+      "review_note": "Original bounded-neighborhood staff-flank evidence for flag-root rejection; generated false-root and real-flag controls.",
+      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending."
     }
   },
   "interpreter_speedup_review": {
@@ -7039,5 +7059,59 @@
     "contract": "Guide287 permits nonempty-page key and meter indices at the end boundary; legacy286 rejects them. Recognition57 and audio90 invalidate prior derived outputs.",
     "validation_boundary": "Focused real-page evidence and synthetic regressions do not establish whole-document playback, full-model library accuracy or packaged device acceptance.",
     "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+  },
+  "parallel_barline_flag_root_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
+    "scope": "Two global geometry repairs with original procedural regressions. No private scores, library data, identifiers, logs, models or signing material distributed. Frozen-model private pages qualified separately; packaged deployment and full-document/device acceptance pending.",
+    "recognitionRevision": 58,
+    "guideVersion": 287,
+    "audioVersion": 91,
+    "reviewed_sources": [
+      {
+        "source_path": "tools/native-worker/guide_writer.py",
+        "source_sha256": "123a312f598a4ecea26e7d66c19952de5c120dfff9c1cdc204ed29ab626600ce"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "acf3f9da8c94ef2d6a21e8ba9a865a8345fcf8c258a62de9950f44a73720528f"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java",
+        "source_sha256": "0e2b825dd639877eefa19e8895ec2bfbcc226de3c4a978ee2542adfcbc0bf718"
+      },
+      {
+        "source_path": "tools/native-worker/NativeAudioTrack.java",
+        "source_sha256": "b2b0a9fa73ea785384c68ca80fc3976a72c56a8185c65d3a286bfd8fc985d176"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeAudioWorker.cs",
+        "source_sha256": "e57362fa6545a3ce578f262a3c539890b467be8cf748cc04467b69d03d5c9821"
+      },
+      {
+        "source_path": "tools/native-worker/test_guide284_tab_ties.py",
+        "source_sha256": "7fd222f04c897135c170dd5d5388a4bae9820b45600ed178a2272a15f9a24f53"
+      },
+      {
+        "source_path": "tools/native-worker/test_printed_stem_guide.py",
+        "source_sha256": "8c69d34e88c0b18ffc6073854132210c6ec9324ccfa3dc5a2a2f9b2fe9ffd214"
+      },
+      {
+        "source_path": "windows-sync-hub/TypedTabTieGuideTests.cs",
+        "source_sha256": "7fe878dca4235e14a359b75818b37d87f5ba50e89e204cd48a4f60353892804f"
+      },
+      {
+        "source_path": "windows-sync-hub/SelfTests.cs",
+        "source_sha256": "7b8fe7e0fede00f3cc9f80eb5f834ef7259cc734743f6654329bb8a74a046894"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeAudioTests.cs",
+        "source_sha256": "52c20d80ba0fed9b17334e6e0a04354c3f99686c7ab0ae0f9a6a37f185608c4a"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "f4d720ed92634d0e24e5d8c81bce2cc29cf90694fa04c787c734b8b4408ef4cd"
+      }
+    ]
   }
 }

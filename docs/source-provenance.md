@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition58 preserves proved parallel barlines and rejects pale flag roots
+supported only by a raster-quantized staff line. Original geometric regressions
+retain numeral, branching, separated-ink and actual-flag controls. Guide287 stays
+unchanged; audio91 invalidates stale playback. Packaged deployment and whole-document
+acceptance remain pending.
+
 Recognition56 recovers compact key cancellation with pitch/barline and ink-gap proof,
 and meters through matching font/reflow evidence from separate staves. Chord head
 rims no longer masquerade as stems when assigning printed arcs. Original geometry

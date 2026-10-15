@@ -1752,7 +1752,9 @@ final class OmrMeasurePostProcessor {
         if (!(touchesTop && touchesBottom && darkRows >= span * .68f && longest >= span * .48f))
             return Integer.MIN_VALUE;
         if (stackedFourCounters(gray, width, height, centerX, top, bottom, gap)
-                || threeOverFourCounters(gray, width, height, centerX, top, bottom, gap))
+                || (threeOverFourCounters(gray, width, height, centerX, top, bottom, gap)
+                        && !ParallelStaffRules.proved(
+                                gray, width, height, centerX, top, bottom, gap)))
             return Integer.MIN_VALUE;
         // A rest plus the five horizontal staff lines can satisfy the aggregate
         // coverage test while leaving an entire staff space empty. A barline
