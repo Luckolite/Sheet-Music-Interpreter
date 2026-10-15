@@ -20,6 +20,12 @@ public final class LocatedCoverHeadingEvidence {
         return confirmed;
     }
 
+    /** A coarse photographic title does not verify every located heading or caption. */
+    public static boolean needsOriginalReads(
+            ScoreCreditsDetector.Page page, List<ScoreCreditsDetector.Line> coarseTitle) {
+        return page.photographicCover() || coarseTitle.equals(page.lines());
+    }
+
     /** Confidence supplements exact agreement; import labels are not recognition evidence. */
     public static LocatedCoverHeadingEvidence fromOriginal(
             ScoreCreditsDetector.Page page,

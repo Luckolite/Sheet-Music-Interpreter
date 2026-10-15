@@ -2260,15 +2260,16 @@
     },
     "LocatedCoverHeadingEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingEvidence.java",
-      "source_sha256": "f4c07c48b2c54cd2bbbc624d67f88659e23722bf89bef1830b272d19e18ee842",
-      "source_normalized_sha256": "f4c07c48b2c54cd2bbbc624d67f88659e23722bf89bef1830b272d19e18ee842",
+      "source_sha256": "ef5231c2b275c8f0a962e90475bf8ef727dff4e15232e8ac814cf547f4e61432",
+      "source_normalized_sha256": "ef5231c2b275c8f0a962e90475bf8ef727dff4e15232e8ac814cf547f4e61432",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
-      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP-format adaptations.",
+      "reviewed_source_state": "Committed paired cover heading preservation. Strong bounded expanded pixels retain outside letters lost by tight crops. Standalone tests and three original PDF scanner controls passed; whole-library verification remains incomplete.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LocatedCoverHeadingEvidence.java",
-      "standalone_sha256": "8e57848de955f0a4b9b38a38f670f55742023bece8fb56790571e93edda74f7e",
+      "standalone_sha256": "886d76278fb8a54c8e11a784c341a09745ca3f64fde5653b4d11be7cda21673b",
       "license": "Apache-2.0",
-      "review_note": "Three guarded agreeing strong original-PDF readings retain an already nominated photographic heading independently of the import label. Merge only into the unchanged source line; ordinary covers and unstable fallback evidence remain separate.",
-      "reviewed_app_commit": "24a5bb85dcdeac0bfb131cb2c6f8211760671723"
+      "review_note": "A coarse photographic title does not verify every located heading. Keep original-pixel reads eligible; exact source ownership and three-reading confidence rules remain. Android SheetCreditsScanner invokes this shared decision. Original fictional controls, no title lookup.",
+      "reviewed_app_commit": "5a48dfb1c3ea3b56266cda011cf5ec57a7adcfd9",
+      "scoped_reviewed_app_commit": "5a48dfb1c3ea3b56266cda011cf5ec57a7adcfd9"
     },
     "OriginalTitleCorroboration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/OriginalTitleCorroboration.java",
@@ -2574,14 +2575,15 @@
     },
     "LocatedCoverHeadingExpansion.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingExpansion.java",
-      "source_sha256": "3523702dc724d06f255610fbbd07a846298a22a4b1f6d008dc24ba0f2cdef018",
-      "source_normalized_sha256": "7a8455fd3a3d78707ba78cbfaa29a3ff68ff7fbcbfda96f1fb2203ad92997cfe",
+      "source_sha256": "38f21492358665c55a783c596e7cb8df1c3e9dc67ee00eae3d180e8d14645de5",
+      "source_normalized_sha256": "38f21492358665c55a783c596e7cb8df1c3e9dc67ee00eae3d180e8d14645de5",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/LocatedCoverHeadingExpansion.java",
-      "standalone_sha256": "5ad5cfc80d31f47f8b45d9102d880c0db84a5538a25fed3e8c639a2644ea4fe2",
+      "standalone_sha256": "505042a3878241e983e74a1b8fd3036b213a8d939b51c19838f5e746fedb5d07",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "85947bc2dbe00690da14be6d25101ff3d265ca20",
-      "reviewed_source_state": "Paired metadata source with exact package-normalized parity; original synthetic regressions. Runtime and whole-library accuracy remain separate.",
-      "review_note": "Global title, contributor, catalogue, instruction and repeated-credit evidence. Bounded original-pixel outside-letter and mixed-case echo recovery requires agreeing high-confidence readings. No song-specific exceptions, private fixtures, model or wire-layout changes."
+      "reviewed_app_commit": "5a48dfb1c3ea3b56266cda011cf5ec57a7adcfd9",
+      "reviewed_source_state": "Committed paired cover heading preservation. Strong bounded expanded pixels retain outside letters lost by tight crops. Standalone tests and three original PDF scanner controls passed; whole-library verification remains incomplete.",
+      "review_note": "A tight crop can remove one or two outside letters from an existing heading. Three high-confidence bounded expanded readings of that unchanged original preserve it. No import-label or song-specific evidence.",
+      "scoped_reviewed_app_commit": "5a48dfb1c3ea3b56266cda011cf5ec57a7adcfd9"
     },
     "PrintedSlurFrames.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurFrames.java",

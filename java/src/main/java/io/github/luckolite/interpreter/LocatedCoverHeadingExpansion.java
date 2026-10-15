@@ -43,6 +43,48 @@ public final class LocatedCoverHeadingExpansion {
         return new Region(left, line.top(), right, line.bottom());
     }
 
+    /** Tight bounds can remove an outside letter even when all three reads agree. */
+    public static boolean needsRead(
+            ScoreCreditsDetector.Line original, LocatedCoverHeadingEvidence narrow) {
+        return narrow == null
+                || narrow.confirmed().text().equalsIgnoreCase(original.text())
+                || clipsOutsideLetters(original.text(), narrow.confirmed().text());
+    }
+
+    private static boolean clipsOutsideLetters(String whole, String cropped) {
+        String before = whole.strip().toLowerCase(Locale.ROOT);
+        String after = cropped.strip().toLowerCase(Locale.ROOT);
+        int missing = before.length() - after.length();
+        if (after.isEmpty() || missing < 1 || missing > 2) return false;
+        String removed =
+                before.endsWith(after)
+                        ? before.substring(0, missing)
+                        : before.startsWith(after) ? before.substring(after.length()) : "";
+        return removed.length() == missing && removed.codePoints().allMatch(Character::isLetter);
+    }
+
+    /** Preserve a nominated full heading when bounded expanded pixels reject narrow clipping. */
+    public static LocatedCoverHeadingEvidence preserveOriginal(
+            ScoreCreditsDetector.Page page,
+            ScoreCreditsDetector.Line original,
+            LocatedCoverHeadingEvidence narrow,
+            List<String> readings,
+            List<Float> confidence) {
+        if (narrow == null
+                || !clipsOutsideLetters(original.text(), narrow.confirmed().text())
+                || region(page, original) == null
+                || readings == null
+                || readings.size() != 3
+                || readings.stream()
+                        .anyMatch(
+                                text ->
+                                        text == null
+                                                || !text.strip()
+                                                        .equalsIgnoreCase(original.text().strip())))
+            return null;
+        return LocatedCoverHeadingEvidence.fromOriginal(page, original, readings, confidence);
+    }
+
     public static LocatedCoverHeadingEvidence confirm(
             ScoreCreditsDetector.Page page,
             ScoreCreditsDetector.Line original,
