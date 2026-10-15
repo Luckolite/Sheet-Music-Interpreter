@@ -73,6 +73,7 @@ final class PrintedStaffExtent {
             for (int y = Math.max(0, top); y + size <= Math.min(height, bottom + 1); y += size) {
                 long sum = 0, squares = 0;
                 int count = 0;
+                int[] tones = new int[size * size];
                 for (int yy = y; yy < y + size; yy++)
                     for (int xx = x; xx < x + size; xx++) {
                         // Interrupted or faded staff rules are notation, not artwork texture.
@@ -85,13 +86,23 @@ final class PrintedStaffExtent {
                             }
                         if (onRule) continue;
                         int v = gray[yy * width + xx] & 255;
+                        tones[count] = v;
                         sum += v;
                         squares += (long) v * v;
                         count++;
                     }
                 if (count < size) continue;
                 double mean = sum / (double) count;
-                if (squares / (double) count - mean * mean > 25) textured++;
+                // Black notation on flat paper is not distributed artwork texture.
+                // Require variation through the middle half of the paper tones.
+                java.util.Arrays.sort(tones, 0, count);
+                int lower = tones[(count - 1) / 4],
+                        median = tones[(count - 1) / 2],
+                        upper = tones[(count - 1) * 3 / 4];
+                if (squares / (double) count - mean * mean > 25
+                        && median < 245
+                        && lower > 96
+                        && upper - lower >= 4) textured++;
                 total++;
             }
         }

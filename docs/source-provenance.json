@@ -3155,12 +3155,12 @@
     },
     "PrintedStaffExtent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStaffExtent.java",
-      "source_sha256": "7ff90ca1f6d85ce7876347b5b0baf5209ef1a739b4800eda69ea124949f6a7e7",
-      "source_normalized_sha256": "45867473dd90b8bdd0b16606968175335b1e918b8fd9f9ba80b3f925b1c7ccc2",
-      "standalone_sha256": "a294e6bfca04145e9f258101f8f0f90c0a0110d379108dca76a1b0c39b2d9b55",
+      "source_sha256": "e1cc59a22890facdea6a723ccd227854f0eb7d8ade8b1c23e0ac207e45dc64d6",
+      "source_normalized_sha256": "41e12f762bd6698c6034324198a6a16de6f98ff2abab110c068aff102c5c5f26",
+      "standalone_sha256": "2696add75497d289097901132a652ee423a5406395537c45e21e415bfc4c23f2",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "review_note": "Namespace-equivalent margin texture fix; four original stem/paper regressions, existing texture controls and private score geometry verified. No score pixels published.",
+      "reviewed_app_commit": "33f2df6440e0d6e70d92c7d12b216118d8616068"
     },
     "PrintedTempoSpanPages.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTempoSpanPages.java",
