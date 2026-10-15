@@ -2152,15 +2152,15 @@
     },
     "BibliographicCoverSceneEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/importer/BibliographicCoverSceneEvidence.java",
-      "source_sha256": "e999c4472cabd5a907a8d97a67a767ed8568a78b1a33f60444b91249bff0527d",
-      "source_normalized_sha256": "4732be7f4fde133577f497ae7af58e27436bbf22d0232f7a6ab30f0faeaaadf0",
+      "source_sha256": "492b9566bfd0343e39ba06177e488dccb2dfa74f8c0a870dd5d1b3b63174d368",
+      "source_normalized_sha256": "006666e81f816fba532d362c63ee1d6aa19ba6b36e4d48611091d06d09090896",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
-      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "reviewed_source_state": "Reviewed portrait-cover helper and eight original generated-pixel tests; exact app/public parity apart from package and license header.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BibliographicCoverSceneEvidence.java",
-      "standalone_sha256": "f006b4a7077b46e443a0013abe696910a18e8cac6a055d9a475f82cc051e9203",
+      "standalone_sha256": "9873b1b01c840e338890582ace178630b8ff6c112bcc07e6064fbde75538c99e",
       "license": "Apache-2.0",
-      "review_note": "Conservative landscape photographic-cover evidence; unstable staff candidates require independent absence at two smaller scales.",
-      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+      "review_note": "Portrait photographic covers require absence of a detected staff; existing palette and texture thresholds are reused. Landscape classification and unstable-staff handling retain their existing boundaries. Android first-page adapter is reviewed separately; no model or wire-format changes.",
+      "reviewed_app_commit": "3541afcec1d772a8c0642a9821aa32e07319b15a"
     },
     "EmbeddedCreditColumns.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/importer/EmbeddedCreditColumns.java",

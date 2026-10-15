@@ -1992,3 +1992,15 @@ Malformed mixed-case contributor-position text is reread from original PDF crops
 On converted scores, a centered subtitle between separate conversion and contributor columns is source-work context. The geometric gate preserves known names, explicit arranger ambiguity and pages without supporting columns. Five original synthetic regressions accompany the shared detector; no Android adapter, native decoder, model or wire changes.
 
 Printed composer variants are combined across supported same-work parts and exposed as review conflicts. Title and edition recovery retain that evidence. Local contrast provides a bounded terminal-stroke retry under the existing consensus gate. Collection covers with repeated imprints exclude unlabelled pictured-publication text; explicit credits retain existing handling. Twenty-five original regression cases cover these changes; no private library material or model changes are included. Android review presentation is app-only; current runtime and paired deployment remain separate gates.
+
+## Portrait photographic covers
+
+Portrait covers with no detected notation now use the existing palette and texture
+evidence for bibliographic heading rereads. Detected staff boundaries are never
+overridden by this path; landscape behavior is unchanged. Eight original
+generated-pixel regressions cover texture, paper, gradients, staff pages and
+invalid inputs. App commit `3541afcec1d772a8c0642a9821aa32e07319b15a` includes the
+matching first-page scanner adapter. No private images, OCR labels, model changes
+or format changes are included. Java/Python tests and synthetic end-to-end smoke
+passed. A full native book scan verified the repaired title; broader native cover
+controls and paired worker deployment remain separate pending checks.

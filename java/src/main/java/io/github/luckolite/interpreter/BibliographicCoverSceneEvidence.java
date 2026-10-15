@@ -36,6 +36,23 @@ public final class BibliographicCoverSceneEvidence {
                 || height > width * .8f
                 || pixels == null
                 || (long) width * height != pixels.length) return false;
+        return photoAppearance(width, height, pixels);
+    }
+
+    /** Portrait cover only when the existing staff detector found no notation. */
+    public static boolean photographicPortrait(
+            int width, int height, int[] pixels, float notationTop) {
+        if (width < 900
+                || height <= width * .8f
+                || height > width * 2f
+                || pixels == null
+                || (long) width * height != pixels.length
+                || !Float.isFinite(notationTop)
+                || notationTop >= 0) return false;
+        return photoAppearance(width, height, pixels);
+    }
+
+    private static boolean photoAppearance(int width, int height, int[] pixels) {
         var palette = new HashSet<Integer>();
         int colored = 0, textured = 0, total = 0;
         for (int y = 0; y < height; y += 2)
