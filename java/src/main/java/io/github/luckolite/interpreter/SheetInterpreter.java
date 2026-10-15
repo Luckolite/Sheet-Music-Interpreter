@@ -303,6 +303,7 @@ public final class SheetInterpreter {
                         width,
                         height,
                         !tabs.isEmpty());
+        finalScore = WholeRestMeterContext.apply(finalScore, gray, width, height, staffs);
         var withExpressions =
                 ScoreExpressionDetector.apply(
                         ScoreFermataDetector.withFermatas(

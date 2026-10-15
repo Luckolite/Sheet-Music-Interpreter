@@ -1962,7 +1962,7 @@ final class OmrMeasurePostProcessor {
     }
 
     /** A counter alone is insufficient: a four also has a continuing right shaft and crossbar. */
-    private static boolean completeFourCounter(
+    static boolean completeFourCounter(
             byte[] gray,
             int width,
             int height,

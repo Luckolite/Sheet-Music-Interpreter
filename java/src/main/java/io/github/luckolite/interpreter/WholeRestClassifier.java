@@ -40,6 +40,18 @@ final class WholeRestClassifier {
             List<SixteenthRestDetector.Staff> staffs,
             List<ScoreNoteEvent> notes,
             List<ScoreRestEvent> otherRests) {
+        return detect(gray, width, height, measures, staffs, notes, otherRests, java.util.Set.of());
+    }
+
+    static List<Decision> detect(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<SixteenthRestDetector.Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> otherRests,
+            java.util.Set<Integer> shortBars) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -134,7 +146,18 @@ final class WholeRestClassifier {
                                     Math.max(
                                             .035f,
                                             plateGap * .65f / ((m.right() - m.left()) * width)));
-                    if (dots.isEmpty() && Math.abs(pos - .5f) <= tolerance) {
+                    final int measureIndex = mi;
+                    boolean shortSilentBar =
+                            shortBars.contains(mi)
+                                    && notes.stream()
+                                            .noneMatch(
+                                                    n ->
+                                                            n.measureIndex() == measureIndex
+                                                                    && n.staffIndex()
+                                                                            == staff.index()
+                                                                    && n.staffCount()
+                                                                            == staff.count());
+                    if (dots.isEmpty() && (Math.abs(pos - .5f) <= tolerance || shortSilentBar)) {
                         String conflict =
                                 conflictReason(
                                         plate,
@@ -154,7 +177,10 @@ final class WholeRestClassifier {
                             reason = conflict;
                         } else {
                             status = Status.PROVED_FULL;
-                            reason = "centered undotted complete plate and silent lane";
+                            reason =
+                                    shortSilentBar
+                                            ? "complete undotted plate in proved short silent bar"
+                                            : "centered undotted complete plate and silent lane";
                         }
                     }
                     var event =

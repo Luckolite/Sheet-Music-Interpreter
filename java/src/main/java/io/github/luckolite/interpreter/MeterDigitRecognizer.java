@@ -35,6 +35,36 @@ final class MeterDigitRecognizer {
         return MeterOcrEvidence.singleReading(List.of(upper + "/" + lower));
     }
 
+    /** Sparse detector evidence is usable only with six strict agreeing slot recognitions. */
+    static String readSparse(
+            int[] pixels,
+            int width,
+            int height,
+            int middle,
+            float gap,
+            List<String> upperReadings,
+            List<String> lowerReadings,
+            PortableOcr.Inference inference)
+            throws Exception {
+        String upper = unanimousDigit(upperReadings), lower = unanimousDigit(lowerReadings);
+        if (upper.isEmpty() || lower.isEmpty()) return "";
+        String verified = read(pixels, width, height, middle, gap, lower, inference);
+        return verified.equals(upper + "/" + lower) ? verified : "";
+    }
+
+    private static String unanimousDigit(List<String> readings) {
+        if (readings == null) return "";
+        String selected = "";
+        for (String value : readings) {
+            if (value == null) return "";
+            if (value.isBlank()) continue;
+            if (!value.matches("[0-9]{1,2}") || !selected.isEmpty() && !selected.equals(value))
+                return "";
+            selected = value;
+        }
+        return selected;
+    }
+
     private static String slot(
             int[] pixels,
             int width,

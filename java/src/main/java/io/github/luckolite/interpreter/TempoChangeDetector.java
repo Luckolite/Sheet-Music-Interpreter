@@ -371,7 +371,7 @@ final class TempoChangeDetector {
         var proved = new java.util.HashMap<MeasureNumberReconciler.NumberToken, Integer>();
         var syntax =
                 java.util.regex.Pattern.compile(
-                        "^[♩♪♫♬√J]?\\s*=\\s*(?:ca\\.?|c\\.|circa)\\s*([0-9]{2,3})$",
+                        "^[♩♪♫♬√J]?\\s*=\\s*(?:ca\\.?|c\\.|circa|~|\u2248)\\s*([0-9]{2,3})$",
                         java.util.regex.Pattern.CASE_INSENSITIVE);
         for (var word : words) {
             if (word == null || word.text() == null) continue;
@@ -435,7 +435,7 @@ final class TempoChangeDetector {
             int eq = equalsSignLeft(digits, gray, width, height, 125, left);
             if (eq < 0) eq = equalsSignLeft(digits, gray, width, height, 175, left);
             if (eq < left || digitLeft - eq > dh * 6) continue;
-            int[] anchor = {-1};
+            int[] anchor = {-1, -1};
             double unit =
                     printedBeatUnitWithDigitHeight(
                             digits, gray, width, height, eq, 200, dh, anchor);
@@ -443,7 +443,8 @@ final class TempoChangeDetector {
                 unit =
                         printedBeatUnitWithDigitHeight(
                                 digits, gray, width, height, eq, 165, dh, anchor);
-            if (!Double.isFinite(unit) || anchor[0] < left || anchor[0] >= eq) continue;
+            if (!Double.isFinite(unit) || anchor[0] < Math.max(0, left - 2 * dh) || anchor[0] >= eq)
+                continue;
             var accepted =
                     new MeasureNumberReconciler.NumberToken(
                             value,
@@ -451,7 +452,7 @@ final class TempoChangeDetector {
                             digits.top(),
                             digits.right(),
                             digits.bottom(),
-                            anchor[0] / (float) width);
+                            anchor[1] / (float) width);
             all.add(accepted);
             proved.put(accepted, eq);
         }
@@ -883,7 +884,10 @@ final class TempoChangeDetector {
             boolean flagged = flaggedRows >= Math.max(3, Math.round(unit * .25f));
             if (hollow && flagged) continue;
             double beat = hollow ? 2 : flagged ? .5 : 1;
-            if (anchor != null) anchor[0] = note[0];
+            if (anchor != null) {
+                anchor[0] = note[0];
+                if (anchor.length > 1) anchor[1] = stem;
+            }
             for (int[] dot : parts) {
                 int dw = dot[1] - dot[0] + 1, dh = dot[3] - dot[2] + 1;
                 float gap = dot[0] - note[1], dy = Math.abs((dot[2] + dot[3]) * .5f - cy);

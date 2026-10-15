@@ -9830,10 +9830,10 @@ final class OmrScoreInterpreter {
                         || main.area < head.area * 3
                         || nearestHeadStaff(staffs, main.centerY) != staff
                         || Math.abs(main.centerX - head.centerX) > gap * 6
-                        || Math.abs(main.centerY - head.centerY) < gap * 2
+                        || Math.abs(main.centerY - head.centerY) < gap * 1.5f
                         || Math.abs(main.centerY - head.centerY) > gap * 6) continue;
                 int[] stem = attachedRawStem(gray, width, height, main, gap);
-                if (stem != null && Math.abs(stem[1] - head.centerY) < gap * 1.5f) stems.add(stem);
+                if (stem != null && Math.abs(stem[1] - head.centerY) < gap * 3) stems.add(stem);
             }
             boolean found = false;
             for (int[] left : stems)
@@ -9875,6 +9875,21 @@ final class OmrScoreInterpreter {
             float gap) {
         float slope = (right[1] - left[1]) / (float) (right[0] - left[0]);
         float primaryY = left[1] + slope * (head.centerX - left[0]);
+        int px = Math.round(head.centerX), py = Math.round(primaryY), radius = Math.round(gap);
+        if (px < 0 || px >= width || py - radius < 0 || py + radius >= height) return false;
+        int search = Math.max(2, Math.round(gap * .45f));
+        for (int step = 0;
+                step < search && py >= 0 && py < height && (gray[py * width + px] & 255) >= 165;
+                step++) py -= left[2];
+        if (py - radius < 0 || py + radius >= height || (gray[py * width + px] & 255) >= 165)
+            return false;
+        int inkTop = py, inkBottom = py;
+        while (inkTop > py - radius && (gray[(inkTop - 1) * width + px] & 255) < 165) inkTop--;
+        while (inkBottom < py + radius && (gray[(inkBottom + 1) * width + px] & 255) < 165)
+            inkBottom++;
+        if (inkBottom - inkTop + 1 < gap * .25f || inkBottom - inkTop + 1 > gap * .8f) return false;
+        primaryY = (inkTop + inkBottom) * .5f;
+
         float separation = (primaryY - head.centerY) * left[2];
         if (separation < gap * .5f
                 || separation > gap * 1.35f
@@ -9889,7 +9904,7 @@ final class OmrScoreInterpreter {
                         head.centerX,
                         primaryY,
                         gap)) return false;
-        int margin = Math.max(2, Math.round(gap * .18f)), radius = Math.round(gap);
+        int margin = Math.max(2, Math.round(gap * .18f));
         for (int[] end : new int[][] {left, right}) {
             float distance = Math.abs(end[0] - head.centerX);
             if (distance < gap * .65f || distance > gap * 2.3f) continue;
@@ -9920,7 +9935,7 @@ final class OmrScoreInterpreter {
                 high = Math.max(high, span);
                 columns++;
             }
-            if (!valid || columns < gap * .65f || high - low > gap * .2f) continue;
+            if (!valid || columns < gap * .65f || high - low > Math.ceil(gap * .2f)) continue;
             // The short stroke must actually reach the already established stem.
             for (int x = finish; direction * (end[0] - x) >= 0; x += direction) {
                 int y = Math.round(head.centerY + slope * (x - head.centerX));

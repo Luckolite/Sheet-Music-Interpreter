@@ -228,6 +228,17 @@ public final class MusicalOcr {
             if (MeterDigitRecognizer.permitsDirect(direct, upperReadings))
                 return new MeterReading(direct, 2);
         }
+        String sparse =
+                MeterDigitRecognizer.readSparse(
+                        cleaned,
+                        cropWidth,
+                        cropHeight,
+                        middle - top,
+                        crop.gap(),
+                        upperReadings,
+                        lowerReadings,
+                        inference);
+        if (!sparse.isBlank()) return new MeterReading(sparse, 2);
         String single = MeterOcrEvidence.singleReading(readings);
         if (!single.isBlank()) return new MeterReading(single, 1);
         // Invalid numerals can be a context-dependent text OCR error. Require agreeing

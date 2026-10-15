@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition60 recovers optically proved approximate tempo equations, sparse meter
+digits, printed separators crossed by thin arcs, displaced short-bar boundaries,
+and key/meter courtesy tails. Secondary-beam rejection retains independent ink
+proof and image-edge bounds. Existing whole rests use proved short-meter context
+in silent lanes. Original synthetic controls accompany these global repairs.
+Guide287 layout is unchanged; audio93 invalidates prior playback. Android source
+compilation and private page checks do not establish deployed or whole-document
+musical accuracy.
+
 Recognition58 preserves proved parallel barlines and rejects pale flag roots
 supported only by a raster-quantized staff line. Original geometric regressions
 retain numeral, branching, separated-ink and actual-flag controls. Guide287 stays

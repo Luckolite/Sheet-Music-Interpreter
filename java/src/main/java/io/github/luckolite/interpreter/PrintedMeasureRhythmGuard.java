@@ -20,6 +20,7 @@ final class PrintedMeasureRhythmGuard {
         raw = rejectOverlappingRows(raw);
         fitted = rejectOverlappingRows(fitted);
         fitted = preservePrintedBoundaries(raw, fitted, gray, width, height);
+        fitted = preserveShiftedBoundary(raw, fitted, gray, width, height);
         fitted = rejectUnprintedRows(raw, fitted, labels, gray, width, height);
         fitted = preserveFinalRestRow(raw, fitted, labels, gray, width, height);
         final var guarded = fitted;
@@ -30,6 +31,41 @@ final class PrintedMeasureRhythmGuard {
         if (!split) return preserved;
         var aligned = alignPrintedSeparators(raw, preserved, notes, gray, width, height);
         return preserveCompleteRuns(raw, aligned, notes, gray, width, height);
+    }
+
+    /** Keep a proven printed separator when count fitting only shifted a two-bar division. */
+    static List<MeasureRegion> preserveShiftedBoundary(
+            List<MeasureRegion> raw,
+            List<MeasureRegion> fitted,
+            byte[] gray,
+            int width,
+            int height) {
+        if (gray == null || gray.length != (long) width * height) return fitted;
+        var result = new ArrayList<>(fitted);
+        for (int i = 0; i + 1 < raw.size(); i++) {
+            var a = raw.get(i);
+            var b = raw.get(i + 1);
+            if (!sameRow(a, b) || b.left() <= a.right() || b.left() - a.right() > .015f) continue;
+            float cut = (a.right() + b.left()) * .5f;
+            var joined = new MeasureRegion(a.left(), b.right(), a.top(), a.bottom());
+            for (int j = 0; j + 1 < result.size(); j++) {
+                var x = result.get(j);
+                var y = result.get(j + 1);
+                if (!sameRow(a, x)
+                        || !sameRow(a, y)
+                        || Math.abs(x.left() - a.left()) > .002f
+                        || Math.abs(y.right() - b.right()) > .002f
+                        || y.left() <= x.right()
+                        || y.left() - x.right() > .015f) continue;
+                float inferred = (x.right() + y.left()) * .5f;
+                if (Math.abs(inferred - cut) < .012f
+                        || !printedBarline(joined, cut, gray, width, height, true)
+                        || printedBarline(joined, inferred, gray, width, height, true)) continue;
+                result.set(j, a);
+                result.set(j + 1, b);
+            }
+        }
+        return List.copyOf(result);
     }
 
     /** A sole printed full-measure rest contradicts density-inferred final-row subdivisions. */
@@ -409,6 +445,11 @@ final class PrintedMeasureRhythmGuard {
 
     private static boolean printedBarline(
             MeasureRegion region, float cut, byte[] gray, int width, int height) {
+        return printedBarline(region, cut, gray, width, height, false);
+    }
+
+    private static boolean printedBarline(
+            MeasureRegion region, float cut, byte[] gray, int width, int height, boolean strict) {
         if (gray == null || gray.length != width * height) return true;
         int top = Math.max(0, Math.round(region.top() * height));
         int bottom = Math.min(height - 1, Math.round(region.bottom() * height));
@@ -416,7 +457,7 @@ final class PrintedMeasureRhythmGuard {
         for (int x = Math.max(0, center - radius); x <= Math.min(width - 1, center + radius); x++) {
             int ink = 0;
             for (int y = top; y <= bottom; y++) if ((gray[y * width + x] & 255) < 180) ink++;
-            if (ink > (bottom - top + 1) * .55f) return true;
+            if (!strict && ink > (bottom - top + 1) * .55f) return true;
         }
         // Duet/orchestral separators may stop at each staff instead of crossing
         // the intervening whitespace. Require complete columns on two actual
@@ -458,7 +499,15 @@ final class PrintedMeasureRhythmGuard {
                         for (int dx : new int[] {-reach, reach})
                             if (x + dx >= 0
                                     && x + dx < width
-                                    && (gray[y * width + x + dx] & 255) < 180) clean = false;
+                                    && (gray[y * width + x + dx] & 255) < 180
+                                    && !ThinBoundaryArc.proved(
+                                            gray,
+                                            width,
+                                            height,
+                                            x,
+                                            edge,
+                                            staff.gap(),
+                                            edge == a ? 1 : -1)) clean = false;
                     }
                 if (clean) return true;
             }
