@@ -945,7 +945,10 @@ public final class ScoreCreditsDetector {
     /** Select a prominent opening heading for conservative source-pixel word-gap analysis. */
     public static Line trackedHeadingWordSpaceCandidate(Page page) {
         if (page.creditsOnly || page.width <= 0 || page.height <= 0) return null;
-        float limit = page.notationTop > 0 ? page.notationTop : page.height * .62f;
+        float limit =
+                page.notationTop > 0 && !page.photographicCover
+                        ? page.notationTop
+                        : page.height * .62f;
         Line heading = chooseTitle("", page, page.lines, limit);
         if (heading == null
                 || heading.top > page.height * .2f

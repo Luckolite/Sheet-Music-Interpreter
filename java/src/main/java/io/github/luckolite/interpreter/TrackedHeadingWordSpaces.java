@@ -1,4 +1,3 @@
-// Copyright 2026 Luckolite
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
@@ -6,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** Recovers only word spaces from two stable ink projections of tracked uppercase text. */
+/** Recovers only word spaces from agreeing complete ink projections of tracked uppercase text. */
 public final class TrackedHeadingWordSpaces {
     private TrackedHeadingWordSpaces() {}
 
@@ -34,7 +33,15 @@ public final class TrackedHeadingWordSpaces {
             String first = project(letters, pixels, width, height, light, light ? 220 : 100);
             if (first == null) continue;
             String second = project(letters, pixels, width, height, light, light ? 235 : 140);
-            if (!first.equals(second)) continue;
+            if (!first.equals(second)) {
+                // Slightly muted light ink may vanish at the brightest threshold.
+                // Require three agreeing complete projections, never a differing read.
+                if (!light
+                        || second != null
+                        || !first.equals(project(letters, pixels, width, height, true, 200))
+                        || !first.equals(project(letters, pixels, width, height, true, 210)))
+                    continue;
+            }
             if (selected != null && !selected.equals(first)) return recognized;
             selected = first;
         }

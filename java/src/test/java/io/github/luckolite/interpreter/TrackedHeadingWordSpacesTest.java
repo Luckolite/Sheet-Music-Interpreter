@@ -1,4 +1,3 @@
-// Copyright 2026 Luckolite
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
@@ -46,12 +45,12 @@ public class TrackedHeadingWordSpacesTest {
     }
 
     @Test
-    public void unstableContrastDoesNotSupplyWordBoundaries() {
+    public void threeStableMutedProjectionsSupplyWordBoundaries() {
         var raster = draw("OVER THE SEA", true);
         for (int i = 0; i < raster.pixels.length; i++)
             if (raster.pixels[i] == 0xfffafafa) raster.pixels[i] = 0xffe4e4e4;
         assertEquals(
-                "OVERTHESEA",
+                "OVER THE SEA",
                 TrackedHeadingWordSpaces.refine("OVERTHESEA", raster.pixels, raster.width, 60));
     }
 
@@ -111,6 +110,37 @@ public class TrackedHeadingWordSpacesTest {
                 ScoreCreditsDetector.trackedHeadingWordSpaceCandidate(
                         new ScoreCreditsDetector.Page(
                                 1800, 2500, 400, List.of(later), true, false)));
+    }
+
+    @Test
+    public void lowerThresholdJoiningLettersRejectsMutedRepair() {
+        var raster = draw("OVER THE SEA", true);
+        for (int i = 0; i < raster.pixels.length; i++)
+            if (raster.pixels[i] == 0xfffafafa) raster.pixels[i] = 0xffe4e4e4;
+        for (int y = 10; y < 48; y++)
+            for (int x = 20; x < 32; x++) raster.pixels[y * raster.width + x] = 0xffcdcdcd;
+        assertEquals(
+                "OVERTHESEA",
+                TrackedHeadingWordSpaces.refine("OVERTHESEA", raster.pixels, raster.width, 60));
+    }
+
+    @Test
+    public void missingLetterAtBrightProjectionCannotBeInvented() {
+        var raster = draw("OVER THE SEA", true);
+        for (int y = 8; y < 52; y++)
+            for (int x = 0; x < 20; x++) raster.pixels[y * raster.width + x] = 0xffcdcdcd;
+        assertEquals(
+                "OVERTHESEA",
+                TrackedHeadingWordSpaces.refine("OVERTHESEA", raster.pixels, raster.width, 60));
+    }
+
+    @Test
+    public void photographicFalseStaffDoesNotClipTrackedHeading() {
+        var heading = new ScoreCreditsDetector.Line("OVERTHESEA", 450, 95, 1350, 160);
+        var photo = new ScoreCreditsDetector.Page(1800, 1013, 148, List.of(heading), false, true);
+        assertEquals(heading, ScoreCreditsDetector.trackedHeadingWordSpaceCandidate(photo));
+        var score = new ScoreCreditsDetector.Page(1800, 1013, 148, List.of(heading), false, false);
+        assertEquals(null, ScoreCreditsDetector.trackedHeadingWordSpaceCandidate(score));
     }
 
     private static String refine(String recognized, String inkText, boolean light) {

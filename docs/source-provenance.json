@@ -2090,16 +2090,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "54dc09c9addbed5a87e2a2191b0267cb7b396d0ff3e90ec2a0a0bc947529edac",
-      "source_normalized_sha256": "54dc09c9addbed5a87e2a2191b0267cb7b396d0ff3e90ec2a0a0bc947529edac",
+      "source_sha256": "91a0aee859a9c5ebfcbcbb9d6a3e414fb9fdbfc17e8a8534173e228862b4371a",
+      "source_normalized_sha256": "91a0aee859a9c5ebfcbcbb9d6a3e414fb9fdbfc17e8a8534173e228862b4371a",
       "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Committed paired same-work initial credit resolution. Full Java/Python checks and original synthetic ambiguity controls passed; Android scanner validation pending.",
+      "reviewed_source_state": "Committed paired photographic heading spacing repair. Full Java/Python and synthetic controls passed; actual Android scanner validation pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "9ea7040b207848a0c02a638c3c58ccab41d97150d1df45d9073472c99394493b",
+      "standalone_sha256": "a9e51dd9f75d59bf60b99176dd86ab64cf10441b01530e3f99188ab0d607a1ed",
       "license": "Apache-2.0",
-      "review_note": "Exact initials and surname need a unique full name and composer evidence for every associated work. Repeated independent score headings corroborate cover lists. Preserve ambiguous names, unrelated works and explicit roles. Original fictional regression headers; no private scores or person/title allowlists.",
-      "reviewed_app_commit": "6c07a518294809c9342b0a0d2d42f66a10495009",
-      "scoped_reviewed_app_commit": "6c07a518294809c9342b0a0d2d42f66a10495009"
+      "review_note": "Photographic false staff boundaries do not truncate heading nomination. Muted light ink requires three complete agreeing projections when the brightest threshold loses letters. Preserve recognized characters, ambiguous gaps and ordinary score boundaries; original synthetic controls only.",
+      "reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2",
+      "scoped_reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2223,15 +2223,16 @@
     },
     "TrackedHeadingWordSpaces.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/importer/TrackedHeadingWordSpaces.java",
-      "source_sha256": "0617073e4269d1944b8aa04c668eb6eef4ec5a2659d898b751962edaa1385bce",
-      "source_normalized_sha256": "0617073e4269d1944b8aa04c668eb6eef4ec5a2659d898b751962edaa1385bce",
+      "source_sha256": "057939f2265932ae88cd3505ed9546995ea5531aa852a516d9c636ecdf6cb42e",
+      "source_normalized_sha256": "057939f2265932ae88cd3505ed9546995ea5531aa852a516d9c636ecdf6cb42e",
       "reviewed_app_base_commit": "0010b05422ae0c517a0269860dbd1bd10c540bcd",
-      "reviewed_source_state": "Committed reviewed metadata source; exact executable-token parity after package/import/header and AOSP formatting adaptations.",
+      "reviewed_source_state": "Committed paired photographic heading spacing repair. Full Java/Python and synthetic controls passed; actual Android scanner validation pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TrackedHeadingWordSpaces.java",
-      "standalone_sha256": "9c61be1fb5147538ce77c1b3ebb1116e7659ca4d5bf75046822bbfbd942f8ab4",
+      "standalone_sha256": "0d51d8cf696c413cdc66c1e0fd0a84d5b782c832b1730800a3e8158f3891299c",
       "license": "Apache-2.0",
-      "review_note": "Two ink thresholds must agree on glyph count and gap classification; only whitespace may change. Ambiguous polarity, glyph counts or gaps retain the original string.",
-      "reviewed_app_commit": "8cca2e48cc3e71affe9ce1f873f076c4d83b89d7"
+      "review_note": "Photographic false staff boundaries do not truncate heading nomination. Muted light ink requires three complete agreeing projections when the brightest threshold loses letters. Preserve recognized characters, ambiguous gaps and ordinary score boundaries; original synthetic controls only.",
+      "reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2",
+      "scoped_reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2"
     },
     "PrintedServiceCreditMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/PrintedServiceCreditMarks.java",
