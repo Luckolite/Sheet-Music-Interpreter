@@ -4720,6 +4720,14 @@ public final class ScoreCreditsDetector {
                     });
         }
         // Resolved whole names no longer need role review; preserve mixed groups.
+        var initialAnchors = new ArrayList<RepeatedCredit>(repeatedCredits);
+        initialAnchors.addAll(inferredCredits);
+        var initialAssigned =
+                java.util.stream.Stream.of(artists, composers, arrangers, other)
+                        .flatMap(Set::stream)
+                        .toList();
+        other.removeIf(
+                value -> resolvedSameWorkInitial(value, pages, initialAnchors, initialAssigned));
         Set<String> reviewSpacingKeys = new LinkedHashSet<>();
         other.removeIf(value -> !reviewSpacingKeys.add(initialSpacingReviewKey(value)));
 
@@ -4814,6 +4822,104 @@ public final class ScoreCreditsDetector {
                 value ->
                         same(value, author)
                                 || subtitles.stream().anyMatch(subtitle -> same(value, subtitle)));
+    }
+
+    private static boolean initialCreditMatches(String abbreviation, String full) {
+        Matcher m =
+                Pattern.compile("^((?:\\p{L}\\.\\h*){1,4})([\\p{L}][\\p{L}'’ \\-]+)$")
+                        .matcher(clean(abbreviation));
+        if (!m.matches()) return false;
+        String initials = m.group(1).replaceAll("[.\\h]", "");
+        String[] words = clean(full).split("\\h+");
+        if (words.length != initials.length() + 1 || !same(words[words.length - 1], m.group(2)))
+            return false;
+        for (int i = 0; i < initials.length(); i++)
+            if (words[i].length() < 2
+                    || words[i].contains(".")
+                    || Character.toLowerCase(words[i].charAt(0))
+                            != Character.toLowerCase(initials.charAt(i))) return false;
+        return true;
+    }
+
+    private static boolean resolvedSameWorkInitial(
+            String value, List<Page> pages, List<RepeatedCredit> anchors, List<String> assigned) {
+        var matches =
+                assigned.stream()
+                        .filter(n -> initialCreditMatches(value, n))
+                        .map(n -> clean(n).toLowerCase(Locale.ROOT))
+                        .distinct()
+                        .toList();
+        if (matches.size() != 1) return false;
+        String full = matches.get(0);
+        boolean witnessed = false;
+        for (Page page : pages) {
+            for (Line line : page.lines) {
+                if (!initialSpacingReviewKey(line.text).equals(initialSpacingReviewKey(value)))
+                    continue;
+                String work = "";
+                if (page.notationTop > 0 && inCreditHeader(page, line)) {
+                    Line title = chooseTitle("", page, page.lines, page.notationTop);
+                    if (title != null && title != line && title.top <= line.top) work = title.text;
+                } else if (collectionListEntry(page, line, page.lines)
+                        || page.notationTop <= 0 && repeatedScoreWorkCaptions(page, anchors)) {
+                    var preceding =
+                            page.lines.stream()
+                                    .filter(
+                                            l ->
+                                                    l != line
+                                                            && l.top < line.top
+                                                            && l.bottom
+                                                                    <= line.top
+                                                                            + line.height() * .2f
+                                                            && line.top - l.bottom
+                                                                    <= Math.max(
+                                                                                    l.height(),
+                                                                                    line.height())
+                                                                            * 1.5f
+                                                            && l.right > line.left
+                                                            && l.left < line.right
+                                                            && credit(l.text) == null)
+                                    .sorted(Comparator.comparingDouble(Line::bottom).reversed())
+                                    .toList();
+                    if (!preceding.isEmpty())
+                        work = clean(preceding.get(0).text).replaceFirst("^[0-9]+\\h+", "");
+                }
+                final String workKey = work;
+                if (work.isEmpty()
+                        || anchors.stream()
+                                .noneMatch(
+                                        a ->
+                                                a.role == Role.COMPOSER
+                                                        && equivalentPartWork(a.work, workKey)
+                                                        && a.names.stream()
+                                                                .anyMatch(n -> same(n, full))))
+                    return false;
+                witnessed = true;
+            }
+        }
+        return witnessed;
+    }
+
+    /** Several independently identified score headings corroborate a cover's work list. */
+    private static boolean repeatedScoreWorkCaptions(Page page, List<RepeatedCredit> anchors) {
+        return anchors.stream()
+                        .filter(a -> a.role == Role.COMPOSER && !a.work.isEmpty())
+                        .map(a -> partWorkKey(a.work))
+                        .distinct()
+                        .filter(
+                                key ->
+                                        page.lines.stream()
+                                                .anyMatch(
+                                                        l ->
+                                                                partWorkKey(
+                                                                                clean(l.text)
+                                                                                        .replaceFirst(
+                                                                                                "^[0-9]+\\h+",
+                                                                                                ""))
+                                                                        .equals(key)))
+                        .limit(3)
+                        .count()
+                >= 3;
     }
 
     private static String initialSpacingReviewKey(String value) {

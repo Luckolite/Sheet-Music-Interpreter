@@ -2090,16 +2090,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "ba45e985c2049b05f048ff7afa0beff69eb15cd070f84c5704bbf8061db5f78f",
-      "source_normalized_sha256": "ba45e985c2049b05f048ff7afa0beff69eb15cd070f84c5704bbf8061db5f78f",
+      "source_sha256": "54dc09c9addbed5a87e2a2191b0267cb7b396d0ff3e90ec2a0a0bc947529edac",
+      "source_normalized_sha256": "54dc09c9addbed5a87e2a2191b0267cb7b396d0ff3e90ec2a0a0bc947529edac",
       "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Committed paired formal-work/key composer inference and literal transcription-service review routing. Full Java suite and original synthetic controls passed; Android scanner validation pending.",
+      "reviewed_source_state": "Committed paired same-work initial credit resolution. Full Java/Python checks and original synthetic ambiguity controls passed; Android scanner validation pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "2a3ef7e97b73aa1bdf748e1670f191105d972a97f7a99b4b3b06199ae3170898",
+      "standalone_sha256": "9ea7040b207848a0c02a638c3c58ccab41d97150d1df45d9073472c99394493b",
       "license": "Apache-2.0",
-      "review_note": "Keep geographic folk labels, explicit role conflicts, non-notation artwork and ordinary unlabelled song bylines out of contextual Composer inference. Transcription services with an organizational suffix remain review credits. No title/person allowlists or private score fixtures.",
-      "reviewed_app_commit": "c4be10d9163f6cac127949a0ac6fd1ce04c8ee66",
-      "scoped_reviewed_app_commit": "c4be10d9163f6cac127949a0ac6fd1ce04c8ee66"
+      "review_note": "Exact initials and surname need a unique full name and composer evidence for every associated work. Repeated independent score headings corroborate cover lists. Preserve ambiguous names, unrelated works and explicit roles. Original fictional regression headers; no private scores or person/title allowlists.",
+      "reviewed_app_commit": "6c07a518294809c9342b0a0d2d42f66a10495009",
+      "scoped_reviewed_app_commit": "6c07a518294809c9342b0a0d2d42f66a10495009"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
