@@ -1095,6 +1095,12 @@ public final class ScoreCreditsDetector {
                         || first.equals("an")
                         || first.equals("the"))
                 && !first.equals(next)) return false;
+        String oldStroke = normalizedBibliographicReading(before).replace('\u2019', '\'');
+        String newStroke = normalizedBibliographicReading(after).replace('\u2019', '\'');
+        // Repeated OCR cannot locate the dot that distinguishes an apostrophe from '!'.
+        // Keep that ambiguity for pixel-specific repair instead of changing punctuation alone.
+        if (!oldStroke.equals(newStroke)
+                && oldStroke.replace('!', '\'').equals(newStroke.replace('!', '\''))) return false;
         return !mixedHeadingQuotes(after) || mixedHeadingQuotes(before);
     }
 
@@ -4529,6 +4535,7 @@ public final class ScoreCreditsDetector {
                             || instructionalDocumentHeading(page, heading, lines)
                                     && paragraphLine(page, line, lines)
                             || staffCharacterDirection(page, line, lines, titleLimit)
+                            || mergedInstrumentTitleContinuation(page, heading, line, knownNames)
                             || line.height() >= heading.height() * .85f
                                     && !DATED_AUTHOR.matcher(clean(line.text)).matches()) continue;
                     String name = canonicalName(clean(line.text), knownNames);
@@ -6205,6 +6212,30 @@ public final class ScoreCreditsDetector {
                 || LEGAL.matcher(line.text).find()
                 || containsPrintedPhrase(pageTitle, line.text)) return false;
         return properReviewName(line.text);
+    }
+
+    /** An instrument sidebar merged into the title box can displace its continuation's center. */
+    private static boolean mergedInstrumentTitleContinuation(
+            Page page, Line heading, Line line, Set<String> knownNames) {
+        if (!page.photographicCover
+                || page.creditsOnly
+                || heading == null
+                || heading.right - heading.left < page.width * .85f
+                || !instrumentOrPlayLabel(clean(heading.text).split("\\h+", 2)[0])
+                || line.right - line.left < page.width * .5f
+                || line.height() < page.width * .06f
+                || line.height() < heading.height() * .5f
+                || line.top < heading.bottom
+                || line.top - heading.bottom > heading.height() * .6f
+                || line.bottom > page.height * .25f
+                || line.left < heading.left
+                || line.right > heading.right
+                || !clean(line.text).matches("[\\p{Lu}]{7,}")
+                || knownNames.stream().anyMatch(n -> same(n, line.text))
+                || page.reviewCredits.stream().anyMatch(r -> intersects(r.line, line)))
+            return false;
+        var credits = coverWorkCreditCandidates(page);
+        return credits.size() >= 3 && credits.stream().allMatch(c -> c.top > line.bottom);
     }
 
     /** A prominent photographed heading may continue in a tightly aligned vertical stack. */

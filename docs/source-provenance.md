@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Photographic anthology titles retain ambiguous punctuation rather than accepting a
+secondary OCR stroke swap. Repeated same-work credit readings can corroborate an
+unsupported accent without assigning roles or replacing independently supported
+variants. Synthetic layouts cover merged instrument/title rows and conflicting
+credit evidence. No model or interchange-format change.
+
 Repeated anthology work/name pairs retain literal contributor credits for review.
 Independent original-image rereads preserve accents and repeated printed variants
 without assigning roles. Original synthetic layouts cover list and reread boundaries.

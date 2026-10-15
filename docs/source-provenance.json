@@ -2091,16 +2091,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "8e89060b49f9397e1534ccdea242dd84c138317662e20b5609a8fe38bda28a12",
-      "source_normalized_sha256": "9334319d4e77d3a0ac91c557bfa71dead626156044f5a938a9c66e9ba8713fd5",
+      "source_sha256": "33aa7f35d5c058452d8fca1dd978647ea7d235a90226f1269e052936b6f00ab4",
+      "source_normalized_sha256": "978c62197aff2bf27c07e1407ed208b6880c882d3af88b7926da4dc87b437867",
       "reviewed_app_base_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335",
-      "reviewed_source_state": "Paired cover surnames and adjacent movement continuations retained for review. Numbered audio anthology caption plus repeated aligned work/name pairs required. Ten new synthetic cases and639 related tests pass; full native/desktop qualification pending.",
+      "reviewed_source_state": "Merged instrument/title continuations excluded from generic credits. Repeated same-work cover credits corroborate unsupported accents only with complete independent views; printed alternatives and assigned roles preserved. Title apostrophe/exclamation swaps require pixel-specific evidence. 913 related Java tests passed; native and paired deployment pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "05927e6e8838618350780f6745968fadddc3a764311ec10070c3e80016c4d491",
+      "standalone_sha256": "991600687bf38a5485e94ba91446099acdae1c70ee08df771ed179d38345736b",
       "license": "Apache-2.0",
-      "review_note": "Single-token OCR consensus is confined to proven cover credit lines. Existing multiword-name and role-assignment behavior preserved; no private score data or known-name lookup.",
-      "reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a",
-      "scoped_reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a"
+      "review_note": "Exact namespace-only port. Three original synthetic regression classes cover38 controls; no score scans, personal metadata, known-name lookup, models or format changes.",
+      "reviewed_app_commit": "64d1ce1d1ef82644089d13eff8cc8e8eeb54f5cd",
+      "scoped_reviewed_app_commit": "64d1ce1d1ef82644089d13eff8cc8e8eeb54f5cd"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2897,15 +2897,15 @@
     },
     "ReviewNameReadConsensus.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ReviewNameReadConsensus.java",
-      "source_sha256": "700bb5600eaf0e2bb6d61ebac819831e368ae12429e4e6ab677a56816b191833",
-      "source_normalized_sha256": "b66a54a15bf2bba920c85842974f8de6d6e09d7c535807fce235613e5097e96d",
+      "source_sha256": "785649b0514857368914b3810cd9cd2aeaa039b4dbd94bd7efd51f7ccd716e73",
+      "source_normalized_sha256": "4903f2966c7da822e0781fe52e8af76f7c914916ca6745e93aaf597776f5733a",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ReviewNameReadConsensus.java",
-      "standalone_sha256": "2d07c370ffa6bd1bd4e6ce37c412ae63a6831509edc79c06a066eb1cd42cacd3",
+      "standalone_sha256": "c69abc90bfe90dd8a2846ac23ef73c4cfd6edea5930227cb44205fd6c0743088",
       "license": "Apache-2.0",
-      "reviewed_source_state": "Paired cover surnames and adjacent movement continuations retained for review. Numbered audio anthology caption plus repeated aligned work/name pairs required. Ten new synthetic cases and639 related tests pass; full native/desktop qualification pending.",
-      "review_note": "Single-token OCR consensus is confined to proven cover credit lines. Existing multiword-name and role-assignment behavior preserved; no private score data or known-name lookup.",
-      "reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a",
-      "scoped_reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a"
+      "reviewed_source_state": "Merged instrument/title continuations excluded from generic credits. Repeated same-work cover credits corroborate unsupported accents only with complete independent views; printed alternatives and assigned roles preserved. Title apostrophe/exclamation swaps require pixel-specific evidence. 913 related Java tests passed; native and paired deployment pending.",
+      "review_note": "Exact namespace-only port. Three original synthetic regression classes cover38 controls; no score scans, personal metadata, known-name lookup, models or format changes.",
+      "reviewed_app_commit": "64d1ce1d1ef82644089d13eff8cc8e8eeb54f5cd",
+      "scoped_reviewed_app_commit": "64d1ce1d1ef82644089d13eff8cc8e8eeb54f5cd"
     },
     "MeterReflowEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterReflowEvidence.java",

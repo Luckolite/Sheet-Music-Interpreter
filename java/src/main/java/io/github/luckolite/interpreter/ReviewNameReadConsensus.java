@@ -213,6 +213,114 @@ public final class ReviewNameReadConsensus {
         }
     }
 
+    private static String accentBase(String text) {
+        return Normalizer.normalize(clean(text), Normalizer.Form.NFD)
+                .replaceAll("\\p{M}+", "")
+                .toUpperCase(Locale.ROOT);
+    }
+
+    /** A repeated literal work/name pair may corroborate an otherwise unsupported accent. */
+    private static String pairedWork(Proposal proposal) {
+        var page = proposal.source();
+        if (!ScoreCreditsDetector.coverWorkCreditCandidates(page).contains(proposal.line()))
+            return "";
+        var ordered =
+                page.lines().stream()
+                        .sorted(
+                                Comparator.comparingDouble(ScoreCreditsDetector.Line::top)
+                                        .thenComparingDouble(ScoreCreditsDetector.Line::left))
+                        .toList();
+        int index = ordered.indexOf(proposal.line());
+        if (index < 1) return "";
+        var work = ordered.get(index - 1);
+        String value = clean(work.text());
+        if (!value.codePoints().anyMatch(Character::isLowerCase)
+                || value.startsWith("(")
+                || value.length() < 4) return "";
+        return words(value);
+    }
+
+    private static boolean validProposal(List<ScoreCreditsDetector.Page> pages, Proposal p) {
+        return p.pageIndex() >= 0
+                && p.pageIndex() < pages.size()
+                && pages.get(p.pageIndex()).equals(p.source());
+    }
+
+    private static Selection repeatedAccentSelection(
+            List<ScoreCreditsDetector.Page> pages, List<Proposal> proposals, Proposal target) {
+        if (!validProposal(pages, target)
+                || select(target.readings(), true) != null
+                || !clean(target.line().text()).matches("[\\p{Lu}]{3,79}")
+                || target.source().reviewCredits().stream()
+                        .anyMatch(r -> r.line().equals(target.line()))) return null;
+        String work = pairedWork(target), base = accentBase(target.line().text());
+        if (work.isEmpty()) return null;
+        // Reuse complete-view validation without accepting a weak literal consensus.
+        var normalized = new ArrayList<ScoreHeaderReadConsensus.Reading>();
+        for (var r : target.readings()) {
+            if (r == null || r.text() == null) return null;
+            if (words(r.text()).equals(words(target.line().text()))) return null;
+            normalized.add(
+                    new ScoreHeaderReadConsensus.Reading(
+                            r.scale(),
+                            r.mode(),
+                            r.widthFactor(),
+                            accentBase(r.text()),
+                            r.confidence()));
+        }
+        var folded = select(normalized, true);
+        if (folded == null
+                || !folded.text().equals(base)
+                || normalized.stream()
+                                .filter(r -> r.text().equals(base) && r.confidence() >= .9)
+                                .count()
+                        < 11) return null;
+        var alternatives = new LinkedHashSet<String>();
+        for (var donor : proposals) {
+            if (!validProposal(pages, donor)
+                    || donor.pageIndex() == target.pageIndex()
+                    || !pairedWork(donor).equals(work)
+                    || !accentBase(donor.line().text()).equals(base)) continue;
+            var literal = select(donor.readings(), true);
+            if (literal == null
+                    || !accentBase(literal.text()).equals(base)
+                    || donor.readings().stream()
+                            .anyMatch(
+                                    r ->
+                                            r.confidence() < .9
+                                                    || !words(r.text())
+                                                            .equals(words(literal.text()))))
+                continue;
+            alternatives.add(literal.text().toUpperCase(Locale.ROOT));
+        }
+        if (alternatives.size() != 1) return null;
+        String replacement = alternatives.iterator().next();
+        return new Selection(replacement, target.readings());
+    }
+
+    private static ScoreCreditsDetector.Page replaceLiteral(
+            ScoreCreditsDetector.Page page, ScoreCreditsDetector.Line line, String text) {
+        return new ScoreCreditsDetector.Page(
+                page.width(),
+                page.height(),
+                page.notationTop(),
+                page.lines().stream()
+                        .map(
+                                l ->
+                                        l.equals(line)
+                                                ? new ScoreCreditsDetector.Line(
+                                                        text,
+                                                        l.left(),
+                                                        l.top(),
+                                                        l.right(),
+                                                        l.bottom())
+                                                : l)
+                        .toList(),
+                page.creditsOnly(),
+                page.photographicCover(),
+                page.reviewCredits());
+    }
+
     public static DocumentSelection selectDocument(
             String hint, List<ScoreCreditsDetector.Page> pages, List<Proposal> proposals) {
         var before = ScoreCreditsDetector.detect(hint, pages, Set.of());
@@ -252,6 +360,35 @@ public final class ReviewNameReadConsensus {
                                             ScoreCreditsDetector.coverWorkCreditCandidates(
                                                             selected.get(p.pageIndex()))
                                                     .contains(p.line())))));
+            if (!expected.equals(new LinkedHashSet<>(after.unclassifiedCredits()))) continue;
+            selected = candidate;
+            current = after;
+            accepted.add(p);
+        }
+        for (var p : proposals) {
+            var corroborated = repeatedAccentSelection(pages, proposals, p);
+            if (corroborated == null
+                    || accepted.contains(p)
+                    || !current.unclassifiedCredits().contains(corroborated.text())) continue;
+            var candidate = new ArrayList<>(selected);
+            candidate.set(
+                    p.pageIndex(),
+                    replaceLiteral(selected.get(p.pageIndex()), p.line(), corroborated.text()));
+            var after = ScoreCreditsDetector.detect(hint, candidate, Set.of());
+            if (!current.title().equals(after.title())
+                    || !current.artist().equals(after.artist())
+                    || !current.composer().equals(after.composer())
+                    || !current.arranger().equals(after.arranger())
+                    || !current.creditConflicts().equals(after.creditConflicts())) continue;
+            var expected = new LinkedHashSet<>(current.unclassifiedCredits());
+            String original = reviewCredit(p.line().text());
+            if (!expected.contains(original)) continue;
+            boolean stillPrinted =
+                    candidate.stream()
+                            .flatMap(page -> page.lines().stream())
+                            .anyMatch(line -> reviewCredit(line.text()).equals(original));
+            if (!stillPrinted) expected.remove(original);
+            expected.add(corroborated.text());
             if (!expected.equals(new LinkedHashSet<>(after.unclassifiedCredits()))) continue;
             selected = candidate;
             current = after;
