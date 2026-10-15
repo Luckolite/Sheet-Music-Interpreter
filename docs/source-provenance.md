@@ -2004,3 +2004,14 @@ matching first-page scanner adapter. No private images, OCR labels, model change
 or format changes are included. Java/Python tests and synthetic end-to-end smoke
 passed. A full native book scan verified the repaired title; broader native cover
 controls and paired worker deployment remain separate pending checks.
+
+## Photographic footer retention
+
+A simple isolated footer on the first photographic cover retains its printed
+literal for review. It uses the existing guarded footer reread, preventing
+general heading consensus from collapsing name boundaries. No contributor role
+is inferred. Six original synthetic regressions extend the existing footer
+controls; notation, legal captions and ambiguous layouts remain excluded.
+App commit `46debf2e9661a2a4cdd8dbb0673c145fb7577791` is paired. Java/Python
+tests and saved-input replay passed; native validation and matched desktop
+deployment remain pending. No private source images or models are included.

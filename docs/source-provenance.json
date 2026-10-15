@@ -2091,15 +2091,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "91a0aee859a9c5ebfcbcbb9d6a3e414fb9fdbfc17e8a8534173e228862b4371a",
-      "source_normalized_sha256": "91a0aee859a9c5ebfcbcbb9d6a3e414fb9fdbfc17e8a8534173e228862b4371a",
+      "source_sha256": "40159ecc8edf61d7bb23cb70205c30b28c537b365754468d21c62a5eaa8aedba",
+      "source_normalized_sha256": "fec08267ebc554b9d34707134582a56203753b59bd224bdcbbbde74b5ada99a3",
       "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Committed paired photographic heading spacing repair. Full Java/Python and synthetic controls passed; actual Android scanner validation pending.",
+      "reviewed_source_state": "Paired strict photographic-footer retention and synthetic regressions; Java/Python tests and frozen metadata replay passed. Native repaired-candidate validation remains pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "a9e51dd9f75d59bf60b99176dd86ab64cf10441b01530e3f99188ab0d607a1ed",
+      "standalone_sha256": "7e4ab041135f498b1733d1fd020b967c944ddbbd079aea72d5b2e6f25bb149cb",
       "license": "Apache-2.0",
-      "review_note": "Photographic false staff boundaries do not truncate heading nomination. Muted light ink requires three complete agreeing projections when the brightest threshold loses letters. Preserve recognized characters, ambiguous gaps and ordinary score boundaries; original synthetic controls only.",
-      "reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2",
+      "review_note": "Simple isolated first-cover footer literals retain guarded name consensus and review semantics on photographs. Such footers cannot enter general heading rereads that collapse word boundaries. Existing notation, legal-caption, geometry, ambiguity and identity guards remain; no role inference or models added.",
+      "reviewed_app_commit": "46debf2e9661a2a4cdd8dbb0673c145fb7577791",
       "scoped_reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2"
     },
     "CreditOcrIdentifierGuard.java": {

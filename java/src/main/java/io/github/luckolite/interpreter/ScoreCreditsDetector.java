@@ -545,7 +545,10 @@ public final class ScoreCreditsDetector {
                 || page.notationTop > 0 && !page.photographicCover
                 || page.width <= 0
                 || page.height <= 0) return List.of();
+        // A simple cover footer uses guarded name rereads, not title consensus.
+        List<Line> retainedFooters = coverFooterReviewCandidates(page);
         return page.lines.stream()
+                .filter(l -> !retainedFooters.contains(l))
                 .filter(
                         l ->
                                 l.top < page.height * (page.photographicCover ? .9f : .3f)
@@ -596,7 +599,6 @@ public final class ScoreCreditsDetector {
      */
     public static List<Line> coverFooterReviewCandidates(Page page) {
         if (page.creditsOnly
-                || page.photographicCover
                 || !Float.isFinite(page.notationTop)
                 || page.notationTop > 0
                 || !Float.isFinite(page.width)

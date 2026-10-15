@@ -224,13 +224,12 @@ public class CoverFooterReviewTest {
     }
 
     @Test
-    public void notationAndCreditsOnlyAndPhotographicPagesAbstain() {
+    public void notationAndCreditsOnlyPagesAbstain() {
         var p = page("ROWAN VALE");
         for (var q :
                 List.of(
                         new ScoreCreditsDetector.Page(1000, 1400, 280, p.lines()),
-                        new ScoreCreditsDetector.Page(1000, 1400, -1, p.lines(), true),
-                        new ScoreCreditsDetector.Page(1000, 1400, -1, p.lines(), false, true)))
+                        new ScoreCreditsDetector.Page(1000, 1400, -1, p.lines(), true)))
             assertTrue(ScoreCreditsDetector.coverFooterReviewCandidates(q).isEmpty());
     }
 
@@ -296,11 +295,14 @@ public class CoverFooterReviewTest {
     }
 
     @Test
-    public void photographicAndLongTitleResultsRemainExactlyUntouched() {
+    public void photographicFooterRepairPreservesAssignedRolesAndLongTitle() {
         var p = page("ROWAN H A RLS");
         var photo = new ScoreCreditsDetector.Page(1000, 1400, -1, p.lines(), false, true);
-        assertEquals(photo.lines(), merge(photo, "ROWAN HARIS"));
-        assertEquals(detect(photo), detect(withLines(photo, merge(photo, "ROWAN HARIS"))));
+        assertEquals("ROWAN HARIS", merge(photo, "ROWAN HARIS").get(1).text());
+        invariant(detect(photo), detect(withLines(photo, merge(photo, "ROWAN HARIS"))));
+        assertEquals(
+                List.of("ROWAN HARIS"),
+                detect(withLines(photo, merge(photo, "ROWAN HARIS"))).unclassifiedCredits());
         var longPage =
                 withLines(
                         p,
