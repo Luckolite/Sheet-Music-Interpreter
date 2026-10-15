@@ -81,4 +81,18 @@ public class PickupSourceProofTest {
     public void emptySourceRejectsProof() {
         new ScorePageInterpretation(List.of(), List.of()).withOpeningPickup(true);
     }
+
+    @Test
+    public void ordinaryEmptyContinuationDoesNotRequirePickupProof() {
+        var empty = new ScorePageInterpretation(List.of(), List.of(), 2);
+        assertFalse(empty.openingPickup());
+        assertEquals(2, empty.firstMeasureNumber());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void numberedContinuationCannotAcquireOpeningPickupProof() {
+        new ScorePageInterpretation(
+                        List.of(new MeasureRegion(.1f, .9f, .2f, .5f)), List.of(), 2)
+                .withOpeningPickup(true);
+    }
 }

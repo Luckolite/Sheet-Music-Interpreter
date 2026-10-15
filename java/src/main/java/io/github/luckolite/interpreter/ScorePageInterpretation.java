@@ -261,7 +261,7 @@ public record ScorePageInterpretation(
         if (slurSource.noteOrigins().size() != notes.size())
             throw new IllegalArgumentException("Slur identities do not match retained score notes");
         firstMeasureNumber = Math.max(0, firstMeasureNumber);
-        if (openingPickup && (firstMeasureNumber > 1 || measures.isEmpty()))
+        if (pickupConflictsWithOpening(openingPickup, firstMeasureNumber, measures))
             throw new IllegalArgumentException("Pickup proof conflicts with source opening");
         keyChanges = keyChanges == null ? List.of() : List.copyOf(keyChanges);
         tempoChanges = tempoChanges == null ? List.of() : List.copyOf(tempoChanges);
@@ -279,6 +279,11 @@ public record ScorePageInterpretation(
         for (var direction : playbackDirections)
             if (direction.measureBoundary() > measures.size())
                 throw new IllegalArgumentException("Playback direction is outside the page");
+    }
+
+    private static boolean pickupConflictsWithOpening(
+            boolean openingPickup, int firstMeasureNumber, List<?> measures) {
+        return openingPickup && (firstMeasureNumber > 1 || measures.isEmpty());
     }
 
     /** Each boundary belongs to the page containing the sign's incoming/outgoing bar. */

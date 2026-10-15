@@ -462,13 +462,13 @@
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
-      "source_sha256": "586e60cf5b001f19ec7565c83bf1e2480769bf366be9b0f9b7acdc663a8f26ea",
-      "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "source_normalized_sha256": "0f51d476b06476cbde089162ac6fc9e081da45e3c8bc96fc720453eb77480e93",
-      "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "standalone_sha256": "944009a0435614bc91028294084fe35cd4a01fd62bedfb340f1842e79f0f3562",
-      "review_note": "Retain independent opening-pickup proof in source identity and copy methods; legacy constructors default false.",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending."
+      "source_sha256": "7de53dbbf60d8d001dca2ab709fdbab398ba431d3cd9a309d0f2fc4b242b6c89",
+      "reviewed_app_commit": "e819bc7022cfe639c9050185651548a8f4f8146d",
+      "source_normalized_sha256": "7de53dbbf60d8d001dca2ab709fdbab398ba431d3cd9a309d0f2fc4b242b6c89",
+      "scoped_reviewed_app_commit": "e819bc7022cfe639c9050185651548a8f4f8146d",
+      "standalone_sha256": "a014ac6a826ceacb2696beff44cc844ec4fed4b2656ae5d5b6973af4e88b4fbc",
+      "review_note": "Extract the identical lazy opening-pickup conflict guard to avoid Android lint record analysis failure. Preserve every field, copy method, short-circuit condition, and rejected pickup state; add original synthetic continuation controls.",
+      "reviewed_source_state": "Reviewed semantic-only guard extraction in the scoped playback app commit. Public Java suite, Python suite, and synthetic PNG/PDF smoke pass; APK and paired deployment verification are recorded separately."
     },
     "ScoreRestEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestEvent.java",
