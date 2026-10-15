@@ -28,7 +28,7 @@ public final class ExpressiveDirectionText {
                     rule(Kind.RITARDANDO, "ritardando|ritard\\.?|rit\\.?"),
                     rule(Kind.RALLENTANDO, "rallentando|rallent\\.?|rall\\.?"),
                     rule(Kind.RITENUTO, "ritenuto|riten\\.?|rite\\.?"),
-                    rule(Kind.ACCELERANDO, "accelerando|accel\\.?"),
+                    rule(Kind.ACCELERANDO, "accelerando|accel\\.?|gradually\\s+faster"),
                     rule(Kind.A_TEMPO, "a\\s+tempo"),
                     rule(Kind.TEMPO_PRIMO, "tempo\\s+(?:primo|i)"),
                     rule(Kind.SAME_TEMPO, "l\\s*['’]?\\s*istesso\\s+tempo|istesso\\s+tempo"),
@@ -44,6 +44,7 @@ public final class ExpressiveDirectionText {
                     rule(
                             Kind.UNRESOLVED_DIRECTION,
                             "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"
+                                    + "|^\\s*(?:[mpf]{1,3}\\s+)?faster\\s*[-.!]*\\s*$"
                                     + "|scherzando|agitato|festoso|espressivo|dolce(?:\\s+e\\s+cantabile)?"
                                     + "|cantabile|con\\s+(?:brio|fuoco|anima)|tranquillo|grazioso"
                                     + "|giocoso|maestoso|appassionato|leggiero|free\\s+time|^\\s*(?:freely|gently)(?:\\s*(?:,|and)\\s*(?:freely|gently))*[.!]?\\s*$"));

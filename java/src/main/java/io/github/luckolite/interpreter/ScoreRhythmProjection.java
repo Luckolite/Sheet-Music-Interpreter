@@ -21,6 +21,13 @@ public final class ScoreRhythmProjection {
     }
 
     public static Map<Integer, Placement> resolve(
+            ScorePageInterpretation source, List<ScoreNoteEvent> selected, float beatsPerMeasure) {
+        try (var timing = ScoreNoteTiming.beginTimingSession(source)) {
+            return resolve(source.notes(), selected, beatsPerMeasure, source.meterChanges());
+        }
+    }
+
+    public static Map<Integer, Placement> resolve(
             List<ScoreNoteEvent> source,
             List<ScoreNoteEvent> selected,
             float beatsPerMeasure,

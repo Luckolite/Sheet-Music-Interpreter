@@ -11,7 +11,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export, articulation_export, ornament_export, grace_export, spelling_export
+from . import clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -233,7 +233,10 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     if full_measure:
         element(node, 'type', 'whole')
     else:
-        note_type(node, duration, event)
+        paired = event.get('retainedTremolo') if event else None
+        if paired and (grace is not None or stop or start or duration != event['end'] - event['start']):
+            raise ValueError('Paired tremolo requires an unsplit original endpoint')
+        note_type(node, duration * 2 if paired else duration, event)
     if grace is not None and node.find('type') is None:
         raise ValueError('Grace note has no exact written type')
     if event is not None and event_kind(event) == 'UNPITCHED':
@@ -242,8 +245,11 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     ornament_flags = event.get('retainedOrnamentFlags', 0) if event and attack_fragment else 0
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
-    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags:
+    paired = event.get('retainedTremolo') if event else None
+    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags or paired:
         notation = element(node, 'notations')
+        if paired and not chord:
+            element(element(notation, 'ornaments'), 'tremolo', paired['strokes'], type=paired['type'])
         for active, kind in ((stop, 'stop'), (start, 'start')):
             if active:
                 element(notation, 'tied', type=kind)
@@ -303,6 +309,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if rest_kind(row) == 'FULL_MEASURE':
                 full_measure_span(page, row)
     document = resolve_boundary_ties(document)
+    from .printed_tempo_spans import resolve_pages, preserve_end, SOURCE, GRADUAL
+    document = dict(document, pages=resolve_pages(document['pages']))
     from . import slur_export
     retained_slurs = slur_export.retained_spans(document['pages'])
     requested_slur_owners = {owner for _, a, b in retained_slurs for owner in (a, b)}
@@ -362,6 +370,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 literal_rests.append(dict(row, start=start, end=end))
         first_event = len(events)
         written = grace_export.plan(page, ticks)
+        paired_tremolos = tremolo_export.retained(page)
         for note_index, n in enumerate(page['events']):
             if event_kind(n) == 'PITCHED' and (not isinstance(n['midi'], int) or not 0 <= n['midi'] <= 127):
                 raise ValueError('MusicXML note pitch must be a MIDI integer in 0..127')
@@ -380,12 +389,13 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
                                retainedArticulations=articulation_export.retained(page, note_index),
                                retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
-                               retainedOrnamentFlags=ornament_export.retained(page, note_index)))
+                               retainedOrnamentFlags=ornament_export.retained(page, note_index),
+                               retainedTremolo=paired_tremolos.get(note_index)))
             if is_grace:
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
                                   stealPercent=placement['steal'], graceWrittenDuration=duration,
                                   principalSourceIdentity=first_event+placement['principal'])
-        from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal
+        from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal, _anchor
         def absolute(anchor):
             if anchor is None:
                 return None
@@ -415,6 +425,12 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             owned = [events[first_event+i] for i in members]
             if owned and all(not n.get('durationFallback', False) and n['start'] == owned[0]['start'] and n['end'] == owned[0]['end'] for n in owned):
                 mark['startTick'] = owned[0]['end'] if mark['kind'] in ('BREATH', 'CAESURA') else owned[0]['start']
+                local_starts = [0]
+                for duration in page['measureBeats']:
+                    local_starts.append(local_starts[-1] + duration)
+                resolved_start = _anchor((mark['startTick'] - offset) / DIVISIONS, local_starts)
+                if mark['kind'] in GRADUAL:
+                    mark['endTick'] = absolute(preserve_end(mark, resolved_start, page))
                 if mark['kind'] == 'FERMATA':
                     mark['endTick'] = owned[0]['end']
             elif mark.get('scope') == 'UNRESOLVED':
@@ -471,6 +487,17 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 targets[0]['gliss_stop'] = n['gliss_start']
         marks = sorted((m for m in expressions if m.get('scope') == 'SCORE' or same_staff(m)),
                        key=lambda m: (m['startTick'], 0 if m['kind'] == 'PEDAL_UP' else 1))
+        dash_numbers = {}
+        occupied = []
+        for mark in marks:
+            if mark['kind'] not in GRADUAL or mark.get('endTick') is None or mark['endTick'] <= mark['startTick'] or not any(e['sourceId'] == SOURCE for e in mark.get('evidence', [])):
+                continue
+            occupied = [(end, number) for end, number in occupied if end > mark['startTick']]
+            number = next((n for n in range(1, 17) if n not in {number for _, number in occupied}), None)
+            if number is None:
+                raise ValueError('Too many overlapping printed tempo extensions')
+            dash_numbers[mark['identity']] = number
+            occupied.append((mark['endTick'], number))
         rendered, rest_symbols = set(), []
         for mark in marks:
             if mark['kind'] not in ('FERMATA', 'BREATH', 'CAESURA'):
@@ -570,6 +597,14 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 if mark['identity'] not in rendered and (a <= mark['startTick'] < b
                         or index == len(bars)-1 and mark['kind'] == 'PEDAL_UP' and mark['startTick'] == b):
                     expression_direction(measure, mark, mark['startTick']-a)
+                    if mark['identity'] in dash_numbers:
+                        dash = element(measure, 'direction', placement='above')
+                        element(element(dash, 'direction-type'), 'dashes', type='start', number=str(dash_numbers[mark['identity']]))
+                        element(dash, 'offset', mark['startTick']-a)
+                if mark['identity'] in dash_numbers and (a <= mark['endTick'] < b or index == len(bars)-1 and mark['endTick'] == b):
+                    dash = element(measure, 'direction', placement='above')
+                    element(element(dash, 'direction-type'), 'dashes', type='stop', number=str(dash_numbers[mark['identity']]))
+                    element(dash, 'offset', mark['endTick']-a)
             present = [n for n in notes if not n.get('grace', False) and n['start'] < b and n['end'] > a]
             bar_rests = [r for r in silent if r['barIndex'] == index]
             voices = sorted({n['voice'] for n in present}) or ([] if bar_rests else [1])

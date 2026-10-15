@@ -12,6 +12,15 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+The combined source review includes printed tremolo ownership and timing, pedal
+columns, tempo spans, repeat/coda navigation, pickup clocks, bass-octave clefs,
+and raw-ink head, beam, rest, and staff-extent repairs. Desktop and standalone
+callers retain supplied meter/dynamic evidence and share the bounded unnumbered
+measure repair. Regressions use original geometry or bundled licensed glyphs;
+private score images and diagnostic state are excluded. Source hashes identify
+the reviewed app snapshot at `c0374eebf5c075b83813a66051faa22bcb431360`; paired deployment and
+whole-library accuracy acceptance remain pending.
+
 Photographic anthology titles retain ambiguous punctuation rather than accepting a
 secondary OCR stroke swap. Repeated same-work credit readings can corroborate an
 unsupported accent without assigning roles or replacing independently supported
@@ -1125,7 +1134,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260Ã¢â‚¬â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.

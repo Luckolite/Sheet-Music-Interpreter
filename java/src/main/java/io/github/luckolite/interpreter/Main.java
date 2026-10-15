@@ -152,14 +152,13 @@ public final class Main {
             double pickup = ScoreOpeningDuration.provedQuarterBeats(score, beats[0]);
             if (Double.isFinite(pickup)) beats[0] = (float) pickup;
             double closing =
-                    ScoreOpeningDuration.provedClosingQuarterBeats(
-                            score.notes(), score.rests(), beats.length, beats[beats.length - 1]);
+                    ScoreOpeningDuration.provedClosingQuarterBeats(score, beats[beats.length - 1]);
             if (Double.isFinite(closing)) beats[beats.length - 1] = (float) closing;
         }
         double[] starts = new double[beats.length + 1];
         for (int i = 0; i < beats.length; i++) starts[i + 1] = starts[i] + beats[i];
         var events = new ArrayList<Map<String, Object>>();
-        try (var timing = ScoreNoteTiming.beginTimingSession()) {
+        try (var timing = ScoreNoteTiming.beginTimingSession(score)) {
             for (int noteIndex = 0; noteIndex < score.notes().size(); noteIndex++) {
                 var note = score.notes().get(noteIndex);
                 int bar = note.measureIndex();
@@ -262,6 +261,7 @@ public final class Main {
                     && clef != ScoreNoteEvent.CLEF_TREBLE
                     && clef != 22
                     && clef != 24
+                    && clef != 25
                     && clef != 37)
                 throw new IOException("Unpitched display clef must be a supported retained clef");
             long display = (long) clef + note.staffStep();

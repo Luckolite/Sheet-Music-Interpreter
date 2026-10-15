@@ -69,4 +69,22 @@ final class GlyphResources {
     static PrintedExpressionGlyphs expressions() {
         return ExpressionHolder.INSTANCE;
     }
+
+    private static final class PedalHolder {
+        static final PrintedPedalGlyphs INSTANCE = create();
+
+        private static PrintedPedalGlyphs create() {
+            try (var input =
+                    GlyphResources.class.getResourceAsStream("glyphs/pedal_templates/glyphs.bin")) {
+                if (input == null) throw new IOException("Missing pedal templates");
+                return PrintedPedalGlyphs.load(input);
+            } catch (IOException error) {
+                throw new IllegalStateException("Cannot load pedal templates", error);
+            }
+        }
+    }
+
+    static PrintedPedalGlyphs pedals() {
+        return PedalHolder.INSTANCE;
+    }
 }

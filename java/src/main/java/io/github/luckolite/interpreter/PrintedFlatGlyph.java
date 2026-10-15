@@ -8,6 +8,22 @@ final class PrintedFlatGlyph {
 
     static boolean matches(
             byte[] gray, int w, int h, int left, int top, int right, int bottom, float gap) {
+        return matchesAt(gray, w, h, left, top, right, bottom, gap, 165, false)
+                || matchesAt(gray, w, h, left, top, right, bottom, gap, 225, true);
+    }
+
+    /** Pale spines still require a dark bowl and every original shape constraint. */
+    private static boolean matchesAt(
+            byte[] gray,
+            int w,
+            int h,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap,
+            int normal,
+            boolean faded) {
         if (gray == null
                 || right < left
                 || bottom < top
@@ -27,7 +43,7 @@ final class PrintedFlatGlyph {
                         top - Math.round(gap),
                         right + Math.round(gap),
                         bottom + Math.round(gap),
-                        165);
+                        normal);
         int extended = top;
         for (int x = left; x <= left + (right - left) * .4f; x++) {
             if (!dark(gray, w, x, top, inkLimit)) continue;
@@ -63,7 +79,7 @@ final class PrintedFlatGlyph {
         if (best < hh * .78f) return false;
         int start = Math.max(spine + Math.round(gap * .3f), left + Math.round(ww * .6f));
         if (start > right) return false;
-        int upper = 0, bowl = 0, tail = 0, clear = 0;
+        int upper = 0, bowl = 0, tail = 0, clear = 0, darkBowl = 0;
         boolean ruleWithinSource = left - gap >= 0 && right + gap < w;
         int leftRuleX = ruleWithinSource ? Math.round(left - gap) : 0;
         int rightRuleX = ruleWithinSource ? Math.round(right + gap) : 0;
@@ -82,6 +98,13 @@ final class PrintedFlatGlyph {
                     ink = true;
                     break;
                 }
+            if (faded && y >= upperEnd && y <= tailStart) {
+                for (int x = start; x <= right; x++)
+                    if (dark(gray, w, x, y, Math.min(165, inkLimit))) {
+                        darkBowl++;
+                        break;
+                    }
+            }
             if (ink) {
                 if (y < upperEnd) upper++;
                 else if (y > tailStart) tail++;
@@ -91,7 +114,11 @@ final class PrintedFlatGlyph {
                 for (int x = clearColumn; x < start; x++)
                     if (!dark(gray, w, x, y, inkLimit)) clear++;
         }
-        return upper <= hh * .08f && tail <= 1 && bowl >= hh * .18f && clear >= 3;
+        return upper <= hh * .08f
+                && tail <= 1
+                && bowl >= hh * .18f
+                && clear >= 3
+                && (!faded || darkBowl >= hh * .18f);
     }
 
     private static boolean dark(byte[] gray, int w, int x, int y, int inkLimit) {

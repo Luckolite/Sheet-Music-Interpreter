@@ -18,7 +18,58 @@ public record ScorePageInterpretation(
         List<ScorePlaybackDirection> playbackDirections,
         List<ScoreExpressiveEvent> expressiveEvents,
         ScoreSlurSource slurSource,
-        boolean openingPickup) {
+        boolean openingPickup,
+        ScoreTremoloSource tremoloSource) {
+    /** Legacy constructors carry no paired tremolo source. */
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int first,
+            List<ScoreKeyChange> keys,
+            List<ScoreTempoChange> tempos,
+            List<ScoreMeterChange> meters,
+            List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniques,
+            List<ScoreDynamicChange> dynamics,
+            List<ScorePlaybackDirection> directions,
+            List<ScoreExpressiveEvent> expressions,
+            ScoreSlurSource slurs,
+            boolean pickup) {
+        this(
+                measures,
+                notes,
+                first,
+                keys,
+                tempos,
+                meters,
+                rests,
+                techniques,
+                dynamics,
+                directions,
+                expressions,
+                slurs,
+                pickup,
+                ScoreTremoloSource.empty(notes == null ? 0 : notes.size()));
+    }
+
+    public ScorePageInterpretation withTremoloSource(ScoreTremoloSource source) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                openingPickup,
+                source);
+    }
+
     /** Legacy callers do not carry independent opening-number proof. */
     public ScorePageInterpretation(
             List<MeasureRegion> measures,
@@ -63,7 +114,8 @@ public record ScorePageInterpretation(
                 playbackDirections,
                 expressiveEvents,
                 slurSource,
-                proof);
+                proof,
+                tremoloSource);
     }
 
     public ScorePageInterpretation(
@@ -107,7 +159,8 @@ public record ScorePageInterpretation(
                 playbackDirections,
                 expressiveEvents,
                 source,
-                openingPickup);
+                openingPickup,
+                tremoloSource);
     }
 
     /** Explicit source owners preserve original printed endpoints through a note edit. */
@@ -128,7 +181,8 @@ public record ScorePageInterpretation(
                 playbackDirections,
                 expressiveEvents,
                 slurSource.edited(sourceOwners),
-                openingPickup);
+                openingPickup,
+                tremoloSource.edited(sourceOwners));
     }
 
     public ScorePageInterpretation(
@@ -183,7 +237,8 @@ public record ScorePageInterpretation(
                 directions,
                 expressiveEvents,
                 slurSource,
-                openingPickup);
+                openingPickup,
+                tremoloSource);
     }
 
     public ScorePageInterpretation withExpressiveEvents(List<ScoreExpressiveEvent> events) {
@@ -200,7 +255,8 @@ public record ScorePageInterpretation(
                 playbackDirections,
                 events,
                 slurSource,
-                openingPickup);
+                openingPickup,
+                tremoloSource);
     }
 
     public ScorePageInterpretation(
@@ -258,6 +314,10 @@ public record ScorePageInterpretation(
         measures = measures == null ? List.of() : List.copyOf(measures);
         notes = notes == null ? List.of() : List.copyOf(notes);
         java.util.Objects.requireNonNull(slurSource);
+        java.util.Objects.requireNonNull(tremoloSource);
+        if (tremoloSource.noteOrigins().size() != notes.size())
+            throw new IllegalArgumentException(
+                    "Tremolo identities do not match retained score notes");
         if (slurSource.noteOrigins().size() != notes.size())
             throw new IllegalArgumentException("Slur identities do not match retained score notes");
         firstMeasureNumber = Math.max(0, firstMeasureNumber);
@@ -305,7 +365,7 @@ public record ScorePageInterpretation(
                                     : boundary >= firstMeasure && boundary < measureAfterLast;
                         })
                 .map(change -> change.offset(-firstMeasure))
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 
     /** Retain each expression once, preserving source identities and full cross-page endpoints. */
@@ -357,6 +417,6 @@ public record ScorePageInterpretation(
                                 change.measureIndex() >= firstMeasure
                                         && change.measureIndex() < measureAfterLast)
                 .map(change -> change.offset(-firstMeasure))
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 }

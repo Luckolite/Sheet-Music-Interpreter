@@ -72,6 +72,7 @@ final class SixteenthRestDetector {
             List<Staff> staffs,
             List<ScoreNoteEvent> notes,
             List<ScoreNoteEvent> classificationNotes) {
+        staffs = printedRestFrames(gray, width, height, staffs);
         Detection baseline = detectWithDotsReleased(gray, width, height, measures, staffs, notes);
         List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
         List<RestDot> dots = new ArrayList<>(baseline.dots());
@@ -119,6 +120,50 @@ final class SixteenthRestDetector {
                 measures,
                 staffs,
                 classificationNotes);
+    }
+
+    /** Keep rest masks aligned to five actual raster rules, independently of pitch fitting. */
+    private static List<Staff> printedRestFrames(
+            byte[] gray, int width, int height, List<Staff> staffs) {
+        if (gray == null || gray.length != (long) width * height || staffs == null) return staffs;
+        var printed = RawStaffLineDetector.detect(gray, width, height);
+        var result = new ArrayList<Staff>();
+        for (var staff : staffs) {
+            if (staff.pitchTrack() != null) {
+                result.add(staff);
+                continue;
+            }
+            RawStaffLineDetector.StaffLines match = null;
+            boolean ambiguous = false;
+            for (var candidate : printed) {
+                if (Math.abs(candidate.gap() - staff.gap()) > staff.gap() * .05f
+                        || Math.abs(candidate.top() - staff.top()) > staff.gap() * .15f
+                        || Math.abs(candidate.bottom() - staff.bottom()) > staff.gap() * .15f)
+                    continue;
+                boolean complete = true;
+                for (int y : candidate.rows()) {
+                    int ink = 0;
+                    for (int x = 0; x < width; x++) if ((gray[y * width + x] & 255) < 170) ink++;
+                    if (ink < Math.max(24, width * .25f)) complete = false;
+                }
+                if (!complete) continue;
+                if (match != null) {
+                    ambiguous = true;
+                    break;
+                }
+                match = candidate;
+            }
+            result.add(
+                    match == null || ambiguous
+                            ? staff
+                            : new Staff(
+                                    match.top(),
+                                    match.bottom(),
+                                    match.gap(),
+                                    staff.index(),
+                                    staff.count()));
+        }
+        return List.copyOf(result);
     }
 
     private static Detection detectWithDotsReleased(

@@ -252,7 +252,7 @@ final class ClosedHeadBarlineGuard {
                 rowRight[y] = Math.max(rowRight[y], x);
             }
             int m = (ph - 1) / 2, e = Math.max(0, Math.round(ph * .15f));
-            if (Math.max(
+            if (Math.min(
                             (rowLeft[e] + rowLeft[ph - 1 - e]) * .5f - rowLeft[m],
                             rowRight[m] - (rowRight[e] + rowRight[ph - 1 - e]) * .5f)
                     < .5f) continue;

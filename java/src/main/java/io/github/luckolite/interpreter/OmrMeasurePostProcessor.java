@@ -252,6 +252,57 @@ final class OmrMeasurePostProcessor {
                     result.remove(other);
             }
         }
+        for (int index = 0; index < result.size(); index++) {
+            var staff = result.get(index);
+            int printedLeft =
+                    PrintedStaffExtent.left(
+                            gray,
+                            width,
+                            height,
+                            staff.left,
+                            staff.right,
+                            staff.gap,
+                            (line, x) ->
+                                    staff.track == null
+                                            ? staff.top
+                                                    + line * staff.gap
+                                                    + staff.slope * (x - width * .5f)
+                                            : staff.track.at(x)[0]
+                                                    - (4 - line) * staff.track.at(x)[1]);
+            int printedRight =
+                    PrintedStaffExtent.right(
+                            gray,
+                            width,
+                            height,
+                            staff.left,
+                            staff.right,
+                            staff.gap,
+                            (line, x) ->
+                                    staff.track == null
+                                            ? staff.top
+                                                    + line * staff.gap
+                                                    + staff.slope * (x - width * .5f)
+                                            : staff.track.at(x)[0]
+                                                    - (4 - line) * staff.track.at(x)[1]);
+            if (printedLeft <= staff.left && printedRight >= staff.right) continue;
+            var boundaries = new ArrayList<Integer>();
+            boundaries.add(printedLeft);
+            for (int b : staff.boundaries)
+                if (b > printedLeft && b < printedRight) boundaries.add(b);
+            boundaries.add(printedRight);
+            if (boundaries.size() >= 2)
+                result.set(
+                        index,
+                        new StaffRun(
+                                staff.top,
+                                staff.bottom,
+                                staff.gap,
+                                printedLeft,
+                                printedRight,
+                                List.copyOf(boundaries),
+                                staff.slope,
+                                staff.track));
+        }
         var admission = new java.util.IdentityHashMap<StaffRun, PrintedStaffAdmission.Evidence>();
         float firstPrinted = Float.POSITIVE_INFINITY, lastPrinted = Float.NEGATIVE_INFINITY;
         for (StaffRun staff : result) {
@@ -1083,6 +1134,9 @@ final class OmrMeasurePostProcessor {
             int right,
             float slope,
             StaffPitchTrack track) {
+        var repeatColumns =
+                PrintedRepeatGlyphs.provedColumns(
+                        gray, width, height, seedRows[0], seedRows[4], gap);
         float centerX = width / 2f;
         int span = Math.max(1, Math.round(seedRows[4] - seedRows[0] + gap * 0.5f));
         List<Integer> candidates = new ArrayList<>();
@@ -1277,7 +1331,9 @@ final class OmrMeasurePostProcessor {
                                 Math.round(rows[0] + shift),
                                 Math.round(rows[4] + shift),
                                 gap);
-            boolean bar = semanticBar && !attachedHead;
+            boolean bar =
+                    semanticBar
+                            && (!attachedHead || rawColumn >= 0 && repeatColumns.get(rawColumn));
             if (bar && !inRun) {
                 inRun = true;
                 runStart = x;
@@ -1533,10 +1589,23 @@ final class OmrMeasurePostProcessor {
     /** A harmonic diamond may be classed as SYMBOL while its long stem looks like a barline. */
     private static boolean symbolHeadTouchesColumn(
             byte[] labels, int width, int height, int x, int top, int bottom, float gap) {
-        int left = Math.max(0, x - Math.round(gap * 1.7f));
-        int right = Math.min(width - 1, x + Math.round(gap * .5f));
-        int first = Math.max(0, top - Math.round(gap * .6f));
-        int last = Math.min(height - 1, bottom + Math.round(gap * 1.7f));
+        return symbolHeadTouchesColumn(labels, width, height, x, top, bottom, gap, false)
+                || symbolHeadTouchesColumn(labels, width, height, x, top, bottom, gap, true);
+    }
+
+    private static boolean symbolHeadTouchesColumn(
+            byte[] labels,
+            int width,
+            int height,
+            int x,
+            int top,
+            int bottom,
+            float gap,
+            boolean downStem) {
+        int left = Math.max(0, x - Math.round(gap * (downStem ? .5f : 1.7f)));
+        int right = Math.min(width - 1, x + Math.round(gap * (downStem ? 1.9f : .5f)));
+        int first = Math.max(0, top - Math.round(gap * (downStem ? 2.2f : .6f)));
+        int last = Math.min(height - 1, bottom + Math.round(gap * (downStem ? .6f : 1.7f)));
         int localWidth = right - left + 1, localHeight = last - first + 1;
         boolean[] seen = new boolean[localWidth * localHeight];
         int[] queue = new int[seen.length];
@@ -1588,8 +1657,8 @@ final class OmrMeasurePostProcessor {
                     && h >= gap * .55f
                     && h <= gap * 1.5f
                     && area >= gap * gap * .32f
-                    && (minY + maxY) * .5f >= top - gap * .5f
-                    && (minY + maxY) * .5f <= bottom + gap * 1.5f) return true;
+                    && (minY + maxY) * .5f >= top - gap * (downStem ? 1.7f : .5f)
+                    && (minY + maxY) * .5f <= bottom + gap * (downStem ? .5f : 1.5f)) return true;
         }
         return false;
     }
@@ -1751,7 +1820,8 @@ final class OmrMeasurePostProcessor {
         int span = bottom - top + 1;
         if (!(touchesTop && touchesBottom && darkRows >= span * .68f && longest >= span * .48f))
             return Integer.MIN_VALUE;
-        if (stackedFourCounters(gray, width, height, centerX, top, bottom, gap)
+        if (RoundedMeterCounters.matches(gray, width, height, centerX, top, bottom, gap)
+                || stackedFourCounters(gray, width, height, centerX, top, bottom, gap)
                 || (threeOverFourCounters(gray, width, height, centerX, top, bottom, gap)
                         && !ParallelStaffRules.proved(
                                 gray, width, height, centerX, top, bottom, gap)))

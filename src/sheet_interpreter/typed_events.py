@@ -19,7 +19,7 @@ def validate_unpitched(event):
     if type(event.get('displayOctave')) is not int or not 0 <= event['displayOctave'] <= 9:
         raise ValueError('Unpitched display octave must be 0..9')
     if ('clefBottomDiatonic' in event and (type(event['clefBottomDiatonic']) is not int
-            or event['clefBottomDiatonic'] not in (18, 22, 24, 30, 37))):
+            or event['clefBottomDiatonic'] not in (18, 22, 24, 25, 30, 37))):
         raise ValueError('Unpitched display clef must be a supported retained clef')
     if any(field in event for field in ('midi', 'boundaryPitch', 'boundaryAccidental', 'upperMidi', 'lowerMidi', 'frequency')):
         raise ValueError('An unpitched event must not carry a tonal pitch identity')

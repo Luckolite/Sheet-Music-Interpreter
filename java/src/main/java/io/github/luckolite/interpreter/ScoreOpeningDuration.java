@@ -14,17 +14,20 @@ public final class ScoreOpeningDuration {
     /** All source consumers share the same independently proved opening clock. */
     public static double provedQuarterBeats(ScorePageInterpretation source, float nominal) {
         if (source == null) return Double.NaN;
-        double silent =
-                provedNumberedSilentPickup(
-                        source.notes(), source.rests(), nominal, source.openingPickup());
-        return Double.isFinite(silent)
-                ? silent
-                : provedQuarterBeats(
-                        source.notes(),
-                        source.rests(),
-                        source.measures(),
-                        nominal,
-                        source.firstMeasureNumber());
+        try (var session = ScoreNoteTiming.beginTimingSession(source)) {
+            double silent =
+                    provedNumberedSilentPickup(
+                            source.notes(), source.rests(), nominal, source.openingPickup());
+            return Double.isFinite(silent)
+                    ? silent
+                    : provedQuarterBeats(
+                            source.notes(),
+                            source.rests(),
+                            source.measures(),
+                            nominal,
+                            source.firstMeasureNumber(),
+                            source.openingPickup());
+        }
     }
 
     /** Silent pickups require independent numbering proof and explicit rests on every staff. */
@@ -41,7 +44,9 @@ public final class ScoreOpeningDuration {
                 || notes.stream().anyMatch(n -> n != null && n.measureIndex() == 0))
             return Double.NaN;
         List<ScoreRestEvent> opening =
-                rests.stream().filter(r -> r != null && r.measureIndex() == 0).toList();
+                rests.stream()
+                        .filter(r -> r != null && r.measureIndex() == 0)
+                        .collect(java.util.stream.Collectors.toList());
         if (opening.isEmpty()) return Double.NaN;
         int count = opening.get(0).staffCount();
         if (count < 1 || count > 16) return Double.NaN;
@@ -75,6 +80,16 @@ public final class ScoreOpeningDuration {
             List<MeasureRegion> measures,
             float nominal,
             int firstMeasureNumber) {
+        return provedQuarterBeats(notes, rests, measures, nominal, firstMeasureNumber, false);
+    }
+
+    private static double provedQuarterBeats(
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> rests,
+            List<MeasureRegion> measures,
+            float nominal,
+            int firstMeasureNumber,
+            boolean numberedPickup) {
 
         if (firstMeasureNumber > 1
                 || notes == null
@@ -108,7 +123,15 @@ public final class ScoreOpeningDuration {
 
         if (width > widths.get(widths.size() / 2) * .5f) return Double.NaN;
 
-        return explicitSpan(notes, rests, 0, nominal, false);
+        return explicitSpan(notes, rests, 0, nominal, false, numberedPickup);
+    }
+
+    public static double provedClosingQuarterBeats(ScorePageInterpretation source, float nominal) {
+        if (source == null) return Double.NaN;
+        try (var session = ScoreNoteTiming.beginTimingSession(source)) {
+            return provedClosingQuarterBeats(
+                    source.notes(), source.rests(), source.measures().size(), nominal);
+        }
     }
 
     /** A shortened ending requires agreeing independent staves and explicit terminal rests. */
@@ -133,6 +156,16 @@ public final class ScoreOpeningDuration {
             int measure,
             float nominal,
             boolean terminal) {
+        return explicitSpan(notes, rests, measure, nominal, terminal, false);
+    }
+
+    private static double explicitSpan(
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> rests,
+            int measure,
+            float nominal,
+            boolean terminal,
+            boolean numberedPickup) {
 
         List<ScoreNoteEvent> opening =
                 notes.stream()
@@ -141,10 +174,12 @@ public final class ScoreOpeningDuration {
                                         n != null
                                                 && n.measureIndex() == measure
                                                 && (n.articulations() & NoteOrnament.GRACE) == 0)
-                        .toList();
+                        .collect(java.util.stream.Collectors.toList());
 
         List<ScoreRestEvent> silence =
-                rests.stream().filter(r -> r != null && r.measureIndex() == measure).toList();
+                rests.stream()
+                        .filter(r -> r != null && r.measureIndex() == measure)
+                        .collect(java.util.stream.Collectors.toList());
 
         if (opening.isEmpty()) return Double.NaN;
 
@@ -182,14 +217,19 @@ public final class ScoreOpeningDuration {
                     opening.stream()
                             .filter(n -> n.staffIndex() == lane)
                             .sorted(Comparator.comparingDouble(ScoreNoteEvent::positionInMeasure))
-                            .toList();
+                            .collect(java.util.stream.Collectors.toList());
 
             List<ScoreRestEvent> gaps =
-                    silence.stream().filter(r -> r.staffIndex() == lane).toList();
+                    silence.stream()
+                            .filter(r -> r.staffIndex() == lane)
+                            .collect(java.util.stream.Collectors.toList());
 
             if (voice.isEmpty() && gaps.isEmpty()) return Double.NaN;
             if (voice.isEmpty() && gaps.size() == 1 && gaps.get(0).isFullMeasure()) continue;
-            gaps = gaps.stream().filter(r -> !r.isFullMeasure()).toList();
+            gaps =
+                    gaps.stream()
+                            .filter(r -> !r.isFullMeasure())
+                            .collect(java.util.stream.Collectors.toList());
             if (voice.isEmpty() && gaps.isEmpty()) return Double.NaN;
 
             if (terminal) {
@@ -219,7 +259,7 @@ public final class ScoreOpeningDuration {
 
             for (ScoreNoteEvent note : voice) {
 
-                double duration = ScoreNoteTiming.writtenDurationBeats(note);
+                double duration = ScoreNoteTiming.advanceDurationBeats(note);
 
                 if (!Double.isFinite(duration) || duration <= 0) return Double.NaN;
 
@@ -250,8 +290,11 @@ public final class ScoreOpeningDuration {
                 }
             }
 
-            if (!voice.isEmpty() && gaps.isEmpty() && voice.get(0).positionInMeasure() < .4f)
-                return Double.NaN;
+            if (!numberedPickup
+                    && !voice.isEmpty()
+                    && gaps.isEmpty()
+                    && voice.get(0).positionInMeasure() < .4f
+                    && voice.stream().anyMatch(n -> !n.compactOpening())) return Double.NaN;
 
             if (Double.isFinite(span) && Math.abs(span - total) > .001) return Double.NaN;
 

@@ -281,13 +281,16 @@ final class PrintedSlurOwners {
             if (head.x() >= width || head.y() >= height) continue;
             double dx = Math.abs(head.x() - cap.x()) / gap;
             double clearance = (above ? head.y() - cap.y() : cap.y() - head.y()) / gap;
-            if (dx > 1.1 || clearance < -.2 || clearance > 8.5) continue;
+            if (dx > 1.1 || clearance < -.6 || clearance > 8.5) continue;
             boolean shaft = shaftSupports(cap, head, above, gray, width, height, gap, heads);
             boolean headEdge =
                     dx <= .85
                             && clearance <= 2
                             && (start ? cap.x() >= head.x() : cap.x() <= head.x())
                             && headBody(gray, width, height, head, gap);
+            // A slanted notehead rim can meet a returning bow above its center.
+            // Permit that overlap only with a proved adjacent head body.
+            if (clearance < -.2 && !headEdge) continue;
             if (dx > .45 && !shaft && !headEdge) continue;
             // A proved shaft or adjacent head edge owns the endpoint ahead of distant heads.
             double score =

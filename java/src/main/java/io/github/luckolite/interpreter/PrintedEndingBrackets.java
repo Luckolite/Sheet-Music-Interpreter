@@ -14,7 +14,20 @@ final class PrintedEndingBrackets {
             String text,
             float x,
             int staffIndex,
-            int staffCount) {}
+            int staffCount,
+            boolean openRight,
+            boolean precedingRoof) {
+        Mark(
+                int start,
+                int end,
+                List<Integer> passes,
+                String text,
+                float x,
+                int staffIndex,
+                int staffCount) {
+            this(start, end, passes, text, x, staffIndex, staffCount, false, false);
+        }
+    }
 
     private static final Pattern SELECTOR =
             Pattern.compile("\\d{1,3}\\.?\\s*(?:,\\s*\\d{1,3}\\.?\\s*)*");
@@ -100,50 +113,118 @@ final class PrintedEndingBrackets {
                         if (floor[x] - roof[x] + 1 <= Math.max(2, gap * .35f)) thin++;
                     }
                 if (straight < n * .98 || thin < n * .95) continue;
-                int hook = 0;
-                for (int x = 0; x < Math.min(w, Math.round(gap * .4f)); x++) {
+                var hooks = new ArrayList<Integer>();
+                var depths = new ArrayList<Integer>();
+                for (int x = 0; x < w; x++) {
                     int depth = floor[x] - (int) Math.round(slope * x + intercept);
-                    if (depth >= gap && count[x] >= depth * .85) hook = Math.max(hook, depth);
-                }
-                if (hook < gap) continue;
-                PlayingTechniqueDetector.Word matched = null;
-                List<Integer> passes = null;
-                boolean ambiguous = false;
-                for (var word : words) {
-                    var parsed = passes(word.text());
-                    if (parsed.isEmpty()) continue;
-                    float l = word.left() * width,
-                            r = word.right() * width,
-                            t = word.top() * height,
-                            b = word.bottom() * height;
-                    double roofY = top + first + slope * (l - left) + intercept;
-                    if (l < left - gap * .3f
-                            || l > left + 5 * gap
-                            || r >= right
-                            || t < roofY - gap * .3f
-                            || b > roofY + Math.min(4 * gap, hook)) continue;
-                    if (matched != null) {
-                        ambiguous = true;
-                        break;
+                    if (depth < gap || count[x] < depth * .85) continue;
+                    int begin = x, deepest = depth;
+                    while (x + 1 < w) {
+                        int nextDepth =
+                                floor[x + 1] - (int) Math.round(slope * (x + 1) + intercept);
+                        if (nextDepth < gap || count[x + 1] < nextDepth * .85) break;
+                        deepest = Math.max(deepest, nextDepth);
+                        x++;
                     }
-                    matched = word;
-                    passes = parsed;
+                    if (x - begin + 1 <= Math.max(2, gap * .4f)) {
+                        hooks.add(begin);
+                        depths.add(deepest);
+                    }
                 }
-                if (matched == null || ambiguous) continue;
-                int start =
-                        PrintedRepeatGlyphs.boundary(measures, staff, left, false, width, height);
-                int end = PrintedRepeatGlyphs.boundary(measures, staff, right, true, width, height);
-                if (start < 0 || end <= start) continue;
-                var mark =
-                        new Mark(
-                                start,
-                                end,
-                                passes,
-                                matched.text(),
-                                left / (float) width,
-                                staff.index(),
-                                staff.count());
-                if (!result.contains(mark)) result.add(mark);
+                for (int hookIndex = 0; hookIndex < hooks.size(); hookIndex++) {
+                    int origin = hooks.get(hookIndex);
+                    int limit = hookIndex + 1 < hooks.size() ? hooks.get(hookIndex + 1) : w - 1;
+                    if (limit - origin <= gap * 6) continue;
+                    int segmentLeft = left + origin, segmentRight = left + limit;
+                    int hook = depths.get(hookIndex);
+                    PlayingTechniqueDetector.Word matched = null;
+                    List<Integer> passes = null;
+                    boolean ambiguous = false;
+                    for (var word : words) {
+                        var parsed = passes(word.text());
+                        if (parsed.isEmpty()) continue;
+                        float l = word.left() * width,
+                                r = word.right() * width,
+                                t = word.top() * height,
+                                b = word.bottom() * height;
+                        double roofY = top + first + slope * (l - left) + intercept;
+                        if (l < segmentLeft - gap * .3f
+                                || l > segmentLeft + 5 * gap
+                                || r >= segmentRight
+                                || t < roofY - gap * .3f
+                                || b > roofY + Math.min(4 * gap, hook)) {
+                            // OCR boxes can include whitespace and the adjacent bracket stroke.
+                            // Retry only nearby selectors, using their ink outside this proved
+                            // roof.
+                            if (l < segmentLeft - gap
+                                    || l > segmentLeft + 5 * gap
+                                    || r >= segmentRight
+                                    || t < roofY - gap
+                                    || b > roofY + Math.min(4 * gap, hook) + gap) continue;
+                            int inkLeft = width,
+                                    inkRight = -1,
+                                    inkTop = height,
+                                    inkBottom = -1,
+                                    inkCount = 0;
+                            for (int yy = Math.max(0, (int) Math.floor(t));
+                                    yy < Math.min(height, (int) Math.ceil(b));
+                                    yy++) {
+                                for (int xx = Math.max(0, (int) Math.floor(l));
+                                        xx < Math.min(width, (int) Math.ceil(r));
+                                        xx++) {
+                                    if ((gray[yy * width + xx] & 255) >= 170) continue;
+                                    int rx = xx - left, ry = yy - top - first;
+                                    if (rx >= 0 && rx < w && ry >= roof[rx] && ry <= floor[rx])
+                                        continue;
+                                    inkLeft = Math.min(inkLeft, xx);
+                                    inkRight = Math.max(inkRight, xx);
+                                    inkTop = Math.min(inkTop, yy);
+                                    inkBottom = Math.max(inkBottom, yy);
+                                    inkCount++;
+                                }
+                            }
+                            if (inkCount < gap
+                                    || inkRight - inkLeft < gap * .25f
+                                    || inkBottom - inkTop < gap * .5f) continue;
+                            l = inkLeft;
+                            r = inkRight + 1;
+                            t = inkTop;
+                            b = inkBottom + 1;
+                            roofY = top + first + slope * (l - left) + intercept;
+                            if (l < segmentLeft
+                                    || l > segmentLeft + 5 * gap
+                                    || r >= segmentRight
+                                    || t < roofY
+                                    || b > roofY + Math.min(4 * gap, hook) + gap * .15f) continue;
+                        }
+                        if (matched != null) {
+                            ambiguous = true;
+                            break;
+                        }
+                        matched = word;
+                        passes = parsed;
+                    }
+                    if (matched == null || ambiguous) continue;
+                    int start =
+                            PrintedRepeatGlyphs.boundary(
+                                    measures, staff, segmentLeft, false, width, height);
+                    int end =
+                            PrintedRepeatGlyphs.boundary(
+                                    measures, staff, segmentRight, true, width, height);
+                    if (start < 0 || end <= start) continue;
+                    var mark =
+                            new Mark(
+                                    start,
+                                    end,
+                                    passes,
+                                    matched.text(),
+                                    segmentLeft / (float) width,
+                                    staff.index(),
+                                    staff.count(),
+                                    hookIndex + 1 == hooks.size(),
+                                    origin > gap * 6);
+                    if (!result.contains(mark)) result.add(mark);
+                }
             }
         }
         result.sort(Comparator.comparingInt(Mark::start).thenComparingInt(Mark::end));

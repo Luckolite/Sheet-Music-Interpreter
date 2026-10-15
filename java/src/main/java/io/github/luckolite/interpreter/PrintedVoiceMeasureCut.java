@@ -4,7 +4,9 @@ package io.github.luckolite.interpreter;
 
 import java.util.*;
 
-/** Locates a printed separator between two complete, inferred single-staff bars. */
+/** Locates a printed separator between inferred single-staff bars.
+ * Balanced written voices are preferred. Otherwise require a unique full-height,
+ * staff-terminated separator clear of every recognized head and between notes. */
 final class PrintedVoiceMeasureCut {
     static Float resolve(
             MeasureRegion region,
@@ -13,6 +15,18 @@ final class PrintedVoiceMeasureCut {
             byte[] gray,
             int w,
             int h) {
+        Float balanced = resolve(region, notes, measure, gray, w, h, false);
+        return balanced != null ? balanced : resolve(region, notes, measure, gray, w, h, true);
+    }
+
+    private static Float resolve(
+            MeasureRegion region,
+            List<ScoreNoteEvent> notes,
+            int measure,
+            byte[] gray,
+            int w,
+            int h,
+            boolean physicalOnly) {
         var voice =
                 notes.stream()
                         .filter(n -> n.measureIndex() == measure)
@@ -24,30 +38,32 @@ final class PrintedVoiceMeasureCut {
                                 n ->
                                         n.staffCount() != 1
                                                 || n.staffIndex() != 0
-                                                || n.leadingRestBeats() != 0
-                                                || n.followingRestBeats() != 0
+                                                || (!physicalOnly && n.leadingRestBeats() != 0)
+                                                || (!physicalOnly && n.followingRestBeats() != 0)
                                                 || (n.articulations() & NoteOrnament.GRACE) != 0))
             return null;
-        double total = 0;
-        float previous = -1;
-        for (var n : voice) {
-            if (n.positionInMeasure() - previous <= .018f) return null;
-            double d = ScoreNoteTiming.writtenDurationBeats(n);
-            if (!Double.isFinite(d) || d <= 0) return null;
-            total += d;
-            previous = n.positionInMeasure();
-        }
-        if (total < 2 || total > 32) return null;
-        double sum = 0;
         int at = -1;
-        for (int i = 0; i + 1 < voice.size(); i++) {
-            sum += ScoreNoteTiming.writtenDurationBeats(voice.get(i));
-            if (Math.abs(sum - total * .5) < .001) {
-                at = i;
-                break;
+        if (!physicalOnly) {
+            double total = 0;
+            float previous = -1;
+            for (var n : voice) {
+                if (n.positionInMeasure() - previous <= .018f) return null;
+                double d = ScoreNoteTiming.writtenDurationBeats(n);
+                if (!Double.isFinite(d) || d <= 0) return null;
+                total += d;
+                previous = n.positionInMeasure();
             }
+            if (total < 2 || total > 32) return null;
+            double sum = 0;
+            for (int i = 0; i + 1 < voice.size(); i++) {
+                sum += ScoreNoteTiming.writtenDurationBeats(voice.get(i));
+                if (Math.abs(sum - total * .5) < .001) {
+                    at = i;
+                    break;
+                }
+            }
+            if (at < 0) return null;
         }
-        if (at < 0) return null;
         int left = Math.max(0, Math.round(region.left() * w)),
                 right = Math.min(w - 1, Math.round(region.right() * w)),
                 top = Math.max(0, Math.round(region.top() * h)),
@@ -71,19 +87,46 @@ final class PrintedVoiceMeasureCut {
         float gap = staff.gap();
         float span = (region.right() - region.left()) * w;
         int from =
-                Math.max(
-                        left,
-                        Math.round(left + voice.get(at).positionInMeasure() * span + gap * .55f));
+                physicalOnly
+                        ? Math.round(left + gap * 2)
+                        : Math.max(
+                                left,
+                                Math.round(
+                                        left
+                                                + voice.get(at).positionInMeasure() * span
+                                                + gap * .55f));
         int to =
-                Math.min(
-                        right,
-                        Math.round(
-                                left + voice.get(at + 1).positionInMeasure() * span - gap * .55f));
+                physicalOnly
+                        ? Math.round(right - gap * 2)
+                        : Math.min(
+                                right,
+                                Math.round(
+                                        left
+                                                + voice.get(at + 1).positionInMeasure() * span
+                                                - gap * .55f));
         if (from > to) return null;
         List<Integer> hits = new ArrayList<>();
         StaffPitchTrack curve =
                 StaffPitchTrack.detectForSymbols(crop, cw, ch, staff.top(), staff.bottom(), gap);
         for (int x = from; x <= to; x++) {
+            if (physicalOnly) {
+                final int column = x;
+                if (voice.stream()
+                                .anyMatch(
+                                        n ->
+                                                Math.abs(
+                                                                left
+                                                                        + n.positionInMeasure()
+                                                                                * span
+                                                                        - column)
+                                                        < gap * .65f)
+                        || voice.stream()
+                                .noneMatch(n -> left + n.positionInMeasure() * span < column)
+                        || voice.stream()
+                                .noneMatch(n -> left + n.positionInMeasure() * span > column))
+                    continue;
+            }
+
             float[] local = curve == null ? new float[] {staff.bottom(), gap} : curve.at(x - left);
             float localTop = top + local[0] - 4 * local[1], localGap = local[1];
             int columnLimit =

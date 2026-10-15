@@ -106,6 +106,7 @@ public final class TabTempo {
                 score.playbackDirections(),
                 score.expressiveEvents(),
                 score.slurSource(),
-                score.openingPickup());
+                score.openingPickup(),
+                score.tremoloSource());
     }
 }

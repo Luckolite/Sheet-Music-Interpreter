@@ -171,8 +171,9 @@ public final class SheetInterpreter {
                         measures,
                         annotations.restCounts.stream().map(NumberToken::internal).toList());
         var rawMeasures = measures;
-        if (!numbers.isEmpty() || !rests.isEmpty())
-            measures = MeasureNumberReconciler.reconcile(measures, numbers, rests);
+        // Unnumbered systems still need the same bounded geometry repair as the native reader.
+        measures =
+                MeasureNumberReconciler.reconcile(measures, numbers, rests, labels, width, height);
         measures =
                 PrintedMeasureRhythmGuard.reconcile(
                         rawMeasures, measures, labels, gray, width, height);
@@ -245,8 +246,12 @@ public final class SheetInterpreter {
                 PrintedWordArticulations.apply(
                         articulationWords, staffs, measures, notes, labels, gray, width, height);
         var meters = new java.util.ArrayList<>(annotations.meters);
+        var meterEvidence =
+                ocr == null
+                        ? new MusicalOcr.MeterEvidence(List.of(), List.of())
+                        : ocr.meterEvidence(labels, gray, width, height, measures, notes);
         if (ocr != null)
-            for (var meter : ocr.meters(labels, gray, width, height, measures, notes))
+            for (var meter : meterEvidence.changes())
                 if (meters.stream()
                         .noneMatch(explicit -> explicit.measureIndex() == meter.measureIndex()))
                     meters.add(meter);
@@ -266,29 +271,38 @@ public final class SheetInterpreter {
         var decoded =
                 TablatureDecoder.apply(
                         new ScorePageInterpretation(
-                                measures,
-                                notes,
-                                firstMeasureNumber,
-                                score.keyChanges(),
-                                TempoChangeDetector.detectWithWords(
-                                        TempoChangeDetector.withIsolatedDigits(
-                                                annotations.tempoNumbers.stream()
-                                                        .map(NumberToken::internal)
-                                                        .toList(),
+                                        measures,
+                                        notes,
+                                        firstMeasureNumber,
+                                        score.keyChanges(),
+                                        TempoChangeDetector.detectWithWords(
+                                                TempoChangeDetector.withIsolatedDigits(
+                                                        annotations.tempoNumbers.stream()
+                                                                .map(NumberToken::internal)
+                                                                .toList(),
+                                                        tempoWords,
+                                                        gray,
+                                                        width,
+                                                        height),
                                                 tempoWords,
                                                 gray,
                                                 width,
+                                                height,
+                                                measures),
+                                        meters,
+                                        rhythm.rests(),
+                                        PlayingTechniqueDetector.detect(
+                                                techniqueWords,
+                                                staffs,
+                                                measures,
+                                                notes,
+                                                width,
                                                 height),
-                                        tempoWords,
-                                        gray,
-                                        width,
-                                        height,
-                                        measures),
-                                meters,
-                                rhythm.rests(),
-                                PlayingTechniqueDetector.detect(
-                                        techniqueWords, staffs, measures, notes, width, height),
-                                dynamicDetection.changes()),
+                                        dynamicDetection.changes())
+                                .withTremoloSource(
+                                        score.tremoloSource()
+                                                .retainFinalHeads(score.notes(), notes)
+                                                .onPage(Math.max(0, physicalPage))),
                         tabs,
                         width,
                         height);
@@ -303,7 +317,15 @@ public final class SheetInterpreter {
                         width,
                         height,
                         !tabs.isEmpty());
-        finalScore = WholeRestMeterContext.apply(finalScore, gray, width, height, staffs);
+        finalScore =
+                WholeRestMeterContext.apply(
+                        finalScore,
+                        gray,
+                        width,
+                        height,
+                        staffs,
+                        meterEvidence.changes(),
+                        meterEvidence.headers());
         // Resolve compound ratios only after the final meter and measure remapping are known.
         finalScore =
                 finalScore.withNotes(
@@ -317,6 +339,16 @@ public final class SheetInterpreter {
                         java.util.stream.IntStream.range(0, finalScore.notes().size())
                                 .boxed()
                                 .toList());
+        finalScore =
+                OpeningBeamPickup.apply(
+                        finalScore,
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        staffs,
+                        meterEvidence.changes(),
+                        meterEvidence.headers());
         var withExpressions =
                 ScoreExpressionDetector.apply(
                         ScoreFermataDetector.withFermatas(
@@ -328,7 +360,7 @@ public final class SheetInterpreter {
                                         .withPlaybackDirections(
                                                 ScoreNavigationDetector.detect(
                                                         words,
-                                                        NavigationSegnoGlyphs.detect(
+                                                        NavigationSignGlyphs.detect(
                                                                 gray, width, height, staffs),
                                                         staffs,
                                                         finalScore.measures(),
@@ -361,7 +393,28 @@ public final class SheetInterpreter {
                                 && MeasureNumberReconciler.provesOpeningPickup(
                                         finalInterpretation.measures(), numbers));
         finalInterpretation =
-                VerifiedCourtesyBoundary.apply(finalInterpretation, labels, gray, width, height);
+                VerifiedCourtesyKeyTail.apply(
+                        VerifiedCourtesyBoundary.apply(
+                                finalInterpretation, labels, gray, width, height),
+                        labels,
+                        gray,
+                        width,
+                        height);
+        final var pedalScore = finalInterpretation;
+        final var pedalGray = gray;
+        finalInterpretation =
+                ScorePedalDetector.withGlyphs(
+                        finalInterpretation,
+                        GlyphResources.pedals()
+                                .detect(finalInterpretation.measures(), staffs, gray, width, height)
+                                .stream()
+                                .map(
+                                        mark ->
+                                                PrintedPedalColumns.locate(
+                                                        mark, pedalScore, pedalGray, width, height))
+                                .toList(),
+                        width,
+                        Math.max(0, physicalPage));
         if (physicalPage >= 0)
             try {
                 var captured =

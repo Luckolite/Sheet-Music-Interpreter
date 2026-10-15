@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 
 public class HeaderRestApiTest {
     @Test
-    public void measureBoundsAreRebuiltAfterHeaderHeadsAreRemoved() {
+    public void headerTerminalCannotDistortMeasureBounds() {
         var p = new HeaderSymbolNormalizationTest.Page(true, true);
         p.restAndNextNote();
         // A staff fragment labelled as header ink extends beyond the C terminal.
@@ -25,11 +25,13 @@ public class HeaderRestApiTest {
                 if (expectedLabels[y * p.w + x] == 2) expectedLabels[y * p.w + x] = 0;
         var expected = OmrMeasurePostProcessor.process(expectedLabels, p.gray, p.w, p.h);
         var original = p.measures();
-        assertTrue(
-                "The false terminal must extend the original measure",
-                original.get(0).left() < expected.get(0).left());
+        // Rounded-meter geometry now excludes this false terminal before normalization.
+        // Both entry paths must retain the same independently cleaned measure boundaries.
+        assertEquals(expected, original);
         var score = SheetInterpreter.analyze(p.labels, p.gray, p.w, p.h);
         assertEquals(expected, score.measures());
+        assertEquals("Only the actual following note survives", 1, score.notes().size());
+        assertEquals(1, score.notes().get(0).measureIndex());
     }
 
     @Test

@@ -35,8 +35,33 @@ public final class ScoreNavigationProjection {
         }
     }
 
+    public record Projection(
+            ScorePageInterpretation score,
+            List<ScoreTremoloOccurrences.Owner> owners,
+            ScoreTremoloOccurrences.Result tremolos) {
+        public Projection {
+            owners = List.copyOf(owners);
+        }
+    }
+
+    public static Projection projectWithOwnership(
+            ScorePageInterpretation source, ScoreNavigationPlan plan, Defaults defaults) {
+        var owners = new ArrayList<ScoreTremoloOccurrences.Owner>();
+        var score = project(source, plan, defaults, owners);
+        return new Projection(
+                score, owners, ScoreTremoloOccurrences.project(source.tremoloSource(), owners));
+    }
+
     public static ScorePageInterpretation project(
             ScorePageInterpretation source, ScoreNavigationPlan plan, Defaults defaults) {
+        return project(source, plan, defaults, null);
+    }
+
+    private static ScorePageInterpretation project(
+            ScorePageInterpretation source,
+            ScoreNavigationPlan plan,
+            Defaults defaults,
+            List<ScoreTremoloOccurrences.Owner> owners) {
         Objects.requireNonNull(source);
         Objects.requireNonNull(plan);
         Objects.requireNonNull(defaults);
@@ -47,6 +72,9 @@ public final class ScoreNavigationProjection {
         if (!plan.navigationApplied()) {
             if (plan.measureCount() != source.measures().size())
                 throw new IllegalArgumentException("Plan does not describe this source score");
+            if (owners != null)
+                for (int i = 0; i < source.notes().size(); i++)
+                    owners.add(new ScoreTremoloOccurrences.Owner(i, 0));
             return source;
         }
         // Whole-bar projection must not silently turn a partial-bar prefix into a complete bar.
@@ -71,6 +99,8 @@ public final class ScoreNavigationProjection {
         }
         var measures = new ArrayList<MeasureRegion>();
         var notes = new ArrayList<ScoreNoteEvent>();
+        var noteOwners =
+                new java.util.IdentityHashMap<ScoreNoteEvent, ScoreTremoloOccurrences.Owner>();
         var rests = new ArrayList<ScoreRestEvent>();
         var keys = new ArrayList<ScoreKeyChange>();
         var tempos = new ArrayList<ScoreTempoChange>();
@@ -103,7 +133,7 @@ public final class ScoreNavigationProjection {
                                         .thenComparingDouble(
                                                 ScoreTechniqueChange::positionInMeasure))
                         .toList();
-        try (var timing = ScoreNoteTiming.beginTimingSession()) {
+        try (var timing = ScoreNoteTiming.beginTimingSession(source)) {
             var dynamicSource = new DynamicSource(source, defaults, orderedTempos);
             for (var run : runs) {
                 var end = new ScoreAnchor(run.end(), 0);
@@ -134,16 +164,23 @@ public final class ScoreNavigationProjection {
                     }
                 for (int m = run.source(); m < run.end(); m++)
                     measures.add(source.measures().get(m));
-                for (var n : source.notes())
-                    if (inside(n.measureIndex(), run))
-                        notes.add(
+                for (int index = 0; index < source.notes().size(); index++) {
+                    var n = source.notes().get(index);
+                    if (inside(n.measureIndex(), run)) {
+                        var projected =
                                 noteAt(
                                         n,
                                         run.map(n.measureIndex()),
                                         n.tiedFromPrevious()
                                                 && !(run.playback() > 0
                                                         && n.measureIndex() == run.source()
-                                                        && !hasEarlierPitch(source.notes(), n))));
+                                                        && !hasEarlierPitch(source.notes(), n)));
+                        notes.add(projected);
+                        noteOwners.put(
+                                projected,
+                                new ScoreTremoloOccurrences.Owner(index, run.playback()));
+                    }
+                }
                 for (var r : source.rests())
                     if (inside(r.measureIndex(), run))
                         rests.add(
@@ -278,6 +315,8 @@ public final class ScoreNavigationProjection {
                         .thenComparingInt(c -> c.direction() == 0 ? 0 : 1));
         // Directions have already been consumed: projecting this result cannot repeat the route
         // again.
+        if (owners != null)
+            for (var note : notes) owners.add(Objects.requireNonNull(noteOwners.get(note)));
         return new ScorePageInterpretation(
                         measures,
                         notes,

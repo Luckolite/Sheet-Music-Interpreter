@@ -43,7 +43,7 @@ final class ClosedWrittenHeadPocket {
                 }
             }
         int bg = percentile(paper, np, 85), dark = percentile(ink, ni, 10);
-        if (bg < 60 || bg >= 185 || bg - dark < 35) return false;
+        if (bg < 60 || bg - dark < 35) return false;
         int threshold = (bg + dark) / 2, bright = bg - Math.max(12, Math.round((bg - dark) * .25f));
         int width = r - l + 1, height = b - t + 1;
         boolean[] seen = new boolean[width * height];

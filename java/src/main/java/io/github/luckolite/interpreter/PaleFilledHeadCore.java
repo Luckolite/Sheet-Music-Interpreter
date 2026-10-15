@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
-/** Uniform grey engraving fill is not a white counter in a beamed notehead. */
+/** Gray engraving mixed with darker ink is not a white counter in a beamed notehead. */
 final class PaleFilledHeadCore {
     private PaleFilledHeadCore() {}
 
@@ -48,6 +48,7 @@ final class PaleFilledHeadCore {
                 if (value <= paper - 25) filled++;
                 if (value >= 145 && value <= paper - 25) pale++;
             }
-        return count >= 12 && filled >= count * .95f && pale >= count * .7f;
+        // Most of the core must remain gray, while nearly all pixels must contrast with paper.
+        return count >= 12 && filled >= count * .95f && pale >= count * .5f;
     }
 }

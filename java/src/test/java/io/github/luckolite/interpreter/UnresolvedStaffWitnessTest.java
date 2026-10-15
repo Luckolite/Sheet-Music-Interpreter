@@ -52,7 +52,7 @@ public class UnresolvedStaffWitnessTest {
         assertEquals(1, score.expressiveEvents().size());
         var e = score.expressiveEvents().get(0);
         assertEquals(ScoreExpressiveEvent.Scope.UNRESOLVED, e.scope());
-        assertFalse(e.start().isPresent());
+        assertEquals(Optional.of(new ScoreAnchor(outgoing ? 2 : 0, 0)), e.start());
         assertEquals(2, e.evidence().size());
         assertEquals(
                 Set.of(0, 1),

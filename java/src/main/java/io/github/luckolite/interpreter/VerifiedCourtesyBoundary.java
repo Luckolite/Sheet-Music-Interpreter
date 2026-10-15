@@ -80,6 +80,7 @@ final class VerifiedCourtesyBoundary {
                 s.playbackDirections(),
                 s.expressiveEvents(),
                 s.slurSource(),
-                s.openingPickup());
+                s.openingPickup(),
+                s.tremoloSource());
     }
 }

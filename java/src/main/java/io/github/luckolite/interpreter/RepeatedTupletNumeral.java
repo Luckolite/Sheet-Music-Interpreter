@@ -148,7 +148,8 @@ final class RepeatedTupletNumeral {
                     if (covered[yy]) hidden++;
                 }
                 if (hidden > rh * .45f) continue;
-                if (ownedJoined && !visibleBeyondLongStem(gray, w, h, x, y, rw, rh, gap, covered)) continue;
+                if (ownedJoined && !visibleBeyondLongStem(gray, w, h, x, y, rw, rh, gap, covered))
+                    continue;
                 int visibleInk = 0, visiblePaper = 0, clearPaper = 0;
                 for (int i = 0; i < ni; i++) if (!covered[ink[i] / rw]) visibleInk++;
                 for (int i = 0; i < np; i++)
@@ -201,13 +202,31 @@ final class RepeatedTupletNumeral {
             if (covered[yy]) continue;
             boolean ink = false;
             for (int xx = 0; xx < rw; xx++)
-                if (!stems[xx] && (gray[(y + yy) * w + x + xx] & 255) < 165) {
+                if (!stems[xx]
+                        && (gray[(y + yy) * w + x + xx] & 255) < 165
+                        && !longRulePixel(gray, w, h, x + xx, y + yy, gap)) {
                     residual++;
                     ink = true;
                 }
             if (ink) rows++;
         }
         return residual >= Math.max(3, rh * .25f) && rows >= 2;
+    }
+
+    private static boolean longRulePixel(byte[] gray, int w, int h, int x, int y, float gap) {
+        int reach = Math.max(5, Math.round(gap * 1.5f));
+        for (int direction : new int[] {-1, 1})
+            for (int angle = -10; angle <= 10; angle++) {
+                int hits = 0, total = 0;
+                for (int d = 1; d <= reach; d++) {
+                    int xx = x + direction * d, yy = Math.round(y + angle * .05f * direction * d);
+                    if (xx < 0 || xx >= w || yy < 0 || yy >= h) break;
+                    total++;
+                    if ((gray[yy * w + xx] & 255) < 190) hits++;
+                }
+                if (total == reach && hits >= total * .9f) return true;
+            }
+        return false;
     }
 
     private static boolean visibleOpening(

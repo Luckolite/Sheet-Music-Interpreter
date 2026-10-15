@@ -24,6 +24,8 @@ public final class NativeDecoderWire {
     /** Same record sizes; typed tab string identity in the existing boundary int. */
     static final int ANALYSIS_TAB_TIE_FORMAT = -25;
 
+    static final int ANALYSIS_TREMOLO_FORMAT = -26; // Private candidate, not deployed
+
     public record Request(
             byte[] labels,
             byte[] gray,
@@ -226,22 +228,33 @@ public final class NativeDecoderWire {
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score)
             throws IOException {
-        writeAnalysis(out, score, ANALYSIS_TAB_TIE_FORMAT);
+        writeAnalysis(out, score, ANALYSIS_TREMOLO_FORMAT);
     }
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score, int marker)
             throws IOException {
-        if (marker != ANALYSIS_TAB_TIE_FORMAT
+        if (marker != ANALYSIS_TREMOLO_FORMAT
+                && marker != ANALYSIS_TAB_TIE_FORMAT
                 && marker != ANALYSIS_REST_KIND_FORMAT
                 && marker != ANALYSIS_KIND_FORMAT)
             throw new IOException("Unsupported analysis writer marker");
+        if (marker != ANALYSIS_TREMOLO_FORMAT
+                && (!score.tremoloSource().pairs().isEmpty()
+                        || score.tremoloSource().noteOrigins().stream()
+                                .anyMatch(java.util.Optional::isPresent)))
+            throw new IOException("Legacy analysis would lose tremolo source");
         if (marker == ANALYSIS_KIND_FORMAT
                 && score.rests().stream().anyMatch(ScoreRestEvent::isFullMeasure))
             throw new IOException("Legacy analysis would lose full-measure rest kind");
+        if (marker != ANALYSIS_TREMOLO_FORMAT
+                && score.notes().stream()
+                        .anyMatch(n -> n.clefBottomDiatonic() == ScoreNoteEvent.CLEF_BASS_OTTAVA))
+            throw new IOException("Legacy analysis would lose octave-bass clef");
         for (var note : score.notes()) {
             if (!TabTieIdentity.valid(note.boundaryTies())
                     || TabTieIdentity.typed(note.boundaryTies())
-                            && (marker != ANALYSIS_TAB_TIE_FORMAT
+                            && ((marker != ANALYSIS_TAB_TIE_FORMAT
+                                            && marker != ANALYSIS_TREMOLO_FORMAT)
                                     || note.kind() != ScoreNoteEvent.Kind.PITCHED))
                 throw new IOException("Unsupported or invalid typed tab tie evidence");
         }
@@ -290,9 +303,11 @@ public final class NativeDecoderWire {
             out.writeInt(r.staffIndex());
             out.writeInt(r.staffCount());
             out.writeDouble(r.durationBeats());
-            if (marker == ANALYSIS_REST_KIND_FORMAT || marker == ANALYSIS_TAB_TIE_FORMAT)
-                out.writeByte(restKindId(r.kind()));
+            if (marker == ANALYSIS_REST_KIND_FORMAT
+                    || marker == ANALYSIS_TAB_TIE_FORMAT
+                    || marker == ANALYSIS_TREMOLO_FORMAT) out.writeByte(restKindId(r.kind()));
         }
+        if (marker == ANALYSIS_TREMOLO_FORMAT) ScoreTremoloWire.write(out, score.tremoloSource());
     }
 
     private static int boundaryTies(DataInputStream in, boolean tabTyped) throws IOException {
@@ -305,7 +320,8 @@ public final class NativeDecoderWire {
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
         int marker = in.readInt();
-        boolean tabTyped = marker == ANALYSIS_TAB_TIE_FORMAT;
+        boolean paired = marker == ANALYSIS_TREMOLO_FORMAT;
+        boolean tabTyped = paired || marker == ANALYSIS_TAB_TIE_FORMAT;
         boolean restTyped = tabTyped || marker == ANALYSIS_REST_KIND_FORMAT;
         boolean typed = restTyped || marker == ANALYSIS_KIND_FORMAT;
         boolean stems = typed || marker == ANALYSIS_STEM_FORMAT;
@@ -338,6 +354,10 @@ public final class NativeDecoderWire {
                             normalCount(in),
                             stems ? stemDirection(in) : 0,
                             typed ? noteKind(in) : ScoreNoteEvent.Kind.PITCHED));
+        if (!paired
+                && notes.stream()
+                        .anyMatch(n -> n.clefBottomDiatonic() == ScoreNoteEvent.CLEF_BASS_OTTAVA))
+            throw new IOException("Legacy analysis cannot contain octave-bass clef");
         for (var note : notes)
             if (TabTieIdentity.typed(note.boundaryTies())
                     && note.kind() != ScoreNoteEvent.Kind.PITCHED)
@@ -364,8 +384,12 @@ public final class NativeDecoderWire {
             rests.add(
                     new ScoreRestEvent(index, position, y, height, staff, staffs, duration, kind));
         }
+        var tremoloSource =
+                paired
+                        ? ScoreTremoloWire.read(in, notes.size())
+                        : ScoreTremoloSource.empty(notes.size());
         if (in.read() != -1) throw new IOException("Trailing decoder result");
-        return new OmrScoreInterpreter.Analysis(notes, keys, rests);
+        return new OmrScoreInterpreter.Analysis(notes, keys, rests, tremoloSource);
     }
 
     private static int index(DataInputStream in, int measures) throws IOException {

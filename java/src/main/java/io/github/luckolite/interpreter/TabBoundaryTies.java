@@ -112,7 +112,8 @@ public final class TabBoundaryTies {
                 score.playbackDirections(),
                 score.expressiveEvents(),
                 score.slurSource(),
-                score.openingPickup());
+                score.openingPickup(),
+                score.tremoloSource());
     }
 
     private static List<Edge> edges(

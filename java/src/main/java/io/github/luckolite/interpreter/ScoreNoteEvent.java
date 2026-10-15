@@ -620,6 +620,7 @@ public record ScoreNoteEvent(
     public static final int CLEF_TENOR = 22; // D3; middle C on the fourth line
     public static final int CLEF_TREBLE_OTTAVA = 37; // E5, treble clef with 8 above
     public static final int CLEF_BASS = 18; // G2
+    public static final int CLEF_BASS_OTTAVA = 25; // G3, bass clef with 8 above
 
     public ScoreNoteEvent(
             int measureIndex,
@@ -952,6 +953,7 @@ public record ScoreNoteEvent(
         if (!Float.isFinite(leadingRestBeats) || leadingRestBeats < 0 || leadingRestBeats > 16)
             leadingRestBeats = 0;
         if (clefBottomDiatonic != CLEF_TREBLE
+                && clefBottomDiatonic != CLEF_BASS_OTTAVA
                 && clefBottomDiatonic != CLEF_BASS
                 && clefBottomDiatonic != CLEF_TREBLE_OTTAVA
                 && clefBottomDiatonic != CLEF_ALTO

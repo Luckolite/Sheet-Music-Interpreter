@@ -29,7 +29,7 @@ public class LocalMeterFallbackTest {
                         inference, new MeterFontMatcher(new File("java/assets/Bravura.otf")));
         var m =
                 MusicalOcr.class.getDeclaredMethod(
-                        "meter",
+                        "meterWithBounds",
                         byte[].class,
                         int.class,
                         int.class,
@@ -42,6 +42,9 @@ public class LocalMeterFallbackTest {
                         640,
                         300,
                         new MeterChangeDetector.Crop(300, 94, 340, 165, 100 + shift, 14));
+        var unwrap = reading.getClass().getDeclaredMethod("reading");
+        unwrap.setAccessible(true);
+        reading = unwrap.invoke(reading);
         var text = reading.getClass().getDeclaredMethod("text");
         text.setAccessible(true);
         return (String) text.invoke(reading);

@@ -1,0 +1,13 @@
+{
+  "fontSha256": "cdf0f893ee1fdb64b7f6713d71ee0dcfc349c0ac01429a8e451b01a9e79f5f3b",
+  "license": "SIL-OFL-1.1",
+  "source": "https://github.com/steinbergmedia/bravura",
+  "glyphReference": "https://smufl.formats.music/latest/tables/keyboard-techniques.html",
+  "glyphs": {
+    "pedal-down": "U+E650",
+    "pedal-up": "U+E655"
+  },
+  "method": "Existing standalone builder raster function, font256px, height64px, no private score pixels",
+  "packagedSha256": "087ebeb302a066f5ce65fa52f0f8d983e6fdcad9683870b486fba664d5b23d24",
+  "format": "PDG1: count2; ordered kind,width,height,raw grayscale; big endian"
+}

@@ -170,7 +170,7 @@ public final class ScoreFermataDetector {
         if (openingBeats <= 0) return score;
         var meter = new ScoreMeterMap(openingBeats, score.meterChanges());
         var events = new ArrayList<ScoreExpressiveEvent>();
-        try (var session = ScoreNoteTiming.beginTimingSession()) {
+        try (var session = ScoreNoteTiming.beginTimingSession(score)) {
             for (var event : score.expressiveEvents()) {
                 var attack = attack(event);
                 if (attack.isEmpty()) {
@@ -189,6 +189,17 @@ public final class ScoreFermataDetector {
                             onset
                                     + ScoreNoteTiming.resolvedWrittenDurationBeats(
                                             note, score.notes(), beats);
+                    for (var pair : score.tremoloSource().resolve().resolved()) {
+                        if (!pair.first().contains(index) && !pair.second().contains(index))
+                            continue;
+                        var first = score.notes().get(pair.first().get(0));
+                        var second = score.notes().get(pair.second().get(0));
+                        onset = ScoreNoteTiming.beatInMeasure(first, score.notes(), beats);
+                        finish =
+                                ScoreNoteTiming.beatInMeasure(second, score.notes(), beats)
+                                        + ScoreNoteTiming.resolvedWrittenDurationBeats(
+                                                second, score.notes(), beats);
+                    }
                     finish = ScoreAnchor.computedOffset(note.measureIndex(), finish, meter);
                     if (!Double.isFinite(onset)
                             || !Double.isFinite(finish)

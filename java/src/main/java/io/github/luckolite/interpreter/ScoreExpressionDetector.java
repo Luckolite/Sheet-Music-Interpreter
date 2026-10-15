@@ -252,7 +252,13 @@ public final class ScoreExpressionDetector {
                                                 direction.printedText()))));
             }
         }
-        return resolve(score.withExpressiveEvents(events), Float.NaN);
+        return PrintedTempoSpans.apply(
+                resolve(score.withExpressiveEvents(events), Float.NaN),
+                words,
+                staffs,
+                gray,
+                width,
+                height);
     }
 
     private record Column(int measure, int staff, int count, float position, boolean rest) {}
@@ -330,6 +336,11 @@ public final class ScoreExpressionDetector {
         }
     }
 
+    static OptionalInt measureOf(ScoreExpressiveEvent event) {
+        var c = column(event);
+        return c.isPresent() ? OptionalInt.of(c.get().measure()) : OptionalInt.empty();
+    }
+
     static boolean owns(ScoreExpressiveEvent event) {
         return column(event).isPresent();
     }
@@ -382,7 +393,7 @@ public final class ScoreExpressionDetector {
         Deque<Optional<Column>> parsedAhead = null;
         boolean firstColumn = true, indexDecision = false;
         int nextEventIndex = 0;
-        try (var session = ScoreNoteTiming.beginTimingSession()) {
+        try (var session = ScoreNoteTiming.beginTimingSession(score)) {
             for (var event : score.expressiveEvents()) {
                 nextEventIndex++;
                 var c =
@@ -461,15 +472,29 @@ public final class ScoreExpressionDetector {
                                                                 breath ? release : start)
                                                         .canonical(meter, score.measures().size()))
                                         : Optional.empty(),
-                                Optional.empty(),
                                 proved
-                                        ? (attack
-                                                ? Scope.NOTE
-                                                : breath
-                                                                || event.kind() == Kind.PEDAL_DOWN
-                                                                || event.kind() == Kind.PEDAL_UP
-                                                        ? Scope.PART
-                                                        : Scope.SCORE)
+                                        ? PrintedTempoSpans.preserveEnd(
+                                                event,
+                                                new ScoreAnchor(
+                                                                c.get().measure(),
+                                                                breath ? release : start)
+                                                        .canonical(meter, score.measures().size()),
+                                                meter,
+                                                score.measures().size(),
+                                                score.tempoChanges())
+                                        : Optional.empty(),
+                                proved
+                                        ? (PrintedTempoSpans.hasOpen(event)
+                                                ? Scope.UNRESOLVED
+                                                : attack
+                                                        ? Scope.NOTE
+                                                        : breath
+                                                                        || event.kind()
+                                                                                == Kind.PEDAL_DOWN
+                                                                        || event.kind()
+                                                                                == Kind.PEDAL_UP
+                                                                ? Scope.PART
+                                                                : Scope.SCORE)
                                         : Scope.UNRESOLVED,
                                 event.staffIndex(),
                                 event.staffCount(),

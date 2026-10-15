@@ -75,7 +75,7 @@ public final class MeterChangeDetector {
         for (var candidate : candidates) counts.merge(candidate.measureIndex(), 1, Integer::sum);
         return candidates.stream()
                 .filter(candidate -> counts.get(candidate.measureIndex()) == 1)
-                .collect(java.util.stream.Collectors.toList());
+                .toList();
     }
 
     private static List<ScoreMeterChange> rasterCandidates(
@@ -267,7 +267,7 @@ public final class MeterChangeDetector {
         var sorted =
                 readings.stream()
                         .sorted(java.util.Comparator.comparingInt(ScoreMeterChange::measureIndex))
-                        .collect(java.util.stream.Collectors.toList());
+                        .toList();
         var result = new ArrayList<ScoreMeterChange>();
         for (int i = 0; i < sorted.size(); i++) {
             var choice = sorted.get(i);
@@ -303,7 +303,8 @@ public final class MeterChangeDetector {
                 score.playbackDirections(),
                 score.expressiveEvents(),
                 score.slurSource(),
-                score.openingPickup());
+                score.openingPickup(),
+                score.tremoloSource());
     }
 
     public static List<Crop> candidates(byte[] labels, byte[] gray, int width, int height) {

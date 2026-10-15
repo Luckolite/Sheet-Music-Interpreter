@@ -40,6 +40,17 @@ public final class MusicalOcr {
                 (pixels, w, h) -> reader.readGray(pixels, w, h).text());
     }
 
+    record MeterEvidence(List<ScoreMeterChange> changes, List<MeterChangeDetector.Crop> headers) {
+        MeterEvidence {
+            changes = List.copyOf(changes);
+            headers = List.copyOf(headers);
+        }
+    }
+
+    private record BoundMeterReading(MeterReading reading, MeterChangeDetector.Crop crop) {}
+
+    private record HeaderReading(int measure, String text, MeterChangeDetector.Crop crop) {}
+
     List<ScoreMeterChange> meters(
             byte[] labels,
             byte[] gray,
@@ -48,6 +59,18 @@ public final class MusicalOcr {
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes)
             throws Exception {
+        return meterEvidence(labels, gray, width, height, measures, notes).changes();
+    }
+
+    MeterEvidence meterEvidence(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes)
+            throws Exception {
+        var headerReadings = new ArrayList<HeaderReading>();
         var readings = new TreeMap<Integer, Map<String, Integer>>();
         var decisive = new HashSet<Integer>();
         var reflowWitnesses = new ArrayList<MeterReflowEvidence.Witness>();
@@ -66,7 +89,12 @@ public final class MusicalOcr {
             if (measure < 0
                     || !MeterChangeDetector.precedesNotes(
                             crop, labels, gray, width, height, measure, measures, notes)) continue;
-            MeterReading reading = meter(gray, width, height, crop);
+            var bound = meterWithBounds(gray, width, height, crop);
+            MeterReading reading = bound.reading();
+            if (reading.votes() >= 2
+                    && MeterChangeDetector.precedesNotes(
+                            bound.crop(), labels, gray, width, height, measure, measures, notes))
+                headerReadings.add(new HeaderReading(measure, reading.text(), bound.crop()));
             if (TRACE)
                 System.err.println(
                         "meter crop=" + crop + " measure=" + measure + " reading=" + reading);
@@ -85,7 +113,23 @@ public final class MusicalOcr {
         }
         var found = new ArrayList<ScoreMeterChange>();
         for (var entry : readings.entrySet()) {
-            if (entry.getValue().size() != 1) continue;
+            if (entry.getValue().size() != 1) {
+                var choices = new HashSet<ScoreMeterChange>();
+                for (String text : entry.getValue().keySet()) {
+                    String[] parts = text.split("/");
+                    choices.add(
+                            new ScoreMeterChange(
+                                    entry.getKey(),
+                                    Integer.parseInt(parts[0]),
+                                    Integer.parseInt(parts[1])));
+                }
+                Integer next = readings.higherKey(entry.getKey());
+                var resolved =
+                        MeterChangeDetector.resolveConflict(
+                                choices, notes, next == null ? measures.size() : next);
+                if (resolved != null) found.add(resolved);
+                continue;
+            }
             var choice = entry.getValue().entrySet().iterator().next();
             // Either repeated OCR scales or two physically separate staff copies must agree.
             if (choice.getValue() < 2 && !decisive.contains(entry.getKey())) continue;
@@ -96,20 +140,40 @@ public final class MusicalOcr {
                             Integer.parseInt(parts[0]),
                             Integer.parseInt(parts[1])));
         }
-        return MeterChangeDetector.filterWholeNoteOcrReadings(found, notes, measures.size());
+        var accepted =
+                MeterChangeDetector.filterWholeNoteOcrReadings(found, notes, measures.size());
+        var headers =
+                headerReadings.stream()
+                        .filter(
+                                h ->
+                                        accepted.stream()
+                                                .anyMatch(
+                                                        m ->
+                                                                m.measureIndex() == h.measure()
+                                                                        && h.text()
+                                                                                .equals(
+                                                                                        m
+                                                                                                        .numerator()
+                                                                                                + "/"
+                                                                                                + m
+                                                                                                        .denominator())))
+                        .map(HeaderReading::crop)
+                        .distinct()
+                        .toList();
+        return new MeterEvidence(accepted, headers);
     }
 
-    private MeterReading meter(byte[] gray, int width, int height, MeterChangeDetector.Crop crop)
-            throws Exception {
+    private BoundMeterReading meterWithBounds(
+            byte[] gray, int width, int height, MeterChangeDetector.Crop crop) throws Exception {
         MeterReading original = meterAt(gray, width, height, crop);
-        if (original.votes() >= 2) return original;
+        if (original.votes() >= 2) return new BoundMeterReading(original, crop);
         var refined = MeterCropStaff.refine(gray, width, height, crop);
-        if (refined.equals(crop)) return original;
+        if (refined.equals(crop)) return new BoundMeterReading(original, crop);
         MeterReading retry = meterAt(gray, width, height, refined);
         if (retry.votes() >= 2
                 && (original.text().isBlank() || original.text().equals(retry.text())))
-            return retry;
-        return original;
+            return new BoundMeterReading(retry, refined);
+        return new BoundMeterReading(original, crop);
     }
 
     private MeterReading meterAt(byte[] gray, int width, int height, MeterChangeDetector.Crop crop)

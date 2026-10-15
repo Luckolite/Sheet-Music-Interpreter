@@ -1,3 +1,5 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
 import java.util.ArrayList;
@@ -83,7 +85,21 @@ public final class ScoreNoteTiming {
         private int size;
         private boolean closed;
 
+        private final java.util.IdentityHashMap<ScoreNoteEvent, Double> tremoloAdvances;
+
         private TimingSession() {
+            tremoloAdvances =
+                    previous == null ? new java.util.IdentityHashMap<>() : previous.tremoloAdvances;
+            SESSION.set(this);
+        }
+
+        private TimingSession(List<ScoreNoteEvent> notes, ScoreTremoloSource source) {
+            tremoloAdvances = ScoreTremoloTiming.advances(notes, source);
+            SESSION.set(this);
+        }
+
+        private TimingSession(ScorePageInterpretation score) {
+            tremoloAdvances = ScoreTremoloTiming.advances(score);
             SESSION.set(this);
         }
 
@@ -213,6 +229,24 @@ public final class ScoreNoteTiming {
         return new TimingSession();
     }
 
+    /** Bind proved pair ownership to this snapshot without changing printed note metadata. */
+    public static TimingSession beginTimingSession(ScorePageInterpretation score) {
+        return new TimingSession(java.util.Objects.requireNonNull(score));
+    }
+
+    public static TimingSession beginTimingSession(
+            List<ScoreNoteEvent> notes, ScoreTremoloSource source) {
+        if (source.noteOrigins().size() != notes.size())
+            throw new IllegalArgumentException("Timing source ownership mismatch");
+        return new TimingSession(notes, source);
+    }
+
+    static double advanceDurationBeats(ScoreNoteEvent note) {
+        var session = SESSION.get();
+        Double advance = session == null ? null : session.tremoloAdvances.get(note);
+        return advance == null ? writtenDurationBeats(note) : advance;
+    }
+
     private static final float SAME_ONSET_POSITION = .018f;
     private static final float CROSS_STAFF_ONSET_POSITION = .022f;
     private static final float MAX_ORDINARY_MEASURE_INSET = .14f;
@@ -290,6 +324,14 @@ public final class ScoreNoteTiming {
         }
 
         private double calculateWrittenDuration() {
+            var timing = SESSION.get();
+            if (timing != null
+                    && attacks().stream().anyMatch(timing.tremoloAdvances::containsKey)) {
+                double explicit = 0;
+                for (var note : attacks())
+                    explicit = Math.max(explicit, advanceDurationBeats(note));
+                return explicit;
+            }
             int beams = beamCount();
             if (beams > 0 && hasTuplet()) {
                 double shortest = Double.POSITIVE_INFINITY;
@@ -306,7 +348,7 @@ public final class ScoreNoteTiming {
                 return durationForBeam(beams, augmentationDots()) * notes.get(0).durationScale();
             double result = Double.NaN;
             for (ScoreNoteEvent note : attacks()) {
-                double written = writtenDurationBeats(note);
+                double written = advanceDurationBeats(note);
                 if (Double.isFinite(written))
                     result = Double.isFinite(result) ? Math.max(result, written) : written;
             }
@@ -388,9 +430,7 @@ public final class ScoreNoteTiming {
             boolean trailing,
             boolean bothSides) {
         private GracePlayback {
-            if (count > 0
-                    && principal != null
-                    && principal.kind() == ScoreNoteEvent.Kind.UNPITCHED)
+            if (count > 0 && principal != null && principal.kind() == ScoreNoteEvent.Kind.UNPITCHED)
                 throw new IllegalArgumentException(
                         "Unpitched grace ownership requires an explicit realization");
         }
@@ -402,9 +442,7 @@ public final class ScoreNoteTiming {
         if (session == null && notes.stream().noneMatch(ScoreNoteTiming::grace)) return null;
         List<ScoreNoteEvent> metrical =
                 session == null
-                        ? notes.stream()
-                                .filter(ScoreNoteTiming::metricalNote)
-                                .collect(java.util.stream.Collectors.toList())
+                        ? notes.stream().filter(ScoreNoteTiming::metricalNote).toList()
                         : session.metrical(notes);
         if (metrical == notes) return null;
         List<ScoreNoteEvent> prefix = new ArrayList<>();
@@ -471,9 +509,7 @@ public final class ScoreNoteTiming {
         TimingSession session = SESSION.get();
         var metrical =
                 session == null
-                        ? notes.stream()
-                                .filter(ScoreNoteTiming::metricalNote)
-                                .collect(java.util.stream.Collectors.toList())
+                        ? notes.stream().filter(ScoreNoteTiming::metricalNote).toList()
                         : session.metrical(notes);
         GracePlayback context = grace(target) ? gracePlayback(target, notes) : null;
         int principal = -1, ordinal = -1;
@@ -496,7 +532,7 @@ public final class ScoreNoteTiming {
             after = context.trailing;
             ordinal = context.index;
             if (after) onset += principalDuration;
-            duration = writtenDurationBeats(target);
+            duration = advanceDurationBeats(target);
             steal = 100 * graceBudget(context, beats) / context.count / principalDuration;
         } else {
             onset = beatInMeasure(target, metrical, beats);
@@ -538,7 +574,7 @@ public final class ScoreNoteTiming {
                                                 n.positionInMeasure()
                                                         < target.positionInMeasure()
                                                                 - SAME_ONSET_POSITION))
-                && Math.abs(writtenDurationBeats(target) - safeBeats) < .001) return 0;
+                && Math.abs(advanceDurationBeats(target) - safeBeats) < .001) return 0;
         var parallelTriplets =
                 ParallelTripletClock.find(target, measureNotes(target, notes), safeBeats);
         if (parallelTriplets != null) {
@@ -618,7 +654,7 @@ public final class ScoreNoteTiming {
                                             g.notes.stream()
                                                     .noneMatch(
                                                             ScoreNoteTiming::hasIndependentSustain))
-                            .collect(java.util.stream.Collectors.toList());
+                            .toList();
             double[] written = tail.stream().mapToDouble(RhythmGroup::writtenDuration).toArray();
             boolean printedTail = completePrintedRestRhythm(tail, safeBeats);
             double start =
@@ -826,7 +862,7 @@ public final class ScoreNoteTiming {
         List<ScoreNoteEvent> measure =
                 measureNotes(target, allNotes).stream()
                         .filter(note -> Float.isFinite(note.positionInMeasure()))
-                        .collect(java.util.stream.Collectors.toList());
+                        .toList();
         if (measure.isEmpty()) return voiceOnset;
 
         List<ScoreNoteEvent> aligned = new ArrayList<>();
@@ -947,6 +983,9 @@ public final class ScoreNoteTiming {
 
     public static double resolvedWrittenDurationBeats(
             ScoreNoteEvent target, List<ScoreNoteEvent> notes, float beatsPerMeasure) {
+        var pairedSession = SESSION.get();
+        if (pairedSession != null && pairedSession.tremoloAdvances.containsKey(target))
+            return pairedSession.tremoloAdvances.get(target);
         GracePlayback grace = gracePlayback(target, notes);
         if (grace != null) {
             if (grace.principal == null)
@@ -964,8 +1003,8 @@ public final class ScoreNoteTiming {
         }
         // A hollow notehead may share an onset/staff with a faster independent voice.
         // Group rhythm repairs describe the attack clock, not that note's sounding length.
-        if (hasIndependentDuration(target, notes)) return writtenDurationBeats(target);
-        if (target == null || notes == null || notes.isEmpty()) return writtenDurationBeats(target);
+        if (hasIndependentDuration(target, notes)) return advanceDurationBeats(target);
+        if (target == null || notes == null || notes.isEmpty()) return advanceDurationBeats(target);
         List<ScoreNoteEvent> phrase = crossStaffPhrase(target, notes, beatsPerMeasure);
         if (!phrase.isEmpty()) return crossStaffDuration(target, phrase, beatsPerMeasure);
         List<RhythmGroup> groups = rhythmGroups(measureVoice(target, notes));
@@ -973,14 +1012,14 @@ public final class ScoreNoteTiming {
                 Float.isFinite(beatsPerMeasure)
                         ? Math.max(.125, Math.min(128, beatsPerMeasure))
                         : Double.NaN;
-        if (parallelWrittenClock(groups, safeBeats) != null) return writtenDurationBeats(target);
+        if (parallelWrittenClock(groups, safeBeats) != null) return advanceDurationBeats(target);
         if (completePrintedRestRhythm(groups, safeBeats)
                 || sharedShortRestRhythm(target, notes, groups, safeBeats))
-            return writtenDurationBeats(target);
+            return advanceDurationBeats(target);
         double[] durations = stabilizedDurations(groups, safeBeats);
         for (int index = 0; index < groups.size(); index++)
             if (groups.get(index).contains(target)) return durations[index];
-        return writtenDurationBeats(target);
+        return advanceDurationBeats(target);
     }
 
     public static boolean hasIndependentSustain(ScoreNoteEvent note) {
@@ -1028,7 +1067,7 @@ public final class ScoreNoteTiming {
                         && b.staffCount() == a.staffCount()
                         && b.beamCount() > 0
                         && independentVoiceOnset(a, b, notes)
-                        && writtenDurationBeats(b) < writtenDurationBeats(a)) return true;
+                        && advanceDurationBeats(b) < advanceDurationBeats(a)) return true;
         }
         return false;
     }
@@ -1046,7 +1085,7 @@ public final class ScoreNoteTiming {
                 for (ScoreNoteEvent moving : group.notes) {
                     if (moving.beamCount() > 0
                             && moving.augmentationDots() == 0
-                            && writtenDurationBeats(moving) < writtenDurationBeats(dotted)
+                            && advanceDurationBeats(moving) < advanceDurationBeats(dotted)
                             && independentVoiceOnset(dotted, moving, voice)) different = true;
                 }
             }
@@ -1064,7 +1103,7 @@ public final class ScoreNoteTiming {
         for (int i = 0; i < groups.size(); i++) {
             double shortest = Double.POSITIVE_INFINITY;
             for (ScoreNoteEvent note : groups.get(i).notes)
-                shortest = Math.min(shortest, writtenDurationBeats(note));
+                shortest = Math.min(shortest, advanceDurationBeats(note));
             if (!Double.isFinite(shortest) || shortest <= 0) return null;
             result[i] = shortest;
             total += shortest + followingRest(groups.get(i));
@@ -1141,7 +1180,7 @@ public final class ScoreNoteTiming {
                 && gap <= following * 1.32) {
             double repaired = durationForBeam(rhythmicBeamCount(next), 0) * first.durationScale();
             if (Double.isFinite(sum)
-                    && Math.abs(sum - writtenDurationBeats(first) + repaired - beats) < .03125)
+                    && Math.abs(sum - advanceDurationBeats(first) + repaired - beats) < .03125)
                 return phrase;
         }
         return List.of();
@@ -1154,7 +1193,7 @@ public final class ScoreNoteTiming {
             float position = phrase.get(i).positionInMeasure();
             double advance = Double.POSITIVE_INFINITY;
             do {
-                advance = Math.min(advance, writtenDurationBeats(phrase.get(i++)));
+                advance = Math.min(advance, advanceDurationBeats(phrase.get(i++)));
             } while (i < phrase.size()
                     && Math.abs(phrase.get(i).positionInMeasure() - position)
                             <= SAME_ONSET_POSITION);
@@ -1165,11 +1204,11 @@ public final class ScoreNoteTiming {
 
     private static double crossStaffDuration(
             ScoreNoteEvent note, List<ScoreNoteEvent> phrase, double beats) {
-        if (implicitCrossStaffTriplets(phrase, beats)) return writtenDurationBeats(note) * 2 / 3;
+        if (implicitCrossStaffTriplets(phrase, beats)) return advanceDurationBeats(note) * 2 / 3;
         double sum = crossStaffClockBeats(phrase);
         if (note.equals(phrase.get(0)) && Math.abs(sum - beats) >= .03125)
-            return writtenDurationBeats(note) + beats - sum;
-        return writtenDurationBeats(note);
+            return advanceDurationBeats(note) + beats - sum;
+        return advanceDurationBeats(note);
     }
 
     private static boolean implicitCrossStaffTriplets(List<ScoreNoteEvent> phrase, double beats) {
@@ -1298,7 +1337,7 @@ public final class ScoreNoteTiming {
                 grid = Math.min(grid, 1.0 / 28.0);
                 minimum = 1.0 / 28.0;
             }
-            double written = writtenDurationBeats(note);
+            double written = advanceDurationBeats(note);
             if (Double.isFinite(written))
                 grid =
                         Math.min(
@@ -1494,7 +1533,7 @@ public final class ScoreNoteTiming {
                         || n.crossStaffBeam()
                         || grace(n)
                         || n.tiedFromPrevious()
-                        || Math.abs(writtenDurationBeats(n) - raw[start]) > .001) return null;
+                        || Math.abs(advanceDurationBeats(n) - raw[start]) > .001) return null;
             prefix += raw[start++];
         }
         int count = groups.size() - start;
@@ -1595,9 +1634,7 @@ public final class ScoreNoteTiming {
             ScoreNoteEvent target, List<ScoreNoteEvent> notes, double beats) {
         if (!target.compactOpening()) return Double.NaN;
         List<ScoreNoteEvent> opening =
-                measureNotes(target, notes).stream()
-                        .filter(n -> !grace(n))
-                        .collect(java.util.stream.Collectors.toList());
+                measureNotes(target, notes).stream().filter(n -> !grace(n)).toList();
         if (opening.isEmpty()
                 || opening.stream()
                         .anyMatch(

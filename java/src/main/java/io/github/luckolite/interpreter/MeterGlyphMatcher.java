@@ -224,6 +224,35 @@ public final class MeterGlyphMatcher {
                     && accepts(retry.value(), retry.score(), weighted.get(1).score(), corroborated))
                 return retry;
         }
+        // A narrow engraving can preserve the winning digit while missing a uniform-size template.
+        // Keep the original identity and confidence/separation requirements for this bounded retry.
+        if (winner.score() >= .80f) {
+            Match compactBest = null;
+            for (float ratio : new float[] {.8f, .9f}) {
+                var compact =
+                        matches(
+                                pixels,
+                                width,
+                                height,
+                                first,
+                                last,
+                                firstLine,
+                                gap,
+                                values,
+                                corroborated,
+                                ignored,
+                                false,
+                                ratio);
+                Match retry = compact.get(0);
+                if (retry.value() != winner.value()
+                        || retry.score() < winner.score() + .03f
+                        || !accepts(
+                                retry.value(), retry.score(), compact.get(1).score(), corroborated))
+                    continue;
+                if (compactBest == null || retry.score() > compactBest.score()) compactBest = retry;
+            }
+            if (compactBest != null) return compactBest;
+        }
         return new Match(0, winner.score());
     }
 
@@ -239,6 +268,34 @@ public final class MeterGlyphMatcher {
             String corroborated,
             boolean[] ignored,
             boolean bold) {
+        return matches(
+                pixels,
+                width,
+                height,
+                first,
+                last,
+                firstLine,
+                gap,
+                values,
+                corroborated,
+                ignored,
+                bold,
+                1f);
+    }
+
+    private List<Match> matches(
+            int[] pixels,
+            int width,
+            int height,
+            int first,
+            int last,
+            int firstLine,
+            float gap,
+            int[] values,
+            String corroborated,
+            boolean[] ignored,
+            boolean bold,
+            float widthRatio) {
         int h = last - first;
         boolean[] source = new boolean[width * h], valid = new boolean[source.length];
         int sourceCount = 0;
@@ -270,6 +327,7 @@ public final class MeterGlyphMatcher {
                             .toString();
             for (int size = minSize; size <= maxSize; size += Math.max(2, Math.round(gap * .18f))) {
                 Glyph glyph = rasterizer.render(glyphs, size);
+                if (widthRatio != 1f) glyph = widthScaled(glyph, widthRatio);
                 if (bold) glyph = weighted(glyph);
                 int gw = glyph.width(), gh = glyph.height();
                 if (gw < 1 || gh < 1 || gw > width + 8 || gh > h + 8) continue;
@@ -295,6 +353,21 @@ public final class MeterGlyphMatcher {
         }
         results.sort(Comparator.comparingDouble(Match::score).reversed());
         return results;
+    }
+
+    private static Glyph widthScaled(Glyph glyph, float ratio) {
+        int w = Math.max(1, Math.round(glyph.width() * ratio)), h = glyph.height();
+        if (glyph.width() < 1 || h < 1) return glyph;
+        boolean[] ink = new boolean[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                ink[y * w + x] =
+                        glyph.ink()[
+                                y * glyph.width()
+                                        + Math.min(
+                                                glyph.width() - 1,
+                                                (int) Math.floor((x + .5) * glyph.width() / w))];
+        return new Glyph(w, h, ink);
     }
 
     /** One-pixel orthogonal stroke expansion models heavier printed ink. */

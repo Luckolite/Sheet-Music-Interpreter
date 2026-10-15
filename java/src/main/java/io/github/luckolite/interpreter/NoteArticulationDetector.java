@@ -74,16 +74,16 @@ final class NoteArticulationDetector {
                 if (note.staff < 0 || note.gap <= 0 || Math.abs(dot.x() - note.x) > note.gap * .9f)
                     continue;
                 double distance = Math.abs(dot.y() - note.y) / note.gap;
-                if (distance < .55
-                        || distance > 8
-                        || !fermataDot(
-                                dot.right - dot.left + 1,
-                                dot.bottom - dot.top + 1,
-                                dot.count,
-                                note.gap)) continue;
-                int direction = dot.y() < note.y ? -1 : 1;
-                if (!connectedFermataRoof(dot, labels, gray, width, height, note.gap, direction))
-                    continue;
+                if (distance < .55 || distance > 8) continue;
+                Glyph provedDot = dot;
+                if (!fermataDot(
+                        dot.right - dot.left + 1, dot.bottom - dot.top + 1, dot.count, note.gap)) {
+                    provedDot = softFermataDot(dot, gray, width, height, note.gap);
+                    if (provedDot == null || nearHead(provedDot, notes)) continue;
+                }
+                int direction = provedDot.y() < note.y ? -1 : 1;
+                if (!connectedFermataRoof(
+                        provedDot, labels, gray, width, height, note.gap, direction)) continue;
                 double score = Math.abs(dot.x() - note.x) / note.gap * 3 + distance;
                 if (score < best) {
                     best = score;
@@ -94,6 +94,46 @@ final class NoteArticulationDetector {
             if (owner >= 0) result.add(new FermataMark(owner, dot.x(), dot.y(), inverted));
         }
         return List.copyOf(result);
+    }
+
+    /** Recover a blurred dot only around an existing dark core; roof proof stays independent. */
+    private static Glyph softFermataDot(Glyph core, byte[] gray, int width, int height, float gap) {
+        if (core.count < 3
+                || core.right - core.left + 1 > Math.ceil(gap * .62f)
+                || core.bottom - core.top + 1 > Math.ceil(gap * .62f)) return null;
+        int radius = Math.max(3, Math.round(gap * .8f));
+        int l = Math.max(0, Math.round(core.x()) - radius),
+                r = Math.min(width - 1, Math.round(core.x()) + radius);
+        int t = Math.max(0, Math.round(core.y()) - radius),
+                b = Math.min(height - 1, Math.round(core.y()) + radius);
+        int w = r - l + 1, h = b - t + 1;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        int first = core.pixels[0], sx = first % width, sy = first / width;
+        if (sx < l || sx > r || sy < t || sy > b) return null;
+        queue[0] = first;
+        seen[(sy - t) * w + sx - l] = true;
+        int count = 1, read = 0, minX = sx, maxX = sx, minY = sy, maxY = sy;
+        while (read < count) {
+            int at = queue[read++], x = at % width, y = at / width;
+            if (x == l || x == r || y == t || y == b) return null;
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < l || nx > r || ny < t || ny > b) continue;
+                    int i = (ny - t) * w + nx - l;
+                    if (!seen[i] && (gray[ny * width + nx] & 255) < 205) {
+                        seen[i] = true;
+                        queue[count++] = ny * width + nx;
+                    }
+                }
+        }
+        if (!fermataDot(maxX - minX + 1, maxY - minY + 1, count, gap)) return null;
+        return new Glyph(minX, minY, maxX, maxY, count, Arrays.copyOf(queue, count));
     }
 
     /** Integer outer pixels round the dot bound outward; its proved roof remains mandatory. */
@@ -613,7 +653,7 @@ final class NoteArticulationDetector {
                                                 new Glyph(
                                                         -g.right, g.top, -g.left, g.bottom, g.count,
                                                         g.pixels))
-                                .toList()
+                                .collect(java.util.stream.Collectors.toList())
                         : List.of();
         List<Glyph> originalReflected =
                 raw
@@ -623,7 +663,7 @@ final class NoteArticulationDetector {
                                                 new Glyph(
                                                         -g.right, g.top, -g.left, g.bottom, g.count,
                                                         g.pixels))
-                                .toList()
+                                .collect(java.util.stream.Collectors.toList())
                         : List.of();
         for (Glyph glyph : candidates) {
             List<Glyph> context = paperCandidates.contains(glyph) ? glyphs : originalGlyphs;

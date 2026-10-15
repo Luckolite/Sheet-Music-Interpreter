@@ -779,7 +779,8 @@ public final class TablatureDecoder {
                 score.openingPickup()
                         && !measures.isEmpty()
                         && !score.measures().isEmpty()
-                        && measures.get(0).equals(score.measures().get(0)));
+                        && measures.get(0).equals(score.measures().get(0)),
+                score.tremoloSource().edited(sourceOwners));
     }
 
     /** Whole-measure meaning needs glyph identity, real enclosing bars and a complete silent voice. */

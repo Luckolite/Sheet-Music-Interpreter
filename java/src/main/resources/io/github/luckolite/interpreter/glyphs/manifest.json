@@ -167,6 +167,16 @@
       "path": "expression_templates/glyphs.json",
       "sha256": "6b95f24e810279c085203bdadbe28b5ca0fb26b30c188e09eb45083b771ed551",
       "bytes": 3051
+    },
+    {
+      "path": "pedal_templates/glyphs.bin",
+      "sha256": "087ebeb302a066f5ce65fa52f0f8d983e6fdcad9683870b486fba664d5b23d24",
+      "bytes": 11552
+    },
+    {
+      "path": "pedal_templates/glyphs.json",
+      "sha256": "3146448a54eb3eb9e6fa75b0a75f5f57fc6da65ff461b7c9775df70c3f535830",
+      "bytes": 623
     }
   ]
 }

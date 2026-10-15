@@ -52,6 +52,21 @@ final class WholeRestClassifier {
             List<ScoreNoteEvent> notes,
             List<ScoreRestEvent> otherRests,
             java.util.Set<Integer> shortBars) {
+        return detect(
+                gray, width, height, measures, staffs, notes, otherRests, shortBars, List.of());
+    }
+
+    /** Crops must come from accepted, conflict-free meter readings, never bare candidates. */
+    static List<Decision> detect(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<SixteenthRestDetector.Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> otherRests,
+            java.util.Set<Integer> shortBars,
+            List<MeterChangeDetector.Crop> verifiedHeaders) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -140,12 +155,37 @@ final class WholeRestClassifier {
                         status = Status.UNRESOLVED;
                         reason = "unresolved nearby dot ownership or ink";
                     }
+                    // Header ink can straddle the detected measure boundary. Keep event geometry
+                    // unchanged; only the full-rest centering frame excludes accepted header ink.
+                    float contentLeft = m.left();
+                    int headerRight = -1;
+                    boolean headerConflict = false;
+                    for (var header : verifiedHeaders) {
+                        if (header == null
+                                || Math.abs(header.firstLine() - lines.top()) > gap * .4f
+                                || header.gap() < gap * .8f
+                                || header.gap() > gap * 1.2f
+                                || header.left() > m.left() * width
+                                || header.right() <= m.left() * width
+                                || header.right() >= plate.left() - gap
+                                || MeterChangeDetector.followingMeasure(
+                                                header, width, height, measures)
+                                        != mi
+                                || !MeterChangeDetector.precedesNotes(
+                                        header, gray, width, height, mi, measures, notes)) continue;
+                        if (headerRight >= 0 && headerRight != header.right())
+                            headerConflict = true;
+                        headerRight = header.right();
+                    }
+                    if (headerRight >= 0 && !headerConflict)
+                        contentLeft = headerRight / (float) width;
+                    float centerPosition = (cx - contentLeft) / (m.right() - contentLeft);
                     float tolerance =
                             Math.min(
                                     .085f,
                                     Math.max(
                                             .035f,
-                                            plateGap * .65f / ((m.right() - m.left()) * width)));
+                                            plateGap * .65f / ((m.right() - contentLeft) * width)));
                     final int measureIndex = mi;
                     boolean shortSilentBar =
                             shortBars.contains(mi)
@@ -157,7 +197,8 @@ final class WholeRestClassifier {
                                                                             == staff.index()
                                                                     && n.staffCount()
                                                                             == staff.count());
-                    if (dots.isEmpty() && (Math.abs(pos - .5f) <= tolerance || shortSilentBar)) {
+                    if (dots.isEmpty()
+                            && (Math.abs(centerPosition - .5f) <= tolerance || shortSilentBar)) {
                         String conflict =
                                 conflictReason(
                                         plate,

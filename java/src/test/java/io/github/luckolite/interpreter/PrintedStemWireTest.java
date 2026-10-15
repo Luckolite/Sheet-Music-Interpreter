@@ -27,7 +27,8 @@ public class PrintedStemWireTest {
         var out = new ByteArrayOutputStream();
         NativeDecoderWire.writeAnalysis(
                 new DataOutputStream(out),
-                new OmrScoreInterpreter.Analysis(List.of(note), List.of(), List.of()));
+                new OmrScoreInterpreter.Analysis(List.of(note), List.of(), List.of()),
+                -25);
         return out.toByteArray();
     }
 
@@ -108,7 +109,7 @@ public class PrintedStemWireTest {
     @Test
     public void unsupportedAnalysisMarkerAndOutOfRangeStemAreRejected() throws Exception {
         var bytes = bytes(note());
-        ByteBuffer.wrap(bytes).putInt(-26);
+        ByteBuffer.wrap(bytes).putInt(-27);
         assertThrows(IOException.class, () -> read(bytes));
         for (int direction : new int[] {-2, 2}) {
             var bad = bytes(note());

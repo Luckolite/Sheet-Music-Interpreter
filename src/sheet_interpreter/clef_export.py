@@ -5,7 +5,7 @@ import xml.etree.ElementTree as ET
 from itertools import groupby
 from .typed_events import event_kind
 
-LAYOUT = {18: ('F',4,0), 22: ('C',4,0), 24: ('C',3,0), 30: ('G',2,0), 37: ('G',2,1)}
+LAYOUT = {18: ('F',4,0), 22: ('C',4,0), 24: ('C',3,0), 25: ('F',4,1), 30: ('G',2,0), 37: ('G',2,1)}
 
 
 def retained(page, index):

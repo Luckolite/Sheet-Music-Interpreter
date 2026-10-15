@@ -9,9 +9,11 @@ import subprocess
 import tempfile
 from pathlib import Path
 from .runtime import java_executable
+from .printed_tempo_spans import preserve_end, resolve_pages, has_open
 from .semantic_wire import encode
 from .typed_events import event_kind, validate_unpitched
 from .rest_kinds import rest_kind, full_measure_span
+from .tremolo_performance import source_spans, pulse_windows
 
 SUPPORTED = {'RITARDANDO', 'RALLENTANDO', 'RITENUTO', 'ACCELERANDO', 'A_TEMPO',
              'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA', 'BREATH', 'CAESURA',
@@ -152,16 +154,18 @@ def _rest_column_span(page, m, staff, count, position, tolerance):
 def _pedal_span(expression, page):
     """Resolve persisted hook columns using the final exported musical clock, never page spacing."""
     target = expression.get('targetEventId') or ''
-    if expression['kind'] not in ('PEDAL_DOWN', 'PEDAL_UP') or not target.startswith('pedal-hooks-v1:'):
+    single = target.startswith('pedal-glyph-column-v1:')
+    if expression['kind'] not in ('PEDAL_DOWN', 'PEDAL_UP') or not (single or target.startswith('pedal-hooks-v1:')):
         return None
     try:
-        fields = list(map(int, target[len('pedal-hooks-v1:'):].split(':')))
-        if len(fields) != 10 or any(not -2147483648 <= value <= 2147483647 for value in fields):
+        prefix = 'pedal-glyph-column-v1:' if single else 'pedal-hooks-v1:'
+        fields = list(map(int, target[len(prefix):].split(':')))
+        if len(fields) != (6 if single else 10) or any(not -2147483648 <= value <= 2147483647 for value in fields):
             return None
         staff, count = fields[-2:]
         if staff < 0 or count <= staff or staff != expression['staffIndex'] or count != expression['staffCount']:
             return None
-        if not any(e['sourceId'] == 'printed-pedal-bracket' and e['staffIndex'] == staff
+        if not any(e['sourceId'] == ('printed-pedal-glyph' if single else 'printed-pedal-bracket') and e['staffIndex'] == staff
                    and e['staffCount'] == count for e in expression.get('evidence', [])):
             return None
         anchors = []
@@ -169,7 +173,7 @@ def _pedal_span(expression, page):
         starts = [0.]
         for duration in page['measureBeats']:
             starts.append(starts[-1]+duration)
-        for m, kind, bits, tolerance_bits in (fields[:4], fields[4:8]):
+        for m, kind, bits, tolerance_bits in ((fields[:4], fields[:4]) if single else (fields[:4], fields[4:8])):
             position, tolerance = (struct.unpack('>f', struct.pack('>I', v & 0xffffffff))[0]
                                    for v in (bits, tolerance_bits))
             if not 0 <= m <= len(page['measureBeats']) or kind not in (0, 1, 2) \
@@ -198,8 +202,10 @@ def _pedal_span(expression, page):
             if not starts[m] <= beat <= starts[m+1]:
                 return None
             anchors.append(_anchor(beat, starts))
-        if (anchors[0]['measureIndex'], anchors[0]['quarterBeatOffset']) >= \
+        if not single and (anchors[0]['measureIndex'], anchors[0]['quarterBeatOffset']) >= \
                 (anchors[1]['measureIndex'], anchors[1]['quarterBeatOffset']):
+            return None
+        if single and expression['kind'] == 'PEDAL_DOWN' and anchors[0]['measureIndex'] == len(page['measureBeats']):
             return None
         return tuple(anchors)
     except (ValueError, struct.error, KeyError, TypeError):
@@ -213,13 +219,15 @@ def _resolve_pedal(expression, page):
         # Literal cues need final written-column proof in both playback and MusicXML.
         expression['start'], expression['end'], expression['scope'] = None, None, 'UNRESOLVED'
     # Revalidate cached columns even when old anchors claim to be resolved.
-    if (expression.get('targetEventId') or '').startswith('pedal-hooks-v1:') \
+    if (expression.get('targetEventId') or '').startswith(('pedal-hooks-v1:', 'pedal-glyph-column-v1:')) \
             and expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP'):
         span = _pedal_span(expression, page)
         down = expression['kind'] == 'PEDAL_DOWN'
         expression['start'] = span[0 if down else 1] if span else None
-        expression['end'] = span[1] if span and down else None
+        expression['end'] = span[1] if span and down and not (expression.get('targetEventId') or '').startswith('pedal-glyph-column-v1:') else None
         expression['scope'] = 'PART' if span else 'UNRESOLVED'
+    elif any(e.get('sourceId') == 'printed-pedal-glyph' for e in expression.get('evidence', [])):
+        expression['start'], expression['end'], expression['scope'] = None, None, 'UNRESOLVED'
     return expression
 
 
@@ -243,7 +251,9 @@ def _seconds(performance, beat, after):
 
 
 def _perform_one(pages, bpm):
+    pages = resolve_pages(pages)
     beats, numeric, expressions, bindings, sounds, aliases, payloads, directions = [], [], [], {}, [], {}, [], []
+    paired_sounds = {}
     previous, offset = {}, 0.
     for page_index, page in enumerate(pages):
         local = page['measureBeats']; starts = [0.]
@@ -254,10 +264,13 @@ def _perform_one(pages, bpm):
         if not math.isclose(starts[-1], page['totalBeats'], abs_tol=1e-6):
             raise ValueError('Expressive page extent disagrees with its measures')
         physical = page.get('sourcePage', page_index)
+        paired = source_spans(page)
         note_ids = []
         for index, note in enumerate(page['events']):
             identifier = f'note:{physical}:{index}'; note_ids.append(identifier)
             start, end = offset+note['startBeat'], offset+note['startBeat']+note['durationBeats']
+            if index in paired:
+                start, end = offset+paired[index]['start'], offset+paired[index]['end']
             if not math.isfinite(start) or not math.isfinite(end) or start < offset or end <= start or end > offset+starts[-1]+1e-6:
                 raise ValueError('Invalid expressive note span')
             validate_unpitched(note)
@@ -282,6 +295,8 @@ def _perform_one(pages, bpm):
                     staff=note['staffIndex'], count=note['staffCount']))
                 payloads.append(dict(note)); aliases[identifier] = old
             previous[lane] = old
+            if index in paired:
+                paired_sounds[old] = dict(paired[index], start=start, end=end)
         for supplied in page.get('score', {}).get('expressiveEvents', []):
             if supplied['kind'] not in SUPPORTED:
                 continue
@@ -292,15 +307,24 @@ def _perform_one(pages, bpm):
                 expression['start'], expression['end'] = span if span else (None, None)
                 expression['scope'] = 'REST' if span else 'UNRESOLVED'
             if members:
+                if expression['kind'] == 'FERMATA':
+                    pair_ids = {paired[i]['pair'] for i in members if i in paired}
+                    members = sorted(set(members) | {i for i, span in paired.items() if span['pair'] in pair_ids})
                 owned = [page['events'][i] for i in members]
-                start = owned[0]['startBeat']; release = start+owned[0]['durationBeats']
-                if all(not n.get('durationFallback', False) and math.isclose(n['startBeat'], start, abs_tol=1e-7)
-                       and math.isclose(n['startBeat']+n['durationBeats'], release, abs_tol=1e-7) for n in owned):
+                spans = [(paired[i]['start'], paired[i]['end']) if i in paired else
+                         (page['events'][i]['startBeat'], page['events'][i]['startBeat']+page['events'][i]['durationBeats']) for i in members]
+                start, release = spans[0]
+                if all(not n.get('durationFallback', False) and math.isclose(span[0], start, abs_tol=1e-7)
+                       and math.isclose(span[1], release, abs_tol=1e-7) for n, span in zip(owned, spans)):
                     breath = expression['kind'] in ('BREATH', 'CAESURA')
-                    expression['start'] = _anchor(release if breath else start, starts)
-                    expression['end'] = _anchor(release, starts) if expression['kind'] == 'FERMATA' else None
+                    resolved_start = _anchor(release if breath else start, starts)
+                    resolved_end = preserve_end(expression, resolved_start, page)
+                    expression['start'] = resolved_start
+                    expression['end'] = _anchor(release, starts) if expression['kind'] == 'FERMATA' else resolved_end
                     attack = expression['kind'] in ('SFORZANDO', 'SFORZATO', 'SFORZANDO_PIANO')
                     expression['scope'] = 'NOTE' if expression['kind'] == 'FERMATA' or attack else 'PART' if breath or expression['kind'] in ('PEDAL_DOWN', 'PEDAL_UP') else 'SCORE'
+                    if has_open(expression):
+                        expression['scope'] = 'UNRESOLVED'
                     if expression['kind'] == 'FERMATA':
                         bindings[expression['eventId']] = {aliases[note_ids[i]] for i in members}
             for field in ('start', 'end'):
@@ -335,20 +359,23 @@ def _perform_one(pages, bpm):
         # Subdivide the written/performed beat span before integrating tempo. A fixed
         # MIDI subdivision after time conversion adds extra attacks during slowing/holds.
         count = max(1, math.ceil((end-start)/subdivision-1e-8)) if subdivision else 1
-        for ordinal in range(count):
-            a = start+ordinal*subdivision if subdivision else start
-            b = min(end,a+subdivision) if subdivision else end
-            held = any(identifier in hold['sustainedTargets'] and math.isclose(hold['beat'], b, abs_tol=1e-8) for hold in result['holds'])
+        pair = paired_sounds.get(interval['sourceIndex'])
+        windows = pulse_windows(pair, start, end, interval['sourceStartBeat']) if pair else (
+            (ordinal, start+ordinal*subdivision if subdivision else start,
+             min(end,start+(ordinal+1)*subdivision) if subdivision else end) for ordinal in range(count))
+        for ordinal, a, b in windows:
+            held = any(identifier in hold['sustainedTargets'] and
+                       (a < hold['beat'] <= b+1e-8 if pair else math.isclose(hold['beat'], b, abs_tol=1e-8)) for hold in result['holds'])
             start_seconds, end_seconds = _seconds(result, a, True), _seconds(result, b, held)
             note = dict(payload)
             note.update(startBeat=start_seconds*2, durationBeats=(end_seconds-start_seconds)*2,
                         tiedFromPrevious=False, measureIndex=0,
-                        performanceId=identifier if not subdivision else identifier+f'/tremolo:{ordinal}')
+                        performanceId=identifier if not (subdivision or pair) else identifier+f'/tremolo:{ordinal}')
             if event_kind(note) == 'UNPITCHED':
                 note['_unpitchedAttackId'] = identifier
                 note['_unpitchedContinuation'] = False
                 note['clippedEntry'] = interval['clippedEntry']
-            if subdivision:
+            if subdivision or pair:
                 note['tremoloBeats'] = 0
             attacks = [attack for attack in result['attacks'] if attack['staffIndex'] == note['staffIndex']
                        and attack['staffCount'] == note['staffCount'] and math.isclose(attack['beat'], a, abs_tol=1e-7)]
@@ -370,7 +397,8 @@ def perform_expressions(document, bpm):
         for row in page.get('score', {}).get('rests', []):
             if rest_kind(row) == 'FULL_MEASURE':
                 full_measure_span(page, row)
-    if not any(e['kind'] in SUPPORTED for page in pages for e in page.get('score', {}).get('expressiveEvents', [])):
+    if not (any(e['kind'] in SUPPORTED or has_open(e) for page in pages for e in page.get('score', {}).get('expressiveEvents', []))
+            or any((page.get('score', {}).get('tremoloSource') or {}).get('pairs') for page in pages)):
         return None
     # Use the same arrangement boundaries as ordinary navigation export.
     from .navigation import _bridge as navigation_bridge

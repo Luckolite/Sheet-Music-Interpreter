@@ -43,6 +43,22 @@ final class ScoreNavigationDetector {
         };
     }
 
+    private static boolean attachedCodaSymbol(Glyph mark, Phrase phrase, int width, int height) {
+        if (phrase.kind() != ScorePlaybackDirection.Kind.TO_CODA
+                && phrase.kind() != ScorePlaybackDirection.Kind.DAL_SEGNO_AL_CODA
+                && phrase.kind() != ScorePlaybackDirection.Kind.DA_CAPO_AL_CODA) return false;
+        float lineHeight =
+                Math.max(phrase.bottom() - phrase.top(), mark.bottom() - mark.top()) * height;
+        if (lineHeight <= 0) return false;
+        float vertical =
+                Math.abs((phrase.top() + phrase.bottom() - mark.top() - mark.bottom()) * .5f)
+                        * height;
+        float following = (mark.centerX() - phrase.right()) * width;
+        return vertical <= lineHeight * .6f
+                && following >= -lineHeight * .5f
+                && following <= lineHeight * 1.3f;
+    }
+
     static List<ScorePlaybackDirection> detect(
             List<PlayingTechniqueDetector.Word> input,
             List<Glyph> glyphs,
@@ -92,6 +108,16 @@ final class ScoreNavigationDetector {
             }
             if (longest != null) phrases.add(longest);
         }
+        // A crossed-ring symbol directly completing an outgoing Coda phrase is
+        // part of that instruction, not an additional destination.
+        marks.removeIf(
+                mark ->
+                        mark.kind() == ScorePlaybackDirection.Kind.CODA
+                                && phrases.stream()
+                                        .anyMatch(
+                                                phrase ->
+                                                        attachedCodaSymbol(
+                                                                mark, phrase, width, height)));
         // A token proved to be inside a longer instruction is not a second mark.
         // Do not suppress a neighboring independent sign by a loose distance rule.
         for (var phrase : phrases)

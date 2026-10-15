@@ -22,6 +22,49 @@ final class PrintedRepeatGlyphs {
 
     private PrintedRepeatGlyphs() {}
 
+    /** Raw repeat proof used before semantic notehead fragments can veto its rails. */
+    static BitSet provedColumns(
+            byte[] gray, int width, int height, float staffTop, float staffBottom, float gap) {
+        BitSet result = new BitSet();
+        if (gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || !Float.isFinite(gap)
+                || gap < 5
+                || gap > Math.min(width, height) / 8f) return result;
+        int top = Math.max(0, Math.round(staffTop - gap)),
+                bottom = Math.min(height - 1, Math.round(staffBottom + gap));
+        if (bottom <= top) return result;
+        var found = dots(gray, width, top, bottom, gap);
+        for (var a : found)
+            for (var b : found) {
+                if (Math.abs(a.x - b.x) > gap * .2f
+                        || b.y - a.y < gap * .7f
+                        || b.y - a.y > gap * 1.3f) continue;
+                float cx = (a.x + b.x) * .5f, cy = (a.y + b.y) * .5f, measuredGap = b.y - a.y;
+                if (Math.abs(cy - (staffTop + staffBottom) * .5f) > gap) continue;
+                var accepted = new ArrayList<List<Bar>>();
+                for (int side : new int[] {-1, 1}) {
+                    if (!staffRails(gray, width, height, cx, cy, measuredGap, side)
+                            && !staffRails(gray, width, height, cx, cy, measuredGap, -side))
+                        continue;
+                    var pair = bars(gray, width, height, cx, cy, measuredGap, gap, side);
+                    if (pair.size() != 2) continue;
+                    pair.sort(Comparator.comparingDouble(bar -> Math.abs(bar.center() - cx)));
+                    var inner = pair.get(0);
+                    var outer = pair.get(1);
+                    if (inner.width() > gap * .35f
+                            || outer.width() < Math.max(2, inner.width() * 1.5f)
+                            || outer.width() > gap * .85f) continue;
+                    accepted.add(pair);
+                }
+                if (accepted.size() == 1)
+                    for (var bar : accepted.get(0)) result.set(bar.left, bar.right + 1);
+            }
+        return result;
+    }
+
     static List<Mark> detect(
             byte[] gray,
             int width,
@@ -51,9 +94,11 @@ final class PrintedRepeatGlyphs {
                     if (Math.abs(cy - (staff.top() + staff.bottom()) * .5f) > gap) continue;
                     var sides = new ArrayList<Mark>();
                     for (int side : new int[] {-1, 1}) {
-                        // Read the five staff rules on the music side, away from the terminal bar
-                        // edge.
-                        if (!staffRails(gray, width, height, cx, cy, measuredGap, side)) continue;
+                        // Prefer the music-side staff rules; dense notes can obscure that flank.
+                        // The opposite flank may independently prove all five rules.
+                        if (!staffRails(gray, width, height, cx, cy, measuredGap, side)
+                                && !staffRails(gray, width, height, cx, cy, measuredGap, -side))
+                            continue;
                         var bars = bars(gray, width, height, cx, cy, measuredGap, gap, side);
                         if (bars.size() != 2) continue;
                         bars.sort(Comparator.comparingDouble(bar -> Math.abs(bar.center() - cx)));

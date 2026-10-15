@@ -137,6 +137,7 @@ final class RawStaffLineDetector {
         }
         if (proved < 2) return;
         rejectIrregularInteriorAliases(staffs, gray, width, height);
+        rejectUnsupportedInteriorTexture(staffs, gray, width, height);
         final int firstPrinted = first, lastPrinted = last;
         // Interior gaps may contain faint parts; this rejection only handles outer texture.
         staffs.removeIf(
@@ -174,6 +175,72 @@ final class RawStaffLineDetector {
                                                 staff.bottom(),
                                                 staff.gap())
                                         == null);
+    }
+
+    /** Multiple texture groups can sit between real systems; each needs its own printed support. */
+    private static void rejectUnsupportedInteriorTexture(
+            List<StaffLines> staffs, byte[] gray, int width, int height) {
+        var proved = new ArrayList<StaffLines>();
+        for (var staff : staffs)
+            if (printedRuleCount(
+                                    new Candidate(staff.rows(), staff.gap(), 0),
+                                    gray,
+                                    width,
+                                    height,
+                                    230)
+                            >= 4
+                    && hasFiveParallelLocalRules(staff, gray, width, height)) proved.add(staff);
+        if (proved.size() < 2) return;
+        staffs.removeIf(
+                staff -> {
+                    boolean above = false, below = false;
+                    for (var proof : proved) {
+                        above |= proof.bottom() < staff.top();
+                        below |= proof.top() > staff.bottom();
+                    }
+                    if (!above
+                            || !below
+                            || proved.contains(staff)
+                            || !hasBackgroundTexture(staff, gray, width, height)) return false;
+                    return printedRuleCount(
+                                            new Candidate(staff.rows(), staff.gap(), 0),
+                                            gray,
+                                            width,
+                                            height,
+                                            230)
+                                    <= 1
+                            && !hasLocalContrastedRule(staff, gray, width, height)
+                            && !hasFiveParallelLocalRules(staff, gray, width, height)
+                            && StaffPitchTrack.detectForMeasures(
+                                            gray,
+                                            width,
+                                            height,
+                                            staff.top(),
+                                            staff.bottom(),
+                                            staff.gap())
+                                    == null;
+                });
+    }
+
+    /** Distributed local variation supplies positive image-texture evidence, not just missing rules. */
+    private static boolean hasBackgroundTexture(
+            StaffLines staff, byte[] gray, int width, int height) {
+        int size = Math.max(4, Math.round(staff.gap())), total = 0, textured = 0;
+        for (int y = Math.max(0, staff.top()); y <= staff.bottom() && y + size <= height; y += size)
+            for (int x = 0; x + size <= width; x += size * 2) {
+                long sum = 0, squares = 0;
+                int count = size * size;
+                for (int yy = y; yy < y + size; yy++)
+                    for (int xx = x; xx < x + size; xx++) {
+                        int value = gray[yy * width + xx] & 255;
+                        sum += value;
+                        squares += (long) value * value;
+                    }
+                double mean = sum / (double) count;
+                if (squares / (double) count - mean * mean > 25) textured++;
+                total++;
+            }
+        return textured >= 16 && textured >= total * .2;
     }
 
     /** Interior semantic texture must contradict both neighboring printed scales before rejection. */

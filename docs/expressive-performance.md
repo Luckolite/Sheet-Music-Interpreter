@@ -29,6 +29,19 @@ projection and inverse seeking use that same clock. Tremolo subdivisions are
 created in musical beats before tempo integration, so slowing or a hold does not
 create additional attacks. A tie keeps one sounding identity.
 
+Paired tremolos retain two source-owned endpoints, including chord members,
+across one shared duration. Each endpoint advances half its printed duration;
+MusicXML preserves its printed note type and emits tremolo start/stop marks.
+Playback alternates the endpoint chords across that shared span. The preview
+uses the app's calmer attack density: 75% of the written subdivision count,
+rounded to the nearest integer, retaining at least two attacks when available.
+This is a preview policy rather than a literal stroke-count performance.
+Repeat visits retain separate performance identities. A jump into a pair keeps
+the original alternating phase, and a Fine inside it clips the release. A
+fermata owned by either endpoint binds the complete pair and extends the final
+sounding pulse without adding attacks. Missing source owners or incompatible
+endpoint durations are rejected instead of exporting two ordinary notes.
+
 Rest-fermata timing requires an identified rest and an exactly accounted silent
 slot between proved written note columns or bar boundaries. Overlapping sound,
 ambiguous ownership or unaccounted silence prevents resolution. Continuation

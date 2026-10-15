@@ -43,7 +43,7 @@ public class RestKindAnalysisWireTest {
 
     static byte[] encoded(OmrScoreInterpreter.Analysis s) throws Exception {
         var out = new ByteArrayOutputStream();
-        NativeDecoderWire.writeAnalysis(new DataOutputStream(out), s);
+        NativeDecoderWire.writeAnalysis(new DataOutputStream(out), s, -25);
         return out.toByteArray();
     }
 
@@ -159,7 +159,7 @@ public class RestKindAnalysisWireTest {
     @Test
     public void unsupportedFutureAnalysisMarkerRejects() throws Exception {
         var b = encoded(score(false));
-        ByteBuffer.wrap(b).putInt(-26);
+        ByteBuffer.wrap(b).putInt(-27);
         invalid(b);
     }
 

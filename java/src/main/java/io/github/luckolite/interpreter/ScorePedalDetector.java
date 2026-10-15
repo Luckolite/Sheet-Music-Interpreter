@@ -7,8 +7,79 @@ import java.util.*;
 /** Preserves proved hook columns until final inherited meter is available, without page rectangles. */
 public final class ScorePedalDetector {
     private static final String SOURCE = "printed-pedal-bracket", TARGET = "pedal-hooks-v1:";
+    private static final String GLYPH_SOURCE = "printed-pedal-glyph",
+            GLYPH_TARGET = "pedal-glyph-column-v1:";
 
     private ScorePedalDetector() {}
+
+    private static String glyphTarget(Columns columns) {
+        var h = columns.start();
+        return GLYPH_TARGET
+                + h.measure()
+                + ":"
+                + h.kind()
+                + ":"
+                + bits(h.position())
+                + ":"
+                + bits(h.tolerance())
+                + ":"
+                + columns.staff()
+                + ":"
+                + columns.count();
+    }
+
+    static ScorePageInterpretation withGlyphs(
+            ScorePageInterpretation score,
+            List<PrintedPedalColumns.Located> glyphs,
+            int width,
+            int page) {
+        if (width <= 0 || page < 0)
+            throw new IllegalArgumentException("Invalid glyph evidence page");
+        var events = new ArrayList<>(score.expressiveEvents());
+        var ids = new HashSet<String>();
+        for (var e : events) ids.add(e.eventId());
+        for (var located : glyphs) {
+            var owned = located.source();
+            var mark = owned.mark();
+            var staff = owned.staff();
+            String id =
+                    "printed-pedal-glyph:"
+                            + page
+                            + ":"
+                            + mark.kind()
+                            + ":"
+                            + mark.left()
+                            + ":"
+                            + mark.top();
+            if (!ids.add(id)) continue;
+            var target =
+                    located.hook()
+                            .map(h -> glyphTarget(new Columns(h, h, staff.index(), staff.count())));
+            events.add(
+                    new ScoreExpressiveEvent(
+                            id,
+                            mark.kind() == 1
+                                    ? ScoreExpressiveEvent.Kind.PEDAL_DOWN
+                                    : ScoreExpressiveEvent.Kind.PEDAL_UP,
+                            Optional.empty(),
+                            Optional.empty(),
+                            ScoreExpressiveEvent.Scope.UNRESOLVED,
+                            staff.index(),
+                            staff.count(),
+                            target,
+                            ScoreExpressiveEvent.Strength.UNSPECIFIED,
+                            "",
+                            List.of(
+                                    new ScoreExpressiveEvent.Evidence(
+                                            GLYPH_SOURCE,
+                                            page,
+                                            mark.left() / (float) width,
+                                            staff.index(),
+                                            staff.count(),
+                                            mark.kind() == 1 ? "Ped." : "*"))));
+        }
+        return score.withExpressiveEvents(events);
+    }
 
     private record Columns(
             PedalBracketAnchors.Hook start, PedalBracketAnchors.Hook end, int staff, int count) {
@@ -62,6 +133,20 @@ public final class ScorePedalDetector {
     }
 
     private static Columns decode(String target) {
+        if (target.startsWith(GLYPH_TARGET))
+            try {
+                var f = target.substring(GLYPH_TARGET.length()).split(":");
+                if (f.length != 6) return null;
+                var h =
+                        new PedalBracketAnchors.Hook(
+                                Integer.parseInt(f[0]),
+                                Integer.parseInt(f[1]),
+                                Float.intBitsToFloat(Integer.parseInt(f[2])),
+                                Float.intBitsToFloat(Integer.parseInt(f[3])));
+                return new Columns(h, h, Integer.parseInt(f[4]), Integer.parseInt(f[5]));
+            } catch (IllegalArgumentException invalid) {
+                return null;
+            }
         if (!target.startsWith(TARGET)) return null;
         try {
             String[] fields = target.substring(TARGET.length()).split(":");
@@ -80,6 +165,33 @@ public final class ScorePedalDetector {
         }
     }
 
+    /** Remaps deferred hook owners together with visible score anchors after structural repair. */
+    static Optional<String> remapTargetMeasures(
+            ScoreExpressiveEvent event, java.util.function.IntUnaryOperator map) {
+        if (!owns(event)) return event.targetEventId();
+        var c = ownedColumns(event);
+        var first = c.start();
+        var last = c.end();
+        var mapped =
+                new Columns(
+                        new PedalBracketAnchors.Hook(
+                                map.applyAsInt(first.measure()),
+                                first.kind(),
+                                first.position(),
+                                first.tolerance()),
+                        new PedalBracketAnchors.Hook(
+                                map.applyAsInt(last.measure()),
+                                last.kind(),
+                                last.position(),
+                                last.tolerance()),
+                        c.staff(),
+                        c.count());
+        return Optional.of(
+                event.targetEventId().orElseThrow().startsWith(GLYPH_TARGET)
+                        ? glyphTarget(mapped)
+                        : mapped.encode());
+    }
+
     static boolean owns(ScoreExpressiveEvent event) {
         return ownedColumns(event) != null;
     }
@@ -94,7 +206,11 @@ public final class ScorePedalDetector {
                         && event.evidence().stream()
                                 .anyMatch(
                                         e ->
-                                                e.sourceId().equals(SOURCE)
+                                                (event.targetEventId()
+                                                                        .orElse("")
+                                                                        .startsWith(GLYPH_TARGET)
+                                                                ? e.sourceId().equals(GLYPH_SOURCE)
+                                                                : e.sourceId().equals(SOURCE))
                                                         && e.staffIndex() == event.staffIndex()
                                                         && e.staffCount() == event.staffCount())
                 ? columns
@@ -178,7 +294,10 @@ public final class ScorePedalDetector {
                 event.scope(),
                 event.staffIndex(),
                 event.staffCount(),
-                Optional.of(columns.offset(offset).encode()),
+                Optional.of(
+                        event.targetEventId().orElse("").startsWith(GLYPH_TARGET)
+                                ? glyphTarget(columns.offset(offset))
+                                : columns.offset(offset).encode()),
                 event.strength(),
                 event.qualifierText(),
                 event.evidence().stream()
@@ -212,14 +331,30 @@ public final class ScorePedalDetector {
             ScorePageInterpretation score, ScoreMeterMap meter) {
         Objects.requireNonNull(score);
         var events = new ArrayList<ScoreExpressiveEvent>();
-        try (var session = ScoreNoteTiming.beginTimingSession()) {
+        try (var session = ScoreNoteTiming.beginTimingSession(score)) {
             Columns previousColumns = null;
             Optional<ScoreAnchor> previousStart = Optional.empty();
             Optional<ScoreAnchor> previousEnd = Optional.empty();
             for (var event : score.expressiveEvents()) {
                 var columns = ownedColumns(event);
                 if (columns == null) {
-                    events.add(event);
+                    if (event.targetEventId().orElse("").startsWith(GLYPH_TARGET)
+                            || event.evidence().stream()
+                                    .anyMatch(e -> e.sourceId().equals(GLYPH_SOURCE)))
+                        events.add(
+                                new ScoreExpressiveEvent(
+                                        event.eventId(),
+                                        event.kind(),
+                                        Optional.empty(),
+                                        Optional.empty(),
+                                        ScoreExpressiveEvent.Scope.UNRESOLVED,
+                                        event.staffIndex(),
+                                        event.staffCount(),
+                                        event.targetEventId(),
+                                        event.strength(),
+                                        event.qualifierText(),
+                                        event.evidence()));
+                    else events.add(event);
                     continue;
                 }
                 Optional<ScoreAnchor> start;
@@ -249,6 +384,30 @@ public final class ScorePedalDetector {
                     previousColumns = columns;
                     previousStart = start;
                     previousEnd = end;
+                }
+                boolean single = event.targetEventId().orElse("").startsWith(GLYPH_TARGET);
+                if (single) {
+                    boolean provedSingle =
+                            start.isPresent()
+                                    && (event.kind() != ScoreExpressiveEvent.Kind.PEDAL_DOWN
+                                            || start.get().measureIndex()
+                                                    < score.measures().size());
+                    events.add(
+                            new ScoreExpressiveEvent(
+                                    event.eventId(),
+                                    event.kind(),
+                                    provedSingle ? start : Optional.empty(),
+                                    Optional.empty(),
+                                    provedSingle
+                                            ? ScoreExpressiveEvent.Scope.PART
+                                            : ScoreExpressiveEvent.Scope.UNRESOLVED,
+                                    event.staffIndex(),
+                                    event.staffCount(),
+                                    event.targetEventId(),
+                                    event.strength(),
+                                    event.qualifierText(),
+                                    event.evidence()));
+                    continue;
                 }
                 boolean proved =
                         start.isPresent()

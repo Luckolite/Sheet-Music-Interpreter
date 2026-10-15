@@ -17,8 +17,8 @@ from . import semantic_wire
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
 RECOGNITION_REVISION = 62
-GUIDE_VERSION = 288
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288)
+GUIDE_VERSION = 289
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -115,6 +115,8 @@ def encode(score, guide_version=GUIDE_VERSION):
             raise ValueError("Invalid tuplet ratio")
         if guide_version < 276 and normal != default_normal:
             raise ValueError("Explicit tuplet ratio requires guide276")
+        if guide_version < 289 and row.get("clefBottomDiatonic") == 25:
+            raise ValueError("Octave-bass clef requires guide289")
         stem = row.get("stemDirection", 0)
         if type(stem) is not int or stem not in (-1, 0, 1):
             raise ValueError("Invalid printed stem direction")
@@ -211,6 +213,12 @@ def encode(score, guide_version=GUIDE_VERSION):
         _pack(output, "B", int(pickup))
     elif pickup:
         raise ValueError("Legacy guide format cannot preserve opening pickup proof")
+    from . import tremolo_wire
+    tremolo = tremolo_wire.encode_source(score.get("tremoloSource"), len(score["notes"]))
+    if guide_version >= 289:
+        output.write(tremolo)
+    elif tremolo != tremolo_wire.encode_source(None, len(score["notes"])):
+        raise ValueError("Legacy guide format cannot preserve tremolo source")
     if output.tell() > MAX_GUIDE_BYTES:
         raise ValueError("Guide exceeds cache limit")
     return output.getvalue()

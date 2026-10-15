@@ -12,7 +12,45 @@ final class WholeRestMeterContext {
             int w,
             int h,
             List<PlayingTechniqueDetector.Staff> staffs) {
+        return apply(s, gray, w, h, staffs, List.of(), List.of());
+    }
+
+    static ScorePageInterpretation apply(
+            ScorePageInterpretation s,
+            byte[] gray,
+            int w,
+            int h,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<ScoreMeterChange> headerMeters,
+            List<MeterChangeDetector.Crop> headers) {
         if (s == null || s.rests().isEmpty() || s.meterChanges().isEmpty()) return s;
+        // Later tablature/annotation stages may change the selected meter. Such a change
+        // invalidates OCR header evidence rather than silently reusing its geometry.
+        var acceptedHeaders =
+                headers.stream()
+                        .filter(
+                                c -> {
+                                    int mi =
+                                            MeterChangeDetector.followingMeasure(
+                                                    c, w, h, s.measures());
+                                    var source =
+                                            headerMeters.stream()
+                                                    .filter(m -> m.measureIndex() == mi)
+                                                    .distinct()
+                                                    .toList();
+                                    var current =
+                                            s.meterChanges().stream()
+                                                    .filter(m -> m.measureIndex() == mi)
+                                                    .distinct()
+                                                    .toList();
+                                    return source.size() == 1
+                                            && current.size() == 1
+                                            && source.get(0).equals(current.get(0));
+                                })
+                        .toList();
+        var headerBars = new HashSet<Integer>();
+        for (var c : acceptedHeaders)
+            headerBars.add(MeterChangeDetector.followingMeasure(c, w, h, s.measures()));
         Set<Integer> shortBars = new HashSet<>();
         for (int mi = 0; mi < s.measures().size(); mi++) {
             int latest = -1;
@@ -34,7 +72,7 @@ final class WholeRestMeterContext {
             double span = selected.numerator() * 4d / selected.denominator();
             if (span > 0 && span < 4) shortBars.add(mi);
         }
-        if (shortBars.isEmpty()) return s;
+        if (shortBars.isEmpty() && acceptedHeaders.isEmpty()) return s;
         var restStaffs =
                 staffs.stream()
                         .map(
@@ -48,12 +86,21 @@ final class WholeRestMeterContext {
                         .toList();
         var decisions =
                 WholeRestClassifier.detect(
-                        gray, w, h, s.measures(), restStaffs, s.notes(), s.rests(), shortBars);
+                        gray,
+                        w,
+                        h,
+                        s.measures(),
+                        restStaffs,
+                        s.notes(),
+                        s.rests(),
+                        shortBars,
+                        acceptedHeaders);
         var rests = new ArrayList<>(s.rests());
         for (var d : decisions) {
             var found = d.event();
             if (!found.isFullMeasure()
-                    || !shortBars.contains(found.measureIndex())
+                    || (!shortBars.contains(found.measureIndex())
+                            && !headerBars.contains(found.measureIndex()))
                     || s.notes().stream()
                             .anyMatch(
                                     n ->
@@ -106,6 +153,7 @@ final class WholeRestMeterContext {
                 s.playbackDirections(),
                 s.expressiveEvents(),
                 s.slurSource(),
-                s.openingPickup());
+                s.openingPickup(),
+                s.tremoloSource());
     }
 }

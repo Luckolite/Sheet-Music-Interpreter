@@ -270,6 +270,10 @@ final class TempoChangeDetector {
                 measureIndex =
                         provedOpeningTempo(
                                 token, gray, width, height, equalsLeft, directionMeasures);
+            if (measureIndex < 0)
+                measureIndex =
+                        provedElevatedSystemTempo(
+                                token, gray, width, height, equalsLeft, directionMeasures);
             if (measureIndex < 0) continue;
             MeasureRegion measure = directionMeasures.get(measureIndex);
             float position =
@@ -357,6 +361,44 @@ final class TempoChangeDetector {
         return -1;
     }
 
+    /** A complete tempo equation may sit above a chord row at a later system start. */
+    private static int provedElevatedSystemTempo(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int equals,
+            List<MeasureRegion> measures) {
+        float cx = (token.left() + token.right()) * .5f, cy = (token.top() + token.bottom()) * .5f;
+        for (var m : measures)
+            if (cx >= m.left() - .025f
+                    && cx <= m.right() + .025f
+                    && cy > m.top() + .002f
+                    && cy < m.bottom()) return -1;
+        if (!Double.isFinite(printedBeatUnit(token, gray, width, height, equals, 200))
+                && !Double.isFinite(printedBeatUnit(token, gray, width, height, equals, 165)))
+            return -1;
+        int found = -1;
+        for (var staff : RawStaffLineDetector.detect(gray, width, height)) {
+            float gap = staff.gap(), y = token.bottom() * height;
+            if (y >= staff.top() || staff.top() - y > gap * 8) continue;
+            int first = -1;
+            for (int i = 0; i < measures.size(); i++) {
+                var m = measures.get(i);
+                if (Math.abs(m.top() * height - staff.top()) > gap * .3f
+                        || staff.bottom() > m.bottom() * height) continue;
+                if (first < 0 || m.left() < measures.get(first).left()) first = i;
+            }
+            if (first < 0) continue;
+            var m = measures.get(first);
+            if (Math.abs(token.annotationLeft() - m.left()) * width > gap * 3
+                    || token.right() > m.right()) continue;
+            if (found >= 0 && found != first) return -1;
+            found = first;
+        }
+        return found;
+    }
+
     private static int approximateFollowingMeasure(
             MeasureNumberReconciler.NumberToken anchor, List<MeasureRegion> measures) {
         int best = nearestFollowingMeasure(anchor, measures, false);
@@ -396,7 +438,7 @@ final class TempoChangeDetector {
         var proved = new java.util.HashMap<MeasureNumberReconciler.NumberToken, Integer>();
         var syntax =
                 java.util.regex.Pattern.compile(
-                        "^[♩♪♫♬√J]?\\s*=\\s*(?:ca\\.?|c\\.|circa|~|\u2248)\\s*([0-9]{2,3})$",
+                        "^[♩♪♫♬√J.]?\\s*=\\s*(?:ca\\.?|c\\.|circa|~|\u2248)\\s*([0-9]{2,3})$",
                         java.util.regex.Pattern.CASE_INSENSITIVE);
         for (var word : words) {
             if (word == null || word.text() == null) continue;

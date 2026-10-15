@@ -84,11 +84,12 @@ class WholeRestWriterTest(unittest.TestCase):
         start = rest_start(new, 283)
         self.assertEqual(1, new[start + 32])
         self.assertEqual(4, struct.unpack_from('>d', new, start + 24)[0])
-        from sheet_interpreter import slur_wire
+        from sheet_interpreter import slur_wire, tremolo_wire
         current = wire.encode(original)
         source = slur_wire.encode_source(None, len(original['notes']))
-        self.assertEqual(new[4:], current[4:-(len(source)+1)])
-        self.assertTrue(current.endswith(source + b'\x00'))
+        tremolo = tremolo_wire.encode_source(None, len(original['notes']))
+        self.assertEqual(new[4:], current[4:-(len(source)+1+len(tremolo))])
+        self.assertTrue(current.endswith(source + b'\x00' + tremolo))
 
     def test_full_measure_rejects_every_legacy_target(self):
         original = score()
@@ -126,7 +127,7 @@ class WholeRestWriterTest(unittest.TestCase):
     def test_unknown_future_layout_rejects(self):
         for writer in (wire,):
             with self.assertRaises(ValueError):
-                writer.encode(score(), 289)
+                writer.encode(score(), 290)
 
     def test_same_geometry_literal_and_full_remain_distinct_records(self):
         original = score()
@@ -136,12 +137,12 @@ class WholeRestWriterTest(unittest.TestCase):
         self.assertEqual(new[start:start + 32], new[start + 33:start + 65])
         self.assertEqual([0, 1], [new[start + 32], new[start + 65]])
 
-    def test_inputs_remain_exact_and_default_writer_is288(self):
+    def test_inputs_remain_exact_and_default_writer_is289(self):
         original = score()
         original['rests'][0]['kind'] = 'FULL_MEASURE'
         before = copy.deepcopy(original)
         for writer in (wire,):
-            self.assertEqual(writer.encode(original, 288), writer.encode(original))
+            self.assertEqual(writer.encode(original, 289), writer.encode(original))
             self.assertEqual(before, original)
 
     def test_write_new_preserves_previous_candidate(self):

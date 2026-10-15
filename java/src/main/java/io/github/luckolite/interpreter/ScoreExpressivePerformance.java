@@ -272,6 +272,35 @@ public final class ScoreExpressivePerformance {
                                             * (event.kind() == Kind.ACCELERANDO
                                                     ? 1 / policy.ratio(event.strength())
                                                     : policy.ratio(event.strength()))));
+            // A proved written span may terminate at an explicit numeric tempo.
+            // Do not borrow a target through an intervening tempo instruction.
+            if (event.kind() != Kind.RITENUTO && event.end().isPresent()) {
+                double endBeat = event.end().orElseThrow().absoluteBeat(meter);
+                Double writtenTarget = null;
+                boolean ambiguous = false;
+                for (int following = index + 1; following < controls.size(); following++) {
+                    var endpoint = controls.get(following);
+                    if (endpoint.beat() > endBeat + 1e-7) break;
+                    if (endpoint.expression() != null
+                            && endpoint.expression().kind() == Kind.SAME_TEMPO) continue;
+                    if (Math.abs(endpoint.beat() - endBeat) > 1e-7
+                            || endpoint.expression() != null) {
+                        ambiguous = true;
+                        break;
+                    }
+                    if (writtenTarget != null && Math.abs(writtenTarget - endpoint.bpm()) > 1e-7) {
+                        ambiguous = true;
+                        break;
+                    }
+                    writtenTarget = endpoint.bpm();
+                }
+                if (!ambiguous
+                        && writtenTarget != null
+                        && endBeat > at
+                        && (event.kind() == Kind.ACCELERANDO
+                                ? writtenTarget > current
+                                : writtenTarget < current)) target = writtenTarget;
+            }
             if (event.kind() == Kind.RITENUTO) {
                 current = target;
                 rampEnd = at;

@@ -14,6 +14,30 @@ final class FadedNoteheadRecovery {
 
     static List<Head> find(
             byte[] labels, byte[] gray, int width, int height, float gap, int top, int bottom) {
+        List<Head> result = find(labels, gray, width, height, gap, top, bottom, 150);
+        for (Head head : find(labels, gray, width, height, gap, top, bottom, 170)) {
+            boolean duplicate = false;
+            for (Head prior : result)
+                if (Math.abs(prior.left() + prior.right() - head.left() - head.right()) < gap * 1.6f
+                        && Math.abs(prior.top() + prior.bottom() - head.top() - head.bottom())
+                                < gap * 1.3f) {
+                    duplicate = true;
+                    break;
+                }
+            if (!duplicate) result.add(head);
+        }
+        return result;
+    }
+
+    private static List<Head> find(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            int top,
+            int bottom,
+            int threshold) {
         List<Head> result = new ArrayList<>();
         if (width <= 0
                 || height <= 0
@@ -30,7 +54,7 @@ final class FadedNoteheadRecovery {
         boolean[] seen = new boolean[size];
         int[] queue = new int[size];
         for (int seed = 0; seed < size; seed++) {
-            if (seen[seed] || (gray[top * width + seed] & 255) <= 150) continue;
+            if (seen[seed] || (gray[top * width + seed] & 255) <= threshold) continue;
             int read = 0, end = 1;
             queue[0] = seed;
             seen[seed] = true;
@@ -46,7 +70,7 @@ final class FadedNoteheadRecovery {
                     int ny = y + (direction == 2 ? -1 : direction == 3 ? 1 : 0);
                     if (nx < 0 || nx >= width || ny < top || ny > bottom) continue;
                     int next = (ny - top) * width + nx;
-                    if (!seen[next] && (gray[ny * width + nx] & 255) > 150) {
+                    if (!seen[next] && (gray[ny * width + nx] & 255) > threshold) {
                         seen[next] = true;
                         queue[end++] = next;
                     }
@@ -109,9 +133,66 @@ final class FadedNoteheadRecovery {
             if (bow < Math.max(.5f, gap * .025f)) continue;
             if (!stem(labels, gray, width, height, left - 2, cy, gap, 1)
                     && !stem(labels, gray, width, height, right + 2, cy, gap, -1)) continue;
+            if (flagPocketOnOwnedStem(labels, gray, width, height, left, upper, right, lower, gap))
+                continue;
             result.add(new Head(left - 2, upper - 2, right + 2, lower + 2));
         }
         return result;
+    }
+
+    /** A compact flag pocket is opposite the already recognized head on the same shaft. */
+    static boolean flagPocketOnOwnedStem(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap) {
+        if (labels == null
+                || gray == null
+                || width < 1
+                || height < 1
+                || labels.length != (long) width * height
+                || gray.length != labels.length
+                || !Float.isFinite(gap)
+                || gap < 6
+                || left < 0
+                || top < 0
+                || right >= width
+                || bottom >= height
+                || right < left
+                || bottom < top
+                || right - left + 1 > gap * .85f
+                || bottom - top + 1 > gap * .85f) return false;
+        int cy = (top + bottom) / 2;
+        for (int direction : new int[] {-1, 1}) {
+            int edge = direction > 0 ? left - 2 : right + 2;
+            for (int sx = Math.max(0, edge - 3); sx <= Math.min(width - 1, edge + 3); sx++) {
+                int ink = 0, semantic = 0, rows = 0, headRows = 0;
+                for (int distance = 0; distance <= gap * 3.5f; distance++) {
+                    int y = cy + direction * distance;
+                    if (y < 0 || y >= height) break;
+                    rows++;
+                    if ((gray[y * width + sx] & 255) < 175) ink++;
+                    if (labels[y * width + sx] == OmrMeasurePostProcessor.STEM_OR_REST) semantic++;
+                    if (distance < gap * 1.25f) continue;
+                    int headInk = 0;
+                    for (int dx = Math.max(2, Math.round(gap * .25f)); dx <= gap * 1.5f; dx++) {
+                        int x = sx - direction * dx;
+                        if (x >= 0
+                                && x < width
+                                && labels[y * width + x] == OmrMeasurePostProcessor.NOTEHEAD
+                                && (gray[y * width + x] & 255) < 175) headInk++;
+                    }
+                    headRows = headInk >= gap * .5f ? headRows + 1 : 0;
+                    if (headRows >= 3 && ink >= rows * .85f && semantic >= rows * .5f) return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean stem(

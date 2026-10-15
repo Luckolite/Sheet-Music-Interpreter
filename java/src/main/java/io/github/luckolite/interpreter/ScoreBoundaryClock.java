@@ -37,7 +37,7 @@ public record ScoreBoundaryClock(double openingQuarterBeats, double closingQuart
         double opening = ScoreOpeningDuration.provedQuarterBeats(source, nominal.beatsInMeasure(0));
         double closing =
                 ScoreOpeningDuration.provedClosingQuarterBeats(
-                        source.notes(), source.rests(), count, nominal.beatsInMeasure(count - 1));
+                        source, nominal.beatsInMeasure(count - 1));
         opening = Double.isFinite(opening) ? opening : nominal.beatsInMeasure(0);
         closing = Double.isFinite(closing) ? closing : nominal.beatsInMeasure(count - 1);
         if (count == 1) opening = closing;

@@ -231,6 +231,91 @@ final class ScoreDynamicsDetector {
         return List.copyOf(result);
     }
 
+    /** Chord rows use their nearby printed staff, even if dynamic ownership chose another system. */
+    static boolean uprightChordF(
+            PlayingTechniqueDetector.Word word,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            byte[] gray,
+            int width,
+            int height) {
+        for (var staff : staffs) if (uprightChordF(word, staff, gray, width, height)) return true;
+        return false;
+    }
+
+    /** An upright capital F above a staff is a chord root, not the italic forte glyph. */
+    static boolean uprightChordF(
+            PlayingTechniqueDetector.Word word,
+            PlayingTechniqueDetector.Staff staff,
+            byte[] gray,
+            int width,
+            int height) {
+        if (word == null
+                || staff == null
+                || !word.text().trim().equalsIgnoreCase("f")
+                || gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || !Float.isFinite(staff.gap())
+                || staff.gap() <= 0
+                || word.bottom() * height > staff.top() - staff.gap() * .25f
+                || staff.top() - word.bottom() * height > staff.gap() * 5.5f) return false;
+        int x0 = Math.max(0, Math.round(word.left() * width)),
+                x1 = Math.min(width, Math.round(word.right() * width));
+        int y0 = Math.max(0, Math.round(word.top() * height)),
+                y1 = Math.min(height, Math.round(word.bottom() * height));
+        int left = x1, right = -1, top = y1, bottom = -1;
+        for (int y = y0; y < y1; y++)
+            for (int x = x0; x < x1; x++)
+                if ((gray[y * width + x] & 255) < 145) {
+                    left = Math.min(left, x);
+                    right = Math.max(right, x);
+                    top = Math.min(top, y);
+                    bottom = Math.max(bottom, y);
+                }
+        int w = right - left + 1, h = bottom - top + 1;
+        if (w < 5
+                || h < 9
+                || w < h * .35f
+                || w > h * .9f
+                || h < staff.gap() * .8f
+                || h > staff.gap() * 2.5f) return false;
+        int stemColumns = 0;
+        for (int x = left; x <= right; x++) {
+            int ink = 0;
+            for (int y = top; y <= bottom; y++) if ((gray[y * width + x] & 255) < 145) ink++;
+            if (ink >= h * .9f) {
+                if (x - left > w * .3f) return false;
+                stemColumns++;
+            }
+        }
+        if (stemColumns < 1 || stemColumns > w * .35f) return false;
+        int upper = 0, middle = 0, openRows = 0, lowerInk = 0, lowerArea = 0;
+        for (int y = top; y <= bottom; y++) {
+            int ink = 0;
+            for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) < 145) ink++;
+            float row = (y - top) / (float) h;
+            if (row < .2f && ink >= w * .8f) upper++;
+            if (row >= .35f && row <= .65f && ink >= w * .75f) middle++;
+            if (row >= .2f && row < .4f) {
+                int rightInk = 0;
+                for (int x = left + Math.round(w * .4f); x <= right; x++)
+                    if ((gray[y * width + x] & 255) < 145) rightInk++;
+                if (rightInk == 0) openRows++;
+            }
+            if (row >= .68f)
+                for (int x = left + Math.max(1, Math.round(w * .4f)); x <= right; x++) {
+                    lowerArea++;
+                    if ((gray[y * width + x] & 255) < 145) lowerInk++;
+                }
+        }
+        return upper >= Math.max(1, h * .05f)
+                && middle >= Math.max(1, h * .05f)
+                && openRows >= Math.max(1, h * .1f)
+                && lowerArea > 0
+                && lowerInk <= lowerArea * .015f;
+    }
+
     static float level(String text) {
         if (text == null) return Float.NaN;
         String token = text.trim().toLowerCase(Locale.ROOT).replaceAll("[.,:;]$", "");
@@ -247,6 +332,12 @@ final class ScoreDynamicsDetector {
         token =
                 token.replaceFirst(
                         "^(ppp|pp|p|mp|mf|fff|ff|f)\\s*(?:animato|scherzando|furioso|legato|espressivo|dolce|cantabile|marcato|sostenuto|tranquillo|agitato)$",
+                        "$1");
+        // A complete dynamic plus standard delivery modifiers retains its literal level.
+        // Do not accept arbitrary trailing words or search inside lyrics.
+        token =
+                token.replaceFirst(
+                        "^(ppp|pp|p|mp|mf|fff|ff|f)\\s+(?:(?:molto|poco|sempre|piu|più)\\s+)?(?:animato|scherzando|furioso|legato|espressivo|dolce|cantabile|marcato|sostenuto|tranquillo|agitato|maestoso|grazioso|giocoso|appassionato|leggiero)(?:\\s+con\\s+(?:brio|fuoco|anima))?$",
                         "$1");
         return switch (token) {
             case "ppp" -> -18;
@@ -450,10 +541,15 @@ final class ScoreDynamicsDetector {
                                 (word.left() + word.right()) * width * .5f,
                                 word.top() * height,
                                 word.bottom() * height);
+            if (owner == null)
+                owner =
+                        provedLowerWordOwner(
+                                word, staffs, measures, notes, ownershipGray, width, height);
             if (owner == null
                     || word.bottom() - word.top() > owner.gap() * 3 / height
                             && !ShadedTallDynamicWord.proved(
                                     word, ownershipGray, width, height, owner.gap())) continue;
+            if (uprightChordF(word, staffs, ownershipGray, width, height)) continue;
             var common =
                     GrandStaffDynamics.directionPart(
                             shared, owner, word.top() * height, word.bottom() * height);
@@ -613,6 +709,38 @@ final class ScoreDynamicsDetector {
                                             lower[b] - upper[b],
                                             direction));
                     }
+                }
+            }
+            for (var shape : OpenHairpinPairs.detect(ownershipGray, width, height, staffs)) {
+                var proposed = new ArrayList<ScoreDynamicChange>();
+                add(
+                        proposed,
+                        shape.staff(),
+                        shape.left() / (float) width,
+                        shape.right() / (float) width,
+                        0,
+                        shape.direction(),
+                        measures,
+                        notes,
+                        width,
+                        height,
+                        false);
+                for (var change : proposed) {
+                    double a = change.measureIndex() + change.positionInMeasure();
+                    double b = change.endMeasureIndex() + change.endPosition();
+                    boolean retained = false;
+                    for (var old : result) {
+                        if (old.direction() != change.direction()
+                                || !sameDynamicPart(old, shape.staff(), false)) continue;
+                        double c = old.measureIndex() + old.positionInMeasure();
+                        double d = old.endMeasureIndex() + old.endPosition();
+                        double overlap = Math.min(b, d) - Math.max(a, c);
+                        if (overlap > 0 && overlap >= Math.min(b - a, d - c) * .8) {
+                            retained = true;
+                            break;
+                        }
+                    }
+                    if (!retained) result.add(change);
                 }
             }
             for (var shape :
@@ -987,6 +1115,43 @@ final class ScoreDynamicsDetector {
     }
 
     /** Call-local floors: detection reads these immutable records without modifying its lists. */
+    /** A narrowly separated literal dynamic may use a unique head-backed, five-rail local frame. */
+    static PlayingTechniqueDetector.Staff provedLowerWordOwner(
+            PlayingTechniqueDetector.Word word,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            byte[] gray,
+            int width,
+            int height) {
+        if (gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || !Float.isFinite(word.top())
+                || !Float.isFinite(word.bottom())
+                || word.top() < 0
+                || word.bottom() > 1
+                || word.bottom() <= word.top()
+                || !Float.isFinite(level(word.text()))
+                || !containsInk(word, gray, width, height)) return null;
+        PlayingTechniqueDetector.Staff accepted = null;
+        float x = (word.left() + word.right()) * width * .5f,
+                top = word.top() * height,
+                bottom = word.bottom() * height;
+        for (var staff : staffs) {
+            if (top < staff.bottom() || top - staff.bottom() > staff.gap() * 5.5f) continue;
+            var local = PrintedDirectionStaff.local(staff, measures, notes, gray, width, height, x);
+            if (local == null
+                    || top < local.bottom() + local.gap() * .25f
+                    || top - local.bottom() > local.gap() * 5f
+                    || bottom - top > local.gap() * 3f) continue;
+            if (accepted != null) return null;
+            accepted = local;
+        }
+        return accepted;
+    }
+
     private static final class DirectionFloors {
         private final List<PlayingTechniqueDetector.Staff> staffs;
         private final List<ScoreNoteEvent> notes;

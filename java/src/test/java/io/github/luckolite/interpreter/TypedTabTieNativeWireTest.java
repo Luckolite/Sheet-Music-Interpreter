@@ -72,10 +72,10 @@ public final class TypedTabTieNativeWireTest {
     }
 
     @Test
-    public void currentDefaultWriterUsesMinus25() throws Exception {
+    public void currentDefaultWriterUsesMinus26() throws Exception {
         var bytes = new ByteArrayOutputStream();
         NativeDecoderWire.writeAnalysis(new DataOutputStream(bytes), score(note(0)));
-        assertEquals(-25, ByteBuffer.wrap(bytes.toByteArray()).getInt());
+        assertEquals(-26, ByteBuffer.wrap(bytes.toByteArray()).getInt());
     }
 
     @Test

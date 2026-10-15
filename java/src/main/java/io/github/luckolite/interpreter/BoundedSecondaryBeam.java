@@ -41,7 +41,7 @@ final class BoundedSecondaryBeam {
             if (stems[0] == null || stems[1] == null || stems[2] == null) continue;
             if (stems[1].x() - stems[0].x() < gap * .7f || stems[2].x() - stems[1].x() < gap * .7f)
                 continue;
-            for (int distance = Math.round(gap * 1.7f); distance <= gap * 5; distance++) {
+            for (int distance = Math.round(gap * 1.7f); distance <= gap * 8; distance++) {
                 float y = stems[0].headY() + direction * distance;
                 for (int angle = -8; angle <= 8; angle++) {
                     Rail secondary = new Rail(y, angle * .04f);
@@ -67,7 +67,7 @@ final class BoundedSecondaryBeam {
                 x <= Math.min(w - 1, Math.round(hx + gap * .85f));
                 x++) {
             int ink = 0, blanks = 0;
-            for (int d = 0; d <= gap * 5; d++) {
+            for (int d = 0; d <= gap * 8; d++) {
                 int y = Math.round(hy) + direction * d;
                 if (y < 0 || y >= h) break;
                 if (dark(g, w, h, x, y)) {
@@ -96,7 +96,7 @@ final class BoundedSecondaryBeam {
         for (Stem stem : stems) {
             float y = rail.y() + (stem.x() - a) * rail.slope();
             float d = stem.direction() * (y - stem.headY());
-            if (d < gap * 1.5f || d > gap * 5) return false;
+            if (d < gap * 1.5f || d > gap * 8) return false;
             int dark = 0, totalStem = 0;
             for (int distance = 0; distance <= Math.abs(y - stem.headY()); distance++) {
                 totalStem++;

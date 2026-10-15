@@ -23,7 +23,12 @@ final class PrintedRepeatNavigation {
         var repeats = PrintedRepeatGlyphs.detect(gray, width, height, staffs, score.measures());
         var endings =
                 PrintedEndingBrackets.detect(gray, width, height, staffs, score.measures(), words);
-        var found = assemble(repeats, endings, Math.max(0, physicalPage));
+        var found =
+                assemble(
+                        repeats,
+                        endings,
+                        Math.max(0, physicalPage),
+                        physicalPage == 0 && score.firstMeasureNumber() == 1);
         if (found.directions().isEmpty() && found.unresolved().isEmpty()) return score;
         var directions = new ArrayList<>(score.playbackDirections());
         directions.addAll(found.directions());
@@ -48,6 +53,9 @@ final class PrintedRepeatNavigation {
                     unresolved(
                             id,
                             "Printed repeat needs document-level ownership",
+                            mark.boundary(),
+                            -1,
+                            mark.outgoing() ? "printed-repeat-end:v1:" : "printed-repeat-start:v1:",
                             evidence(
                                     id,
                                     physicalPage,
@@ -74,6 +82,13 @@ final class PrintedRepeatNavigation {
                     unresolved(
                             id,
                             "Printed ending needs unambiguous repeat ownership: " + mark.text(),
+                            mark.start(),
+                            mark.end(),
+                            "printed-ending-span:v1:"
+                                    + mark.openRight()
+                                    + ":"
+                                    + mark.precedingRoof()
+                                    + ":",
                             evidence(
                                     id,
                                     physicalPage,
@@ -124,19 +139,31 @@ final class PrintedRepeatNavigation {
     }
 
     private static ScoreExpressiveEvent unresolved(
-            String id, String text, ScoreExpressiveEvent.Evidence evidence) {
+            String id,
+            String text,
+            int start,
+            int end,
+            String sourceKind,
+            ScoreExpressiveEvent.Evidence evidence) {
         return new ScoreExpressiveEvent(
                 id,
                 ScoreExpressiveEvent.Kind.UNRESOLVED_DIRECTION,
-                Optional.empty(),
-                Optional.empty(),
+                Optional.of(new ScoreAnchor(start, 0)),
+                end < 0 ? Optional.empty() : Optional.of(new ScoreAnchor(end, 0)),
                 ScoreExpressiveEvent.Scope.UNRESOLVED,
                 evidence.staffIndex(),
                 evidence.staffCount(),
                 Optional.empty(),
                 ScoreExpressiveEvent.Strength.UNSPECIFIED,
                 text,
-                List.of(evidence));
+                List.of(
+                        new ScoreExpressiveEvent.Evidence(
+                                sourceKind + evidence.sourceId(),
+                                evidence.pageIndex(),
+                                evidence.visualX(),
+                                evidence.staffIndex(),
+                                evidence.staffCount(),
+                                evidence.printedText())));
     }
 
     private static ScoreExpressiveEvent.Evidence evidence(
@@ -148,6 +175,15 @@ final class PrintedRepeatNavigation {
             List<PrintedRepeatGlyphs.Mark> repeats,
             List<PrintedEndingBrackets.Mark> endings,
             int pageIndex) {
+        return assemble(repeats, endings, pageIndex, false);
+    }
+
+    /** An implicit opening requires caller proof that boundary zero is the score beginning. */
+    static Result assemble(
+            List<PrintedRepeatGlyphs.Mark> repeats,
+            List<PrintedEndingBrackets.Mark> endings,
+            int pageIndex,
+            boolean scoreBeginning) {
         var directions = new ArrayList<ScorePlaybackDirection>();
         var unresolved = new ArrayList<String>();
         var ordered = new ArrayList<>(repeats);
@@ -192,7 +228,21 @@ final class PrintedRepeatNavigation {
                 continue;
             }
             if (starts.isEmpty()) {
-                unresolved.add("Repeat end at " + mark.boundary() + " has no proved local start");
+                if (scoreBeginning && regions.isEmpty() && mark.boundary() > 0) {
+                    var region =
+                            new Region(
+                                    0,
+                                    mark.boundary(),
+                                    "printed-repeat:"
+                                            + pageIndex
+                                            + ":implicit:0:"
+                                            + mark.boundary());
+                    regions.add(region);
+                    closingEdges.put(region.id(), new ArrayList<>(List.of(mark.boundary())));
+                } else {
+                    unresolved.add(
+                            "Repeat end at " + mark.boundary() + " has no proved local start");
+                }
                 continue;
             }
             var start = starts.pop();
@@ -247,7 +297,7 @@ final class PrintedRepeatNavigation {
                     var following =
                             uniqueEndings.stream()
                                     .filter(e -> !used.contains(e) && e.start() == boundary)
-                                    .toList();
+                                    .collect(java.util.stream.Collectors.toList());
                     if (following.isEmpty()) break;
                     if (following.size() != 1) {
                         conflict = true;
@@ -351,17 +401,26 @@ final class PrintedRepeatNavigation {
                                 mark.text());
             } else {
                 boolean outgoing = direction.kind() == ScorePlaybackDirection.Kind.REPEAT_END;
+                boolean implicitStart = !outgoing && details.repeatGroupId().contains(":implicit:");
                 var mark =
                         ordered.stream()
                                 .filter(
                                         m ->
-                                                m.boundary() == direction.measureBoundary()
-                                                        && m.outgoing() == outgoing)
+                                                implicitStart
+                                                        ? m.outgoing()
+                                                                && details.repeatGroupId()
+                                                                        .endsWith(
+                                                                                ":" + m.boundary())
+                                                        : m.boundary()
+                                                                        == direction
+                                                                                .measureBoundary()
+                                                                && m.outgoing() == outgoing)
                                 .findFirst()
                                 .orElseThrow();
                 proof =
                         evidence(
-                                details.eventId(),
+                                (implicitStart ? "implicit-score-beginning:" : "")
+                                        + details.eventId(),
                                 pageIndex,
                                 mark.x(),
                                 mark.staffIndex(),

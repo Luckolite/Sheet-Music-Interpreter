@@ -1851,8 +1851,46 @@ final class TripletRhythmDetector {
                             gap,
                             ownDistance);
                 };
-        return contrasted
-                ? findContrastedNumeral(
+        Glyph normal =
+                contrasted
+                        ? findContrastedNumeral(
+                                gray,
+                                width,
+                                height,
+                                firstX,
+                                lastX,
+                                firstY,
+                                lastY,
+                                gap,
+                                shortNotes,
+                                headX,
+                                headY,
+                                number,
+                                boundedSecondary,
+                                ownership)
+                        : findPrintedNumeral(
+                                gray,
+                                width,
+                                height,
+                                firstX,
+                                lastX,
+                                firstY,
+                                lastY,
+                                gap,
+                                shortNotes,
+                                headX,
+                                headY,
+                                number,
+                                boundedSecondary,
+                                ownership);
+        if (normal != null
+                || number != 3
+                || !shortNotes
+                || !(boundedSecondary
+                        || (first.staffStep() <= -3 && first.stemDirection() == 1)
+                        || (first.staffStep() >= 11 && first.stemDirection() == -1))) return normal;
+        Glyph extended =
+                findPrintedNumeral(
                         gray,
                         width,
                         height,
@@ -1866,22 +1904,35 @@ final class TripletRhythmDetector {
                         headY,
                         number,
                         boundedSecondary,
-                        ownership)
-                : findPrintedNumeral(
-                        gray,
-                        width,
-                        height,
-                        firstX,
-                        lastX,
-                        firstY,
-                        lastY,
-                        gap,
-                        shortNotes,
-                        headX,
-                        headY,
-                        number,
-                        boundedSecondary,
-                        ownership);
+                        ownership,
+                        9,
+                        glyph ->
+                                boundedSecondary
+                                        || ledgerBeamOwns(
+                                                glyph,
+                                                first,
+                                                soundingHeads,
+                                                bar,
+                                                gray,
+                                                width,
+                                                height,
+                                                firstX,
+                                                lastX,
+                                                gap));
+        return extended != null
+                        && TupletNumeralInk.hasGlyphContrast(
+                                gray,
+                                width,
+                                height,
+                                extended.left(),
+                                extended.top(),
+                                extended.right(),
+                                extended.bottom(),
+                                gap)
+                        && validNumeralContext(
+                                gray, width, height, extended, firstX, lastX, gap, number)
+                ? extended
+                : null;
     }
 
     private static boolean beamOwnsNumeral(
@@ -2775,13 +2826,51 @@ final class TripletRhythmDetector {
             int number,
             boolean boundedSecondary,
             java.util.function.Predicate<Glyph> ownership) {
+        return findPrintedNumeral(
+                gray,
+                width,
+                height,
+                firstX,
+                lastX,
+                firstY,
+                lastY,
+                gap,
+                shortNotes,
+                headX,
+                headY,
+                number,
+                boundedSecondary,
+                ownership,
+                8,
+                glyph -> false);
+    }
+
+    private static Glyph findPrintedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean boundedSecondary,
+            java.util.function.Predicate<Glyph> ownership,
+            float searchGaps,
+            java.util.function.Predicate<Glyph> extendedOwnership) {
         float centerX = (firstX + lastX) * .5f;
         // Numerals align with the beam/stems, which can sit to one side of the
         // oval centres. Include that offset without clipping an italic 3.
         int left = Math.max(0, Math.round(centerX - gap * 2.1f));
         int right = Math.min(width - 1, Math.round(centerX + gap * 2.1f));
-        int top = Math.max(0, Math.round(firstY - gap * 7));
-        int bottom = Math.min(height - 1, Math.round(lastY + gap * 7));
+        int normalTop = Math.max(0, Math.round(firstY - gap * 7));
+        int top = Math.max(0, Math.round(firstY - gap * searchGaps));
+        int normalBottom = Math.min(height - 1, Math.round(lastY + gap * 7));
+        int bottom = Math.min(height - 1, Math.round(lastY + gap * searchGaps));
         int localWidth = right - left + 1, localHeight = bottom - top + 1;
         if (localWidth < 3 || localHeight < 3) return null;
         boolean[] visited = new boolean[localWidth * localHeight];
@@ -2812,6 +2901,18 @@ final class TripletRhythmDetector {
                             queue[pending++] = next;
                         }
                     }
+            }
+            if (number == 3 && shortNotes && minX <= left && maxX >= right && minY < firstY - gap) {
+                Glyph joined =
+                        bracketedCurveThree(
+                                gray, width, height, left, right, minY, firstX, lastX, firstY, gap,
+                                ownership);
+                if (joined != null
+                        && (!Float.isFinite(headX)
+                                || headX >= joined.left() - gap * .1f
+                                        && headX <= joined.right() + gap * .1f
+                                        && headY >= joined.top() - gap * .1f
+                                        && headY <= joined.bottom() + gap * .1f)) return joined;
             }
             int gw = maxX - minX + 1, gh = maxY - minY + 1;
             if (minX <= left
@@ -2875,6 +2976,9 @@ final class TripletRhythmDetector {
                     && !bracket
                     && insideFiveLineStaff(gray, width, height, minX, minY, maxX, maxY, gap))
                 continue;
+            if ((minY <= normalTop || maxY >= normalBottom)
+                    && !bracket
+                    && !extendedOwnership.test(new Glyph(minX, minY, maxX, maxY))) continue;
             if (shortNotes || bracket) {
                 Glyph glyph = new Glyph(minX, minY, maxX, maxY);
                 if (ownership.test(glyph)) return glyph;
@@ -3194,7 +3298,8 @@ final class TripletRhythmDetector {
             if (max < 0) return false;
             if (y < h * .3f && max - min >= w * .65f) broad++;
             if (y >= h * .35f) {
-                if (max - min > w * .55f || y < h * .8f && count < w * .12f) return false;
+                if (max - min > w * .55f
+                        || y < h * .8f && count < Math.max(1, Math.round(w * .12f))) return false;
                 int center = min + max;
                 if (previous != Integer.MAX_VALUE && center > previous + 2) reverse++;
                 previous = center;
@@ -3225,7 +3330,7 @@ final class TripletRhythmDetector {
                     max = Math.max(max, x);
                 }
             // Italic fives can have a narrower cap than their lower bowl.
-            if (y < h * .28f && max - min >= w * .45f) bars++;
+            if (y < h * .28f && max >= min && max - min + 1 >= w * .45f) bars++;
             if (y >= h * .18f && y < h * .42f && min <= w * .4f && max <= w * .6f && max >= min)
                 leftStem++;
             if (y >= h * .48f && y < h * .82f) {
@@ -3381,5 +3486,215 @@ final class TripletRhythmDetector {
                 || note.staffIndex() >= inside.size()) return fallback;
         float gap = inside.get(note.staffIndex()).gap();
         return gap >= fallback * .65f && gap <= fallback * 1.35f ? gap : fallback;
+    }
+
+    /** Separate a numeral above a proved thin crossing rule; brackets and original ownership remain mandatory. */
+    private static Glyph bracketedCurveThree(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int top,
+            float firstX,
+            float lastX,
+            float firstY,
+            float gap,
+            java.util.function.Predicate<Glyph> ownership) {
+        Glyph plain =
+                bracketedCurveThreePass(
+                        gray, width, height, left, right, top, firstX, lastX, firstY, gap,
+                        ownership, false);
+        return plain != null
+                ? plain
+                : bracketedCurveThreePass(
+                        gray, width, height, left, right, top, firstX, lastX, firstY, gap,
+                        ownership, true);
+    }
+
+    private static Glyph bracketedCurveThreePass(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            int top,
+            float firstX,
+            float lastX,
+            float firstY,
+            float gap,
+            java.util.function.Predicate<Glyph> ownership,
+            boolean occluded) {
+        int center = (left + right) / 2, span = right - left + 1;
+        for (int cy = Math.round(top + gap * .7f);
+                cy <= Math.min(firstY - 1, top + gap * 2.3f);
+                cy++) {
+            for (int angle = -10; angle <= 10; angle++) {
+                float slope = angle * .05f;
+                int hits = 0, thin = 0;
+                for (int x = left; x <= right; x++) {
+                    int y = Math.round(cy + slope * (x - center));
+                    if (y < 2 || y >= height - 2) continue;
+                    if (dark(gray, width, x, y - 1)
+                            || dark(gray, width, x, y)
+                            || dark(gray, width, x, y + 1)) hits++;
+                    int ink = 0;
+                    for (int yy = Math.max(0, y - Math.round(gap * .4f));
+                            yy <= Math.min(height - 1, y + Math.round(gap * .4f));
+                            yy++) if (dark(gray, width, x, yy)) ink++;
+                    if (ink <= Math.max(3, gap * .35f)) thin++;
+                }
+                if (hits < span * .94f || thin < span * .90f) continue;
+                int cut =
+                        (int)
+                                        Math.floor(
+                                                cy
+                                                        - Math.abs(slope)
+                                                                * (occluded
+                                                                        ? (span - 1) * .5f
+                                                                        : gap * .7f))
+                                - 2;
+                int rows = cut - top + 1;
+                if (rows < gap * .7f || rows > gap * 2.3f) continue;
+                boolean[] seen = new boolean[span * rows];
+                int[] queue = new int[seen.length];
+                for (int seed = 0; seed < seen.length; seed++) {
+                    if (seen[seed] || !dark(gray, width, left + seed % span, top + seed / span))
+                        continue;
+                    int take = 0, size = 1, l = right, r = left, t = cut, b = top;
+                    queue[0] = seed;
+                    seen[seed] = true;
+                    while (take < size) {
+                        int at = queue[take++], x = at % span, y = at / span;
+                        l = Math.min(l, left + x);
+                        r = Math.max(r, left + x);
+                        t = Math.min(t, top + y);
+                        b = Math.max(b, top + y);
+                        for (int dy = -1; dy <= 1; dy++)
+                            for (int dx = -1; dx <= 1; dx++) {
+                                int xx = x + dx, yy = y + dy;
+                                if (xx < 0 || xx >= span || yy < 0 || yy >= rows) continue;
+                                int next = yy * span + xx;
+                                if (!seen[next] && dark(gray, width, left + xx, top + yy)) {
+                                    seen[next] = true;
+                                    queue[size++] = next;
+                                }
+                            }
+                    }
+                    int gw = r - l + 1, gh = b - t + 1;
+                    if (l <= left
+                            || r >= right
+                            || t != top
+                            || b != cut
+                            || gh < gap * .7f
+                            || gh > gap * 2.3f
+                            || gw < gh * .3f
+                            || gw > gh * .95f
+                            || size < gw * gh * .15f
+                            || size > gw * gh * .7f
+                            || b >= firstY - gap) continue;
+                    // A slur can obscure the lower terminal of an italic numeral. The
+                    // isolated upper component bounds the crop; all pixels remain original,
+                    // and both bracket arms, the complete three shape and ownership still apply.
+                    if (occluded) {
+                        l = Math.max(left + 1, l - Math.round(gap * .15f));
+                        b = Math.round(cy + slope * ((l + r) * .5f - center)) + 1;
+                        gw = r - l + 1;
+                        gh = b - t + 1;
+                        if (gh > gap * 2.3f || b >= firstY - gap || gw > gh * .95f) continue;
+                    }
+                    if (!looksLikeThree(gray, width, l, t, gw, gh)) continue;
+                    if (!bracketArm(
+                                    gray,
+                                    width,
+                                    height,
+                                    Math.round(firstX - gap * .3f),
+                                    l - 2,
+                                    t,
+                                    t,
+                                    gap)
+                            || !bracketArm(
+                                    gray,
+                                    width,
+                                    height,
+                                    r + 2,
+                                    Math.round(lastX + gap * .3f),
+                                    t,
+                                    t,
+                                    gap)) continue;
+                    if (TupletNumeralNeighbors.joinedText(gray, width, height, l, t, r, b))
+                        continue;
+                    Glyph glyph = new Glyph(l, t, r, b);
+                    if (ownership.test(glyph)) return glyph;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Extra search height requires a connected ledger-note beam and independently printed staff. */
+    private static boolean ledgerBeamOwns(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float gap) {
+        boolean upper = first.stemDirection() == -1;
+        ScoreNoteEvent last = null;
+        for (var n : heads) {
+            float x = (bar.left() + n.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (n.measureIndex() == first.measureIndex()
+                    && n.staffIndex() == first.staffIndex()
+                    && n.staffCount() == first.staffCount()
+                    && (upper ? n.staffStep() >= 11 : n.staffStep() <= -3)
+                    && n.stemDirection() == first.stemDirection()
+                    && n.beamCount() > 0
+                    && Math.abs(x - lastX) < gap * .4f) last = n;
+        }
+        if (last == null
+                || !PrintedTupletBeamOwner.connectedHeads(
+                        gray,
+                        width,
+                        height,
+                        firstX,
+                        first.pageY() * height,
+                        lastX,
+                        last.pageY() * height,
+                        gap,
+                        first.stemDirection())) return false;
+        float expectedBottom = first.pageY() * height + first.staffStep() * gap * .5f;
+        float expectedTop = expectedBottom - 4 * gap;
+        int left = Math.max(0, Math.round(upper ? bar.left() * width : firstX - gap)),
+                right = Math.min(width - 1, Math.round(upper ? bar.right() * width : lastX + gap));
+        int top = Math.max(0, Math.round(expectedTop - gap)),
+                bottom = Math.min(height - 1, Math.round(expectedBottom + gap));
+        int w = right - left + 1, h = bottom - top + 1;
+        if (w < 24 || h < 1) return false;
+        byte[] crop = new byte[w * h];
+        for (int y = 0; y < h; y++)
+            System.arraycopy(gray, (top + y) * width + left, crop, y * w, w);
+        int matches = 0;
+        for (var staff : RawStaffLineDetector.detect(crop, w, h)) {
+            float staffTop = top + staff.top(), staffBottom = top + staff.bottom();
+            if (staff.gap() < gap * .8f
+                    || staff.gap() > gap * 1.2f
+                    || Math.abs(staffTop - expectedTop) > gap * .7f) continue;
+            if (upper) {
+                if (glyph.top() <= staffBottom + gap * .15f
+                        || glyph.bottom() > staffBottom + gap * 2.5f
+                        || first.pageY() * height > staffTop - gap
+                        || last.pageY() * height > staffTop - gap) continue;
+            } else if (glyph.bottom() >= staffTop - gap * .15f
+                    || glyph.top() < staffTop - gap * 2.5f
+                    || first.pageY() * height < staffBottom + gap
+                    || last.pageY() * height < staffBottom + gap) continue;
+            matches++;
+        }
+        return matches == 1;
     }
 }
