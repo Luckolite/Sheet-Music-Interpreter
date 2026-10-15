@@ -2090,16 +2090,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "06e27edc19301655707f6ee1facf8263125aec34b9c3fb1148bb0d3c5ac72427",
-      "source_normalized_sha256": "06e27edc19301655707f6ee1facf8263125aec34b9c3fb1148bb0d3c5ac72427",
+      "source_sha256": "ba45e985c2049b05f048ff7afa0beff69eb15cd070f84c5704bbf8061db5f78f",
+      "source_normalized_sha256": "ba45e985c2049b05f048ff7afa0beff69eb15cd070f84c5704bbf8061db5f78f",
       "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Exact package-only port; dotted-initial spacing duplicates retain first printed form. Four original synthetic controls plus existing review controls; saved 507-PDF differential changes one duplicate only. Fresh Android and paired deployment pending.",
+      "reviewed_source_state": "Committed paired formal-work/key composer inference and literal transcription-service review routing. Full Java suite and original synthetic controls passed; Android scanner validation pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "4ccc35db158140668be558d04008fbcee9624154b372b228eb7e789e81f38fca",
+      "standalone_sha256": "2a3ef7e97b73aa1bdf748e1670f191105d972a97f7a99b4b3b06199ae3170898",
       "license": "Apache-2.0",
-      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected. Geographic folk-song and folk-tune source labels are excluded from person-credit review; mixed bylines and named transcription services remain available. Remove exact whole-name duplicates from role review after roles resolve across the document. Case differences are ignored; unresolved spellings, mixed names, services and printed conflicts remain protected. Grouped review names are removed only when every parsed name exactly matches an assigned name; partially resolved groups and spelling differences stay available. Collapse whitespace after dotted initials only within review entries; preserve original first spelling, full-name variants, different initials, surnames and other punctuation. No role inference or external alias catalogue.",
-      "reviewed_app_commit": "85bbfa51ad758898a4b8e0d15dbaef1f11ab5f3b",
-      "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
+      "review_note": "Keep geographic folk labels, explicit role conflicts, non-notation artwork and ordinary unlabelled song bylines out of contextual Composer inference. Transcription services with an organizational suffix remain review credits. No title/person allowlists or private score fixtures.",
+      "reviewed_app_commit": "c4be10d9163f6cac127949a0ac6fd1ce04c8ee66",
+      "scoped_reviewed_app_commit": "c4be10d9163f6cac127949a0ac6fd1ce04c8ee66"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",

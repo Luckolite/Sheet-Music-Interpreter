@@ -4176,6 +4176,20 @@ public final class ScoreCreditsDetector {
                     claimed.add(line);
                     continue;
                 }
+                String transcriptionPayload =
+                        clean(line.text)
+                                .replaceFirst(
+                                        "(?iu)^(?:transcribed|transcription|transcr[.]?)\\h+by\\h+",
+                                        "");
+                if (!transcriptionPayload.equals(clean(line.text))
+                        && inCreditHeader(page, line)
+                        && creditNameText(transcriptionPayload)
+                        && transcriptionPayload.matches(
+                                "(?iu).+\\h+(?:studios?|services?|publishing|publications|transcriptions|LLC|Ltd[.]?)$")) {
+                    other.add(transcriptionPayload);
+                    claimed.add(line);
+                    continue;
+                }
                 ReviewCredit service =
                         page.reviewCredits.stream()
                                 .filter(
@@ -7474,7 +7488,22 @@ public final class ScoreCreditsDetector {
                                             < Math.max(context.height(), name.height()) * 1.5f)))
                 return true;
         }
-        return false;
+        // A formal work type and musical key corroborate the score author byline.
+        return name.center() > page.width * .65f
+                && name.height() < heading.height() * .9f
+                && !notationReviewLabel(page, name)
+                && !folkOriginDescription(text)
+                && clean(heading.text)
+                        .matches(
+                                "(?iu)^(?:nocturne|prelude|fugue|sonata|concerto|symphony|etude|étude|waltz|mazurka|polonaise|impromptu|ballade)\\h+in\\h+[A-G](?:(?:[- ]?(?:flat|sharp))|[♭♯])?\\h+(?:major|minor)$")
+                && lines.stream()
+                        .noneMatch(
+                                other ->
+                                        other != name
+                                                && other.top >= heading.top
+                                                && other.bottom < page.notationTop
+                                                && credit(other.text) != null
+                                                && credit(other.text).role == Role.COMPOSER);
     }
 
     /** A numbered movement name needs a separate larger work heading above it. */
