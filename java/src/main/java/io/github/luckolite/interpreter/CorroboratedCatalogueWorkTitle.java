@@ -200,20 +200,57 @@ public final class CorroboratedCatalogueWorkTitle {
                         .filter(row -> row.text().strip().equals(before.title().strip()))
                         .toList();
         if (selectedHeaders.size() != 1) return null;
-        var header = selectedHeaders.get(0);
-        String literalHeader = ScoreHeaderReadConsensus.select(medium.get(header));
-        if (header.equals(rawHeading)
-                || header.equals(rawCaption)
-                || literalHeader.isEmpty()
-                || !close(header.text(), literalHeader)
-                || catalogue.isWorkAlias(header.text())
-                || catalogue.isPersonName(header.text())
-                || !catalogue.isInstrumentPart(literalHeader)
-                || catalogue.isWorkAlias(literalHeader)
-                || catalogue.isPersonName(literalHeader)
-                || header.height() < rawHeading.height() * 1.1
-                || header.top() >= first.height() * .2f
-                || !repeatedHeader(original, header, literalHeader)) return null;
+        var baselineHeader = selectedHeaders.get(0);
+        var candidates = new LinkedHashSet<ScoreCreditsDetector.Line>();
+        candidates.add(baselineHeader);
+        candidates.addAll(OpeningWorkHeading.headerCandidates(first));
+        var provedHeaders = new ArrayList<ScoreCreditsDetector.Line>();
+        for (var header : candidates) {
+            String literalHeader = ScoreHeaderReadConsensus.select(medium.get(header));
+            if (header.equals(rawHeading)
+                    || header.equals(rawCaption)
+                    || literalHeader.isEmpty()
+                    || !close(header.text(), literalHeader)
+                    || ScoreCreditsDetector.isPrintedCredit(header.text())
+                    || catalogue.isWorkAlias(header.text())
+                    || catalogue.isPersonName(header.text())
+                    || !catalogue.isInstrumentPart(literalHeader)
+                    || catalogue.isWorkAlias(literalHeader)
+                    || catalogue.isPersonName(literalHeader)
+                    || header.height() < rawHeading.height() * 1.1
+                    || header.top() >= first.height() * .2f
+                    || !repeatedHeader(original, header, literalHeader)) continue;
+            provedHeaders.add(header);
+        }
+        if (provedHeaders.size() != 1) return null;
+        var header = provedHeaders.get(0);
+        if (!header.equals(baselineHeader)) {
+            // A proved part header may expose a smaller near-staff body row selected as title.
+            // Do not displace another work, contributor, explicit credit or owned review.
+            String baselineKey = MusicMetadataCatalogue.key(baselineHeader.text());
+            if (baselineHeader.equals(rawHeading)
+                    || baselineHeader.equals(rawCaption)
+                    || baselineHeader.height() >= header.height()
+                    || baselineHeader.top() < rawHeading.top() - rawHeading.height() * .25f
+                    || baselineHeader.bottom() > first.notationTop()
+                    || baselineHeader.left() <= rawHeading.right()
+                    || ScoreCreditsDetector.isPrintedCredit(baselineHeader.text())
+                    || catalogue.isWorkAlias(baselineHeader.text())
+                    || catalogue.isPersonName(baselineHeader.text())
+                    || names.stream()
+                            .anyMatch(name -> MusicMetadataCatalogue.key(name).equals(baselineKey))
+                    || before.unclassifiedCredits().stream()
+                            .anyMatch(
+                                    value -> MusicMetadataCatalogue.key(value).equals(baselineKey)))
+                return null;
+            for (var credit : first.reviewCredits()) {
+                var row = credit.line();
+                if (Math.min(row.right(), baselineHeader.right())
+                                > Math.max(row.left(), baselineHeader.left())
+                        && Math.min(row.bottom(), baselineHeader.bottom())
+                                > Math.max(row.top(), baselineHeader.top())) return null;
+            }
+        }
         String rawKey = MusicMetadataCatalogue.key(rawHeading.text());
         String literalKey = MusicMetadataCatalogue.key(pair.heading().text());
         // A second row with the same name could own a contributor review independently.

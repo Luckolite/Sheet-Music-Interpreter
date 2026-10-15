@@ -504,13 +504,13 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "2b3f3a80b629ea8396baa3fee639eaa89e5e17872acf9e22d254735b147418e6",
+      "source_sha256": "05e99ac2675af9de3a9c840ea602c2df7c06d8afb0b63cebaa6d956c923da408",
       "reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
-      "source_normalized_sha256": "b91c4ff5a7b266c149fd26e3e1833d5abe0512d77e30bae3b536fd1d59e0cfb5",
+      "source_normalized_sha256": "d049ecae01847dd189611d02c02362b9245750c3d91ffa611f6a7a3768ed69d8",
       "review_note": "Recognize approximate tempo equations with optical beat-unit proof and use proved stem ownership for measure attribution.",
-      "reviewed_source_state": "Committed paired recognition60/guide287/audio93 sources; packaged rollout and whole-document acceptance pending.",
+      "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
-      "standalone_sha256": "7704a88d1e04f0d37655bb464c801c592b1838053106af1abdaf66be7be7021f"
+      "standalone_sha256": "7138d23af1adccf92c75f8258304ec65a55d86c5fa430706151b53c4842ff68e"
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
@@ -1565,11 +1565,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "a22d1ea5b94b0433cb1e9c90fb14885122bbb14b28f2d35153d4d1667bcdf948",
-      "source_normalized_sha256": "76c2ac785d1ef4ddb74adbf9320e690d8ef09199d28f3d8a6bff1c3ecc5bd96d",
+      "source_sha256": "22f480b5d4a0dc70c77fa9a712307c7c81b0319f1cd6b610af80bb6b091b77c2",
+      "source_normalized_sha256": "f3976998f154308b94f0bcf8d8f4d8489bc2434fed4a8deeb562f30e97f10785",
       "review_note": "Explicit compound ratios and established-meter septuplet correction; reviewed executable parity or matching native/standalone orchestration. Guide288 gates new actual counts; recognition61/audio94 invalidate derived results. Original synthetic controls; unchanged model weights.",
-      "reviewed_source_state": "Reviewed paired source candidate; not yet committed or deployed.",
-      "standalone_sha256": "8b0ab7d1fc9b75afc7b3f7d226e16d8bbb9c4411063f3b06a39ee441963fe1f0",
+      "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
+      "standalone_sha256": "aecd53812b484d8c9c534425b4698fc22b034ce79c468a84c9928c3bd211bd2c",
       "reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
     },
@@ -1627,11 +1627,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f714e9a013924e2be72f5a96b6067f9180a7665cf4c1a708ff1616424174d096",
-      "source_normalized_sha256": "f714e9a013924e2be72f5a96b6067f9180a7665cf4c1a708ff1616424174d096",
-      "reviewed_source_state": "Reviewed paired source candidate; not yet committed or deployed.",
+      "source_sha256": "591a2c72aeb1b9607c4f774a14a4dc5047cbf3a4ea0f90a8d9fd79653efe98ad",
+      "source_normalized_sha256": "2d3ae6516301e9d87da535f786eb445cb4572296b3af3bcb396056641a589da1",
+      "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
       "review_note": "Explicit compound ratios and established-meter septuplet correction; reviewed executable parity or matching native/standalone orchestration. Guide288 gates new actual counts; recognition61/audio94 invalidate derived results. Original synthetic controls; unchanged model weights.",
-      "standalone_sha256": "308b846bc1252b9880ab421468a82fea9479d759575734d9952c2551054eb046",
+      "standalone_sha256": "76b7cb4766432ddf40630e4f950158a57a4a21a6f5be38718ab8969b6ef794b3",
       "reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
     },
@@ -1746,11 +1746,12 @@
     },
     "PrintedVoiceMeasureCut.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedVoiceMeasureCut.java",
-      "source_sha256": "ba484ad7d662b831ad2948d9d146b7488e4f21d2f4168f2da2f056ea3917f2c0",
-      "source_normalized_sha256": "f21eb3a8ee28cd41b6f6f8b7188dd665b9146b6c99333cc78ec61c88fd77bd78",
+      "source_sha256": "57157e04b23ef37adeca14e7d89295e47954470ca5058d0ef372ba326cdcace0",
+      "source_normalized_sha256": "ac158380ceebf3dfa3b5e21e6c17dfab4b4dd22a8cc9e7bae2160fcf8fc33e48",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change."
+      "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
+      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
+      "standalone_sha256": "9ba4ff0077ab3e935766191ae314f5002851e996288a18d99134b318ec703629"
     },
     "ShadedHollowPocket.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedHollowPocket.java",
@@ -2323,12 +2324,12 @@
     },
     "CorroboratedCatalogueWorkTitle.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CorroboratedCatalogueWorkTitle.java",
-      "source_sha256": "640d321984c582d70e7ae236430bbbdd70647031254ea1469a574c496fdd8b3c",
-      "source_normalized_sha256": "30f48bbd1152753884d8c9e048e30cbe024afb2e3f5c7174b79314cb1568048a",
+      "source_sha256": "87d87926d496948e2217e567c94f90d1e4fe21fe524870da0ac1b77632ee11a6",
+      "source_normalized_sha256": "87d87926d496948e2217e567c94f90d1e4fe21fe524870da0ac1b77632ee11a6",
       "reviewed_app_base_commit": "875c633f6aad212d45f5a0eaec7ff6d8515cfdd0",
-      "reviewed_source_state": "Original-pixel complementary caption modes and independent complete-axis numbered-work readings; full runtime and whole-library qualification remain separate.",
+      "reviewed_source_state": "Bounded independent opening instrument-header nomination and source-bound repeated-header proof when baseline chooses smaller near-staff body text; literal work/form/ordinal, contributor, role and review guards retained. Original synthetic regression. Fresh APK/PDF and whole-library verification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CorroboratedCatalogueWorkTitle.java",
-      "standalone_sha256": "cf79c6bdfc8df860aba38a3f4ac909df0d49350247518af88010c4c3190e02df",
+      "standalone_sha256": "8e7d296dca280113520457366e2c23c716639132e82178247ba21b8de8c0e20b",
       "license": "Apache-2.0",
       "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes.",
       "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903"
@@ -2390,12 +2391,12 @@
     },
     "OpeningWorkHeading.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/OpeningWorkHeading.java",
-      "source_sha256": "0b95a13fce34d3981d183457fd3ad11ae89f97cd26c938ab120784576e9b8235",
-      "source_normalized_sha256": "12c36a9d58ebc496b2f450e39c51942e2b63b919dbc3f7383a81f16117fd4214",
+      "source_sha256": "047aec2e99f6c37def08ef85e3779a5e89518edd4c17025cdb472468b1514835",
+      "source_normalized_sha256": "047aec2e99f6c37def08ef85e3779a5e89518edd4c17025cdb472468b1514835",
       "reviewed_app_base_commit": "e61fdb96d4f666e53d2cb9b39df2fb3bdb48fffe",
-      "reviewed_source_state": "Qualified combined primary-title, typed version-caption and public numbered-work ownership source integration; current runtime qualification remains separate.",
+      "reviewed_source_state": "Bounded independent opening instrument-header nomination and source-bound repeated-header proof when baseline chooses smaller near-staff body text; literal work/form/ordinal, contributor, role and review guards retained. Original synthetic regression. Fresh APK/PDF and whole-library verification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpeningWorkHeading.java",
-      "standalone_sha256": "45c37a6578785ead78b732a2f88de45332962a9ef1f195414349621fd3bf6da1",
+      "standalone_sha256": "47bb8113ee3e7b869762b4eab474480ae50e4063b902d34833bc85ea65dce4aa",
       "license": "Apache-2.0",
       "review_note": "Literal rereads remain bound to original source rows. Public facts corroborate exact work/type/ordinal ownership and positively veto person collisions; no missing names or title characters come from the catalogue. Four runtime snapshot assets are size/SHA-256 pinned. Original fictional source, identifier, role, review, asset-integrity and cancellation regressions. No model or record layout changes."
     },

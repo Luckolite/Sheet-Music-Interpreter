@@ -119,6 +119,11 @@ final class PrintedVoiceMeasureCut {
                         break;
                     }
                 }
+                // A stem can cross all five rules but continues beyond the staff.
+                // A separator terminates at the outer rules; inspect the same lean.
+                if (full
+                        && extendsBeyondStaff(gray, w, h, x, localTop, localGap, lean, columnLimit))
+                    full = false;
                 if (full) {
                     proved = true;
                     break;
@@ -128,5 +133,24 @@ final class PrintedVoiceMeasureCut {
         }
         if (hits.isEmpty() || hits.get(hits.size() - 1) - hits.get(0) > gap * .65f) return null;
         return hits.get(hits.size() / 2) / (float) w;
+    }
+
+    private static boolean extendsBeyondStaff(
+            byte[] gray, int w, int h, int x, float top, float gap, float lean, int limit) {
+        float middle = top + 2 * gap;
+        int start = Math.max(2, Math.round(gap * .3f));
+        int length = Math.max(3, Math.round(gap * .3f));
+        for (int side : new int[] {-1, 1}) {
+            float edge = side < 0 ? top : top + 4 * gap;
+            int dark = 0;
+            for (int distance = start; distance < start + length; distance++) {
+                int y = Math.round(edge + side * distance);
+                int xx = Math.round(x + lean * (y - middle));
+                if (y < 0 || y >= h || xx < 0 || xx >= w) return true;
+                if ((gray[y * w + xx] & 255) < limit) dark++;
+            }
+            if (dark >= length * .8f) return true;
+        }
+        return false;
     }
 }

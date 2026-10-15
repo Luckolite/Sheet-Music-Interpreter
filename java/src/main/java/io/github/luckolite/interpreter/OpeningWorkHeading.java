@@ -132,6 +132,27 @@ public final class OpeningWorkHeading {
         return List.copyOf(result);
     }
 
+    /** Bounded source crops for independently proving a larger instrument-part header. */
+    public static List<ScoreCreditsDetector.Line> headerCandidates(ScoreCreditsDetector.Page p) {
+        var pairs = geometryCandidates(p);
+        if (pairs.isEmpty() || pairs.size() > 4) return List.of();
+        var result = new LinkedHashSet<ScoreCreditsDetector.Line>();
+        for (var row : p.lines()) {
+            if (protectedRow(row, p) || ScoreCreditsDetector.isPrintedCredit(row.text())) continue;
+            for (var pair : pairs) {
+                if (row.equals(pair.heading())
+                        || row.equals(pair.caption())
+                        || row.height() < pair.heading().height() * 1.1f
+                        || row.top() >= p.height() * .2f
+                        || row.bottom() > p.notationTop()
+                        || row.top() >= pair.heading().top()
+                        || row.center() <= pair.heading().right()) continue;
+                result.add(row);
+            }
+        }
+        return List.copyOf(result);
+    }
+
     public static Evidence find(
             ScoreCreditsDetector.Page p,
             List<ScoreCreditsDetector.Line> lines,

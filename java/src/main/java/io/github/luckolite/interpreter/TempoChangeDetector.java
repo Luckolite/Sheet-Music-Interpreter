@@ -241,6 +241,7 @@ final class TempoChangeDetector {
             if (directionMeasures == null)
                 directionMeasures = directionMeasures(measures, gray, width, height);
             token = printedDigitBounds(token, gray, width, height);
+            float equationLeft = provedEquationLeft(token, gray, width, height, equalsLeft);
             // A direction such as "Lento, poco rubato (quarter = c. 88)" starts at the
             // change; the digits can extend to the next bar. Keep their ink box for symbol
             // recognition, but attach the change to the start of its OCR direction line.
@@ -272,7 +273,7 @@ final class TempoChangeDetector {
             if (measureIndex < 0) continue;
             MeasureRegion measure = directionMeasures.get(measureIndex);
             float position =
-                    (anchor.left() - measure.left())
+                    (Math.min(anchor.left(), equationLeft) - measure.left())
                             / Math.max(.0001f, measure.right() - measure.left());
             // Engravers place the number to the right of the note/equal sign. Snap a mark printed
             // near the barline to beat zero instead of delaying the change by the text width.
@@ -295,6 +296,30 @@ final class TempoChangeDetector {
             deduplicated.add(change);
         }
         return List.copyOf(deduplicated);
+    }
+
+    /** Retain an earlier verbal prefix, but never let OCR padding move a proved equation right. */
+    private static float provedEquationLeft(
+            MeasureNumberReconciler.NumberToken token,
+            byte[] gray,
+            int width,
+            int height,
+            int equals) {
+        int digitHeight = printedDigitHeight(token, gray, width, height);
+        int[] light = {-1, -1}, dark = {-1, -1};
+        double a =
+                printedBeatUnitWithDigitHeight(
+                        token, gray, width, height, equals, 200, digitHeight, light);
+        double b =
+                printedBeatUnitWithDigitHeight(
+                        token, gray, width, height, equals, 165, digitHeight, dark);
+        if (!Double.isFinite(a)
+                || !Double.isFinite(b)
+                || Math.abs(a - b) > .001
+                || light[0] < 0
+                || dark[0] < 0
+                || Math.abs(light[0] - dark[0]) > 2) return token.annotationLeft();
+        return Math.min(token.annotationLeft(), Math.min(light[0], dark[0]) / (float) width);
     }
 
     /** A complete equation may precede the playable edge of the opening system. */

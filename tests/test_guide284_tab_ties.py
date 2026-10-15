@@ -62,7 +62,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         self.assertEqual(288, struct.unpack_from('>i', new)[0])
 
-        self.assertEqual(61, wire.RECOGNITION_REVISION)
+        self.assertEqual(62, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))
