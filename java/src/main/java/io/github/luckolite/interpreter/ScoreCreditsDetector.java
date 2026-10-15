@@ -4706,6 +4706,9 @@ public final class ScoreCreditsDetector {
                     });
         }
         // Resolved whole names no longer need role review; preserve mixed groups.
+        Set<String> reviewSpacingKeys = new LinkedHashSet<>();
+        other.removeIf(value -> !reviewSpacingKeys.add(initialSpacingReviewKey(value)));
+
         var assignedReviewNames =
                 java.util.stream.Stream.of(artists, composers, arrangers)
                         .flatMap(Set::stream)
@@ -4797,6 +4800,15 @@ public final class ScoreCreditsDetector {
                 value ->
                         same(value, author)
                                 || subtitles.stream().anyMatch(subtitle -> same(value, subtitle)));
+    }
+
+    private static String initialSpacingReviewKey(String value) {
+        // Preserve the first printed form; only spacing after dotted initials is equivalent.
+        Matcher initials =
+                Pattern.compile("^((?:\\p{L}\\.\\h*){1,4})([\\p{L}][\\p{L}'’ \\-]+)$")
+                        .matcher(value);
+        if (!initials.matches()) return value;
+        return initials.group(1).replaceAll("\\h+", "") + " " + initials.group(2);
     }
 
     /** Geographic folk-source labels describe provenance, rather than a credited person. */
