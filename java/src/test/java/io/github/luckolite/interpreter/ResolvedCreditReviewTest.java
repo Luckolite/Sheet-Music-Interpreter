@@ -68,4 +68,44 @@ public class ResolvedCreditReviewTest {
         assertTrue(
                 r.unclassifiedCredits().stream().anyMatch(value -> value.contains("Rowan Vale")));
     }
+
+    @Test
+    public void commaGroupResolved() {
+        var r = scan("Morgan Brookfield, Rowan Vale", "Morgan Brookfield; Rowan Vale");
+        assertTrue(r.composer().contains("Morgan Brookfield"));
+        assertTrue(r.composer().contains("Rowan Vale"));
+        assertTrue(r.unclassifiedCredits().isEmpty());
+    }
+
+    @Test
+    public void semicolonGroupResolved() {
+        var r = scan("Morgan Brookfield; Rowan Vale", "Morgan Brookfield; Rowan Vale");
+        assertTrue(r.composer().contains("Rowan Vale"));
+        assertTrue(r.unclassifiedCredits().isEmpty());
+    }
+
+    @Test
+    public void trailingCommaGroupResolved() {
+        var r = scan("Morgan Brookfield, Rowan Vale,", "Morgan Brookfield; Rowan Vale");
+        assertTrue(r.composer().contains("Rowan Vale"));
+        assertTrue(r.unclassifiedCredits().isEmpty());
+    }
+
+    @Test
+    public void groupWithUnresolvedNameRemains() {
+        var r = scan("Morgan Brookfield, Rowan Vale", "Morgan Brookfield");
+        assertTrue(r.unclassifiedCredits().stream().anyMatch(v -> v.contains("Rowan Vale")));
+    }
+
+    @Test
+    public void groupWithDifferentSpellingRemains() {
+        var r = scan("Morgan Brokfield, Rowan Vale", "Morgan Brookfield; Rowan Vale");
+        assertTrue(r.unclassifiedCredits().stream().anyMatch(v -> v.contains("Morgan Brokfield")));
+    }
+
+    @Test
+    public void groupWithUnresolvedServiceRemains() {
+        var r = scan("Morgan Brookfield, Meadow Studio", "Morgan Brookfield");
+        assertTrue(r.unclassifiedCredits().stream().anyMatch(v -> v.contains("Meadow Studio")));
+    }
 }

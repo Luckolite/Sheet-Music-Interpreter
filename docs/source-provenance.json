@@ -2096,15 +2096,15 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "9b7ebfa5f6768f09e11f74a21f950414450426c4dc7e7daa0b0b8bc57bdafac0",
-      "source_normalized_sha256": "10cd08ad7e1ca8ef64063ed15cc7021d2e6a2f43eb66dfc24a3a6f3e767d876c",
+      "source_sha256": "0733d5634dc42c759292be2e295eb5a670c56f9268c541931408871ec8379d03",
+      "source_normalized_sha256": "b2975aa6f4f2764252a29a8fc6a1e34e5285696cc07c12514b8bbe3c495f7ca8",
       "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Exact package-only port. Seven original synthetic controls and 88 private collected-PDF detector replays; fresh runtime pending.",
+      "reviewed_source_state": "Exact package-only port. Thirteen original synthetic controls; three new regressions fail before the grouped-name fix. Saved 507-PDF differential preserves role/title/conflict fields; fresh runtime pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "96655a33eda15f5fc23aba9b22f3cc1e32fe4140843a7131352ec6c669aaa886",
+      "standalone_sha256": "7dfef11047d928c01c8630ea97a0b65139c55b08bb9a6f3df73eae3c77071675",
       "license": "Apache-2.0",
-      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected. Geographic folk-song and folk-tune source labels are excluded from person-credit review; mixed bylines and named transcription services remain available. Remove exact whole-name duplicates from role review after roles resolve across the document. Case differences are ignored; unresolved spellings, mixed names, services and printed conflicts remain protected.",
-      "reviewed_app_commit": "ba5b3f78a25a139bcfad0c4a287ac04cc3ea2c08",
+      "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes. Compact root-plus-quality fragments immediately above the first staff and left of centre are excluded from person-credit review; titles, distant text and explicit bylines remain protected. Geographic folk-song and folk-tune source labels are excluded from person-credit review; mixed bylines and named transcription services remain available. Remove exact whole-name duplicates from role review after roles resolve across the document. Case differences are ignored; unresolved spellings, mixed names, services and printed conflicts remain protected. Grouped review names are removed only when every parsed name exactly matches an assigned name; partially resolved groups and spelling differences stay available.",
+      "reviewed_app_commit": "8b23692190853e8db7916a4787c660caeac8b686",
       "scoped_reviewed_app_commit": "be94044eac030a3c5af08189992f4336144cae24"
     },
     "CreditOcrIdentifierGuard.java": {

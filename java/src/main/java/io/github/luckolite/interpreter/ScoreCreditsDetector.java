@@ -4706,11 +4706,28 @@ public final class ScoreCreditsDetector {
                     });
         }
         // Resolved whole names no longer need role review; preserve mixed groups.
+        var assignedReviewNames =
+                java.util.stream.Stream.of(artists, composers, arrangers)
+                        .flatMap(Set::stream)
+                        .toList();
         other.removeIf(
-                value ->
-                        java.util.stream.Stream.of(artists, composers, arrangers)
-                                .flatMap(Set::stream)
-                                .anyMatch(name -> clean(name).equalsIgnoreCase(clean(value))));
+                value -> {
+                    if (assignedReviewNames.stream()
+                            .anyMatch(name -> clean(name).equalsIgnoreCase(clean(value))))
+                        return true;
+                    var names = contextualAuthorNames(value);
+                    return !names.isEmpty()
+                            && names.stream()
+                                    .allMatch(
+                                            name ->
+                                                    assignedReviewNames.stream()
+                                                            .anyMatch(
+                                                                    assigned ->
+                                                                            clean(assigned)
+                                                                                    .equalsIgnoreCase(
+                                                                                            clean(
+                                                                                                    name))));
+                });
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
