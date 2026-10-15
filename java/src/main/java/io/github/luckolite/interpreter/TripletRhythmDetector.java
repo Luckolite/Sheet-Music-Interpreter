@@ -3603,6 +3603,24 @@ final class TripletRhythmDetector {
                         gh = b - t + 1;
                         if (gh > gap * 2.3f || b >= firstY - gap || gw > gh * .95f) continue;
                     }
+                    // A two's detached baseline serif is not the continuous lower bowl of three.
+                    if (occluded) {
+                        int previousRight = -1;
+                        boolean detachedFoot = false;
+                        for (int yy = (int) Math.ceil(gh * .55f);
+                                yy <= (int) Math.floor(gh * .82f);
+                                yy++) {
+                            int edge = -1;
+                            for (int xx = 0; xx < gw; xx++)
+                                if (dark(gray, width, l + xx, t + yy)) edge = xx;
+                            if (edge >= 0
+                                    && previousRight >= 0
+                                    && edge - previousRight > Math.max(2, gw * .25f))
+                                detachedFoot = true;
+                            previousRight = edge;
+                        }
+                        if (detachedFoot) continue;
+                    }
                     if (!looksLikeThree(gray, width, l, t, gw, gh)) continue;
                     if (!bracketArm(
                                     gray,

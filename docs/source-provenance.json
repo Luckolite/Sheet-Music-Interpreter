@@ -508,12 +508,12 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "58163d273551747b0e83dfa7050717771acfab4a1263edf11b51ea6d61eab6c6",
-      "source_normalized_sha256": "6d988aab0112a1a6261d78ee1c0fd0745f3461f3a4ec151bb50b61cbf8e6f141",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "9ca131c3fd191243826aaabcf84c169166723fe9e692f953f906f8b954859b88",
+      "source_normalized_sha256": "624ef0a82014e1bc0cc2aa36c800a341daf5a5d8336524c28cedc4a2cb453af5",
+      "review_note": "Namespace and whitespace equivalent bounded lower-contour guard for occluded three; deterministic original crossed two and three raster regressions.",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "69143943635fa12e8a7d82f92d778a4dcdb3585d9067e5ffcc145269e37faecb",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "standalone_sha256": "29cb6d669160a5e0fb9d51e30f6f75fc28de9e92db9394f95bd563308b6abcbc",
+      "reviewed_app_commit": "270c4d60b23c7c1c715f872d333f06af18d02c9b"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
