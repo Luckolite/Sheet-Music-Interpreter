@@ -2897,10 +2897,10 @@
     },
     "ReviewNameReadConsensus.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ReviewNameReadConsensus.java",
-      "source_sha256": "e2e06181daa44e3bfe588d3b4f6d7640acd643d435b14df6f431615db477442d",
-      "source_normalized_sha256": "75fa80b8f2f5b7062aef5cd90037ffa0996edfd4f20ed0bee6f07dcd269345aa",
+      "source_sha256": "28cd07b0339f53b6e6d953cde0d9dc00fafbfdf6f8462ddc308cdd5257acff16",
+      "source_normalized_sha256": "f810eaada73bee786a53deb99efcae48101b2102619acdc7a6f9ab36ff1f0826",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ReviewNameReadConsensus.java",
-      "standalone_sha256": "ad3fc214f85178c4ac6fe59db9786adb6d867dd4590a87af1934521ffa773c72",
+      "standalone_sha256": "d1a6fac2032984e6d357f03aa773f53eb1be2db9078bcb3145d5d9c0dc9842f3",
       "license": "Apache-2.0",
       "reviewed_source_state": "Package-only source port; Android reader adapter compiles; device and paired deployment verification pending.",
       "review_note": "Unresolved review names require a full twelve-view grid, nine matching word readings, high-confidence support at all scales, and separately corroborated literal separators. Source-bound document guards preserve all roles, titles and conflicts. Original fictional tests; existing bundled model unchanged. Android-only PrimaryTitleReader and SheetCreditsScanner adapters reuse the bounded original-PDF grid and retain read evidence; no private sources or external name catalogue included.",

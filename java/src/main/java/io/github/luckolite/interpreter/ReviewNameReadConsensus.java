@@ -91,6 +91,14 @@ public final class ReviewNameReadConsensus {
         return null;
     }
 
+    private static boolean producerLine(String text) {
+        return clean(text).matches("(?iu)^produced\\h+by\\h+.+$");
+    }
+
+    private static String reviewCredit(String text) {
+        return text.strip().replaceAll("\\h+", " ").replaceFirst("(?iu)^produced\\h+by\\h+", "");
+    }
+
     public static List<ScoreCreditsDetector.Line> candidates(ScoreCreditsDetector.Page p) {
         if (p == null
                 || p.photographicCover()
@@ -107,7 +115,7 @@ public final class ReviewNameReadConsensus {
                         l ->
                                 l.text() != null
                                         && result.unclassifiedCredits()
-                                                .contains(l.text().strip().replaceAll("\\h+", " "))
+                                                .contains(reviewCredit(l.text()))
                                         && Float.isFinite(l.left())
                                         && Float.isFinite(l.top())
                                         && Float.isFinite(l.right())
@@ -133,7 +141,8 @@ public final class ReviewNameReadConsensus {
             List<ScoreHeaderReadConsensus.Reading> rows) {
         if (!candidates(page).contains(line)) return page;
         var selection = select(rows);
-        if (selection == null) return page;
+        if (selection == null || producerLine(line.text()) != producerLine(selection.text()))
+            return page;
         var lines = new ArrayList<ScoreCreditsDetector.Line>();
         for (var l : page.lines())
             lines.add(
@@ -158,8 +167,8 @@ public final class ReviewNameReadConsensus {
                 || !before.arranger().equals(after.arranger())
                 || !before.creditConflicts().equals(after.creditConflicts())) return page;
         var expected = new LinkedHashSet<>(before.unclassifiedCredits());
-        expected.remove(line.text().strip().replaceAll("\\h+", " "));
-        expected.add(selection.text());
+        expected.remove(reviewCredit(line.text()));
+        expected.add(reviewCredit(selection.text()));
         return expected.equals(new LinkedHashSet<>(after.unclassifiedCredits())) ? changed : page;
     }
 
@@ -205,8 +214,8 @@ public final class ReviewNameReadConsensus {
                     || !current.arranger().equals(after.arranger())
                     || !current.creditConflicts().equals(after.creditConflicts())) continue;
             var expected = new LinkedHashSet<>(current.unclassifiedCredits());
-            if (!expected.remove(p.line().text().strip().replaceAll("\\h+", " "))) continue;
-            expected.add(select(p.readings()).text());
+            if (!expected.remove(reviewCredit(p.line().text()))) continue;
+            expected.add(reviewCredit(select(p.readings()).text()));
             if (!expected.equals(new LinkedHashSet<>(after.unclassifiedCredits()))) continue;
             selected = candidate;
             current = after;
