@@ -23,9 +23,40 @@ public class CrossedNumeralSerifTest {
     }
 
     private Object find(byte[] g) throws Exception {
-        var m = SlopedCurveThreeTest.class.getDeclaredMethod("find", byte[].class, boolean.class);
+        var m =
+                TripletRhythmDetector.class.getDeclaredMethod(
+                        "findPrintedNumeral",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        float.class,
+                        float.class,
+                        float.class,
+                        float.class,
+                        float.class,
+                        boolean.class,
+                        float.class,
+                        float.class,
+                        int.class,
+                        boolean.class,
+                        java.util.function.Predicate.class);
         m.setAccessible(true);
-        return m.invoke(new SlopedCurveThreeTest(), g, true);
+        return m.invoke(
+                null,
+                g,
+                500,
+                300,
+                200f,
+                300f,
+                180f,
+                180f,
+                20f,
+                true,
+                Float.NaN,
+                140f,
+                3,
+                false,
+                (java.util.function.Predicate<Object>) (x -> true));
     }
 
     @Test
