@@ -42,6 +42,26 @@ public final class LocatedCoverHeadingEvidence {
         return confirmed == null ? null : new LocatedCoverHeadingEvidence(original, confirmed);
     }
 
+    /** Exact-crop agreement may protect an unchanged heading without authorizing replacement.
+     * Expanded crops must retain the stronger fromOriginal rule. */
+    public static LocatedCoverHeadingEvidence fromExactOriginal(
+            ScoreCreditsDetector.Page page,
+            ScoreCreditsDetector.Line original,
+            List<String> readings,
+            List<Float> confidence) {
+        var strong = fromOriginal(page, original, readings, confidence);
+        if (strong != null) return strong;
+        if (!page.photographicCover()
+                || confidence == null
+                || confidence.size() != 3
+                || confidence.stream()
+                        .anyMatch(c -> c == null || !Float.isFinite(c) || c < .90f || c > 1))
+            return null;
+        var confirmed = ScoreCreditsDetector.locatedCoverHeadingReading(page, original, readings);
+        if (confirmed == null || !confirmed.text().equals(original.text())) return null;
+        return new LocatedCoverHeadingEvidence(original, original);
+    }
+
     /** Only the unchanged nominated line may be replaced; other merged headings stay independent. */
     public static List<ScoreCreditsDetector.Line> merge(
             ScoreCreditsDetector.Page page, List<LocatedCoverHeadingEvidence> evidence) {

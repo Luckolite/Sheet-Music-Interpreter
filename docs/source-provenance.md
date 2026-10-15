@@ -2028,3 +2028,12 @@ raw geometry and larger inputs remain unchanged. Two procedural regressions
 cover the short-row failure and unchanged larger rows. App commit `f49f2ad08ceaf0851b0f59007cd3380ef0b2cb1a`
 is paired; full Java/Python tests and synthetic smoke passed. Native and desktop qualification remain
 pending. No private score data or models are included.
+
+## Confirmed cover headings
+
+Three exact original-crop readings may protect unchanged heading text at 0.90
+confidence. Replacement and expanded-crop evidence still require 0.95. This
+prevents a later fallback from overwriting a corroborated heading. Seven original
+fictional regressions cover retention, disagreement, confidence and routing.
+App commit `506a74ce530a0af76f6b229d2fba743f8c3133b1` is paired. Native whole-library and matching desktop
+qualification remain pending; no private score data or model changes are included.
