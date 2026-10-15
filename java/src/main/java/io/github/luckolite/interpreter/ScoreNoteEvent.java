@@ -222,7 +222,7 @@ public record ScoreNoteEvent(
                 beamCount,
                 writtenAccidental,
                 unbeamedDurationBeats,
-                tupletDivisor,
+                tupletDivisor == 2 || tupletDivisor == 4 ? 1 : tupletDivisor,
                 followingRestBeats,
                 articulations,
                 clefBottomDiatonic,
@@ -243,7 +243,13 @@ public record ScoreNoteEvent(
     }
 
     public ScoreNoteEvent withTupletRatio(int actual, int normal) {
-        if (actual != 1 && actual != 3 && actual != 5 && actual != 6 && actual != 7)
+        if (actual != 1
+                && actual != 2
+                && actual != 3
+                && actual != 4
+                && actual != 5
+                && actual != 6
+                && actual != 7)
             throw new IllegalArgumentException("Unsupported tuplet actual count");
         return new ScoreNoteEvent(
                 measureIndex,
@@ -954,8 +960,12 @@ public record ScoreNoteEvent(
         if (!Float.isFinite(followingRestBeats)
                 || followingRestBeats < 0
                 || followingRestBeats > 16) followingRestBeats = 0;
-        if (tupletDivisor != 3 && tupletDivisor != 5 && tupletDivisor != 6 && tupletDivisor != 7)
-            tupletDivisor = 1;
+        if (tupletDivisor != 2
+                && tupletDivisor != 3
+                && tupletDivisor != 4
+                && tupletDivisor != 5
+                && tupletDivisor != 6
+                && tupletDivisor != 7) tupletDivisor = 1;
         if (tupletNormalNotes < 1
                 || tupletNormalNotes > 16
                 || tupletDivisor == 1 && tupletNormalNotes != 1)

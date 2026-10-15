@@ -32,7 +32,7 @@ def ticks(value):
 def note_type(node, duration, event=None):
     actual = event.get('tupletActualNotes', 1) if event else 1
     normal = event.get('tupletNormalNotes', 1) if event else 1
-    if (type(actual) is not int or type(normal) is not int or actual not in (1,3,5,6,7)
+    if (type(actual) is not int or type(normal) is not int or actual not in (1,2,3,4,5,6,7)
             or not 1 <= normal <= 16 or actual == 1 and normal != 1):
         raise ValueError('Unsupported explicit tuplet ratio')
     if actual != 1:

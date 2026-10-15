@@ -304,6 +304,19 @@ public final class SheetInterpreter {
                         height,
                         !tabs.isEmpty());
         finalScore = WholeRestMeterContext.apply(finalScore, gray, width, height, staffs);
+        // Resolve compound ratios only after the final meter and measure remapping are known.
+        finalScore =
+                finalScore.withNotes(
+                        TripletRhythmDetector.compoundDuplets(
+                                finalScore.notes(),
+                                finalScore.measures(),
+                                finalScore.meterChanges(),
+                                gray,
+                                width,
+                                height),
+                        java.util.stream.IntStream.range(0, finalScore.notes().size())
+                                .boxed()
+                                .toList());
         var withExpressions =
                 ScoreExpressionDetector.apply(
                         ScoreFermataDetector.withFermatas(

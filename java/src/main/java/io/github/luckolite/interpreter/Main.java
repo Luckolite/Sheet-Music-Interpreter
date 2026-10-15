@@ -140,6 +140,7 @@ public final class Main {
                                         null,
                                         physicalPage),
                         initialKey);
+        score = ScoreTupletMeterContext.apply(score, initialMeter);
         float[] beats = new float[score.measures().size()];
         Arrays.fill(beats, initialMeter.quarterBeats());
         for (var change :

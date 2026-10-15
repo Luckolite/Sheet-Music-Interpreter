@@ -17568,6 +17568,44 @@ final class OmrScoreInterpreter {
                 else if (distance < 0) outerLeft = count;
                 else outerRight = count;
             }
+            if (thick >= 3 && voiceStem == null && !smallHead) {
+                int refined =
+                        DetachedBeamTailCap.endpoint(
+                                gray,
+                                width,
+                                height,
+                                bestX,
+                                head.centerY,
+                                stemEnd,
+                                upward ? -1 : 1,
+                                gap,
+                                stemThreshold);
+                if (refined != stemEnd) {
+                    boolean paired = true;
+                    for (float distance : new float[] {-.65f, -.4f, .4f, .65f}) {
+                        int x = bestX + Math.round(distance * gap);
+                        int innerX =
+                                bestX
+                                        + Math.round(
+                                                Math.copySign(
+                                                                Math.abs(distance) < .5f
+                                                                        ? .2f
+                                                                        : .4f,
+                                                                distance)
+                                                        * gap);
+                        int near = Math.max(0, refined - (upward ? Math.round(gap * .2f) : inside));
+                        int far =
+                                Math.min(
+                                        height - 1,
+                                        refined + (upward ? inside : Math.round(gap * .2f)));
+                        if (thickNonHeadBands(
+                                        gray, labels, width, height, x, near, far, staff, innerX,
+                                        true)
+                                != 2) paired = false;
+                    }
+                    if (paired) return 2;
+                }
+            }
             // A shaded blank cap can separate a coarse stem trace from detached ink.
             // Recount at the independently supported endpoint; ordinary faint shafts,
             // genuine second beams and independently curved flags retain their evidence.

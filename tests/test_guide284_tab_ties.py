@@ -60,9 +60,9 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         new = wire.encode(original)
 
-        self.assertEqual(287, struct.unpack_from('>i', new)[0])
+        self.assertEqual(288, struct.unpack_from('>i', new)[0])
 
-        self.assertEqual(60, wire.RECOGNITION_REVISION)
+        self.assertEqual(61, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))
@@ -169,4 +169,4 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
 
-            wire.encode(score(), 288)
+            wire.encode(score(), 289)

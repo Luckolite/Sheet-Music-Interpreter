@@ -913,6 +913,138 @@ final class TripletRhythmDetector {
                 gap);
     }
 
+    /** Printed duplets require compound meter and a complete unambiguous staff clock. */
+    static List<ScoreNoteEvent> compoundDuplets(
+            List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures,
+            List<ScoreMeterChange> meters,
+            byte[] gray,
+            int width,
+            int height) {
+        if (meters == null || meters.isEmpty() || notes.isEmpty()) return notes;
+        var candidate =
+                beamedTuplets(
+                        beamedTuplets(notes, measures, gray, width, height, 2, notes.size()),
+                        measures,
+                        gray,
+                        width,
+                        height,
+                        4,
+                        notes.size());
+        var groups = onsets(candidate);
+        var originalGroups = onsets(notes);
+        var result = new ArrayList<>(notes);
+        for (int i = 0; i < notes.size(); i++) {
+            var n = candidate.get(i);
+            if ((n.tupletDivisor() != 2 && n.tupletDivisor() != 4)
+                    || notes.get(i).tupletDivisor() != 1) continue;
+            ScoreMeterChange selected = null;
+            boolean conflict = false;
+            for (var meter : meters) {
+                if (meter.measureIndex() < 0 || meter.measureIndex() > n.measureIndex()) continue;
+                if (selected == null || meter.measureIndex() > selected.measureIndex()) {
+                    selected = meter;
+                    conflict = false;
+                } else if (meter.measureIndex() == selected.measureIndex()
+                        && !meter.equals(selected)) conflict = true;
+            }
+            if (conflict
+                    || selected == null
+                    || selected.denominator() != 8
+                    || selected.numerator() < 6
+                    || selected.numerator() % 3 != 0) continue;
+            double expected = selected.numerator() * .5;
+            double old =
+                    staffClock(originalGroups, notes, notes.get(i), n.staffIndex(), notes.size());
+            double fixed = staffClock(groups, candidate, n, n.staffIndex(), notes.size());
+            if (Double.isFinite(old)
+                    && Double.isFinite(fixed)
+                    && old < expected - .001
+                    && Math.abs(fixed - expected) < .001) result.set(i, n);
+        }
+        return List.copyOf(result);
+    }
+
+    /** Resolve a complete printed seven-sixteenth group against established document meter. */
+    static List<ScoreNoteEvent> contextualSevens(
+            List<ScoreNoteEvent> notes, List<ScoreMeterChange> meters, boolean openingPickup) {
+        if (notes == null || notes.isEmpty() || meters == null || meters.isEmpty()) return notes;
+        var result = new ArrayList<>(notes);
+        var originalGroups = onsets(notes);
+        for (var first : notes) {
+            if (first.tupletDivisor() != 7
+                    || first.tupletNormalNotes() != 4
+                    || first.beamCount() != 2
+                    || openingPickup && first.measureIndex() == 0) continue;
+            ScoreMeterChange selected = null;
+            boolean conflict = false;
+            for (var m : meters) {
+                if (m.measureIndex() < 0 || m.measureIndex() > first.measureIndex()) continue;
+                if (selected == null || m.measureIndex() > selected.measureIndex()) {
+                    selected = m;
+                    conflict = false;
+                } else if (m.measureIndex() == selected.measureIndex() && !m.equals(selected))
+                    conflict = true;
+            }
+            if (selected == null || conflict) continue;
+            var members = new ArrayList<Integer>();
+            for (int i = 0; i < notes.size(); i++) {
+                var n = notes.get(i);
+                if (n.measureIndex() == first.measureIndex()
+                        && n.staffIndex() == first.staffIndex()
+                        && n.staffCount() == first.staffCount()
+                        && n.tupletDivisor() == 7) members.add(i);
+            }
+            if (members.size() != 7) continue;
+            if (notes.get(members.get(0)) != first) continue;
+            float left = first.positionInMeasure(),
+                    right = notes.get(members.get(6)).positionInMeasure();
+            boolean interrupted = false;
+            for (var n : notes)
+                if (n.measureIndex() == first.measureIndex()
+                        && n.staffIndex() == first.staffIndex()
+                        && n.staffCount() == first.staffCount()
+                        && n.positionInMeasure() > left
+                        && n.positionInMeasure() < right
+                        && n.tupletDivisor() != 7) interrupted = true;
+            if (interrupted) continue;
+            boolean valid = true;
+            float previous = -1;
+            var candidate = new ArrayList<>(notes);
+            for (int i : members) {
+                var n = notes.get(i);
+                if (n.tupletNormalNotes() != 4
+                        || n.beamCount() != 2
+                        || n.augmentationDots() != 0
+                        || n.leadingRestBeats() != 0
+                        || n.followingRestBeats() != 0
+                        || previous >= 0 && n.positionInMeasure() - previous < .018f) {
+                    valid = false;
+                    break;
+                }
+                previous = n.positionInMeasure();
+                candidate.set(i, n.withTupletRatio(7, 6));
+            }
+            if (!valid) continue;
+            double before =
+                    staffClock(originalGroups, notes, first, first.staffIndex(), notes.size());
+            double after =
+                    staffClock(
+                            onsets(candidate),
+                            candidate,
+                            first,
+                            first.staffIndex(),
+                            candidate.size());
+            double expected = selected.quarterBeats();
+            if (Double.isFinite(before)
+                    && Double.isFinite(after)
+                    && before < expected - .001
+                    && Math.abs(after - expected) < .001)
+                for (int i : members) result.set(i, candidate.get(i));
+        }
+        return List.copyOf(result);
+    }
+
     private static List<ScoreNoteEvent> beamedTuplets(
             List<ScoreNoteEvent> notes,
             List<MeasureRegion> measures,
@@ -932,6 +1064,7 @@ final class TripletRhythmDetector {
                         || first.augmentationDots() != 0
                         || first.measureIndex() < 0
                         || first.measureIndex() >= measures.size()) continue;
+                if (divisor == 4 && first.beamCount() > 2) continue;
                 List<Onset> run = new ArrayList<>();
                 float minimum = Float.MAX_VALUE, maximum = 0;
                 boolean valid = true;
@@ -990,7 +1123,7 @@ final class TripletRhythmDetector {
                     y1 = Math.min(y1, onset.top() * height);
                     y2 = Math.max(y2, onset.bottom() * height);
                 }
-                if (divisor >= 5) {
+                if (divisor >= 4) {
                     boolean separated = false;
                     for (int j = 1; j < run.size(); j++) {
                         Onset previous = run.get(j - 1), next = run.get(j);
@@ -1028,13 +1161,17 @@ final class TripletRhythmDetector {
                                 Float.NaN,
                                 Float.NaN,
                                 divisor,
-                                divisor == 6,
+                                divisor == 6 || divisor == 2 || divisor == 4,
                                 false,
                                 first,
                                 result.subList(0, Math.min(virtualStart, result.size())),
                                 bar,
                                 measures);
                 if (numeral == null || insideOtherSystem(numeral, bar, measures, width, height))
+                    continue;
+                if ((divisor == 2 || divisor == 4)
+                        && !beamOwnsNumeral(
+                                numeral, first, notes, bar, gray, width, height, x1, lastX, gap))
                     continue;
                 for (Onset onset : run)
                     for (int at : onset.indices()) {
@@ -1063,7 +1200,16 @@ final class TripletRhythmDetector {
                                                 n.octaveShift(),
                                                 n.boundaryTies())
                                         .withStemDirection(n.stemDirection())
-                                        .withKind(n.kind()));
+                                        .withKind(n.kind())
+                                        .withTupletRatio(
+                                                divisor,
+                                                divisor == 2
+                                                        ? 3
+                                                        : divisor == 4
+                                                                ? (n.beamCount() == 2 ? 6 : 3)
+                                                                : ScoreNoteEvent
+                                                                        .defaultTupletNormalNotes(
+                                                                                divisor)));
                     }
             }
         }
@@ -2684,13 +2830,20 @@ final class TripletRhythmDetector {
                             || headX > maxX + gap * .1f
                             || headY < minY - gap * .1f
                             || headY > maxY + gap * .1f)) continue;
-            if (!(number == 7
-                    ? looksLikeSeven(gray, width, minX, minY, gw, gh)
-                    : number == 5
-                            ? looksLikeFive(gray, width, minX, minY, gw, gh)
-                            : number == 6
-                                    ? TupletSixGlyph.matches(gray, width, minX, minY, gw, gh)
-                                    : looksLikeThree(gray, width, minX, minY, gw, gh))) continue;
+            if (!(number == 2
+                    ? looksLikeTwo(gray, width, count, minX, maxX, minY, maxY)
+                    : number == 4
+                            ? looksLikeFingerFour(gray, width, count, minX, maxX, minY, maxY)
+                            : number == 7
+                                    ? looksLikeSeven(gray, width, minX, minY, gw, gh)
+                                    : number == 5
+                                            ? looksLikeFive(gray, width, minX, minY, gw, gh)
+                                            : number == 6
+                                                    ? TupletSixGlyph.matches(
+                                                            gray, width, minX, minY, gw, gh)
+                                                    : looksLikeThree(
+                                                            gray, width, minX, minY, gw, gh)))
+                continue;
             if (TupletNumeralNeighbors.joinedText(gray, width, height, minX, minY, maxX, maxY))
                 continue;
             // Quarter-note tuplets need the two bracket arms. For beamed/flagged short notes,
@@ -2952,6 +3105,77 @@ final class TripletRhythmDetector {
                 && topBar < glyphWidth * .68f
                 && upperLeft >= Math.max(2, Math.round(area * .10f))
                 && lowerLeft <= Math.max(2, Math.round(area * .16f));
+    }
+
+    private static boolean looksLikeTwo(
+            byte[] gray, int width, int area, int minX, int maxX, int minY, int maxY) {
+        int glyphWidth = maxX - minX + 1, glyphHeight = maxY - minY + 1;
+        float fill = area / (float) (glyphWidth * glyphHeight);
+        if (fill < .13f || fill > .66f) return false;
+        int[] rows = new int[glyphHeight];
+        int upperRight = 0, lowerLeft = 0, lowerDiagonal = 0;
+        for (int y = minY; y <= maxY; y++)
+            for (int x = minX; x <= maxX; x++) {
+                if ((gray[y * width + x] & 0xff) > 165) continue;
+                int localX = x - minX, localY = y - minY;
+                rows[localY]++;
+                if (localX >= glyphWidth * .52f && localY <= glyphHeight * .48f) upperRight++;
+                if (localX <= glyphWidth * .48f && localY >= glyphHeight * .52f) lowerLeft++;
+                if (localX <= glyphWidth * .42f
+                        && localY >= glyphHeight * .52f
+                        && localY <= glyphHeight * .82f) lowerDiagonal++;
+            }
+        int topStroke = 0, bottomStroke = 0, rightSpine = 0, leftSpine = 0;
+        for (int y = 0; y <= Math.min(glyphHeight - 1, Math.round(glyphHeight * .30f)); y++)
+            topStroke = Math.max(topStroke, rows[y]);
+        for (int y = Math.max(0, Math.round(glyphHeight * .70f)); y < glyphHeight; y++)
+            bottomStroke = Math.max(bottomStroke, rows[y]);
+        for (int x = Math.max(0, Math.round(glyphWidth * .58f)); x < glyphWidth; x++) {
+            int run = 0;
+            for (int y = minY; y <= maxY; y++) {
+                run = (gray[y * width + minX + x] & 255) <= 165 ? run + 1 : 0;
+                rightSpine = Math.max(rightSpine, run);
+            }
+        }
+        for (int x = 0; x < Math.round(glyphWidth * .42f); x++) {
+            int run = 0;
+            for (int y = minY; y <= maxY; y++) {
+                run = (gray[y * width + minX + x] & 255) <= 165 ? run + 1 : 0;
+                leftSpine = Math.max(leftSpine, run);
+            }
+        }
+        // A two has separated left terminals, not the long left spine of a
+        // mirrored digit. Serifs must not manufacture diagonal evidence.
+        return topStroke >= glyphWidth * .46f
+                && bottomStroke >= glyphWidth * .52f
+                && (rightSpine < glyphHeight * .90f
+                        || descendingTwoStroke(gray, width, minX, minY, glyphWidth, glyphHeight))
+                && leftSpine < glyphHeight * .50f
+                && upperRight >= Math.max(2, Math.round(area * .10f))
+                && lowerLeft >= Math.max(2, Math.round(area * .10f))
+                && lowerDiagonal >= Math.max(2, (int) (area * .06f));
+    }
+
+    /** Bold twos may share one right-hand column while their middle stroke still descends left. */
+    private static boolean descendingTwoStroke(
+            byte[] gray, int width, int left, int top, int w, int h) {
+        double upper = 0, lower = 0;
+        int upperCount = 0, lowerCount = 0;
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) <= 165) {
+                    if (y >= h * .25 && y < h * .45) {
+                        upper += x;
+                        upperCount++;
+                    }
+                    if (y >= h * .55 && y < h * .75) {
+                        lower += x;
+                        lowerCount++;
+                    }
+                }
+        return upperCount >= h * .2
+                && lowerCount >= h * .2
+                && upper / upperCount - lower / lowerCount >= w * .20;
     }
 
     private static boolean looksLikeSeven(byte[] gray, int width, int left, int top, int w, int h) {

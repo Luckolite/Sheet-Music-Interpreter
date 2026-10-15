@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 60
-GUIDE_VERSION = 287
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287)
+RECOGNITION_REVISION = 61
+GUIDE_VERSION = 288
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -102,9 +102,14 @@ def encode(score, guide_version=GUIDE_VERSION):
         if guide_version < 284 and row.get("boundaryTies", 0) & 16:
             raise ValueError("Typed tab tie identity requires guide284")
         actual = _field(row, "tupletDivisor")
+        if type(actual) is int and actual in (2, 4):
+            if guide_version < 288:
+                raise ValueError("Compound tuplets require guide288")
+            if "tupletNormalNotes" not in row:
+                raise ValueError("Compound tuplets require an explicit normal count")
         default_normal = {3: 2, 5: 4, 6: 4, 7: 4}.get(actual, 1)
         normal = row.get("tupletNormalNotes", default_normal)
-        if (type(actual) is not int or actual not in (1, 3, 5, 6, 7)
+        if (type(actual) is not int or actual not in (1, 2, 3, 4, 5, 6, 7)
                 or type(normal) is not int or not 1 <= normal <= 16
                 or actual == 1 and normal != 1):
             raise ValueError("Invalid tuplet ratio")

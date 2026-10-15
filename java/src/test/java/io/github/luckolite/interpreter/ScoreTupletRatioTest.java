@@ -80,6 +80,6 @@ public class ScoreTupletRatioTest {
     public void invalidRatiosAreRejected() {
         assertThrows(IllegalArgumentException.class, () -> sixteenth(.2f).withTupletRatio(5, 0));
         assertThrows(IllegalArgumentException.class, () -> sixteenth(.2f).withTupletRatio(1, 3));
-        assertThrows(IllegalArgumentException.class, () -> sixteenth(.2f).withTupletRatio(2, 3));
+        assertThrows(IllegalArgumentException.class, () -> sixteenth(.2f).withTupletRatio(8, 3));
     }
 }
