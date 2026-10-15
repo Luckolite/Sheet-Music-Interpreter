@@ -23,11 +23,14 @@ final class RestVerticalWave {
         float extreme = Float.NaN;
         for (int y = first; y <= last; y++) {
             int x0 = -1, x1 = -1;
+            int ruleLeft = Math.round(left - gap), ruleRight = Math.round(right + gap);
             boolean rule =
                     left - gap >= 0
                             && right + gap < width
-                            && dark(gray, width, Math.round(left - gap), y)
-                            && dark(gray, width, Math.round(right + gap), y);
+                            && ruleLeft >= 0
+                            && ruleRight < width
+                            && dark(gray, width, ruleLeft, y)
+                            && dark(gray, width, ruleRight, y);
             if (rule) continue;
             for (int x = left; x <= right; x++)
                 if (dark(gray, width, x, y)) {

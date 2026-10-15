@@ -1172,9 +1172,13 @@
     },
     "RestVerticalWave.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestVerticalWave.java",
-      "source_sha256": "ec888163863f47980672461872910ca2461aff9b3dff19fd8452adc103ed0d99",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ec888163863f47980672461872910ca2461aff9b3dff19fd8452adc103ed0d99"
+      "source_sha256": "66afd668365f89d15fab7ebccc640325990f399034fc475536f9763415904e28",
+      "reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44",
+      "source_normalized_sha256": "d6edb6eb289931281147ffe0a69b84c6acd36c4411b90ffa23823afb1b41e3dc",
+      "standalone_sha256": "7421a7f40fc40215251d302baabcbb00311d01067e6bf267a2b07278626c59de",
+      "reviewed_source_state": "Committed paired rounded raster bounds repair; recognition59/audio92, guide287 unchanged. Original synthetic controls and full source suite passed; packaged deployment pending.",
+      "review_note": "Original synthetic edge tests reproduce the prior bounds exception; preserve float-domain guards and validate rounded columns before pixel reads. No private source material or model changes.",
+      "scoped_reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44"
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
@@ -1561,13 +1565,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "5a6c00d3204f08c67acb8bd7a70c8557da7a37c57cbbafe863fd9138efe47d38",
-      "source_normalized_sha256": "5a6c00d3204f08c67acb8bd7a70c8557da7a37c57cbbafe863fd9138efe47d38",
-      "review_note": "Recognition58 invalidates stale recognition results; guide287 record layout unchanged.",
-      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
-      "standalone_sha256": "22f850a32be0dcda1256c7cf6978da3ff2f8812388fb01f0460572386cb49572",
-      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
-      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff"
+      "source_sha256": "5cfd703585bcbf4bccc987100bb81a8d58fdb67596d7b53402736754dd0c84de",
+      "source_normalized_sha256": "5cfd703585bcbf4bccc987100bb81a8d58fdb67596d7b53402736754dd0c84de",
+      "review_note": "Original synthetic edge tests reproduce the prior bounds exception; preserve float-domain guards and validate rounded columns before pixel reads. No private source material or model changes.",
+      "reviewed_source_state": "Committed paired rounded raster bounds repair; recognition59/audio92, guide287 unchanged. Original synthetic controls and full source suite passed; packaged deployment pending.",
+      "standalone_sha256": "159093eb06bdcd202e993f3b85322edcaa6b4eb0f807d4bbe5557f069b6b0e96",
+      "reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44",
+      "scoped_reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1623,13 +1627,13 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "123a312f598a4ecea26e7d66c19952de5c120dfff9c1cdc204ed29ab626600ce",
-      "source_normalized_sha256": "123a312f598a4ecea26e7d66c19952de5c120dfff9c1cdc204ed29ab626600ce",
-      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending.",
-      "review_note": "Recognition58 matches Android/native cache identity; guide287 unchanged.",
-      "standalone_sha256": "9b83cd569bccbdde89a24b1631f2ac29e6578405c0ae33e11f4636e5f1f0e655",
-      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
-      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff"
+      "source_sha256": "3e4304711c2a07742018a9fe6e1090c158c389a2806e7b430f7f83666eccf7f6",
+      "source_normalized_sha256": "3e4304711c2a07742018a9fe6e1090c158c389a2806e7b430f7f83666eccf7f6",
+      "reviewed_source_state": "Committed paired rounded raster bounds repair; recognition59/audio92, guide287 unchanged. Original synthetic controls and full source suite passed; packaged deployment pending.",
+      "review_note": "Original synthetic edge tests reproduce the prior bounds exception; preserve float-domain guards and validate rounded columns before pixel reads. No private source material or model changes.",
+      "standalone_sha256": "2f34d0b5ecb0caa0daa3a0f0cc4d3df8984b8adfe822eec7172618f13efa5361",
+      "reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44",
+      "scoped_reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -7113,5 +7117,13 @@
         "source_sha256": "f4d720ed92634d0e24e5d8c81bce2cc29cf90694fa04c787c734b8b4408ef4cd"
       }
     ]
+  },
+  "rounded_rest_bounds_review": {
+    "license": "Apache-2.0",
+    "appCommit": "b9357cea9498a072237e541be9db117594979a44",
+    "recognitionRevision": 59,
+    "audioVersion": 92,
+    "guideVersion": 287,
+    "scope": "Global rounded witness-column bounds; original procedural regressions, no private scores, logs, identifiers, model or threshold changes. Real-score crash-free replay verified separately; full-document accuracy not asserted."
   }
 }
