@@ -4705,6 +4705,12 @@ public final class ScoreCreditsDetector {
                                                                                 same(name, known)));
                     });
         }
+        // Resolved whole names no longer need role review; preserve mixed groups.
+        other.removeIf(
+                value ->
+                        java.util.stream.Stream.of(artists, composers, arrangers)
+                                .flatMap(Set::stream)
+                                .anyMatch(name -> clean(name).equalsIgnoreCase(clean(value))));
         return new Result(
                 title.isEmpty() ? fallback : title,
                 String.join("; ", artists),
