@@ -2894,6 +2894,17 @@
       "reviewed_source_state": "Package-only port verified. Three original-PDF readings must agree; runtime qualification pending.",
       "review_note": "Restore only one omitted repeated letter in already located credits using three unanimous readings with confidence at least 0.98. Original synthetic controls; no names catalogue, role reassignment, model or wire changes.",
       "reviewed_app_commit": "97e40e99b3109dde109d27ec8cc38c32272c6fff"
+    },
+    "ReviewNameReadConsensus.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/data/ReviewNameReadConsensus.java",
+      "source_sha256": "e2e06181daa44e3bfe588d3b4f6d7640acd643d435b14df6f431615db477442d",
+      "source_normalized_sha256": "75fa80b8f2f5b7062aef5cd90037ffa0996edfd4f20ed0bee6f07dcd269345aa",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ReviewNameReadConsensus.java",
+      "standalone_sha256": "ad3fc214f85178c4ac6fe59db9786adb6d867dd4590a87af1934521ffa773c72",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "Package-only source port; Android reader adapter compiles; device and paired deployment verification pending.",
+      "review_note": "Unresolved review names require a full twelve-view grid, nine matching word readings, high-confidence support at all scales, and separately corroborated literal separators. Source-bound document guards preserve all roles, titles and conflicts. Original fictional tests; existing bundled model unchanged. Android-only PrimaryTitleReader and SheetCreditsScanner adapters reuse the bounded original-PDF grid and retain read evidence; no private sources or external name catalogue included.",
+      "reviewed_app_commit": "1e43151370a9ed26d8fb1545a3f2b2db96ffb7dc"
     }
   },
   "interpreter_speedup_review": {
