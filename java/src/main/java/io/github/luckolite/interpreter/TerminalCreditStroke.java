@@ -129,7 +129,7 @@ public final class TerminalCreditStroke {
         return new Prepared(w, h, out);
     }
 
-    /** Readings must come from three distinct original-PDF render scales. */
+    /** Require three agreeing original-PDF scales, with no confident contradictory reading. */
     public static String restore(
             String original,
             List<String> readings,
@@ -139,25 +139,28 @@ public final class TerminalCreditStroke {
                 || readings == null
                 || confidence == null
                 || strokeEvidence == null
-                || readings.size() != 3
-                || confidence.size() != 3
-                || strokeEvidence.size() != 3) return original;
+                || (readings.size() != 3 && readings.size() != 4)
+                || confidence.size() != readings.size()
+                || strokeEvidence.size() != readings.size()) return original;
         String before = name(original);
         if (!before.matches("[A-Z][A-Z'’]*(?:\\h+[A-Z][A-Z'’]*){1,5}")
                 || before.length() < 8
                 || before.endsWith("I")
                 || before.endsWith("L")) return original;
         String wanted = before + "I";
-        for (int i = 0; i < 3; i++) {
+        int agreement = 0;
+        for (int i = 0; i < readings.size(); i++) {
             Float score = confidence.get(i);
             if (score == null
                     || !Float.isFinite(score)
-                    || score < .90f
+                    || score < 0
                     || score > 1
-                    || !Boolean.TRUE.equals(strokeEvidence.get(i))
-                    || !wanted.equals(name(readings.get(i)))) return original;
+                    || !Boolean.TRUE.equals(strokeEvidence.get(i))) return original;
+            if (score < .90f) continue;
+            if (!wanted.equals(name(readings.get(i)))) return original;
+            agreement++;
         }
-        return wanted;
+        return agreement >= 3 ? wanted : original;
     }
 
     private static String name(String value) {

@@ -2845,14 +2845,14 @@
     },
     "TerminalCreditStroke.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/TerminalCreditStroke.java",
-      "source_sha256": "ec6eb1a0b918cacbbaa971bd5c779c8f15049ae3443a16fdb37cc9d09951f2cb",
-      "source_normalized_sha256": "70a2474f2c688fb0eba559006fdd73c5ee46f1c367931e94602d06600e599178",
+      "source_sha256": "1b2de81a2a21709b7cd484f12d80e77a0261fb7b52f8157f6652169d9636ad16",
+      "source_normalized_sha256": "1b2de81a2a21709b7cd484f12d80e77a0261fb7b52f8157f6652169d9636ad16",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TerminalCreditStroke.java",
-      "standalone_sha256": "ebc2ac2c622a8b83cf3ee60775e7429bef527925406e7b7026ff19ef29a991fa",
+      "standalone_sha256": "1f0dc60720dd29f6fbdf6f6ed7486bce45d80b11ed6173999c5fc805f54156a6",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "34e06b64c85e20126ff8f363689ee2f9d37f7903",
-      "reviewed_source_state": "Exact package-normalized paired sources; original pixel/consensus/caller controls. Whole-library Android runtime unverified.",
-      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes."
+      "reviewed_app_commit": "302bd5f4c9a44da317961b9ba3f1e9fd5cced236",
+      "reviewed_source_state": "Exact package-only port. Three confident exact terminal-I readings required across three or four distinct original-PDF scales. Every view requires ink proof; confident dissent rejected. Original synthetic regressions and actual Android crop parity verified. Full scanner APK and paired deployment pending.",
+      "review_note": "Retain supported same-work printed composer variants with review conflicts; preserve conflict evidence through title/edition recovery. Bounded local contrast restores faint terminal strokes only with existing three-reading consensus. Repeated-imprint collection artwork is excluded from unclassified reviews. Original synthetic controls only; no private score assets, name dictionary, model or native wire changes. Four-scale fallback tolerates one low-confidence abstention only; no known-name lookup or score-specific production rules."
     },
     "MetadataStaffBoundary.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/MetadataStaffBoundary.java",
