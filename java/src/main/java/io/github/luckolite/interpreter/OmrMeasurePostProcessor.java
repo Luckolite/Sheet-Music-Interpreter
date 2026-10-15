@@ -1831,6 +1831,38 @@ final class OmrMeasurePostProcessor {
     /** A thick arpeggio can have a straight overlapping core; its ink edges still oscillate.
      * Ignore staff-rule rows and require repeated reversals, not one beam/head intersection.
      * The axis follows the tested bar slope, so a straight tilted rule is not a wave. */
+    /** A quantized thick wave can hide in its center while both ink edges still turn. */
+    private static final class StrokeEdgeTurns {
+        double extreme = Double.NaN,
+                minimum = Double.POSITIVE_INFINITY,
+                maximum = Double.NEGATIVE_INFINITY;
+        int direction, turns;
+
+        void add(double value, double excursion) {
+            minimum = Math.min(minimum, value);
+            maximum = Math.max(maximum, value);
+            if (Double.isNaN(extreme)) {
+                extreme = value;
+                return;
+            }
+            if (direction == 0) {
+                if (Math.abs(value - extreme) >= excursion) {
+                    direction = value > extreme ? 1 : -1;
+                    extreme = value;
+                }
+            } else if (direction * (value - extreme) >= 0) extreme = value;
+            else if (Math.abs(value - extreme) >= excursion) {
+                turns++;
+                direction = -direction;
+                extreme = value;
+            }
+        }
+
+        boolean repeated(float gap, double amplitude) {
+            return turns >= 4 && maximum - minimum >= gap * amplitude;
+        }
+    }
+
     private static boolean oscillatingVerticalStroke(
             byte[] gray,
             int width,
@@ -1847,6 +1879,8 @@ final class OmrMeasurePostProcessor {
                 minimum = Double.POSITIVE_INFINITY,
                 maximum = Double.NEGATIVE_INFINITY;
         double excursion = Math.max(1.1, gap * .08);
+        var leftEdge = new StrokeEdgeTurns();
+        var rightEdge = new StrokeEdgeTurns();
         float centerY = (rows[0] + rows[4]) * .5f + shift;
         for (int y = Math.max(0, Math.round(rows[0] + shift));
                 y <= Math.min(height - 1, Math.round(rows[4] + shift));
@@ -1863,6 +1897,8 @@ final class OmrMeasurePostProcessor {
             while (right < Math.min(width - 1, axis + radius)
                     && (gray[y * width + right + 1] & 255) <= cutoff) right++;
             if (left == axis - radius || right == axis + radius) continue;
+            leftEdge.add(left - axis, Math.max(1, gap * .04));
+            rightEdge.add(right - axis, Math.max(1, gap * .04));
             double center = (left + right) * .5 - axis;
             minimum = Math.min(minimum, center);
             maximum = Math.max(maximum, center);
@@ -1882,7 +1918,9 @@ final class OmrMeasurePostProcessor {
                 extreme = center;
             }
         }
-        return turns >= 4 && maximum - minimum >= gap * .15;
+        return turns >= 4 && maximum - minimum >= gap * .15
+                || leftEdge.repeated(gap, .15) && rightEdge.turns >= 4
+                || rightEdge.repeated(gap, .15) && leftEdge.turns >= 4;
     }
 
     private static boolean hasVerticalInk(

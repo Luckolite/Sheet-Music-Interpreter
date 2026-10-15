@@ -306,14 +306,13 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "2d2115e82e8ed0ba399930f2787b562a4d13cc51f7841e877e2f922bc958d92e",
-      "reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "review_note": "Use inclusive raster crop height for complete stacked meter digits.",
-      "source_normalized_sha256": "b240cf5b6ca46f79f7cde893ed83030f88adbffd391664e26f706a6ac7cba096",
-      "reviewed_source_state": "Committed paired recognition54/guide286/audio87 sources; final packaged deployment and runtime verification pending.",
-      "reviewed_app_state": "Scoped meter source committed; unrelated app source and index ownership preserved.",
-      "scoped_reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "standalone_sha256": "ad8dc48db54bd2dfb71a24244be2de9812c2b5ffc3d2c9674e82ab0362fd3f9a"
+      "source_sha256": "a4920032def9a3839da9b575d63c084429ea895e4707fbf7cd0d49474c59a5cf",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "source_normalized_sha256": "ca1a30116643e389c2161a500c738829ccc26657fdbf45c7cbb0fd26bccfbdc5",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "standalone_sha256": "127d4fe5f38ecd868938a9678bdca148fd6e0f71d442bcbd52fcad9adf13aa12",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -362,15 +361,13 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "4258c9c96b019ee4d28d5db22be4c66e82645801983ca2e856a7587f2ef7d766",
-      "source_normalized_sha256": "fa2ad7f17453e4ca7ec76adb2ad6b5949bf4c6f0fa578868d30a3b8a112c43a7",
-      "review_note": "Require near-staff contact for a shared vertical connector and insert a proved missing final staff boundary.",
-      "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Committed paired recognition52/guide286/audio85 sources; final packaged deployment and runtime validation pending.",
-      "reviewed_app_commit": "ecaa0a3f26fe39dd3e132f0420f49bc2781e8ccf",
-      "scoped_reviewed_app_commit": "ecaa0a3f26fe39dd3e132f0420f49bc2781e8ccf",
-      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "standalone_sha256": "5ec15c31ff2059b9da397a0a6590bbf2eff20200e510e9162fee9b6a6425588b"
+      "source_sha256": "c4ace71a51918a0e63debf2a3812bfeb1fa5bd29d31388bf6b7b0e60e1bae459",
+      "source_normalized_sha256": "a8ee1d74e4f1fb844b6d1749cc7de4128ff383322b8858015e95fde10085b4bf",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "standalone_sha256": "e1d9976cf5ba3b59979c5bf9e2c081bbfd0f1f1565ad997386168df4af4bd840",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -517,15 +514,13 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "a5d2a94fff2e5833390a51d7791e3e7278e7f44166b46fc713e2795d8043e9c8",
-      "reviewed_app_commit": "ecaa0a3f26fe39dd3e132f0420f49bc2781e8ccf",
-      "source_normalized_sha256": "547d209d217d68c4b5988ae7b870d7290f756bfc4bfd54d9611994c8a411ea04",
-      "review_note": "Add a contrast-consensus threshold and remove only bracket-owned numeral fragments before rest detection, proving both shafts and connected bracket hooks.",
-      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "reviewed_source_state": "Committed paired recognition52/guide286/audio85 sources; final packaged deployment and runtime validation pending.",
-      "scoped_reviewed_app_commit": "ecaa0a3f26fe39dd3e132f0420f49bc2781e8ccf",
-      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "standalone_sha256": "cf4e2fb68637a38fb10b87bef7f23fbb26965dc16277f879bb84cbf6fc222c91"
+      "source_sha256": "c898f9c321cabb292beabbaa5eaeb9bf08bcd1455ecb81f82069232b810ca4f1",
+      "source_normalized_sha256": "03766a77af7d5324bdfae1d966cbe16e31d586512ba4f661e45bdce354843c5d",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "standalone_sha256": "7599e72d209fedb726f4a0b9152b87a4310d581cb0ce9d87ac49789800feb918",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -579,13 +574,13 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "ff9bc3fd9c34c9810ccceabc9d0741d09b0d5cdabd87f644e23be79fdcbc4821",
-      "reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127",
-      "source_normalized_sha256": "f473f64e37ef441d0cfe95270f32bb8cf150fa33a9c4eb2f8ce30496fc79fcf7",
-      "review_note": "An isolated octave direction carries through unique explicit same-written-pitch/staff ties. Contradictory accidentals, rests, reattacks, ambiguous unisons, new directions and printed dashed endpoints retain ownership guards. Word/glyph recognition is unchanged. Original Apache-2.0 procedural/event controls; namespace and existing diagnostics adaptation only. No new dependency, model, template or record layout.",
-      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source at reviewed_app_commit; exact reviewed bytes pinned by source hashes.",
-      "scoped_reviewed_app_commit": "5b4890dea64f1f5055bac51c97ee04f1462da127"
+      "source_sha256": "1022fbcd0fc1e314417f654647cacf5826da235563f28f763300481a4f9d5f14",
+      "source_normalized_sha256": "c72c8d3c1f28a6ab1adb9c01694eeff31921cbe6ba40448d4a6744687eccc1e2",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "standalone_sha256": "9dd919d2e4c354db7b82c13ee706922116e59e7fa057e908e153c56f1353fd15",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -801,13 +796,13 @@
     },
     "CommonTimeMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CommonTimeMeter.java",
-      "source_sha256": "083922d4480fe1e8f4b7345cc937d0b7b338b5082018bf9b316d8080b3a18a59",
-      "reviewed_app_commit": "ca9b73b219aa35b41b1b70b49b82f2e60c8aec5d",
-      "source_normalized_sha256": "e0d4d0ee7dba756261eae417658f3e2690f588132bf91ce687511b9d35f6728f",
-      "reviewed_source_state": "Committed paired recognition53/guide286/audio86 sources; final packaged deployment and runtime validation pending.",
-      "review_note": "Use physical staff rules and separated crossbars to distinguish sharp ink from common or cut time.",
-      "scoped_reviewed_app_commit": "ca9b73b219aa35b41b1b70b49b82f2e60c8aec5d",
-      "standalone_sha256": "58c7e751879695c0ea3ab2a765824c8aa40de7a1b5d9665042ca300c7bf87f68"
+      "source_sha256": "1ffb6e27f2a7ed7d7facc50d9d76782accf034636edb5046d92ea5a497c8ead3",
+      "source_normalized_sha256": "7854ef99ea90bd79a2691203087a60e19dc57c05cbc25c51f1bc4029d054776b",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "standalone_sha256": "fb426ce9402ae8acf9395a5f9293571e420ad05be774ffbd876e66a3cdbc5afa",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",
@@ -1458,14 +1453,13 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "1666a0d22a9231fc3667b410dabab72a94f703025e7d9de963848dba3ec1a78d",
-      "source_normalized_sha256": "1666a0d22a9231fc3667b410dabab72a94f703025e7d9de963848dba3ec1a78d",
-      "reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
-      "reviewed_source_state": "Committed generic caption retention beside existing verified metronome context and paired recognition42 cache identity; guide285/audio79 unchanged.",
-      "review_note": "A metric equation spanning one bar boundary owns the first nearby same-staff attack in the next region. Multiple crossed boundaries or missing attacks abstain; ordinary left-anchor ownership retained. No private score pages, masks, library records, weights or new wire layout are published. Preserve descriptive prefixes beside a complete metronome equation only when existing verified tempo, printed pulse/rate, measure/system and staff/column ownership agree. Never infer BPM or retain numeric equation as duplicate caption text. Original synthetic controls and private unchanged-clock replay; no score-specific production rules, private fixtures, new model or record layout. Native source list includes the helper; packaged paired rollout remains user-deferred.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app891; recorded app commit remains the origin base.",
-      "scoped_reviewed_app_commit": "7a28770b9d331e54d769feb96ce7678963f2d41d",
-      "standalone_sha256": "2902e9849435dd353fb6440286cec4d4ab7a68a6f5d0097dce563391f1e02a3a"
+      "source_sha256": "80720facc8e2e12cb3f902e542313c49e19093da69e942e5991dc5563a01813c",
+      "source_normalized_sha256": "6632259232b30a89e33bdafe32fd3d9047a20350ce56e10f48911e12037787c3",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "standalone_sha256": "9031ef034cdec208d7c398ebcfb6fa311d01e34f79771daf1ab3117afe05f255",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -1567,15 +1561,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "9253a9a591b670a650c762e6f0c9aedf692e1c2b1dd45c4266a743630c6facb9",
-      "source_normalized_sha256": "9253a9a591b670a650c762e6f0c9aedf692e1c2b1dd45c4266a743630c6facb9",
-      "reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "review_note": "Advance recognition55 to56 and audio88 to89; guide286 layout unchanged.",
-      "reviewed_source_state": "Committed paired recognition56/guide286/audio89 sources; final packaged deployment and runtime verification pending.",
-      "scoped_reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "standalone_sha256": "bafbeabc1c83667e825b988593b9c1547b03be5e8e6ab971a6e1e4c15688e4a7",
-      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "source_state": "Committed source; paired packaged rollout remains pending."
+      "source_sha256": "78add0cfc1d56f937d000b8436c5138778bf7f1f11b027043bdd1fc470aec1fc",
+      "source_normalized_sha256": "78add0cfc1d56f937d000b8436c5138778bf7f1f11b027043bdd1fc470aec1fc",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "standalone_sha256": "8cdca7da7d658f063116fdf59c5baecf86ed1e52c85a6697a4dc374d024822b0",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1631,15 +1623,13 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e51e7b0a32474435efc021187df6e7d1734b28c20a3820997d4691b9a118db4f",
-      "source_normalized_sha256": "6a9ad35068e43c22a8788017760c53b4fd38537ed79eade4715c9f005cfc6859",
-      "reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "reviewed_source_state": "Committed paired recognition56/guide286/audio89 sources; final packaged deployment and runtime verification pending.",
-      "review_note": "Match recognition56 while preserving guide286 layout.",
-      "scoped_reviewed_app_commit": "6566d2745321e397fd2e7596b161e2364feeac48",
-      "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "f92d522bcd3b6a568b619d9403c4b3b5368ade511fff50a04301a9626a906c1c",
-      "source_state": "Committed source; paired packaged rollout remains pending."
+      "source_sha256": "274639e3dfae0e4a6a3f7cdbac51c9e3629557e91017d1cd249fb7664a9414b2",
+      "source_normalized_sha256": "274639e3dfae0e4a6a3f7cdbac51c9e3629557e91017d1cd249fb7664a9414b2",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "standalone_sha256": "3e6bde182d1c1afacda9ce460e53801d1b98a60368485cf14aad71e631b23e67",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2656,13 +2646,13 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "9339a4c8bf690922193e477190102e0d21ab8a435bfc439c83c356fdffc10dac",
-      "source_normalized_sha256": "aa6bfef13ade7bfb7a931b567719eec163a9165e2729e88d5f029ecd09979f8a",
-      "reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "scoped_reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "reviewed_source_state": "Committed paired recognition49/guide286/audio82 sources; final cumulative package/deployment/runtime verification pending.",
-      "review_note": "Standalone and actual NativePageGuide/Android analyzer invoke the shared printed-navigation stage after expressive construction, retaining pickup and phrase evidence. No Android standalone facade is introduced.",
-      "standalone_sha256": "a8127a370446bc883cc480a83fd4afab48cd0de67f0fe8e9122685806998badc"
+      "source_sha256": "f05b51568c37e10dfb2186f042e5d50d3588cda7202b0818ce3a20dc3791dd43",
+      "source_normalized_sha256": "5bdcb66dbbf79044e435dfd1ac843f0198054fee7c863b151e88cb024212eee5",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "review_note": "Reviewed matching courtesy boundary stage in Android analyzer, NativePageGuide and standalone SheetInterpreter immediately before printed slur capture; all retain pixel and label inputs.",
+      "standalone_sha256": "9e7eb2a9f49e8132fe26bd3ac7618395b75906632ddd0325acf1eb4b58a09522",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -2708,13 +2698,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterGlyphMatcher.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterGlyphMatcher.java",
       "license": "Apache-2.0",
-      "source_sha256": "fb0893171c7265d47c07c75b98a5b6add88819b4c14c0dfafe71674040904e11",
-      "source_normalized_sha256": "b86a66c14cdf464f1cff30c4141fbc6c8018c2d17fd255c3fde76316f980beec",
-      "reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "scoped_reviewed_app_commit": "2e0fdb9e816d1768db596854039c627ef4fdd5c6",
-      "standalone_sha256": "e244dac9848f5ae1f245f7d422b5bbf9afbbaa871c49db8e7d147b9bc0359bef",
-      "review_note": "Retry a blank uncorroborated meter reading with bounded split offsets, fixed physical staff rails and two agreeing accepted readings; reject conflicts.",
-      "reviewed_source_state": "Committed paired recognition54/guide286/audio87 sources; final packaged deployment and runtime verification pending."
+      "source_sha256": "bfc9672dee963f5f77431e55976e82856f3d24bed9fd7dadcc877042cf0f6b97",
+      "source_normalized_sha256": "93c426953c5804dbb25ba3bae10c89d6682790a70698e0b22d9fe1496c93497f",
+      "standalone_sha256": "50b87f09582ef20526d0c377b93fcf3e21c61dcedeca926d983b2a2826a7c3d1",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
     "MeterFontEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterFontEvidence.java",
@@ -2916,6 +2906,46 @@
       "standalone_sha256": "9144773f33cd809794ebe088899c29c7c4b038353cb1fad6e3d4a708f8acdab2",
       "review_note": "Original Apache-2.0 helper for strong finite font evidence, invalid numerator recovery and distinct aligned staff witnesses; no source-score rules.",
       "reviewed_source_state": "Committed paired recognition56/guide286/audio89 sources; final packaged deployment and runtime verification pending."
+    },
+    "CourtesyBoundaryInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CourtesyBoundaryInk.java",
+      "source_sha256": "9dd434ef0c2f7efdbe3bf1f17e18a58551b986ecedaeb71e3c2dbf1c6f651855",
+      "source_normalized_sha256": "4894cde1b6e7ab74cca6eab0397c58b1ddd21c85945efac3bd2957ace898b09f",
+      "standalone_sha256": "2c644909b8ddea680a479a281612ff0f3e3572c5353912e84b73b7da70b14f94",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+    },
+    "LocalMeterStaffWindows.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalMeterStaffWindows.java",
+      "source_sha256": "53e3cca496b7cdb201d1630d8eb0487508dc062ef9ef39744b6c210a9a3ecac9",
+      "source_normalized_sha256": "4721fead240cd1c0922f7a4a67a30f36fc10803d98af5ca9a161c5d7ddf2faf6",
+      "standalone_sha256": "26e1918c0ece5f35c6fc5a437b492d68eb7432a8c46ce1059096138f05d44e36",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+    },
+    "PrintedDirectionWordStaff.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionWordStaff.java",
+      "source_sha256": "d0b61c5a5b070990e997f647ea9b716143a64592f6a35c8e1b8999f31e03db0e",
+      "source_normalized_sha256": "32aa9c3d7a22a0f404a4bddc2749d925622a3721a3c51b063fb57ef74026557d",
+      "standalone_sha256": "925904f0fe16ef9f0100d89ace56040c4b9c879d005c64a1fffa48f59abb1ad6",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
+    },
+    "VerifiedCourtesyBoundary.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/VerifiedCourtesyBoundary.java",
+      "source_sha256": "bafc15690fef6cce151adb5b157eddbb38a4863a0e881d19e273b10544d4b3ed",
+      "source_normalized_sha256": "4486a2a604ef459979a8667e30a5c6bfa0150902e4ca6b0e40aafb64aedfeb99",
+      "standalone_sha256": "569fbf93296a9a36bdbb9e9176b13ddb0387daa1707c317a3d507714a4ef2573",
+      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
+      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
+      "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
+      "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     }
   },
   "interpreter_speedup_review": {
@@ -7002,5 +7032,12 @@
         "source_sha256": "828144f9c23a6895967e3ad4df0cb4dcb79e9f43d87d0d18dfbfd04704d2e004"
       }
     ]
+  },
+  "courtesy_boundary_and_printed_geometry_review": {
+    "license": "Apache-2.0",
+    "scope": "Eight global repairs: printed octave rounding, quantized arpeggio edges, dark meter cores, cut-time terminal rounding, local meter rails, independently verified empty courtesy boundaries, separated adjacent quintuplets, and staff recovery beneath printed direction words. Original synthetic regressions only. No private score scans, titles, logs, model changes or library data.",
+    "contract": "Guide287 permits nonempty-page key and meter indices at the end boundary; legacy286 rejects them. Recognition57 and audio90 invalidate prior derived outputs.",
+    "validation_boundary": "Focused real-page evidence and synthetic regressions do not establish whole-document playback, full-model library accuracy or packaged device acceptance.",
+    "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
   }
 }

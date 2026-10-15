@@ -60,14 +60,16 @@ final class OctaveMarkDetector {
         gray = contrastedInk(gray, width, height);
         List<PlayingTechniqueDetector.Word> combined =
                 new ArrayList<>(words == null ? List.of() : words);
-        combined.addAll(printedWords(gray, width, height, staffs, true));
+        var printed = printedWords(gray, width, height, staffs, true);
+        combined.addAll(printed);
         if (combined.isEmpty()) return notes;
         List<Span> spans = new ArrayList<>();
         for (var sourceWord : combined) {
             var word = directionAfterMeasureNumber(sourceWord);
             int shift = shift(word.text());
             if (shift == 0) continue;
-            var owner = owner(word, staffs, shift, height);
+            var owner =
+                    owner(word, staffs, shift, height, printed.contains(sourceWord), gray, width);
             if (owner == null) continue;
             float gap = owner.gap(), left = word.left() * width - gap * .65f;
             float textRight =
@@ -882,7 +884,10 @@ final class OctaveMarkDetector {
             PlayingTechniqueDetector.Word word,
             List<PlayingTechniqueDetector.Staff> staffs,
             int shift,
-            int height) {
+            int height,
+            boolean printed,
+            byte[] gray,
+            int width) {
         PlayingTechniqueDetector.Staff best = null;
         float distance = Float.POSITIVE_INFINITY;
         for (var staff : staffs) {
@@ -890,7 +895,27 @@ final class OctaveMarkDetector {
                     shift > 0
                             ? (staff.top() - word.bottom() * height) / staff.gap()
                             : (word.top() * height - staff.bottom()) / staff.gap();
-            if (d < .25f || d > 12 || d >= distance) continue;
+            if (d > 12 || d >= distance) continue;
+            if (d < .25f) {
+                // Raster boxes round to whole pixels. Only a proved printed mark with
+                // a continuing dash chain can use the fractional-pixel clearance band.
+                float clearance =
+                        shift > 0
+                                ? staff.top() - Math.round(word.bottom() * height)
+                                : Math.round(word.top() * height) - staff.bottom();
+                if (!printed
+                        || clearance < 1
+                        || clearance < Math.floor(staff.gap() * .25f)
+                        || dashEnd(
+                                        gray,
+                                        width,
+                                        height,
+                                        word.right() * width,
+                                        word.top() * height,
+                                        word.bottom() * height,
+                                        staff.gap())
+                                < word.right() * width + staff.gap() * 2) continue;
+            }
             distance = d;
             best = staff;
         }

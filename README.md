@@ -166,6 +166,12 @@ the rule band. Recognition51/audio84 invalidate earlier derived interpretations;
 guide286 record layout remains unchanged. Original synthetic regressions and
 source checks do not establish whole-library accuracy or packaged runtime behavior.
 
+Guide287 preserves independently verified courtesy key and meter changes at the
+end of a nonempty page without inventing another measure. Legacy layouts retain
+their earlier bounds. Printed meter, octave, arpeggio, tuplet and direction
+repairs use local physical evidence and retain ambiguous cases. These changes
+require recognition57 and audio90 cache invalidation in paired consumers.
+
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`

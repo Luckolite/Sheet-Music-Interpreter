@@ -53,6 +53,50 @@ public final class MeterGlyphMatcher {
             String lowerEvidence,
             boolean[] ignored) {
         Reading original =
+                readStandard(
+                        pixels,
+                        width,
+                        height,
+                        middle,
+                        firstLine,
+                        gap,
+                        upperEvidence,
+                        lowerEvidence,
+                        ignored);
+        if (!original.text().isBlank()
+                || original.topScore() < .65f
+                || original.bottomScore() < .65f) return original;
+        Reading accepted = null;
+        for (int threshold : new int[] {60, 75, 90}) {
+            int[] core = pixels.clone();
+            for (int i = 0; i < core.length; i++)
+                core[i] = (pixels[i] & 255) < threshold ? 0xff000000 : 0xffffffff;
+            Reading retry =
+                    readStandard(core, width, height, middle, firstLine, gap, "", "", ignored);
+            if (retry.text().isBlank()
+                    || (accepted != null && !accepted.text().equals(retry.text()))) return original;
+            if (accepted == null
+                    || Math.min(retry.topScore(), retry.bottomScore())
+                            < Math.min(accepted.topScore(), accepted.bottomScore()))
+                accepted = retry;
+        }
+        String[] digits = accepted.text().split("/");
+        if ((!upperEvidence.isBlank() && !upperEvidence.equals(digits[0]))
+                || (!lowerEvidence.isBlank() && !lowerEvidence.equals(digits[1]))) return original;
+        return accepted;
+    }
+
+    private Reading readStandard(
+            int[] pixels,
+            int width,
+            int height,
+            int middle,
+            int firstLine,
+            float gap,
+            String upperEvidence,
+            String lowerEvidence,
+            boolean[] ignored) {
+        Reading original =
                 readAt(
                         pixels,
                         width,

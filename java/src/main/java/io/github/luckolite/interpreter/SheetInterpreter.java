@@ -346,6 +346,8 @@ public final class SheetInterpreter {
                         firstMeasureNumber <= 1
                                 && MeasureNumberReconciler.provesOpeningPickup(
                                         finalInterpretation.measures(), numbers));
+        finalInterpretation =
+                VerifiedCourtesyBoundary.apply(finalInterpretation, labels, gray, width, height);
         if (physicalPage >= 0)
             try {
                 var captured =

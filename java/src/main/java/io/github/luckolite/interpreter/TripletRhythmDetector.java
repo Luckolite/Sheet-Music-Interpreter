@@ -290,7 +290,10 @@ final class TripletRhythmDetector {
             if (!visited.add(key)
                     || first.measureIndex() < 0
                     || first.measureIndex() >= measures.size()) continue;
-            var bar = notes.stream().filter(n -> sameVoice(first, n)).toList();
+            var bar =
+                    notes.stream()
+                            .filter(n -> sameVoice(first, n))
+                            .collect(java.util.stream.Collectors.toList());
             if (bar.stream().anyMatch(n -> n.stemDirection() == 0)
                     || bar.stream().filter(n -> n.stemDirection() == 1).count() < 2
                     || bar.stream().filter(n -> n.stemDirection() == -1).count() < 2) continue;
@@ -314,7 +317,7 @@ final class TripletRhythmDetector {
                                                         ScoreNoteEvent::measureIndex)
                                                 .thenComparingDouble(
                                                         ScoreNoteEvent::positionInMeasure))
-                                .toList();
+                                .collect(java.util.stream.Collectors.toList());
                 if (lane.size() < 3) continue;
                 var marked = apply(lane, measures, gray, width, height, Integer.MAX_VALUE);
                 var owned = new ArrayList<Integer>();
@@ -890,6 +893,26 @@ final class TripletRhythmDetector {
         return result;
     }
 
+    /** Close attacks may belong to separate printed beam groups; an ink gap alone is insufficient. */
+    private static boolean separateTupletBoundary(
+            Onset left,
+            Onset right,
+            MeasureRegion bar,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        return SeparateBeamGroups.between(
+                gray,
+                width,
+                height,
+                (bar.left() + left.position() * (bar.right() - bar.left())) * width,
+                left.top() * height,
+                (bar.left() + right.position() * (bar.right() - bar.left())) * width,
+                right.top() * height,
+                gap);
+    }
+
     private static List<ScoreNoteEvent> beamedTuplets(
             List<ScoreNoteEvent> notes,
             List<MeasureRegion> measures,
@@ -934,6 +957,8 @@ final class TripletRhythmDetector {
                 if (i > 0
                         && matching(groups.get(i - 1), result, first) != null
                         && firstGroup.position() - groups.get(i - 1).position() < minimum * 1.5f
+                        && !separateTupletBoundary(
+                                groups.get(i - 1), firstGroup, bar, gray, width, height, gap)
                         && !(divisor == 6
                                 && adjacentSix(
                                         groups, result, i - 6, first, bar, gray, width, height,
@@ -942,6 +967,14 @@ final class TripletRhythmDetector {
                         && matching(groups.get(i + divisor), result, first) != null
                         && groups.get(i + divisor).position() - run.get(divisor - 1).position()
                                 < minimum * 1.5f
+                        && !separateTupletBoundary(
+                                run.get(divisor - 1),
+                                groups.get(i + divisor),
+                                bar,
+                                gray,
+                                width,
+                                height,
+                                gap)
                         && !(divisor == 6
                                 && adjacentSix(
                                         groups, result, i + 6, first, bar, gray, width, height,
@@ -957,7 +990,7 @@ final class TripletRhythmDetector {
                     y1 = Math.min(y1, onset.top() * height);
                     y2 = Math.max(y2, onset.bottom() * height);
                 }
-                if (divisor == 6) {
+                if (divisor >= 5) {
                     boolean separated = false;
                     for (int j = 1; j < run.size(); j++) {
                         Onset previous = run.get(j - 1), next = run.get(j);

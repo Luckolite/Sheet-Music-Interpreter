@@ -116,6 +116,7 @@ final class CommonTimeMeter {
                                 gray, width, height, left, right, mid, gap, firstLine, slope))
             return 0;
         // Both right terminals and both left shoulders must be present, not a 3 or rest.
+        // Pixel counts are integral: retain the whole-pixel portion of the scaled minimum.
         if (count(
                                 gray,
                                 width,
@@ -127,7 +128,7 @@ final class CommonTimeMeter {
                                 firstLine,
                                 gap,
                                 slope)
-                        < gap * .65f
+                        < Math.floor(gap * .65f)
                 || count(
                                 gray,
                                 width,
@@ -139,7 +140,7 @@ final class CommonTimeMeter {
                                 firstLine,
                                 gap,
                                 slope)
-                        < gap * .65f
+                        < Math.floor(gap * .65f)
                 || count(
                                 gray,
                                 width,
@@ -151,7 +152,7 @@ final class CommonTimeMeter {
                                 firstLine,
                                 gap,
                                 slope)
-                        < gap * .65f
+                        < Math.floor(gap * .65f)
                 || count(
                                 gray,
                                 width,
@@ -163,7 +164,7 @@ final class CommonTimeMeter {
                                 firstLine,
                                 gap,
                                 slope)
-                        < gap * .65f) return 0;
+                        < Math.floor(gap * .65f)) return 0;
         // The C's left arc crosses the middle while its interior remains open.
         if (count(
                         gray,

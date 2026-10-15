@@ -11,6 +11,30 @@ public final class MeterChangeDetector {
 
     private record SignatureStaff(RawStaffLineDetector.StaffLines lines, float slope) {}
 
+    private record MeterWindow(SignatureStaff geometry, int left, int right) {}
+
+    private static List<MeterWindow> localWindows(
+            byte[] labels, byte[] gray, int width, int height) {
+        var out = new ArrayList<MeterWindow>();
+        var staffs = signatureStaffs(labels, gray, width, height);
+        for (var g : staffs) out.add(new MeterWindow(g, 0, width));
+        for (var g : staffs)
+            for (var w :
+                    LocalMeterStaffWindows.detect(
+                            gray, width, height, g.lines().rows(), g.lines().gap(), g.slope())) {
+                int[] rows = g.lines().rows().clone();
+                for (int i = 0; i < 5; i++) rows[i] += w.shift();
+                out.add(
+                        new MeterWindow(
+                                new SignatureStaff(
+                                        new RawStaffLineDetector.StaffLines(rows, g.lines().gap()),
+                                        g.slope()),
+                                w.left(),
+                                w.right()));
+            }
+        return out;
+    }
+
     /** Engraved C / cut-C signs, independent of digit OCR; conflicting staff copies abstain. */
     public static List<ScoreMeterChange> commonTimeReadings(
             byte[] labels,
@@ -51,7 +75,7 @@ public final class MeterChangeDetector {
         for (var candidate : candidates) counts.merge(candidate.measureIndex(), 1, Integer::sum);
         return candidates.stream()
                 .filter(candidate -> counts.get(candidate.measureIndex()) == 1)
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
     }
 
     private static List<ScoreMeterChange> rasterCandidates(
@@ -318,7 +342,8 @@ public final class MeterChangeDetector {
                 || gray == null
                 || labels.length != width * height
                 || gray.length != width * height) return result;
-        for (var geometry : signatureStaffs(labels, gray, width, height)) {
+        for (var window : localWindows(labels, gray, width, height)) {
+            var geometry = window.geometry();
             var staff = geometry.lines();
             float slope = geometry.slope();
             float gap = staff.gap();
@@ -357,16 +382,16 @@ public final class MeterChangeDetector {
                         break;
                     }
                 if (line) continue;
-                for (int x = 0; x < width; x++) {
+                for (int x = window.left(); x < window.right(); x++) {
                     int yy = y + Math.round(slope * (x - width * .5f));
                     if (yy >= 0 && yy < height && (gray[yy * width + x] & 255) < 155) ink[x]++;
                 }
             }
             int maxBlank = Math.max(1, Math.round(gap * .22f));
-            for (int x = 0; x < width; x++) {
+            for (int x = window.left(); x < window.right(); x++) {
                 if (ink[x] < 2) continue;
                 int left = x, last = x, blanks = 0;
-                for (; x < width; x++) {
+                for (; x < window.right(); x++) {
                     if (ink[x] >= 2) {
                         last = x;
                         blanks = 0;

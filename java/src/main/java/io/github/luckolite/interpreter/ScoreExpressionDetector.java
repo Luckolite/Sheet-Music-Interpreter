@@ -100,8 +100,13 @@ public final class ScoreExpressionDetector {
                             .filter(d -> KINDS.contains(d.kind()))
                             .toList();
             if (directions.isEmpty() && caption != null)
-                directions = List.of(new ExpressiveDirectionText.Direction(
-                        Kind.UNRESOLVED_DIRECTION, Strength.UNSPECIFIED, caption.text(), ""));
+                directions =
+                        List.of(
+                                new ExpressiveDirectionText.Direction(
+                                        Kind.UNRESOLVED_DIRECTION,
+                                        Strength.UNSPECIFIED,
+                                        caption.text(),
+                                        ""));
             if (directions.isEmpty()) continue;
             boolean release =
                     directions.stream()
@@ -131,6 +136,10 @@ public final class ScoreExpressionDetector {
                                 word.right() * width,
                                 word.top() * height,
                                 word.bottom() * height);
+            if (staff == null && word.right() > word.left())
+                staff =
+                        PrintedDirectionWordStaff.find(
+                                staffs, score.measures(), score.notes(), gray, width, height, word);
             ScoreNoteEvent closest =
                     staff == null ? null : closestDirectionNote(score, staff, width, height, x, x);
             boolean metricBoundary = false;
@@ -184,8 +193,9 @@ public final class ScoreExpressionDetector {
                             ? PrintedRestDirection.find(score, staffs, word, gray, width, height)
                             : null;
             if (closest == null && rest == null) continue;
-            if (caption != null && (closest != null ? closest.measureIndex() : rest.measureIndex())
-                    != caption.measureIndex()) continue;
+            if (caption != null
+                    && (closest != null ? closest.measureIndex() : rest.measureIndex())
+                            != caption.measureIndex()) continue;
             var anchor =
                     closest != null
                             ? new Column(
