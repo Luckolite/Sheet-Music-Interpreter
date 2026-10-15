@@ -282,15 +282,18 @@ final class PrintedSlurOwners {
             double dx = Math.abs(head.x() - cap.x()) / gap;
             double clearance = (above ? head.y() - cap.y() : cap.y() - head.y()) / gap;
             if (dx > 1.1 || clearance < -.2 || clearance > 8.5) continue;
-            boolean shaft = shaftSupports(cap, head, above, gray, width, height, gap);
+            boolean shaft = shaftSupports(cap, head, above, gray, width, height, gap, heads);
             boolean headEdge =
                     dx <= .85
                             && clearance <= 2
                             && (start ? cap.x() >= head.x() : cap.x() <= head.x())
                             && headBody(gray, width, height, head, gap);
             if (dx > .45 && !shaft && !headEdge) continue;
-            // A connected source shaft is stronger ownership than a neighboring dense head.
-            double score = shaft ? -.35 + dx * .15 + clearance * .015 : dx + clearance * .03;
+            // A proved shaft or adjacent head edge owns the endpoint ahead of distant heads.
+            double score =
+                    shaft || headEdge && clearance <= 1
+                            ? -.35 + dx * .15 + clearance * .015
+                            : dx + clearance * .03;
             result.add(new Candidate(head, score));
         }
         result.sort(
@@ -320,7 +323,8 @@ final class PrintedSlurOwners {
             byte[] gray,
             int width,
             int height,
-            float gap) {
+            float gap,
+            List<? extends Location> heads) {
         int direction = above ? -1 : 1;
         float edge = head.x() + (above ? .6f : -.6f) * gap;
         if (Math.abs(edge - cap.x()) > gap * .4f) return false;
@@ -331,16 +335,28 @@ final class PrintedSlurOwners {
         for (int x = Math.max(0, Math.round(edge - gap * .2f));
                 x < width && x <= edge + gap * .2f;
                 x++) {
-            int total = 0, hits = 0;
+            int total = 0, hits = 0, exposedHits = 0;
             for (int y = Math.min(first, last); y <= Math.max(first, last); y++) {
                 if (y < 0 || y >= height) {
                     total = 0;
                     break;
                 }
                 total++;
-                if ((gray[y * width + x] & 255) < 165) hits++;
+                if ((gray[y * width + x] & 255) < 165) {
+                    hits++;
+                    // Stacked head rims cannot supply the exposed stem proof.
+                    boolean body = false;
+                    for (var other : heads)
+                        if (Math.abs(x - other.x()) <= gap * .75f
+                                && Math.abs(y - other.y()) <= gap * .6f) {
+                            body = true;
+                            break;
+                        }
+                    if (!body) exposedHits++;
+                }
             }
-            if (total >= gap * .75f && hits >= total * .9f) return true;
+            if (total >= gap * .75f && hits >= total * .9f && exposedHits >= gap * .75f)
+                return true;
         }
         return false;
     }

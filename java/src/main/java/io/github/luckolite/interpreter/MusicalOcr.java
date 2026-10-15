@@ -50,6 +50,7 @@ public final class MusicalOcr {
             throws Exception {
         var readings = new TreeMap<Integer, Map<String, Integer>>();
         var decisive = new HashSet<Integer>();
+        var reflowWitnesses = new ArrayList<MeterReflowEvidence.Witness>();
         for (var change :
                 MeterChangeDetector.rasterMeterCandidates(
                         labels, gray, width, height, measures, notes)) {
@@ -70,9 +71,17 @@ public final class MusicalOcr {
                 System.err.println(
                         "meter crop=" + crop + " measure=" + measure + " reading=" + reading);
             if (reading.text().isBlank()) continue;
+            if (reading.votes() < 0) {
+                reflowWitnesses.add(new MeterReflowEvidence.Witness(measure, crop, reading.text()));
+                continue;
+            }
             readings.computeIfAbsent(measure, ignored -> new HashMap<>())
                     .merge(reading.text(), 1, Integer::sum);
             if (reading.votes() >= 2) decisive.add(measure);
+        }
+        for (var entry : MeterReflowEvidence.corroborated(reflowWitnesses).entrySet()) {
+            readings.computeIfAbsent(entry.getKey(), k -> new HashMap<>())
+                    .merge(entry.getValue(), 2, Integer::sum);
         }
         var found = new ArrayList<ScoreMeterChange>();
         for (var entry : readings.entrySet()) {
@@ -161,6 +170,15 @@ public final class MusicalOcr {
                             upperEvidence,
                             lowerEvidence);
             if (!supported.isBlank()) return new MeterReading(supported, 2);
+            if (MeterReflowEvidence.eligible(
+                    font.text(),
+                    font.topScore(),
+                    font.bottomScore(),
+                    upperEvidence,
+                    lowerEvidence)) {
+                String reflowed = reflowedMeter(cleaned, cropWidth, cropHeight, middle - top);
+                if (font.text().equals(reflowed)) return new MeterReading(reflowed, -1);
+            }
             if (font.text().isBlank()) {
                 boolean[] ignored =
                         MeterCrossingStroke.mask(

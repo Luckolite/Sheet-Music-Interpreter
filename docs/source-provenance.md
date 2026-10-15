@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition56 recovers compact key cancellation with pitch/barline and ink-gap proof,
+and meters through matching font/reflow evidence from separate staves. Chord head
+rims no longer masquerade as stems when assigning printed arcs. Original geometry
+and conflicting-evidence controls accompany the changes. Guide286 layout remains
+unchanged; audio89 invalidates stale playback. Packaged deployment and full-document
+acceptance remain pending.
+
 Recognition55 retains multiple staff witnesses for one unresolved printed repeat
 without duplicate event identities or guessed navigation. A final row containing
 one full-measure rest, no notes and no internal printed barline is preserved when

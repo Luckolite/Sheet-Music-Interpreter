@@ -5372,6 +5372,7 @@ final class OmrScoreInterpreter {
                 // Close accidentals on a chord are not a new key. Multiple glyphs
                 // need a boundary or the ordered fourth/fifth signature pattern.
                 if (!signatureHeader
+                        && !singleBarCancellation
                         && firstHead - run.get(run.size() - 1).x < staff.gap * 1.35f
                         && (strongest == 1
                                 || !doubleBar
@@ -6504,8 +6505,7 @@ final class OmrScoreInterpreter {
             return List.of();
         if (glyphs.get(0).x - boundary < -staff.gap * .12f
                 || glyphs.get(0).x - boundary > staff.gap * 2
-                || firstHead - glyphs.get(glyphs.size() - 1).x < staff.gap * 1.35f)
-            return List.of();
+                || firstHead - glyphs.get(glyphs.size() - 1).x < staff.gap) return List.of();
         boolean bar = false;
         for (int x = Math.max(0, Math.round(boundary - staff.gap * .6f));
                 x <= Math.min(width - 1, Math.round(boundary + staff.gap * .6f));
@@ -6527,6 +6527,10 @@ final class OmrScoreInterpreter {
                     break;
                 }
             if (owner == null) return List.of();
+            // A proved cancellation run can use compact engraving, but its final
+            // glyph must leave clear ink separation before the first sounding head.
+            if (i + 1 == glyphs.size() && firstHead - owner.component.maxX < staff.gap * .75f)
+                return List.of();
             float y =
                     i < split
                             ? owner.component.centerY
