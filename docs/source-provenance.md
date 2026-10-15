@@ -2015,3 +2015,12 @@ controls; notation, legal captions and ambiguous layouts remain excluded.
 App commit `46debf2e9661a2a4cdd8dbb0673c145fb7577791` is paired. Java/Python
 tests and saved-input replay passed; native validation and matched desktop
 deployment remain pending. No private source images or models are included.
+
+## Small curved OCR inputs
+
+Curved text rows gain white bottom/right padding when an axis is below32 pixels,
+preventing native OCR from aborting a document. Original glyph pixels, origin,
+raw geometry and larger inputs remain unchanged. Two procedural regressions
+cover the short-row failure and unchanged larger rows. App commit `f49f2ad08ceaf0851b0f59007cd3380ef0b2cb1a`
+is paired; full Java/Python tests and synthetic smoke passed. Native and desktop qualification remain
+pending. No private score data or models are included.

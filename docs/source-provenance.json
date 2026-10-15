@@ -2294,11 +2294,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/data/CurvedCoverRows.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurvedCoverRows.java",
       "license": "Apache-2.0",
-      "source_sha256": "9c774de404e1afa2e9e9da887e5ca9c80003ebe94c402080701a8c23e8d175f2",
-      "source_normalized_sha256": "3ef9c251508c39711d78fe9fdd2451247c36a4736a20bfa1e1e9df3730a25321",
-      "review_note": "Pure-JDK pixel-only bounded curved row extraction; deterministic geometry, input preservation and original procedural raster controls. Exact package/import-adapted executable parity reviewed. Prior mapped origins retained in ledger_heading_curved_cover_review and Git history.",
-      "reviewed_app_commit": "69870c1b27ced793375df1a11a06c7e6014eb37b",
-      "reviewed_source_state": "Committed app958 reviewed ledger-heading and curved-title batch. Models, dependencies and guide/audio record layouts unchanged."
+      "source_sha256": "540879f6c6b1e01188372558c0bcbe7603fb441ac0825f72f8ed233628a11610",
+      "source_normalized_sha256": "44185a71f5414a12c9f968a838ec4250a4608aa8bff0a5e16492eed3331ceba8",
+      "review_note": "Package-adapted executable parity verified. Curved OCR raster adds white pixels only at bottom/right to meet minimum32 dimensions; glyph pixels, origin, raw geometry and input remain unchanged. Original procedural regression fails on31pixel baseline; candidate passes.",
+      "reviewed_app_commit": "f49f2ad08ceaf0851b0f59007cd3380ef0b2cb1a",
+      "reviewed_source_state": "Committed small curved OCR input repair; no model, inference threshold, guide or audio format changes. Native qualification and paired deployment pending."
     },
     "CurvedTitleCompletion.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CurvedTitleCompletion.java",

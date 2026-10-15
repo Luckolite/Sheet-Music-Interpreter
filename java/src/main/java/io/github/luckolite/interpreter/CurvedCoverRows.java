@@ -545,7 +545,19 @@ public final class CurvedCoverRows {
                 fit.residual,
                 new double[] {minX, minY, maxX, maxY},
                 new Raster(ow, oh, raw),
-                new Raster(ow, oh, clean));
+                ocrRaster(ow, oh, clean));
+    }
+
+    /** OCR requires at least 32 pixels per axis; padding preserves glyph scale and origin. */
+    private static Raster ocrRaster(int width, int height, int[] pixels) {
+        int paddedWidth = Math.max(32, width), paddedHeight = Math.max(32, height);
+        if (paddedWidth == width && paddedHeight == height)
+            return new Raster(width, height, pixels);
+        int[] padded = new int[paddedWidth * paddedHeight];
+        Arrays.fill(padded, 0xffffffff);
+        for (int y = 0; y < height; y++)
+            System.arraycopy(pixels, y * width, padded, y * paddedWidth, width);
+        return new Raster(paddedWidth, paddedHeight, padded);
     }
 
     private static int bilinear(int[] pixels, int w, int h, double x, double y) {
