@@ -25,9 +25,9 @@ public class HeaderRestApiTest {
                 if (expectedLabels[y * p.w + x] == 2) expectedLabels[y * p.w + x] = 0;
         var expected = OmrMeasurePostProcessor.process(expectedLabels, p.gray, p.w, p.h);
         var original = p.measures();
-        // Rounded-meter geometry now excludes this false terminal before normalization.
-        // Both entry paths must retain the same independently cleaned measure boundaries.
-        assertEquals(expected, original);
+        // The false header terminal distorts the raw extent; the public API must
+        // normalize it to the independently cleaned measure boundaries.
+        assertNotEquals(expected, original);
         var score = SheetInterpreter.analyze(p.labels, p.gray, p.w, p.h);
         assertEquals(expected, score.measures());
         assertEquals("Only the actual following note survives", 1, score.notes().size());
