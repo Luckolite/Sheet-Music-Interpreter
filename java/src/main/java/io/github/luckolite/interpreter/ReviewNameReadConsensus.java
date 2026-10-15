@@ -100,6 +100,8 @@ public final class ReviewNameReadConsensus {
     }
 
     public static List<ScoreCreditsDetector.Line> candidates(ScoreCreditsDetector.Page p) {
+        var cover = ScoreCreditsDetector.coverWorkCreditCandidates(p);
+        if (!cover.isEmpty()) return cover;
         if (p == null
                 || p.photographicCover()
                 || p.creditsOnly()
@@ -135,6 +137,13 @@ public final class ReviewNameReadConsensus {
                 .toList();
     }
 
+    private static String selectedText(
+            ScoreCreditsDetector.Page page, ScoreCreditsDetector.Line line, Selection selection) {
+        return ScoreCreditsDetector.coverWorkCreditCandidates(page).contains(line)
+                ? selection.text().toUpperCase(Locale.ROOT)
+                : selection.text();
+    }
+
     public static ScoreCreditsDetector.Page merge(
             ScoreCreditsDetector.Page page,
             ScoreCreditsDetector.Line line,
@@ -148,7 +157,11 @@ public final class ReviewNameReadConsensus {
             lines.add(
                     l.equals(line)
                             ? new ScoreCreditsDetector.Line(
-                                    selection.text(), l.left(), l.top(), l.right(), l.bottom())
+                                    selectedText(page, line, selection),
+                                    l.left(),
+                                    l.top(),
+                                    l.right(),
+                                    l.bottom())
                             : l);
         var changed =
                 new ScoreCreditsDetector.Page(
@@ -168,7 +181,7 @@ public final class ReviewNameReadConsensus {
                 || !before.creditConflicts().equals(after.creditConflicts())) return page;
         var expected = new LinkedHashSet<>(before.unclassifiedCredits());
         expected.remove(reviewCredit(line.text()));
-        expected.add(reviewCredit(selection.text()));
+        expected.add(reviewCredit(selectedText(page, line, selection)));
         return expected.equals(new LinkedHashSet<>(after.unclassifiedCredits())) ? changed : page;
     }
 
@@ -214,8 +227,18 @@ public final class ReviewNameReadConsensus {
                     || !current.arranger().equals(after.arranger())
                     || !current.creditConflicts().equals(after.creditConflicts())) continue;
             var expected = new LinkedHashSet<>(current.unclassifiedCredits());
-            if (!expected.remove(reviewCredit(p.line().text()))) continue;
-            expected.add(reviewCredit(select(p.readings()).text()));
+            String original = reviewCredit(p.line().text());
+            if (!expected.contains(original)) continue;
+            boolean stillPrinted =
+                    candidate.stream()
+                            .flatMap(page -> page.lines().stream())
+                            .anyMatch(line -> reviewCredit(line.text()).equals(original));
+            if (!stillPrinted || !after.unclassifiedCredits().contains(original))
+                expected.remove(original);
+            expected.add(
+                    reviewCredit(
+                            selectedText(
+                                    selected.get(p.pageIndex()), p.line(), select(p.readings()))));
             if (!expected.equals(new LinkedHashSet<>(after.unclassifiedCredits()))) continue;
             selected = candidate;
             current = after;

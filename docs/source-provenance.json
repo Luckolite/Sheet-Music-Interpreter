@@ -2091,16 +2091,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "40159ecc8edf61d7bb23cb70205c30b28c537b365754468d21c62a5eaa8aedba",
-      "source_normalized_sha256": "fec08267ebc554b9d34707134582a56203753b59bd224bdcbbbde74b5ada99a3",
-      "reviewed_app_base_commit": "f8c4e52023d8fd245a56a054397980c1f32de596",
-      "reviewed_source_state": "Paired strict photographic-footer retention and synthetic regressions; Java/Python tests and frozen metadata replay passed. Native repaired-candidate validation remains pending.",
+      "source_sha256": "018c05c1b8907ba5e336baf6de515385cfa2c00ae1fcadf201a354a8f66cf49f",
+      "source_normalized_sha256": "a989038eca6ece5c1e131929c425fcbdc7608e0dad5b41cf97ebb30682cb47fc",
+      "reviewed_app_base_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335",
+      "reviewed_source_state": "Paired cover-list credit retention and original synthetic regressions; full Java/Python and smoke checks passed. Android candidate built; native PDF qualification and paired deployment remain pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "7e4ab041135f498b1733d1fd020b967c944ddbbd079aea72d5b2e6f25bb149cb",
+      "standalone_sha256": "65f0b771c6032020f4a3490528966b36d13d68313aa85644578348056bea47b5",
       "license": "Apache-2.0",
-      "review_note": "Simple isolated first-cover footer literals retain guarded name consensus and review semantics on photographs. Such footers cannot enter general heading rereads that collapse word boundaries. Existing notation, legal-caption, geometry, ambiguity and identity guards remain; no role inference or models added.",
-      "reviewed_app_commit": "46debf2e9661a2a4cdd8dbb0673c145fb7577791",
-      "scoped_reviewed_app_commit": "9bfa388a564c265c0794ea89453e89d64b95c6c2"
+      "review_note": "Repeated work/name typography in anthology lists retains contributor text for review without assigning roles. Bounded original-image name rereads preserve printed case, accents, and independently retained front/back variants. No name catalogue, private fixture, model, or record-format change.",
+      "reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335",
+      "scoped_reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2897,14 +2897,14 @@
     },
     "ReviewNameReadConsensus.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ReviewNameReadConsensus.java",
-      "source_sha256": "28cd07b0339f53b6e6d953cde0d9dc00fafbfdf6f8462ddc308cdd5257acff16",
-      "source_normalized_sha256": "f810eaada73bee786a53deb99efcae48101b2102619acdc7a6f9ab36ff1f0826",
+      "source_sha256": "39950142170efea96fc76bb8e7d942f4df5a3a989ed2c384486fe9616fe00644",
+      "source_normalized_sha256": "01983351511f97a941235417e805b7947b6c7bb448b8e3522a896cedb756b012",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ReviewNameReadConsensus.java",
-      "standalone_sha256": "d1a6fac2032984e6d357f03aa773f53eb1be2db9078bcb3145d5d9c0dc9842f3",
+      "standalone_sha256": "b30cec5e50ceabbe6b9a3f2bba953e72260daf2d7177df0b8ab28304728e3818",
       "license": "Apache-2.0",
-      "reviewed_source_state": "Package-only source port; Android reader adapter compiles; device and paired deployment verification pending.",
-      "review_note": "Unresolved review names require a full twelve-view grid, nine matching word readings, high-confidence support at all scales, and separately corroborated literal separators. Source-bound document guards preserve all roles, titles and conflicts. Original fictional tests; existing bundled model unchanged. Android-only PrimaryTitleReader and SheetCreditsScanner adapters reuse the bounded original-PDF grid and retain read evidence; no private sources or external name catalogue included.",
-      "reviewed_app_commit": "1e43151370a9ed26d8fb1545a3f2b2db96ffb7dc"
+      "reviewed_source_state": "Paired cover-list credit retention and original synthetic regressions; full Java/Python and smoke checks passed. Android candidate built; native PDF qualification and paired deployment remain pending.",
+      "review_note": "Repeated work/name typography in anthology lists retains contributor text for review without assigning roles. Bounded original-image name rereads preserve printed case, accents, and independently retained front/back variants. No name catalogue, private fixture, model, or record-format change.",
+      "reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335"
     },
     "MeterReflowEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterReflowEvidence.java",

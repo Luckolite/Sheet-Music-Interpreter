@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Repeated anthology work/name pairs retain literal contributor credits for review.
+Independent original-image rereads preserve accents and repeated printed variants
+without assigning roles. Original synthetic layouts cover list and reread boundaries.
+
 Recognition60 recovers optically proved approximate tempo equations, sparse meter
 digits, printed separators crossed by thin arcs, displaced short-bar boundaries,
 and key/meter courtesy tails. Secondary-beam rejection retains independent ink

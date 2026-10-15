@@ -3996,6 +3996,92 @@ public final class ScoreCreditsDetector {
                 roles.creditConflicts);
     }
 
+    public static List<Line> coverWorkCreditCandidates(Page page) {
+        if (page == null
+                || !Float.isFinite(page.notationTop)
+                || !Float.isFinite(page.width)
+                || !Float.isFinite(page.height)
+                || page.width <= 0
+                || page.height <= 0) return List.of();
+        var lines =
+                page.lines.stream()
+                        .sorted(
+                                Comparator.comparingDouble((Line l) -> l.top)
+                                        .thenComparingDouble(l -> l.left))
+                        .toList();
+        var names = coverWorkCredits(page, lines);
+        return lines.stream()
+                .filter(
+                        l ->
+                                names.contains(clean(l.text))
+                                        && Float.isFinite(l.left)
+                                        && Float.isFinite(l.top)
+                                        && Float.isFinite(l.right)
+                                        && Float.isFinite(l.bottom)
+                                        && l.left >= 0
+                                        && l.right <= page.width
+                                        && l.right > l.left
+                                        && l.top >= 0
+                                        && l.bottom <= page.height
+                                        && l.bottom > l.top
+                                        && l.height() >= page.width * .008f
+                                        && l.height() < page.width * .06f)
+                .limit(16)
+                .toList();
+    }
+
+    /** Repeated anthology work/name pairs retain literal credits without assigning roles. */
+    private static List<String> coverWorkCredits(Page page, List<Line> lines) {
+        if (!Float.isFinite(page.notationTop)
+                || page.notationTop >= 0
+                || lines.stream()
+                        .noneMatch(
+                                l ->
+                                        clean(l.text)
+                                                        .matches(
+                                                                "(?iu).*\\b(?:favorites|favourites|songs|hits)\\b.*")
+                                                && clean(l.text)
+                                                        .matches(
+                                                                "(?iu).*\\b(?:tracks|arrangements|play.along)\\b.*")))
+            return List.of();
+        List<Line> names = new ArrayList<>(), seeds = new ArrayList<>();
+        for (int i = 1; i < lines.size(); i++) {
+            Line work = lines.get(i - 1), name = lines.get(i);
+            String text = clean(name.text), title = clean(work.text);
+            if (!text.matches("[\\p{Lu}][\\p{Lu} .’'&-]{2,79}")
+                    || !text.contains(" ")
+                    || name.top < page.height * .2f
+                    || Math.abs(work.right - name.right) > page.width * .025f
+                    || name.top - work.bottom < -work.height() * .25f
+                    || name.top - work.bottom > work.height() * .8f
+                    || name.height() < work.height() * .5f
+                    || name.height() > work.height() * 1.8f
+                    || title.startsWith("(")
+                    || title.length() > 90) continue;
+            names.add(name);
+            if (title.codePoints().anyMatch(Character::isLowerCase)) seeds.add(name);
+        }
+        List<String> result = new ArrayList<>();
+        for (Line name : names) {
+            if (seeds.stream()
+                            .filter(n -> Math.abs(n.right - name.right) < page.width * .025f)
+                            .count()
+                    < 3) continue;
+            result.add(clean(name.text));
+            int index = lines.indexOf(name);
+            if (index + 1 < lines.size()) {
+                Line alias = lines.get(index + 1);
+                String t = clean(alias.text);
+                if (t.matches("(?u)^\\(formerly [\\p{Lu}][\\p{Lu} .’'&-]{2,79}\\)$")
+                        && Math.abs(alias.right - name.right) < page.width * .025f
+                        && alias.top >= name.bottom - name.height() * .2f
+                        && alias.top - name.bottom <= name.height() * .8f)
+                    result.add(t.substring("(formerly ".length(), t.length() - 1));
+            }
+        }
+        return result;
+    }
+
     public static Result detect(String titleHint, List<Page> pages, Set<String> knownNames) {
         String fallback = clean(titleHint);
         String isolatedPhotoName = isolatedPhotographicHeading(fallback, pages);
@@ -4005,6 +4091,7 @@ public final class ScoreCreditsDetector {
         if (!narrativeArtwork.isEmpty()) return new Result(fallback, "", "", "", List.of());
         Set<String> artists = new LinkedHashSet<>(), composers = new LinkedHashSet<>();
         Set<String> arrangers = new LinkedHashSet<>(), other = new LinkedHashSet<>();
+        Set<String> pairedCoverCredits = new LinkedHashSet<>();
         List<RepeatedCredit> repeatedCredits = new ArrayList<>();
         List<RepeatedCredit> inferredCredits = new ArrayList<>();
         Set<String> traditionalWorks = new LinkedHashSet<>();
@@ -4377,6 +4464,8 @@ public final class ScoreCreditsDetector {
                     addNames(arrangers, creditNames(value));
                 claimed.add(line);
             }
+            pairedCoverCredits.addAll(coverWorkCredits(page, lines));
+            other.addAll(pairedCoverCredits);
             // Unlabeled nearby names are evidence for review, not automatic artist roles.
             if (heading != null)
                 for (Line line : lines) {
@@ -4669,7 +4758,8 @@ public final class ScoreCreditsDetector {
                                                                 .anyMatch(n -> same(n, value))));
         other.removeIf(
                 value ->
-                        !knownNames.stream().anyMatch(name -> same(name, value))
+                        !pairedCoverCredits.stream().anyMatch(name -> same(name, value))
+                                && !knownNames.stream().anyMatch(name -> same(name, value))
                                 && repeatedCredits.stream()
                                         .noneMatch(
                                                 e ->
