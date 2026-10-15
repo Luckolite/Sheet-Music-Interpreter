@@ -1213,6 +1213,28 @@ final class OmrScoreInterpreter {
             // Beamed notes cannot have open heads. If a staff line, slur, or artwork edge near
             // an open half/whole head looked like a beam, retain the notehead's stronger direct
             // evidence instead of collapsing the sustained passage into eighths/sixteenths.
+            // A compact faded head can retain a false white pocket. Require its own
+            // complete rooted hook before overriding sustained-head priority.
+            if (gray != null
+                    && beamCount == 1
+                    && unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                    && head.maxX - head.minX + 1 <= localGap * 1.3f
+                    && head.maxY - head.minY + 1 <= localGap * .9f) {
+                int[] ownedFlagStem = attachedRawStem(gray, width, height, head, localGap);
+                if (ownedFlagStem != null
+                        && hasCurvedFlag(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                head,
+                                localGap,
+                                ownedFlagStem[0],
+                                ownedFlagStem[1],
+                                ownedFlagStem[2] < 0)) {
+                    unbeamedDuration = 0;
+                }
+            }
             if (unbeamedDuration >= ScoreNoteEvent.DURATION_HALF) beamCount = 0;
             Component dotAnchor =
                     unbeamedDuration == ScoreNoteEvent.DURATION_WHOLE
