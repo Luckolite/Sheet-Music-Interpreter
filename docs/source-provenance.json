@@ -2091,16 +2091,16 @@
     },
     "ScoreCreditsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ScoreCreditsDetector.java",
-      "source_sha256": "018c05c1b8907ba5e336baf6de515385cfa2c00ae1fcadf201a354a8f66cf49f",
-      "source_normalized_sha256": "a989038eca6ece5c1e131929c425fcbdc7608e0dad5b41cf97ebb30682cb47fc",
+      "source_sha256": "8e89060b49f9397e1534ccdea242dd84c138317662e20b5609a8fe38bda28a12",
+      "source_normalized_sha256": "9334319d4e77d3a0ac91c557bfa71dead626156044f5a938a9c66e9ba8713fd5",
       "reviewed_app_base_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335",
-      "reviewed_source_state": "Paired cover-list credit retention and original synthetic regressions; full Java/Python and smoke checks passed. Android candidate built; native PDF qualification and paired deployment remain pending.",
+      "reviewed_source_state": "Paired cover surnames and adjacent movement continuations retained for review. Numbered audio anthology caption plus repeated aligned work/name pairs required. Ten new synthetic cases and639 related tests pass; full native/desktop qualification pending.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreCreditsDetector.java",
-      "standalone_sha256": "65f0b771c6032020f4a3490528966b36d13d68313aa85644578348056bea47b5",
+      "standalone_sha256": "05927e6e8838618350780f6745968fadddc3a764311ec10070c3e80016c4d491",
       "license": "Apache-2.0",
-      "review_note": "Repeated work/name typography in anthology lists retains contributor text for review without assigning roles. Bounded original-image name rereads preserve printed case, accents, and independently retained front/back variants. No name catalogue, private fixture, model, or record-format change.",
-      "reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335",
-      "scoped_reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335"
+      "review_note": "Single-token OCR consensus is confined to proven cover credit lines. Existing multiword-name and role-assignment behavior preserved; no private score data or known-name lookup.",
+      "reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a",
+      "scoped_reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a"
     },
     "CreditOcrIdentifierGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/CreditOcrIdentifierGuard.java",
@@ -2897,14 +2897,15 @@
     },
     "ReviewNameReadConsensus.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/ReviewNameReadConsensus.java",
-      "source_sha256": "39950142170efea96fc76bb8e7d942f4df5a3a989ed2c384486fe9616fe00644",
-      "source_normalized_sha256": "01983351511f97a941235417e805b7947b6c7bb448b8e3522a896cedb756b012",
+      "source_sha256": "700bb5600eaf0e2bb6d61ebac819831e368ae12429e4e6ab677a56816b191833",
+      "source_normalized_sha256": "b66a54a15bf2bba920c85842974f8de6d6e09d7c535807fce235613e5097e96d",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ReviewNameReadConsensus.java",
-      "standalone_sha256": "b30cec5e50ceabbe6b9a3f2bba953e72260daf2d7177df0b8ab28304728e3818",
+      "standalone_sha256": "2d07c370ffa6bd1bd4e6ce37c412ae63a6831509edc79c06a066eb1cd42cacd3",
       "license": "Apache-2.0",
-      "reviewed_source_state": "Paired cover-list credit retention and original synthetic regressions; full Java/Python and smoke checks passed. Android candidate built; native PDF qualification and paired deployment remain pending.",
-      "review_note": "Repeated work/name typography in anthology lists retains contributor text for review without assigning roles. Bounded original-image name rereads preserve printed case, accents, and independently retained front/back variants. No name catalogue, private fixture, model, or record-format change.",
-      "reviewed_app_commit": "5af2069088f9e8b963452aaf4ad15a7d959c4335"
+      "reviewed_source_state": "Paired cover surnames and adjacent movement continuations retained for review. Numbered audio anthology caption plus repeated aligned work/name pairs required. Ten new synthetic cases and639 related tests pass; full native/desktop qualification pending.",
+      "review_note": "Single-token OCR consensus is confined to proven cover credit lines. Existing multiword-name and role-assignment behavior preserved; no private score data or known-name lookup.",
+      "reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a",
+      "scoped_reviewed_app_commit": "473c406cf44d2c57119e71ede9af696f4c1e9f6a"
     },
     "MeterReflowEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterReflowEvidence.java",

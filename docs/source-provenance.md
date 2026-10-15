@@ -2037,3 +2037,12 @@ prevents a later fallback from overwriting a corroborated heading. Seven origina
 fictional regressions cover retention, disagreement, confidence and routing.
 App commit `506a74ce530a0af76f6b229d2fba743f8c3133b1` is paired. Native whole-library and matching desktop
 qualification remain pending; no private score data or model changes are included.
+
+## Anthology cover surnames
+
+Numbered audio anthologies retain single-word names from repeated aligned
+work/credit pairs. Adjacent movement captions keep their following credit.
+Single-name OCR consensus is limited to those proven cover lines; no roles are
+inferred. Ten fictional regressions and 639 related tests passed. App commit
+`473c406cf44d2c57119e71ede9af696f4c1e9f6a` is paired. Full native and matching desktop
+qualification remain pending. No private scores or model changes are included.

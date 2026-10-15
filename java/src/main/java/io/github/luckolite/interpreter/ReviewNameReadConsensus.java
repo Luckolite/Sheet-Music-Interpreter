@@ -27,6 +27,11 @@ public final class ReviewNameReadConsensus {
     }
 
     public static Selection select(List<ScoreHeaderReadConsensus.Reading> rows) {
+        return select(rows, false);
+    }
+
+    private static Selection select(
+            List<ScoreHeaderReadConsensus.Reading> rows, boolean coverSurname) {
         if (rows == null || rows.size() != 12) return null;
         var views = new HashSet<String>();
         var groups = new LinkedHashMap<String, List<ScoreHeaderReadConsensus.Reading>>();
@@ -49,7 +54,8 @@ public final class ReviewNameReadConsensus {
                     || r.confidence() < 0
                     || r.confidence() > 1
                     || !views.add(r.scale() + ":" + r.mode() + ":" + r.widthFactor())) return null;
-            if (name(clean(r.text())))
+            if (name(clean(r.text()))
+                    || (coverSurname && clean(r.text()).matches("[\\p{L}][\\p{L}’'-]{2,79}")))
                 groups.computeIfAbsent(words(r.text()), k -> new ArrayList<>()).add(r);
         }
         for (var g : groups.values()) {
@@ -149,7 +155,8 @@ public final class ReviewNameReadConsensus {
             ScoreCreditsDetector.Line line,
             List<ScoreHeaderReadConsensus.Reading> rows) {
         if (!candidates(page).contains(line)) return page;
-        var selection = select(rows);
+        var selection =
+                select(rows, ScoreCreditsDetector.coverWorkCreditCandidates(page).contains(line));
         if (selection == null || producerLine(line.text()) != producerLine(selection.text()))
             return page;
         var lines = new ArrayList<ScoreCreditsDetector.Line>();
@@ -238,7 +245,13 @@ public final class ReviewNameReadConsensus {
             expected.add(
                     reviewCredit(
                             selectedText(
-                                    selected.get(p.pageIndex()), p.line(), select(p.readings()))));
+                                    selected.get(p.pageIndex()),
+                                    p.line(),
+                                    select(
+                                            p.readings(),
+                                            ScoreCreditsDetector.coverWorkCreditCandidates(
+                                                            selected.get(p.pageIndex()))
+                                                    .contains(p.line())))));
             if (!expected.equals(new LinkedHashSet<>(after.unclassifiedCredits()))) continue;
             selected = candidate;
             current = after;

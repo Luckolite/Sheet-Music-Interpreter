@@ -4036,27 +4036,38 @@ public final class ScoreCreditsDetector {
                 || page.notationTop >= 0
                 || lines.stream()
                         .noneMatch(
-                                l ->
-                                        clean(l.text)
-                                                        .matches(
-                                                                "(?iu).*\\b(?:favorites|favourites|songs|hits)\\b.*")
-                                                && clean(l.text)
-                                                        .matches(
-                                                                "(?iu).*\\b(?:tracks|arrangements|play.along)\\b.*")))
-            return List.of();
+                                l -> {
+                                    String caption = clean(l.text);
+                                    return (caption.matches(
+                                                            "(?iu).*\\b(?:favorites|favourites|songs|hits)\\b.*")
+                                                    && caption.matches(
+                                                            "(?iu).*\\b(?:tracks|arrangements|play.along)\\b.*"))
+                                            || caption.matches(
+                                                    "(?iu)^(?:play\\h+)?[1-9][0-9]?\\h*\\p{L}.*\\b(?:audio|cd)\\h+tracks\\b.*");
+                                })) return List.of();
         List<Line> names = new ArrayList<>(), seeds = new ArrayList<>();
         for (int i = 1; i < lines.size(); i++) {
             Line work = lines.get(i - 1), name = lines.get(i);
             String text = clean(name.text), title = clean(work.text);
+            boolean movementContinuation =
+                    title.startsWith("(")
+                            && title.endsWith(")")
+                            && i >= 2
+                            && clean(lines.get(i - 2).text)
+                                    .codePoints()
+                                    .anyMatch(Character::isLowerCase)
+                            && Math.abs(lines.get(i - 2).right - work.right) <= page.width * .025f
+                            && work.top >= lines.get(i - 2).bottom - work.height() * .25f
+                            && work.top - lines.get(i - 2).bottom <= work.height() * .8f;
+
             if (!text.matches("[\\p{Lu}][\\p{Lu} .’'&-]{2,79}")
-                    || !text.contains(" ")
                     || name.top < page.height * .2f
                     || Math.abs(work.right - name.right) > page.width * .025f
                     || name.top - work.bottom < -work.height() * .25f
                     || name.top - work.bottom > work.height() * .8f
                     || name.height() < work.height() * .5f
                     || name.height() > work.height() * 1.8f
-                    || title.startsWith("(")
+                    || (title.startsWith("(") && !movementContinuation)
                     || title.length() > 90) continue;
             names.add(name);
             if (title.codePoints().anyMatch(Character::isLowerCase)) seeds.add(name);
