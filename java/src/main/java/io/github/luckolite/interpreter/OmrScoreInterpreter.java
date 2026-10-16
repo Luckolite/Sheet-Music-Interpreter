@@ -544,6 +544,8 @@ final class OmrScoreInterpreter {
         rejectedBeamHeads.addAll(shortPairedMergedBeamHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(narrowPairedBeamHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(offsetParallelBeamIslandHeads(gray, width, height, heads, staffs));
+        rejectedBeamHeads.addAll(
+                reducedPairBeamIslands(gray, width, height, heads, staffs));
         heads.removeAll(rejectedBeamHeads);
         heads.removeAll(outlinedHookHeads(gray, width, height, heads, staffs));
         heads.removeAll(isolatedBeamTipHeads(gray, width, height, heads, staffs));
@@ -10715,6 +10717,64 @@ final class OmrScoreInterpreter {
                         found = true;
                 }
             if (found) rejected.add(head);
+        }
+        return rejected;
+    }
+
+    /** Tiny stemless mask islands inside a proven reduced two-beam pair are beam ink. */
+    private static List<Component> reducedPairBeamIslands(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        List<Component> rejected = new ArrayList<>();
+        if (gray == null) return rejected;
+        for (Component island : heads) {
+            Staff owner = nearestHeadStaff(staffs, island.centerY);
+            if (owner == null) continue;
+            float gap = owner.gap;
+            if (island.area > gap * gap * .25f
+                    || island.maxX - island.minX + 1 > gap * .6f
+                    || island.maxY - island.minY + 1 > gap * .6f
+                    || attachedRawStem(gray, width, height, island, gap * .65f) != null) continue;
+            for (Component a : heads) {
+                if (a == island
+                        || nearestHeadStaff(staffs, a.centerY) != owner
+                        || a.area < island.area * 2
+                        || a.area > gap * gap * .65f
+                        || a.maxX - a.minX + 1 > gap
+                        || a.maxY - a.minY + 1 > gap * .85f
+                        || a.centerX >= island.centerX
+                        || a.centerY - island.centerY < gap * 1.1f
+                        || a.centerY - island.centerY > gap * 3.5f) continue;
+                int[] first = attachedRawStem(gray, width, height, a, gap * .65f);
+                if (first == null || first[2] != -1 || first[0] >= island.minX) continue;
+                for (Component b : heads) {
+                    if (b == island
+                            || b == a
+                            || nearestHeadStaff(staffs, b.centerY) != owner
+                            || b.area < island.area * 2
+                            || b.area > gap * gap * .65f
+                            || b.maxX - b.minX + 1 > gap
+                            || b.maxY - b.minY + 1 > gap * .85f
+                            || b.centerX <= island.centerX
+                            || b.centerY - island.centerY < gap * 1.1f
+                            || b.centerY - island.centerY > gap * 3.5f) continue;
+                    int[] last = attachedRawStem(gray, width, height, b, gap * .65f);
+                    if (last == null
+                            || last[2] != -1
+                            || last[0] <= island.maxX
+                            || last[0] - first[0] < gap
+                            || last[0] - first[0] > gap * 2.5f) continue;
+                    float expected =
+                            first[1]
+                                    + (last[1] - first[1])
+                                            * (island.centerX - first[0])
+                                            / (last[0] - first[0]);
+                    if (island.minY < expected - gap * .2f
+                            || island.maxY > expected + gap * 1.1f
+                            || PairedGraceBeamInk.count(gray, width, height, first, last, gap) != 2)
+                        continue;
+                    if (!rejected.contains(island)) rejected.add(island);
+                }
+            }
         }
         return rejected;
     }

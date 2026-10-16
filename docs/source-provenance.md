@@ -2325,3 +2325,14 @@ drawn staff and bar lines; it contains no external score pixels or geometry.
 Private replay restored one false split without changing written note fields;
 two additional control pages retained identical decoded data.
 Paired app source: 2b90efd1bf6ee33a2dae901b4e25af4bab763a45.
+
+## Stemless islands inside reduced paired beams
+
+Tiny semantic head islands between two independently stemmed reduced notes are
+removed only when the printed beam pair owns them. This lets the existing grace
+grouper retain the complete ornamental pair. Independent shafts, larger heads,
+single beams and missing owners remain protected by original procedural tests.
+Private replay removes one false note and restores one grace flag while retaining
+all other note fields and rests; two further control pages remain identical.
+A broader blurred beam-cap variant remains under investigation.
+Paired app source: a08d0dbb854c7d24bc3396ab149bc400faba6770.

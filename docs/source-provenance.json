@@ -377,14 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "4aff6b9929cab589d26306f8289baee30e404ca681655ef7114d3ec12330fd0c",
-      "review_note": "Shared beamed heads retain a second quarter only with independent opposing raw shafts, a bare flag-free endpoint, and no intervening head owner. Extra events follow original source indices. Numeral-three classification uses its connected component so neighboring disconnected letter ink cannot supply lobes. Original procedural fixtures only; no private score pixels, models, dependencies or wire layouts changed.",
-      "source_normalized_sha256": "5d97073f99ef06ce1e1f2467338bcc91216e1fd85ddb09a2354a5e84861852e6",
+      "source_sha256": "a88ff7fb6b4b7d55c4afccb9ff5e99e33e9a9b584187d789e41c69b420992125",
+      "review_note": "Tiny stemless mask islands within two independently stemmed reduced heads are rejected only with paired printed beam ownership; genuine shafts, large heads, single beams and absent owners preserved. Original procedural controls; no score pixels ported.",
+      "source_normalized_sha256": "430efc4421a2ec02688d4c0c7cfea290de6dddac69780f3b5844ccc8b8164595",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Reviewed app/public port retaining the existing standalone diagnostics adapter;10404 Java tests,20 app engraving tests,and5 native pages/1352notes passed. Cumulative paired deployment pending.",
-      "standalone_sha256": "32397e5d8194305a8d7112c88e490b5fe6affeb7afc9a5c49fab42c1cb4595b7",
+      "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
+      "standalone_sha256": "89a979acc50ed644e388807ab5b930f6f3926e2a123a0b6f6bdd9a8d7d0edc28",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43"
+      "reviewed_app_commit": "a08d0dbb854c7d24bc3396ab149bc400faba6770",
+      "scoped_reviewed_app_commit": "a08d0dbb854c7d24bc3396ab149bc400faba6770"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
