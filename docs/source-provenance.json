@@ -377,15 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "446ea8c12f5b95a969709f27d00a9751b639941656d73f088cc75f6bd93ee8a3",
-      "review_note": "Compensate the flag-root sampling distance for a bounded staff-rule occlusion while retaining visible-root, hook, bulge and detached-curve checks. Original mirrored rooted and detached-hook controls.",
-      "source_normalized_sha256": "5bbb3eedce635b27d03e74bc89ca87b891471524b4a6ee5841e1285fec0353ee",
+      "source_sha256": "22d39e72812c36aabb434a9e77a8c9f12e2d8c827d814e217c8b3d7bdea86eb7",
+      "review_note": "Repeat compressed overlapping staff alias cleanup after regional recovery establishes complete staffs. Original opposite-slope rows prove retained heads, pitches and sole-staff identity.",
+      "source_normalized_sha256": "0f6df3a4d047325aecd903f7eb6a5afcab7d58eb411600b7cbc28131f9cb9fdf",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; 10481 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "13ea6f859785f833baffb3e13f169953da3832a03ef8380d63e9dffef8ba08af",
+      "reviewed_source_state": "Committed source; 10487 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
+      "standalone_sha256": "4cf4f5750ccdc00b9f132708195799293064520256a008bee2f06cf1c788fe87",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "b830290c97f21943a5247a865bd07072550bab76",
-      "scoped_reviewed_app_commit": "b830290c97f21943a5247a865bd07072550bab76"
+      "reviewed_app_commit": "da4b3b9f876e5cec1461d88280172c8c2d0985a4",
+      "scoped_reviewed_app_commit": "da4b3b9f876e5cec1461d88280172c8c2d0985a4"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

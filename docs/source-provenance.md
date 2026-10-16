@@ -2388,3 +2388,8 @@ Paired app source: f05817fd55f5332aecbd7b4eb75fcf708d289734.
 
 A staff line can hide enough of an eighth-note flag root to leave only one visible row in the normal sampling distance. Recognition now compensates for a bounded number of proved staff rows while still requiring visible root and hook evidence. Original mirrored hooks, rule-only and detached-hook controls preserve the distinction. Private replay restores one eighth note and preserves all other page fields.
 Paired app source: b830290c97f21943a5247a865bd07072550bab76.
+
+## Regional staff recovery and overlapping aliases
+
+Regional recovery can establish a real staff after the initial overlap cleanup. Applying the same scale and overlap guards afterward removes compressed aliases that would otherwise steal notes or invent a second staff. Six original opposite-slope row fixtures cover retained pitches, note counts and staff identity; no private score pixels are included.
+Paired app source: da4b3b9f876e5cec1461d88280172c8c2d0985a4.

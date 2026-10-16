@@ -8414,6 +8414,8 @@ final class OmrScoreInterpreter {
                                     <= seed.gap() * 1.5f);
             staffs.add(recovered);
         }
+        // Regional recovery can establish the real staff after the earlier alias cleanup.
+        removeCompressedOverlappingStaffAliases(staffs);
         staffs.sort(Comparator.comparingDouble(staff -> staff.top));
         assignSystemPositions(staffs, measures, height);
         return staffs;
