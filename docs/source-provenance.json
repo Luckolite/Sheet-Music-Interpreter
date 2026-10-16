@@ -2037,12 +2037,13 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "7939d38b48ba408fdcd8c156ee837a1d025baa885c32cb5534ae1c0b0c1fc90b",
-      "source_normalized_sha256": "af4ec394ab0f2458fa017f983cb3d1344f31001983bd1ea098ea8ff5d985a548",
-      "reviewed_source_state": "Committed source; 10432 Java and 584 Python tests passed. Paired package deployment and whole-library acceptance pending.",
-      "review_note": "Use the individually detected second staff row for hanging rest support. Original uneven-rule and antialias-fringe fixtures demonstrate missing centered whole-rest proof without weakening attachment, isolation or silent-lane checks.",
-      "standalone_sha256": "aa3e9c92f43b4929ab8d443c44b9bf70f6cc97eef41ef0dcc4d4d9d904e1bd92",
-      "reviewed_app_commit": "c784b9aadd2b8f69747aa1866c7a7e5602abc43e"
+      "source_sha256": "54bbb9e34cb9681cf9806db4be93af1980e5156520f5e74a51b03ca1366ffb95",
+      "source_normalized_sha256": "776f3b76a58d676214d2c2d2229865e4dab22b06a0a52f273aa0245da8b19a6e",
+      "reviewed_source_state": "committed",
+      "review_note": "Independently printed double-bar inner stroke bounds full-rest centering only; preserve event geometry and existing plate, silence and ownership checks. Original generated ending-bar regressions.",
+      "standalone_sha256": "0724567e8f71f231218b8d99609726d058a5079866fc4cdffe5353066e3263b0",
+      "reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e",
+      "scoped_reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e"
     },
     "WideSystemIncomingTieProof.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",

@@ -181,13 +181,24 @@ final class WholeRestClassifier {
                     }
                     if (headerRight >= 0 && !headerConflict)
                         contentLeft = headerRight / (float) width;
-                    float centerPosition = (cx - contentLeft) / (m.right() - contentLeft);
+                    float contentRight =
+                            doubleBarContentRight(
+                                    gray,
+                                    width,
+                                    height,
+                                    m.right(),
+                                    lines.top(),
+                                    lines.bottom(),
+                                    gap);
+                    float centerPosition = (cx - contentLeft) / (contentRight - contentLeft);
                     float tolerance =
                             Math.min(
                                     .085f,
                                     Math.max(
                                             .035f,
-                                            plateGap * .65f / ((m.right() - contentLeft) * width)));
+                                            plateGap
+                                                    * .65f
+                                                    / ((contentRight - contentLeft) * width)));
                     final int measureIndex = mi;
                     boolean shortSilentBar =
                             shortBars.contains(mi)
@@ -545,6 +556,42 @@ final class WholeRestClassifier {
         for (int row = last + 1; row <= last + margin; row++)
             if (ink(g, w, l - margin, r + margin, row) > 1) return null;
         return new Plate(l, r, rule, first, last, gap, support);
+    }
+
+    /** The inner stroke owns the usable ending of an independently printed double bar. */
+    private static float doubleBarContentRight(
+            byte[] g, int w, int h, float right, float top, float bottom, float gap) {
+        int end = Math.min(w - 1, Math.round(right * w)),
+                start = Math.max(0, end - Math.round(gap * 2)),
+                first = Math.max(0, Math.round(top) + 2),
+                last = Math.min(h - 1, Math.round(bottom) - 2);
+        if (last <= first) return right;
+        var bands = new ArrayList<int[]>();
+        int run = -1;
+        for (int x = start; x <= end + 1; x++) {
+            int count = 0;
+            if (x <= end) for (int y = first; y <= last; y++) if (dark(g, w, x, y)) count++;
+            boolean bar = x <= end && count >= (last - first + 1) * .9f;
+            if (bar && run < 0) run = x;
+            if (!bar && run >= 0) {
+                bands.add(new int[] {run, x - 1});
+                run = -1;
+            }
+        }
+        if (bands.size() != 2) return right;
+        int[] a = bands.get(0), b = bands.get(1);
+        if (a[1] - a[0] + 1 > gap * .35f
+                || b[1] - b[0] + 1 > gap * .9f
+                || b[0] - a[1] < 2
+                || b[0] - a[1] > gap
+                || end - b[1] > gap * .3f) return right;
+        int flank = Math.max(3, Math.round(gap * .3f));
+        int upper = Math.round(top) - flank, lower = Math.round(bottom) + flank;
+        if (upper < 0 || lower >= h) return right;
+        for (int[] band : bands)
+            for (int x = band[0]; x <= band[1]; x++)
+                if (dark(g, w, x, upper) || dark(g, w, x, lower)) return right;
+        return a[0] / (float) w;
     }
 
     private static boolean dark(byte[] g, int w, int x, int y) {

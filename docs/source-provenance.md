@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Two independently printed ending strokes bound full-rest centering at the inner
+stroke. The existing plate, silent-lane and dot-ownership proofs remain required;
+event coordinates stay unchanged. Original generated controls reject lone, broken,
+extended and misplaced strokes and preserve off-center literal rests.
+
 Short outgoing tie bows can begin above their notehead. A bounded overlapping
 search retains the existing raw-curve proof, ink threshold and matching incoming
 endpoint requirement. Original paired-system fixtures cover curved and straight
