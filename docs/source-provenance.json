@@ -925,13 +925,14 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "0604c3fa0984b4538c4288823777d1a535871a7f4f3e69463b6f25a0faf47c44",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "2d4c83744ea60fcfe3da361c08aed0b083317ed31a93e22ad09eda1bc738ab68",
-      "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
+      "source_sha256": "381b3ee3116de4e235ef89f61b971be97883237ca6fbc586993140382ab02336",
+      "reviewed_app_commit": "09e441f7d931a5dd8012d2dcb3552bc0fbf80398",
+      "source_normalized_sha256": "c323411a1bc37e121f7b62f026b4b7bdf3d3bce3076c146331c57fbe35836525",
+      "review_note": "Reviewed compact-beam fallback uses non-overlapping three-pixel probes and stem margins instead of fractional-span cutoff. Existing independently attached stems, separated dark cores and aligned slopes retained. Seven original synthetic controls; no private score pixels or model changes.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "reviewed_source_state": "Committed app source;10286 Java tests and seven original app controls passed. Paired deployment and whole-library acceptance pending.",
+      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
+      "standalone_sha256": "b639051072edc8ae25328b3181bc4618d0b45bf2057904f22a14c6d52dec5ee7"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",

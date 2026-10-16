@@ -127,7 +127,7 @@ final class PairedGraceBeamInk {
         // A compact blurred pair can close the white channel close to one stem.
         // Require three separated, aligned double cores on the clear inner side;
         // this path is not used for full-size notes or very short connectors.
-        if (maximum == 0 && inside == 1.5f && span >= gap * 1.4f)
+        if (maximum == 0 && inside == 1.5f && compactProbeSpan(a, b))
             for (float[] columns : new float[][] {{.2f, .4f, .6f}, {.4f, .6f, .8f}})
                 for (float fraction : new float[] {.5f, .75f}) {
                     int count =
@@ -139,7 +139,7 @@ final class PairedGraceBeamInk {
         // A returning slur can extend one stem beyond its actual beam tip.
         // Retry bounded inward tip positions only for compact ornaments; every
         // accepted position still proves separate parallel cores at three columns.
-        if (maximum == 0 && inside == 1.5f && span >= gap * 1.4f)
+        if (maximum == 0 && inside == 1.5f && compactProbeSpan(a, b))
             for (float inset : new float[] {.25f, .5f, .75f, 1f})
                 for (int side = 0; side < 2; side++) {
                     int[] first = a.clone(), last = b.clone();
@@ -155,6 +155,21 @@ final class PairedGraceBeamInk {
                     }
                 }
         return maximum;
+    }
+
+    // Each three-pixel core witness must sample pixels independent of its neighbors.
+    private static boolean compactProbeSpan(int[] a, int[] b) {
+        for (float[] probes : new float[][] {{.2f, .4f, .6f}, {.4f, .6f, .8f}}) {
+            int previous = -1;
+            for (float f : probes) {
+                int x = Math.round(a[0] + (b[0] - a[0]) * f);
+                if (Math.abs(x - a[0]) < 2
+                        || Math.abs(x - b[0]) < 2
+                        || previous >= 0 && Math.abs(x - previous) < 3) return false;
+                previous = x;
+            }
+        }
+        return true;
     }
 
     private static int countAtContrast(

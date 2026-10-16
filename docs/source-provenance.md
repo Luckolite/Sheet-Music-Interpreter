@@ -2256,3 +2256,16 @@ against the app implementation. All 10,279 Java tests and synthetic PNG/PDF pitc
 duration, MIDI, MusicXML and MP3 smoke checks passed. Paired deployment and
 whole-library acceptance remain pending.
 Paired app source: `6f12bed379978db04f6ba2ae660db00d60aa13b1`.
+
+## Independent compact-beam probes
+
+Compact double-beam recovery now checks that its three ink witnesses use separate
+pixel strips and remain inside the stem pair. This admits narrow, blurred grace
+pairs without accepting overlapping evidence. Existing core separation, alignment
+and stem requirements remain. Seven original analytic controls cover both stem
+directions, narrow and reversed pairs, overlapping probes, single rails and exact
+input preservation. All seven pass against the app source; 1,588 focused checks
+pass. All 10,286 Java tests passed. Paired deployment and whole-library acceptance
+remain pending.
+Paired app source: `09e441f7d931a5dd8012d2dcb3552bc0fbf80398`.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
