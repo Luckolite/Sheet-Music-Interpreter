@@ -21580,6 +21580,34 @@ final class OmrScoreInterpreter {
                 }
             }
         }
+        // A miniature returning shoulder can precede the first head at a system or page edge.
+        // Keep the original search first, then require the complete raw-curve proof.
+        if (!outgoing) {
+            for (int clearance = 0; clearance <= Math.round(gap * 1.8f); clearance++) {
+                for (int span = Math.max(6, Math.round(gap * .35f));
+                        span < Math.round(gap * 1.6f);
+                        span++) {
+                    int right = note.head.minX - clearance;
+                    int left = right - span;
+                    if (left < 0 || right >= width) continue;
+                    if (hasContinuousTieArc(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            left,
+                            right,
+                            note.head.centerY,
+                            gap,
+                            null,
+                            225,
+                            side,
+                            true,
+                            false,
+                            null)) return true;
+                }
+            }
+        }
         return false;
     }
 

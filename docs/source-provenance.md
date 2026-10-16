@@ -2137,3 +2137,16 @@ acceptance remain pending.
 Paired app source: `3a3cb1ed6fabcfa2f6c06a56acd63904f2996d63`. Java validation: 10,206 existing tests
 plus six new regressions passed; the six also pass against the app source.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Miniature incoming boundary shoulders
+
+An incoming-only fallback searches compact raw arcs after the existing endpoint
+search fails. It preserves the complete curve proof; cross-system and page
+assembly still require paired shoulders, compatible pitch and continuity. Eight
+original two-system regressions cover above/below arcs, missing endpoints,
+different pitches, opposite sides, straight strokes and immutable inputs. No
+private score data or model changes are included. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `e0dddabea8c18e135e65cc4b7906926284f7b63b`. Java tests: 10,220 passed;
+the eight new regressions also pass against the app source.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

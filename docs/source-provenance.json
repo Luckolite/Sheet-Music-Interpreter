@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "8a101c4bc44fa503872ee0739efd2e15ead74541ab3fda42781a51a18d1abfea",
-      "review_note": "Reviewed identical compact-tie caller clearance, retained span and span-relative curvature changes in both namespaces. Six original miniature-score tests cover19 geometries, reflected arcs, pitch changes, broken arcs, flat strokes and long slurs. No private score pixels, new helpers or models.",
-      "source_normalized_sha256": "f9d2c24efadc7a380f1e05dbdabc8c71f3df8c73780c12cea9b42343323398d3",
+      "source_sha256": "7ad23a0c05ea48d2849632a232704e572953afffaf3037f0dff954f8e57db09a",
+      "review_note": "Reviewed identical incoming-only compact boundary-arc fallback after the existing endpoint search. Retains full raw-curve proof and paired same-pitch/system or page assembly requirements. Eight original miniature-boundary regressions cover both sides, missing endpoints, pitch mismatch, opposite sides, straight strokes and source immutability. No private data or model changes.",
+      "source_normalized_sha256": "ed0ce13c3f4ff442e8f6ab3774a38355ee16ec68dfb603cc9e38873bb1587b5e",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "1da534606ba532f1fa825cf76026ba6899766850fea3fb1391c7daaea60b940d",
+      "standalone_sha256": "a0b23e63b0cb66b5699b961d9239940c48a00d41fc18dc082fe65a867cd002ca",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "3a3cb1ed6fabcfa2f6c06a56acd63904f2996d63"
+      "reviewed_app_commit": "e0dddabea8c18e135e65cc4b7906926284f7b63b"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
