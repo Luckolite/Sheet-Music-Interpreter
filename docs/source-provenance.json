@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "031294a501728868c692fd276de97879949ce0a5096ca72feb3bbd7586aa0857",
-      "review_note": "Reviewed near-rule fallback for bright-paper phase and ink-mass proof. Three independent rule references remain mandatory; finite-beam and ink-budget constraints retained. Original analytic regression only; no private pixels or model changes.",
-      "source_normalized_sha256": "a9f7a0d872080f5d90f0caa788508bab2fb60a2fba7107650125462d95789062",
+      "source_sha256": "3f66ec097bdc9d5e588cbf57c5bf2c08468fb8dc7e44763808670272cb08916b",
+      "review_note": "Reviewed narrow finite-beam body ink deficit against continuing rule witnesses. Existing endpoint geometry retained; threshold-row width alone cannot override independent staff proof. Original equal-ink raster and genuine-beam controls only; no private pixels or model changes.",
+      "source_normalized_sha256": "60a011e522605b668613fc3a89726b59fefceed6577c1dba30b708978511fb01",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed app source; 10,259 Java regressions, four app controls, and twelve private page replays pass. Paired deployment remains pending.",
-      "standalone_sha256": "75d5a9621e0e70701ce4ce66be2a231aceb9500b52891cfe2ef45bb0ab4dfef4",
+      "reviewed_source_state": "Committed app source; 10,263 Java tests, four app controls and twelve private page replays pass. Paired deployment remains pending.",
+      "standalone_sha256": "a444744f56641700930e7c1fb516d31628524eac838a1d5578c998cb7d16c617",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "1fe92fcfaa0115edfcff5304b04e05b75ec0f988"
+      "reviewed_app_commit": "88e3c8169690664c5817e1c822cba2afc5787115"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

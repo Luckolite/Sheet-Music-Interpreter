@@ -2218,3 +2218,16 @@ All 10,259 Java regressions passed. Paired deployment and whole-library
 acceptance remain pending.
 Paired app source: `1fe92fcfaa0115edfcff5304b04e05b75ec0f988`.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Finite rule-width changes
+
+A narrow finite beam must carry more local-paper ink deficit than its continuing
+staff-rule witnesses. This prevents raster phase from adding a false beam merely
+by changing the number of pixels below a threshold. Existing endpoint geometry
+and uninterrupted witness requirements remain. Four original synthetic checks
+cover equal-ink resampling, dark and lighter genuine beams, and immutable inputs.
+The false-beam control fails before the change; all four pass against both
+implementations. All 10,263 Java regressions passed. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `88e3c8169690664c5817e1c822cba2afc5787115`.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

@@ -20251,7 +20251,11 @@ final class OmrScoreInterpreter {
         int thickMinimum = Math.max(3, Math.min(last - first + 1, (int) Math.ceil(gap * .3f)));
         int thinMaximum = Math.max(1, (int) Math.floor(gap * .24f));
         int witnessLength = Math.max(4, Math.round(gap * .75f));
+        // Raster phase can add a threshold row without adding beam ink.
+        // Narrow finite bodies must outweigh their continuing rule witnesses.
+        boolean narrow = last - first + 1 <= gap * .35f;
         for (int direction : new int[] {-1, 1}) {
+            double bodyMass = 0, tailMass = 0;
             int thickColumns = 0,
                     thinColumns = 0,
                     taperColumns = 0,
@@ -20321,26 +20325,40 @@ final class OmrScoreInterpreter {
                             if ((gray[y * width + column] & 255) < cutoff) ink++;
                     }
                 }
+                int mass = 0;
+                if (narrow) {
+                    int margin = Math.max(3, Math.round(gap * .6f)), paper = 0;
+                    for (int yy = Math.max(0, first + shift - margin);
+                            yy <= Math.min(height - 1, last + shift + margin);
+                            yy++) paper = Math.max(paper, gray[yy * width + column] & 255);
+                    for (int yy = Math.max(0, first + shift - 2);
+                            yy <= Math.min(height - 1, last + shift + 2);
+                            yy++) mass += Math.max(0, paper - (gray[yy * width + column] & 255));
+                }
                 if (ink >= thickMinimum) {
                     // A small articulation can cross the continuing rule just beyond a
                     // beam end. Require a fresh uninterrupted thin witness after it;
                     // never bridge another long beam or accept an entirely thick rule.
                     if (tailStarted) {
                         thinColumns = 0;
+                        tailMass = 0;
                         if (++tailInterruption > Math.round(gap * .85f)) break;
                         continue;
                     }
                     taperColumns = 0;
                     thickColumns++;
+                    bodyMass += mass;
                 } else if (ink > 0 && ink <= thinMaximum && thickColumns >= Math.round(gap * 2)) {
                     tailStarted = true;
                     tailInterruption = 0;
+                    tailMass += mass;
                     if (++thinColumns >= witnessLength) {
                         proven = true;
                         break;
                     }
                 } else if (tailStarted && ink > thinMaximum) {
                     thinColumns = 0;
+                    tailMass = 0;
                     if (++tailInterruption > Math.round(gap * .85f)) break;
                 } else if (ink > thinMaximum
                         && ink < thickMinimum
@@ -20350,7 +20368,10 @@ final class OmrScoreInterpreter {
                     // Antialiasing can soften the last few columns of a finite beam.
                 } else break;
             }
-            if (!proven) return false;
+            if (!proven
+                    || narrow
+                            && bodyMass / Math.max(1, thickColumns)
+                                    <= tailMass / Math.max(1, thinColumns) * 1.10) return false;
         }
         return true;
     }
