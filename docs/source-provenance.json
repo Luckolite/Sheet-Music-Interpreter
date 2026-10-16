@@ -361,12 +361,13 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "e22002c51709fb61482a3a2a2976c14ee903333798529427ff6357b603009e96",
-      "source_normalized_sha256": "ec035fa4c4f9d226041491bc52fb2f94e2b3ea30848e0ab9fbfa2ccc4d5c001b",
-      "review_note": "Namespace-equivalent additions preserve a previously proved closing bar only after independent bounded raw/semantic verification under both staff frames. Ten original procedural regressions; no score pixels or model changes.",
-      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "2c457062f30f28a0354df2fd06fd65c7702a7594988cfb0b12ef9cf19e6a56a0",
-      "reviewed_app_commit": "a0baaa00a8471f84721bd4238b84e735ae1a38c3"
+      "source_sha256": "6aaf398fefdd00538279c288a84e38743f3abcd9e20a280e435d5472a437a4c6",
+      "source_normalized_sha256": "705f0ff29e8e0d497c711640e6c069c4bb648ab86d84caa9decec3ede43b9977",
+      "review_note": "Retain an already verified closing boundary when independently visible staff rules continue through a proposed textured-margin trim. Requires existing continuity and ordinary closing-bar ownership checks; original procedural texture/disconnected-tail controls.",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "ac05bf6c9c77f6995f090b2df7807ec57671cbd200a6d93eccfeb62957ac7ba2",
+      "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
+      "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -377,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2c52b10af212971518547a856f4a0df898d84c6d15bc6133680f1ed088abdca4",
-      "review_note": "Before line-to-space correction, use existing local ink contrast to test a faint outer ledger. The default ledger phase detector retains its180threshold. Original mirrored pale-line, absent-line and dark-line controls.",
-      "source_normalized_sha256": "520e041023195164777f72d202d299e104152c0474e2358faf40351e044b76e6",
+      "source_sha256": "efd4ac337be3edb28582e7c6a00c4fa5ea559a12ca93ef3805a858b011a06897",
+      "review_note": "Pass available semantic labels through grace-prefix ordinary-beam ownership checks so staff rules cannot supply nonstaff beam evidence. Gray-only overloads retain conservative ownership. Original staff-only, genuine thin-beam, beam-over-staff and missing-label controls.",
+      "source_normalized_sha256": "1847c6db2a1d6fee195527bd4893dc61aabfc892585207382e97b32e6b24d150",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; 10493 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "ec21b188e8b701c835c3f007316c439090c2428a2f67407b00d3999db6fa4381",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "15fe0e1e762cc1c24932668fbf9a4af9806830425171ee9f676524f30d538976",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "9513e553f4c84f6cf238839793b4b55862d01b82",
-      "scoped_reviewed_app_commit": "9513e553f4c84f6cf238839793b4b55862d01b82"
+      "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
+      "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

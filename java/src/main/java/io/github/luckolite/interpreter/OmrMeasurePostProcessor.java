@@ -284,6 +284,25 @@ final class OmrMeasurePostProcessor {
                                                     + staff.slope * (x - width * .5f)
                                             : staff.track.at(x)[0]
                                                     - (4 - line) * staff.track.at(x)[1]);
+            if (printedRight < staff.right) {
+                int[] ruleRows = new int[5];
+                for (int line = 0; line < 5; line++)
+                    ruleRows[line] = Math.round(staff.top + line * staff.gap);
+                int[] continuation =
+                        rawStaffColumns(
+                                gray, width, height, ruleRows, staff.gap, staff.slope, staff.track);
+                if (continuousPrintedRight(continuation, printedRight, staff.gap) >= staff.right - 1
+                        && verifiedClosingBoundary(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                staff.right,
+                                ruleRows,
+                                staff.gap,
+                                staff.slope,
+                                staff.track)) printedRight = staff.right;
+            }
             if (printedLeft <= staff.left && printedRight >= staff.right) continue;
             var boundaries = new ArrayList<Integer>();
             boundaries.add(printedLeft);

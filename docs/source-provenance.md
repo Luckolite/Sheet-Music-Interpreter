@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+An independently verified closing bar and continuous staff rules protect a real
+ending from textured-margin trimming. Grace-prefix beam ownership uses available
+semantic labels to distinguish staff rules from connecting beam ink; gray-only
+callers keep the conservative fallback. Original generated texture and glyph
+fixtures cover both changes without source-score pixels. Cumulative deployment
+remains pending.
+
 Printed barline endpoint checks allow one fading raster row only beside an
 independently proved bilateral staff rule. Count fitting cannot subdivide every
 bar of a fully proved row using unsupported cuts. Isolated inferred separators

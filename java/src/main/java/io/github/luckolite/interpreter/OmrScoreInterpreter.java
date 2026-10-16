@@ -12036,7 +12036,7 @@ final class OmrScoreInterpreter {
                     previous = next;
                     continue;
                 }
-                if (extendsMetricalBeam(gray, width, height, detected, i)) break;
+                if (extendsMetricalBeam(labels, gray, width, height, detected, i)) break;
                 boolean compactGroup = prefix.size() >= 2;
                 for (int k = 0; k < prefix.size() && compactGroup; k++) {
                     DetectedNote member = detected.get(prefix.get(k));
@@ -12082,11 +12082,22 @@ final class OmrScoreInterpreter {
                 break;
             }
         }
-        markPairedGraces(gray, width, height, detected, events);
-        markSlashedGracePrefixes(gray, width, height, detected, events);
+        markPairedGraces(labels, gray, width, height, detected, events);
+        markSlashedGracePrefixes(labels, gray, width, height, detected, events);
+    }
+
+    /** Gray-only callers retain conservative ordinary-beam ownership. */
+    private static void markPairedGraces(
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> detected,
+            List<ScoreNoteEvent> events) {
+        markPairedGraces(null, gray, width, height, detected, events);
     }
 
     private static void markPairedGraces(
+            byte[] labels,
             byte[] gray,
             int width,
             int height,
@@ -12195,7 +12206,7 @@ final class OmrScoreInterpreter {
                     || principal.head.maxX - principal.head.minX + 1 <= gap * 1.05f
                     || principal.head.area <= a.head.area * 1.65f
                     || principal.head.area <= b.head.area * 1.65f) continue;
-            if (extendsMetricalBeam(gray, width, height, detected, i)) continue;
+            if (extendsMetricalBeam(labels, gray, width, height, detected, i)) continue;
             events.set(i, asEngravedGrace(events.get(i), provedBeams));
             events.set(bIndex, asEngravedGrace(events.get(bIndex), provedBeams));
             if (bIndex == i + 1) i++;
@@ -12204,7 +12215,12 @@ final class OmrScoreInterpreter {
 
     /** A continuous beam from an ordinary attack keeps its smaller heads metrical. */
     private static boolean extendsMetricalBeam(
-            byte[] gray, int width, int height, List<DetectedNote> detected, int index) {
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> detected,
+            int index) {
         if (gray == null) return false;
         DetectedNote first = detected.get(index), next = first;
         int cursor = index;
@@ -12213,7 +12229,7 @@ final class OmrScoreInterpreter {
             if (prior < 0) return false;
             DetectedNote previous = detected.get(prior);
             if (!graceStemsShareBeam(
-                    null, gray, width, height, previous.head, next.head, first.staffGap, true))
+                    labels, gray, width, height, previous.head, next.head, first.staffGap, true))
                 return false;
             int[] stem = attachedRawStem(gray, width, height, previous.head, first.staffGap * .65f);
             if (stem != null && Math.abs(stem[1] - previous.head.centerY) > first.staffGap * 4.8f)
@@ -12240,8 +12256,19 @@ final class OmrScoreInterpreter {
         return -1;
     }
 
+    /** Gray-only callers retain conservative ordinary-beam ownership. */
+    private static void markSlashedGracePrefixes(
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> detected,
+            List<ScoreNoteEvent> events) {
+        markSlashedGracePrefixes(null, gray, width, height, detected, events);
+    }
+
     /** An independently slashed short shaft can survive a modestly faded scan. */
     private static void markSlashedGracePrefixes(
+            byte[] labels,
             byte[] gray,
             int width,
             int height,
@@ -12254,7 +12281,8 @@ final class OmrScoreInterpreter {
             if ((events.get(i).articulations() & NoteOrnament.GRACE) != 0
                     || !(smallGraceHead(a)
                             || roundedBeamedGraceHead(a, gray, width, height)
-                                    && !extendsMetricalBeam(gray, width, height, detected, i))
+                                    && !extendsMetricalBeam(
+                                            labels, gray, width, height, detected, i))
                     || a.event.beamCount() > 1
                     || !sameGraceVoice(a, principal)
                     || smallGraceHead(principal)
