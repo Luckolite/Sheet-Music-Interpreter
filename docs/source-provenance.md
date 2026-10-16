@@ -2124,3 +2124,16 @@ whole-library acceptance remain pending.
 Paired app source: `06846962df3da6a964c2768ccb304343faf08ddd`. Java tests: 10,206; Python tests: 582
 (44 skipped).
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Miniature ties between closely spaced heads
+
+The raw-arc search now considers a clear gap of one staff space. Compact arcs
+retain a shorter minimum span and scale their required curvature to the smaller
+of staff spacing and arc width. Dark-core, contrast, coverage and connected-column
+checks remain intact. Six original miniature-score tests cover 19 geometries,
+reflection, different pitches, broken arcs, flat strokes and long slurs. No private
+score pixels or model changes are included. Paired deployment and whole-library
+acceptance remain pending.
+Paired app source: `3a3cb1ed6fabcfa2f6c06a56acd63904f2996d63`. Java validation: 10,206 existing tests
+plus six new regressions passed; the six also pass against the app source.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

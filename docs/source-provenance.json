@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "68008dea889ad9fd3ac416faafe20eae6c9f42428e885a4bdc93d131cdd287d2",
-      "review_note": "Reviewed identical compact tie endpoint and curve sampling changes in both namespaces. Preserve original 205 ink threshold and coarse curve grid before added faint-endpoint/fine-grid proofs. Five original analytic geometry regressions cover recovered arcs, baseline retention, broken arcs, flat strokes and insufficient dark cores; no private score assets or model changes.",
-      "source_normalized_sha256": "bff3e7e58cbc250022ce58ed10ed5b77fb03a381c4f1e67a1035579aee63644a",
+      "source_sha256": "8a101c4bc44fa503872ee0739efd2e15ead74541ab3fda42781a51a18d1abfea",
+      "review_note": "Reviewed identical compact-tie caller clearance, retained span and span-relative curvature changes in both namespaces. Six original miniature-score tests cover19 geometries, reflected arcs, pitch changes, broken arcs, flat strokes and long slurs. No private score pixels, new helpers or models.",
+      "source_normalized_sha256": "f9d2c24efadc7a380f1e05dbdabc8c71f3df8c73780c12cea9b42343323398d3",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "f4028712473267d1c445e478e5a4bdf2e5eb6abed9517964496ce7f64dcdde71",
+      "standalone_sha256": "1da534606ba532f1fa825cf76026ba6899766850fea3fb1391c7daaea60b940d",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "06846962df3da6a964c2768ccb304343faf08ddd"
+      "reviewed_app_commit": "3a3cb1ed6fabcfa2f6c06a56acd63904f2996d63"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

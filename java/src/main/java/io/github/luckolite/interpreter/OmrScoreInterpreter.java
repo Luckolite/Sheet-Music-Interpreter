@@ -21434,7 +21434,8 @@ final class OmrScoreInterpreter {
                     frame.track)) return true;
         }
         if (gray != null && gray.length == labels.length) {
-            if (right - left + 1 >= gap * 1.3f
+            // One clear staff space can contain a complete miniature tie.
+            if (right - left + 1 >= gap
                     && hasPrintedTieArc(
                             labels, gray, width, height, left, right, centerY, gap, true, frame))
                 return true;
@@ -21658,7 +21659,11 @@ final class OmrScoreInterpreter {
                 for (int first = 0; first <= clearanceCount; first++)
                     for (int last = 0; last <= clearanceCount; last++) {
                         int a = left + first * clearanceStep, b = right - last * clearanceStep;
-                        if (b - a < Math.max(gap * .9f, (right - left) * .45f)) continue;
+                        // Narrow ties retain both a relative span and an absolute staff-scale floor.
+                        if (b - a
+                                < Math.max(
+                                        gap * (right - left < gap * 2.5f ? .6f : .9f),
+                                        (right - left) * .45f)) continue;
                         if (hasContinuousTieArc(
                                 labels, gray, width, height, a, b, centerY, gap, null, faintInk, 0,
                                 true, false, frame)) return true;
@@ -22019,6 +22024,7 @@ final class OmrScoreInterpreter {
                         // its printed center remains straight. Do not let the search
                         // switch boundaries to manufacture a returning arc.
                         if (hits >= 34 && hasFlatTieStrokeCenter(strokeCenters, gap)) continue;
+                        // Curvature follows the smaller of staff scale and the short arc span.
                         if (hits >= 43
                                 && bins[0] >= 7
                                 && bins[1] >= 7
@@ -22026,7 +22032,8 @@ final class OmrScoreInterpreter {
                                 && bins[3] >= 7
                                 && bins[4] >= 7
                                 && arcCurvature(strokeCenters, 0, 0, 49)
-                                        >= Math.max(.8f, gap * .12f)) {
+                                        >= Math.max(
+                                                .8f, Math.min(gap * .12f, (right - left) * .15f))) {
                             if (!TieArcBranchInk.outwardStems(
                                             gray,
                                             width,
