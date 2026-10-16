@@ -22322,6 +22322,14 @@ final class OmrScoreInterpreter {
             if (hasPrintedTieArc(
                     labels, gray, width, height, arcLeft, arcRight, centerY, gap, false, frame))
                 return true;
+            // Compact returning shoulders can end slightly inside the head bounds.
+            // Keep the full dark-curve proof and a staff-scaled overlap limit.
+            if (current.head.centerX - previous.head.centerX <= gap * 4) {
+                int a = Math.max(previous.head.minX, Math.round(previous.head.centerX - gap * .2f));
+                int b = Math.min(current.head.maxX, Math.round(current.head.centerX + gap * .2f));
+                if (hasPrintedTieArc(labels, gray, width, height, a, b, centerY, gap, false, frame))
+                    return true;
+            }
             if (ScoreNoteTiming.hasIndependentSustain(previous.event)
                     && ScoreNoteTiming.hasIndependentSustain(current.event)
                     && hasFlattenedTieArc(

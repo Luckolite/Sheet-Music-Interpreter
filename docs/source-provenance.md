@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Compact tie shoulders may return just inside their head centers. A bounded
+under-head search preserves the existing complete dark-curve proof. Original
+mirrored and scaled curves reject straight, incomplete and faint unrelated ink.
+
 A downward stem authorizes a separate raised rest only when its note lies below
 the rest. Original procedural voice controls preserve genuine lower voices and
 independently held voices while rejecting false voice ownership.
