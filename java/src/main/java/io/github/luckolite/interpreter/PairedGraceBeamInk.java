@@ -151,6 +151,36 @@ final class PairedGraceBeamInk {
                     if (count == 2) return count;
                 }
         }
+        // A blurred junction may leave a clear channel on only one side.
+        // Three disjoint strips must still prove two consistently spaced rails.
+        if (maximum == 0 && inside == 1.5f && compactProbeSpan(a, b)) {
+            int step = Math.max(3, (int) Math.ceil(gap * .2f));
+            for (int offset = 3; offset + 2 * step <= span - 3; offset++) {
+                float[] columns = {
+                    offset / (float) span,
+                    (offset + step) / (float) span,
+                    (offset + 2 * step) / (float) span
+                };
+                for (float fraction : new float[] {.5f, .75f}) {
+                    int count =
+                            countAtContrast(
+                                    gray,
+                                    width,
+                                    height,
+                                    a,
+                                    b,
+                                    gap,
+                                    fraction,
+                                    inside,
+                                    columns,
+                                    staffTop,
+                                    track,
+                                    true,
+                                    Math.max(1, step * .24f));
+                    if (count == 2) return count;
+                }
+            }
+        }
         // A returning slur can extend one stem beyond its actual beam tip.
         // Retry bounded inward tip positions only for compact ornaments; every
         // accepted position still proves separate parallel cores at three columns.
@@ -216,6 +246,36 @@ final class PairedGraceBeamInk {
             float staffTop,
             StaffPitchTrack track,
             boolean strictParallel) {
+        return countAtContrast(
+                gray,
+                width,
+                height,
+                a,
+                b,
+                gap,
+                fraction,
+                inside,
+                columns,
+                staffTop,
+                track,
+                strictParallel,
+                Math.max(1, gap * .12f));
+    }
+
+    private static int countAtContrast(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float fraction,
+            float inside,
+            float[] columns,
+            float staffTop,
+            StaffPitchTrack track,
+            boolean strictParallel,
+            float parallelTolerance) {
         int wanted = 0;
         float firstSeparation = Float.NaN;
         float[] previous = null;
@@ -289,8 +349,7 @@ final class PairedGraceBeamInk {
                 if (coreCount != 2) return 0;
                 float separation = cores[1] - cores[0];
                 if (Float.isFinite(firstSeparation)
-                        && Math.abs(separation - firstSeparation) > Math.max(1, gap * .12f))
-                    return 0;
+                        && Math.abs(separation - firstSeparation) > parallelTolerance) return 0;
                 if (!Float.isFinite(firstSeparation)) firstSeparation = separation;
             }
 

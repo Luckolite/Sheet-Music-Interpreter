@@ -2280,3 +2280,14 @@ the app implementation, and 1,588 focused checks pass. All 10,293 Java tests
 passed. Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
 Paired deployment and whole-library acceptance remain pending.
 Paired app source: `4a641a287b5436c9ef31fe6c6b4d128f60b157b8`.
+
+## Independent windows in blurred grace channels
+
+Compact grace pairs may retain a clear beam channel on only one side. A bounded
+window requires three disjoint ink strips, stem margins and rail-separation drift
+scaled to the witness distance. Existing probes remain unchanged. Six original
+controls cover mirrored and reversed pairs, single rails, insufficient channels
+and unchanged input. All 10,299 Java tests and six app controls passed. Paired
+deployment and whole-library acceptance remain pending.
+Paired app source: 348521b7a8c5fefb39ca25f134b978006475f2d0.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
