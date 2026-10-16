@@ -2163,3 +2163,17 @@ remain pending.
 Paired app source: `433b22c5e8b0dd3c41ff4444008d326e656383c3`. Java tests: 10,228 passed;
 the eight new regressions also pass against the app source.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Inset and flattened sustained ties
+
+The bounded inset search now retains dark and faded returning shoulders across
+compact spans. Sustained notes also admit flattened crests at ordinary long-arc
+spacing, preserving full continuity, curvature, contrast, pitch, and endpoint
+checks. Ten original analytic regressions cover the repaired geometries, broken
+curves, staff rules, straight strokes, missing shoulders, and pale marks without
+a dark core. All ten pass against the app source; 642 focused tie checks pass.
+No private score pixels or model changes are included. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `450c5aaf5dd4fbedf494014e01f229e34d160ae4`. All 10,238 Java
+regressions passed. Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3
+checks passed.

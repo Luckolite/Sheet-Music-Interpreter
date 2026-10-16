@@ -21709,7 +21709,8 @@ final class OmrScoreInterpreter {
             // Retain the original ink proof before accepting faint tapered endpoints.
             int clearanceStep = right - left < gap * 2.5f ? 1 : Math.max(1, Math.round(gap * .1f));
             int clearanceCount = Math.round(gap * 1.4f / clearanceStep);
-            for (int faintInk : right - left < gap * 2.5f ? new int[] {205, 225} : new int[] {205})
+            // Insets can hide dark shoulders; faded ends need the same complete dark-core proof.
+            for (int faintInk : new int[] {165, 205, 225})
                 for (int first = 0; first <= clearanceCount; first++)
                     for (int last = 0; last <= clearanceCount; last++) {
                         int a = left + first * clearanceStep, b = right - last * clearanceStep;
@@ -21746,7 +21747,8 @@ final class OmrScoreInterpreter {
             int right,
             float centerY,
             float gap) {
-        if (right - left < gap * 24 || right - left > gap * 48) return false;
+        // Sustained ties can have flattened crests at ordinary long-span spacing.
+        if (right - left < gap * 5 || right - left > gap * 48) return false;
         int step = Math.max(1, Math.round(gap * .2f));
         for (int first = 0; first <= 5; first++)
             for (int last = 0; last <= 5; last++)
