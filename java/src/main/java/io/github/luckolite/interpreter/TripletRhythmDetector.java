@@ -1905,7 +1905,7 @@ final class TripletRhythmDetector {
                         number,
                         boundedSecondary,
                         ownership,
-                        9,
+                        10,
                         glyph ->
                                 boundedSecondary
                                         || ledgerBeamOwns(

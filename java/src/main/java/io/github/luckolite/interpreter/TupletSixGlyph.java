@@ -58,7 +58,7 @@ final class TupletSixGlyph {
                 && lowRows > 0
                 && high / highRows - low / lowRows >= w * .15f
                 && upperThin >= Math.max(2, Math.round(h * .2f))
-                && upperPocket <= 1
+                && upperPocket <= Math.max(1, Math.round(h * .12f))
                 && lowerPocket >= Math.max(3, Math.round(h * .2f))
                 && footWide >= 2;
     }

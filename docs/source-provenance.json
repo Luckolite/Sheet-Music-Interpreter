@@ -101,9 +101,12 @@
     },
     "TupletSixGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
-      "source_sha256": "198b4a0e4a3be7b1db976aa95735a9dc47f5d153940a4f42faaddc4951d0eee8",
+      "source_sha256": "9a1891e6173e11a83daa8f15efe7237131bcb8cf8c10c7bb3377780a229e9777",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "198b4a0e4a3be7b1db976aa95735a9dc47f5d153940a4f42faaddc4951d0eee8"
+      "source_normalized_sha256": "592371cd8e7a88dd90743286e8f1380563286b47ee609c8e02db6ccaf162d421",
+      "standalone_sha256": "7eff51e984278806079eb27918812b657cdbed42759c94fdd4adb8c90ea115cc",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Retain short upper returns in a printed six using a height-scaled pocket bound. Extend fully connected bounded secondary-beam and owned-numeral proof to ten staff gaps. Original hooked-six and tall-rail positive/reject, timing/grid, mirrored/sloped/partial-beam controls; no score-specific rules."
     },
     "ShadedChordHeadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedChordHeadRecovery.java",
@@ -511,11 +514,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "a1c1686102bb50ef2867b0329d91ce39254ad5fb5423ed45831beeae99e24229",
-      "source_normalized_sha256": "8c2fe9d0278a074cadf17bb6e6a26cb0199e47954fbe6a90010335fe5221941c",
-      "review_note": "Shared beamed heads retain a second quarter only with independent opposing raw shafts, a bare flag-free endpoint, and no intervening head owner. Extra events follow original source indices. Numeral-three classification uses its connected component so neighboring disconnected letter ink cannot supply lobes. Original procedural fixtures only; no private score pixels, models, dependencies or wire layouts changed.",
-      "reviewed_source_state": "Reviewed app/public port retaining the existing standalone diagnostics adapter;10404 Java tests,20 app engraving tests,and5 native pages/1352notes passed. Cumulative paired deployment pending.",
-      "standalone_sha256": "cc17623827526c7d75b3dfff0fb19ac6b993f21e70eb2d9c1a51c4b0073c239d",
+      "source_sha256": "ac3d22422a7bf9c4e354897a5a38128a95f5c9b7af74443709bb451e540e7fec",
+      "source_normalized_sha256": "1d3b0688fa191589079f32d6853f5ca061bbbf011d6c5a44c661fa2edd7c4c94",
+      "review_note": "Retain short upper returns in a printed six using a height-scaled pocket bound. Extend fully connected bounded secondary-beam and owned-numeral proof to ten staff gaps. Original hooked-six and tall-rail positive/reject, timing/grid, mirrored/sloped/partial-beam controls; no score-specific rules.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "a32f5c5fddecffd2237e739f0a11735a3f41d4d330fd813438421e833ebf1d26",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },
@@ -1272,12 +1275,12 @@
     },
     "BoundedSecondaryBeam.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoundedSecondaryBeam.java",
-      "source_sha256": "1fa8157acb077fd02286b47920ed4eb80a89a0e8dbf3020fcc1aece5be6d37bd",
-      "source_normalized_sha256": "8c1fdd0297093da97900c48d77c9b9d651501b5e277bc77eadd7811de8362a5f",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "847eab6fcce08fd9ef519855b01fb763a5c6c95f0e9d1b4c74a4278ea25ab52c",
+      "source_normalized_sha256": "2492be2e64c406340eafaa4d584997a79768c47ca72a7c4816f4d502a763eed4",
+      "review_note": "Retain short upper returns in a printed six using a height-scaled pocket bound. Extend fully connected bounded secondary-beam and owned-numeral proof to ten staff gaps. Original hooked-six and tall-rail positive/reject, timing/grid, mirrored/sloped/partial-beam controls; no score-specific rules.",
       "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "2933d994053e28f840d735d06c3773105b677b4898b358e8b371d86f9ae704b3",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "a2939ee7659124f5daa7a953295c60191126347ac16069b1f29046eee0189284",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "FaintHairpinArms.java": {

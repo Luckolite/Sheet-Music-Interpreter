@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Long-stem tuplets retain the complete connected-stem, separate-rail and bounded
+secondary-beam proofs within ten staff gaps. Printed sixes allow a short upper
+hook return proportional to glyph height while retaining the lower-bowl checks.
+
 Compact hollow chords use the same independently printed open-oval proof as
 taller displaced-second stacks before falling back to a two-lobe split.
 
