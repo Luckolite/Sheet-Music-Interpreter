@@ -2269,3 +2269,14 @@ pass. All 10,286 Java tests passed. Paired deployment and whole-library acceptan
 remain pending.
 Paired app source: `09e441f7d931a5dd8012d2dcb3552bc0fbf80398`.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Parallel rails on an integer sampling grid
+
+Additional compact probes use even integer spacing to avoid a rounded column
+inside a blurred stem junction. Their two rails must maintain consistent spacing
+relative to the first probe, preventing an adjacent slur from supplying a second
+beam. Canonical probe behavior is preserved. Seven original controls pass against
+the app implementation, and 1,588 focused checks pass. All 10,293 Java tests
+passed. Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
+Paired deployment and whole-library acceptance remain pending.
+Paired app source: `4a641a287b5436c9ef31fe6c6b4d128f60b157b8`.

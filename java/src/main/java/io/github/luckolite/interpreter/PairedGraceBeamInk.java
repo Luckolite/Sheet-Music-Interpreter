@@ -136,6 +136,21 @@ final class PairedGraceBeamInk {
                                     staffTop, track);
                     if (count == 2) return count;
                 }
+        // Integer-spaced witnesses must also preserve the distance between both rails.
+        if (maximum == 0 && inside == 1.5f && compactProbeSpan(a, b)) {
+            float step = (float) Math.floor(span * .2f) / span;
+            for (float[] columns :
+                    new float[][] {
+                        {step, 2 * step, 3 * step}, {1 - 3 * step, 1 - 2 * step, 1 - step}
+                    })
+                for (float fraction : new float[] {.5f, .75f}) {
+                    int count =
+                            countAtContrast(
+                                    gray, width, height, a, b, gap, fraction, inside, columns,
+                                    staffTop, track, true);
+                    if (count == 2) return count;
+                }
+        }
         // A returning slur can extend one stem beyond its actual beam tip.
         // Retry bounded inward tip positions only for compact ornaments; every
         // accepted position still proves separate parallel cores at three columns.
@@ -184,7 +199,25 @@ final class PairedGraceBeamInk {
             float[] columns,
             float staffTop,
             StaffPitchTrack track) {
+        return countAtContrast(
+                gray, width, height, a, b, gap, fraction, inside, columns, staffTop, track, false);
+    }
+
+    private static int countAtContrast(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float fraction,
+            float inside,
+            float[] columns,
+            float staffTop,
+            StaffPitchTrack track,
+            boolean strictParallel) {
         int wanted = 0;
+        float firstSeparation = Float.NaN;
         float[] previous = null;
         for (float f : columns) {
             int x = Math.round(a[0] + (b[0] - a[0]) * f);
@@ -252,6 +285,15 @@ final class PairedGraceBeamInk {
                 }
             }
             if (coreCount < 2 || coreCount > 3) return 0;
+            if (strictParallel) {
+                if (coreCount != 2) return 0;
+                float separation = cores[1] - cores[0];
+                if (Float.isFinite(firstSeparation)
+                        && Math.abs(separation - firstSeparation) > Math.max(1, gap * .12f))
+                    return 0;
+                if (!Float.isFinite(firstSeparation)) firstSeparation = separation;
+            }
+
             if (wanted != 0 && wanted != coreCount) return 0;
             wanted = coreCount;
             float[] current = cores;

@@ -925,14 +925,14 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "381b3ee3116de4e235ef89f61b971be97883237ca6fbc586993140382ab02336",
-      "reviewed_app_commit": "09e441f7d931a5dd8012d2dcb3552bc0fbf80398",
-      "source_normalized_sha256": "c323411a1bc37e121f7b62f026b4b7bdf3d3bce3076c146331c57fbe35836525",
-      "review_note": "Reviewed compact-beam fallback uses non-overlapping three-pixel probes and stem margins instead of fractional-span cutoff. Existing independently attached stems, separated dark cores and aligned slopes retained. Seven original synthetic controls; no private score pixels or model changes.",
+      "source_sha256": "3af1e6f38a6ad6e73bb382c742b7d6a2eeebf3bdbf565acce8ca29816b8cda4e",
+      "reviewed_app_commit": "4a641a287b5436c9ef31fe6c6b4d128f60b157b8",
+      "source_normalized_sha256": "f04faf3191cf5ead684b2b50f1abe6774062ef123f96e40c2e7a211d235db7ef",
+      "review_note": "Reviewed additional integer-spaced compact probes with stable inter-rail spacing; canonical probes preserved. Rejects divergent slur and single-beam evidence. Seven original analytic regressions; no score pixels, model or platform changes.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "reviewed_source_state": "Committed app source;10286 Java tests and seven original app controls passed. Paired deployment and whole-library acceptance pending.",
+      "reviewed_source_state": "Committed app source;10293 Java tests and seven original app controls passed. PNG/PDF pitch, duration and export smoke passed. Paired deployment and whole-library acceptance pending.",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "standalone_sha256": "b639051072edc8ae25328b3181bc4618d0b45bf2057904f22a14c6d52dec5ee7"
+      "standalone_sha256": "de20065e7a5aabf85c87c931dab4a2dd3fded722fcb1bd960cce3a1693e422d0"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
