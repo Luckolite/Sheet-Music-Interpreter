@@ -16671,10 +16671,12 @@ final class OmrScoreInterpreter {
         // Antialiasing can join a round dot to a nearby tie. Its dark core remains
         // separate; retain the same bounds, shape and engraving-slot checks below.
         if (gray != null && gray.length == width * height)
-            for (Component core : findDarkDotComponents(gray, width, height, head, gap, 70))
-                if (core.area >= gap * gap * .06f
-                        && core.maxX - core.minX + 1 >= gap * .22f
-                        && core.maxY - core.minY + 1 >= gap * .22f) combined.add(core);
+            for (int coreThreshold : new int[] {70, 40})
+                for (Component core :
+                        findDarkDotComponents(gray, width, height, head, gap, coreThreshold))
+                    if (core.area >= gap * gap * .06f
+                            && core.maxX - core.minX + 1 >= gap * .22f
+                            && core.maxY - core.minY + 1 >= gap * .22f) combined.add(core);
         if (gray != null && gray.length == width * height)
             combined.addAll(fadedAugmentationDots(gray, width, height, head, gap));
         if (gray != null

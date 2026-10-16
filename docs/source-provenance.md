@@ -2363,3 +2363,8 @@ Paired app source: c784b9aadd2b8f69747aa1866c7a7e5602abc43e.
 
 Separate thin, returning curves with matching bend direction can jointly explain a small semantic head island. The interpreter rejects that island without suppressing real filled or hollow heads. Printed slur capture clears only proved unretained islands from a segmentation copy, preserving the source and rebinding curves to genuine heads. Original mirrored, hollow-head, stem and mask-preservation fixtures cover the shared proof. Private page replay removes two false heads, restores an incoming tie and rebinds an outer slur; all real note content and rests are preserved.
 Paired app source: cbd253e8e60cb082e9dd3a4ec59da1c6965260f2.
+
+## Dark dot cores beside shaded curves
+
+A second dark-core threshold separates a substantial round augmentation-dot body from lighter connecting curve ink. The existing engraving-slot, size, contrast and ownership checks still apply. Original contact, small-core, continuous-curve and dark-fragment fixtures protect against false dots. Private replay restores one dotted-half duration while preserving every other page field.
+Paired app source: f224e335a4652211fc72167e4dde52d05cd87f85.
