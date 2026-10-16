@@ -20833,6 +20833,7 @@ final class OmrScoreInterpreter {
             List<Staff> staffs) {
         List<DetectedNote> result = new ArrayList<>(source);
         List<DetectedNote> printedGeometry = null;
+        int[] detachedMarks = null;
         for (int currentIndex = 1; currentIndex < result.size(); currentIndex++) {
             DetectedNote current = result.get(currentIndex);
             if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
@@ -20882,6 +20883,46 @@ final class OmrScoreInterpreter {
                             systemBreakTieCandidate(before, after, width)
                                     && hasTieArc(labels, gray, width, height, before, after);
                 }
+            }
+            if (!tied
+                    && previousIndex >= 0
+                    && hasTieArc(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            result.get(previousIndex),
+                            current,
+                            verifiedTieFrame(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    staffs,
+                                    result.get(previousIndex),
+                                    current),
+                            true)) {
+                // Articulations are emitted later; inspect them only for this extra path.
+                if (detachedMarks == null) {
+                    List<NoteArticulationDetector.Anchor> tieAnchors = new ArrayList<>();
+                    for (DetectedNote note : source) {
+                        Staff owner = staffForHead(labels, gray, width, height, staffs, note.head);
+                        tieAnchors.add(
+                                new NoteArticulationDetector.Anchor(
+                                        note.head.centerX,
+                                        note.head.centerY,
+                                        note.staffGap,
+                                        staffs.indexOf(owner),
+                                        owner == null ? null : owner.pitchTrack));
+                    }
+                    detachedMarks =
+                            NoteArticulationDetector.detect(
+                                    labels, gray, width, height, tieAnchors);
+                }
+                int detached = NoteArticulation.STACCATO | NoteArticulation.STACCATISSIMO;
+                tied =
+                        (detachedMarks[previousIndex] & detached) == 0
+                                || (detachedMarks[currentIndex] & detached) == 0;
             }
             if (!tied) continue;
             ScoreNoteEvent event = current.event;
@@ -21313,6 +21354,18 @@ final class OmrScoreInterpreter {
             DetectedNote previous,
             DetectedNote current,
             TieFrame frame) {
+        return hasTieArc(labels, gray, width, height, previous, current, frame, false);
+    }
+
+    private static boolean hasTieArc(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            DetectedNote previous,
+            DetectedNote current,
+            TieFrame frame,
+            boolean extendedShoulders) {
         if (!systemBreakTieCandidate(previous, current, width)
                 && wideSystemTieCandidate(gray, width, height, previous, current)) {
             for (int side : new int[] {-1, 1})
@@ -21387,7 +21440,7 @@ final class OmrScoreInterpreter {
                 return true;
             // Engraved ties may begin below the heads, before their horizontal edges.
             // Recover the returning shoulders instead of testing only the flattened middle.
-            int overlap = Math.round(gap * .6f);
+            int overlap = Math.round(gap * (extendedShoulders ? .85f : .6f));
             int arcLeft = Math.max(Math.round(previous.head.centerX), left - overlap);
             int arcRight = Math.min(Math.round(current.head.centerX), right + overlap);
             if (hasPrintedTieArc(

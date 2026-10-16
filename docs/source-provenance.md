@@ -2099,3 +2099,15 @@ gray contacts. No commercial score pixels, model changes, or dependencies are
 included. Paired desktop deployment and whole-library acceptance remain pending.
 Paired app source: `20e1e3c401a7c3fc3aa1471f67d66206593c6b24`. Java tests: 10,194; Python tests: 582
 (44 skipped); synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Ties with shoulders inside notehead edges
+
+An additional raw-arc search reaches further into the notehead shoulders, bounded
+by their centers, after the existing proof fails. Original asymmetric-shoulder
+behavior remains available. Independently detected detached articulations at both
+endpoints prevent a new tie under a staccato slur. Seven original antialiased
+regressions cover complete arcs, staff phases, reflection, broken arcs, different
+pitches, and slur controls. No commercial score pixels or model changes are
+included. Paired deployment and whole-library acceptance remain pending.
+Paired app source: `3be11619994dce2d55504738c39f4de1576a6a60`. Java tests: 10,201; Python tests: 582
+(44 skipped); synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

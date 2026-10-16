@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "cec50412dc7abeac683226a6208fe7d7edb5d6751d1a5caa3d9ec3d48bf032c8",
-      "review_note": "Reviewed matching single-beam tip ownership: larger partial masks require two real stem owners and a continuous non-bulging band; dark-core fallback allows only narrow outer contact. Sixteen original procedural regressions; no private score assets or model changes.",
-      "source_normalized_sha256": "9921fcddb0e354dd509011e8c8a0b13f1ef70790530f8ed717ed18841102efa0",
+      "source_sha256": "2d14cfad1fdc2c64ebd91f09bd8117efb91788504f0e4ca16427e83f65f25f1b",
+      "review_note": "Reviewed namespace-equivalent additional head-center-bounded tie shoulder search after original proof fails. Lazy full-context detached-articulation evidence rejects newly tied staccato pairs. Seven original antialiased geometry regressions; no private score assets or model changes.",
+      "source_normalized_sha256": "5f176ecdafc96766312acfa5429e0c902c8831c5e4cbfb5b7c3a61616509e985",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "af73238a91656cb6c5146e911bf6976be882963e3f18b96131e8c54ceaf4dfe7",
+      "standalone_sha256": "401ae803f5073e00767c34fa78e7dcaf0432b06b03aadb3d1eeac01cf0eba715",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "20e1e3c401a7c3fc3aa1471f67d66206593c6b24"
+      "reviewed_app_commit": "3be11619994dce2d55504738c39f4de1576a6a60"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
