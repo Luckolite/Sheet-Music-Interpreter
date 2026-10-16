@@ -553,13 +553,13 @@
     },
     "PrintedMeasureRhythmGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
-      "source_sha256": "8067925b17e280aab082c8161548a21358e69c0b260d068abc344de4301883e6",
-      "reviewed_app_commit": "2b90efd1bf6ee33a2dae901b4e25af4bab763a45",
-      "source_normalized_sha256": "5fd155a046381f2f9407cb63fc6f731e6df8cc8fd9454498a546607c3c6c4c0f",
+      "source_sha256": "b5f985a3919df038be7d791ba4ac2c9bc4e803a5946f0fad94314858c60047c0",
+      "reviewed_app_commit": "77c8e3ca3217affaaddcc4a0762cb18298e658f8",
+      "source_normalized_sha256": "9c979d6861e929066973887d206373c8eb95c6ef50e8b4846df192d25ba2cb30",
       "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
-      "review_note": "Equal-count fitting preserves all strictly proved original printed separators when proposed redistribution adds only unsupported interior cuts. Original unequal-width procedural bars cover genuine replacement lines, missing proof, short stems, changed logical counts and input immutability.",
-      "scoped_reviewed_app_commit": "2b90efd1bf6ee33a2dae901b4e25af4bab763a45",
-      "standalone_sha256": "4bdd0c9060b98b0c99c713b431131201409bf0e13f55e64880544e99e3e7f8a5"
+      "review_note": "A fading endpoint raster row requires an adjacent independently proved bilateral rule and monotonic local contrast. Fully proved printed rows reject unsupported count inflation only when every original bar was subdivided. Isolated inferred cuts, genuine extra separators and unproved original separators retain fitted recovery. Original procedural controls only.",
+      "scoped_reviewed_app_commit": "77c8e3ca3217affaaddcc4a0762cb18298e658f8",
+      "standalone_sha256": "99d80e71ee58ac2494a3551714cb056ea90ddaa245732fe91a7af8e686c95cdd"
     },
     "PrintedPageEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",

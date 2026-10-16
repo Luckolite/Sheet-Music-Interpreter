@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Printed barline endpoint checks allow one fading raster row only beside an
+independently proved bilateral staff rule. Count fitting cannot subdivide every
+bar of a fully proved row using unsupported cuts. Isolated inferred separators
+remain eligible for recovery. Original procedural fixtures cover fading fringes,
+stem and head rejection, missing rule support, genuine new separators and isolated
+cuts. No model or wire-layout changes; cumulative deployment remains pending.
+
 Shared filled heads retain independent quarter and beamed voices when opposing
 raw shafts, an unflagged endpoint and exclusive head ownership prove both voices.
 Additional events follow existing source indices. Original procedural controls

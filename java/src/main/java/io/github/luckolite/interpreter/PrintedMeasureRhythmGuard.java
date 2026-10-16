@@ -34,7 +34,7 @@ final class PrintedMeasureRhythmGuard {
         return preserveCompleteRuns(raw, aligned, notes, gray, width, height);
     }
 
-    /** Equal-count fitting cannot trade verified separators for unsupported interior cuts. */
+    /** Count fitting cannot replace a fully proved printed row with unsupported interior cuts. */
     static List<MeasureRegion> preserveCountNeutralRows(
             List<MeasureRegion> raw,
             List<MeasureRegion> fitted,
@@ -55,12 +55,16 @@ final class PrintedMeasureRhythmGuard {
                             .filter(r -> sameRow(anchor, r))
                             .sorted(Comparator.comparingDouble(MeasureRegion::left))
                             .toList();
-            if (proposed.size() != original.size()
+            if (proposed.size() < original.size()
                     || Math.abs(proposed.get(0).left() - anchor.left()) > .006f
                     || Math.abs(
                                     proposed.get(proposed.size() - 1).right()
                                             - original.get(original.size() - 1).right())
                             > .006f) continue;
+            // A row-wide count inflation must subdivide every original bar. One extra cut
+            // may repair a genuinely missed separator and requires stronger evidence.
+            if (proposed.size() > original.size()
+                    && original.stream().anyMatch(r -> fragments(r, proposed).size() < 2)) continue;
             var row =
                     new MeasureRegion(
                             anchor.left(),
@@ -566,7 +570,10 @@ final class PrintedMeasureRhythmGuard {
                         if (verifiedRuleBand(gray, width, height, x, edge, y, staff.gap()))
                             continue;
                         if ((edge == a && dy < -1) || (edge == b && dy > 1))
-                            if ((gray[y * width + x] & 255) < 180) clean = false;
+                            if ((gray[y * width + x] & 255) < 180
+                                    && !verifiedRuleFringe(
+                                            gray, width, height, x, x, edge, y, staff.gap()))
+                                clean = false;
                         // Ignore the printed rule itself; a head spreads laterally off that rule.
                         if (Math.abs(dy) <= 1) continue;
                         int reach = Math.max(3, Math.round(staff.gap() * .45f));
@@ -574,6 +581,8 @@ final class PrintedMeasureRhythmGuard {
                             if (x + dx >= 0
                                     && x + dx < width
                                     && (gray[y * width + x + dx] & 255) < 180
+                                    && !verifiedRuleFringe(
+                                            gray, width, height, x, x + dx, edge, y, staff.gap())
                                     && !ThinBoundaryArc.proved(
                                             gray,
                                             width,
@@ -622,5 +631,31 @@ final class PrintedMeasureRhythmGuard {
             }
         }
         return true;
+    }
+
+    /** One fading raster row may border a separately proved horizontal rule. */
+    private static boolean verifiedRuleFringe(
+            byte[] gray,
+            int width,
+            int height,
+            int boundaryX,
+            int sampleX,
+            int edge,
+            int y,
+            float gap) {
+        int distance = Math.abs(y - edge);
+        if (distance < 1 || distance > Math.max(1, Math.round(gap * .22f)) + 1) return false;
+        int toward = y + (edge > y ? 1 : -1), away = y + (edge > y ? -1 : 1);
+        if (toward < 0
+                || away < 0
+                || toward >= height
+                || away >= height
+                || sampleX < 0
+                || sampleX >= width) return false;
+        int ink = gray[y * width + sampleX] & 255, core = gray[toward * width + sampleX] & 255;
+        return core < 170
+                && ink >= core + 24
+                && (gray[away * width + sampleX] & 255) >= ink
+                && verifiedRuleBand(gray, width, height, boundaryX, toward, toward, gap);
     }
 }
