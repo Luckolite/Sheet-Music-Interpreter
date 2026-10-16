@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d6d22fac6c6643a47e434a7f51be8ba460e59307768103186288d6e9412e9a8e",
-      "review_note": "Reviewed global whole-head opening geometry at two ink thresholds, preserving filled/half heads and separate voices; namespace-equivalent helper/caller. Ten original font/layout tests using existing SIL-OFL Bravura, no score pixels.",
-      "source_normalized_sha256": "d31eb93ab323ca67ea364768ae643baf0203dc9ebc5b0376a6039152e8b48d77",
+      "source_sha256": "3ce13577c53a213f6751f1ebdfb4e73c1c7fc58fdde86fba7607f4494cf70369",
+      "review_note": "Reviewed namespace-equivalent whole-head recovery anchored to small semantic fragments; closed opening and broad bilateral raw flanks reject flag pockets. Nine original Bravura regressions, no private score assets.",
+      "source_normalized_sha256": "143d65f9457dd0c51bcddb5b8d88fd50746842d7d5c7e6940a9501f5d182e07a",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "ec4336d20050d38189514b757dadb3da776a148c213d2810c29cac7c880e16b5",
+      "standalone_sha256": "9021abe58d04a2be9431c9bce33a4b096c44ee09d26d2441d6b7985d11c97cf7",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "300a51a569c4f087ad09077f8c786748984e1557"
+      "reviewed_app_commit": "5905b3d4a12b963e967acae7c6f02fe3e273194e"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -3268,6 +3268,15 @@
       "standalone_sha256": "cb2dc85d6b0a6a1cd17cd1edf007cd5a8866b824d4dd0f68860681e46eda1b46",
       "reviewed_app_commit": "300a51a569c4f087ad09077f8c786748984e1557",
       "review_note": "Reviewed global whole-head opening geometry at two ink thresholds, preserving filled/half heads and separate voices; namespace-equivalent helper/caller. Ten original font/layout tests using existing SIL-OFL Bravura, no score pixels.",
+      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending."
+    },
+    "SeededWholeHeadRecovery.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeededWholeHeadRecovery.java",
+      "source_sha256": "d0e5bd40966d39acc701f432c1b6396d740577201579c1d32d980a473fd1dbd7",
+      "source_normalized_sha256": "6210b798506c6c80c9375d5d72ce3984444a4d1f948aaad25240ce45288e82f5",
+      "standalone_sha256": "e91f1537f608e65aa228b28b653746450c0fb7fadd18c39f385e4c4feef2ad67",
+      "reviewed_app_commit": "5905b3d4a12b963e967acae7c6f02fe3e273194e",
+      "review_note": "Reviewed namespace-equivalent whole-head recovery anchored to small semantic fragments; closed opening and broad bilateral raw flanks reject flag pockets. Nine original Bravura regressions, no private score assets.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending."
     }
   },

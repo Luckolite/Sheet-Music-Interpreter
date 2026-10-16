@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Small surviving head-mask fragments can recover a complete printed whole oval
+only with a closed whole-note opening and broad dark ink on both sides. Existing
+heads suppress duplicates; flag pockets, unsupported raw ovals and half openings
+remain excluded. Nine original Bravura controls cover voice preservation and
+input immutability. No weights or format change; paired deployment and
+whole-library acceptance remain pending.
+
 Whole-note openings retain their written duration when another voice's stem
 crosses them. Enclosed-pocket geometry must agree at two brightness thresholds;
 ambiguous openings keep the existing classification. Original Bravura layouts

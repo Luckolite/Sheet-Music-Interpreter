@@ -161,6 +161,44 @@ final class OmrScoreInterpreter {
                 second--;
             }
         }
+        for (Component seed : List.copyOf(rawHeadComponents)) {
+            Staff owner = nearestHeadStaff(staffs, seed.centerY);
+            if (owner == null
+                    || seed.area < 3
+                    || seed.area > owner.gap * owner.gap * .2f
+                    || seed.maxX - seed.minX + 1 > owner.gap * .65f
+                    || seed.maxY - seed.minY + 1 > owner.gap * .65f) continue;
+            var recovered =
+                    SeededWholeHeadRecovery.recover(
+                            gray, width, height, owner.gap, seed.centerX, seed.centerY);
+            if (recovered == null) continue;
+            if (rawHeadComponents.stream()
+                    .anyMatch(
+                            existing ->
+                                    existing.area >= owner.gap * owner.gap * .3f
+                                            && Math.abs(existing.centerX - recovered.x())
+                                                    < owner.gap * .8f
+                                            && Math.abs(existing.centerY - recovered.y())
+                                                    < owner.gap * .65f)) continue;
+            rawHeadComponents.removeIf(
+                    existing ->
+                            existing.area < owner.gap * owner.gap * .2f
+                                    && existing.centerX >= recovered.left()
+                                    && existing.centerX <= recovered.right()
+                                    && existing.centerY >= recovered.top()
+                                    && existing.centerY <= recovered.bottom());
+            Component head =
+                    new Component(
+                            recovered.area(),
+                            recovered.left(),
+                            recovered.right(),
+                            recovered.top(),
+                            recovered.bottom(),
+                            recovered.x(),
+                            recovered.y());
+            rawHeadComponents.add(head);
+            recoveredFadedHeads.add(head);
+        }
         for (Staff staff : staffs)
             for (FadedNoteheadRecovery.Head recovered :
                     FadedNoteheadRecovery.find(
