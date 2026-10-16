@@ -76,6 +76,12 @@ final class GraceConnectorInk {
                 for (int dy = -1; dy <= 1; dy++)
                     for (int dx = -1; dx <= 1; dx++) {
                         int xx = x + dx, yy = y + dy;
+                        if (dy != 0)
+                            while (xx >= 0 && xx < w && yy >= 0 && yy < h && rules[yy]) {
+                                xx += dx;
+                                yy += dy;
+                            }
+
                         if (xx < 0 || xx >= w || yy < 0 || yy >= h || rules[yy]) continue;
                         int next = yy * w + xx;
                         if (!seen[next]

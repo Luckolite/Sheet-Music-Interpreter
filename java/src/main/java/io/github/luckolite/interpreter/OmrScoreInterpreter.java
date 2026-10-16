@@ -9881,6 +9881,25 @@ final class OmrScoreInterpreter {
         return result;
     }
 
+
+    private static boolean ownedGraceHookAcrossContrasts(
+            byte[] gray, int width, int height, Component head, float gap, int threshold) {
+        for (float fraction : new float[] {1f, .85f, .7f, .55f, .4f, .25f})
+            if (GraceConnectorInk.isHook(
+                    gray,
+                    width,
+                    height,
+                    head.minX,
+                    head.minY,
+                    head.maxX,
+                    head.maxY,
+                    head.centerX,
+                    head.centerY,
+                    head.area,
+                    gap,
+                    Math.round(threshold * fraction))) return true;
+        return false;
+    }
     /** The small curved connector below a grace and its principal note has no
      * independent stem. Its unequal endpoints are not the geometry of a tie. */
     private static List<Component> graceSlurHeads(
@@ -9973,7 +9992,9 @@ final class OmrScoreInterpreter {
                                     head.centerY,
                                     head.area,
                                     g,
-                                    Math.min(65, Math.round(threshold * .45f))))) result.add(head);
+                                    Math.min(65, Math.round(threshold * .45f)))
+                            || ownedGraceHookAcrossContrasts(
+                                    gray, width, height, head, g, threshold))) result.add(head);
         }
         return result;
     }
@@ -16030,6 +16051,71 @@ final class OmrScoreInterpreter {
         return true;
     }
 
+
+    private static boolean graceOwnedDot(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Component dot,
+            float gap,
+            List<Component> heads) {
+        if (gray == null) return false;
+        for (Component other : heads) {
+            if (other != head
+                    && other.area > dot.area * 1.25f
+                    && Math.abs(other.centerX - dot.centerX) < gap * .3f
+                    && Math.abs(other.centerY - dot.centerY) < gap * .3f
+                    && attachedRawStem(gray, width, height, other, gap * .65f) != null) return true;
+        }
+        if (head.maxX - head.minX + 1 > Math.ceil(gap * .95f)
+                || head.maxY - head.minY + 1 > Math.ceil(gap * .78f)
+                || head.area > Math.ceil(gap * .95f) * Math.ceil(gap * .78f) * .8f) return false;
+        int[] stem = attachedRawStem(gray, width, height, head, gap * .65f);
+        if (stem == null
+                || stem[2] != -1
+                || head.centerY - stem[1] > gap * 3.3f
+                || SlashedGraceFlagInk.count(
+                                gray, width, height, head.centerX, head.centerY, stem[0], gap)
+                        != 1) return false;
+        boolean principal = false;
+        for (Component other : heads) {
+            float dx = other.centerX - head.centerX;
+            if (other != head
+                    && dx >= gap * .65f
+                    && dx <= gap * 3.2f
+                    && Math.abs(other.centerY - head.centerY) <= gap * 2.5f
+                    && other.area > head.area * 1.65f
+                    && other.maxX - other.minX + 1 > gap * 1.05f
+                    && dot.centerX > head.centerX
+                    && dot.centerX < other.centerX
+                    && attachedRawStem(gray, width, height, other, gap * .65f) != null) {
+                principal = true;
+                break;
+            }
+        }
+        if (!principal) return false;
+        for (int threshold : new int[] {65, 90, 115})
+            if (AttachedGraceDotInk.matches(
+                    gray, width, height, head.minX, head.minY, head.maxX, head.maxY, head.area,
+                    dot.minX, dot.minY, dot.maxX, dot.maxY, dot.area, gap, threshold)) return true;
+
+        for (int threshold : new int[] {165, 140, 115, 90, 65, 40})
+            if (GraceConnectorInk.isHook(
+                    gray,
+                    width,
+                    height,
+                    dot.minX,
+                    dot.minY,
+                    dot.maxX,
+                    dot.maxY,
+                    dot.centerX,
+                    dot.centerY,
+                    dot.area,
+                    gap,
+                    threshold)) return true;
+        return false;
+    }
     private static int countAugmentationDots(
             List<Component> candidates,
             Component head,
@@ -16208,7 +16294,9 @@ final class OmrScoreInterpreter {
                     duplicate = true;
                     break;
                 }
-            if (!duplicate) aligned.add(dot);
+            if (!duplicate
+                    && !graceOwnedDot(gray, width, height, head, dot, gap, neighboringHeads))
+                aligned.add(dot);
         }
         aligned.sort(Comparator.comparingDouble(Component::centerX));
         if (aligned.isEmpty()) return 0;

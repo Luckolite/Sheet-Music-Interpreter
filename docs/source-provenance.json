@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "20f5a3c735c1a8eadcb7a53e6fd7b4656fd41fed6e305e836265daa032639473",
-      "review_note": "Remove stemless segmentation islands only with full-size independently stemmed anchors on both sides above the candidate and an existing returning raw slur contour. Retain source ink, actual notes and index-remapped source spans. Original Apache-2.0 synthetic geometry derived from repository grace-slur tests; no private pixels, dependency, model or format changes.",
-      "source_normalized_sha256": "0a507981abcfc7872e1d52d88faf6afb4500dabaa06acc8e275978ce8c66f4ef",
+      "source_sha256": "1d5d43b030c185ebfe534f97d5fe24fbd9842ea900b6a3dbc24429498c2fe582",
+      "review_note": "Independently stemmed neighboring head ink cannot become an augmentation dot. A verified short slashed grace with a larger stemmed principal may reject its owned attached stroke or curved connector. Trace across only thin continuous printed rules; isolated dots and broad bands remain protected. Existing grace-slur ownership admits a bounded contrast sweep. Original Apache-2.0 synthetic fixtures; no private pixels, model, dependency or format changes.",
+      "source_normalized_sha256": "eccc128e5d3fe210a9c9cd20f235af35436d6d69bcc9e0f521a9d39cdf8cea8c",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Token-identical tested integration;10354 Java tests,8 original controls,10 native pages. Cumulative paired deployment pending.",
-      "standalone_sha256": "1317ac14d5cea2ec969b4c882409d6b4963f698b39d91019a91f30907b528e86",
+      "reviewed_source_state": "Token-identical integration;10375 Java tests,21 original controls,11 native pages,24 private timing probes. Cumulative paired deployment pending.",
+      "standalone_sha256": "8a1c9e25c5f15477f49903c8ff5bf527523fc00ea8340cb07dacd4d30823b945",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "0c3af584fd9380d87c6d19b0e04ad45e4d634d5d"
+      "reviewed_app_commit": "e075f4122742ccbe717ee18d8497ca5c603ef689"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -855,9 +855,12 @@
     },
     "GraceConnectorInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GraceConnectorInk.java",
-      "source_sha256": "7a9af24c26f00e382f804d3cc2f9482a23403743be65c53b231d588d6740ba5e",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "7a9af24c26f00e382f804d3cc2f9482a23403743be65c53b231d588d6740ba5e"
+      "source_sha256": "de6f7b397fc91c11d0bbcccfdcae7fda49f29c9077904fb45a91cabcba6eb8fb",
+      "reviewed_app_commit": "e075f4122742ccbe717ee18d8497ca5c603ef689",
+      "source_normalized_sha256": "b0a67f1316b9a30e1480ba78b2503ac103721cd3a4229a9e88e039a3674322a5",
+      "standalone_sha256": "3905ee6f367db04ec1952bd770725c1b63630148134135dd59823da2471ca40e",
+      "reviewed_source_state": "Token-identical integration;10375 Java tests,21 original controls,11 native pages,24 private timing probes. Cumulative paired deployment pending.",
+      "review_note": "Independently stemmed neighboring head ink cannot become an augmentation dot. A verified short slashed grace with a larger stemmed principal may reject its owned attached stroke or curved connector. Trace across only thin continuous printed rules; isolated dots and broad bands remain protected. Existing grace-slur ownership admits a bounded contrast sweep. Original Apache-2.0 synthetic fixtures; no private pixels, model, dependency or format changes."
     },
     "HandwrittenTwoHeadInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HandwrittenTwoHeadInk.java",
@@ -3302,6 +3305,15 @@
       "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
       "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
       "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8"
+    },
+    "AttachedGraceDotInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/AttachedGraceDotInk.java",
+      "source_sha256": "8a86fac1c4903ad9c7e7dbf13f88e64727365ba70fb48c89a519ff97eecd02ca",
+      "source_normalized_sha256": "104c004d1840bf1b96b030d1cb303d94db4c43fa9869e086662da3fb9c4a4cbb",
+      "standalone_sha256": "b90f85cf1360c1f32d6361c021ea689abb18dc1f691631c1278b26aae08b4906",
+      "reviewed_source_state": "Token-identical integration;10375 Java tests,21 original controls,11 native pages,24 private timing probes. Cumulative paired deployment pending.",
+      "review_note": "Independently stemmed neighboring head ink cannot become an augmentation dot. A verified short slashed grace with a larger stemmed principal may reject its owned attached stroke or curved connector. Trace across only thin continuous printed rules; isolated dots and broad bands remain protected. Existing grace-slur ownership admits a bounded contrast sweep. Original Apache-2.0 synthetic fixtures; no private pixels, model, dependency or format changes.",
+      "reviewed_app_commit": "e075f4122742ccbe717ee18d8497ca5c603ef689"
     }
   },
   "interpreter_speedup_review": {
