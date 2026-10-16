@@ -2383,3 +2383,8 @@ Paired app source: ed7d208f5712a127c45fe71bcf53920b9abf2f0c.
 
 Dark-core recovery now checks the ink distribution along its principal axes. A diagonal fragment can have square bounds yet remain too elongated to be a dot. This rejects a false augmentation dot in slide ink while retaining round and modestly elliptical cores and the existing lighter-curve contact recovery. Six original mirrored, genuine-core and pixel-preservation fixtures cover the change.
 Paired app source: f05817fd55f5332aecbd7b4eb75fcf708d289734.
+
+## Staff bands crossing flag roots
+
+A staff line can hide enough of an eighth-note flag root to leave only one visible row in the normal sampling distance. Recognition now compensates for a bounded number of proved staff rows while still requiring visible root and hook evidence. Original mirrored hooks, rule-only and detached-hook controls preserve the distinction. Private replay restores one eighth note and preserves all other page fields.
+Paired app source: b830290c97f21943a5247a865bd07072550bab76.

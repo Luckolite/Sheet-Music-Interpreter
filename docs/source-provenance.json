@@ -377,15 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f4efa23a0912c83ae5aa9a54c2a8ab549de7425a4fc28a717cca7dcbc3cfe85c",
-      "review_note": "Require round principal-axis ink distribution for recovered dark dot cores, rejecting diagonal curve fragments even when their bounding boxes are square. Original mirrored fragments, round and elliptical cores, and pixel-preservation controls.",
-      "source_normalized_sha256": "950409334839a55ede4499fc7ea51f845ad3ecb33294d5fa1ce4df23db732590",
+      "source_sha256": "446ea8c12f5b95a969709f27d00a9751b639941656d73f088cc75f6bd93ee8a3",
+      "review_note": "Compensate the flag-root sampling distance for a bounded staff-rule occlusion while retaining visible-root, hook, bulge and detached-curve checks. Original mirrored rooted and detached-hook controls.",
+      "source_normalized_sha256": "5bbb3eedce635b27d03e74bc89ca87b891471524b4a6ee5841e1285fec0353ee",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; 10476 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "405790d557e956b35cccc400569ff1eb5e1e7c52bd1da638f4d539a4e142dace",
+      "reviewed_source_state": "Committed source; 10481 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
+      "standalone_sha256": "13ea6f859785f833baffb3e13f169953da3832a03ef8380d63e9dffef8ba08af",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "f05817fd55f5332aecbd7b4eb75fcf708d289734",
-      "scoped_reviewed_app_commit": "f05817fd55f5332aecbd7b4eb75fcf708d289734"
+      "reviewed_app_commit": "b830290c97f21943a5247a865bd07072550bab76",
+      "scoped_reviewed_app_commit": "b830290c97f21943a5247a865bd07072550bab76"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

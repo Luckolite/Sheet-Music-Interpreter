@@ -21203,6 +21203,15 @@ final class OmrScoreInterpreter {
         // endpoint to the other side. A flag is rooted at that endpoint.
         if (curvePastStemEnd(gray, width, height, stemX, end, gap, upward, flagThreshold))
             return false;
+        // A staff band can hide the hook's root; compensate only for that narrow occlusion.
+        float rootDistance = gap * 1.15f;
+        int coveredRows = 0;
+        for (int step = 0; step <= Math.round(rootDistance); step++) {
+            int y = end + (upward ? step : -step);
+            if (y >= 0 && y < height
+                    && rawRuleBeyondFlag(gray, width, y, stemX, gap, flagThreshold)) coveredRows++;
+        }
+        rootDistance += Math.min(coveredRows, Math.round(gap * .30f));
         int rows = 0, nearEnd = 0, bulge = 0, exterior = 0, rootRows = 0;
         for (int y = top; y <= bottom; y++) {
             if (Math.abs(y - head.centerY) < gap * .65f) continue;
@@ -21235,13 +21244,13 @@ final class OmrScoreInterpreter {
                 continue;
             }
             // A rule fringe at the tip is not independent evidence of a flag root.
-            if (Math.abs(y - end) <= gap * 1.15f
+            if (Math.abs(y - end) <= rootDistance
                     && minX - stemX <= gap * .5f
                     && (Math.abs(y - end) > gap * .1f
                             || !FlagRootStaffRule.matches(
                                     gray, width, height, y, stemX, gap, flagThreshold))) rootRows++;
             rows++;
-            if (Math.abs(y - end) <= gap * 1.15f) nearEnd++;
+            if (Math.abs(y - end) <= rootDistance) nearEnd++;
             if (maxX - stemX >= gap * .55f) bulge++;
             if (maxX >= right - 1) exterior++;
         }
