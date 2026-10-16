@@ -488,13 +488,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "59d41db2c536df2f76b2d32423cf23723e3c23a806e970d2e51fa81ec4b916af",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "source_normalized_sha256": "e9cfeb9976dd955bbf845c22103f1adc20f27cb3569c5cd96ddef1c2b6b0b204",
+      "source_sha256": "4358056c5b6e4b56c77623d96701e54f14426e48da04f684a9beeffa2428f6df",
+      "review_note": "Require five locally supported staff rules before rechecking quarter-rest contour. Dark-core recovery requires both contrast levels and valid outer height. A held whole plus independently printed upper moving stems proves trailing raised-rest placement. Original procedural/Bravura fixtures; no private score pixels, models, dependencies or format changes.",
+      "source_normalized_sha256": "4358056c5b6e4b56c77623d96701e54f14426e48da04f684a9beeffa2428f6df",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
+      "reviewed_source_state": "Token-identical app/public integration;10388 Java tests and13 original regressions;4 native pages/1388notes. Cumulative paired deployment pending.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "bd3fe9aea754c4dfea6f073a6bf17eaf315361f5acc847e621e205ed66b4dfef",
+      "standalone_sha256": "7c97bdec7dc8ccb96a919f85ca7cc0013ac4f697ec7caa5450322a720f0153fb",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "TempoChangeDetector.java": {

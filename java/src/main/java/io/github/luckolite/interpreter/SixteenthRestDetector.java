@@ -2262,6 +2262,9 @@ final class SixteenthRestDetector {
                         heldBelow = true;
                         break;
                     }
+                if (!heldBelow && quarter)
+                    heldBelow = raisedQuarterAfterHeldVoice(
+                            gray, width, height, region, notes, m, staff, left, right, minY, maxY, gap);
                 if (!heldBelow) continue;
             }
             if (lowered && !half && !whole) {
@@ -2922,6 +2925,74 @@ final class SixteenthRestDetector {
         return movingVoiceStem(gray, width, height, region, note, gap, true);
     }
 
+    /** Printed upper stems connect a moving voice from a held whole note to its raised rest. */
+    private static boolean raisedQuarterAfterHeldVoice(
+            byte[] gray,
+            int width,
+            int height,
+            MeasureRegion region,
+            List<ScoreNoteEvent> notes,
+            int measure,
+            Staff staff,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            float gap) {
+        for (ScoreNoteEvent held : notes) {
+            if (held.measureIndex() != measure
+                    || held.staffIndex() != staff.index()
+                    || held.staffCount() != staff.count()
+                    || held.crossStaffBeam()
+                    || held.beamCount() != 0
+                    || held.unbeamedDurationBeats() < 4
+                    || (held.articulations() & NoteOrnament.GRACE) != 0) continue;
+            float
+                    hx =
+                            (region.left()
+                                            + held.positionInMeasure()
+                                                    * (region.right() - region.left()))
+                                    * width,
+                    hy = held.pageY() * height;
+            if (hx > left - gap * 2
+                    || left - hx > gap * 36
+                    || hy < maxY + gap * .4f
+                    || hy > maxY + gap * 4) continue;
+            boolean onset = false, tail = false;
+            int moving = 0;
+            float lastX = -100000;
+            for (ScoreNoteEvent n : notes) {
+                if (n.measureIndex() != measure
+                        || n.staffIndex() != staff.index()
+                        || n.staffCount() != staff.count()
+                        || n.crossStaffBeam()
+                        || n.beamCount() < 1
+                        || n.beamCount() > 3
+                        || (n.articulations() & NoteOrnament.GRACE) != 0) continue;
+                float
+                        x =
+                                (region.left()
+                                                + n.positionInMeasure()
+                                                        * (region.right() - region.left()))
+                                        * width,
+                        y = n.pageY() * height;
+                if (x < hx - gap
+                        || x >= left - gap * .4f
+                        || y > hy - gap * .4f
+                        || y < minY - gap
+                        || PrintedStemDirection.detect(gray, width, height, x, y, gap) != 1)
+                    continue;
+                if (Math.abs(x - lastX) < gap * .5f) continue;
+                moving++;
+                lastX = x;
+                onset |= Math.abs(x - hx) <= gap;
+                tail |= left - x <= gap * 3;
+            }
+            if (moving >= 2 && onset && tail) return true;
+        }
+        return false;
+    }
+
     /** A full attached beam independently identifies a moving voice below a separate rest. */
     private static boolean connectedUpStemVoice(
             byte[] gray,
@@ -3249,6 +3320,86 @@ final class SixteenthRestDetector {
 
     /** Quarter rests have a narrow zigzag above a left-facing lower hook. */
     private static boolean quarterRest(
+            byte[] gray,
+            int width,
+            Staff staff,
+            int top,
+            boolean[] line,
+            int left,
+            int right,
+            int minY,
+            int maxY) {
+        if (quarterRestMasked(gray, width, staff, top, line, left, right, minY, maxY)) return true;
+        float gap = staff.gap();
+        int height = gray.length / width, margin = Math.max(4, Math.round(gap * 2));
+        if (left - margin < 0 || right + margin >= width) return false;
+        boolean[] local = new boolean[line.length];
+        for (int rule = 0; rule < 5; rule++) {
+            float expected = staff.top() + rule * gap;
+            boolean found = false;
+            for (int y = Math.max(0, (int) Math.floor(expected - gap * .35f));
+                    y <= Math.min(height - 1, (int) Math.ceil(expected + gap * .35f));
+                    y++) {
+                int ln = 0, rn = 0;
+                for (int x = left - margin; x < left; x++)
+                    if ((gray[y * width + x] & 255) < 170) ln++;
+                for (int x = right + 1; x <= right + margin; x++)
+                    if ((gray[y * width + x] & 255) < 170) rn++;
+                if (ln >= margin * .8f && rn >= margin * .8f) {
+                    found = true;
+                    if (y >= top && y - top < local.length) local[y - top] = true;
+                }
+            }
+            if (!found) return false;
+        }
+        if (quarterRestMasked(gray, width, staff, top, local, left, right, minY, maxY)) return true;
+        // Ownership uses the outer bounds: a trimmed core cannot authorize an oversized glyph.
+        if (maxY - minY + 1 > gap * 3.6f) return false;
+        int cw = right - left + 1 + 2 * margin, ch = line.length;
+        byte[] core = new byte[cw * ch];
+        int accepted = 0;
+        for (int threshold : new int[] {115, 90}) {
+            boolean[] coreRules = new boolean[ch];
+            int lo = ch, hi = -1;
+            for (int y = 0; y < ch; y++) {
+                int ln = 0, rn = 0;
+                for (int x = 0; x < cw; x++) {
+                    int value = gray[(y + top) * width + left - margin + x] & 255;
+                    core[y * cw + x] = (byte) (value < threshold ? value : 255);
+                    if (value < threshold) {
+                        if (x < margin) ln++;
+                        if (x >= cw - margin) rn++;
+                    }
+                }
+                coreRules[y] = ln >= margin * .8f && rn >= margin * .8f;
+                if (!coreRules[y] && y + top >= minY && y + top <= maxY)
+                    for (int x = margin; x < cw - margin; x++)
+                        if ((core[y * cw + x] & 255) < 170) {
+                            lo = Math.min(lo, y);
+                            hi = Math.max(hi, y);
+                        }
+            }
+            if (lo <= hi
+                    && quarterRestMasked(
+                            core,
+                            cw,
+                            new Staff(
+                                    staff.top() - top,
+                                    staff.bottom() - top,
+                                    gap,
+                                    staff.index(),
+                                    staff.count()),
+                            0,
+                            coreRules,
+                            margin,
+                            cw - margin - 1,
+                            lo,
+                            hi)) accepted++;
+        }
+        return accepted == 2;
+    }
+
+    private static boolean quarterRestMasked(
             byte[] gray,
             int width,
             Staff staff,
