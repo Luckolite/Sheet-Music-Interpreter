@@ -7216,6 +7216,13 @@ final class OmrScoreInterpreter {
                 result.addAll(hollow);
                 continue;
             }
+            // Compact displaced hollow chords need the same open-oval proof as taller stacks.
+            List<Component> displacedHollow =
+                    splitHollowSecondChord(labels, gray, width, height, component, staff, 0);
+            if (!displacedHollow.isEmpty()) {
+                result.addAll(displacedHollow);
+                continue;
+            }
             if (staff == null
                     || componentHeight < staff.gap * 1.45f
                     || componentHeight > staff.gap * 3.2f) {

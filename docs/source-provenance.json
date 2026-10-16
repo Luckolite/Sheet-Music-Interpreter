@@ -378,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "fa82c512d29c889382223335c9ce772187326d0f5c51369f481fe19deb8fbb41",
-      "review_note": "Split stemless whole-note second beside a vertical open-head column only with independent printed open-center proof. Preserve whole-chord dot anchor during rest exclusion. Original mirrored/enlarged/rest-present/solid and per-head closed-center/white-mask/pixel-preservation controls.",
-      "source_normalized_sha256": "1347123b01d8bbfcf090ccddd949df7e9335e409ae8fd8eefd3be3872a83debd",
+      "source_sha256": "1f24da6d33d2d257aac5f54d8146a985895cdda5409fbbcd4ce83932a1db7aa3",
+      "review_note": "Apply independently printed hollow-second chord proof to compact stacks before the two-lobe fallback. Original pixel-derived compact triad, filled/missing/white-mask/pixel-preservation and stem-owned dot/rest controls.",
+      "source_normalized_sha256": "599378e08be7275c3d29b8745dc70ca32ed8156750a0de4e2213ea859bf3d21d",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed source; full validation and paired deployment pending",
-      "standalone_sha256": "ff7fda34f28106a103eaeb23ded131f02e5cfc2b276dc92468fe830733ecc9d5",
+      "standalone_sha256": "ec9c5bfdcb1c2ee6f82bd2b9e868b3dc949434aa4364f42688760cf7dca31d6c",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "7ab5675f890fc35bfb691a3852bba73e6e48f426",
-      "scoped_reviewed_app_commit": "7ab5675f890fc35bfb691a3852bba73e6e48f426"
+      "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
+      "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

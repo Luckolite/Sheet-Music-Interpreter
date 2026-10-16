@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Compact hollow chords use the same independently printed open-oval proof as
+taller displaced-second stacks before falling back to a two-lobe split.
+
 Touching whole-note columns with a displaced second require independently printed
 open centers for every recovered head. Whole-chord dot positions remain available
 when rest exclusion revalidates their durations.
