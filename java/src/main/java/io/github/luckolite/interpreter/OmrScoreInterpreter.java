@@ -11655,9 +11655,141 @@ final class OmrScoreInterpreter {
                                 Math.max(1, Math.round(gap * .65f * .16f)),
                                 inkThreshold)
                         != null) return false;
-        return rawSlurBowl(gray, width, height, head, gap);
+        return rawSlurBowl(gray, width, height, head, gap)
+                || rawNestedCurves(gray, width, height, head, gap);
     }
 
+    /** Remove only independently proved, unretained nested-curve islands from a capture copy. */
+    static byte[] printedSlurLabels(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<? extends PrintedSlurOwners.Location> retained) {
+        if (labels == null
+                || gray == null
+                || labels.length != (long) width * height
+                || gray.length != labels.length) return labels;
+        var staffs = findStaffs(labels, gray, width, height, measures);
+        var components = findComponents(labels, width, height, OmrMeasurePostProcessor.NOTEHEAD);
+        var rejected = new ArrayList<Component>();
+        for (var head : components) {
+            var staff = nearestHeadStaff(staffs, head.centerY);
+            if (staff == null) continue;
+            float gap = staff.gap;
+            if (head.maxX - head.minX + 1 > gap * 1.2f
+                    || head.maxY - head.minY + 1 > gap * .95f
+                    || head.area > gap * gap * .5f) continue;
+            boolean owned = false;
+            for (var note : retained)
+                if (Math.abs(note.x() - head.centerX) <= gap * .8f
+                        && Math.abs(note.y() - head.centerY) <= gap * .65f) {
+                    owned = true;
+                    break;
+                }
+            if (owned || attachedRawStem(gray, width, height, head, gap * .65f) != null) continue;
+            if (rawNestedCurves(gray, width, height, head, gap)) rejected.add(head);
+        }
+        var protectedHeads = new ArrayList<Component>(components);
+        protectedHeads.removeAll(rejected);
+        return tieLabelsWithoutSlurHeads(labels, width, rejected, protectedHeads);
+    }
+    /** Two separate thin curves can be merged into one semantic head island. */
+    private static boolean rawNestedCurves(
+            byte[] gray, int width, int height, Component head, float gap) {
+        int threshold = slurInkThreshold(gray, width, height, head, gap);
+        int left = Math.max(0, Math.round(head.centerX - gap * 8)),
+                right = Math.min(width - 1, Math.round(head.centerX + gap * 8));
+        int top = Math.max(0, Math.round(head.centerY - gap * 3)),
+                bottom = Math.min(height - 1, Math.round(head.centerY + gap * 3));
+        int w = right - left + 1, h = bottom - top + 1;
+        boolean[] rules = new boolean[h];
+        for (int y = 0; y < h; y++) {
+            int n = 0;
+            for (int x = left; x <= right; x++)
+                if ((gray[(top + y) * width + x] & 255) <= threshold) n++;
+            rules[y] = n >= w * .9f;
+        }
+        for (int y = 0; y < h; ) {
+            int start = y;
+            while (y < h && rules[y]) y++;
+            if (y - start > Math.max(2, Math.round(gap * .3f)))
+                java.util.Arrays.fill(rules, start, y, false);
+            if (start == y) y++;
+        }
+        boolean[] seen = new boolean[w * h];
+        int[] stack = new int[w * h];
+        int proved = 0, totalOverlap = 0, sign = 0;
+        for (int origin = 0; origin < seen.length; origin++) {
+            int ox = origin % w, oy = origin / w;
+            if (seen[origin]
+                    || rules[oy]
+                    || (gray[(top + oy) * width + left + ox] & 255) > threshold) continue;
+            int size = 0;
+            stack[size++] = origin;
+            seen[origin] = true;
+            int minX = w, maxX = -1, minY = h, maxY = -1, overlap = 0;
+            int[] counts = new int[w], sums = new int[w], low = new int[w], high = new int[w];
+            java.util.Arrays.fill(low, h);
+            while (size > 0) {
+                int at = stack[--size], x = at % w, y = at / w;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+                counts[x]++;
+                sums[x] += y;
+                low[x] = Math.min(low[x], y);
+                high[x] = Math.max(high[x], y);
+                if (x + left >= head.minX
+                        && x + left <= head.maxX
+                        && y + top >= head.minY
+                        && y + top <= head.maxY) overlap++;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= w || yy < 0 || yy >= h || rules[yy]) continue;
+                        int next = yy * w + xx;
+                        if (!seen[next]
+                                && (gray[(top + yy) * width + left + xx] & 255) <= threshold) {
+                            seen[next] = true;
+                            stack[size++] = next;
+                        }
+                    }
+            }
+            if (overlap == 0) continue;
+            int span = maxX - minX + 1;
+            if (minX == 0
+                    || maxX == w - 1
+                    || minY == 0
+                    || maxY == h - 1
+                    || overlap < head.area * .1f
+                    || span < gap * 2
+                    || span < (head.maxX - head.minX + 1) * 1.8f) return false;
+            float[] centers = new float[3];
+            int[] bins = new int[3];
+            for (int x = minX; x <= maxX; x++) {
+                if (counts[x] == 0 || counts[x] > gap * .45f || high[x] - low[x] + 1 != counts[x])
+                    return false;
+                int bin = Math.min(2, (x - minX) * 3 / span);
+                centers[bin] += sums[x] / (float) counts[x];
+                bins[bin]++;
+            }
+            for (int i = 0; i < 3; i++) {
+                if (bins[i] == 0) return false;
+                centers[i] /= bins[i];
+            }
+            float bend = centers[1] - (centers[0] + centers[2]) * .5f;
+            if (Math.abs(bend) < Math.max(1.25f, gap * .1f)) return false;
+            int direction = bend > 0 ? 1 : -1;
+            if (sign != 0 && sign != direction) return false;
+            sign = direction;
+            proved++;
+            totalOverlap += overlap;
+        }
+        return proved >= 2 && totalOverlap >= head.area * .35f;
+    }
     /** A segmentation island can cover only the roundest part of a longer slur.
      * Inspect its complete raw component after removing thin, continuous staff rules. */
     private static boolean rawSlurBowl(

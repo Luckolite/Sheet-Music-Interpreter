@@ -377,15 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ef5bf1faafc74d3541191baf95e46e43dcf8ee256a91c727292554f830fda899",
-      "review_note": "A reduced beam cap may borrow its real grace shaft. Require two independently rooted reduced heads, paired rails or one continuous edge channel, no intervening oval closure, and bounded stem ownership. Apply recovered2beam/grace only to those two roots. Original procedural fixtures preserve genuine note bulges and independent shafts.",
-      "source_normalized_sha256": "e87e26710ebfb106db8ada5b2480bfb79c1e8c87eda49bb8ba42617cb22b82a2",
+      "source_sha256": "6dade0dbb47da4bada4b13c961d49a8060911c76562a531ae2bcb8f6e00e541c",
+      "review_note": "Paired global nested-curve ownership proof rejects merged semantic islands; a capture-only mask copy unmasks proved unretained islands while preserving source pixels and retained notes. Original geometric regressions only.",
+      "source_normalized_sha256": "ee923837ae0b3effd38dfec0f318cc84b1c21eede62f9205de0489114d08bc41",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
-      "standalone_sha256": "1d0adda4db2e3960c3604ba0b2dadbd9eddbd5dfeae58ccd9800a79aef3ccee7",
+      "reviewed_source_state": "Committed source; 10446 Java and 584 Python tests passed. Paired package deployment and whole-library acceptance pending.",
+      "standalone_sha256": "763c79067856b252001f323a77b17db3c39181d4abc66ea241180af8415da7e2",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "82e8206261faca466621a5b1e2899cb70f4bcde3",
-      "scoped_reviewed_app_commit": "82e8206261faca466621a5b1e2899cb70f4bcde3"
+      "reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
+      "scoped_reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -2644,12 +2644,13 @@
     },
     "PrintedSlurRecognition.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurRecognition.java",
-      "source_sha256": "d957705ba89f8560fba43940fd3dfcf14f1d5c24a5dbf574ed0ed6918d3cd91c",
-      "source_normalized_sha256": "7c50baa68e88a590b24b3dd5e9d4d72b17899be6dc824aa3d08f7ab8fe5b80b3",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Hook finalized page slots with explicit physical page context; unknown opening meter retains geometry and unknown key/pitch retains candidates. Existing retained/edited source is not replaced. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+      "source_sha256": "6f38203409820d1319b18a9a575e3edd7cbeca16948ae63beb7830e488f5e591",
+      "source_normalized_sha256": "c7bff5e9b14e83b9361cad0ed07c44a0ed5f0999c9f16681e672d9160ecdfd91",
+      "reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
+      "scoped_reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
+      "reviewed_source_state": "Committed source; 10446 Java and 584 Python tests passed. Paired package deployment and whole-library acceptance pending.",
+      "review_note": "Paired global nested-curve ownership proof rejects merged semantic islands; a capture-only mask copy unmasks proved unretained islands while preserving source pixels and retained notes. Original geometric regressions only.",
+      "standalone_sha256": "1a3cd2503e05ffd920e8df70c1bce9803d18e84d1cf99a6b730327bef8e7dfab"
     },
     "slur_wire.py": {
       "source_path": "tools/native-worker/slur_wire.py",

@@ -2358,3 +2358,8 @@ attachment, empty-space, dotted-rest and silent-lane checks remain in force.
 Private replay corrects two centered full-bar rest kinds with no note changes.
 A separate local-phase and faint-dot-ink ambiguity remains under investigation.
 Paired app source: c784b9aadd2b8f69747aa1866c7a7e5602abc43e.
+
+## Nested curves merged into false heads
+
+Separate thin, returning curves with matching bend direction can jointly explain a small semantic head island. The interpreter rejects that island without suppressing real filled or hollow heads. Printed slur capture clears only proved unretained islands from a segmentation copy, preserving the source and rebinding curves to genuine heads. Original mirrored, hollow-head, stem and mask-preservation fixtures cover the shared proof. Private page replay removes two false heads, restores an incoming tie and rebinds an outer slur; all real note content and rests are preserved.
+Paired app source: cbd253e8e60cb082e9dd3a4ec59da1c6965260f2.

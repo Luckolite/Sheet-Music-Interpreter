@@ -45,6 +45,9 @@ final class PrintedSlurRecognition {
                             score.notes(), score.measures(), width, height);
             var prepared =
                     PrintedSlurFrames.prepare(gray, width, height, staffs, score.notes(), heads);
+            labels =
+                    OmrScoreInterpreter.printedSlurLabels(
+                            labels, gray, width, height, score.measures(), heads);
             var captured =
                     PrintedSlurPageCapture.captureGeometry(
                             physicalPage,
@@ -124,6 +127,9 @@ final class PrintedSlurRecognition {
                         height);
         var prepared = PrintedSlurFrames.prepare(gray, width, height, staffs, score.notes(), heads);
         var ties = retainedTies(score.notes(), written, heads);
+        labels =
+                OmrScoreInterpreter.printedSlurLabels(
+                        labels, gray, width, height, score.measures(), heads);
         var captured =
                 PrintedSlurPageCapture.capture(
                         physicalPage,
