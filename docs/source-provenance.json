@@ -378,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "0a3c9a6fa1326c74234053e5f8e90734a35a56ed891a120426eedaa9dabea5c3",
-      "review_note": "Complete continuous clipped inner beam ink only when three semantic bands already exist. Original mirrored fixtures retain single/double beams and reject separated marks; unchanged raw thickness/root/staff ownership proofs.",
-      "source_normalized_sha256": "78a990f0df0512482efb6533f5cd66518ae5cd59be81cb9b40f2aeeec5f5fc9e",
+      "source_sha256": "f1fba1e28eb07f4b40e268006a0d70572c8874adef590c4074e5b967cda5882c",
+      "review_note": "Third-beam clipped-body completion requires a continuous thick path farther from its stem. Original mirrored tests and broken companion-rail regression preserve independent beam ownership.",
+      "source_normalized_sha256": "9db4358263397cd53c84f8c21b399e87f6b9eba654ea13996e909ded7a4a718c",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "09a664225ae3806af045294a669001d801bfc544573fe5f46215f7adb9eebe08",
+      "reviewed_source_state": "Committed; combined full validation and deployment pending",
+      "standalone_sha256": "5b4e710bfc186fd4c47d6fb435d7b4cf2fa2717070e2c4d8add3ffee46ced4d8",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "05dbdc1061c2b330f7569ac8d6929e6f86547cf1",
-      "scoped_reviewed_app_commit": "05dbdc1061c2b330f7569ac8d6929e6f86547cf1"
+      "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
+      "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -490,14 +490,15 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "ecaba03c84c2cdb75606790f4a8f0fbcc4260b2f14f5645991383d5db176afe7",
-      "review_note": "Additive compressed quarter-rest contour requires substantial horizontal excursion and full zigzag/hook geometry, with blank nonstaff rows proving a whole glyph. An additional contrast level also requires original-bound isolation; clipped meter numerals remain rejected. Original Bravura/procedural fixtures only; no private pixels, models, dependencies or formats changed.",
-      "source_normalized_sha256": "2cc245c354c49083974749826eb7f2c5bb742a7ca147d659077aafc299e785ba",
+      "source_sha256": "20960d74f279553dec0a78488b3c46a4c3a05cbc70d98cb95e4d5abdf452951d",
+      "review_note": "A moving voice authorizing a raised rest must actually lie below its contour. Original procedural contours preserve held and correctly placed moving voices; raw gray data unchanged.",
+      "source_normalized_sha256": "f3713b8c879e0258ba6ba23d64a95b7a5c0adf4bdb3a689c89ec26619bd208d8",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Token-identical integration;10394 Java tests,6 original controls,4 native pages/1388notes. Paired cumulative deployment pending.",
+      "reviewed_source_state": "Committed; combined full validation and deployment pending",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "5eef49ace387a01b3d6bbf94ce5fa11a65792997d1fbd3f64ec1320f5444348e",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "standalone_sha256": "015f442ceb0d243900e7e24a598a699a43bac31b75386f5bac7574896b77ade9",
+      "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
+      "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",

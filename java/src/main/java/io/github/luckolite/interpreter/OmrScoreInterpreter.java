@@ -18668,11 +18668,12 @@ final class OmrScoreInterpreter {
                 int x = bestX + Math.round(distance * gap);
                 int near = Math.max(0, stemEnd - (upward ? Math.round(gap * .2f) : inside));
                 int far = Math.min(height - 1, stemEnd + (upward ? inside : Math.round(gap * .2f)));
-                // Complete only the continuous inner body already intersecting the scan.
-                // Three semantic bands are required; never cross white into a separate mark.
+                // Complete a clipped body only when its thick ink continues farther
+                // from this shaft; a broken companion rail cannot supply that proof.
                 if (beams >= 3 && !smallHead) {
-                    if (upward)
-                        far =
+                    int outerX = bestX + Math.round(Math.copySign(gap * 1.1f, distance));
+                    if (upward) {
+                        int edge =
                                 completeBeamEdge(
                                         gray,
                                         width,
@@ -18681,8 +18682,11 @@ final class OmrScoreInterpreter {
                                         far,
                                         1,
                                         Math.min(height - 1, far + Math.round(gap * .6f)));
-                    else
-                        near =
+                        if (edge > far
+                                && bandReachesInnerProbe(
+                                        gray, width, height, x, outerX, far, edge, 165)) far = edge;
+                    } else {
+                        int edge =
                                 completeBeamEdge(
                                         gray,
                                         width,
@@ -18691,6 +18695,11 @@ final class OmrScoreInterpreter {
                                         near,
                                         -1,
                                         Math.max(0, near - Math.round(gap * .6f)));
+                        if (edge < near
+                                && bandReachesInnerProbe(
+                                        gray, width, height, x, outerX, edge, near, 165))
+                            near = edge;
+                    }
                 }
                 // Very long stems can stop at the inner beam edge. Complete that
                 // clipped band, but never reach across

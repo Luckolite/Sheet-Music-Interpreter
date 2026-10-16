@@ -12,8 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+A downward stem authorizes a separate raised rest only when its note lies below
+the rest. Original procedural voice controls preserve genuine lower voices and
+independently held voices while rejecting false voice ownership.
+
 A third semantic beam may intersect the inner scan boundary. Complete only its
-continuous ink body before applying unchanged thickness, root and staff-ownership
+continuous ink body, requiring a farther thick path to reject broken companion
+rails, before applying unchanged thickness, root and staff-ownership
 proofs. Original mirrored drawings preserve single/double beams and reject
 separated inner marks without changing pixels.
 

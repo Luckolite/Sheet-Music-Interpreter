@@ -2356,9 +2356,10 @@ final class SixteenthRestDetector {
                         boolean independentMovingVoice =
                                 !ordinary
                                                 && (lowered
-                                                        || movingVoiceBelow(
-                                                                gray, width, height, region, note,
-                                                                gap)
+                                                        || noteY > maxY + gap * .65f
+                                                                && movingVoiceBelow(
+                                                                        gray, width, height, region,
+                                                                        note, gap)
                                                         || quarter
                                                                 && noteY > maxY + gap * .65f
                                                                 && connectedUpStemVoice(
