@@ -47,6 +47,40 @@ final class LocalPrintedStaffBand {
             int last,
             float slope,
             StaffPitchTrack track) {
+        return matchesAtDistance(
+                gray, w, h, x, top, gap, threshold, first, last, slope, track, false, 1);
+    }
+
+    static boolean matchesBeyondStem(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            int first,
+            int last,
+            float slope,
+            StaffPitchTrack track) {
+        return matchesAtDistance(
+                gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2);
+    }
+
+    private static boolean matchesAtDistance(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            int first,
+            int last,
+            float slope,
+            StaffPitchTrack track,
+            boolean bright,
+            int firstGaps) {
         if (track != null) {
             float[] frame = track.at(x);
             gap = frame[1];
@@ -64,8 +98,8 @@ final class LocalPrintedStaffBand {
         if (bandLine < 0 || bandLine > 4 || Math.abs(cy - top - bandLine * gap) > gap * .3f)
             return false;
         float[] near = sample(gray, w, h, x, cy, gap, threshold);
-        if (near == null || near[2] < 60 || near[2] >= 185) return false;
-        int start = Math.round(gap), span = Math.round(gap * 2);
+        if (near == null || near[2] < 60 || (bright ? near[2] < 185 : near[2] >= 185)) return false;
+        int start = Math.round(gap * firstGaps), span = Math.round(gap * 2);
         if (x - start - span < 1 || x + start + span >= w - 1) return false;
         int references = 0;
         float largestMass = 0;

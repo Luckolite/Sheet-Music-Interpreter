@@ -28,6 +28,19 @@ final class PaleBeamRecovery {
             if (y < 0 || y >= height) return false;
             boolean white = true;
             for (int x = left; x <= right; x++) white &= (gray[y * width + x] & 255) >= 250;
+            if (!white) {
+                int reach = Math.max(3, Math.round(gap));
+                int lo = Math.max(0, left - reach), hi = Math.min(width - 1, right + reach);
+                int[] samples = new int[hi - lo + 1];
+                for (int x = lo; x <= hi; x++) samples[x - lo] = gray[y * width + x] & 255;
+                java.util.Arrays.sort(samples);
+                int paper = samples[(samples.length - 1) * 3 / 4];
+                white = paper >= 235;
+                for (int x = left; x <= right; x++) {
+                    int shade = gray[y * width + x] & 255;
+                    white &= shade >= 235 && paper - shade <= 8;
+                }
+            }
             blank = white ? blank + 1 : 0;
             if (blank >= 2) return true;
         }

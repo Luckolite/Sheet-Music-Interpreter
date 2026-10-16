@@ -17,11 +17,36 @@ final class BeamRuleLocalSlope {
             float gap,
             int threshold,
             float bandCenter) {
+        return findAtDistance(gray, width, height, x, top, gap, threshold, bandCenter, 1);
+    }
+
+    static Float findBeyondStem(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            float bandCenter) {
+        return findAtDistance(gray, width, height, x, top, gap, threshold, bandCenter, 2);
+    }
+
+    private static Float findAtDistance(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            float bandCenter,
+            int firstGaps) {
         if (gap < 4 || x < 0 || x >= width) return null;
         int bandLine = Math.round((bandCenter - top) / gap);
         if (bandLine < 0 || bandLine > 4 || Math.abs(bandCenter - top - bandLine * gap) > gap * .3f)
             return null;
-        int first = Math.round(gap), span = Math.round(gap * 2);
+        int first = Math.round(gap * firstGaps), span = Math.round(gap * 2);
         if (x - first - span < 0 || x + first + span >= width) return null;
         float[] slopes = new float[4];
         int count = 0;

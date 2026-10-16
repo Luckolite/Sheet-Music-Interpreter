@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "91d654aab928906f41c2c3a2e81d5448162a9d1a14380cd6c10f24ca5c14cbe1",
-      "review_note": "Reviewed identical inset arc ink search and sustained flattened arc span changes. Complete returning-curve, dark-core, contrast, and same-pitch requirements retained. Ten original regressions use analytic geometry; no private data or model changes.",
-      "source_normalized_sha256": "6a1c40ed9e6714845006ecd430019933a4e7be424da052765ce7b3317ef4cdac",
+      "source_sha256": "1b851c85ae5c30a6e29f2f93eabcbf9df19f77b8ebc4fffc2716bbdfaa1e060b",
+      "review_note": "Reviewed matching independent distant-rule proof and bounded ink-mass comparison for bright narrow fringes. Original shaded-paper behavior retained; finite dark and pale short beams remain. Only original analytic regressions included.",
+      "source_normalized_sha256": "7061f5040e809c0befed91c93f37a0bca06993ba2bc5ea0c1bdd15cbc8151064",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "f2eada4a52957cd1e14afab3432b7f7d24bd45175644a48cc11e151e1a958629",
+      "reviewed_source_state": "Committed app source; 10,251 Java regressions, 23 app checks, and 12 private page replays pass. Paired deployment remains pending.",
+      "standalone_sha256": "f5800c0a356ade1bfe5d172bd94782f044726d9d8e72368debb1ce2d37d5f78f",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "450c5aaf5dd4fbedf494014e01f229e34d160ae4"
+      "reviewed_app_commit": "8025161cd874590ff7178d6ba815a2465ed32e0b"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1296,10 +1296,12 @@
     },
     "BeamRuleLocalSlope.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamRuleLocalSlope.java",
-      "source_sha256": "0f79a674979b7bb41afb3be5ab6ed528dc2cc5b3f688dcb06675a4cf0a334ac5",
-      "source_normalized_sha256": "0f79a674979b7bb41afb3be5ab6ed528dc2cc5b3f688dcb06675a4cf0a334ac5",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "18dde6f2d51d7b359a99ae9a199541be335407bc28200082ce21652f623497d2",
+      "source_normalized_sha256": "857a4e1beb415cbabda1844e76dd5e2ecb20a775fdf3005c7adb108c39ba38af",
+      "reviewed_source_state": "Committed app source; 10,251 Java regressions, 23 app checks, and 12 private page replays pass. Paired deployment remains pending.",
+      "review_note": "Reviewed matching farther-rule proof for narrow staff fringes and bright-paper cap rejection before pale stem recovery. Existing slope search stays unchanged; independent three-rule, finite-beam and shaft-contrast guards retained. Original analytic controls only; no private data or model changes.",
+      "standalone_sha256": "41d0b027d6faa42c33568b1768cf341efe76e9b926595b0945538091f4e9ca4e",
+      "reviewed_app_commit": "8025161cd874590ff7178d6ba815a2465ed32e0b"
     },
     "CrossRowPortamento.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossRowPortamento.java",
@@ -1582,11 +1584,12 @@
     },
     "PaleBeamRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleBeamRecovery.java",
-      "source_sha256": "95b11c55320381eaa62629d64ea525bf43efb10a2c6b1cfa88d0ab3e54aa0382",
-      "source_normalized_sha256": "ea08e00888925abe35dbe938bb5326ef737cd12dd468644ded81b8b837ba05a4",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
-      "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material."
+      "source_sha256": "7b0a8b19cc9a9a5c8735dfb3dc473c74f012d16b1a4c021704718492d5ee9f8a",
+      "source_normalized_sha256": "ab5f1b9d4fd70b8dd32dbe9fb07572f32dff3980218ae45534c0372a410bf294",
+      "reviewed_app_commit": "8025161cd874590ff7178d6ba815a2465ed32e0b",
+      "reviewed_source_state": "Committed app source; 10,251 Java regressions, 23 app checks, and 12 private page replays pass. Paired deployment remains pending.",
+      "review_note": "Reviewed matching farther-rule proof for narrow staff fringes and bright-paper cap rejection before pale stem recovery. Existing slope search stays unchanged; independent three-rule, finite-beam and shaft-contrast guards retained. Original analytic controls only; no private data or model changes.",
+      "standalone_sha256": "3d798ee07f5a8dff7b9b4df4fd76b0ff5d5d92aaca11f3c271c1964759337f0d"
     },
     "ParallelTripletClock.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelTripletClock.java",
@@ -1708,11 +1711,12 @@
     },
     "LocalPrintedStaffBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalPrintedStaffBand.java",
-      "source_sha256": "a0fccfafc0e14067238a690c2f2367954a97107529dd547629d45777d3cb320c",
-      "source_normalized_sha256": "163d7c82f06abc8c65c859c5ef7393743bef9d1aa8e069ef892815906c9fcc1e",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
+      "source_sha256": "893d49fc2c512ff3f6a506d9661fcbe102333414015f4b72ffad82c3b6803223",
+      "source_normalized_sha256": "8c8a82b5a3dbb271924988a727587614d9fc60c7ce13b3690ffa75f4d8122b33",
+      "reviewed_app_commit": "8025161cd874590ff7178d6ba815a2465ed32e0b",
+      "reviewed_source_state": "Committed app source; 10,251 Java regressions, 23 app checks, and 12 private page replays pass. Paired deployment remains pending.",
+      "review_note": "Reviewed matching independent distant-rule proof and bounded ink-mass comparison for bright narrow fringes. Original shaded-paper behavior retained; finite dark and pale short beams remain. Only original analytic regressions included.",
+      "standalone_sha256": "19506a2bae5a2789655d6c0f38c515f80c3b0754d1e04efb9a5daf495e3295f0"
     },
     "PrintedRestBarHeads.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestBarHeads.java",

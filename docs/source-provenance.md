@@ -2177,3 +2177,19 @@ whole-library acceptance remain pending.
 Paired app source: `450c5aaf5dd4fbedf494014e01f229e34d160ae4`. All 10,238 Java
 regressions passed. Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3
 checks passed.
+
+## Crowded rules and near-white shaft caps
+
+A separate farther-rule search verifies three independent staff rules when nearby
+notation obscures a narrow fringe. The original slope search remains unchanged.
+Pale stem recovery also rejects two bright-paper rows using local paper contrast,
+while retaining visibly faint shafts. Thirteen original analytic controls cover
+crowding, real beams, missing rule context, faint shafts, and immutable inputs;
+all thirteen pass against the app source. No private score data or model changes
+are included. Paired deployment and whole-library acceptance remain pending.
+The distant-rule path also compares local ink mass with neighboring rules;
+23 app checks, including genuine short dark and pale beam controls, pass.
+
+Paired app source: `8025161cd874590ff7178d6ba815a2465ed32e0b`. All 10,251 Java
+regressions passed; 23 focused checks also pass against the app source.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

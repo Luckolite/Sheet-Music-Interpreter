@@ -20146,6 +20146,21 @@ final class OmrScoreInterpreter {
                         && finiteBeamOverRule(
                                 gray, width, height, x, y - run, y - 1, staff, threshold))
                     onlyStaff = false;
+                // Nearby notes can obscure rule witnesses; use three independent farther rules.
+                if (!onlyStaff
+                        && onStaff
+                        && staffRows >= 2
+                        && run >= 3
+                        && run <= gap * .35f
+                        && BeamRuleLocalSlope.findBeyondStem(
+                                        gray, width, height, x, lineTop, gap, threshold, bandCenter)
+                                != null
+                        && LocalPrintedStaffBand.matchesBeyondStem(
+                                gray, width, height, x, lineTop, gap, threshold, y - run, y - 1,
+                                0, staff.pitchTrack)
+                        && !finiteBeamOverRule(
+                                gray, width, height, x, y - run, y - 1, staff, threshold))
+                    onlyStaff = true;
                 boolean provedRuleBand =
                         !onlyStaff
                                 && onStaff
