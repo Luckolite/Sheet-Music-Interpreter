@@ -3358,7 +3358,10 @@ final class SixteenthRestDetector {
         int cw = right - left + 1 + 2 * margin, ch = line.length;
         byte[] core = new byte[cw * ch];
         int accepted = 0;
-        for (int threshold : new int[] {115, 90}) {
+        for (int threshold : new int[] {140, 115, 90}) {
+            if (threshold == 140
+                    && !isolatedQuarterContour(
+                            gray, width, left, right, minY, maxY, local, top, gap)) continue;
             boolean[] coreRules = new boolean[ch];
             int lo = ch, hi = -1;
             for (int y = 0; y < ch; y++) {
@@ -3396,7 +3399,7 @@ final class SixteenthRestDetector {
                             lo,
                             hi)) accepted++;
         }
-        return accepted == 2;
+        return accepted >= 2;
     }
 
     private static boolean quarterRestMasked(
@@ -3486,10 +3489,42 @@ final class SixteenthRestDetector {
                         && !CompactQuarterRestContour.parallelSpines(
                                 gray, width, left, right, minY, maxY, line, top, gap)
                 || (CompactQuarterRestContour.matches(centers, gap)
+                                || (CompactQuarterRestContour.matchesNarrow(centers, gap)
+                                        && isolatedQuarterContour(
+                                                gray, width, left, right, minY, maxY, line, top,
+                                                gap))
                                 || CompactQuarterRestContour.leftSilhouette(
                                         leftEdges, rightEdges, gap))
                         && CompactQuarterRestContour.hasContrastedInk(
                                 gray, width, left, right, minY, maxY, line, top, gap);
+    }
+
+    /** A compressed zigzag must be a whole glyph, not a cropped continuation of meter or other ink. */
+    private static boolean isolatedQuarterContour(
+            byte[] gray,
+            int width,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            boolean[] line,
+            int top,
+            float gap) {
+        int height = gray.length / width;
+        for (int direction : new int[] {-1, 1}) {
+            int checked = 0, start = direction < 0 ? minY : maxY;
+            for (int dy = 1; dy <= Math.ceil(gap * .75f) && checked < 2; dy++) {
+                int y = start + direction * dy;
+                if (y < 0 || y >= height) return false;
+                if (y - top >= 0 && y - top < line.length && line[y - top]) continue;
+                int ink = 0;
+                for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) < 170) ink++;
+                if (ink > 1) return false;
+                checked++;
+            }
+            if (checked < 2) return false;
+        }
+        return true;
     }
 
     /** Full zigzag with a short lower hook; allow half a raster pixel at its rounded turns. */

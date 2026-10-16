@@ -488,13 +488,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "4358056c5b6e4b56c77623d96701e54f14426e48da04f684a9beeffa2428f6df",
-      "review_note": "Require five locally supported staff rules before rechecking quarter-rest contour. Dark-core recovery requires both contrast levels and valid outer height. A held whole plus independently printed upper moving stems proves trailing raised-rest placement. Original procedural/Bravura fixtures; no private score pixels, models, dependencies or format changes.",
-      "source_normalized_sha256": "4358056c5b6e4b56c77623d96701e54f14426e48da04f684a9beeffa2428f6df",
+      "source_sha256": "ecaba03c84c2cdb75606790f4a8f0fbcc4260b2f14f5645991383d5db176afe7",
+      "review_note": "Additive compressed quarter-rest contour requires substantial horizontal excursion and full zigzag/hook geometry, with blank nonstaff rows proving a whole glyph. An additional contrast level also requires original-bound isolation; clipped meter numerals remain rejected. Original Bravura/procedural fixtures only; no private pixels, models, dependencies or formats changed.",
+      "source_normalized_sha256": "2cc245c354c49083974749826eb7f2c5bb742a7ca147d659077aafc299e785ba",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Token-identical app/public integration;10388 Java tests and13 original regressions;4 native pages/1388notes. Cumulative paired deployment pending.",
+      "reviewed_source_state": "Token-identical integration;10394 Java tests,6 original controls,4 native pages/1388notes. Paired cumulative deployment pending.",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "7c97bdec7dc8ccb96a919f85ca7cc0013ac4f697ec7caa5450322a720f0153fb",
+      "standalone_sha256": "5eef49ace387a01b3d6bbf94ce5fa11a65792997d1fbd3f64ec1320f5444348e",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "TempoChangeDetector.java": {
@@ -798,9 +798,12 @@
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",
-      "source_sha256": "22a2ae3c99bc2b8ed17d2218885f7133e0ed8d42c7502a05f485a86356f2e3f8",
+      "source_sha256": "306b65a9f39ead5f5d54ef9329ba73d2fcd342b80c9483e0a2ce3f016990ca73",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "22a2ae3c99bc2b8ed17d2218885f7133e0ed8d42c7502a05f485a86356f2e3f8"
+      "source_normalized_sha256": "edd1d665a4b6295b02750ee86217f092c85ec2c73f98b176bee831ae78058260",
+      "standalone_sha256": "dc943f244a68149b23446086d4f93566847ed61e605a5799ec13df53e1bde4d2",
+      "reviewed_source_state": "Token-identical integration;10394 Java tests,6 original controls,4 native pages/1388notes. Paired cumulative deployment pending.",
+      "review_note": "Additive compressed quarter-rest contour requires substantial horizontal excursion and full zigzag/hook geometry, with blank nonstaff rows proving a whole glyph. An additional contrast level also requires original-bound isolation; clipped meter numerals remain rejected. Original Bravura/procedural fixtures only; no private pixels, models, dependencies or formats changed."
     },
     "ConnectedItalicDynamic.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ConnectedItalicDynamic.java",

@@ -156,6 +156,58 @@ final class CompactQuarterRestContour {
         return false;
     }
 
+    /** Normalize horizontal compression while retaining full vertical zigzag and hook evidence. */
+    static boolean matchesNarrow(double[] rows, float gap) {
+        if (rows == null || rows.length < 12 || !Float.isFinite(gap) || gap < 4) return false;
+        int n = rows.length;
+        double[] smooth = new double[n];
+        for (int i = 0; i < n; i++) {
+            if (!Double.isFinite(rows[i])) return false;
+            double sum = 0;
+            int count = 0;
+            for (int j = Math.max(0, i - 1); j <= Math.min(n - 1, i + 1); j++) {
+                sum += rows[j];
+                count++;
+            }
+            smooth[i] = sum / count;
+        }
+        double min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
+        for (double x : smooth) {
+            min = Math.min(min, x);
+            max = Math.max(max, x);
+        }
+        double horizontal = Math.min(gap, (max - min) * 1.5);
+        if (horizontal < gap * .6) return false;
+        double start = average(smooth, 0, Math.max(1, n / 10));
+        double foot = average(smooth, n - Math.max(2, n / 12), n);
+        double lateFoot = average(smooth, n - 2, n);
+        for (int first = (int) (n * .15); first <= n * .40; first++) {
+            if (smooth[first] - start < horizontal * .26) continue;
+            for (int valley = first + Math.max(3, Math.round(gap * .25f));
+                    valley <= n * .57;
+                    valley++) {
+                if (smooth[first] - smooth[valley] < horizontal * .20) continue;
+                for (int second = valley + Math.max(3, Math.round(gap * .25f));
+                        second <= n * .73;
+                        second++) {
+                    if (smooth[second] - smooth[valley] < horizontal * .18) continue;
+                    for (int hook = second + 2; hook <= n * .93; hook++) {
+                        if (smooth[second] - smooth[hook] < horizontal * .10
+                                || (hook >= n * .80 ? lateFoot : foot) - smooth[hook]
+                                        < horizontal * (hook >= n * .80 ? .04 : .09)) continue;
+                        // A true early hook has a substantial trailing downstroke;
+                        // one isolated noisy pixel near the foot cannot establish it.
+                        if (hook - valley < gap * .45f) continue;
+                        if (hook < n * .80 && n - hook < gap * .65f || n - hook < gap * .25f)
+                            continue;
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     /** Additive overlapping ink can obscure the centre while leaving the full left silhouette. */
     static boolean leftSilhouette(double[] left, double[] right, float gap) {
         if (left == null
