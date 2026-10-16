@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f066b8c4c92f323b5f6b395b13bc104c8c9ed117c97205ed20323b7d4eae24fd",
-      "review_note": "Reviewed interrupted target-rule support: three independent phase-aligned ink-budget references can establish a narrow rule band without continuous rows near the target. Existing raw-frame, mass, thickness and finite-beam guards retained. Original synthetic regression only; no private pixels or model changes.",
-      "source_normalized_sha256": "2ddd4991187dc22bc54122ff23aa9316b306a2d7c89d4a6163ea97d13e38b7b2",
+      "source_sha256": "664455db10bfd5d50ccf528b87ad5927eb60afef69126d2f9e6d4ec84cadcd4d",
+      "review_note": "Reviewed global outgoing slur-tip exclusion, tip-local rule-fringe root guard and median rule ink budget for rounded band width. Twelve original analytic regressions; no private pixels, score identifiers or model changes.",
+      "source_normalized_sha256": "fe761a41e40a9e95e8f29b8a8890813eadee60a44060f7ed817f67d6c21311d7",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed app source; 10267 Java regressions and four original app controls pass. Paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "9d7614ab4f146f350b4e3d21f4a2d9fa45a3bd51ba43b259da58dbd166e49926",
+      "reviewed_source_state": "Committed app source;10279 Java tests,12 original app regressions,synthetic PNG/PDF exports passed. Paired deployment and whole-library acceptance pending.",
+      "standalone_sha256": "459e13d4c1c9c4b2ee64d83a42b4e4c5437753edc40394ee537f1f442b7fac3f",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "df24f673d1461fad56d4c4efa1640e37b7b0c23c"
+      "reviewed_app_commit": "6f12bed379978db04f6ba2ae660db00d60aa13b1"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1711,12 +1711,12 @@
     },
     "LocalPrintedStaffBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LocalPrintedStaffBand.java",
-      "source_sha256": "04504c09d728084bb0be8cfa5d3be0878b01e0c800f532b84768c80c3293678a",
-      "source_normalized_sha256": "46f991809a237538ff7a8b1d0f6fdf9d8d32e51f2f640ece115930440180daa0",
-      "reviewed_app_commit": "1fe92fcfaa0115edfcff5304b04e05b75ec0f988",
-      "reviewed_source_state": "Committed app source; 10,259 Java regressions, four app controls, and twelve private page replays pass. Paired deployment remains pending.",
-      "review_note": "Reviewed near-rule fallback for bright-paper phase and ink-mass proof. Three independent rule references remain mandatory; finite-beam and ink-budget constraints retained. Original analytic regression only; no private pixels or model changes.",
-      "standalone_sha256": "ffe1e1cc280e84e7569f2e88410cd127da352b90307b8e3b457b525e65159029"
+      "source_sha256": "f61c1e92afc34ed94f5994fe8b14584340ffc36ce9b665a5e0f3ba91ae2d6fcd",
+      "source_normalized_sha256": "3cd1b63791457d454cf9a63abd07a090421c7f71efa80d2ee02979540fdd55a0",
+      "reviewed_app_commit": "6f12bed379978db04f6ba2ae660db00d60aa13b1",
+      "reviewed_source_state": "Committed app source;10279 Java tests,12 original app regressions,synthetic PNG/PDF exports passed. Paired deployment and whole-library acceptance pending.",
+      "review_note": "Reviewed global outgoing slur-tip exclusion, tip-local rule-fringe root guard and median rule ink budget for rounded band width. Twelve original analytic regressions; no private pixels, score identifiers or model changes.",
+      "standalone_sha256": "a77379ea4343b08e3d60b03e80b000c7e764d83ee3bac7464c7b942c5e4cb800"
     },
     "PrintedRestBarHeads.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestBarHeads.java",

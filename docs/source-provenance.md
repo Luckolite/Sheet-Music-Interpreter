@@ -2243,3 +2243,16 @@ checks pass. All 10,267 Java regressions passed. Paired deployment and
 whole-library acceptance remain pending.
 Paired app source: `df24f673d1461fad56d4c4efa1640e37b7b0c23c`.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Slur tips and rounded staff-rule widths
+
+Outgoing curves beyond either side of a stem tip cannot supply a flag; a rule
+fringe at the tip cannot supply an independent flag root. Rounded staff-band
+widths require the median independent-rule ink budget, so another beam cannot
+inflate that budget. Existing narrower-band behavior is preserved. Twelve
+original analytic regressions cover both stem directions, independent roots,
+real beams, insufficient reference rules and immutable inputs. All twelve pass
+against the app implementation. All 10,279 Java tests and synthetic PNG/PDF pitch,
+duration, MIDI, MusicXML and MP3 smoke checks passed. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `6f12bed379978db04f6ba2ae660db00d60aa13b1`.

@@ -20151,10 +20151,14 @@ final class OmrScoreInterpreter {
                 if (!onlyStaff
                         && onStaff
                         && run >= 3
-                        && run <= gap * .35f
+                        && run <= Math.ceil(gap * .35f)
                         && LocalPrintedStaffBand.matchesBeyondStem(
                                 gray, width, height, x, lineTop, gap, threshold, y - run, y - 1,
                                 0, staff.pitchTrack)
+                        && (run <= gap * .35f
+                                || LocalPrintedStaffBand.matchesRoundedBeyondStem(
+                                        gray, width, height, x, lineTop, gap, threshold, y - run,
+                                        y - 1, 0, staff.pitchTrack))
                         && !finiteBeamOverRule(
                                 gray, width, height, x, y - run, y - 1, staff, threshold))
                     onlyStaff = true;
@@ -20510,7 +20514,12 @@ final class OmrScoreInterpreter {
             if (Math.abs(y - end) < gap * .5f && minX - stemX > gap * .6f) {
                 continue;
             }
-            if (Math.abs(y - end) <= gap * 1.15f && minX - stemX <= gap * .5f) rootRows++;
+            // A rule fringe at the tip is not independent evidence of a flag root.
+            if (Math.abs(y - end) <= gap * 1.15f
+                    && minX - stemX <= gap * .5f
+                    && (Math.abs(y - end) > gap * .1f
+                            || !FlagRootStaffRule.matches(
+                                    gray, width, height, y, stemX, gap, flagThreshold))) rootRows++;
             rows++;
             if (Math.abs(y - end) <= gap * 1.15f) nearEnd++;
             if (maxX - stemX >= gap * .55f) bulge++;
@@ -20534,10 +20543,26 @@ final class OmrScoreInterpreter {
             float gap,
             boolean upward,
             int threshold) {
+        return curvePastStemEndSide(gray, width, height, stemX, end, gap, upward, threshold, -1)
+                || curvePastStemEndSide(gray, width, height, stemX, end, gap, upward, threshold, 1);
+    }
+
+    private static boolean curvePastStemEndSide(
+            byte[] gray,
+            int width,
+            int height,
+            int stemX,
+            int end,
+            float gap,
+            boolean upward,
+            int threshold,
+            int side) {
         int direction = upward ? -1 : 1, previous = -1, first = -1, columns = 0;
-        for (int dx = Math.max(3, Math.round(gap * .3f)); dx <= Math.round(gap * 1.2f); dx++) {
-            int x = stemX - dx;
-            if (x < 0) return false;
+        for (int dx = Math.max(3, Math.round(gap * .3f));
+                dx <= Math.round(gap * (side == 1 ? 1.5f : 1.2f));
+                dx++) {
+            int x = stemX + side * dx;
+            if (x < 0 || x >= width) return false;
             int found = -1;
             for (int d = 2; d <= Math.round(gap * 1.8f); d++) {
                 int y = end + direction * d;
@@ -20548,7 +20573,10 @@ final class OmrScoreInterpreter {
                     break;
                 }
             }
-            if (found < 0) return false;
+            if (found < 0) {
+                if (side == 1 && first < 0 && dx < gap * .6f) continue;
+                return false;
+            }
             if (first < 0) first = found;
             previous = found;
             columns++;

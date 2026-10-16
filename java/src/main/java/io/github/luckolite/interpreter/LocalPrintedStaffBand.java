@@ -48,7 +48,8 @@ final class LocalPrintedStaffBand {
             float slope,
             StaffPitchTrack track) {
         return matchesAtDistance(
-                gray, w, h, x, top, gap, threshold, first, last, slope, track, false, 1);
+                gray, w, h, x, top, gap, threshold, first, last, slope, track, false, 1, 1.4f,
+                false);
     }
 
     static boolean matchesBeyondStem(
@@ -64,9 +65,32 @@ final class LocalPrintedStaffBand {
             float slope,
             StaffPitchTrack track) {
         return matchesAtDistance(
-                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2)
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2,
+                        1.4f, false)
                 || matchesAtDistance(
-                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 1);
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 1,
+                        1.4f, false);
+    }
+
+    // The extra rounded pixel needs a typical rule budget; one beam cannot inflate it.
+    static boolean matchesRoundedBeyondStem(
+            byte[] gray,
+            int w,
+            int h,
+            int x,
+            float top,
+            float gap,
+            int threshold,
+            int first,
+            int last,
+            float slope,
+            StaffPitchTrack track) {
+        return matchesAtDistance(
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2,
+                        1.4f, true)
+                || matchesAtDistance(
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 1,
+                        1.4f, true);
     }
 
     private static boolean matchesAtDistance(
@@ -82,7 +106,9 @@ final class LocalPrintedStaffBand {
             float slope,
             StaffPitchTrack track,
             boolean bright,
-            int firstGaps) {
+            int firstGaps,
+            float massRatio,
+            boolean medianReference) {
         if (track != null) {
             float[] frame = track.at(x);
             gap = frame[1];
@@ -105,7 +131,7 @@ final class LocalPrintedStaffBand {
         if (x - start - span < 1 || x + start + span >= w - 1) return false;
         int references = 0;
         float largestMass = 0;
-        float[] phases = new float[4];
+        float[] phases = new float[4], referenceMasses = new float[4];
         for (int line = 0; line < 5; line++) {
             if (line == bandLine) continue;
             float seed = top + line * gap;
@@ -134,10 +160,15 @@ final class LocalPrintedStaffBand {
             for (int i = 0; i < n; i++)
                 if (Math.abs(offsets[i] - phase) <= Math.max(1, gap * .1f)) agreeing++;
             if (agreeing < n * .85f) continue;
+            referenceMasses[references] = masses[n / 2];
             phases[references++] = phase;
             largestMass = Math.max(largestMass, masses[n / 2]);
         }
         if (references < 3 || largestMass <= 0) return false;
+        if (medianReference) {
+            Arrays.sort(referenceMasses, 0, references);
+            largestMass = referenceMasses[references / 2];
+        }
         Arrays.sort(phases, 0, references);
         float phase = phases[references / 2];
         int agreeing = 0;
@@ -145,7 +176,7 @@ final class LocalPrintedStaffBand {
             if (Math.abs(phases[i] - phase) <= gap * .15f) agreeing++;
         return agreeing >= 3
                 && Math.abs(cy - top - bandLine * gap - phase) <= gap * .2f
-                && near[1] <= largestMass * 1.4f;
+                && near[1] <= largestMass * massRatio;
     }
 
     /** Center, ink deficit, and local paper level of a narrow isolated source rule. */
