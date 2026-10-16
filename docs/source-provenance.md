@@ -2313,3 +2313,15 @@ original controls pass against app and standalone source; all 10,311 Java tests
 passed. Paired deployment and whole-library acceptance remain pending.
 Paired app source: f798200a6d7132893c5439a5bb919dd64106d4ed.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
+
+## Preserving printed boundaries during equal-count fitting
+
+A row with strictly verified printed separators retains its original boundaries
+when equal-count fitting replaces a narrow measure with an unsupported split
+inside another measure. Genuine replacement lines, missing raw proof, and
+changes to logical measure count continue through the existing reconciliation.
+The original procedural regression uses unequal-width bars and independently
+drawn staff and bar lines; it contains no external score pixels or geometry.
+Private replay restored one false split without changing written note fields;
+two additional control pages retained identical decoded data.
+Paired app source: 2b90efd1bf6ee33a2dae901b4e25af4bab763a45.

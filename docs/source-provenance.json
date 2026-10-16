@@ -552,13 +552,13 @@
     },
     "PrintedMeasureRhythmGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
-      "source_sha256": "f4592e4fab4d5ce951ce4a533681eec05928cec0f09d64abc6dcfca944854b6d",
-      "reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
-      "source_normalized_sha256": "c92f9cb0aece1d4d9b8260abacc9ac38dfff36c521d75b3ba40d54f64aaefef8",
-      "reviewed_source_state": "Committed paired recognition60/guide287/audio93 sources; packaged rollout and whole-document acceptance pending.",
-      "review_note": "Preserve full printed separators crossing thin arcs and restore displaced adjacent boundaries only when raw separator proof defeats fitted placement.",
-      "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
-      "standalone_sha256": "f1164b7666b50569baf8857c69a1451ab3388547b545fcc726a946854df2196d"
+      "source_sha256": "8067925b17e280aab082c8161548a21358e69c0b260d068abc344de4301883e6",
+      "reviewed_app_commit": "2b90efd1bf6ee33a2dae901b4e25af4bab763a45",
+      "source_normalized_sha256": "5fd155a046381f2f9407cb63fc6f731e6df8cc8fd9454498a546607c3c6c4c0f",
+      "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
+      "review_note": "Equal-count fitting preserves all strictly proved original printed separators when proposed redistribution adds only unsupported interior cuts. Original unequal-width procedural bars cover genuine replacement lines, missing proof, short stems, changed logical counts and input immutability.",
+      "scoped_reviewed_app_commit": "2b90efd1bf6ee33a2dae901b4e25af4bab763a45",
+      "standalone_sha256": "4bdd0c9060b98b0c99c713b431131201409bf0e13f55e64880544e99e3e7f8a5"
     },
     "PrintedPageEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",

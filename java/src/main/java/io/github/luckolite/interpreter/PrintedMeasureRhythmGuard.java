@@ -19,6 +19,7 @@ final class PrintedMeasureRhythmGuard {
             int height) {
         raw = rejectOverlappingRows(raw);
         fitted = rejectOverlappingRows(fitted);
+        fitted = preserveCountNeutralRows(raw, fitted, gray, width, height);
         fitted = preservePrintedBoundaries(raw, fitted, gray, width, height);
         fitted = preserveShiftedBoundary(raw, fitted, gray, width, height);
         fitted = rejectUnprintedRows(raw, fitted, labels, gray, width, height);
@@ -31,6 +32,79 @@ final class PrintedMeasureRhythmGuard {
         if (!split) return preserved;
         var aligned = alignPrintedSeparators(raw, preserved, notes, gray, width, height);
         return preserveCompleteRuns(raw, aligned, notes, gray, width, height);
+    }
+
+    /** Equal-count fitting cannot trade verified separators for unsupported interior cuts. */
+    static List<MeasureRegion> preserveCountNeutralRows(
+            List<MeasureRegion> raw,
+            List<MeasureRegion> fitted,
+            byte[] gray,
+            int width,
+            int height) {
+        if (gray == null || gray.length != (long) width * height) return fitted;
+        var result = new ArrayList<>(fitted);
+        for (var anchor : raw) {
+            var original =
+                    raw.stream()
+                            .filter(r -> sameRow(anchor, r))
+                            .sorted(Comparator.comparingDouble(MeasureRegion::left))
+                            .toList();
+            if (original.size() < 2 || original.get(0) != anchor) continue;
+            var proposed =
+                    result.stream()
+                            .filter(r -> sameRow(anchor, r))
+                            .sorted(Comparator.comparingDouble(MeasureRegion::left))
+                            .toList();
+            if (proposed.size() != original.size()
+                    || Math.abs(proposed.get(0).left() - anchor.left()) > .006f
+                    || Math.abs(
+                                    proposed.get(proposed.size() - 1).right()
+                                            - original.get(original.size() - 1).right())
+                            > .006f) continue;
+            var row =
+                    new MeasureRegion(
+                            anchor.left(),
+                            original.get(original.size() - 1).right(),
+                            anchor.top(),
+                            anchor.bottom());
+            var cuts = new ArrayList<Float>();
+            boolean verified = true;
+            for (int i = 1; i < original.size(); i++) {
+                var a = original.get(i - 1);
+                var b = original.get(i);
+                float cut = (a.right() + b.left()) * .5f;
+                if (b.left() <= a.right()
+                        || b.left() - a.right() > .015f
+                        || !printedBarline(row, cut, gray, width, height, true)) {
+                    verified = false;
+                    break;
+                }
+                cuts.add(cut);
+            }
+            if (!verified) continue;
+            boolean inferred = false;
+            for (int i = 1; i < proposed.size(); i++) {
+                var a = proposed.get(i - 1);
+                var b = proposed.get(i);
+                float cut = (a.right() + b.left()) * .5f;
+                if (b.left() <= a.right() || b.left() - a.right() > .015f) {
+                    verified = false;
+                    break;
+                }
+                if (cuts.stream().noneMatch(c -> Math.abs(c - cut) < .006f)) {
+                    if (printedBarline(row, cut, gray, width, height, true)) {
+                        verified = false;
+                        break;
+                    }
+                    inferred = true;
+                }
+            }
+            if (!verified || !inferred) continue;
+            int at = result.indexOf(proposed.get(0));
+            result.removeAll(proposed);
+            result.addAll(at, original);
+        }
+        return List.copyOf(result);
     }
 
     /** Keep a proven printed separator when count fitting only shifted a two-bar division. */
