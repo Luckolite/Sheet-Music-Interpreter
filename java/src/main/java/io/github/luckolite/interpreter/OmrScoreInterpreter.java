@@ -556,6 +556,7 @@ final class OmrScoreInterpreter {
         heads.removeAll(curvedExits.heads());
         List<Component> shortTies = shortTieBowlHeads(labels, gray, width, height, heads, staffs);
         shortTies.addAll(graceSlurHeads(gray, width, height, heads, staffs));
+        shortTies.addAll(stemmedSlurHeads(gray, width, height, heads, staffs));
         heads.removeAll(shortTies);
         rejectedSlurHeads.addAll(shortTies);
         // A bright paper halo can enlarge a printed augmentation dot enough for HOMR to label it
@@ -9834,6 +9835,48 @@ final class OmrScoreInterpreter {
                     }
             }
             if (proved) result.add(head);
+        }
+        return result;
+    }
+
+    /** An independently stemmed note at each end owns a returning lower slur. */
+    private static List<Component> stemmedSlurHeads(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        List<Component> result = new ArrayList<>();
+        if (gray == null) return result;
+        for (Component head : heads) {
+            Staff staff = nearestHeadStaff(staffs, head.centerY);
+            if (staff == null) continue;
+            float gap = staff.gap;
+            if (head.area > gap * gap * .85f
+                    || head.maxX - head.minX + 1 > gap * 1.4f
+                    || head.maxY - head.minY + 1 > gap
+                    || attachedRawStem(gray, width, height, head, gap * .65f) != null) continue;
+            boolean left = false, right = false;
+            for (Component other : heads) {
+                if (other == head
+                        || nearestHeadStaff(staffs, other.centerY) != staff
+                        || other.area < gap * gap * .9f
+                        || other.maxX - other.minX + 1 < gap) continue;
+                float dx = other.centerX - head.centerX, dy = head.centerY - other.centerY;
+                if (Math.abs(dx) < gap * .5f
+                        || Math.abs(dx) > gap * 3
+                        || dy < gap * .35f
+                        || dy > gap * 2.2f
+                        || attachedRawStem(gray, width, height, other, gap * .65f) == null)
+                    continue;
+                if (dx < 0) left = true;
+                else right = true;
+            }
+            if (!left || !right) continue;
+            int threshold = slurInkThreshold(gray, width, height, head, gap);
+            for (float fraction : new float[] {1f, .85f, .7f, .55f}) {
+                if (rawSlurBowl(
+                        gray, width, height, head, gap, Math.round(threshold * fraction), true)) {
+                    result.add(head);
+                    break;
+                }
+            }
         }
         return result;
     }

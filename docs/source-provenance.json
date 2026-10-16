@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c83990ea6b7faadeaebb9ade0dc255af7fc985624cccbb797eb15845840c12a3",
-      "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
-      "source_normalized_sha256": "854b3b68e4db915464d0d5c6213ddd44bc04b0087a2de0db9b1ba899a05366da",
+      "source_sha256": "20f5a3c735c1a8eadcb7a53e6fd7b4656fd41fed6e305e836265daa032639473",
+      "review_note": "Remove stemless segmentation islands only with full-size independently stemmed anchors on both sides above the candidate and an existing returning raw slur contour. Retain source ink, actual notes and index-remapped source spans. Original Apache-2.0 synthetic geometry derived from repository grace-slur tests; no private pixels, dependency, model or format changes.",
+      "source_normalized_sha256": "0a507981abcfc7872e1d52d88faf6afb4500dabaa06acc8e275978ce8c66f4ef",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
-      "standalone_sha256": "4d3350d8c3b1c89165ddd2377ab453f8c25490f74cfc9ad90a0447a854357f6a",
+      "reviewed_source_state": "Token-identical tested integration;10354 Java tests,8 original controls,10 native pages. Cumulative paired deployment pending.",
+      "standalone_sha256": "1317ac14d5cea2ec969b4c882409d6b4963f698b39d91019a91f30907b528e86",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8"
+      "reviewed_app_commit": "0c3af584fd9380d87c6d19b0e04ad45e4d634d5d"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
