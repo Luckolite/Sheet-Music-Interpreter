@@ -2368,3 +2368,8 @@ Paired app source: cbd253e8e60cb082e9dd3a4ec59da1c6965260f2.
 
 A second dark-core threshold separates a substantial round augmentation-dot body from lighter connecting curve ink. The existing engraving-slot, size, contrast and ownership checks still apply. Original contact, small-core, continuous-curve and dark-fragment fixtures protect against false dots. Private replay restores one dotted-half duration while preserving every other page field.
 Paired app source: f224e335a4652211fc72167e4dde52d05cd87f85.
+
+## Thin tremolo flank continuity
+
+Floating-stroke recognition now rejects connected ink at the same minimum thickness used to admit strokes. This prevents three thin staff lines between ordinary beamed notes from creating a false tremolo pair and failing downstream timing validation. Original mirrored rules, connected beams and genuine floating strokes cover the boundary; timing validation remains intact.
+Paired app source: 36c78456a09ba96802930712da07866e87a4c369.

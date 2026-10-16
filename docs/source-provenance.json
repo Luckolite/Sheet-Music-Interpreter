@@ -3098,12 +3098,12 @@
     },
     "PairedTremoloInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedTremoloInk.java",
-      "source_sha256": "c103711684aabdf6e8697719999aee2770272c5c45e282fd346a85528401448f",
-      "source_normalized_sha256": "5809e1c4e01da722619993e0de2c8dea3ffc9c7c44a39de118b2d064e7a0d49b",
-      "standalone_sha256": "63705a95e0d6844b0f923181d3c302abb3aca96f1827830f67c634bdad20211c",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "a726d0e15e66e9bc972ec3e55cc6fe245c8891601f082d98e368e64aec2a0ffc",
+      "source_normalized_sha256": "d740c28291ad17935aba452c8e7ac4090ea76dd531135f8faa1a30b098c1dd1c",
+      "standalone_sha256": "2bb3b74b614e39b9af6e786c2c46390c537bcee0060e7287a31f886efe67d816",
+      "reviewed_source_state": "Committed source; 10458 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
+      "review_note": "Match flank continuity rejection to the minimum admitted stroke thickness, preventing thin staff rules from becoming floating tremolo rails. Original mirrored staff/beam and true floating-stroke fixtures.",
+      "reviewed_app_commit": "36c78456a09ba96802930712da07866e87a4c369"
     },
     "PrintedDashChains.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDashChains.java",

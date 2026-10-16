@@ -230,7 +230,7 @@ final class PairedTremoloInk {
                                     y <= Math.min(h - 1, yy + rounded(.45 * gap));
                                     y++) {
                                 run = dark(gray, w, x, y) ? run + 1 : 0;
-                                if (run >= Math.max(4, rounded(.24 * gap))) bounded = false;
+                                if (run >= .20 * gap) bounded = false;
                             }
                         }
                     }
