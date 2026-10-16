@@ -361,12 +361,12 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "a79e6a5ff5c49387eaecb3a5c6d3d79dc8c3932e25b8ff40ed2c7adaeb8cc87e",
-      "source_normalized_sha256": "c0efa1154f538661ceb4c5fe4dcf4415d7a20f15a5a00aeadfbae1f574f33cb1",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "cd19855f3c6434cd1a119d6a41c2b563cd7cd493332ecc1bf9f7474bf1fbe020",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "e22002c51709fb61482a3a2a2976c14ee903333798529427ff6357b603009e96",
+      "source_normalized_sha256": "ec035fa4c4f9d226041491bc52fb2f94e2b3ea30848e0ab9fbfa2ccc4d5c001b",
+      "review_note": "Namespace-equivalent additions preserve a previously proved closing bar only after independent bounded raw/semantic verification under both staff frames. Ten original procedural regressions; no score pixels or model changes.",
+      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
+      "standalone_sha256": "2c457062f30f28a0354df2fd06fd65c7702a7594988cfb0b12ef9cf19e6a56a0",
+      "reviewed_app_commit": "a0baaa00a8471f84721bd4238b84e735ae1a38c3"
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",

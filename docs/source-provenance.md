@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Regional staff replacement retains a previously proved closing bar when both
+staff frames independently confirm it through the existing raw-ink and note
+ownership guards. Ten original procedural regressions cover the shortened edge,
+attached heads, unsupported bars, shifted rows and input preservation. No model
+or score-format change; paired deployment and library acceptance remain pending.
+
 The combined source review includes printed tremolo ownership and timing, pedal
 columns, tempo spans, repeat/coda navigation, pickup clocks, bass-octave clefs,
 and raw-ink head, beam, rest, and staff-extent repairs. Desktop and standalone

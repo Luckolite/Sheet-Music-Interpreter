@@ -524,6 +524,28 @@ final class OmrMeasurePostProcessor {
                                             && extentLongest[side][frame]
                                                     >= Math.max(
                                                             8, Math.round(frames[frame].gap * 3));
+                        // Replacing a regional frame must not discard an already found
+                        // closing bar solely because the short tail has broken staff ink.
+                        if (!proved && side == 1 && span <= prior.gap * 4) {
+                            boolean closingProved = true;
+                            for (StaffRun frame : frames) {
+                                int[] frameRows = new int[5];
+                                for (int line = 0; line < 5; line++)
+                                    frameRows[line] = Math.round(frame.top + line * frame.gap);
+                                closingProved &=
+                                        verifiedClosingBoundary(
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                prior.right,
+                                                frameRows,
+                                                frame.gap,
+                                                frame.slope,
+                                                frame.track);
+                            }
+                            proved = closingProved;
+                        }
                         if (proved) {
                             if (side == 0) keepLeft = prior.left;
                             else keepRight = prior.right;
@@ -1108,6 +1130,49 @@ final class OmrMeasurePostProcessor {
             if (accumulated >= target) return x;
         }
         return counts.length - 1;
+    }
+
+    /** Recheck an existing closing edge with ordinary bar and attached-head guards. */
+    static boolean verifiedClosingBoundary(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int edge,
+            int[] rows,
+            float gap,
+            float slope,
+            StaffPitchTrack track) {
+        if (labels == null
+                || gray == null
+                || width < 1
+                || height < 1
+                || labels.length != (long) width * height
+                || gray.length != labels.length
+                || rows == null
+                || rows.length != 5
+                || !Float.isFinite(gap)
+                || gap < 6
+                || !Float.isFinite(slope)
+                || edge < gap * 4
+                || edge + gap * 4 >= width) return false;
+        // A nearby false candidate can suppress a real closing bar through minimum
+        // measure width. Center this independent check on the previously proved edge.
+        var boundaries =
+                findBoundaries(
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        rows,
+                        gap,
+                        Math.round(edge - gap * 4),
+                        Math.round(edge + gap * 4),
+                        slope,
+                        track);
+        for (int i = 1; i + 1 < boundaries.size(); i++)
+            if (Math.abs(boundaries.get(i) - edge) <= 2) return true;
+        return false;
     }
 
     private static List<Integer> findBoundaries(
