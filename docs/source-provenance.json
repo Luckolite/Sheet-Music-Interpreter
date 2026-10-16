@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "976dfc1b9f7f197b18576d57d9ba02c49d17724acc9119d552aec254a43c2dfd",
-      "review_note": "Reviewed continuous reduced-stem fallback after failed original beam proof, and bounded contrast windows with each rail anchored to the first witness. Original probes and principal-note ownership retained. Twelve original synthetic controls; no private pixels, model or format changes.",
-      "source_normalized_sha256": "8478b807841d553ebacd2094432e0afd195e0eb5709d52775d637fb979d230f2",
+      "source_sha256": "98c75763cf77e89e2baa6bfc1c96cbf17a2b79b8e47518ae9d6c365697646275",
+      "review_note": "Original Apache-2.0 geometry helper proves a detached bowed stroke across six staff gaps before shortening a full-size stem. Recount must prove exactly one or two beams; curved flags and voice-owned stems retain existing handling. Nine original analytic controls; no private pixels, model, dependency or format change.",
+      "source_normalized_sha256": "20764d237396f4d262ff24c2190fe499067d1fec2ce9efacb0552a1ef342ea70",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Tested-token-identical integrated source;10311 Java tests and12 original app controls passed. Paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "2a14e42673c46d13c3e47271bb7aba892f9d7c62c9dc1a4e7ace0ef6ba516585",
+      "reviewed_source_state": "Tested-token-identical scoped integration;10320 Java tests and9 original app controls passed. Cumulative paired deployment pending.",
+      "standalone_sha256": "930f6ed42159d0fd3406f76818a234be9585e831125ff0325f7808314e3c7d17",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "f798200a6d7132893c5439a5bb919dd64106d4ed"
+      "reviewed_app_commit": "e1d0f3debe02fe476fcc49957319c20d02849ebd"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -3284,6 +3284,15 @@
       "reviewed_app_commit": "5905b3d4a12b963e967acae7c6f02fe3e273194e",
       "review_note": "Reviewed namespace-equivalent whole-head recovery anchored to small semantic fragments; closed opening and broad bilateral raw flanks reject flag pockets. Nine original Bravura regressions, no private score assets.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending."
+    },
+    "DetachedSlurStemCap.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedSlurStemCap.java",
+      "source_sha256": "cb2e19402ed73028aee0f6e1b5f0bd0b90f81afc45b711c655520e7b6a23389c",
+      "source_normalized_sha256": "32701c6f3c41801777a38bbcbbf6ab47ba090bf0f478efdc0654692764b8706e",
+      "standalone_sha256": "8ec4ae6596d6514840f1baf91959e675e86fe5adf6154e01741c5bf2582840d5",
+      "reviewed_source_state": "Tested-token-identical scoped integration;10320 Java tests and9 original app controls passed. Cumulative paired deployment pending.",
+      "review_note": "Original Apache-2.0 geometry helper proves a detached bowed stroke across six staff gaps before shortening a full-size stem. Recount must prove exactly one or two beams; curved flags and voice-owned stems retain existing handling. Nine original analytic controls; no private pixels, model, dependency or format change.",
+      "reviewed_app_commit": "e1d0f3debe02fe476fcc49957319c20d02849ebd"
     }
   },
   "interpreter_speedup_review": {

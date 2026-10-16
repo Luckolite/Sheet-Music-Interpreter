@@ -18064,6 +18064,39 @@ final class OmrScoreInterpreter {
                 else if (distance < 0) outerLeft = count;
                 else outerRight = count;
             }
+            if (thick >= 3
+                    && voiceStem == null
+                    && !smallHead
+                    && !hasCurvedFlag(
+                            labels, gray, width, height, head, gap, bestX, stemEnd, upward)) {
+                int[] continuous =
+                        attachedRawStem(gray, width, height, head, gap, 1, stemThreshold);
+                int side = upward ? -1 : 1;
+                if (continuous != null
+                        && continuous[0] == bestX
+                        && continuous[2] == side
+                        && DetachedSlurStemCap.matches(
+                                gray,
+                                width,
+                                height,
+                                bestX,
+                                stemEnd,
+                                continuous[1],
+                                side,
+                                gap,
+                                stemThreshold)
+                        && detectBeamCount(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        head,
+                                        staff,
+                                        corroborate,
+                                        allowSinglePale,
+                                        continuous)
+                                == 2) return 2;
+            }
             if (thick >= 3 && voiceStem == null && !smallHead) {
                 int refined =
                         DetachedBeamTailCap.endpoint(
@@ -18123,6 +18156,23 @@ final class OmrScoreInterpreter {
                                 side,
                                 gap,
                                 stemThreshold);
+                if (refined == stemEnd && !smallHead) {
+                    int[] continuous =
+                            attachedRawStem(gray, width, height, head, gap, 1, stemThreshold);
+                    if (continuous != null
+                            && continuous[0] == bestX
+                            && continuous[2] == side
+                            && DetachedSlurStemCap.matches(
+                                    gray,
+                                    width,
+                                    height,
+                                    bestX,
+                                    stemEnd,
+                                    continuous[1],
+                                    side,
+                                    gap,
+                                    stemThreshold)) refined = continuous[1];
+                }
                 if (refined != stemEnd
                         && detectBeamCount(
                                         labels,
