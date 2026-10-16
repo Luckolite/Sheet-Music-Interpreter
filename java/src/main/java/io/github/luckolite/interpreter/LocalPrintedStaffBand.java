@@ -64,7 +64,9 @@ final class LocalPrintedStaffBand {
             float slope,
             StaffPitchTrack track) {
         return matchesAtDistance(
-                gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2);
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 2)
+                || matchesAtDistance(
+                        gray, w, h, x, top, gap, threshold, first, last, slope, track, true, 1);
     }
 
     private static boolean matchesAtDistance(

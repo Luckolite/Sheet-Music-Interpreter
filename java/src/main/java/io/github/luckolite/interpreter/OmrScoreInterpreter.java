@@ -20146,8 +20146,8 @@ final class OmrScoreInterpreter {
                         && finiteBeamOverRule(
                                 gray, width, height, x, y - run, y - 1, staff, threshold))
                     onlyStaff = false;
-                // Partial occlusions can break continuous slope witnesses. Three farther rules
-                // still prove the fringe through independent phase and ink-mass agreement.
+                // Partial occlusions can break continuous slope witnesses. Three independently
+                // sampled rules still prove the fringe through phase and ink-mass agreement.
                 if (!onlyStaff
                         && onStaff
                         && staffRows >= 2

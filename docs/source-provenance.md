@@ -2205,3 +2205,16 @@ against both implementations. All 10,255 Java regressions passed. Paired
 deployment and whole-library acceptance remain pending.
 Paired app source: `f1a61a84b235f9d5c69d8ae0ab801290e3ad81a2`.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Nearby rule evidence
+
+Bright-paper staff-fringe recovery now also checks nearer independent rules when
+more distant notation interrupts the existing phase and ink-mass proof. Three
+corroborating rules and the original finite-beam, thickness and mass constraints
+remain required. Four original analytic checks reproduce the previous false beam
+and preserve genuine beams, insufficient-reference cases and exact input arrays.
+All four pass against the app candidate; 1,222 focused Java checks pass.
+All 10,259 Java regressions passed. Paired deployment and whole-library
+acceptance remain pending.
+Paired app source: `1fe92fcfaa0115edfcff5304b04e05b75ec0f988`.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
