@@ -3218,12 +3218,12 @@
     },
     "ScoreTremoloWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloWire.java",
-      "source_sha256": "2595e36dab29a50d30b4b3baba2a67212393e927f0f1e721e394084705a305af",
-      "source_normalized_sha256": "622da199bb4f82c3fce04709aef48dc7bcd9f6f5cf48889379349990c2865420",
-      "standalone_sha256": "f98def9b2c83321dc1cd5c1ea2e07c0e27309a0f3351d14e933e1ad4a217dec2",
+      "source_sha256": "ece675a52120770d37d08935fb26d0bdac465e86cceb4a1f05ab407371b7a7ec",
+      "source_normalized_sha256": "fb0156cc7428129c3350682182c71b7b4843827b55108972c0c8a8af96eeecc6",
+      "standalone_sha256": "023fbbdd1a2b28b311682178e0a5bc73405c5fab88119af7a071097e83d2df40",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "review_note": "Namespace/whitespace equivalent exact readFully for Android26 compatibility; UTF8 roundtrip and all truncated framed bodies rejected.",
+      "reviewed_app_commit": "653952e5b4274d8d952e9cdb8b5ed0b1443cf303"
     },
     "SmoothLedgerBackground.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SmoothLedgerBackground.java",

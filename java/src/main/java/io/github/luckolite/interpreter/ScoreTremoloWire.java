@@ -125,8 +125,8 @@ public final class ScoreTremoloWire {
             List<ScoreTremoloSource.Pair> result = new ArrayList<>();
             for (int i = 0; i < pairs; i++) {
                 int length = count(in, 1024);
-                byte[] id = in.readNBytes(length);
-                if (id.length != length) throw new EOFException("Truncated tremolo identity");
+                byte[] id = new byte[length];
+                in.readFully(id);
                 String name =
                         StandardCharsets.UTF_8
                                 .newDecoder()
