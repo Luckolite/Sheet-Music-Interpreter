@@ -378,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "fe5a471a06a19426edee383d422e57ce9127e48994e52d0ba7aef8b9487604d0",
-      "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
-      "source_normalized_sha256": "4299d40937520665c631399a8958789a5e38407730af6868a99272ae550adee4",
+      "source_sha256": "9219f156699dde77988c0a76c5ece9c36939fdf5645b641e8d1cfe3c83b0f3c9",
+      "review_note": "Short outgoing system tie bows may overlap their head; complete raw curve and paired incoming ownership remain required. Original generated paired systems and rejection controls.",
+      "source_normalized_sha256": "96652c4f7e0d8733d0608024d86d6c534748a2e8f394e90839f223b8bd9d8d1d",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "abb61f56ae738c7b73da047957ae992a4603f4ef03ecba0e3537860e30fb971e",
+      "standalone_sha256": "19084f058cc69ecc6604ea11cd235fc5ca0320b4163a80d9e7cacddc7f8d0742",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
-      "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f"
+      "reviewed_app_commit": "1dd18328ed2c7ebb5e1d75e3737761b6d29fd187",
+      "scoped_reviewed_app_commit": "1dd18328ed2c7ebb5e1d75e3737761b6d29fd187"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

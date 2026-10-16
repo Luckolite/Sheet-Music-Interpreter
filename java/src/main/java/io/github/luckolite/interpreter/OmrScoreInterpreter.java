@@ -22448,6 +22448,33 @@ final class OmrScoreInterpreter {
                 }
             }
         }
+        // A short outgoing bow can start above the head before crossing its outer edge.
+        // Require the same complete raw arc and a separately proved matching incoming end.
+        if (outgoing) {
+            for (int left = Math.round(note.head.centerX); left < note.head.maxX; left++) {
+                for (int span = Math.max(6, Math.round(gap * .35f));
+                        span < Math.round(gap * 1.6f);
+                        span++) {
+                    int right = left + span;
+                    if (left < 0 || right >= width || right < note.head.maxX + gap * .35f) continue;
+                    if (hasContinuousTieArc(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            left,
+                            right,
+                            note.head.centerY,
+                            gap,
+                            null,
+                            205,
+                            side,
+                            true,
+                            false,
+                            null)) return true;
+                }
+            }
+        }
         // A miniature returning shoulder can precede the first head at a system or page edge.
         // Keep the original search first, then require the complete raw-curve proof.
         if (!outgoing) {

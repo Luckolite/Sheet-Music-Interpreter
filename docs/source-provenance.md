@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Short outgoing tie bows can begin above their notehead. A bounded overlapping
+search retains the existing raw-curve proof, ink threshold and matching incoming
+endpoint requirement. Original paired-system fixtures cover curved and straight
+strokes, missing counterparts, pitch mismatch and source-pixel preservation.
+
 Verified regional staff samples protect pitch only within their observed horizontal
 range. Extrapolated frames remain estimates eligible for existing local five-rule
 recovery. Original generated rules cover both tails, preserved interior authority,
