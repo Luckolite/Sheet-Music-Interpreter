@@ -2378,3 +2378,8 @@ Paired app source: 36c78456a09ba96802930712da07866e87a4c369.
 
 A coarse shaft trace can bridge a short white gap into an overhead slur. Recognition now rejects a lone beam only when a continuous shaft, detached curved cap and independent zero-beam recount agree. Multiple bounded spans prove curvature before the slur merges with a staff rule. Original mirrored quarters, genuine beams, connected curves and staff-crossing fixtures protect the boundary. Private replay restores four quarters while preserving all other fields across two pages.
 Paired app source: ed7d208f5712a127c45fe71bcf53920b9abf2f0c.
+
+## Diagonal dark fragments beside notes
+
+Dark-core recovery now checks the ink distribution along its principal axes. A diagonal fragment can have square bounds yet remain too elongated to be a dot. This rejects a false augmentation dot in slide ink while retaining round and modestly elliptical cores and the existing lighter-curve contact recovery. Six original mirrored, genuine-core and pixel-preservation fixtures cover the change.
+Paired app source: f05817fd55f5332aecbd7b4eb75fcf708d289734.

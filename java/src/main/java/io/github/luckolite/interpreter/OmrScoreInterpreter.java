@@ -16676,7 +16676,8 @@ final class OmrScoreInterpreter {
                         findDarkDotComponents(gray, width, height, head, gap, coreThreshold))
                     if (core.area >= gap * gap * .06f
                             && core.maxX - core.minX + 1 >= gap * .22f
-                            && core.maxY - core.minY + 1 >= gap * .22f) combined.add(core);
+                            && core.maxY - core.minY + 1 >= gap * .22f
+                            && roundDarkDotCore(gray, width, core, coreThreshold)) combined.add(core);
         if (gray != null && gray.length == width * height)
             combined.addAll(fadedAugmentationDots(gray, width, height, head, gap));
         if (gray != null
@@ -16772,6 +16773,28 @@ final class OmrScoreInterpreter {
                         && Math.abs(second.centerY - first.centerY) <= gap * .40f
                 ? 2
                 : 1;
+    }
+
+    /** A diagonal fragment can have square bounds without a rounded ink body. */
+    private static boolean roundDarkDotCore(byte[] gray, int width, Component core, int threshold) {
+        double sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+        int count = 0;
+        for (int y = core.minY; y <= core.maxY; y++)
+            for (int x = core.minX; x <= core.maxX; x++)
+                if ((gray[y * width + x] & 255) < threshold) {
+                    double dx = x - core.minX, dy = y - core.minY;
+                    sx += dx;
+                    sy += dy;
+                    sxx += dx * dx;
+                    syy += dy * dy;
+                    sxy += dx * dy;
+                    count++;
+                }
+        if (count < 3) return false;
+        double xx = sxx - sx * sx / count, yy = syy - sy * sy / count, xy = sxy - sx * sy / count;
+        double spread = xx + yy;
+        // Bound the principal-axis variance ratio to three, including diagonal orientation.
+        return spread > 0 && 4 * ((xx - yy) * (xx - yy) + 4 * xy * xy) <= spread * spread;
     }
 
     /** A tiny threshold island in shaded paper needs an independently contrasting printed core. */
