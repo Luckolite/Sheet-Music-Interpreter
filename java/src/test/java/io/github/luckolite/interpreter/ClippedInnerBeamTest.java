@@ -19,25 +19,25 @@ public class ClippedInnerBeamTest {
         for (int j = 0; j < 5; j++)
             for (int x = 20; x < 280; x++) {
                 g[(90 + j * 14) * W + x] = (byte) 180;
-                l[(90 + j * 14) * W + x] = 2;
+                l[(90 + j * 14) * W + x] = OmrMeasurePostProcessor.STAFF;
             }
         for (int y = 75; y <= 140; y++)
             for (int x = 139; x <= 141; x++) {
                 g[y * W + x] = 20;
-                l[y * W + x] = 5;
+                l[y * W + x] = OmrMeasurePostProcessor.SYMBOL;
             }
         for (int j = 0; j < count; j++)
             for (int y = 140 - thickness - j * spacing; y < 140 - j * spacing; y++)
                 for (int x = 115; x <= 141; x++) {
                     if (detached && j == 2 && y >= 112) continue;
                     g[y * W + x] = 20;
-                    l[y * W + x] = 5;
+                    l[y * W + x] = OmrMeasurePostProcessor.SYMBOL;
                 }
         for (int y = 68; y <= 82; y++)
             for (int x = 140; x <= 160; x++)
                 if (Math.pow((x - 150) / 10.0, 2) + Math.pow((y - 75) / 7.0, 2) <= 1) {
                     g[y * W + x] = 20;
-                    l[y * W + x] = 1;
+                    l[y * W + x] = OmrMeasurePostProcessor.NOTEHEAD;
                 }
         if (up) {
             byte[] gg = g.clone(), ll = l.clone();
