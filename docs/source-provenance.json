@@ -1557,19 +1557,21 @@
     },
     "ForteInkShape.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ForteInkShape.java",
-      "source_sha256": "7c568804896ce940cfee4af1044e17f5095ab795a47c856fcd5ea44f382d02d0",
-      "source_normalized_sha256": "7c568804896ce940cfee4af1044e17f5095ab795a47c856fcd5ea44f382d02d0",
+      "source_sha256": "54bf16cefb77e8a7c1967fdc33317aba8bbbaaa688011427d6886eefcc1ac5d8",
+      "source_normalized_sha256": "41a4ded7a4224843d28b3ccfed7de691f7f03f3050972502b344fea76b038d79",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+      "reviewed_source_state": "working-tree",
+      "review_note": "Exclude false off-staff rests inside connected dynamic lettering using independently separated right-contour rows and complete f hook, cross stroke and foot topology. Original Bezier lettering, missing-stroke, genuine-rest, blank, translated and scaled controls; no private score pixels.",
+      "standalone_sha256": "5a75867ee07a3cb0a92e2a87d9ff0b6b9d62b3a2d809f0f958270345c4c9538a"
     },
     "ForteRestGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ForteRestGuard.java",
-      "source_sha256": "7f1571b681c3c571a3d09911114e2385890725bc151680e235fe2bbf7fad9413",
-      "source_normalized_sha256": "7f1571b681c3c571a3d09911114e2385890725bc151680e235fe2bbf7fad9413",
+      "source_sha256": "7c10cb3edff61ad3e7fcf746d410e9748b75c3e089e9fcb5ea288dd4fdb4eb8f",
+      "source_normalized_sha256": "07574e9f0ae97b0b696031324ac91717c94000ccbea18ae6799153f44a7b05e6",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_source_state": "Reviewed isolated 880 successor preserving accepted 879; exact file hashes pin uncommitted source beyond base commit.",
-      "review_note": "Global independent printed-number consensus, complete note/natural/clef/brace meter ownership, whole forte rest exclusion and page-bounded finite beam proof. Full executable token parity after package/diagnostic adapters; MusicalOcr retains caller-owned inference. Original generated Apache-2.0 controls and licensed Bravura OFL glyphs. No score, device data, weights or new production dependency."
+      "reviewed_source_state": "working-tree",
+      "review_note": "Exclude false off-staff rests inside connected dynamic lettering using independently separated right-contour rows and complete f hook, cross stroke and foot topology. Original Bezier lettering, missing-stroke, genuine-rest, blank, translated and scaled controls; no private score pixels.",
+      "standalone_sha256": "07cd99ab2b1ec0d9ecceae46a82433313110c8177b32f1c91925ce080b74326e"
     },
     "MeterHeaderInkGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterHeaderInkGuard.java",

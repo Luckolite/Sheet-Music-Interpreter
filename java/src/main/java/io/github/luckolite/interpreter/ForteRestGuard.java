@@ -57,7 +57,9 @@ final class ForteRestGuard {
                         || Math.abs(cy - (top + bottom) * .5f) > gap * .7f) continue;
                 byte[] ink = new byte[w * h];
                 for (int i = 0; i < size; i++) ink[queue[i]] = 1;
-                if (ForteInkShape.matches(ink, w, minX, maxX, minY, maxY, gap)) return true;
+                if (ForteInkShape.matches(ink, w, minX, maxX, minY, maxY, gap)
+                        || ForteInkShape.rightContour(ink, w, minX, maxX, minY, maxY, gap))
+                    return true;
             }
         }
         return false;

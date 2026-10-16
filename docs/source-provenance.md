@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Connected dynamic lettering retains its complete italic-f contour proof when
+a preceding letter widens the component. Original geometric controls preserve
+genuine eighth rests and reject incomplete f strokes.
+
 Long-stem tuplets retain the complete connected-stem, separate-rail and bounded
 secondary-beam proofs within ten staff gaps. Printed sixes allow a short upper
 hook return proportional to glyph height while retaining the lower-bowl checks.
