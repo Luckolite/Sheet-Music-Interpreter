@@ -8,18 +8,18 @@ You do not need to publish your own code. Follow the [license and notice require
 
 ## What it supports 🎹🎸🎻🎷
 
-- Standard notation: pitches, accidentals, chords, rests, ties, tempo and key changes.
+- Standard notation: pitches, accidentals, chords, rests, ties, repeats and endings, tempo and key changes.
 
 - Multi-staff piano, 6- and 7 string guitar tabs, violin and ensemble pages, including independently barred staves.
 
 - Note-equals-number tempo marks and note-equals-note metric modulations, including dotted pulses.
 
-- Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses and sf/sfz/sfp attacks. See [the shared playback policy](docs/expressive-performance.md) for timing defaults and evidence requirements.
-- Continuous pedal brackets with two upward hooks retain written columns. Complete, part-owned pairs supply ordered MIDI sustain controls, finite audio release gates and MusicXML bracket endpoints.
+- Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses, sf/sfz/sfp attacks and paired tremolos. See [the shared playback policy](docs/expressive-performance.md).
+- Piano pedal brackets carry through to MIDI sustain, audio previews and MusicXML.
 
 - Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Graphical bends, quarter-tone bends, whammy-bar directions and strum direction aren't supported.
 
-- JSON for integration, MIDI/MP3 for preview, and MusicXML for editing in notation software.
+- JSON for integration, MIDI/MP3 for preview, and MusicXML for editing with retained clefs, slurs, articulations, ornaments and grace notes.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 
 - MusicXML reconstructs a concert-pitch score, not the original layout or tab placement.
