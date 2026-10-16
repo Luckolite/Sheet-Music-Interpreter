@@ -377,15 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2cc9980446451b268e33ebcac22fb24446a62923cab184ac681e10c2e4ba4b77",
-      "review_note": "Retain substantial darker dot cores when raster shading joins a dot to a lighter curve; existing size, roundness, contrast and ownership checks remain. Original shaded-contact and curve-fragment controls; no score assets.",
-      "source_normalized_sha256": "4774eecfb7e45fd91b045bb43942a8eec79543c669dbfc1a4d336eb104e1c369",
+      "source_sha256": "5380c651a262affb957ca15f136e869cea8626fed2bb4091946b694f19306a60",
+      "review_note": "Reject a lone beam supplied by a detached slur cap. Existing strict endpoint ownership and curved-flag guards remain; multiple bounded spans establish curvature before staff-rule merging. Original mirrored curve/staff fixtures only.",
+      "source_normalized_sha256": "7f9aa0859250d18e19b344851a59c49289ce300590dc09f815bec824e9c9f6f1",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; 10454 Java and 584 Python tests passed (44 skipped). Paired package deployment and whole-library acceptance pending.",
-      "standalone_sha256": "e00e174de2e4ec6543992fb9fed9ac1f9e6fc2a4b6cf5bec4da6d5a49210bed1",
+      "reviewed_source_state": "Committed source; 10470 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
+      "standalone_sha256": "7cfc9929eb6170148a0ea50791ff7ad5da08a45d37571c01fb9374a3bb305523",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "f224e335a4652211fc72167e4dde52d05cd87f85",
-      "scoped_reviewed_app_commit": "f224e335a4652211fc72167e4dde52d05cd87f85"
+      "reviewed_app_commit": "ed7d208f5712a127c45fe71bcf53920b9abf2f0c",
+      "scoped_reviewed_app_commit": "ed7d208f5712a127c45fe71bcf53920b9abf2f0c"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -3296,12 +3296,12 @@
     },
     "DetachedSlurStemCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedSlurStemCap.java",
-      "source_sha256": "0c795cc5e8839f0d785ea14f5b7322651b8e215b865a5afa08ef19001381d446",
-      "source_normalized_sha256": "ee8e4bfc84acc184af8808774db5c3489535e990ff1d4e5346e8122dbe0c791a",
-      "standalone_sha256": "9edbce6b312b6187f159b9b3bd7a1375636fa73c8400316a923b05f39e195004",
-      "reviewed_source_state": "Tested-token-identical scoped integration;10328 Java tests and8 original app controls passed. Cumulative paired deployment pending.",
-      "review_note": "Detached bowed slur proof also excludes antialiased pale recovery endpoints and bounds tremolo searches to the continuous shaft. Both pale recovery paths retain the same geometric proof; no blanket duration override. Eight original analytic regression controls, no private pixels, model, dependency or format changes.",
-      "reviewed_app_commit": "999eaa3a08bed1bc4b63db0a035e85985de12242"
+      "source_sha256": "561feb1c1858f6e129ac32ae6539c5f1a076b011b785154ab854feb55903ae3f",
+      "source_normalized_sha256": "d7bc60c52f853f039b0bce897aa6d227c42610280def5beb71d6ab2fd05d52c1",
+      "standalone_sha256": "c83e8def0352bd8b0760dfed3f98f5f9825f293a9962ecfc5d5464f2d95ab4ef",
+      "reviewed_source_state": "Committed source; 10470 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
+      "review_note": "Reject a lone beam supplied by a detached slur cap. Existing strict endpoint ownership and curved-flag guards remain; multiple bounded spans establish curvature before staff-rule merging. Original mirrored curve/staff fixtures only.",
+      "reviewed_app_commit": "ed7d208f5712a127c45fe71bcf53920b9abf2f0c"
     },
     "DetachedMordentBeamCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedMordentBeamCap.java",

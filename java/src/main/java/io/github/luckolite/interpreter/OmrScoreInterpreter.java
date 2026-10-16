@@ -18673,7 +18673,8 @@ final class OmrScoreInterpreter {
                 else if (distance < 0) outerLeft = count;
                 else outerRight = count;
             }
-            if (thick >= 3
+            // A detached curved cap cannot supply a lone beam or a third beam.
+            if ((thick == 1 || thick >= 3)
                     && voiceStem == null
                     && !smallHead
                     && !hasCurvedFlag(
@@ -18704,7 +18705,7 @@ final class OmrScoreInterpreter {
                                         corroborate,
                                         allowSinglePale,
                                         continuous)
-                                == 2) return 2;
+                                == (thick == 1 ? 0 : 2)) return thick == 1 ? 0 : 2;
             }
             if (thick >= 3 && voiceStem == null && !smallHead) {
                 int refined =

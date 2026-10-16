@@ -2373,3 +2373,8 @@ Paired app source: f224e335a4652211fc72167e4dde52d05cd87f85.
 
 Floating-stroke recognition now rejects connected ink at the same minimum thickness used to admit strokes. This prevents three thin staff lines between ordinary beamed notes from creating a false tremolo pair and failing downstream timing validation. Original mirrored rules, connected beams and genuine floating strokes cover the boundary; timing validation remains intact.
 Paired app source: 36c78456a09ba96802930712da07866e87a4c369.
+
+## Detached slur caps above quarter stems
+
+A coarse shaft trace can bridge a short white gap into an overhead slur. Recognition now rejects a lone beam only when a continuous shaft, detached curved cap and independent zero-beam recount agree. Multiple bounded spans prove curvature before the slur merges with a staff rule. Original mirrored quarters, genuine beams, connected curves and staff-crossing fixtures protect the boundary. Private replay restores four quarters while preserving all other fields across two pages.
+Paired app source: ed7d208f5712a127c45fe71bcf53920b9abf2f0c.

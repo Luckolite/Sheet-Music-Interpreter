@@ -51,11 +51,14 @@ final class DetachedSlurStemCap {
         while (bottom + 1 < height && (gray[(bottom + 1) * width + x] & 255) < threshold) bottom++;
         if (bottom - top + 1 < 2 || bottom - top + 1 > gap * .6f) return false;
         float center = (top + bottom) * .5f;
-        float left = follow(gray, width, height, x, center, gap, threshold, -1, span);
-        float right = follow(gray, width, height, x, center, gap, threshold, 1, span);
-        return Float.isFinite(left)
-                && Float.isFinite(right)
-                && (center - (left + right) * .5f) * side >= gap * .25f;
+        // Shorter spans can prove the bend before the curve merges into a staff rule.
+        for (int followSpan : new int[] {span, Math.round(gap * 2.5f), Math.round(gap * 2)}) {
+            float left = follow(gray, width, height, x, center, gap, threshold, -1, followSpan);
+            float right = follow(gray, width, height, x, center, gap, threshold, 1, followSpan);
+            if (Float.isFinite(left) && Float.isFinite(right)
+                    && (center - (left + right) * .5f) * side >= gap * .25f) return true;
+        }
+        return false;
     }
 
     static boolean crossesRecovery(
