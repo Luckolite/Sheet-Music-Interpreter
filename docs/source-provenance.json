@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "1b851c85ae5c30a6e29f2f93eabcbf9df19f77b8ebc4fffc2716bbdfaa1e060b",
-      "review_note": "Reviewed matching independent distant-rule proof and bounded ink-mass comparison for bright narrow fringes. Original shaded-paper behavior retained; finite dark and pale short beams remain. Only original analytic regressions included.",
-      "source_normalized_sha256": "7061f5040e809c0befed91c93f37a0bca06993ba2bc5ea0c1bdd15cbc8151064",
+      "source_sha256": "eb7b07c25cdc9371d7c25c733fcf6bedc3364dfc0a050d58fae54f25443f3532",
+      "review_note": "Reviewed global phase-and-ink-mass proof for narrow staff fringes when partial notation occlusions prevent continuous slope witnesses. Three independent rules, phase agreement, bright-paper mass budget and finite-beam exclusion retained. Original analytic regression only; no private pixels or model changes.",
+      "source_normalized_sha256": "1bbb045499c4fc724554db4b4994dc88c92f4015e4c1a741a7479cfbfb6fd50f",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed app source; 10,251 Java regressions, 23 app checks, and 12 private page replays pass. Paired deployment remains pending.",
-      "standalone_sha256": "f5800c0a356ade1bfe5d172bd94782f044726d9d8e72368debb1ce2d37d5f78f",
+      "reviewed_source_state": "Committed app source; 10,255 Java regressions, four app regressions and twelve private page replays pass. Paired deployment remains pending.",
+      "standalone_sha256": "000ce158f00849f844096d9c31fbe85bbcb4b9a24e817fe41376085f499f90a3",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "8025161cd874590ff7178d6ba815a2465ed32e0b"
+      "reviewed_app_commit": "f1a61a84b235f9d5c69d8ae0ab801290e3ad81a2"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

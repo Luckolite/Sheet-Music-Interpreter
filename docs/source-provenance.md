@@ -2193,3 +2193,15 @@ The distant-rule path also compares local ink mass with neighboring rules;
 Paired app source: `8025161cd874590ff7178d6ba815a2465ed32e0b`. All 10,251 Java
 regressions passed; 23 focused checks also pass against the app source.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Partially obscured staff rules
+
+Narrow staff fringes can use three independent, phase-aligned rule ink budgets
+when neighboring notation interrupts continuous slope witnesses. Bright-paper,
+thickness and finite-beam guards remain required. Four original analytic checks
+cover the false beam, retained genuine beam, insufficient rule context and exact
+input preservation. The positive case fails before the correction; all four pass
+against both implementations. All 10,255 Java regressions passed. Paired
+deployment and whole-library acceptance remain pending.
+Paired app source: `f1a61a84b235f9d5c69d8ae0ab801290e3ad81a2`.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
