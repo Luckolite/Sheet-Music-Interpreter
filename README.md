@@ -8,11 +8,11 @@ You do not need to publish your own code. Follow the [license and notice require
 
 ## What it supports 🎹🎸🎻🎷
 
+- Piano, Violin, Guitar 6- and 7 string tabs, ensemble pages, and independently barred staves.
+
 - Standard notation: pitches, accidentals, chords, rests, ties, repeats and endings, tempo and key changes.
 
-- Multi-staff piano, 6- and 7 string guitar tabs, violin and ensemble pages, including independently barred staves.
-
-- Note-equals-number tempo marks and note-equals-note metric modulations, including dotted pulses.
+- Note-equals-number tempo marks, and note-equals-note metric modulations, including dotted pulses.
 
 - Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses, sf/sfz/sfp attacks and paired tremolos. See [the shared playback policy](docs/expressive-performance.md).
 - Piano pedal brackets carry through to MIDI sustain, audio previews and MusicXML.
