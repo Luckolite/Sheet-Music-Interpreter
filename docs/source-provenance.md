@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Touching whole-note columns with a displaced second require independently printed
+open centers for every recovered head. Whole-chord dot positions remain available
+when rest exclusion revalidates their durations.
+
 Lower octave heads may use the complete ledger-chain proof from four inner
 rails onward. All rails still require short, dark spans and thin exposed flanks;
 original fixtures reject each missing inner rail, long lines and thick bars.

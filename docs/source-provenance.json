@@ -378,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "9f6b62e610570c56dac4d60315bc73e8a320a71de95e0e9175f7305b768889e0",
-      "review_note": "Extend complete lower-ledger chain proof to four required inner rails. Each short dark rail must retain thin bilateral exposed flanks even when crossing an octave head. Original five-ledger filled octave and each missing inner rail, long lines, thick bars, unchanged pixels regressions.",
-      "source_normalized_sha256": "d71e61f32a4810d0722f3b553aff910455e4975a1b460c4004846e5d45539587",
+      "source_sha256": "fa82c512d29c889382223335c9ce772187326d0f5c51369f481fe19deb8fbb41",
+      "review_note": "Split stemless whole-note second beside a vertical open-head column only with independent printed open-center proof. Preserve whole-chord dot anchor during rest exclusion. Original mirrored/enlarged/rest-present/solid and per-head closed-center/white-mask/pixel-preservation controls.",
+      "source_normalized_sha256": "1347123b01d8bbfcf090ccddd949df7e9335e409ae8fd8eefd3be3872a83debd",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; full rebuilt validation and paired deployment pending",
-      "standalone_sha256": "fe708a9914ebc7f4f1800dea311f0699f8d5476d5c442affdb639e19e9cf509c",
+      "reviewed_source_state": "Committed source; full validation and paired deployment pending",
+      "standalone_sha256": "ff7fda34f28106a103eaeb23ded131f02e5cfc2b276dc92468fe830733ecc9d5",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "9cf932975111ff4a1d2af3b94cc3d6a34b67d4ea",
-      "scoped_reviewed_app_commit": "9cf932975111ff4a1d2af3b94cc3d6a34b67d4ea"
+      "reviewed_app_commit": "7ab5675f890fc35bfb691a3852bba73e6e48f426",
+      "scoped_reviewed_app_commit": "7ab5675f890fc35bfb691a3852bba73e6e48f426"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",

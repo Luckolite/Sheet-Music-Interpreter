@@ -2015,7 +2015,17 @@ final class OmrScoreInterpreter {
                                                             note.head,
                                                             resolvedHeads,
                                                             note.staffGap)
-                                                    : note.head,
+                                                    : event.unbeamedDurationBeats()
+                                                                    == ScoreNoteEvent.DURATION_WHOLE
+                                                            ? wholeChordDotAnchor(
+                                                                    labels,
+                                                                    gray,
+                                                                    width,
+                                                                    height,
+                                                                    note.head,
+                                                                    resolvedHeads,
+                                                                    note.staffGap)
+                                                            : note.head,
                                             resolvedHeads,
                                             dotValidationGap,
                                             event.unbeamedDurationBeats()
@@ -7146,6 +7156,12 @@ final class OmrScoreInterpreter {
         for (Component component : source) {
             Staff staff = nearestHeadStaff(staffs, component.centerY);
             float componentHeight = component.maxY - component.minY + 1f;
+            List<Component> wholeStack =
+                    splitWholeSecondStack(labels, gray, width, height, component, staff);
+            if (!wholeStack.isEmpty()) {
+                result.addAll(wholeStack);
+                continue;
+            }
             List<Component> wholeSeconds =
                     splitWholeSeconds(labels, gray, width, height, component, staff);
             if (!wholeSeconds.isEmpty()) {
@@ -19121,6 +19137,54 @@ final class OmrScoreInterpreter {
     }
 
     // Retain the already-published displaced whole-note and accent safeguards.
+    /** Whole-note seconds can touch a vertical column of other open heads. */
+    private static List<Component> splitWholeSecondStack(
+            byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null || staff == null) return List.of();
+        float gap = staff.pitchGap;
+        float w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        if (w < gap * 3.1f || w > gap * 4.2f || h < gap * 2.5f || h > gap * 4.4f) return List.of();
+        for (boolean leafLeft : new boolean[] {true, false}) {
+            int middle = Math.round((head.minX + head.maxX) * .5f + (leafLeft ? -.1f : .1f) * gap);
+            Component leaf =
+                    horizontalHeadSlice(
+                            labels,
+                            width,
+                            head,
+                            leafLeft ? head.minX : middle + 1,
+                            leafLeft ? middle : head.maxX);
+            Component column =
+                    horizontalHeadSlice(
+                            labels,
+                            width,
+                            head,
+                            leafLeft ? middle + 1 : head.minX,
+                            leafLeft ? head.maxX : middle);
+            if (leaf == null
+                    || column == null
+                    || !plausibleHead(leaf, gap)
+                    || leaf.maxY - leaf.minY + 1 > gap * 1.4f
+                    || leaf.maxY - leaf.minY + 1 < gap * .65f
+                    || !printedOpenOval(labels, gray, width, height, leaf, gap)
+                    || hasAttachedStem(labels, width, height, leaf, gap)) continue;
+            List<Component> stack = splitHollowStack(labels, gray, width, height, column, staff);
+            if (stack.size() < 3) continue;
+            boolean valid = true, second = false;
+            for (Component part : stack) {
+                if (!printedOpenOval(labels, gray, width, height, part, gap)
+                        || hasAttachedStem(labels, width, height, part, gap)) valid = false;
+                float dy = Math.abs(part.centerY - leaf.centerY);
+                if (dy >= gap * .3f && dy <= gap * .75f) second = true;
+            }
+            if (!valid || !second) continue;
+            List<Component> result = new ArrayList<>(stack);
+            result.add(leaf);
+            result.sort(Comparator.comparingDouble(Component::centerY));
+            return result;
+        }
+        return List.of();
+    }
+
     private static List<Component> splitWholeSeconds(
             byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null || staff == null) return List.of();
