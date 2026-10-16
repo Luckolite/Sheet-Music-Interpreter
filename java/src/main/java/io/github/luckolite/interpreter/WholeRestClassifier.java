@@ -106,7 +106,9 @@ final class WholeRestClassifier {
                 int lo = Math.max(1, (int) Math.ceil(m.left() * width));
                 int hi = Math.min(width - 2, (int) Math.floor(m.right() * width));
                 var plates = new ArrayList<Plate>();
-                scanSecondRule(gray, width, height, lo, hi, lines.top(), gap, plates);
+                // Anchor the hanging body to the detected rule rather than averaged spacing.
+                scanSecondRule(
+                        gray, width, height, lo, hi, lines.rows()[1] - gap, gap, plates);
                 scanRaised(gray, width, height, lo, hi, lines.top(), gap, plates);
                 for (var plate : plates) {
                     float plateGap = plate.gap();

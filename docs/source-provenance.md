@@ -2348,3 +2348,13 @@ cover independent shafts, genuine head bulges, missing owners and closed channel
 Private replay restores an ornamental pair and removes its false cap note;
 other written note fields and rest data remain unchanged.
 Paired app source: 82e8206261faca466621a5b1e2899cb70f4bcde3.
+
+## Hanging rests on individually detected staff rules
+
+Whole-rest classification now anchors the hanging body to the detected second
+staff rule rather than reconstructing that rule from average spacing. Original
+uneven-rule and partial-fringe fixtures reproduce the old missed proof; existing
+attachment, empty-space, dotted-rest and silent-lane checks remain in force.
+Private replay corrects two centered full-bar rest kinds with no note changes.
+A separate local-phase and faint-dot-ink ambiguity remains under investigation.
+Paired app source: c784b9aadd2b8f69747aa1866c7a7e5602abc43e.

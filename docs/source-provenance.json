@@ -2035,12 +2035,12 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "2bddd7635c013fbe70997a80d1a55ae740b77007335381476003b40d53023f8d",
-      "source_normalized_sha256": "68c38febd84dbafc3786936ccc8adb186b8691359be73313a28280e168d49155",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "c01d8348cfcba6ab35cd649e6aaaee3b076eee189ab6030215473bdb6de7b2e2",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "7939d38b48ba408fdcd8c156ee837a1d025baa885c32cb5534ae1c0b0c1fc90b",
+      "source_normalized_sha256": "af4ec394ab0f2458fa017f983cb3d1344f31001983bd1ea098ea8ff5d985a548",
+      "reviewed_source_state": "Committed source; 10432 Java and 584 Python tests passed. Paired package deployment and whole-library acceptance pending.",
+      "review_note": "Use the individually detected second staff row for hanging rest support. Original uneven-rule and antialias-fringe fixtures demonstrate missing centered whole-rest proof without weakening attachment, isolation or silent-lane checks.",
+      "standalone_sha256": "aa3e9c92f43b4929ab8d443c44b9bf70f6cc97eef41ef0dcc4d4d9d904e1bd92",
+      "reviewed_app_commit": "c784b9aadd2b8f69747aa1866c7a7e5602abc43e"
     },
     "WideSystemIncomingTieProof.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",
