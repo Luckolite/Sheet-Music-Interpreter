@@ -21580,6 +21580,32 @@ final class OmrScoreInterpreter {
                 }
             }
         }
+        // Preserve the coarse search, then resolve raster phase for short outgoing arcs.
+        // The existing ink, continuity and paired-endpoint requirements still apply.
+        if (outgoing) {
+            for (int clearance = 0; clearance <= Math.round(gap * 1.8f); clearance++) {
+                for (int span = Math.round(gap * 1.6f); span <= Math.round(gap * 3f); span++) {
+                    int left = note.head.maxX + clearance;
+                    int right = left + span;
+                    if (left < 0 || right >= width) continue;
+                    if (hasContinuousTieArc(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            left,
+                            right,
+                            note.head.centerY,
+                            gap,
+                            null,
+                            205,
+                            side,
+                            true,
+                            false,
+                            null)) return true;
+                }
+            }
+        }
         // A miniature returning shoulder can precede the first head at a system or page edge.
         // Keep the original search first, then require the complete raw-curve proof.
         if (!outgoing) {

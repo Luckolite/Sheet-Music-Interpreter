@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "7ad23a0c05ea48d2849632a232704e572953afffaf3037f0dff954f8e57db09a",
-      "review_note": "Reviewed identical incoming-only compact boundary-arc fallback after the existing endpoint search. Retains full raw-curve proof and paired same-pitch/system or page assembly requirements. Eight original miniature-boundary regressions cover both sides, missing endpoints, pitch mismatch, opposite sides, straight strokes and source immutability. No private data or model changes.",
-      "source_normalized_sha256": "ed0ce13c3f4ff442e8f6ab3774a38355ee16ec68dfb603cc9e38873bb1587b5e",
+      "source_sha256": "060daae23267cc99b478c60cee42dbbcca0e694a6bb4bed3c303c1b307d0939b",
+      "review_note": "Reviewed identical outgoing-only pixel-phase fallback after existing boundary arc search. Ink threshold remains 205, with strict contrast and complete curve proof. Eight original phase tests cover upper/lower arcs, missing endpoints, pitch/side mismatch, flat strokes and immutable source arrays. No private data or model changes.",
+      "source_normalized_sha256": "d2b3d0398bc35272a2ed1b389743bb94ed59e865f09006a9a4b62528145b954f",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "a0b23e63b0cb66b5699b961d9239940c48a00d41fc18dc082fe65a867cd002ca",
+      "standalone_sha256": "b85c32d6875bcc47ebe2283a119ad395fc66cde4891fce8ac7d56aec61d80e45",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "e0dddabea8c18e135e65cc4b7906926284f7b63b"
+      "reviewed_app_commit": "433b22c5e8b0dd3c41ff4444008d326e656383c3"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -6200,12 +6200,12 @@
       "OmrScoreInterpreter.java": {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
         "source_sha256": "ce7f9109f63c89b31fdef290bfc81a3089e6e16598dfeb622e0e949d8f989de3",
-        "reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
+        "reviewed_app_commit": "433b22c5e8b0dd3c41ff4444008d326e656383c3",
         "scoped_reviewed_app_commit": "2c890b216f9fe461e1e364cc9817dd102fbde7b0",
         "review_note": "Recognition28: returning tie candidates require connected original-column ink; independent adjacent sustained heads may exceed the page-relative distance cap. Existing pitch, voice, written timing, arc and clearance guards remain. Original synthetic controls only; no model or dependencies changed.",
         "source_normalized_sha256": "1aa38a454469b13b27e028a6c2859a66153a7c9128987427f04bc65aeacd3506",
         "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-        "reviewed_source_state": "Committed recognition28 source, reviewed package/diagnostic adaptation; guide284 and audio77 physical layouts unchanged.",
+        "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
         "standalone_sha256": "17e4cbacd60e6b3430e434c74c9e195bb1bfa577b256d4b370b93166497ec392"
       },
       "GuideCacheIdentity.java": {
@@ -6284,12 +6284,12 @@
       "OmrScoreInterpreter.java": {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
         "source_sha256": "5929deedbfeaa5e48a7510f0f3e66b7f68927496d6c3c61385bf9d3274765677",
-        "reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
+        "reviewed_app_commit": "433b22c5e8b0dd3c41ff4444008d326e656383c3",
         "scoped_reviewed_app_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
         "review_note": "Rounded reduced heads need their own short stem, independently proven slash/flag, a larger nearby principal on the same staff and no metrical beam extension. Recognition33 invalidates derived guides; guide284 layout/audio79/model inputs unchanged. Exact package and existing portable Diagnostics-adapted Java counterpart reviewed; prior mapped origins retained in rounded_slashed_grace_and_renderer_voice_review.",
         "source_normalized_sha256": "40e51062374ebbbbbf4b99d44391c28a36c238ee1db695cd1840b4d882a67321",
         "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-        "reviewed_source_state": "Committed app961 bounded rounded slashed-grace recognition and recognition33 cache invalidation. Guide284/audio79 layouts, model weights and dependencies unchanged. App-only exact renderer voice identity adapters reviewed separately.",
+        "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
         "standalone_sha256": "b28198bdf30bc13b143264f938bc00e95704e3a976dcd7507f724704010430c2",
         "reviewed_app_base_commit": "560be1ba88ecd830e05d32eee05cbbc2e4374fab"
       },

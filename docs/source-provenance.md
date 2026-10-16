@@ -2150,3 +2150,16 @@ whole-library acceptance remain pending.
 Paired app source: `e0dddabea8c18e135e65cc4b7906926284f7b63b`. Java tests: 10,220 passed;
 the eight new regressions also pass against the app source.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Outgoing boundary arc raster phase
+
+A pixel-spaced fallback resolves short outgoing arcs that fall between the coarse
+search positions. It retains the original ink threshold, adds strict contrast,
+and preserves the complete curve and paired-endpoint requirements. Eight original
+phase regressions cover upper and lower arcs, missing endpoints, different pitches,
+opposite sides, flat strokes and immutable source arrays. No private score data
+or model changes are included. Paired deployment and whole-library acceptance
+remain pending.
+Paired app source: `433b22c5e8b0dd3c41ff4444008d326e656383c3`. Java tests: 10,228 passed;
+the eight new regressions also pass against the app source.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
