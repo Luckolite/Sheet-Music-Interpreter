@@ -2393,3 +2393,8 @@ Paired app source: b830290c97f21943a5247a865bd07072550bab76.
 
 Regional recovery can establish a real staff after the initial overlap cleanup. Applying the same scale and overlap guards afterward removes compressed aliases that would otherwise steal notes or invent a second staff. Six original opposite-slope row fixtures cover retained pitches, note counts and staff identity; no private score pixels are included.
 Paired app source: da4b3b9f876e5cec1461d88280172c8c2d0985a4.
+
+## Faded outer-ledger evidence
+
+A fixed dark-ink threshold can miss a pale outer ledger and incorrectly shift its note into a space. Before making that correction, the interpreter now checks the outer rule with its existing local contrast limits. Other ledger calibration keeps its prior threshold. Six original mirrored pale-rule, missing-rule and dark-rule fixtures cover the distinction; private replay changes one pitch and preserves all other page fields.
+Paired app source: 9513e553f4c84f6cf238839793b4b55862d01b82.

@@ -15830,6 +15830,18 @@ final class OmrScoreInterpreter {
             float expected,
             float gap,
             boolean bounded) {
+        return printedLedgerLine(gray, width, height, head, expected, gap, bounded, 180);
+    }
+
+    private static float printedLedgerLine(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float expected,
+            float gap,
+            boolean bounded,
+            int threshold) {
         int reach = Math.max(3, Math.round(gap * .55f)),
                 range = Math.max(2, Math.round(gap * .25f));
         int flank = Math.max(2, Math.round(gap * .3f));
@@ -15846,7 +15858,7 @@ final class OmrScoreInterpreter {
                 int support = 0;
                 for (int x = left; x <= right; x++) {
                     int ink = gray[y * width + x] & 255;
-                    if (ink < 180
+                    if (ink < threshold
                             && (gray[(y - flank) * width + x] & 255) > ink + 20
                             && (gray[(y + flank) * width + x] & 255) > ink + 20) support++;
                 }
@@ -15894,7 +15906,7 @@ final class OmrScoreInterpreter {
                             y <= Math.min(height - 1 - flank, Math.round(center) + 1);
                             y++) {
                         int value = gray[y * width + xx] & 255;
-                        if (value < 180
+                        if (value < threshold
                                 && (gray[(y - flank) * width + xx] & 255) > value + 20
                                 && (gray[(y + flank) * width + xx] & 255) > value + 20) ink = true;
                     }
@@ -15973,6 +15985,15 @@ final class OmrScoreInterpreter {
                                 bottom - (original + inward * 2) * gap * .5f,
                                 gap,
                                 false);
+            // Faded ink is not proof of a missing outer ledger.
+            if (!Float.isFinite(outer)) {
+                int threshold = ledgerInkLimits(gray, width, height, head, gap)[0];
+                if (threshold > 180)
+                    outer =
+                            printedLedgerLine(
+                                    gray, width, height, head,
+                                    bottom - original * gap * .5f, gap, false, threshold);
+            }
             int space = LedgerSpacePhase.resolve(position, head.centerY, gap, outer, first, second);
             if (space != original) return space;
         }
