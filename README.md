@@ -9,9 +9,6 @@ You do not need to publish your own code. Follow the [license and notice require
 ## What it supports 🎹🎸🎻🎷
 
 - Standard notation: pitches, accidentals, chords, rests, ties, tempo and key changes.
-  Full-measure silent voices retain the actual meter or pickup span and a whole-rest
-  MusicXML glyph; literal rest durations remain distinct. See the
-  [0.1.10 rest and wire contract](docs/native-decoder.md#typed-rest-records-0110).
 
 - Multi-staff piano, 6- and 7 string guitar tabs, violin and ensemble pages, including independently barred staves.
 
@@ -21,9 +18,6 @@ You do not need to publish your own code. Follow the [license and notice require
 - Continuous pedal brackets with two upward hooks retain written columns. Complete, part-owned pairs supply ordered MIDI sustain controls, finite audio release gates and MusicXML bracket endpoints.
 
 - Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Graphical bends, quarter-tone bends, whammy-bar directions and strum direction aren't supported.
-
-  Triplet chords/rests, rhythm-letter ownership and tuning spelling follow the
-  [guitar-tab interpretation rules](docs/guitar-tabs.md).
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing in notation software.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
@@ -54,70 +48,9 @@ sheet-interpreter score.pdf --output score.json --midi preview.mid --musicxml sc
 Images work too. `--midi` and `--musicxml` are optional. Use `--meter 3/4`, `--bpm 90`,
 `--key-fifths 2` or `--pages 1,2,3` when needed. Default meter and tempo are 4/4 and 120 BPM.
 
-The CLI forwards each selected physical page to the decoder, preserving printed
-slur ownership in `score.slurSource` even when PDF pages are skipped. JSON
-`sourcePage` and `--pages` remain one-based; the Python API's optional
-`Interpreter.interpret(..., page_index=5)` identifies physical page 6. Omit
-`page_index` when identity is unknown. The Java file bridge accepts the same
-zero-based identity with `--page-index 5`; its original five arguments still work.
-
-MusicXML exports confirmed `score.slurSource` phrases on their original attack
-fragments, preserving placement and line style. Deferred candidates remain
-unengraved until their musical meaning is proved. Removed or unselected original
-endpoints do not borrow replacement notes. Cross-part slurs require an explicit
-part mapping; this staff-per-part exporter reports that limitation rather than
-silently dropping a confirmed phrase.
-
-MusicXML preserves retained accents, marcato, staccato, tenuto and staccatissimo
-on their original attack fragments. Common shared-stem chord marks appear once;
-differing head marks and independent voices remain distinct. Unrelated or partial
-event lists cannot borrow marks from source notes.
-
-Exact binary spans without a single ordinary glyph are split into written
-values, tied for sustained notes. Chord heads share each fragment's clock;
-articulations, guitar text and phrase endpoints remain on the original attack,
-and release symbols remain on the final fragment. Existing single values and
-explicit tuplet ratios are preserved. Composite explicit tuplet spans use the
-fewest exact tied glyphs supported by every chord head's ratio. An explicit ratio
-never silently falls back to an ordinary note or a different ratio. Arbitrary
-inferred clocks are not rounded into new rhythmic evidence; unsupported clocks
-and unproved tuplet rest-group reconstruction remain separate limitations.
-
-Retained trills, turns, inverted turns, both mordent forms and single-note
-tremolo also survive MusicXML export. Delayed turns and explicit auxiliary
-accidentals are represented separately. These glyphs preserve the source head;
-they do not replace it with performed subdivisions. Unpitched tonal ornaments
-still require explicit instrument semantics. Older notation readers may not
-display delayed inverted turns or auxiliary accidentals.
-
-Grace-bearing pages include optional `events[].writtenPlacement` from the shared
-written timing API. Existing `startBeat`/`durationBeats` remain playback clocks.
-MusicXML uses the written onset, duration, principal index, ordinal and steal
-percentage to preserve prefix and trailing grace groups without consuming
-measure time or shortening the principal's written note. Grace slurs retain
-their attack order. Missing or contradictory ownership is reported rather than
-converted into ordinary notes; regenerate older grace-bearing decoded JSON
-with the current Java bridge to obtain the written metadata.
-
-MusicXML also preserves recognized bass, alto, tenor, treble and octave-treble
-clefs from the retained note context, including changes inside measures. Note
-pitches and playback stay unchanged. Without reliable source clef metadata, the
-legacy pitch-based initial clef remains available. Conflicting simultaneous
-clefs require an explicit staff mapping rather than a guessed choice.
-
-When retained source staff position, clef, accidental and octave shift reproduce
-the exported MIDI pitch exactly, MusicXML preserves that concert-pitch spelling.
-This keeps an ornament's diatonic neighbors attached to the original note letter,
-including double accidentals and octave-crossing spellings such as C-flat.
-Edited pitches or incomplete source mapping retain the legacy spelling fallback.
-Event durations, ties and playback pitches remain unchanged.
-
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
-reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML playback use the quarter-note
-tempo directly. MusicXML prints the original beat unit and corresponding marked
-rate above the staff, including dotted pulses. A detected opening mark replaces
-the fallback initial heading; later changes retain the initial tempo.
+reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.
 Everything runs locally after installation; no account or server is required.
 
 ### MP3 audio previews
@@ -139,47 +72,10 @@ is needed to export an already decoded document through the Python API.
 FFmpeg is a separate optional dependency with its own license; it is not committed
 or bundled in this repository's Apache-2.0 source/model artifacts.
 
-Whole-measure rest identity uses independently printed staff evidence, including
-local staff alignment and partial rule edges. Regional staff recovery preserves
-proved opening extents, and narrow articulation carets are distinguished from
-rounded fermata roofs. These checks do not establish whole-score accuracy.
-
-Printed repeat bars require paired dots, five staff rails and ordered barline
-ink. Alternate endings require a connected bracket and explicit pass selectors.
-Complete local groups support combined selectors, multiple backward ending edges
-and nested repeats; source evidence survives. Implicit starts and cross-page
-ownership remain unresolved rather than receiving guessed navigation.
-
-Small terminal courtesy sharps require matching semantic/raw glyph evidence,
-a double bar and agreeing local staff geometry; nearby stem/rest ink retains the
-measure. Offset tuplet numeral windows preserve physical ownership checks. Meter
-staff refinement can trim verified blank margins without changing OCR conflict
-handling or source pixels. These recognition fixes do not establish whole-score
-accuracy or replace document-level timing and runtime validation.
-
-
-Recognize complete leading dynamic levels with known delivery qualifiers, and
-retain detached text below shallow clipped notation only after a complete blank
-band and a repeated stem check. Preserve source words and pixels. Printed barline
-recovery accounts for verified thick staff rules while testing for stems beyond
-the rule band. Recognition51/audio84 invalidate earlier derived interpretations;
-guide286 record layout remains unchanged. Original synthetic regressions and
-source checks do not establish whole-library accuracy or packaged runtime behavior.
-
-Guide287 preserves independently verified courtesy key and meter changes at the
-end of a nonempty page without inventing another measure. Legacy layouts retain
-their earlier bounds. Printed meter, octave, arpeggio, tuplet and direction
-repairs use local physical evidence and retain ambiguous cases. These changes
-require recognition57 and audio90 cache invalidation in paired consumers.
-
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`
 from Java. See [API examples and output format](docs/integration.md).
-The explicit Java page overload retains printed slur evidence, including arcs
-that need inherited key or meter context before classification.
-The Java [bibliographic metadata API](docs/bibliographic-metadata.md) extracts
-titles and contributor credits from caller-supplied OCR text and page geometry.
 An optional [native Java decoding service](docs/native-decoder.md) supports
 bounded, source-matched geometry and analysis requests from local workers.
 The Python reader runs bundled-model OCR automatically on images and scanned PDFs.
