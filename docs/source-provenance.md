@@ -2231,3 +2231,15 @@ implementations. All 10,263 Java regressions passed. Paired deployment and
 whole-library acceptance remain pending.
 Paired app source: `88e3c8169690664c5817e1c822cba2afc5787115`.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Interrupted target rules
+
+The narrow staff-fringe proof can use three independent phase-aligned ink-budget
+references when local target-rule rows are interrupted. Existing frame, thickness,
+ink-budget and finite-beam guards remain. Four original synthetic checks reproduce
+the former false beam, preserve genuine beams and insufficient-reference cases,
+and retain exact inputs. All four pass against the app source; 1,222 focused Java
+checks pass. All 10,267 Java regressions passed. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `df24f673d1461fad56d4c4efa1640e37b7b0c23c`.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

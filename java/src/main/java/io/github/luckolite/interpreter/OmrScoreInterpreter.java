@@ -20150,7 +20150,6 @@ final class OmrScoreInterpreter {
                 // sampled rules still prove the fringe through phase and ink-mass agreement.
                 if (!onlyStaff
                         && onStaff
-                        && staffRows >= 2
                         && run >= 3
                         && run <= gap * .35f
                         && LocalPrintedStaffBand.matchesBeyondStem(
