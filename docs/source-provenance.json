@@ -1848,12 +1848,12 @@
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
-      "source_sha256": "e983e814b4f5d09d914a0257f55e6d6578db465d801fabe7594cdcdfc195e1b1",
-      "source_normalized_sha256": "b670d1bf4bd8c5fb3e5a738e76d52ee5b1bfb37819036895f87db52f6da7db44",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "e72af80eaee023045ebf78343bfecec77a63a3427e4767c0413bd3ff547ee199",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "cb3eeabcadabf97f7fe6f844dafad6fbbb23af12f54bc52038b997eec23628d4",
+      "source_normalized_sha256": "2ed1bb1042495e0383dcd453f99b22f61200c5108c755534e35322a1e4e0a00d",
+      "reviewed_source_state": "Equivalent localized stem evidence repair in app and standalone; paired rollout pending.",
+      "review_note": "Short numeral windows retain extended stem ownership through three-quarter height coverage; original rectangle regressions cover upper/lower/gray shafts, independent glyph ink and masked rows.",
+      "standalone_sha256": "8d80d5a6816d08104145e747c13d059a589e850e183663004e598c0586456820",
+      "reviewed_app_commit": "85fe58ab0cc655621c10522b47b13b251d148f6f"
     },
     "RegionalStaffSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",

@@ -182,7 +182,11 @@ final class RepeatedTupletNumeral {
         for (int xx = 0; xx < rw; xx++) {
             int ink = 0;
             for (int yy = 0; yy < rh; yy++) if ((gray[(y + yy) * w + x + xx] & 255) < 190) ink++;
-            if (ink < rh * .9f) continue;
+            // A shaft can end at a beam within this short numeral window. Requiring
+            // almost its full height lets that corner masquerade as the right side
+            // of a 3. Covering three quarters plus the external half-space extension
+            // below is stem evidence; independent glyph ink must survive removal.
+            if (ink < rh * .75f) continue;
             int outside = 0;
             for (int yy = y - 1;
                     yy >= Math.max(0, y - Math.round(gap)) && (gray[yy * w + x + xx] & 255) < 190;
