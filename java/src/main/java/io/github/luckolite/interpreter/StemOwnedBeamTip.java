@@ -240,21 +240,54 @@ final class StemOwnedBeamTip {
             int boxHeight,
             int area,
             float gap) {
+        return singleBeam(gray, w, h, a, b, cx, cy, boxWidth, boxHeight, area, gap, .85f, -1);
+    }
+
+    static boolean wideSingleBeam(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int boxWidth,
+            int boxHeight,
+            int area,
+            float gap) {
+        return singleBeam(gray, w, h, a, b, cx, cy, boxWidth, boxHeight, area, gap, 1.2f, -1)
+                || singleBeam(gray, w, h, a, b, cx, cy, boxWidth, boxHeight, area, gap, 1.2f, 70);
+    }
+
+    private static boolean singleBeam(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int boxWidth,
+            int boxHeight,
+            int area,
+            float gap,
+            float maximumWidth,
+            int inkLimit) {
         if (gray == null
                 || gap < 8
                 || a == null
                 || b == null
                 || a[2] != b[2]
-                || boxWidth > gap * .85f
+                || boxWidth > gap * maximumWidth
                 || boxHeight > gap * .85f
-                || area > gap * gap * .5f) return false;
+                || area > gap * gap * (maximumWidth > 1 ? .6f : .5f)) return false;
         int[] left = a[0] < b[0] ? a : b, right = a[0] < b[0] ? b : a;
         float dx = right[0] - left[0], slope = (right[1] - left[1]) / dx;
         if (dx < gap * 2
                 || dx > gap * 6
                 || Math.abs(slope) > .6f
-                || Math.min(Math.abs(cx - left[0]), Math.abs(cx - right[0])) > gap * .5f)
-            return false;
+                || Math.min(Math.abs(cx - left[0]), Math.abs(cx - right[0]))
+                        > gap * (maximumWidth > 1 ? .65f : .5f)) return false;
         int threshold =
                 BeamInkThreshold.at(
                         gray,
@@ -264,16 +297,30 @@ final class StemOwnedBeamTip {
                         Math.round(cy - gap * 2),
                         Math.round(cy + gap * 2),
                         gap);
+        int outerThreshold = threshold;
+        if (inkLimit > 0) threshold = Math.min(threshold, inkLimit);
         int margin = Math.max(3, Math.round(gap * .22f)), radius = Math.round(gap);
         for (int shift = -Math.round(gap * .5f); shift <= Math.round(gap * .5f); shift++) {
             if (Math.abs(left[1] + slope * (cx - left[0]) + shift - cy) > gap * .22f) continue;
             int total = 0, valid = 0, near = 0, nearValid = 0;
             int[] spans = new int[Math.max(1, right[0] - left[0] + 1)];
-            int spanCount = 0, nearMaximum = 0;
+            int[] outerSpans = new int[spans.length];
+            int spanCount = 0, nearMaximum = 0, outerCount = 0;
             for (int x = left[0] + margin; x <= right[0] - margin; x++) {
                 int y = Math.round(left[1] + slope * (x - left[0]) + shift);
                 if (x < 0 || x >= w || y - radius < 0 || y + radius >= h) return false;
                 total++;
+                if (inkLimit > 0) {
+                    int top = y, bottom = y;
+                    if ((gray[y * w + x] & 255) >= outerThreshold) outerSpans[outerCount++] = 0;
+                    else {
+                        while (top > y - radius && (gray[(top - 1) * w + x] & 255) < outerThreshold)
+                            top--;
+                        while (bottom < y + radius
+                                && (gray[(bottom + 1) * w + x] & 255) < outerThreshold) bottom++;
+                        outerSpans[outerCount++] = bottom - top + 1;
+                    }
+                }
                 boolean okay = false;
                 if ((gray[y * w + x] & 255) < threshold) {
                     int top = y, bottom = y;
@@ -295,6 +342,7 @@ final class StemOwnedBeamTip {
                     && valid >= total * .9f
                     && near >= 4
                     && nearValid >= near * .9f) {
+                if (inkLimit > 0 && !narrowOuterContact(outerSpans, outerCount, gap)) continue;
                 java.util.Arrays.sort(spans, 0, spanCount);
                 if (spanCount > 0
                         && nearMaximum
@@ -304,4 +352,24 @@ final class StemOwnedBeamTip {
         }
         return false;
     }
+
+    // A thin staff rule may touch the beam for a few columns. A notehead produces
+    // a broader outer contour, even when its interior is lighter than the beam.
+    private static boolean narrowOuterContact(int[] spans, int count, float gap) {
+        if (count == 0) return false;
+        int[] sorted = java.util.Arrays.copyOf(spans, count);
+        java.util.Arrays.sort(sorted);
+        int limit = sorted[count / 2] + Math.max(1, Math.round(gap * .12f));
+        int total = 0, run = 0, longest = 0;
+        for (int i = 0; i < count; i++) {
+            if (spans[i] > limit) {
+                total++;
+                run++;
+                longest = Math.max(longest, run);
+            } else run = 0;
+        }
+        return total <= Math.max(1, Math.round(gap * .3f))
+                && longest <= Math.max(1, Math.round(gap * .25f));
+    }
+
 }

@@ -538,6 +538,7 @@ final class OmrScoreInterpreter {
             }
         List<Component> rejectedBeamHeads = beamJunctionHeads(gray, width, height, heads, staffs);
         rejectedBeamHeads.addAll(recoveredGraceCaps);
+        rejectedBeamHeads.addAll(wideSingleBeamTipHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(mergedBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(singleBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(shortPairedMergedBeamHeads(gray, width, height, heads, staffs));
@@ -9932,6 +9933,51 @@ final class OmrScoreInterpreter {
                                     Math.min(65, Math.round(threshold * .45f))))) result.add(head);
         }
         return result;
+    }
+
+    /** A complete single beam can own a wider partial mask at its tip. */
+    private static List<Component> wideSingleBeamTipHeads(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        List<Component> rejected = new ArrayList<>();
+        if (gray == null) return rejected;
+        for (Component head : heads) {
+            Staff staff = nearestHeadStaff(staffs, head.centerY);
+            if (staff == null) continue;
+            float gap = staff.pitchTrack == null ? staff.gap : staff.pitchTrack.at(head.centerX)[1];
+            if (head.maxX - head.minX + 1 > gap * 1.2f
+                    || head.maxY - head.minY + 1 > gap * .85f
+                    || head.area > gap * gap * .6f) continue;
+            List<int[]> owners = new ArrayList<>();
+            for (Component main : heads) {
+                if (main == head
+                        || main.area < Math.max(gap * gap, head.area * 2f)
+                        || nearestHeadStaff(staffs, main.centerY) != staff
+                        || Math.abs(main.centerX - head.centerX) > gap * 6
+                        || Math.abs(main.centerY - head.centerY) < gap * 2
+                        || Math.abs(main.centerY - head.centerY) > gap * 6) continue;
+                int[] stem = attachedRawStem(gray, width, height, main, gap);
+                if (stem != null && Math.abs(stem[1] - head.centerY) < gap * 1.1f) owners.add(stem);
+            }
+            boolean found = false;
+            for (int[] a : owners)
+                for (int[] b : owners) {
+                    if (a == b || found) continue;
+                    if (StemOwnedBeamTip.wideSingleBeam(
+                            gray,
+                            width,
+                            height,
+                            a,
+                            b,
+                            head.centerX,
+                            head.centerY,
+                            head.maxX - head.minX + 1,
+                            head.maxY - head.minY + 1,
+                            head.area,
+                            gap)) found = true;
+                }
+            if (found) rejected.add(head);
+        }
+        return rejected;
     }
 
     /** Small semantic islands at a beam endpoint can borrow the actual note's stem.

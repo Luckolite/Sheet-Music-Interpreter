@@ -2087,3 +2087,15 @@ Single-name OCR consensus is limited to those proven cover lines; no roles are
 inferred. Ten fictional regressions and 639 related tests passed. App commit
 `473c406cf44d2c57119e71ede9af696f4c1e9f6a` is paired. Full native and matching desktop
 qualification remain pending. No private scores or model changes are included.
+
+## Wider semantic islands on single beams
+
+Two full noteheads and their raw stems can identify a larger partial notehead mask
+on a complete single beam. The beam must retain a continuous narrow contour; a
+dark-core retry allows only a short outer contact with a staff rule and rejects
+broad light notehead contours. Sixteen original procedural tests cover both stem
+directions, wider masks, rounded heads, broken bands, and narrow versus broad
+gray contacts. No commercial score pixels, model changes, or dependencies are
+included. Paired desktop deployment and whole-library acceptance remain pending.
+Paired app source: `20e1e3c401a7c3fc3aa1471f67d66206593c6b24`. Java tests: 10,194; Python tests: 582
+(44 skipped); synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

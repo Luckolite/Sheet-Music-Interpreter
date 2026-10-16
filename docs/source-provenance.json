@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "3ce13577c53a213f6751f1ebdfb4e73c1c7fc58fdde86fba7607f4494cf70369",
-      "review_note": "Reviewed namespace-equivalent whole-head recovery anchored to small semantic fragments; closed opening and broad bilateral raw flanks reject flag pockets. Nine original Bravura regressions, no private score assets.",
-      "source_normalized_sha256": "143d65f9457dd0c51bcddb5b8d88fd50746842d7d5c7e6940a9501f5d182e07a",
+      "source_sha256": "cec50412dc7abeac683226a6208fe7d7edb5d6751d1a5caa3d9ec3d48bf032c8",
+      "review_note": "Reviewed matching single-beam tip ownership: larger partial masks require two real stem owners and a continuous non-bulging band; dark-core fallback allows only narrow outer contact. Sixteen original procedural regressions; no private score assets or model changes.",
+      "source_normalized_sha256": "9921fcddb0e354dd509011e8c8a0b13f1ef70790530f8ed717ed18841102efa0",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "9021abe58d04a2be9431c9bce33a4b096c44ee09d26d2441d6b7985d11c97cf7",
+      "standalone_sha256": "af73238a91656cb6c5146e911bf6976be882963e3f18b96131e8c54ceaf4dfe7",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "5905b3d4a12b963e967acae7c6f02fe3e273194e"
+      "reviewed_app_commit": "20e1e3c401a7c3fc3aa1471f67d66206593c6b24"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1049,12 +1049,13 @@
     },
     "StemOwnedBeamTip.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StemOwnedBeamTip.java",
-      "source_sha256": "324d99c0743240b2c166c39f11b9dfbd13ece6084151a6967f019114c086741e",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "3afc834073299952b828baba8a1a94e83c0a7d85110dd8319662885b30a1f06b",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "source_sha256": "f6823962611b3dcad6bd752aa930684ab11da5584f21f02704f4de47351d93f7",
+      "reviewed_app_commit": "20e1e3c401a7c3fc3aa1471f67d66206593c6b24",
+      "source_normalized_sha256": "d488ae572ae81528707fcbd05edf397ea6419818400ac2eb4b2bbe419cb9d63c",
+      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
+      "review_note": "Reviewed matching single-beam tip ownership: larger partial masks require two real stem owners and a continuous non-bulging band; dark-core fallback allows only narrow outer contact. Sixteen original procedural regressions; no private score assets or model changes.",
+      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
+      "standalone_sha256": "2c507f8260d94196ad412029e133ec6b2b3f43300737ad2d2b52d8e8ba131d65"
     },
     "TupletNumeralInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletNumeralInk.java",
