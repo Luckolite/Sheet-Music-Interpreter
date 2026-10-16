@@ -12389,6 +12389,11 @@ final class OmrScoreInterpreter {
                 && gray != null
                 && !hasStemAtHead(labels, width, height, head, gap)
                 && attachedRawStem(gray, width, height, head, gap) == null) stem = false;
+        if (open
+                && stem
+                && WholeHeadPocketEvidence.proved(
+                        gray, width, height, head.minX, head.minY, head.maxX, head.maxY, gap))
+            stem = false;
         if (open) return stem ? ScoreNoteEvent.DURATION_HALF : ScoreNoteEvent.DURATION_WHOLE;
         if (beamCount > 0) return ScoreNoteEvent.DURATION_UNKNOWN;
         // A filled head is a quarter even when a thin stem was missed by segmentation. Treating it

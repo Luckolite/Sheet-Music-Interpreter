@@ -12,6 +12,13 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Whole-note openings retain their written duration when another voice's stem
+crosses them. Enclosed-pocket geometry must agree at two brightness thresholds;
+ambiguous openings keep the existing classification. Original Bravura layouts
+cover half/filled heads, independent beamed voices, staff crossings, scale and
+rotation. No weights or interchange-format change; paired deployment and
+whole-library acceptance remain pending.
+
 Touching filled unisons are separated only with two independent printed shafts
 in the same direction and a raw-ink neck between compact closed heads. Ten
 original procedural controls cover pitches, beams, absent/raw-unsupported shafts,

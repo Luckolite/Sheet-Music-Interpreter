@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f25f0cff562a3fd23217c628361ec1a1ca15b07f888950b25421217c23003aad",
-      "review_note": "Namespace-equivalent global split for two touching filled unisons with independently printed same-direction shafts and a raw-ink neck; ten original procedural controls, no private score pixels or model changes.",
-      "source_normalized_sha256": "6a6ce7ac48843b1b8e450a1a02f255a648446eafd484390313462ab1fca1e63e",
+      "source_sha256": "d6d22fac6c6643a47e434a7f51be8ba460e59307768103186288d6e9412e9a8e",
+      "review_note": "Reviewed global whole-head opening geometry at two ink thresholds, preserving filled/half heads and separate voices; namespace-equivalent helper/caller. Ten original font/layout tests using existing SIL-OFL Bravura, no score pixels.",
+      "source_normalized_sha256": "d31eb93ab323ca67ea364768ae643baf0203dc9ebc5b0376a6039152e8b48d77",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "51736762b0e515a8eb6c5b24d9c3e939f23be8bd99201dc12673619538da3fe6",
+      "standalone_sha256": "ec4336d20050d38189514b757dadb3da776a148c213d2810c29cac7c880e16b5",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "ff5e99aa85e637298de02975f0fd43d7143f0e82"
+      "reviewed_app_commit": "300a51a569c4f087ad09077f8c786748984e1557"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -3260,6 +3260,15 @@
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+    },
+    "WholeHeadPocketEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeHeadPocketEvidence.java",
+      "source_sha256": "fae5e6a2f77d1229bb6627fd6c173e28174b2b373cbc479d5ee0787fff3abdd7",
+      "source_normalized_sha256": "083ceda8541fb406b02093d12c38d01aca15c0b2ea54381609c472f124debb58",
+      "standalone_sha256": "cb2dc85d6b0a6a1cd17cd1edf007cd5a8866b824d4dd0f68860681e46eda1b46",
+      "reviewed_app_commit": "300a51a569c4f087ad09077f8c786748984e1557",
+      "review_note": "Reviewed global whole-head opening geometry at two ink thresholds, preserving filled/half heads and separate voices; namespace-equivalent helper/caller. Ten original font/layout tests using existing SIL-OFL Bravura, no score pixels.",
+      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending."
     }
   },
   "interpreter_speedup_review": {
