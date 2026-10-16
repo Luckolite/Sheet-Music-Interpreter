@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Touching filled unisons are separated only with two independent printed shafts
+in the same direction and a raw-ink neck between compact closed heads. Ten
+original procedural controls cover pitches, beams, absent/raw-unsupported shafts,
+solid blobs and input preservation. No model or score-format change; paired
+deployment and whole-library acceptance remain pending.
+
 Regional staff replacement retains a previously proved closing bar when both
 staff frames independently confirm it through the existing raw-ink and note
 ownership guards. Ten original procedural regressions cover the shortened edge,

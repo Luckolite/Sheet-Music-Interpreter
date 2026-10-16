@@ -7003,6 +7003,12 @@ final class OmrScoreInterpreter {
                 result.addAll(run);
                 continue;
             }
+            List<Component> repeatedPair =
+                    splitTouchingRepeatedHeads(labels, gray, width, height, component, staff);
+            if (!repeatedPair.isEmpty()) {
+                result.addAll(repeatedPair);
+                continue;
+            }
             List<Component> attacks =
                     splitJoinedChordAttacks(labels, gray, width, height, component, staff);
             if (!attacks.isEmpty()) {
@@ -7233,6 +7239,47 @@ final class OmrScoreInterpreter {
 
     /** Thin semantic bridges can join a tightly engraved repeated run. Require
      * distinct raw oval lobes and an attached stem for every recovered attack. */
+    /** Two filled unisons need two separate printed shafts in the same direction. */
+    private static List<Component> splitTouchingRepeatedHeads(
+            byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null || staff == null) return List.of();
+        float gap = staff.pitchGap;
+        int w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        if (w < gap * 1.8f || w > gap * 3.1f || h < gap * .65f || h > gap * 1.4f) return List.of();
+        int middle = (head.minX + head.maxX) / 2;
+        Component left = horizontalHeadSlice(labels, width, head, head.minX, middle);
+        Component right = horizontalHeadSlice(labels, width, head, middle + 1, head.maxX);
+        if (left == null
+                || right == null
+                || !plausibleHead(left, gap)
+                || !plausibleHead(right, gap)
+                || Math.abs(left.centerY - right.centerY) > gap * .25f
+                || left.area < gap * gap * .4f
+                || right.area < gap * gap * .4f
+                || hasOpenCenter(labels, gray, width, height, left, gap)
+                || hasOpenCenter(labels, gray, width, height, right, gap)) return List.of();
+        int[] a = attachedRawStem(gray, width, height, left, gap);
+        int[] b = attachedRawStem(gray, width, height, right, gap);
+        if (a == null
+                || b == null
+                || a[2] != b[2]
+                || b[0] - a[0] < gap * .8f
+                || b[0] - a[0] > gap * 1.9f) return List.of();
+        int leftPeak = 0, rightPeak = 0, neck = h;
+        for (int x = head.minX; x <= head.maxX; x++) {
+            int ink = 0;
+            for (int y = head.minY; y <= head.maxY; y++)
+                if ((gray[y * width + x] & 255) < 165) ink++;
+            if (x < middle) leftPeak = Math.max(leftPeak, ink);
+            if (x > middle) rightPeak = Math.max(rightPeak, ink);
+            if (Math.abs(x - middle) <= Math.max(1, Math.round(gap * .15f)))
+                neck = Math.min(neck, ink);
+        }
+        if (Math.min(leftPeak, rightPeak) < gap * .65f
+                || neck > Math.min(leftPeak, rightPeak) * .8f) return List.of();
+        return List.of(left, right);
+    }
+
     private static List<Component> splitRepeatedHeadRun(
             byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null || staff == null) return List.of();

@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "90b7f44664d4bcd3105dc998fd728ab4c94ade0e3706e67b79df243eb6c80dcd",
-      "review_note": "Reviewed matching bounded rooted-flag delta and recognition63 identity over previously reviewed source; original synthetic controls. Historical comment/format differences retained.",
-      "source_normalized_sha256": "04aa43fe669298b812676a763b98b70d255a8b8e7228e4390f487fd956cd3302",
+      "source_sha256": "f25f0cff562a3fd23217c628361ec1a1ca15b07f888950b25421217c23003aad",
+      "review_note": "Namespace-equivalent global split for two touching filled unisons with independently printed same-direction shafts and a raw-ink neck; ten original procedural controls, no private score pixels or model changes.",
+      "source_normalized_sha256": "6a6ce7ac48843b1b8e450a1a02f255a648446eafd484390313462ab1fca1e63e",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "2ab64dec2dd5550f665cb964d60c86f0ab71abf7bb2914ed0ad7d34947936246",
+      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
+      "standalone_sha256": "51736762b0e515a8eb6c5b24d9c3e939f23be8bd99201dc12673619538da3fe6",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7"
+      "reviewed_app_commit": "ff5e99aa85e637298de02975f0fd43d7143f0e82"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
