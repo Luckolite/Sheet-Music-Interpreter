@@ -16,6 +16,11 @@ final class StaffPitchTrack {
         return verified;
     }
 
+    /** Sampled rule proof does not certify an extrapolated frame outside its observations. */
+    boolean verifiedAt(float x) {
+        return verified && x >= points[0][0] && x <= points[points.length - 1][0];
+    }
+
     private float tailStart = Float.NEGATIVE_INFINITY,
             tailEnd = Float.POSITIVE_INFINITY,
             tailBottom,

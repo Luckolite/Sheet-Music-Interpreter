@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Verified regional staff samples protect pitch only within their observed horizontal
+range. Extrapolated frames remain estimates eligible for existing local five-rule
+recovery. Original generated rules cover both tails, preserved interior authority,
+and missing local evidence. No model or wire-layout changes.
+
 An independently verified closing bar and continuous staff rules protect a real
 ending from textured-margin trimming. Grace-prefix beam ownership uses available
 semantic labels to distinguish staff rules from connecting beam ink; gray-only

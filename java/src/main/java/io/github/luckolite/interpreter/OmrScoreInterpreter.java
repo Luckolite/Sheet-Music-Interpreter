@@ -16112,9 +16112,10 @@ final class OmrScoreInterpreter {
             referenceBottom = local[0];
             gap = local[1];
         }
-        // All five physical rules were independently established across this row.
+        // All five physical rules were independently established within this sampled range.
         // A small glyph crop cannot rephase that frame using a beam or slur edge.
-        if (curved && staff.pitchTrack.verified()) return new float[] {referenceBottom, gap};
+        if (curved && staff.pitchTrack.verifiedAt(head.centerX))
+            return new float[] {referenceBottom, gap};
         boolean shaded =
                 StaffPitchTrack.needsContrast(
                         gray, width, height, head.centerX, referenceBottom, gap);

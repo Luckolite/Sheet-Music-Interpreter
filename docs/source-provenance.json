@@ -378,15 +378,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "efd4ac337be3edb28582e7c6a00c4fa5ea559a12ca93ef3805a858b011a06897",
-      "review_note": "Pass available semantic labels through grace-prefix ordinary-beam ownership checks so staff rules cannot supply nonstaff beam evidence. Gray-only overloads retain conservative ownership. Original staff-only, genuine thin-beam, beam-over-staff and missing-label controls.",
-      "source_normalized_sha256": "1847c6db2a1d6fee195527bd4893dc61aabfc892585207382e97b32e6b24d150",
+      "source_sha256": "fe5a471a06a19426edee383d422e57ce9127e48994e52d0ba7aef8b9487604d0",
+      "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
+      "source_normalized_sha256": "4299d40937520665c631399a8958789a5e38407730af6868a99272ae550adee4",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "15fe0e1e762cc1c24932668fbf9a4af9806830425171ee9f676524f30d538976",
+      "standalone_sha256": "abb61f56ae738c7b73da047957ae992a4603f4ef03ecba0e3537860e30fb971e",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
-      "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
+      "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
+      "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -538,14 +538,15 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "54cafed9873680ddd87712abf2b5d90932beaa39873caa63a57bc13264861565",
-      "source_normalized_sha256": "b471cc5a73ffcf1350066b75193f28d445bab0d6dba8e91648982433699728a4",
+      "source_sha256": "17977264a113510c38cf0597bd975ed3737ffb695a918f822169eb11f00540dd",
+      "source_normalized_sha256": "9b5a1d3a090f8c23b271ff7203bbb041d445d115cfeb4a801acfb560583c7e6c",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Previously published independently proved raw staff factory now committed with its actual caller. Existing detection paths and pitch numbers remain unchanged. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
+      "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
+      "reviewed_source_state": "committed",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
+      "standalone_sha256": "da0600343fb80a7bc298e53adb1303617ee3a6021e5e684e85598a3e89e809dc",
+      "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
+      "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f"
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
