@@ -12,6 +12,17 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Shared filled heads retain independent quarter and beamed voices when opposing
+raw shafts, an unflagged endpoint and exclusive head ownership prove both voices.
+Additional events follow existing source indices. Original procedural controls
+cover shared-head recovery, ordinary and flagged stems, simultaneous timing,
+and preservation of separate written durations. No model or wire-layout change;
+paired cumulative deployment remains pending.
+
+A printed three is classified from its own connected ink component. Disconnected
+neighboring letters cannot supply its two lobes. Original cap/stem and curved-ink
+fixtures reproduce the false numeral and retain a genuine connected three.
+
 Small surviving head-mask fragments can recover a complete printed whole oval
 only with a closed whole-note opening and broad dark ink on both sides. Existing
 heads suppress duplicates; flag pockets, unsupported raw ovals and half openings

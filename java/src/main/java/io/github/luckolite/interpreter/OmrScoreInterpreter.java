@@ -2136,6 +2136,85 @@ final class OmrScoreInterpreter {
                                                     ? 0
                                                     : printedDirection));
         }
+        // Append extra voices after the original heads, retaining all original source indices.
+        for (int i = 0; i < tiedNotes.size(); i++) {
+            var n = voicedNotes.get(i);
+            var printed = joined.get(i);
+            if (gray == null
+                    || n.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || n.beamCount() < 1
+                    || n.augmentationDots() != 0
+                    || n.tupletDivisor() > 1
+                    || n.tiedFromPrevious()
+                    || n.boundaryTies() != 0
+                    || n.articulations() != 0
+                    || n.crossStaffBeam()) continue;
+            var h = printed.head;
+            float gap = printed.staffGap;
+            int[] up = directionalVoiceShaft(gray, width, height, h, gap, -1);
+            int[] down = directionalVoiceShaft(gray, width, height, h, gap, 1);
+            if (up == null || down == null || up[0] - down[0] < gap * .7f) continue;
+            Staff frame = staffForHead(labels, gray, width, height, staffs, h);
+            if (frame == null) continue;
+            int upBeams = detectBeamCount(labels, gray, width, height, h, frame, false, false, up);
+            int downBeams =
+                    detectBeamCount(labels, gray, width, height, h, frame, false, false, down);
+            int[] bare =
+                    upBeams == n.beamCount() && downBeams == 0
+                            ? down
+                            : downBeams == n.beamCount() && upBeams == 0 ? up : null;
+            if (bare == null || Math.abs(bare[1] - h.centerY) > gap * 5) continue;
+            int[] beamed = bare == down ? up : down;
+            boolean owned = false;
+            for (var other : joined) {
+                if (other == printed) continue;
+                // A chord's outer contour is not an opposing shaft. Its beam stem
+                // must continue beyond the other heads before reaching its endpoint.
+                if (Math.abs(other.head.centerX - beamed[0]) < gap * .9f
+                        && (other.head.centerY - h.centerY) * beamed[2] > gap * .4f
+                        && (other.head.centerY - h.centerY) * beamed[2]
+                                < Math.abs(beamed[1] - h.centerY) + gap * .5f
+                        && (beamed[1] - other.head.centerY) * beamed[2] < gap * .9f) {
+                    owned = true;
+                    break;
+                }
+                float dx = Math.abs(other.head.centerX - bare[0]);
+                float dy = (other.head.centerY - h.centerY) * bare[2];
+                if (dx < gap * .9f
+                        && dy > gap * .4f
+                        && dy < Math.abs(bare[1] - h.centerY) + gap * .5f) {
+                    owned = true;
+                    break;
+                }
+            }
+            if (owned || !sharedBareStemClear(gray, width, height, h, gap, bare)) continue;
+            voicedNotes.set(i, n.withStemDirection(bare[2]));
+            voicedNotes.add(
+                    new ScoreNoteEvent(
+                            n.measureIndex(),
+                            n.positionInMeasure(),
+                            n.staffStep(),
+                            n.staffIndex(),
+                            n.staffCount(),
+                            n.pageY(),
+                            false,
+                            0,
+                            0,
+                            n.writtenAccidental(),
+                            1,
+                            1,
+                            0,
+                            0,
+                            n.clefBottomDiatonic(),
+                            false,
+                            0,
+                            n.compactOpening(),
+                            n.octaveShift(),
+                            0,
+                            1,
+                            -bare[2],
+                            n.kind()));
+        }
         List<ScoreTremoloSource.Pair> retainedPairs = new ArrayList<>();
         for (var pair : pairedProbe) {
             int first = -1, second = -1;
@@ -2194,6 +2273,30 @@ final class OmrScoreInterpreter {
                 keyChanges,
                 rests,
                 ScoreTremoloSource.capture(0, voicedNotes.size(), retainedPairs));
+    }
+
+    /** A quarter shaft has no flag or beam branches outside staff crossings. */
+    private static boolean sharedBareStemClear(
+            byte[] gray, int width, int height, Component head, float gap, int[] stem) {
+        int dirty = 0, clear = 0;
+        for (int distance = Math.round(gap * .95f);
+                distance <= Math.abs(stem[1] - head.centerY);
+                distance++) {
+            int y = Math.round(head.centerY) + stem[2] * distance;
+            if (y < 0 || y >= height) return false;
+            if (rawRuleBeyondFlag(gray, width, y, stem[0], gap, 180)) continue;
+            boolean ink = false;
+            for (int side : new int[] {-1, 1}) {
+                for (int dx = Math.max(3, Math.round(gap * .35f)); dx <= gap * .85f; dx++) {
+                    int x = stem[0] + side * dx;
+                    if (x < 0 || x >= width) return false;
+                    if ((gray[y * width + x] & 255) < 180) ink = true;
+                }
+            }
+            if (ink) dirty++;
+            else clear++;
+        }
+        return dirty <= Math.max(1, Math.round(gap * .12f)) && clear >= gap;
     }
 
     /** Pixel-derived temporary ownership notes; leaves original events and legacy inference unchanged. */

@@ -2875,6 +2875,7 @@ final class TripletRhythmDetector {
         if (localWidth < 3 || localHeight < 3) return null;
         boolean[] visited = new boolean[localWidth * localHeight];
         int[] queue = new int[visited.length];
+        int[] component = new int[visited.length];
         for (int origin = 0; origin < visited.length; origin++) {
             if (visited[origin]
                     || !dark(gray, width, left + origin % localWidth, top + origin / localWidth))
@@ -2885,7 +2886,7 @@ final class TripletRhythmDetector {
             int minX = right, maxX = left, minY = bottom, maxY = top;
             while (pending > 0) {
                 int current = queue[--pending];
-                count++;
+                component[count++] = current;
                 int x = current % localWidth, y = current / localWidth;
                 minX = Math.min(minX, left + x);
                 maxX = Math.max(maxX, left + x);
@@ -2942,8 +2943,8 @@ final class TripletRhythmDetector {
                                             : number == 6
                                                     ? TupletSixGlyph.matches(
                                                             gray, width, minX, minY, gw, gh)
-                                                    : looksLikeThree(
-                                                            gray, width, minX, minY, gw, gh)))
+                                                    : looksLikeComponentThree(
+                                                            component, count, localWidth, left, top, minX, minY, gw, gh)))
                 continue;
             if (TupletNumeralNeighbors.joinedText(gray, width, height, minX, minY, maxX, maxY))
                 continue;
@@ -3345,6 +3346,27 @@ final class TripletRhythmDetector {
                 && lowerOpen >= 1
                 && lowerOpen + lowerPocket >= Math.max(2, h / 8)
                 && lowerEdge - foot >= Math.max(1, (int) (w * .08f));
+    }
+
+    /** Neighboring disconnected ink cannot supply the lobes of this component. */
+    private static boolean looksLikeComponentThree(
+            int[] component,
+            int count,
+            int sourceWidth,
+            int sourceLeft,
+            int sourceTop,
+            int left,
+            int top,
+            int w,
+            int h) {
+        byte[] pixels = new byte[w * h];
+        java.util.Arrays.fill(pixels, (byte) 255);
+        for (int i = 0; i < count; i++) {
+            int x = sourceLeft + component[i] % sourceWidth - left;
+            int y = sourceTop + component[i] / sourceWidth - top;
+            pixels[y * w + x] = 0;
+        }
+        return looksLikeThree(pixels, w, 0, 0, w, h);
     }
 
     private static boolean looksLikeThree(byte[] gray, int width, int left, int top, int w, int h) {

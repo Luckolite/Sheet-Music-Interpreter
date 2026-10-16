@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "1d5d43b030c185ebfe534f97d5fe24fbd9842ea900b6a3dbc24429498c2fe582",
-      "review_note": "Independently stemmed neighboring head ink cannot become an augmentation dot. A verified short slashed grace with a larger stemmed principal may reject its owned attached stroke or curved connector. Trace across only thin continuous printed rules; isolated dots and broad bands remain protected. Existing grace-slur ownership admits a bounded contrast sweep. Original Apache-2.0 synthetic fixtures; no private pixels, model, dependency or format changes.",
-      "source_normalized_sha256": "eccc128e5d3fe210a9c9cd20f235af35436d6d69bcc9e0f521a9d39cdf8cea8c",
+      "source_sha256": "4aff6b9929cab589d26306f8289baee30e404ca681655ef7114d3ec12330fd0c",
+      "review_note": "Shared beamed heads retain a second quarter only with independent opposing raw shafts, a bare flag-free endpoint, and no intervening head owner. Extra events follow original source indices. Numeral-three classification uses its connected component so neighboring disconnected letter ink cannot supply lobes. Original procedural fixtures only; no private score pixels, models, dependencies or wire layouts changed.",
+      "source_normalized_sha256": "5d97073f99ef06ce1e1f2467338bcc91216e1fd85ddb09a2354a5e84861852e6",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Token-identical integration;10375 Java tests,21 original controls,11 native pages,24 private timing probes. Cumulative paired deployment pending.",
-      "standalone_sha256": "8a1c9e25c5f15477f49903c8ff5bf527523fc00ea8340cb07dacd4d30823b945",
-      "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "e075f4122742ccbe717ee18d8497ca5c603ef689"
+      "reviewed_source_state": "Reviewed app/public port retaining the existing standalone diagnostics adapter;10404 Java tests,20 app engraving tests,and5 native pages/1352notes passed. Cumulative paired deployment pending.",
+      "standalone_sha256": "32397e5d8194305a8d7112c88e490b5fe6affeb7afc9a5c49fab42c1cb4595b7",
+      "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
+      "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -508,12 +508,13 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "9ca131c3fd191243826aaabcf84c169166723fe9e692f953f906f8b954859b88",
-      "source_normalized_sha256": "624ef0a82014e1bc0cc2aa36c800a341daf5a5d8336524c28cedc4a2cb453af5",
-      "review_note": "Namespace and whitespace equivalent bounded lower-contour guard for occluded three; deterministic original crossed two and three raster regressions.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "29cb6d669160a5e0fb9d51e30f6f75fc28de9e92db9394f95bd563308b6abcbc",
-      "reviewed_app_commit": "270c4d60b23c7c1c715f872d333f06af18d02c9b"
+      "source_sha256": "a1c1686102bb50ef2867b0329d91ce39254ad5fb5423ed45831beeae99e24229",
+      "source_normalized_sha256": "8c2fe9d0278a074cadf17bb6e6a26cb0199e47954fbe6a90010335fe5221941c",
+      "review_note": "Shared beamed heads retain a second quarter only with independent opposing raw shafts, a bare flag-free endpoint, and no intervening head owner. Extra events follow original source indices. Numeral-three classification uses its connected component so neighboring disconnected letter ink cannot supply lobes. Original procedural fixtures only; no private score pixels, models, dependencies or wire layouts changed.",
+      "reviewed_source_state": "Reviewed app/public port retaining the existing standalone diagnostics adapter;10404 Java tests,20 app engraving tests,and5 native pages/1352notes passed. Cumulative paired deployment pending.",
+      "standalone_sha256": "cc17623827526c7d75b3dfff0fb19ac6b993f21e70eb2d9c1a51c4b0073c239d",
+      "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
+      "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
