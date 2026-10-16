@@ -58,6 +58,44 @@ final class DetachedSlurStemCap {
                 && (center - (left + right) * .5f) * side >= gap * .25f;
     }
 
+    static boolean crossesRecovery(
+            byte[] gray,
+            int width,
+            int height,
+            int[] strict,
+            int[] pale,
+            float gap,
+            int threshold) {
+        if (gray == null
+                || width < 3
+                || height < 3
+                || gray.length != (long) width * height
+                || strict == null
+                || pale == null
+                || strict.length < 3
+                || pale.length < 3
+                || !Float.isFinite(gap)
+                || gap < 8
+                || gap > Math.min(width, height) / 6f
+                || threshold < 1
+                || threshold > 220
+                || Math.abs(strict[2]) != 1
+                || pale[2] != strict[2]
+                || Math.abs(pale[0] - strict[0]) > gap * .3f
+                || (pale[1] - strict[1]) * strict[2] < gap * .5f
+                || (pale[1] - strict[1]) * strict[2] > gap * 1.5f) return false;
+        int x = pale[0];
+        if (x < 1 || x >= width - 1) return false;
+        // Pale traces include antialiased fringes; anchor the proof to actual dark ink.
+        for (int step = 0; step <= Math.round(gap * .35f); step++) {
+            int end = pale[1] - pale[2] * step;
+            if (end < 1 || end >= height - 1) return false;
+            if ((gray[end * width + x] & 255) < threshold)
+                return matches(gray, width, height, x, end, strict[1], strict[2], gap, threshold);
+        }
+        return false;
+    }
+
     private static float follow(
             byte[] gray,
             int width,

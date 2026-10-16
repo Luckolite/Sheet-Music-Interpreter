@@ -16790,6 +16790,21 @@ final class OmrScoreInterpreter {
                         Math.max(1, Math.round(gap * .16f)),
                         threshold);
         if (stem == null) return empty;
+        int[] continuous = attachedRawStem(gray, width, height, head, gap, 1, threshold);
+        if (continuous != null
+                && continuous[0] == stem[0]
+                && continuous[2] == stem[2]
+                && DetachedSlurStemCap.matches(
+                        gray,
+                        width,
+                        height,
+                        stem[0],
+                        stem[1],
+                        continuous[1],
+                        stem[2],
+                        gap,
+                        threshold)) stem = continuous;
+
         int side = Math.max(2, Math.round(gap * .38f)),
                 far = Math.max(side + 2, Math.round(gap * 1.4f));
         if (stem[0] - far < 0 || stem[0] + far >= width) return empty;
@@ -18276,6 +18291,8 @@ final class OmrScoreInterpreter {
                             paleStemToSupportedBeam(
                                     labels, gray, width, height, head, staff, allowSinglePale);
                 if (pale != null
+                        && !DetachedSlurStemCap.crossesRecovery(
+                                gray, width, height, attached, pale, gap, stemThreshold)
                         && !PaleBeamRecovery.crossesBlankCap(
                                 gray, width, height, attached, pale, gap)
                         && pale[2] == attached[2]
@@ -20004,6 +20021,19 @@ final class OmrScoreInterpreter {
             Staff staff,
             int[] pale) {
         float gap = staff.gap;
+        int strictThreshold =
+                BeamInkThreshold.at(
+                                gray,
+                                width,
+                                height,
+                                Math.round(head.centerX),
+                                Math.round(head.centerY - gap * 5),
+                                Math.round(head.centerY + gap * 5),
+                                gap)
+                        + 5;
+        int[] strict = attachedRawStem(gray, width, height, head, gap, 1, strictThreshold);
+        if (DetachedSlurStemCap.crossesRecovery(
+                gray, width, height, strict, pale, gap, strictThreshold)) return false;
         boolean up = pale[2] < 0;
         if (rootedPaleFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up)
                 || hasCurvedFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up))
