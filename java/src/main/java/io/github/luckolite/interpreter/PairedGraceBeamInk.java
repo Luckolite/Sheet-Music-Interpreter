@@ -20,6 +20,18 @@ final class PairedGraceBeamInk {
         return count(gray, width, height, a, b, gap, 2.2f, 5f, Float.NaN, null);
     }
 
+    static int countPrintedSize(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float staffTop,
+            StaffPitchTrack track) {
+        return count(gray, width, height, a, b, gap, 2.2f, 5f, staffTop, track);
+    }
+
     /** Confirm full-size rails against the independent local printed rules. */
     static int countFullSize(
             byte[] gray, int width, int height, int[] a, int[] b, float gap, float staffTop) {
@@ -336,13 +348,31 @@ final class PairedGraceBeamInk {
                 if (!ink && start >= 0) {
                     int size = y - start;
                     if (Float.isFinite(staffTop)
+                            && (inside == 1.5f
+                                    || exactRoundedCore(
+                                            gray, width, height, x, start, y - 1, gap, threshold))
                             && LocalPrintedStaffBand.matches(
                                     gray, width, height, x, staffTop, gap, threshold, start,
                                     y - 1)) {
                         start = -1;
                         continue;
                     }
-                    if (track != null && track.verified()) {
+                    if (inside > 1.5f
+                            && Float.isFinite(staffTop)
+                            && exactRoundedCore(
+                                    gray, width, height, x, start, y - 1, gap, threshold)
+                            && LocalPrintedStaffBand.matchesRoundedBeyondStem(
+                                    gray, width, height, x, staffTop, gap, threshold, start, y - 1,
+                                    0, track)) {
+                        start = -1;
+                        continue;
+                    }
+                    if (track != null
+                            && track.verified()
+                            && (inside == 1.5f
+                                    || exactRoundedCore(
+                                            gray, width, height, x, start, y - 1, gap,
+                                            threshold))) {
                         float[] physical = track.at(x);
                         if (LocalPrintedStaffBand.matches(
                                         gray,
@@ -406,5 +436,22 @@ final class PairedGraceBeamInk {
             previous = current;
         }
         return wanted;
+    }
+
+    // A nearby narrow rule cannot supply the mass of a different, wider beam core.
+    private static boolean exactRoundedCore(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int first,
+            int last,
+            float gap,
+            int threshold) {
+        int top = first, bottom = last;
+        while (top > 0 && (gray[(top - 1) * width + x] & 255) < threshold) top--;
+        while (bottom + 1 < height && (gray[(bottom + 1) * width + x] & 255) < threshold) bottom++;
+        return bottom - top + 1 <= Math.ceil(gap * .4f)
+                && Math.abs((top + bottom) - (first + last)) <= 1;
     }
 }

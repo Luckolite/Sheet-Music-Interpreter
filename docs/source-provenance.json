@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2129f5b05bd8387b1f75a304bbd2a3880ea4bfc9f31815fee162857b5492a3e4",
-      "review_note": "Detached bowed slur proof also excludes antialiased pale recovery endpoints and bounds tremolo searches to the continuous shaft. Both pale recovery paths retain the same geometric proof; no blanket duration override. Eight original analytic regression controls, no private pixels, model, dependency or format changes.",
-      "source_normalized_sha256": "88be03c7915492984987685347b8d0b4c3837384adea8818a99729035f47c482",
+      "source_sha256": "c83990ea6b7faadeaebb9ade0dc255af7fc985624cccbb797eb15845840c12a3",
+      "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
+      "source_normalized_sha256": "854b3b68e4db915464d0d5c6213ddd44bc04b0087a2de0db9b1ba899a05366da",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Tested-token-identical scoped integration;10328 Java tests and8 original app controls passed. Cumulative paired deployment pending.",
-      "standalone_sha256": "948fc1920a794e66b5935f2ff8b560bc019f53fd96de52d9fe68b50dc8d3b1ca",
+      "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
+      "standalone_sha256": "4d3350d8c3b1c89165ddd2377ab453f8c25490f74cfc9ad90a0447a854357f6a",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "999eaa3a08bed1bc4b63db0a035e85985de12242"
+      "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -925,14 +925,14 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "ebdf665837a73eb5315304cf30001056d43e6607c162ee05ebd9dd95fc0603a5",
-      "reviewed_app_commit": "f798200a6d7132893c5439a5bb919dd64106d4ed",
-      "source_normalized_sha256": "6c63c14ed2db2697c084428d4b90f98ba11218ef51928ecda4c57b99eb252fdd",
-      "review_note": "Reviewed continuous reduced-stem fallback after failed original beam proof, and bounded contrast windows with each rail anchored to the first witness. Original probes and principal-note ownership retained. Twelve original synthetic controls; no private pixels, model or format changes.",
+      "source_sha256": "55ff495ee78918218a075730c7de27318e3af2cf500a2263cadb6f01b2d55c8b",
+      "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8",
+      "source_normalized_sha256": "02b73292a0d03f80ee5607cf027785be0fa377e79b375a8adf249c51dee90edd",
+      "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "reviewed_source_state": "Tested-token-identical integrated source;10311 Java tests and12 original app controls passed. Paired deployment and whole-library acceptance pending.",
+      "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "standalone_sha256": "86bdf1622a9dbafd1ffca64d7a225ef658799f097b5ec9adbe153da5f12a0119"
+      "standalone_sha256": "93271816c6a950a4b0468e4c65fcd0216937a7ce8e239d8bacf3688f863c36f0"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
@@ -3293,6 +3293,15 @@
       "reviewed_source_state": "Tested-token-identical scoped integration;10328 Java tests and8 original app controls passed. Cumulative paired deployment pending.",
       "review_note": "Detached bowed slur proof also excludes antialiased pale recovery endpoints and bounds tremolo searches to the continuous shaft. Both pale recovery paths retain the same geometric proof; no blanket duration override. Eight original analytic regression controls, no private pixels, model, dependency or format changes.",
       "reviewed_app_commit": "999eaa3a08bed1bc4b63db0a035e85985de12242"
+    },
+    "DetachedMordentBeamCap.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedMordentBeamCap.java",
+      "source_sha256": "0e46c20e7302bbd9af3c3ab30a06e048fd448b8edacb5bf36813213fe959f99f",
+      "source_normalized_sha256": "da2fd36a59b9c333b6343320cfb2da9064eebb21222987da6b4153ebea96aab4",
+      "standalone_sha256": "814eadffe6771dd5aad65b92e72ca1305b254cd9ce5efa85b228b4f72dfee44f",
+      "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
+      "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
+      "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8"
     }
   },
   "interpreter_speedup_review": {

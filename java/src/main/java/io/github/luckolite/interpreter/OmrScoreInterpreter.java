@@ -17753,7 +17753,8 @@ final class OmrScoreInterpreter {
                             Math.max(1, Math.round(gap * .16f)),
                             threshold,
                             pairLimit);
-            if (PairedGraceBeamInk.countPrintedSize(gray, width, height, own, pair, gap)
+            if (PairedGraceBeamInk.countPrintedSize(
+                            gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
                     == expected) return true;
         }
         return false;
@@ -18291,6 +18292,8 @@ final class OmrScoreInterpreter {
                             paleStemToSupportedBeam(
                                     labels, gray, width, height, head, staff, allowSinglePale);
                 if (pale != null
+                        && !DetachedMordentBeamCap.crosses(
+                                gray, width, height, head.centerY, attached, pale, gap, stemThreshold)
                         && !DetachedSlurStemCap.crossesRecovery(
                                 gray, width, height, attached, pale, gap, stemThreshold)
                         && !PaleBeamRecovery.crossesBlankCap(
@@ -20032,6 +20035,9 @@ final class OmrScoreInterpreter {
                                 gap)
                         + 5;
         int[] strict = attachedRawStem(gray, width, height, head, gap, 1, strictThreshold);
+        if (DetachedMordentBeamCap.crosses(
+                gray, width, height, head.centerY, strict, pale, gap, strictThreshold))
+            return false;
         if (DetachedSlurStemCap.crossesRecovery(
                 gray, width, height, strict, pale, gap, strictThreshold)) return false;
         boolean up = pale[2] < 0;
