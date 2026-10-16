@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+A third semantic beam may intersect the inner scan boundary. Complete only its
+continuous ink body before applying unchanged thickness, root and staff-ownership
+proofs. Original mirrored drawings preserve single/double beams and reject
+separated inner marks without changing pixels.
+
 Two independently printed ending strokes bound full-rest centering at the inner
 stroke. The existing plate, silent-lane and dot-ownership proofs remain required;
 event coordinates stay unchanged. Original generated controls reject lone, broken,

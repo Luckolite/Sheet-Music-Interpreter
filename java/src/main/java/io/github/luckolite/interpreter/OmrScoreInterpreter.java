@@ -18668,6 +18668,30 @@ final class OmrScoreInterpreter {
                 int x = bestX + Math.round(distance * gap);
                 int near = Math.max(0, stemEnd - (upward ? Math.round(gap * .2f) : inside));
                 int far = Math.min(height - 1, stemEnd + (upward ? inside : Math.round(gap * .2f)));
+                // Complete only the continuous inner body already intersecting the scan.
+                // Three semantic bands are required; never cross white into a separate mark.
+                if (beams >= 3 && !smallHead) {
+                    if (upward)
+                        far =
+                                completeBeamEdge(
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        far,
+                                        1,
+                                        Math.min(height - 1, far + Math.round(gap * .6f)));
+                    else
+                        near =
+                                completeBeamEdge(
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        near,
+                                        -1,
+                                        Math.max(0, near - Math.round(gap * .6f)));
+                }
                 // Very long stems can stop at the inner beam edge. Complete that
                 // clipped band, but never reach across
                 // white space into a separate slur or flag return.
