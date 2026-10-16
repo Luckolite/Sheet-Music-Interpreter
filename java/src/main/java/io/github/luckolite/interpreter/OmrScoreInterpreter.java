@@ -546,6 +546,10 @@ final class OmrScoreInterpreter {
         rejectedBeamHeads.addAll(offsetParallelBeamIslandHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(
                 reducedPairBeamIslands(gray, width, height, heads, staffs));
+        List<Component> recoveredBeamCapGraces = new ArrayList<>();
+        rejectedBeamHeads.addAll(
+                reducedPairBorrowedShaftHeads(
+                        gray, width, height, heads, staffs, recoveredBeamCapGraces));
         heads.removeAll(rejectedBeamHeads);
         heads.removeAll(outlinedHookHeads(gray, width, height, heads, staffs));
         heads.removeAll(isolatedBeamTipHeads(gray, width, height, heads, staffs));
@@ -1248,6 +1252,10 @@ final class OmrScoreInterpreter {
                 beamCount = recoveredCreaseGraces.get(head);
                 unbeamedDuration = 0;
             }
+            if (recoveredBeamCapGraces.contains(head)) {
+                beamCount = 2;
+                unbeamedDuration = 0;
+            }
             // Beamed notes cannot have open heads. If a staff line, slur, or artwork edge near
             // an open half/whole head looked like a beam, retain the notehead's stronger direct
             // evidence instead of collapsing the sustained passage into eighths/sixteenths.
@@ -1413,6 +1421,8 @@ final class OmrScoreInterpreter {
             if (accidentalGraces.contains(head))
                 event = event.withArticulations(event.articulations() | NoteOrnament.GRACE);
             if (recoveredCreaseGraces.containsKey(head))
+                event = event.withArticulations(event.articulations() | NoteOrnament.GRACE);
+            if (recoveredBeamCapGraces.contains(head))
                 event = event.withArticulations(event.articulations() | NoteOrnament.GRACE);
             if (tremolo[0] > 0)
                 event =
@@ -10777,6 +10787,161 @@ final class OmrScoreInterpreter {
             }
         }
         return rejected;
+    }
+
+    /** A semantic beam cap can borrow the downward continuation of its real grace shaft. */
+    private static List<Component> reducedPairBorrowedShaftHeads(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        return reducedPairBorrowedShaftHeads(gray, width, height, heads, staffs, new ArrayList<>());
+    }
+
+    private static List<Component> reducedPairBorrowedShaftHeads(
+            byte[] gray,
+            int width,
+            int height,
+            List<Component> heads,
+            List<Staff> staffs,
+            List<Component> graces) {
+        List<Component> rejected = new ArrayList<>();
+        if (gray == null) return rejected;
+        for (Component cap : heads) {
+            Staff owner = nearestHeadStaff(staffs, cap.centerY);
+            if (owner == null) continue;
+            float gap = owner.gap;
+            if (cap.area > gap * gap * .8f
+                    || cap.maxX - cap.minX + 1 > gap * 1.5f
+                    || cap.maxY - cap.minY + 1 > gap) continue;
+            int[] borrowed = attachedRawStem(gray, width, height, cap, gap * .65f);
+            if (borrowed == null || borrowed[2] != 1) continue;
+            for (Component a : heads) {
+                if (a == cap
+                        || nearestHeadStaff(staffs, a.centerY) != owner
+                        || a.area < gap * gap * .25f
+                        || a.area > gap * gap * .65f
+                        || a.maxX - a.minX + 1 > gap
+                        || a.maxY - a.minY + 1 > gap * .85f
+                        || a.centerX >= cap.centerX
+                        || a.centerY - cap.centerY < gap * 1.1f
+                        || a.centerY - cap.centerY > gap * 3.5f) continue;
+                int[] first = attachedRawStem(gray, width, height, a, gap * .65f);
+                if (first == null
+                        || first[2] != -1
+                        || Math.abs(first[0] - borrowed[0]) > gap * .2f
+                        || Math.abs(borrowed[1] - a.centerY) > gap * .6f) continue;
+                for (Component b : heads) {
+                    if (b == cap
+                            || b == a
+                            || nearestHeadStaff(staffs, b.centerY) != owner
+                            || b.area < gap * gap * .25f
+                            || b.area > gap * gap * .65f
+                            || b.maxX - b.minX + 1 > gap
+                            || b.maxY - b.minY + 1 > gap * .85f
+                            || b.centerX <= cap.centerX
+                            || b.centerY - cap.centerY < gap * 1.1f
+                            || b.centerY - cap.centerY > gap * 3.5f) continue;
+                    int[] last = attachedRawStem(gray, width, height, b, gap * .65f);
+                    if (last == null
+                            || last[2] != -1
+                            || last[0] - first[0] < gap * .95f
+                            || last[0] - first[0] > gap * 2.5f
+                            || cap.minX < first[0] - gap * .2f
+                            || cap.maxX > last[0] + gap * .2f) continue;
+                    float expected =
+                            first[1]
+                                    + (last[1] - first[1])
+                                            * (cap.centerX - first[0])
+                                            / (last[0] - first[0]);
+                    if (cap.minY < expected - gap * .3f
+                            || cap.maxY > expected + gap * 1.1f
+                            || (PairedGraceBeamInk.count(gray, width, height, first, last, gap) != 2
+                                    && !compactInnerBeamChannel(
+                                            gray, width, height, first, last, gap))) continue;
+                    if (!rejected.contains(cap)) rejected.add(cap);
+                    if (!graces.contains(a)) graces.add(a);
+                    if (!graces.contains(b)) graces.add(b);
+                }
+            }
+        }
+        return rejected;
+    }
+
+    private static boolean compactInnerBeamChannel(
+            byte[] gray, int w, int h, int[] a, int[] b, float gap) {
+        if (gray == null
+                || w <= 0
+                || h <= 0
+                || gray.length != (long) w * h
+                || a == null
+                || b == null
+                || a.length != 3
+                || b.length != 3
+                || a[2] != -1
+                || b[2] != -1
+                || !Float.isFinite(gap)
+                || gap < 4
+                || a[0] < 0
+                || b[0] >= w) return false;
+        int span = b[0] - a[0];
+        if (span < gap * .95f || span > gap * 1.8f) return false;
+        float slope = (b[1] - a[1]) / (float) span;
+        int darkest = 255;
+        for (int x = a[0] + 2; x <= b[0] - 2; x++) {
+            int top = Math.round(a[1] + slope * (x - a[0]));
+            for (int y = top; y <= top + Math.round(gap); y++)
+                if (y >= 0 && y < h) darkest = Math.min(darkest, gray[y * w + x] & 255);
+        }
+        for (int offset : new int[] {45, 75}) {
+            int threshold = Math.min(140, darkest + offset), run = 0, blocks = 0, longest = 0;
+            boolean firstClear = false, lastClear = false;
+            float priorUpper = Float.NaN, priorLower = Float.NaN;
+            for (int x = a[0] + 2; x <= b[0] - 2; x++) {
+                int top = Math.round(a[1] + slope * (x - a[0]) - gap * .2f),
+                        bottom = Math.round(a[1] + slope * (x - a[0]) + gap * 1.2f);
+                if (top < 0 || bottom >= h) return false;
+                List<int[]> cores = new ArrayList<>();
+                int begin = -1;
+                for (int y = top; y <= bottom + 1; y++) {
+                    boolean ink = y <= bottom && (gray[y * w + x] & 255) < threshold;
+                    if (ink && begin < 0) begin = y;
+                    if (!ink && begin >= 0) {
+                        if (y - begin >= gap * .18f) cores.add(new int[] {begin, y - 1});
+                        begin = -1;
+                    }
+                }
+                boolean good = cores.size() == 2;
+                float upper = 0, lower = 0;
+                if (good) {
+                    var u = cores.get(0);
+                    var l = cores.get(1);
+                    int uh = u[1] - u[0] + 1, lh = l[1] - l[0] + 1, white = l[0] - u[1] - 1;
+                    upper = (u[0] + u[1]) * .5f;
+                    lower = (l[0] + l[1]) * .5f;
+                    good =
+                            uh >= gap * .18f
+                                    && uh <= gap * .5f
+                                    && lh >= gap * .18f
+                                    && lh <= gap * .5f
+                                    && white >= 1
+                                    && white <= gap * .35f;
+                }
+                if (good) {
+                    if (run > 0
+                            && (Math.abs(upper - priorUpper - slope) > 1
+                                    || Math.abs(lower - priorLower - slope) > 1)) run = 0;
+                    if (run == 0) blocks++;
+                    run++;
+                    longest = Math.max(longest, run);
+                    priorUpper = upper;
+                    priorLower = lower;
+                } else run = 0;
+                if (x == a[0] + 2) firstClear = good;
+                if (x == b[0] - 2) lastClear = good;
+            }
+            if (blocks == 1
+                    && longest >= Math.max(3, Math.round(gap * .25f))
+                    && (firstClear || lastClear)) return true;
+        }
+        return false;
     }
 
     private static List<Component> narrowPairedBeamHeads(

@@ -2336,3 +2336,15 @@ Private replay removes one false note and restores one grace flag while retainin
 all other note fields and rests; two further control pages remain identical.
 A broader blurred beam-cap variant remains under investigation.
 Paired app source: a08d0dbb854c7d24bc3396ab149bc400faba6770.
+
+## Reduced beam caps sharing a real shaft
+
+A reduced beam cap can appear to have a stem because it borrows the downward
+continuation of a genuine grace shaft. Recovery requires two independently
+rooted reduced notes and either paired rails or one continuous edge channel.
+A local oval that interrupts the channel is preserved. Only the two proven
+owners receive the recovered two-beam grace rhythm. Original procedural tests
+cover independent shafts, genuine head bulges, missing owners and closed channels.
+Private replay restores an ornamental pair and removes its false cap note;
+other written note fields and rest data remain unchanged.
+Paired app source: 82e8206261faca466621a5b1e2899cb70f4bcde3.

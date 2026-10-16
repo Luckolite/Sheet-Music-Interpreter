@@ -377,15 +377,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "a88ff7fb6b4b7d55c4afccb9ff5e99e33e9a9b584187d789e41c69b420992125",
-      "review_note": "Tiny stemless mask islands within two independently stemmed reduced heads are rejected only with paired printed beam ownership; genuine shafts, large heads, single beams and absent owners preserved. Original procedural controls; no score pixels ported.",
-      "source_normalized_sha256": "430efc4421a2ec02688d4c0c7cfea290de6dddac69780f3b5844ccc8b8164595",
+      "source_sha256": "ef5bf1faafc74d3541191baf95e46e43dcf8ee256a91c727292554f830fda899",
+      "review_note": "A reduced beam cap may borrow its real grace shaft. Require two independently rooted reduced heads, paired rails or one continuous edge channel, no intervening oval closure, and bounded stem ownership. Apply recovered2beam/grace only to those two roots. Original procedural fixtures preserve genuine note bulges and independent shafts.",
+      "source_normalized_sha256": "e87e26710ebfb106db8ada5b2480bfb79c1e8c87eda49bb8ba42617cb22b82a2",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
-      "standalone_sha256": "89a979acc50ed644e388807ab5b930f6f3926e2a123a0b6f6bdd9a8d7d0edc28",
+      "standalone_sha256": "1d0adda4db2e3960c3604ba0b2dadbd9eddbd5dfeae58ccd9800a79aef3ccee7",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "a08d0dbb854c7d24bc3396ab149bc400faba6770",
-      "scoped_reviewed_app_commit": "a08d0dbb854c7d24bc3396ab149bc400faba6770"
+      "reviewed_app_commit": "82e8206261faca466621a5b1e2899cb70f4bcde3",
+      "scoped_reviewed_app_commit": "82e8206261faca466621a5b1e2899cb70f4bcde3"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
