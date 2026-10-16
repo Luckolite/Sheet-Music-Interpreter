@@ -2111,3 +2111,16 @@ pitches, and slur controls. No commercial score pixels or model changes are
 included. Paired deployment and whole-library acceptance remain pending.
 Paired app source: `3be11619994dce2d55504738c39f4de1576a6a60`. Java tests: 10,201; Python tests: 582
 (44 skipped); synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.
+
+## Short ties with tapered faint endpoints
+
+Compact arcs get pixel-spaced endpoint clearances and a finer curve search. The
+original ink threshold and sampling grid remain available before the additional
+proofs; dark-core, contrast, curvature and connected-column requirements remain
+in place. Five original analytic regressions cover 31 recovered geometries, an
+existing faint arc, and broken, flat and uniformly pale controls. No private score
+pixels, model weights or dependencies are included. Paired deployment and
+whole-library acceptance remain pending.
+Paired app source: `06846962df3da6a964c2768ccb304343faf08ddd`. Java tests: 10,206; Python tests: 582
+(44 skipped).
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML, and MP3 checks passed.

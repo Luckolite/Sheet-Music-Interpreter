@@ -21651,16 +21651,18 @@ final class OmrScoreInterpreter {
         // Compact dotted notes also leave that clearance. Keep the whole returning
         // curve inside the head edges and require a substantial remaining span.
         if (faintShoulders && right - left < gap * 5) {
-            int clearanceStep = Math.max(1, Math.round(gap * .1f));
+            // Retain the original ink proof before accepting faint tapered endpoints.
+            int clearanceStep = right - left < gap * 2.5f ? 1 : Math.max(1, Math.round(gap * .1f));
             int clearanceCount = Math.round(gap * 1.4f / clearanceStep);
-            for (int first = 0; first <= clearanceCount; first++)
-                for (int last = 0; last <= clearanceCount; last++) {
-                    int a = left + first * clearanceStep, b = right - last * clearanceStep;
-                    if (b - a < Math.max(gap * .9f, (right - left) * .45f)) continue;
-                    if (hasContinuousTieArc(
-                            labels, gray, width, height, a, b, centerY, gap, null, 205, 0, true,
-                            false, frame)) return true;
-                }
+            for (int faintInk : right - left < gap * 2.5f ? new int[] {205, 225} : new int[] {205})
+                for (int first = 0; first <= clearanceCount; first++)
+                    for (int last = 0; last <= clearanceCount; last++) {
+                        int a = left + first * clearanceStep, b = right - last * clearanceStep;
+                        if (b - a < Math.max(gap * .9f, (right - left) * .45f)) continue;
+                        if (hasContinuousTieArc(
+                                labels, gray, width, height, a, b, centerY, gap, null, faintInk, 0,
+                                true, false, frame)) return true;
+                    }
         }
         // Keep short-arc limits and require a dark core within the complete curve.
         int longStep = Math.max(1, Math.round(gap * .2f));
@@ -21894,465 +21896,473 @@ final class OmrScoreInterpreter {
             float t = (sample + .5f) / 50f;
             sampleColumns[sample] = Math.round(left + t * (right - left));
         }
-        for (int side : requiredSide == 0 ? new int[] {-1, 1} : new int[] {requiredSide})
-            for (float offset = .2f; offset <= 1.15f; offset += .15f)
-                candidate:
-                for (float bend = -.75f; bend <= 1.8f; bend += .1f) {
-                    if (Math.abs(bend) < .24f || offset + bend < .12f) continue;
-                    // A compact span cannot own a deep bowl under the heads;
-                    // rounded dynamics and rest bulbs can supply unrelated ink.
-                    if (right - left < gap * 2.6f && offset + Math.max(0, bend) > 1.6f) continue;
-                    if (target != null
-                            && Math.abs(centerY + side * gap * (offset + bend) - target.centerY)
-                                    > gap * .25f) continue;
-                    int hits = 0, obscured = 0, strong = 0;
-                    java.util.Arrays.fill(bins, 0);
-                    java.util.Arrays.fill(coveredBins, 0);
-                    for (int sample = 0; sample < 50; sample++) {
-                        // Every acceptance path needs at least 34 visible hits, 43 total
-                        // samples, and seven covered samples in every ten-sample bin.
-                        // Remaining samples cannot repair a failed bound; skip only then.
-                        int remaining = 50 - sample;
-                        int bin = sample / 10;
-                        if (hits + remaining < 34
-                                || hits + obscured + remaining < 43
-                                || (inkLimit > 165 && strong + remaining < 30)
-                                || coveredBins[bin] + 10 - sample % 10 < 7
-                                || (sample % 10 == 0 && bin > 0 && coveredBins[bin - 1] < 7))
-                            continue candidate;
-                        // Only completed candidates reach curvature checks. Initialize each
-                        // visited sample; abandoned candidates never read their stale tail.
-                        centers[sample] =
-                                supportedCenters[sample] = strokeCenters[sample] = Float.NaN;
-                        int x = sampleColumns[sample];
-                        int y =
-                                Math.round(
-                                        centerY
-                                                + side
-                                                        * gap
-                                                        * (offset
-                                                                + bend
-                                                                        * (flatProfile
-                                                                                ? FLAT_TIE_PROFILE[
-                                                                                        sample]
-                                                                                : PARABOLIC_TIE_PROFILE[
-                                                                                        sample])));
-                        boolean ink = false;
-                        int obscuredY = -1;
-                        for (int search = 0; search <= radius * 2; search++) {
-                            int dy = (search + 1) / 2 * (search % 2 == 0 ? 1 : -1);
-                            int yy = y + dy;
-                            if (yy < 0 || yy >= height) continue;
-                            int at = yy * width + x;
-                            if ((gray[at] & 255) > inkLimit
-                                    || labels[at] == OmrMeasurePostProcessor.NOTEHEAD) continue;
-                            int shade = gray[at] & 255;
-                            if (strictContrast && shade > 125) {
-                                int paper = 0;
-                                for (int distance : contrastOffsets) {
-                                    if (yy >= distance)
-                                        paper =
-                                                Math.max(
-                                                        paper,
-                                                        gray[(yy - distance) * width + x] & 255);
-                                    if (yy + distance < height)
-                                        paper =
-                                                Math.max(
-                                                        paper,
-                                                        gray[(yy + distance) * width + x] & 255);
+        // Keep the original grid: fractional sampling can move across rasterized ink.
+        // Short arcs get an additional finer pass after those candidates fail.
+        for (int grid = 0; grid < (right - left < gap * 2 ? 2 : 1); grid++)
+            for (int side : requiredSide == 0 ? new int[] {-1, 1} : new int[] {requiredSide})
+                for (float offset = .2f; offset <= 1.15f; offset += grid == 1 ? .075f : .15f)
+                    candidate:
+                    for (float bend = -.75f; bend <= 1.8f; bend += grid == 1 ? .05f : .1f) {
+                        if (Math.abs(bend) < .24f || offset + bend < .12f) continue;
+                        // A compact span cannot own a deep bowl under the heads;
+                        // rounded dynamics and rest bulbs can supply unrelated ink.
+                        if (right - left < gap * 2.6f && offset + Math.max(0, bend) > 1.6f)
+                            continue;
+                        if (target != null
+                                && Math.abs(centerY + side * gap * (offset + bend) - target.centerY)
+                                        > gap * .25f) continue;
+                        int hits = 0, obscured = 0, strong = 0;
+                        java.util.Arrays.fill(bins, 0);
+                        java.util.Arrays.fill(coveredBins, 0);
+                        for (int sample = 0; sample < 50; sample++) {
+                            // Every acceptance path needs at least 34 visible hits, 43 total
+                            // samples, and seven covered samples in every ten-sample bin.
+                            // Remaining samples cannot repair a failed bound; skip only then.
+                            int remaining = 50 - sample;
+                            int bin = sample / 10;
+                            if (hits + remaining < 34
+                                    || hits + obscured + remaining < 43
+                                    || (inkLimit > 165 && strong + remaining < 30)
+                                    || coveredBins[bin] + 10 - sample % 10 < 7
+                                    || (sample % 10 == 0 && bin > 0 && coveredBins[bin - 1] < 7))
+                                continue candidate;
+                            // Only completed candidates reach curvature checks. Initialize each
+                            // visited sample; abandoned candidates never read their stale tail.
+                            centers[sample] =
+                                    supportedCenters[sample] = strokeCenters[sample] = Float.NaN;
+                            int x = sampleColumns[sample];
+                            int y =
+                                    Math.round(
+                                            centerY
+                                                    + side
+                                                            * gap
+                                                            * (offset
+                                                                    + bend
+                                                                            * (flatProfile
+                                                                                    ? FLAT_TIE_PROFILE[
+                                                                                            sample]
+                                                                                    : PARABOLIC_TIE_PROFILE[
+                                                                                            sample])));
+                            boolean ink = false;
+                            int obscuredY = -1;
+                            for (int search = 0; search <= radius * 2; search++) {
+                                int dy = (search + 1) / 2 * (search % 2 == 0 ? 1 : -1);
+                                int yy = y + dy;
+                                if (yy < 0 || yy >= height) continue;
+                                int at = yy * width + x;
+                                if ((gray[at] & 255) > inkLimit
+                                        || labels[at] == OmrMeasurePostProcessor.NOTEHEAD) continue;
+                                int shade = gray[at] & 255;
+                                if (strictContrast && shade > 125) {
+                                    int paper = 0;
+                                    for (int distance : contrastOffsets) {
+                                        if (yy >= distance)
+                                            paper =
+                                                    Math.max(
+                                                            paper,
+                                                            gray[(yy - distance) * width + x]
+                                                                    & 255);
+                                        if (yy + distance < height)
+                                            paper =
+                                                    Math.max(
+                                                            paper,
+                                                            gray[(yy + distance) * width + x]
+                                                                    & 255);
+                                    }
+                                    if (paper < shade + 20) continue;
                                 }
-                                if (paper < shade + 20) continue;
+                                // Semantic staff bands can cover a curved tie crest. Raw
+                                // straight rules stay occluded; the remaining thin stroke
+                                // must independently pass the returning-curve checks.
+                                if (straightRows[yy]) {
+                                    if (obscuredY < 0) obscuredY = yy;
+                                } else {
+                                    // Measure the printed stroke center, not whichever edge
+                                    // best fits the requested curve. Alternating between the
+                                    // top and bottom edges can bend a thick straight rule.
+                                    int inkTop = yy, inkBottom = yy;
+                                    while (inkTop > Math.max(0, yy - reach)
+                                            && (gray[(inkTop - 1) * width + x] & 255) <= inkLimit)
+                                        inkTop--;
+                                    while (inkBottom < Math.min(height - 1, yy + reach)
+                                            && (gray[(inkBottom + 1) * width + x] & 255)
+                                                    <= inkLimit) inkBottom++;
+                                    // Follow the actual thin stroke, not the convenient
+                                    // edge of a thick accidental, rest bulb or letter.
+                                    if (inkBottom - inkTop > gap * .6f) continue;
+                                    float strokeCenter = (inkTop + inkBottom) * .5f;
+                                    if (right - left < gap * 2.6f
+                                            && side * (strokeCenter - centerY) > gap * 1.6f)
+                                        continue;
+                                    if (Math.abs(strokeCenter - y)
+                                            > radius + Math.max(1f, gap * .06f)) continue;
+                                    strokeCenters[sample] = strokeCenter;
+                                    ink = true;
+                                    centers[sample] = yy;
+                                    supportedCenters[sample] = yy;
+                                    if ((gray[at] & 255) <= 165) strong++;
+                                    break;
+                                }
                             }
-                            // Semantic staff bands can cover a curved tie crest. Raw
-                            // straight rules stay occluded; the remaining thin stroke
-                            // must independently pass the returning-curve checks.
-                            if (straightRows[yy]) {
-                                if (obscuredY < 0) obscuredY = yy;
-                            } else {
-                                // Measure the printed stroke center, not whichever edge
-                                // best fits the requested curve. Alternating between the
-                                // top and bottom edges can bend a thick straight rule.
-                                int inkTop = yy, inkBottom = yy;
-                                while (inkTop > Math.max(0, yy - reach)
-                                        && (gray[(inkTop - 1) * width + x] & 255) <= inkLimit)
-                                    inkTop--;
-                                while (inkBottom < Math.min(height - 1, yy + reach)
-                                        && (gray[(inkBottom + 1) * width + x] & 255) <= inkLimit)
-                                    inkBottom++;
-                                // Follow the actual thin stroke, not the convenient
-                                // edge of a thick accidental, rest bulb or letter.
-                                if (inkBottom - inkTop > gap * .6f) continue;
-                                float strokeCenter = (inkTop + inkBottom) * .5f;
-                                if (right - left < gap * 2.6f
-                                        && side * (strokeCenter - centerY) > gap * 1.6f) continue;
-                                if (Math.abs(strokeCenter - y) > radius + Math.max(1f, gap * .06f))
-                                    continue;
-                                strokeCenters[sample] = strokeCenter;
-                                ink = true;
-                                centers[sample] = yy;
-                                supportedCenters[sample] = yy;
-                                if ((gray[at] & 255) <= 165) strong++;
-                                break;
+                            if (ink) {
+                                hits++;
+                                bins[sample / 10]++;
+                                coveredBins[sample / 10]++;
+                            } else if (obscuredY >= 0) {
+                                obscured++;
+                                coveredBins[sample / 10]++;
+                                supportedCenters[sample] = obscuredY;
                             }
                         }
-                        if (ink) {
-                            hits++;
-                            bins[sample / 10]++;
-                            coveredBins[sample / 10]++;
-                        } else if (obscuredY >= 0) {
-                            obscured++;
-                            coveredBins[sample / 10]++;
-                            supportedCenters[sample] = obscuredY;
+                        if (inkLimit > 165 && strong < 30) continue;
+                        // A changing stroke width can supply two curved boundaries while
+                        // its printed center remains straight. Do not let the search
+                        // switch boundaries to manufacture a returning arc.
+                        if (hits >= 34 && hasFlatTieStrokeCenter(strokeCenters, gap)) continue;
+                        if (hits >= 43
+                                && bins[0] >= 7
+                                && bins[1] >= 7
+                                && bins[2] >= 7
+                                && bins[3] >= 7
+                                && bins[4] >= 7
+                                && arcCurvature(strokeCenters, 0, 0, 49)
+                                        >= Math.max(.8f, gap * .12f)) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
+                        }
+                        // A short returning arc can cross a staff rule at one end. Treat a
+                        // few such pixels as occluded only when the remaining curve and
+                        // both endpoints are independently visible away from the rule.
+                        if (hits >= 40
+                                && obscured > 0
+                                && obscured <= 6
+                                && hits + obscured >= 43
+                                && bins[0] >= 5
+                                && bins[4] >= 5
+                                && coveredBins[0] >= 7
+                                && coveredBins[1] >= 7
+                                && coveredBins[2] >= 7
+                                && coveredBins[3] >= 7
+                                && coveredBins[4] >= 7
+                                && arcCurvature(supportedCenters, 0, 0, 49)
+                                        >= Math.max(1.2f, gap * .15f)) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
+                        }
+                        // Both ends of a short tie can merge into the same thick staff rule.
+                        // Require an almost complete curve and an independently visible middle
+                        // and returning shoulders; a straight rule or one-sided beam cannot pass.
+                        if (hits >= 36
+                                && obscured > 0
+                                && obscured <= 14
+                                && hits + obscured >= 48
+                                && bins[0] >= 3
+                                && bins[4] >= 3
+                                && bins[1] >= 9
+                                && bins[2] >= 9
+                                && bins[3] >= 9
+                                && coveredBins[0] >= 9
+                                && coveredBins[4] >= 9
+                                && arcCurvature(strokeCenters, 0, 0, 49)
+                                        >= Math.max(1.2f, gap * .15f)) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
+                        }
+                        // A long, deeply bowed tie can cross several distinct staff rules.
+                        // Require every sampled bin to be fully covered, both returning
+                        // shoulders and a dark core; unrelated straight fragments cannot qualify.
+                        if (right - left >= gap * 8
+                                && right - left <= gap * (flatProfile ? 48 : 24)
+                                && hits >= 36
+                                && strong >= 36
+                                && obscured > 0
+                                && obscured <= 14
+                                && hits + obscured == 50
+                                && bins[0] >= 5
+                                && bins[4] >= 5
+                                && bins[1] >= 8
+                                && bins[2] >= 8
+                                && bins[3] >= 8
+                                && arcCurvature(supportedCenters, 0, 0, 49) >= gap * .45f
+                                && (strictContrast
+                                        || hasContinuousTieArc(
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                left,
+                                                right,
+                                                centerY,
+                                                gap,
+                                                target,
+                                                inkLimit,
+                                                requiredSide,
+                                                true,
+                                                false,
+                                                frame))) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
+                        }
+                        // Antialiased shoulders can reduce the dark count while staff rules
+                        // obscure a returning curve. Require nearly complete coverage in
+                        // every bin, both shoulders, an independently dark core and contrast.
+                        if (right - left >= gap * 8
+                                && right - left <= gap * (flatProfile ? 48 : 24)
+                                && hits >= 36
+                                && strong >= 30
+                                && obscured > 0
+                                && obscured <= 14
+                                && hits + obscured >= 48
+                                && bins[0] >= 4
+                                && bins[4] >= 4
+                                && bins[0] + bins[4] >= 10
+                                && bins[1] >= 8
+                                && bins[2] >= 8
+                                && bins[3] >= 8
+                                && coveredBins[0] >= 8
+                                && coveredBins[1] >= 8
+                                && coveredBins[2] >= 8
+                                && coveredBins[3] >= 8
+                                && coveredBins[4] >= 8
+                                && arcCurvature(supportedCenters, 0, 0, 49) >= gap * .45f
+                                && (strictContrast
+                                        || hasContinuousTieArc(
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                left,
+                                                right,
+                                                centerY,
+                                                gap,
+                                                target,
+                                                inkLimit,
+                                                requiredSide,
+                                                true,
+                                                false,
+                                                frame))) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
+                        }
+                        // A compact tie can touch a staff rule at its crest instead of
+                        // at the endpoints. Both returning shoulders must remain visible;
+                        // the rule only supplies the small occluded central section.
+                        if (right - left <= gap * 5
+                                && hits >= 34
+                                && obscured > 0
+                                && obscured <= 16
+                                && hits + obscured >= 48
+                                && bins[0] >= 8
+                                && bins[1] >= 7
+                                && bins[3] >= 7
+                                && bins[4] >= 8
+                                && coveredBins[0] >= 9
+                                && coveredBins[1] >= 9
+                                && coveredBins[2] >= 9
+                                && coveredBins[3] >= 9
+                                && coveredBins[4] >= 9
+                                && arcCurvature(supportedCenters, 0, 0, 49)
+                                        >= Math.max(1.5f, gap * .20f)
+                                && (strictContrast
+                                        || hasContinuousTieArc(
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                left,
+                                                right,
+                                                centerY,
+                                                gap,
+                                                target,
+                                                inkLimit,
+                                                requiredSide,
+                                                true,
+                                                false,
+                                                frame))) {
+                            if (!TieArcBranchInk.outwardStems(
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            strokeCenters,
+                                            side,
+                                            gap,
+                                            inkLimit)
+                                    && !VerifiedStaffTieRidge.followsRule(
+                                            frame == null ? null : frame.track,
+                                            left,
+                                            right,
+                                            strokeCenters)
+                                    && DenseTieArcContinuity.proved(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            left,
+                                            right,
+                                            centerY,
+                                            gap,
+                                            side,
+                                            offset,
+                                            bend,
+                                            flatProfile,
+                                            inkLimit,
+                                            strictContrast,
+                                            straightRows,
+                                            contrastOffsets)) return true;
                         }
                     }
-                    if (inkLimit > 165 && strong < 30) continue;
-                    // A changing stroke width can supply two curved boundaries while
-                    // its printed center remains straight. Do not let the search
-                    // switch boundaries to manufacture a returning arc.
-                    if (hits >= 34 && hasFlatTieStrokeCenter(strokeCenters, gap)) continue;
-                    if (hits >= 43
-                            && bins[0] >= 7
-                            && bins[1] >= 7
-                            && bins[2] >= 7
-                            && bins[3] >= 7
-                            && bins[4] >= 7
-                            && arcCurvature(strokeCenters, 0, 0, 49) >= Math.max(.8f, gap * .12f)) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                    // A short returning arc can cross a staff rule at one end. Treat a
-                    // few such pixels as occluded only when the remaining curve and
-                    // both endpoints are independently visible away from the rule.
-                    if (hits >= 40
-                            && obscured > 0
-                            && obscured <= 6
-                            && hits + obscured >= 43
-                            && bins[0] >= 5
-                            && bins[4] >= 5
-                            && coveredBins[0] >= 7
-                            && coveredBins[1] >= 7
-                            && coveredBins[2] >= 7
-                            && coveredBins[3] >= 7
-                            && coveredBins[4] >= 7
-                            && arcCurvature(supportedCenters, 0, 0, 49)
-                                    >= Math.max(1.2f, gap * .15f)) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                    // Both ends of a short tie can merge into the same thick staff rule.
-                    // Require an almost complete curve and an independently visible middle
-                    // and returning shoulders; a straight rule or one-sided beam cannot pass.
-                    if (hits >= 36
-                            && obscured > 0
-                            && obscured <= 14
-                            && hits + obscured >= 48
-                            && bins[0] >= 3
-                            && bins[4] >= 3
-                            && bins[1] >= 9
-                            && bins[2] >= 9
-                            && bins[3] >= 9
-                            && coveredBins[0] >= 9
-                            && coveredBins[4] >= 9
-                            && arcCurvature(strokeCenters, 0, 0, 49)
-                                    >= Math.max(1.2f, gap * .15f)) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                    // A long, deeply bowed tie can cross several distinct staff rules.
-                    // Require every sampled bin to be fully covered, both returning
-                    // shoulders and a dark core; unrelated straight fragments cannot qualify.
-                    if (right - left >= gap * 8
-                            && right - left <= gap * (flatProfile ? 48 : 24)
-                            && hits >= 36
-                            && strong >= 36
-                            && obscured > 0
-                            && obscured <= 14
-                            && hits + obscured == 50
-                            && bins[0] >= 5
-                            && bins[4] >= 5
-                            && bins[1] >= 8
-                            && bins[2] >= 8
-                            && bins[3] >= 8
-                            && arcCurvature(supportedCenters, 0, 0, 49) >= gap * .45f
-                            && (strictContrast
-                                    || hasContinuousTieArc(
-                                            labels,
-                                            gray,
-                                            width,
-                                            height,
-                                            left,
-                                            right,
-                                            centerY,
-                                            gap,
-                                            target,
-                                            inkLimit,
-                                            requiredSide,
-                                            true,
-                                            false,
-                                            frame))) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                    // Antialiased shoulders can reduce the dark count while staff rules
-                    // obscure a returning curve. Require nearly complete coverage in
-                    // every bin, both shoulders, an independently dark core and contrast.
-                    if (right - left >= gap * 8
-                            && right - left <= gap * (flatProfile ? 48 : 24)
-                            && hits >= 36
-                            && strong >= 30
-                            && obscured > 0
-                            && obscured <= 14
-                            && hits + obscured >= 48
-                            && bins[0] >= 4
-                            && bins[4] >= 4
-                            && bins[0] + bins[4] >= 10
-                            && bins[1] >= 8
-                            && bins[2] >= 8
-                            && bins[3] >= 8
-                            && coveredBins[0] >= 8
-                            && coveredBins[1] >= 8
-                            && coveredBins[2] >= 8
-                            && coveredBins[3] >= 8
-                            && coveredBins[4] >= 8
-                            && arcCurvature(supportedCenters, 0, 0, 49) >= gap * .45f
-                            && (strictContrast
-                                    || hasContinuousTieArc(
-                                            labels,
-                                            gray,
-                                            width,
-                                            height,
-                                            left,
-                                            right,
-                                            centerY,
-                                            gap,
-                                            target,
-                                            inkLimit,
-                                            requiredSide,
-                                            true,
-                                            false,
-                                            frame))) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                    // A compact tie can touch a staff rule at its crest instead of
-                    // at the endpoints. Both returning shoulders must remain visible;
-                    // the rule only supplies the small occluded central section.
-                    if (right - left <= gap * 5
-                            && hits >= 34
-                            && obscured > 0
-                            && obscured <= 16
-                            && hits + obscured >= 48
-                            && bins[0] >= 8
-                            && bins[1] >= 7
-                            && bins[3] >= 7
-                            && bins[4] >= 8
-                            && coveredBins[0] >= 9
-                            && coveredBins[1] >= 9
-                            && coveredBins[2] >= 9
-                            && coveredBins[3] >= 9
-                            && coveredBins[4] >= 9
-                            && arcCurvature(supportedCenters, 0, 0, 49)
-                                    >= Math.max(1.5f, gap * .20f)
-                            && (strictContrast
-                                    || hasContinuousTieArc(
-                                            labels,
-                                            gray,
-                                            width,
-                                            height,
-                                            left,
-                                            right,
-                                            centerY,
-                                            gap,
-                                            target,
-                                            inkLimit,
-                                            requiredSide,
-                                            true,
-                                            false,
-                                            frame))) {
-                        if (!TieArcBranchInk.outwardStems(
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        strokeCenters,
-                                        side,
-                                        gap,
-                                        inkLimit)
-                                && !VerifiedStaffTieRidge.followsRule(
-                                        frame == null ? null : frame.track,
-                                        left,
-                                        right,
-                                        strokeCenters)
-                                && DenseTieArcContinuity.proved(
-                                        labels,
-                                        gray,
-                                        width,
-                                        height,
-                                        left,
-                                        right,
-                                        centerY,
-                                        gap,
-                                        side,
-                                        offset,
-                                        bend,
-                                        flatProfile,
-                                        inkLimit,
-                                        strictContrast,
-                                        straightRows,
-                                        contrastOffsets)) return true;
-                    }
-                }
         return false;
     }
 

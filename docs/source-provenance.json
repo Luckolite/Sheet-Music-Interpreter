@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2d14cfad1fdc2c64ebd91f09bd8117efb91788504f0e4ca16427e83f65f25f1b",
-      "review_note": "Reviewed namespace-equivalent additional head-center-bounded tie shoulder search after original proof fails. Lazy full-context detached-articulation evidence rejects newly tied staccato pairs. Seven original antialiased geometry regressions; no private score assets or model changes.",
-      "source_normalized_sha256": "5f176ecdafc96766312acfa5429e0c902c8831c5e4cbfb5b7c3a61616509e985",
+      "source_sha256": "68008dea889ad9fd3ac416faafe20eae6c9f42428e885a4bdc93d131cdd287d2",
+      "review_note": "Reviewed identical compact tie endpoint and curve sampling changes in both namespaces. Preserve original 205 ink threshold and coarse curve grid before added faint-endpoint/fine-grid proofs. Five original analytic geometry regressions cover recovered arcs, baseline retention, broken arcs, flat strokes and insufficient dark cores; no private score assets or model changes.",
+      "source_normalized_sha256": "bff3e7e58cbc250022ce58ed10ed5b77fb03a381c4f1e67a1035579aee63644a",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "401ae803f5073e00767c34fa78e7dcaf0432b06b03aadb3d1eeac01cf0eba715",
+      "reviewed_source_state": "Committed app source; paired deployment and whole-library acceptance pending.",
+      "standalone_sha256": "f4028712473267d1c445e478e5a4bdf2e5eb6abed9517964496ce7f64dcdde71",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "3be11619994dce2d55504738c39f4de1576a6a60"
+      "reviewed_app_commit": "06846962df3da6a964c2768ccb304343faf08ddd"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
