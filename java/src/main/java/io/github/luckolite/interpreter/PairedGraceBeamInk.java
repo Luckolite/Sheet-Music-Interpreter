@@ -161,7 +161,8 @@ final class PairedGraceBeamInk {
                     (offset + step) / (float) span,
                     (offset + 2 * step) / (float) span
                 };
-                for (float fraction : new float[] {.5f, .75f}) {
+                for (int contrastStep = 4; contrastStep <= 12; contrastStep++) {
+                    float fraction = contrastStep / 16f;
                     int count =
                             countAtContrast(
                                     gray,
@@ -176,7 +177,8 @@ final class PairedGraceBeamInk {
                                     staffTop,
                                     track,
                                     true,
-                                    Math.max(1, step * .24f));
+                                    Math.max(1, gap * .12f),
+                                    Math.max(1, gap * .12f));
                     if (count == 2) return count;
                 }
             }
@@ -276,9 +278,42 @@ final class PairedGraceBeamInk {
             StaffPitchTrack track,
             boolean strictParallel,
             float parallelTolerance) {
+        return countAtContrast(
+                gray,
+                width,
+                height,
+                a,
+                b,
+                gap,
+                fraction,
+                inside,
+                columns,
+                staffTop,
+                track,
+                strictParallel,
+                parallelTolerance,
+                Float.POSITIVE_INFINITY);
+    }
+
+    private static int countAtContrast(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float fraction,
+            float inside,
+            float[] columns,
+            float staffTop,
+            StaffPitchTrack track,
+            boolean strictParallel,
+            float parallelTolerance,
+            float coreTolerance) {
         int wanted = 0;
         float firstSeparation = Float.NaN;
         float[] previous = null;
+        float[] firstCores = null;
         for (float f : columns) {
             int x = Math.round(a[0] + (b[0] - a[0]) * f);
             float end = a[1] + (b[1] - a[1]) * f;
@@ -353,6 +388,12 @@ final class PairedGraceBeamInk {
                 if (!Float.isFinite(firstSeparation)) firstSeparation = separation;
             }
 
+            if (Float.isFinite(coreTolerance)) {
+                if (firstCores == null) firstCores = cores.clone();
+                else
+                    for (int i = 0; i < coreCount; i++)
+                        if (Math.abs(cores[i] - firstCores[i]) > coreTolerance) return 0;
+            }
             if (wanted != 0 && wanted != coreCount) return 0;
             wanted = coreCount;
             float[] current = cores;

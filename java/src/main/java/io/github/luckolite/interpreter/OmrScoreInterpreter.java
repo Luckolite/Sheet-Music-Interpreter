@@ -11628,6 +11628,23 @@ final class OmrScoreInterpreter {
                                 Math.max(1, Math.round(gap * .16f)),
                                 185);
             int provedBeams = PairedGraceBeamInk.count(gray, width, height, first, last, gap);
+            // A short blank can join a reduced shaft to an unrelated outer beam.
+            // Retry continuous shafts only after the original pair lacks beam proof.
+            if (provedBeams < 2) {
+                int[] compactFirst =
+                        attachedRawStem(gray, width, height, a.head, gap * .65f, 1, threshold);
+                int[] compactLast =
+                        attachedRawStem(gray, width, height, b.head, gap * .65f, 1, threshold);
+                int compactBeams =
+                        PairedGraceBeamInk.count(
+                                gray, width, height, compactFirst, compactLast, gap);
+                if (compactBeams >= 2) {
+                    first = compactFirst;
+                    last = compactLast;
+                    provedBeams = compactBeams;
+                }
+            }
+
             if (first == null
                     || last == null
                     || Math.abs(first[1] - a.head.centerY) > gap * 4.8f

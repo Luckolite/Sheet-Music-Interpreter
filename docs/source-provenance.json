@@ -377,14 +377,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "664455db10bfd5d50ccf528b87ad5927eb60afef69126d2f9e6d4ec84cadcd4d",
-      "review_note": "Reviewed global outgoing slur-tip exclusion, tip-local rule-fringe root guard and median rule ink budget for rounded band width. Twelve original analytic regressions; no private pixels, score identifiers or model changes.",
-      "source_normalized_sha256": "fe761a41e40a9e95e8f29b8a8890813eadee60a44060f7ed817f67d6c21311d7",
+      "source_sha256": "976dfc1b9f7f197b18576d57d9ba02c49d17724acc9119d552aec254a43c2dfd",
+      "review_note": "Reviewed continuous reduced-stem fallback after failed original beam proof, and bounded contrast windows with each rail anchored to the first witness. Original probes and principal-note ownership retained. Twelve original synthetic controls; no private pixels, model or format changes.",
+      "source_normalized_sha256": "8478b807841d553ebacd2094432e0afd195e0eb5709d52775d637fb979d230f2",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed app source;10279 Java tests,12 original app regressions,synthetic PNG/PDF exports passed. Paired deployment and whole-library acceptance pending.",
-      "standalone_sha256": "459e13d4c1c9c4b2ee64d83a42b4e4c5437753edc40394ee537f1f442b7fac3f",
+      "reviewed_source_state": "Tested-token-identical integrated source;10311 Java tests and12 original app controls passed. Paired deployment and whole-library acceptance pending.",
+      "standalone_sha256": "2a14e42673c46d13c3e47271bb7aba892f9d7c62c9dc1a4e7ace0ef6ba516585",
       "reviewed_app_base_commit": "e0a10c744663d3c7474896d22c9c37cde0ce00c9",
-      "reviewed_app_commit": "6f12bed379978db04f6ba2ae660db00d60aa13b1"
+      "reviewed_app_commit": "f798200a6d7132893c5439a5bb919dd64106d4ed"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -925,14 +925,14 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "8f02982d2fb06ba75c1ae897d3edc2b4468f1fee8be0a8b23b236435f72f3d3f",
-      "reviewed_app_commit": "348521b7a8c5fefb39ca25f134b978006475f2d0",
-      "source_normalized_sha256": "1f30fd68df80dddf23e3dc64a6b0bd744c17150ae3061c6ec52265424252ba22",
-      "review_note": "Reviewed bounded independent-window fallback for partially blurred grace channels. Three disjoint strips retain stem margins, separated cores and inter-rail drift bounded by witness distance. Canonical probes preserved. Six original analytic regressions; no private pixels or model changes.",
+      "source_sha256": "ebdf665837a73eb5315304cf30001056d43e6607c162ee05ebd9dd95fc0603a5",
+      "reviewed_app_commit": "f798200a6d7132893c5439a5bb919dd64106d4ed",
+      "source_normalized_sha256": "6c63c14ed2db2697c084428d4b90f98ba11218ef51928ecda4c57b99eb252fdd",
+      "review_note": "Reviewed continuous reduced-stem fallback after failed original beam proof, and bounded contrast windows with each rail anchored to the first witness. Original probes and principal-note ownership retained. Twelve original synthetic controls; no private pixels, model or format changes.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "reviewed_source_state": "Tested-token-identical integrated source;10299 Java tests,1588 focused and six original app controls passed. Nine-page private replay verified; paired deployment pending.",
+      "reviewed_source_state": "Tested-token-identical integrated source;10311 Java tests and12 original app controls passed. Paired deployment and whole-library acceptance pending.",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "standalone_sha256": "e6fadc30425d3cf7b8c12b15717eb3806d0ca8a3824d90ceed4aa2c156039842"
+      "standalone_sha256": "86bdf1622a9dbafd1ffca64d7a225ef658799f097b5ec9adbe153da5f12a0119"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",

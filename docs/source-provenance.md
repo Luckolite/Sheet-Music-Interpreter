@@ -2291,3 +2291,14 @@ and unchanged input. All 10,299 Java tests and six app controls passed. Paired
 deployment and whole-library acceptance remain pending.
 Paired app source: 348521b7a8c5fefb39ca25f134b978006475f2d0.
 Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
+
+## Grace shaft ownership and blurred channels
+
+Failed paired-beam proof retries reduced shafts with one blank pixel, preventing
+a nearby outer beam from extending the grace stem. All reduced-head, principal
+and metrical ownership checks remain. Compact contrast windows also anchor each
+rail to its first witness while preserving existing canonical probes. Twelve
+original controls pass against app and standalone source; all 10,311 Java tests
+passed. Paired deployment and whole-library acceptance remain pending.
+Paired app source: f798200a6d7132893c5439a5bb919dd64106d4ed.
+Synthetic PNG/PDF pitch, duration, MIDI, MusicXML and MP3 checks passed.
