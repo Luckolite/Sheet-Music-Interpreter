@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Lower octave heads may use the complete ledger-chain proof from four inner
+rails onward. All rails still require short, dark spans and thin exposed flanks;
+original fixtures reject each missing inner rail, long lines and thick bars.
+
 Compact tie shoulders may return just inside their head centers. A bounded
 under-head search preserves the existing complete dark-curve proof. Original
 mirrored and scaled curves reject straight, incomplete and faint unrelated ink.

@@ -9340,9 +9340,9 @@ final class OmrScoreInterpreter {
             byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null) return false;
         float gap = staff.pitchGap, distance = (head.centerY - staff.pitchBottom) / gap;
-        if (distance <= 6.75f || distance > 12f) return false;
+        if (distance <= 4.5f || distance > 12f) return false;
         int required = Math.max(0, (int) Math.ceil(distance - .65f) - 1);
-        if (required < 6) return false;
+        if (required < 4) return false;
         int left = Math.max(0, Math.round(head.minX - gap * .3f));
         int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
         int margin = Math.max(1, Math.round(gap * .18f));
