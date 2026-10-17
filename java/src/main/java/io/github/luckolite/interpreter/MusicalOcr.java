@@ -75,12 +75,16 @@ public final class MusicalOcr {
         var readings = new TreeMap<Integer, Map<String, Integer>>();
         var decisive = new HashSet<Integer>();
         var reflowWitnesses = new ArrayList<MeterReflowEvidence.Witness>();
+        var fontCopies = new ArrayList<MeterCopyFontEvidence.Copy>();
+        var rasterMeasures = new HashSet<Integer>();
+        var ineligibleFontMeasures = new HashSet<Integer>();
         for (var change :
                 MeterChangeDetector.rasterMeterCandidates(
                         labels, gray, width, height, measures, notes)) {
             readings.computeIfAbsent(change.measureIndex(), ignored -> new HashMap<>())
                     .merge(change.numerator() + "/" + change.denominator(), 1, Integer::sum);
             decisive.add(change.measureIndex());
+            rasterMeasures.add(change.measureIndex());
         }
         var candidates =
                 MeterChangeDetector.candidates(labels, gray, width, height, measures, notes);
@@ -92,6 +96,20 @@ public final class MusicalOcr {
                             crop, labels, gray, width, height, measure, measures, notes)) continue;
             var bound = meterWithBounds(gray, width, height, crop);
             MeterReading reading = bound.reading();
+            if (!reading.text().isBlank() && reading.votes() > 0) {
+                if (MeterChangeDetector.followingMeasure(bound.crop(), width, height, measures)
+                                != measure
+                        || !MeterChangeDetector.precedesNotes(
+                                bound.crop(),
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                measure,
+                                measures,
+                                notes)) ineligibleFontMeasures.add(measure);
+                fontCopies.add(new MeterCopyFontEvidence.Copy(measure, bound.crop()));
+            }
             if (reading.votes() >= 2
                     && MeterChangeDetector.precedesNotes(
                             bound.crop(), labels, gray, width, height, measure, measures, notes))
@@ -128,6 +146,36 @@ public final class MusicalOcr {
                 var resolved =
                         MeterChangeDetector.resolveConflict(
                                 choices, notes, next == null ? measures.size() : next);
+                if (resolved == null
+                        && !rasterMeasures.contains(entry.getKey())
+                        && !ineligibleFontMeasures.contains(entry.getKey())
+                        && reflowWitnesses.stream()
+                                .noneMatch(witness -> witness.measure() == entry.getKey())) {
+                    var ownedCopies =
+                            fontCopies.stream()
+                                    .filter(copy -> copy.measure() == entry.getKey())
+                                    .toList();
+                    resolved =
+                            MeterCopyFontEvidence.resolve(
+                                    entry.getKey(),
+                                    choices,
+                                    ownedCopies,
+                                    gray,
+                                    width,
+                                    height,
+                                    (pixels, cw, ch, middle, first, gap) -> {
+                                        var font =
+                                                meterFont.read(pixels, cw, ch, middle, first, gap);
+                                        return new MeterCopyFontEvidence.Reading(
+                                                font.text(), font.topScore(), font.bottomScore());
+                                    });
+                    if (resolved != null) {
+                        String text = resolved.numerator() + "/" + resolved.denominator();
+                        for (var copy : ownedCopies)
+                            headerReadings.add(
+                                    new HeaderReading(entry.getKey(), text, copy.crop()));
+                    }
+                }
                 if (resolved != null) found.add(resolved);
                 continue;
             }

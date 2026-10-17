@@ -388,12 +388,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "42d161c7d6eb6cda1a1f1fd36039ea6e126bfd1c8461eab206d4e503fea2c4b3",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "source_normalized_sha256": "577ecabe63b999f9f33eda8c1cc08a5312e8017c1f1f3e62dcb78eef7357148b",
+      "source_sha256": "b45e523325be90c959ebafb7afee2f98ed94c30c5574cb22cb83be4a9b952116",
+      "review_note": "Require a complete ordered sharp header and independent semantic-centroid/raw-crossbar ownership by one unique admitted local staff. Preserve legitimate lower headers whose long sharp stems cross another staff core. Legacy raw glyph arithmetic, thresholds and scan selection remain unchanged; no new pitch collar, total-span limit, models or protocol fields.",
+      "source_normalized_sha256": "7af851daa6da3812080c572b5125aa18af5896bb47fc02702f16fc09dc1b9124",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "a583ffe90dfa2cd5ad1d0724e6f483f330f96e67f70424974b524b67bda97c8f",
+      "standalone_sha256": "3ed745e1d7e2b2d3fb7e2ac1df80959d12bed759a0c6773943c7d9f795b0f729",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -1155,11 +1155,11 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "2ef022d5ec2985847577728357e019637c5ca40d23fd546887a4ed74c630379a",
-      "source_normalized_sha256": "8f911996e3f036839fd28ad20d6c7f3d808e7d1c0711085eea8ffb0139ee3c04",
+      "source_sha256": "9f489a16575633771090f87743e1964e9e5d49a40b12870f82b1239524ed664e",
+      "source_normalized_sha256": "873b4af796830c062d48f8e9fe3eef5746bc83f675d53d11884aaac697b273de",
       "reviewed_source_state": "working-tree",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "standalone_sha256": "bcb90e04da97fa7e77cf83cc4f0962d2058e0c9c8b3974da84d22d95a8528bef",
+      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields.",
+      "standalone_sha256": "ebc77772c3252565852e9a647cd9255f15f68b25b18552f25b99ff8c7feca76f",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "NativeDynamicGlyphs.java": {
@@ -1601,11 +1601,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8e556e8f7d60cff120296f1580945bc29593667577ef83f580347029c837ab12",
-      "source_normalized_sha256": "b182baa7be0194a43cee63bb68dcdcc889ccbd6934673e02973d87565001a58e",
-      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
+      "source_sha256": "2508e8f436acbdf76cedd0b6083386654cb7783539e3ef96fce65caa94523124",
+      "source_normalized_sha256": "45a3a43f1daff652b13088f2bced2e4fdfc40fbd527d5263a6fbbde0fc769df8",
+      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "7e1a5b1c0211300f731e7bb75a2d6380e6e9141b63d10cd46cda591723c242da",
+      "standalone_sha256": "69e9e3eb81f6ffe133d26c22775787947485de2110a4fcbc6dd6067f7fc97a71",
       "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
     },
@@ -3590,6 +3590,15 @@
       "standalone_sha256": "157b6b4a519be22a2538e8bf8752b819f1c447aff3b8ef2f8777358e8adbdbe9",
       "reviewed_source_state": "working-tree",
       "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields."
+    },
+    "MeterCopyFontEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCopyFontEvidence.java",
+      "license": "Apache-2.0",
+      "source_sha256": "5b9922c866a3ff27528c6a1470cebf9143ccbd6db988f14a75b3f3b2ec188da2",
+      "source_normalized_sha256": "9977b536cbaeffdd3ceae7ff8d27833c81a4223b2f3ad2d7be9c0a30185482f2",
+      "standalone_sha256": "ab22137a289d0519d1aeb2847ec9b6b5d70791ac124ded120c5b1ba65ec9ac0a",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields."
     }
   },
   "interpreter_speedup_review": {
@@ -8024,5 +8033,18 @@
       "tools/native-worker/decoder-sources.txt": "ebb0ec042a7b250a4497d9fa29eab027dbb5482fed91321d5568e784daebe3ae"
     },
     "boundaries": "Explicit physical-page APIs retain actual page ownership; legacy unknown-page calls use provisional page0 and assembly rebases evidence. Native acquisition and actual sixpage Song app/Python notation products qualified privately; renderer/device/paired-worker deployment pending. No changes to performance SUPPORTED or onset/spread."
+  },
+  "independent_meter_copies_ordered_sharp_header_review": {
+    "summary": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields.",
+    "recognition_revision": 66,
+    "guide_layout": 290,
+    "original_public_java_methods": 28,
+    "reviewed_android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "sha256": "ab7e9c7f0416d051e450873cf58075f632a736fa5a721cfca9815824518c7862"
+    },
+    "native_manifest_sources": 328,
+    "boundaries": "Actual native retained-mask acquisition and actual Song numeric clock/XML consumers reviewed privately. Android dependency typecheck only; device font raster, renderer/audio and cumulative app/paired-worker deployment remain pending.",
+    "sharp_staff_ownership": "Semantic and raw positions are checked at their own x against admitted local pitch-track frames; equal-distance ownership abstains. Three original source-free API regressions cover foreign phases, conflicting semantic/raw owners and a genuine lower header."
   }
 }

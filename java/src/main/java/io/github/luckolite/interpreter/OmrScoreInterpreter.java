@@ -5758,6 +5758,89 @@ final class OmrScoreInterpreter {
      * treating an ordinary local accidental as a modulation; one-flat/one-sharp changes remain
      * eligible only when the raw score also shows a double bar at the boundary.
      */
+    /** Resolve a flat/sharp conflict only from a complete ordered printed sharp header. */
+    private static java.util.Set<AccidentalCandidate> orderedRawHeaderSharps(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<AccidentalCandidate> candidates,
+            Component clef,
+            Staff staff,
+            List<Staff> staffs,
+            boolean firstInRow,
+            float left,
+            float right) {
+        if (!firstInRow || clef == null || !completeHeaderTreble(clef, staff))
+            return java.util.Set.of();
+        var owners = new ArrayList<AccidentalCandidate>();
+        var raw = new ArrayList<SignatureGlyph>();
+        for (var candidate : candidates) {
+            var c = candidate.component;
+            if (c.centerX < left - staff.gap * .12f
+                    || c.centerX > right
+                    || c.centerY < staff.top - staff.gap * 2.25f
+                    || c.centerY > staff.bottom + staff.gap * 2.25f) continue;
+            if (isNaturalGlyph(labels, width, height, candidate, staff.gap))
+                return java.util.Set.of();
+            if (!isSharpGlyph(labels, width, height, candidate, staff.gap)) {
+                if (isFlatGlyph(labels, width, height, candidate, staff.gap)
+                        || PrintedFlatGlyph.matches(
+                                gray, width, height, c.minX, c.minY, c.maxX, c.maxY, staff.gap))
+                    return java.util.Set.of();
+                continue;
+            }
+            SignatureGlyph printed =
+                    observedSignatureSharp(gray, width, height, candidate, staff.gap);
+            if (printed == null || !sharpHeaderStaffOwns(c, printed, staff, staffs))
+                return java.util.Set.of();
+            owners.add(candidate);
+            raw.add(printed);
+        }
+        raw.sort(Comparator.comparingDouble(SignatureGlyph::x));
+        if (!orderedPrintedSharpPitches(raw, staff)
+                || !firstPrintedHeaderSharp(raw.get(0), clef, staff)) return java.util.Set.of();
+        return java.util.Set.copyOf(owners);
+    }
+
+    /** Semantic and printed pitch must independently belong to the same admitted local staff. */
+    private static boolean sharpHeaderStaffOwns(
+            Component semantic, SignatureGlyph printed, Staff owner, List<Staff> staffs) {
+        return uniqueHeaderStaff(staffs, owner, semantic.centerX, semantic.centerY)
+                && uniqueHeaderStaff(staffs, owner, printed.x, printed.pitchY);
+    }
+
+    private static boolean uniqueHeaderStaff(List<Staff> staffs, Staff owner, float x, float y) {
+        var local = new ArrayList<Staff>();
+        Staff owned = null;
+        for (var staff : staffs) {
+            Staff frame = headerPrintedFrame(staff, x);
+            local.add(frame);
+            if (staff == owner) owned = frame;
+        }
+        if (owned == null || nearestHeadStaff(local, y) != owned) return false;
+        float distance = y < owned.top ? owned.top - y : y > owned.bottom ? y - owned.bottom : 0;
+        for (var frame : local) {
+            if (frame == owned) continue;
+            float other = y < frame.top ? frame.top - y : y > frame.bottom ? y - frame.bottom : 0;
+            if (Float.compare(distance, other) == 0) return false;
+        }
+        return true;
+    }
+
+    /** Carry both coordinates and bounds from one successful complete raw component. */
+    private static SignatureGlyph observedSignatureSharp(
+            byte[] gray, int width, int height, AccidentalCandidate candidate, float gap) {
+        for (float margin : new float[] {.3f, .45f, .6f}) {
+            SignatureGlyph[] observed = new SignatureGlyph[1];
+            float pitch =
+                    printedSignatureSharpInCrop(
+                            gray, width, height, candidate, gap, true, margin, observed);
+            if (Float.isFinite(pitch) && observed[0] != null) return observed[0];
+        }
+        return null;
+    }
+
     private static List<ScoreKeyChange> detectKeyChanges(
             byte[] labels,
             byte[] gray,
@@ -5865,6 +5948,19 @@ final class OmrScoreInterpreter {
                     right = Math.min(right, firstHead - staff.gap * .28f);
                 if (right <= left) continue;
 
+                java.util.Set<AccidentalCandidate> corroboratedSharps =
+                        orderedRawHeaderSharps(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                candidates,
+                                clef,
+                                staff,
+                                staffs,
+                                firstInRow,
+                                left,
+                                right);
                 List<SignatureGlyph> glyphs = new ArrayList<>();
                 Map<AccidentalCandidate, Float> recognized = new HashMap<>();
                 for (AccidentalCandidate candidate : candidates) {
@@ -5892,7 +5988,9 @@ final class OmrScoreInterpreter {
                     // sharp. Tiny semantic specks can also occur on nearby meter digits.
                     float signatureX = glyph.centerX;
                     boolean printedFlat =
-                            (clef != null || accidental == ScoreNoteEvent.ACCIDENTAL_FLAT)
+                            !corroboratedSharps.contains(candidate)
+                                    && (clef != null
+                                            || accidental == ScoreNoteEvent.ACCIDENTAL_FLAT)
                                     && PrintedFlatGlyph.matches(
                                             gray,
                                             width,
@@ -16372,6 +16470,19 @@ final class OmrScoreInterpreter {
             float gap,
             boolean pitch,
             float cropMargin) {
+        return printedSignatureSharpInCrop(
+                gray, width, height, candidate, gap, pitch, cropMargin, null);
+    }
+
+    private static float printedSignatureSharpInCrop(
+            byte[] gray,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            boolean pitch,
+            float cropMargin,
+            SignatureGlyph[] observed) {
         if (gray == null || gap < 3) return Float.NaN;
         Component seed = candidate.component;
         if (seed.maxX - seed.minX + 1 > gap * 1.6f || seed.maxY - seed.minY + 1 > gap * 3.65f)
@@ -16411,7 +16522,32 @@ final class OmrScoreInterpreter {
                     || rawStrokeLeavesCrop(gray, width, height, ink, w, h, left, top, gap))
                 continue;
             if (isSharpGlyph(
-                    ink, w, h, new AccidentalCandidate(glyph, OmrMeasurePostProcessor.SYMBOL), gap))
+                    ink,
+                    w,
+                    h,
+                    new AccidentalCandidate(glyph, OmrMeasurePostProcessor.SYMBOL),
+                    gap)) {
+                if (observed != null)
+                    observed[0] =
+                            new SignatureGlyph(
+                                    left + glyph.centerX,
+                                    ScoreNoteEvent.ACCIDENTAL_SHARP,
+                                    top
+                                            + sharpPitchCenter(
+                                                    ink,
+                                                    w,
+                                                    h,
+                                                    new AccidentalCandidate(
+                                                            glyph, OmrMeasurePostProcessor.SYMBOL),
+                                                    gap),
+                                    new Component(
+                                            glyph.area,
+                                            left + glyph.minX,
+                                            left + glyph.maxX,
+                                            top + glyph.minY,
+                                            top + glyph.maxY,
+                                            left + glyph.centerX,
+                                            top + glyph.centerY));
                 return pitch
                         ? top
                                 + sharpPitchCenter(
@@ -16422,6 +16558,7 @@ final class OmrScoreInterpreter {
                                                 glyph, OmrMeasurePostProcessor.SYMBOL),
                                         gap)
                         : left + glyph.centerX;
+            }
         }
         byte[] faint = FaintSharpInk.crop(gray, width, height, left, top, right, bottom, gap);
         if (faint != null) {
@@ -16437,7 +16574,23 @@ final class OmrScoreInterpreter {
                                 h,
                                 new AccidentalCandidate(glyph, OmrMeasurePostProcessor.CLEF_OR_KEY),
                                 gap);
-                if (Float.isFinite(center)) return pitch ? top + center : left + glyph.centerX;
+                if (Float.isFinite(center)) {
+                    if (observed != null)
+                        observed[0] =
+                                new SignatureGlyph(
+                                        left + glyph.centerX,
+                                        ScoreNoteEvent.ACCIDENTAL_SHARP,
+                                        top + center,
+                                        new Component(
+                                                glyph.area,
+                                                left + glyph.minX,
+                                                left + glyph.maxX,
+                                                top + glyph.minY,
+                                                top + glyph.maxY,
+                                                left + glyph.centerX,
+                                                top + glyph.centerY));
+                    return pitch ? top + center : left + glyph.centerX;
+                }
             }
         }
         return Float.NaN;
