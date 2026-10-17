@@ -246,8 +246,11 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     symbols = [mark for mark in (event.get('releaseSymbols', []) if event else rest_symbols)
                if mark['release'] == fragment_end]
     paired = event.get('retainedTremolo') if event else None
-    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags or paired:
+    arpeggio = bool(event and event.get('retainedArpeggio') and attack_fragment and grace is None)
+    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags or paired or arpeggio:
         notation = element(node, 'notations')
+        if arpeggio:
+            element(notation, 'arpeggiate')
         if paired and not chord:
             element(element(notation, 'ornaments'), 'tremolo', paired['strokes'], type=paired['type'])
         for active, kind in ((stop, 'stop'), (start, 'start')):
@@ -390,7 +393,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                retainedArticulations=articulation_export.retained(page, note_index),
                                retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index),
-                               retainedTremolo=paired_tremolos.get(note_index)))
+                               retainedTremolo=paired_tremolos.get(note_index), retainedArpeggio=False))
             if is_grace:
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
                                   stealPercent=placement['steal'], graceWrittenDuration=duration,
@@ -405,7 +408,12 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if not isinstance(q, (int, float)) or not math.isfinite(q) or q < 0 or q > (page['measureBeats'][m] if m < len(page['measureBeats']) else 0):
                 raise ValueError('Expression anchor outside MusicXML measure')
             return offset+ticks(sum(page['measureBeats'][:m])+q)
+        from .arpeggio_notation import plan as arpeggio_plan
         for supplied in score.get('expressiveEvents', []):
+            if supplied.get('kind') == 'ARPEGGIO':
+                for source_index in arpeggio_plan(supplied, page):
+                    events[first_event+source_index]['retainedArpeggio'] = True
+                continue  # A source-owned note symbol, never a generic words direction.
             mark = _resolve_pedal(dict(supplied), page)
             if _rest_owned(mark):
                 span = _rest_span(mark, page)

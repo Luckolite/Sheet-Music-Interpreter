@@ -1251,11 +1251,12 @@
     },
     "ScoreDynamicContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicContinuation.java",
-      "source_sha256": "eb8a3b245cb0dc242c33d3b80d61c20cd40ddc9dcdd7360a9499010ca0e7c97f",
-      "source_normalized_sha256": "24df5a192077b28c668c08b3288ebac07f2d259e131cecca01683cfa59f1fc7a",
+      "source_sha256": "20065db0981920ebf4a02917e7704ffa7485b6c3628fedad046ab446c913f53e",
+      "source_normalized_sha256": "e78c9fc7e9157bab968be6d72ed9e2ae4b4ae2deaf85bf1f635772cc5aeb79ef",
       "reviewed_app_commit": "95271300e87f128ef5b0194d31a920a7a8b7a6cb",
-      "reviewed_source_state": "Isolated pedal candidate on accepted872 manifest ede2c2383426167237cb4da5d19afeb2f923d5daa581726e930c37b4b710ec45",
-      "review_note": "Whole-file package-only JDK port. Global continuous-rail geometry, persisted hook columns, musical anchors, navigation or rest-slot timing. Original synthetic regressions; no private score/model/log/library/signing data."
+      "reviewed_source_state": "working-tree",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
+      "standalone_sha256": "1e26aa9d225bd2881753fd8a3a09cb5e8ccf82143adb724de02123afd83f3c82"
     },
     "ScoreFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataDetector.java",
@@ -1600,11 +1601,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "8262fc6fb4e78e3a14908dfc6d1903395ecb5fc2fea58522f80ea1335a870de8",
-      "source_normalized_sha256": "66475325bf8b2c478aaf8b049b701e419385d4da2e3619eed7a6c25eef37724c",
-      "review_note": "Recognition revision64 invalidates prior derived recognition at unchanged guide layout290; no binary fields added.",
-      "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
-      "standalone_sha256": "1f490f6b06c92d5e5cde5b606e57f89877b4b854f0efff9b8519a6e06a4da164",
+      "source_sha256": "8e556e8f7d60cff120296f1580945bc29593667577ef83f580347029c837ab12",
+      "source_normalized_sha256": "b182baa7be0194a43cee63bb68dcdcc889ccbd6934673e02973d87565001a58e",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "7e1a5b1c0211300f731e7bb75a2d6380e6e9141b63d10cd46cda591723c242da",
       "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
     },
@@ -2692,11 +2693,11 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "f4422b5927b10f14cf67d87e90f3eb222d6e9914a32496f6414f421903e31e0a",
-      "source_normalized_sha256": "a0054207aa7c082e188d5ab2cbed7c11215fefdcb831fe5e0e9296f33d76d264",
+      "source_sha256": "11931ce907a43a7e13bbecdfd8e56dfa13f451a05760a16401255c98c95295a8",
+      "source_normalized_sha256": "a8590c7c467c6b22a39339fb79a7fba6b45062872f0c0e6b02feda0e5ca3c947",
       "reviewed_source_state": "working-tree",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "standalone_sha256": "ce6e36b6ddef103bb7af4d9e80d643485035a1a1881126a2a60821a29a2fa5e7",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
+      "standalone_sha256": "db4c57fa191b0da0125f8e670725e9a85cfa7a1fead78030526def1b9fc8c99c",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "MeterDigitRecognizer.java": {
@@ -3571,6 +3572,24 @@
       "standalone_sha256": "46ec34198bb1510ee16435ef5b21d980f8e75fba03108ef8ed5ece1e14500b6a",
       "reviewed_source_state": "working-tree",
       "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "ScoreArpeggioDetector.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreArpeggioDetector.java",
+      "license": "Apache-2.0",
+      "source_sha256": "71864d664f8175e7091faa2e845dce4249b86f850c325b53a7167f1c90dd7139",
+      "source_normalized_sha256": "7f8d34cc2572b54c23e0d6a6b73da7cfe8769a3f83e236d175900f5c1597e0e2",
+      "standalone_sha256": "d89b538737ac462e61e993505c47179d6af9045f98c7268fbc065dccb41f0c71",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields."
+    },
+    "ScoreArpeggioNotation.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreArpeggioNotation.java",
+      "license": "Apache-2.0",
+      "source_sha256": "b62b21e38c81ebf0fb0fa0bde769c22a4bdcc003ea3701831606c8a1e46ebb68",
+      "source_normalized_sha256": "41b1502514f77155e9e4eb3aa62d4e21189385dfae72f7e24b8e9df97d9d36fd",
+      "standalone_sha256": "157b6b4a519be22a2538e8bf8752b819f1c447aff3b8ef2f8777358e8adbdbe9",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields."
     }
   },
   "interpreter_speedup_review": {
@@ -7984,5 +8003,26 @@
     "wire": "Legacy RSP1/OCR1 word records unchanged, unknown grouping and unclassified admission retained. New evidence stays in process. Guide290 unchanged; recognition revision64.",
     "validation_boundary": "Source/native recognition and typed actual-Song export qualified privately; Android adapter dependency typecheck only. Cumulative APK and paired Hub/worker deployment deferred.",
     "consumer_fixture_boundary": "Two downstream clock tests explicitly author CONTEXT_QUALIFIED input and do not claim OCR acquisition. Private copied Android caller-body fixtures and private CTX4/ADW1 codecs are excluded; actual Android adapter typecheck and independent shared-core controls retained."
+  },
+  "source_owned_arpeggio_review": {
+    "summary": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
+    "recognition_revision": 65,
+    "guide_layout": 290,
+    "new_original_tests": {
+      "portable_java": 95,
+      "app_writer_java": 6,
+      "python": 27
+    },
+    "standalone_python": {
+      "arpeggio_notation.py": "c7fb35dcee70263170165873159ef18ea8e55ae1fee6534e86ed8c5051cc5b84",
+      "performance.py": "e90f8381f2d7b2683cb56640ded4132610ead6b10829be7cea1c2f0fed99d4f1",
+      "musicxml.py": "a6f8a71a3d27624134b842bba66dd032df852c19e00518a4ae9744b626f5aa99"
+    },
+    "reviewed_app_adapters": {
+      "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java": "7ef3eda3347090b2e4ab317a0e2732fa12b6d8e8f88f6b12144f2ad1c7a2d607",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java": "31528cb9bd2312021b8a417d5833d3a2d0ccbafe735d1f72fc6a958e8c632f23",
+      "tools/native-worker/decoder-sources.txt": "ebb0ec042a7b250a4497d9fa29eab027dbb5482fed91321d5568e784daebe3ae"
+    },
+    "boundaries": "Explicit physical-page APIs retain actual page ownership; legacy unknown-page calls use provisional page0 and assembly rebases evidence. Native acquisition and actual sixpage Song app/Python notation products qualified privately; renderer/device/paired-worker deployment pending. No changes to performance SUPPORTED or onset/spread."
   }
 }

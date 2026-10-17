@@ -443,6 +443,14 @@ public final class SheetInterpreter {
                                 .toList(),
                         width,
                         Math.max(0, physicalPage));
+        finalInterpretation =
+                ScoreArpeggioDetector.apply(
+                        finalInterpretation,
+                        gray,
+                        width,
+                        height,
+                        staffs,
+                        Math.max(0, physicalPage));
         if (physicalPage >= 0)
             try {
                 var captured =

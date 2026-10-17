@@ -201,6 +201,8 @@ public final class ScoreDynamicContinuation {
     /** Namespace generated page-local evidence while preserving independently authored semantics. */
     public static ScoreExpressiveEvent offsetEvidence(
             ScoreExpressiveEvent event, int offset, int page) {
+        if (ScoreArpeggioNotation.owns(event))
+            return ScoreArpeggioNotation.offsetEvidence(event, offset, page);
         if (ScorePedalDetector.owns(event))
             return ScorePedalDetector.offsetEvidence(event, offset, page);
         if (ScoreRestFermataDetector.owns(event))

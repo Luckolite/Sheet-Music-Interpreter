@@ -53,6 +53,9 @@ def _anchor(beat, starts):
 
 
 def _column_members(expression, page):
+    if expression.get('kind') == 'ARPEGGIO':
+        from .arpeggio_notation import target_indices
+        return target_indices(expression, page)
     target = expression.get('targetEventId') or ''
     sources = {'fermata-raw-ink'} if expression['kind'] == 'FERMATA' else {'printed-expression-word', 'printed-expression-symbol'}
     prefix = 'printed-attack:' if expression['kind'] == 'FERMATA' else 'expression-column:'
