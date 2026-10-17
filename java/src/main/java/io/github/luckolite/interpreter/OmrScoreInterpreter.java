@@ -18414,6 +18414,42 @@ final class OmrScoreInterpreter {
         return local;
     }
 
+    /** Preserve the curve follower's bounds while separating independently proved rule ink. */
+    private static boolean crossesPrintedRuleSlurCap(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Staff staff,
+            int[] strict,
+            int[] pale,
+            float gap,
+            int threshold) {
+        if (strict == null
+                || pale == null
+                || strict.length < 3
+                || pale.length < 3
+                || !Float.isFinite(gap)
+                || gap < 8
+                || Math.abs(strict[2]) != 1
+                || pale[2] != strict[2]
+                || Math.abs(pale[0] - strict[0]) > gap * .3f
+                || (pale[1] - strict[1]) * strict[2] < gap * .5f
+                || (pale[1] - strict[1]) * strict[2] > gap * 1.5f
+                || threshold < 1
+                || threshold > 220) return false;
+        if (!staff.sharedRuleTrackChecked) {
+            staff.sharedRuleTrackChecked = true;
+            staff.sharedRuleTrack =
+                    staff.pitchTrack != null && staff.pitchTrack.verified()
+                            ? staff.pitchTrack
+                            : StaffPitchTrack.forPrintedSlurs(
+                                    gray, width, height, staff.top, staff.bottom, staff.gap);
+        }
+        return DetachedSlurStemCap.crossesPrintedRuleRecovery(
+                labels, gray, width, height, strict, pale, gap, threshold, staff.sharedRuleTrack);
+    }
+
     /** A complete curved stroke above an independently rooted terminal rail. */
     private static boolean singleBlankTerminalSlurCap(
             byte[] labels,
@@ -19964,9 +20000,26 @@ final class OmrScoreInterpreter {
                                     labels, gray, width, height, head, staff, allowSinglePale);
                 if (pale != null
                         && !DetachedMordentBeamCap.crosses(
-                                gray, width, height, head.centerY, attached, pale, gap, stemThreshold)
+                                gray,
+                                width,
+                                height,
+                                head.centerY,
+                                attached,
+                                pale,
+                                gap,
+                                stemThreshold)
                         && !DetachedSlurStemCap.crossesRecovery(
                                 gray, width, height, attached, pale, gap, stemThreshold)
+                        && !crossesPrintedRuleSlurCap(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                staff,
+                                attached,
+                                pale,
+                                gap,
+                                stemThreshold)
                         && !PaleBeamRecovery.crossesBlankCap(
                                 gray, width, height, attached, pale, gap)
                         && pale[2] == attached[2]
@@ -21915,6 +21968,9 @@ final class OmrScoreInterpreter {
             return false;
         if (DetachedSlurStemCap.crossesRecovery(
                 gray, width, height, strict, pale, gap, strictThreshold)) return false;
+        if (crossesPrintedRuleSlurCap(
+                labels, gray, width, height, staff, strict, pale, gap, strictThreshold))
+            return false;
         boolean up = pale[2] < 0;
         if (rootedPaleFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up)
                 || hasCurvedFlag(labels, gray, width, height, head, gap, pale[0], pale[1], up))

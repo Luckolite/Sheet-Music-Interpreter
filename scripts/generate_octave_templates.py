@@ -37,7 +37,7 @@ def render_music(music_font, suffix_fonts):
         for size in [32, 48, 64, 96]:
             font = ImageFont.truetype(str(music_font), size)
             rows.append(encoded(ink_crop(chr(code), font), shift))
-    for size in [32, 40, 48]:
+    for size in [32, 40, 48, 64, 96]:
         font = ImageFont.truetype(str(music_font), size)
         for path in suffix_fonts:
             for ratio in [.4, .5, .6]:

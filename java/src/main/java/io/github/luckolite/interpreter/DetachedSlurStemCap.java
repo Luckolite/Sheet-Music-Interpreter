@@ -44,6 +44,21 @@ final class DetachedSlurStemCap {
             float gap,
             int threshold,
             int blankRows) {
+        return matches(gray, width, height, x, end, refined, side, gap, threshold, blankRows, null);
+    }
+
+    private static boolean matches(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int end,
+            int refined,
+            int side,
+            float gap,
+            int threshold,
+            int blankRows,
+            PrintedCurveRuleInk ruleInk) {
         if (gray == null
                 || width < 3
                 || height < 3
@@ -69,7 +84,8 @@ final class DetachedSlurStemCap {
         for (int y = refined + side; y != end; y += side) {
             boolean clear = true;
             for (int xx = x - 1; xx <= x + 1; xx++)
-                if ((gray[y * width + xx] & 255) < threshold) clear = false;
+                if ((ruleInk == null ? gray[y * width + xx] & 255 : ruleInk.sample(xx, y))
+                        < threshold) clear = false;
             blank = clear ? blank + 1 : 0;
             if (blank >= blankRows) separated = true;
         }
@@ -81,8 +97,10 @@ final class DetachedSlurStemCap {
         float center = (top + bottom) * .5f;
         // Shorter spans can prove the bend before the curve merges into a staff rule.
         for (int followSpan : new int[] {span, Math.round(gap * 2.5f), Math.round(gap * 2)}) {
-            float left = follow(gray, width, height, x, center, gap, threshold, -1, followSpan);
-            float right = follow(gray, width, height, x, center, gap, threshold, 1, followSpan);
+            float left =
+                    follow(gray, width, height, x, center, gap, threshold, -1, followSpan, ruleInk);
+            float right =
+                    follow(gray, width, height, x, center, gap, threshold, 1, followSpan, ruleInk);
             if (Float.isFinite(left) && Float.isFinite(right)
                     && (center - (left + right) * .5f) * side >= gap * .25f) return true;
         }
@@ -127,6 +145,56 @@ final class DetachedSlurStemCap {
         return false;
     }
 
+    /** Verified independent rules may explain extra ink at a complete curve crossing. */
+    static boolean crossesPrintedRuleRecovery(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int[] strict,
+            int[] pale,
+            float gap,
+            int threshold,
+            StaffPitchTrack track) {
+        if (labels == null
+                || gray == null
+                || labels.length != gray.length
+                || width < 3
+                || height < 3
+                || gray.length != (long) width * height
+                || strict == null
+                || pale == null
+                || strict.length < 3
+                || pale.length < 3
+                || !Float.isFinite(gap)
+                || gap < 8
+                || Math.abs(strict[2]) != 1
+                || pale[2] != strict[2]
+                || Math.abs(pale[0] - strict[0]) > gap * .3f
+                || (pale[1] - strict[1]) * strict[2] < gap * .5f
+                || (pale[1] - strict[1]) * strict[2] > gap * 1.5f
+                || threshold < 1
+                || threshold > 220
+                || track == null
+                || !track.verified()
+                || !track.verifiedAt(pale[0] - gap * 3)
+                || !track.verifiedAt(pale[0] + gap * 3)) return false;
+        int x = pale[0];
+        if (x < 1 || x >= width - 1) return false;
+        PrintedCurveRuleInk ruleInk =
+                new PrintedCurveRuleInk(labels, gray, width, height, threshold, track);
+        for (int step = 0; step <= Math.round(gap * .35f); step++) {
+            int end = pale[1] - pale[2] * step;
+            if (end < 1 || end >= height - 1) return false;
+            if ((gray[end * width + x] & 255) < threshold)
+                return matches(
+                                gray, width, height, x, end, strict[1], strict[2], gap, threshold,
+                                2, ruleInk)
+                        && ruleInk.corroboratedCrossing();
+        }
+        return false;
+    }
+
     private static float follow(
             byte[] gray,
             int width,
@@ -136,7 +204,8 @@ final class DetachedSlurStemCap {
             float gap,
             int threshold,
             int side,
-            int span) {
+            int span,
+            PrintedCurveRuleInk ruleInk) {
         float previous = center;
         for (int dx = 1; dx <= span; dx++) {
             int xx = x + side * dx,
@@ -144,12 +213,15 @@ final class DetachedSlurStemCap {
                     hi = Math.min(height - 1, (int) Math.ceil(previous + gap));
             float nearest = Float.NaN, best = Float.POSITIVE_INFINITY;
             for (int y = lo; y <= hi; ) {
-                if ((gray[y * width + xx] & 255) >= threshold) {
+                if ((ruleInk == null ? gray[y * width + xx] & 255 : ruleInk.sample(xx, y))
+                        >= threshold) {
                     y++;
                     continue;
                 }
                 int start = y;
-                while (y <= hi && (gray[y * width + xx] & 255) < threshold) y++;
+                while (y <= hi
+                        && (ruleInk == null ? gray[y * width + xx] & 255 : ruleInk.sample(xx, y))
+                                < threshold) y++;
                 float candidate = (start + y - 1) * .5f, delta = Math.abs(candidate - previous);
                 if (start > lo
                         && y <= hi

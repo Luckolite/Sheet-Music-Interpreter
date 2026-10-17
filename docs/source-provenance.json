@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "b3544662e2cd89acb0191362d2b10cede8113cd78a4f3ffe74dcb756743b7c8a",
-      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
-      "source_normalized_sha256": "48c1710ead52c5f1a63072b1f1d292d5a98edc18cab7d9bfd261f68c79544070",
+      "source_sha256": "371ba2a82b12f3c42966b40f02dea89570e962433fdbb44c46b1233b0f72d40a",
+      "review_note": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules.",
+      "source_normalized_sha256": "81dc36bd4a61923a97938baac962839cff21b1a4cde9b89479ae8b4b19d08995",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "c5dac8d687f49ce3f5069016a827a2a52b6ea4c468be463d9d5b08ff5e7a810c",
+      "standalone_sha256": "1a4ec7fbdcaa3e315f0a8a8932734afb1d0abbf0307cd0239fc18eea12e78488",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -588,11 +588,13 @@
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
-      "source_sha256": "818aef8c0321ce8689808cefa469103237312cf1b59d6a26c50b8e9de5c81848",
-      "source_normalized_sha256": "818aef8c0321ce8689808cefa469103237312cf1b59d6a26c50b8e9de5c81848",
+      "source_sha256": "d87b3e573cee7e73fd530ebf0632c59d03bee572b614da109915508f68990092",
+      "source_normalized_sha256": "f41c935212609771832ed37145d2eeb90ea5130e3ceccca1c474d0cb65439cae",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Original rendered templates packed once into immutable long words; per-window bilinear/nearest masks and exact intersection/union counts use Long.bitCount. Raster thresholds, ratio penalties, score order and rejection margins unchanged. Original generated224-case regression and700-case differential benchmark, no private images, model change, or dependencies.",
-      "reviewed_app_snapshot": "music-sheets-word-bank-842-source (retained provenance: public4af945db, 2026-10-05)"
+      "review_note": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules.",
+      "reviewed_app_snapshot": "music-sheets-word-bank-842-source (retained provenance: public4af945db, 2026-10-05)",
+      "standalone_sha256": "33f5a11d08561ee1567ee16f7f620b2f21f2d1222731fc49329822cbe1f42c4f",
+      "reviewed_source_state": "working-tree"
     },
     "MeterOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOcrEvidence.java",
@@ -3313,11 +3315,11 @@
     },
     "DetachedSlurStemCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedSlurStemCap.java",
-      "source_sha256": "36bcb84a9f0514670afd547a8f30b6c7614d81fef82f1f10d8f87d92b6d03389",
-      "source_normalized_sha256": "455f9e4e083e1407ca0aa679b1385f34154a6660a708b19a60f8b9d86146ac5c",
-      "standalone_sha256": "de6b188c5144422df1c657145a92beac2c1a934055f9c15241c1b3087e2ea6f8",
+      "source_sha256": "0373eec88bbee1e009c41479716de3765eebefdfd96d943c026922acd4f90266",
+      "source_normalized_sha256": "3b81aafc5e8749b64a16aa12a437fb02178ddd55376dd7e735ce3028b5777f6d",
+      "standalone_sha256": "ad81599d1219dc6576d21f726fc3760b5e1397aeb4cbbc7dae1a347cb287ff40",
       "reviewed_source_state": "working-tree",
-      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+      "review_note": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules.",
       "reviewed_app_commit": "ed7d208f5712a127c45fe71bcf53920b9abf2f0c"
     },
     "DetachedMordentBeamCap.java": {
@@ -3415,6 +3417,16 @@
       "standalone_sha256": "380f2262f4cc8a1c92ba98157432fd9c36e1e3d075e6878eeb540635072fdfd7",
       "reviewed_source_state": "working-tree",
       "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules."
+    },
+    "PrintedCurveRuleInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedCurveRuleInk.java",
+      "reviewed_app_base_commit": "3fdc80c8c99cb1243302ff358f87121682324290",
+      "origin": "Original Apache-2.0 optical helper; no private score assets.",
+      "source_sha256": "1f6e3503f387989e0597aad35ea5e31c452bc4ca057e36af9fdefb87a83946cf",
+      "source_normalized_sha256": "f399fb380c2982031ab06f87382f8d415a440c390e0cd709168d04492a5ae81d",
+      "standalone_sha256": "29acd59ebf81a5f0a3ac3ed75c80e88d771c943f0616e99dcf9c5894f9a8c767",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules."
     }
   },
   "interpreter_speedup_review": {
@@ -7660,5 +7672,15 @@
     "guide_version": 290,
     "record_layout": "Existing paired-tremolo and 80-byte note fields retained; old formats reject the new clef enum. Ordinary old-clef analysis stays byte-identical -26.",
     "deployment": "Source changes only; paired app, Hub, page/audio worker build and deployment require cumulative rollout verification."
+  },
+  "higher_resolution_octave_and_curve_rule_review": {
+    "summary": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules.",
+    "new_original_java_tests": 26,
+    "template_records": 644,
+    "new_template_records": 72,
+    "generator": "scripts/generate_octave_templates.py",
+    "licensed_fonts": "Existing Bravura plus licensed Windows Times/Cambria/Georgia Italic raster output; font binaries unchanged and not added. Only original rendered glyph masks, no source score pixels.",
+    "layout": "Guide290 and existing native/guide records unchanged.",
+    "deployment": "Source changes; cumulative app/Hub/page/audio worker packaging and deployment pending."
   }
 }
