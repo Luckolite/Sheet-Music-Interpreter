@@ -12312,9 +12312,13 @@ final class OmrScoreInterpreter {
             if (bIndex < 0) continue;
             DetectedNote b = detected.get(bIndex);
             float gap = a.staffGap;
+            // Only an independently established grace group may round its integer envelope outward.
+            boolean existingGracePair =
+                    (events.get(i).articulations() & NoteOrnament.GRACE) != 0
+                            && (events.get(bIndex).articulations() & NoteOrnament.GRACE) != 0;
             if (!sameGraceVoice(a, b)
-                    || !reducedPairedGrace(a)
-                    || !reducedPairedGrace(b)
+                    || !reducedPairedGrace(a, existingGracePair)
+                    || !reducedPairedGrace(b, existingGracePair)
                     || b.head.centerX - a.head.centerX < gap * .95f
                     || b.head.centerX - a.head.centerX > gap * 3
                     || Math.abs(b.head.centerY - a.head.centerY) > gap * 1.3f) continue;
@@ -12583,8 +12587,9 @@ final class OmrScoreInterpreter {
                 && a.event.staffCount() == b.event.staffCount();
     }
 
-    private static boolean reducedPairedGrace(DetectedNote n) {
-        return n.head.maxX - n.head.minX + 1 <= n.staffGap * 1.05f
+    private static boolean reducedPairedGrace(DetectedNote n, boolean existingGracePair) {
+        return n.head.maxX - n.head.minX + 1
+                        <= (existingGracePair ? Math.ceil(n.staffGap * 1.05f) : n.staffGap * 1.05f)
                 && n.head.maxY - n.head.minY + 1 <= n.staffGap * 1.2f
                 && n.head.area <= n.staffGap * n.staffGap * .8f
                 && n.event.unbeamedDurationBeats() < 2
@@ -18450,6 +18455,48 @@ final class OmrScoreInterpreter {
                 labels, gray, width, height, strict, pale, gap, threshold, staff.sharedRuleTrack);
     }
 
+    /** A blank-tolerant shaft cannot replace its own terminal beam with a proved slur. */
+    private static int[] stemBeforeDetachedSlur(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            int[] attached,
+            int threshold,
+            boolean corroborate,
+            boolean allowSinglePale) {
+        if (attached == null) return null;
+        float gap = staff.gap;
+        int[] strict = attachedRawStem(gray, width, height, head, gap, 1, threshold);
+        if (strict == null
+                || strict[2] != attached[2]
+                || Math.abs(strict[0] - attached[0]) > gap * .3f
+                || (attached[1] - strict[1]) * strict[2] <= 0) return attached;
+        int[] pale =
+                paleStemToSupportedBeam(labels, gray, width, height, head, staff, allowSinglePale);
+        if (pale == null
+                || pale[2] != attached[2]
+                || Math.abs(pale[0] - attached[0]) > gap * .3f
+                || (pale[1] - attached[1]) * attached[2] < 0
+                || !DetachedSlurStemCap.crossesRecovery(
+                        gray, width, height, strict, pale, gap, threshold)) return attached;
+        return detectBeamCount(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                head,
+                                staff,
+                                corroborate,
+                                allowSinglePale,
+                                strict)
+                        == 1
+                ? strict
+                : attached;
+    }
+
     /** A complete curved stroke above an independently rooted terminal rail. */
     private static boolean singleBlankTerminalSlurCap(
             byte[] labels,
@@ -19540,6 +19587,19 @@ final class OmrScoreInterpreter {
         attached = stemBelowDetachedBow(gray, width, height, head, gap, attached);
         attached = stemBeforePaperTail(labels, gray, width, height, head, gap, attached);
         attached = stemToReturningFlag(labels, gray, width, height, head, gap, attached);
+        if (voiceStem == null && faintStem == null && !smallHead)
+            attached =
+                    stemBeforeDetachedSlur(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff,
+                            attached,
+                            stemThreshold,
+                            corroborate,
+                            allowSinglePale);
         if (voiceStem != null) attached = voiceStem;
         if (attached != null) {
             bestX = attached[0];
@@ -19777,6 +19837,22 @@ final class OmrScoreInterpreter {
                     && innerThick == 2
                     && outerLeft == 1
                     && outerRight == 1
+                    && singleBlankTerminalSlurCap(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff,
+                            new int[] {bestX, stemEnd, upward ? -1 : 1},
+                            stemThreshold)) return 1;
+            // A curved cap can enter just one outer probe while its own terminal rail
+            // is independently complete on the opposite two probes.
+            if (voiceStem == null
+                    && !smallHead
+                    && thick == 2
+                    && innerThick == 2
+                    && (outerLeft == 2 && outerRight == 1 || outerLeft == 1 && outerRight == 2)
                     && singleBlankTerminalSlurCap(
                             labels,
                             gray,
