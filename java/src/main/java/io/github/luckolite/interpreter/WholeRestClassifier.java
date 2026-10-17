@@ -268,7 +268,8 @@ final class WholeRestClassifier {
         int top = Math.max(p.first() + 1, p.rule() + Math.max(2, Math.round(p.gap() * .15f)));
         int bottom = p.rule() + Math.round(p.gap() * .85f);
         if (l < 0 || r >= w || top < 0 || bottom >= h || l >= r || top >= bottom) return true;
-        for (int y = top; y <= bottom; y++)
+        for (int y = top; y <= bottom; y++) {
+            var fringe = ruleFringeEnvelope(g, w, h, p, m, y);
             for (int x = l; x <= r; x++) {
                 if ((g[y * w + x] & 255) >= 225) continue;
                 boolean accounted = false;
@@ -278,9 +279,147 @@ final class WholeRestClassifier {
                         accounted = true;
                         break;
                     }
-                if (!accounted) return true;
+                if (!accounted && !ownedFringePixel(g, w, fringe, x, y)) return true;
             }
+        }
         return false;
+    }
+
+    private record OpticalProfile(
+            double minimumInner,
+            double maximumInner,
+            double meanInner,
+            double meanOuter,
+            double slope,
+            double excess) {
+        double upper(double inner) {
+            return meanOuter + slope * (inner - meanInner) + excess;
+        }
+    }
+
+    private record FringeEnvelope(int core, OpticalProfile profile) {}
+
+    /** Learn a thin optical falloff only from two clear stripes outside the body/dot corridor. */
+    private static FringeEnvelope ruleFringeEnvelope(
+            byte[] g, int w, int h, Plate p, MeasureRegion m, int y) {
+        if (p.support() != Support.SECOND_RULE
+                || y != p.first() + 1
+                || y <= p.rule() + 1
+                || y + 1 >= h) return null;
+        int[] strips = {
+            p.left() - Math.round(p.gap() * 3),
+            p.left() - Math.round(p.gap() * .75f),
+            p.right() + Math.round(p.gap() * 3),
+            p.right() + Math.round(p.gap() * 4.5f)
+        };
+        if (strips[0] <= Math.ceil(m.left() * w)
+                || strips[3] >= Math.floor(m.right() * w)
+                || strips[1] - strips[0] < p.gap()
+                || strips[3] - strips[2] < p.gap()) return null;
+        int core = -1;
+        for (int row = y - 2; row >= p.rule(); row--) {
+            boolean complete = true;
+            for (int strip = 0; strip < 2; strip++) {
+                int count = 0;
+                for (int x = strips[strip * 2]; x <= strips[strip * 2 + 1]; x++)
+                    if (dark(g, w, x, row)) count++;
+                complete &= count >= (strips[strip * 2 + 1] - strips[strip * 2] + 1) * .9f;
+            }
+            // The independently observed core must be one uninterrupted horizontal owner
+            // across both reference stripes and the intervening body/corridor.
+            if (complete)
+                for (int x = strips[0]; x <= strips[3]; x++)
+                    if (!dark(g, w, x, row)) {
+                        complete = false;
+                        break;
+                    }
+            if (complete) {
+                core = row;
+                break;
+            }
+        }
+        if (core < 0) return null;
+        var samples = new ArrayList<double[]>();
+        int flank = Math.max(2, Math.round(p.gap() * .35f));
+        for (int strip = 0; strip < 2; strip++) {
+            int lo = strips[strip * 2], hi = strips[strip * 2 + 1];
+            for (int x = lo; x <= hi; x++) {
+                int inner = g[(y - 1) * w + x] & 255, outer = g[y * w + x] & 255;
+                int c = g[core * w + x] & 255;
+                if (c >= 170
+                        || inner <= c
+                        || inner >= 225
+                        || outer <= inner
+                        || outer < 200
+                        || outer >= 245
+                        || (g[(y + 1) * w + x] & 255) < 245) return null;
+                // Local added ink in a reference stripe cannot set a permissive envelope.
+                if (x - flank >= lo
+                        && x + flank <= hi
+                        && outer + 3
+                                < Math.min(g[y * w + x - flank] & 255, g[y * w + x + flank] & 255))
+                    return null;
+                if (x - flank >= lo && x + flank <= hi)
+                    samples.add(
+                            new double[] {
+                                x, (255d - inner) / (255d - c), (255d - outer) / (255d - inner)
+                            });
+            }
+        }
+        if (samples.size() < Math.ceil(p.gap())) return null;
+        var profile = opticalProfile(samples);
+        return profile == null ? null : new FringeEnvelope(core, profile);
+    }
+
+    /** Reference attenuation must predict the observed outer falloff, without gray-level slack. */
+    private static OpticalProfile opticalProfile(List<double[]> samples) {
+        double minimumInner = Double.POSITIVE_INFINITY, maximumInner = 0;
+        double minimumOuter = Double.POSITIVE_INFINITY, maximumOuter = 0;
+        double meanInner = 0, meanOuter = 0;
+        for (var v : samples) {
+            minimumInner = Math.min(minimumInner, v[1]);
+            maximumInner = Math.max(maximumInner, v[1]);
+            minimumOuter = Math.min(minimumOuter, v[2]);
+            maximumOuter = Math.max(maximumOuter, v[2]);
+            meanInner += v[1];
+            meanOuter += v[2];
+        }
+        // Equal inner phases cannot explain independently darkened outer reference ink.
+        if (minimumInner == maximumInner) {
+            if (minimumOuter != maximumOuter) return null;
+            return new OpticalProfile(minimumInner, maximumInner, minimumInner, minimumOuter, 0, 0);
+        }
+        meanInner /= samples.size();
+        meanOuter /= samples.size();
+        double xy = 0, xx = 0;
+        for (var v : samples) {
+            xy += (v[1] - meanInner) * (v[2] - meanOuter);
+            xx += (v[1] - meanInner) * (v[1] - meanInner);
+        }
+        double slope = xy / xx, excess = 0;
+        if (!(slope > 0) || !Double.isFinite(slope)) return null;
+        for (var v : samples)
+            excess = Math.max(excess, v[2] - meanOuter - slope * (v[1] - meanInner));
+        return new OpticalProfile(minimumInner, maximumInner, meanInner, meanOuter, slope, excess);
+    }
+
+    private static boolean ownedFringePixel(byte[] g, int w, FringeEnvelope profile, int x, int y) {
+        if (profile == null) return false;
+        int c = g[profile.core() * w + x] & 255;
+        int inner = g[(y - 1) * w + x] & 255, outer = g[y * w + x] & 255;
+        if (c >= 170
+                || inner <= c
+                || inner >= 225
+                || outer <= inner
+                || outer < 200
+                || outer >= 245
+                || (g[(y + 1) * w + x] & 255) < 245) return false;
+        double innerRatio = (255d - inner) / (255d - c);
+        double outerRatio = (255d - outer) / (255d - inner);
+        var learned = profile.profile();
+        return innerRatio >= learned.minimumInner()
+                && innerRatio <= learned.maximumInner()
+                && outerRatio <= learned.upper(innerRatio);
     }
 
     private static String conflictReason(
@@ -436,10 +575,23 @@ final class WholeRestClassifier {
                 if (p == null || !attachedRuleEdge(g, w, lo, hi, left, right, bottom, first, gap))
                     continue;
                 int arms = Math.round(gap * .5f);
-                if (ink(g, w, left - arms, right + arms, rule)
-                        < (right - left + 1 + 2 * arms) * .90f) continue;
-                if (ink(g, w, left - arms, right + arms, rule - Math.max(1, Math.round(gap * .2f)))
-                        > 1) continue;
+                // A thin printed rule may start with a pale fringe. Require the same complete
+                // arms and paper above one observed row within its already proved support band.
+                boolean supported = false;
+                for (int support = rule; support <= bottom; support++) {
+                    if (ink(g, w, left - arms, right + arms, support)
+                            < (right - left + 1 + 2 * arms) * .90f) continue;
+                    if (ink(
+                                    g,
+                                    w,
+                                    left - arms,
+                                    right + arms,
+                                    support - Math.max(1, Math.round(gap * .2f)))
+                            > 1) continue;
+                    supported = true;
+                    break;
+                }
+                if (!supported) continue;
                 boolean duplicate = false;
                 for (var prior : out)
                     if (prior.support() == Support.SECOND_RULE

@@ -2055,11 +2055,11 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "54bbb9e34cb9681cf9806db4be93af1980e5156520f5e74a51b03ca1366ffb95",
-      "source_normalized_sha256": "776f3b76a58d676214d2c2d2229865e4dab22b06a0a52f273aa0245da8b19a6e",
-      "reviewed_source_state": "committed",
-      "review_note": "Independently printed double-bar inner stroke bounds full-rest centering only; preserve event geometry and existing plate, silence and ownership checks. Original generated ending-bar regressions.",
-      "standalone_sha256": "0724567e8f71f231218b8d99609726d058a5079866fc4cdffe5353066e3263b0",
+      "source_sha256": "7f7c0314b3fef66bcf1836e645a76bffc5adff52ea874e0e766ea09a9a386a8a",
+      "source_normalized_sha256": "40d5c853b0d99471e0deff907c6dde79f1404232ed6f1e80209f206710d80a79",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recognize a whole-measure plate only with complete support inside its observed thin rule band. Account for a single optical fringe row only from two external reference stripes, an uninterrupted strict rule core, monotone core/inner/outer/paper falloff, and a positive conditional attenuation profile confined to observed phases with zero quantization slack. Unowned augmentation ink stays literal; retain all existing complete-body, centering, staff, sounding-note and conflict guards. Twenty-nine original procedural tests; no private score pixels, identifiers, models, or format changes.",
+      "standalone_sha256": "18ae36733a05c415477f4d529f2544d88259522c5a338405b0dbf00ef76a8dde",
       "reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e",
       "scoped_reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e"
     },
@@ -7839,6 +7839,13 @@
     "new_original_java_tests": 19,
     "license": "Original procedural Apache-2.0 staff, quarter-rest and bounds fixtures.",
     "layout": "Guide290 unchanged; new pure-Java helper included in explicit native source manifest.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "whole_rest_optical_rule_review": {
+    "summary": "Recognize a whole-measure plate only with complete support inside its observed thin rule band. Account for a single optical fringe row only from two external reference stripes, an uninterrupted strict rule core, monotone core/inner/outer/paper falloff, and a positive conditional attenuation profile confined to observed phases with zero quantization slack. Unowned augmentation ink stays literal; retain all existing complete-body, centering, staff, sounding-note and conflict guards. Twenty-nine original procedural tests; no private score pixels, identifiers, models, or format changes.",
+    "new_original_java_tests": 29,
+    "license": "Original Apache-2.0 geometric fixtures.",
+    "layout": "Guide290 and native layouts unchanged; no helper or manifest additions.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }
 }
