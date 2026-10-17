@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "fc81460c65494a058c5a7b1fab02553389ceb5f9765bb86b863e5b5e0b43f255",
-      "review_note": "Search bounded overlapping tie shoulders across reduced-head gaps; demote a semantic island only when a continuous returning curve passes through it between two retained stemmed endpoints. Original mirrored/scaled curves and missing-ink/independent-head controls.",
-      "source_normalized_sha256": "63d4340af28b1a8996b7d087840bf69d1d934070ea5072772d7a56199df6fdeb",
+      "source_sha256": "2a9fea78fea5378a87e99df14fdf4aef70ad80ce24f3e660f3740281ee6f0306",
+      "review_note": "Recover broken oval rims only with opposing edge contrast, semantic/raw shaft ownership and a complete beam to a retained note. The proved beam establishes filled rhythm on both endpoints. Original scaled/mirrored shapes, missing-ink/shaft/beam controls and false rectangles/arcs; no private score data.",
+      "source_normalized_sha256": "431e0808e9acd9a8a11741e2a63ca81be6dbafc3e9e66c162d4d0af9b83984d5",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "252b88e4af06e5ede3bf4d98a3e874c787e8b69c3da55f6f5bbc9313ed9d0a94",
+      "standalone_sha256": "ace7d4cd254338351376f84a2a05bc9cd60626deb4dae4a9715333b6bf74f22a",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -3260,11 +3260,11 @@
     },
     "SymbolStemHeadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SymbolStemHeadRecovery.java",
-      "source_sha256": "1d51ad8c47d5c224444f11f85b730fbc0cd46ac43fa89e9728c6593870696caf",
-      "source_normalized_sha256": "e9ff2af2c5daebeb5a9a3bc05213bef53a623a7efd295bf10985e0901491978e",
-      "standalone_sha256": "7cada0e93bcbe6bdc16e62e8f805829533d571c185c030e8839a1adb22032e27",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "85d765d4188b53a27e116a6ea7ecba9b26450e6c9a90a1b652b2d5443486a416",
+      "source_normalized_sha256": "6ab32933edd252b88449b209086ea6f53f4a6a01e55fc6f04b68aede04fa971d",
+      "standalone_sha256": "8050be3c3174006c0da80c37f01d22e070ba8f6871037a82fad6586ea5ca86ed",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover broken oval rims only with opposing edge contrast, semantic/raw shaft ownership and a complete beam to a retained note. The proved beam establishes filled rhythm on both endpoints. Original scaled/mirrored shapes, missing-ink/shaft/beam controls and false rectangles/arcs; no private score data.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "TieBarlineCorner.java": {

@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Broken oval rims require independent raw/semantic shaft ownership and a complete
+shared beam before they may become notes or establish filled rhythm.
+
 Compact tie islands require a complete returning curve through their mask and two
 retained stemmed endpoints, including reduced-head gaps with overlapping shoulders.
 

@@ -473,16 +473,21 @@ final class OmrScoreInterpreter {
             }
         }
         List<Component> recoveredSingleBeamHeads = new ArrayList<>();
-        for (Staff owner : staffs)
-            for (var recovered :
-                    SymbolStemHeadRecovery.find(
-                            labels,
-                            gray,
-                            width,
-                            height,
-                            owner.gap,
-                            Math.round(owner.top - owner.gap * 2.5f),
-                            Math.round(owner.bottom + owner.gap * 2.5f))) {
+        for (Staff owner : staffs) {
+            int bandTop = Math.round(owner.top - owner.gap * 2.5f),
+                    bandBottom = Math.round(owner.bottom + owner.gap * 2.5f);
+            var sparse =
+                    SymbolStemHeadRecovery.sparseOvals(
+                            labels, gray, width, height, owner.gap, bandTop, bandBottom);
+            var candidates =
+                    new ArrayList<>(
+                            SymbolStemHeadRecovery.find(
+                                    labels, gray, width, height, owner.gap, bandTop, bandBottom));
+            candidates.addAll(sparse);
+            for (var recovered : candidates) {
+                // A complete owned beam can establish a faded head as filled even when
+                // its surviving rim resembles a hollow note. Preserve ordinary head gates.
+                boolean sparseCandidate = sparse.contains(recovered);
                 Component candidate =
                         new Component(
                                 recovered.area(),
@@ -512,7 +517,8 @@ final class OmrScoreInterpreter {
                 boolean proved = false;
                 for (Component main : heads) {
                     if (nearestHeadStaff(staffs, main.centerY) != owner
-                            || hasOpenCenter(labels, gray, width, height, main, owner.gap)
+                            || !sparseCandidate
+                                    && hasOpenCenter(labels, gray, width, height, main, owner.gap)
                                     && !recoveredFilledFragmentHeads.contains(main)) continue;
                     int[] other =
                             attachedRawStem(
@@ -526,6 +532,10 @@ final class OmrScoreInterpreter {
                     if (PrintedSingleBeamPath.connects(
                             gray, width, height, own, other, owner.gap)) {
                         proved = true;
+                        if (sparseCandidate) {
+                            recoveredSingleBeamHeads.add(main);
+                            recoveredFilledFragmentHeads.add(main);
+                        }
                         break;
                     }
                 }
@@ -536,6 +546,7 @@ final class OmrScoreInterpreter {
                     recoveredFadedHeads.add(candidate);
                 }
             }
+        }
         List<Component> rejectedBeamHeads = beamJunctionHeads(gray, width, height, heads, staffs);
         rejectedBeamHeads.addAll(recoveredGraceCaps);
         rejectedBeamHeads.addAll(wideSingleBeamTipHeads(gray, width, height, heads, staffs));
