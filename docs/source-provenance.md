@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Rounded meter counters require curvature on both sides so a bar beside a wavy
+stroke remains a measure boundary. Controls use original geometric pockets.
+
 Connected dynamic lettering retains its complete italic-f contour proof when
 a preceding letter widens the component. Original geometric controls preserve
 genuine eighth rests and reject incomplete f strokes.

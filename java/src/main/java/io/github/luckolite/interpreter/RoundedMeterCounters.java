@@ -27,10 +27,14 @@ final class RoundedMeterCounters {
             queue[0] = seed;
             seen[seed] = true;
             int minX = w, maxX = -1, minY = h, maxY = -1;
-            int[] rows = new int[h];
+            int[] rows = new int[h], leftEdges = new int[h], rightEdges = new int[h];
+            Arrays.fill(leftEdges, w);
+            Arrays.fill(rightEdges, -1);
             while (read < write) {
                 int at = queue[read++], x = at % w, y = at / w;
                 rows[y]++;
+                leftEdges[y] = Math.min(leftEdges[y], x);
+                rightEdges[y] = Math.max(rightEdges[y], x);
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
@@ -59,8 +63,19 @@ final class RoundedMeterCounters {
                     || write > gap * gap * .65f) continue;
             int peak = 0;
             for (int y = minY + 1; y < maxY; y++) peak = Math.max(peak, rows[y]);
+            // A barline beside a wavy stroke encloses pockets with one straight edge.
+            // A rounded digit needs independent curvature on both sides of its counter.
+            int leftMin = w, leftMax = -1, rightMin = w, rightMax = -1;
+            for (int y = minY; y <= maxY; y++) {
+                leftMin = Math.min(leftMin, leftEdges[y]);
+                leftMax = Math.max(leftMax, leftEdges[y]);
+                rightMin = Math.min(rightMin, rightEdges[y]);
+                rightMax = Math.max(rightMax, rightEdges[y]);
+            }
             boolean curved =
-                    peak - Math.min(rows[minY], rows[maxY]) >= Math.max(3, Math.round(gap * .18f));
+                    peak - Math.min(rows[minY], rows[maxY]) >= Math.max(3, Math.round(gap * .18f))
+                            && leftMax - leftMin >= Math.max(1, Math.round(gap * .08f))
+                            && rightMax - rightMin >= Math.max(1, Math.round(gap * .08f));
             pockets.add(
                     new Pocket(
                             left + (minX + maxX) * .5f,

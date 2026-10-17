@@ -3206,11 +3206,11 @@
     },
     "RoundedMeterCounters.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RoundedMeterCounters.java",
-      "source_sha256": "6b95a3dafdd3ece298c239d4c068bdf7b64a5bb5fa5290fa0df91e1f6d5136c9",
-      "source_normalized_sha256": "17b9b51d6583190611b2ea6d043e854df0ad6cee552ec38bdfd050276013a679",
-      "standalone_sha256": "39616d6a9ab995a70e8aa4aa4e1bbe53fee9fe8347461c5e76cc8cfba75c4ed5",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "663784bdd7f3b2556ff3e0379074b7e0985c003b82a42daee7b9fb43005319f9",
+      "source_normalized_sha256": "d5a074fb9548bc35ee4d3574a4d32d6dc50846ed5795970114154556af2fc3ed",
+      "standalone_sha256": "f4c60a97c6c202c47a72cf5e0846d5658b32ab98aa52d4618b98f42120f8e263",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Require independently curved left and right pocket edges before rejecting a barline as rounded meter digits. Original straight-edge mirrored/scaled, true rounded-counter and immutable-pixel controls; no private score pixels.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "ScoreTremoloOccurrences.java": {
