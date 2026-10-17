@@ -104,6 +104,41 @@ final class PairedGraceBeamInk {
         return maximum;
     }
 
+    static int countSinglePrinted(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float staffTop,
+            StaffPitchTrack track) {
+        if (gray == null || a == null || b == null || gap < 4 || a[2] != b[2]) return 0;
+        int span = Math.abs(a[0] - b[0]);
+        if (span < gap * .95f || span > gap * 5 || Math.abs(a[1] - b[1]) > gap * .75f) return 0;
+        float edge = Math.min(.2f, Math.max(2, Math.round(gap * .15f)) / (float) span);
+        float[] columns = {edge, .25f, .5f, .75f, 1 - edge};
+        for (float fraction : new float[] {.5f, .75f, 1f})
+            if (countAtContrast(
+                            gray,
+                            width,
+                            height,
+                            a,
+                            b,
+                            gap,
+                            fraction,
+                            2.2f,
+                            columns,
+                            staffTop,
+                            track,
+                            false,
+                            Float.POSITIVE_INFINITY,
+                            Float.POSITIVE_INFINITY,
+                            1)
+                    == 1) return 1;
+        return 0;
+    }
+
     private static int count(
             byte[] gray,
             int width,
@@ -137,6 +172,20 @@ final class PairedGraceBeamInk {
                             track);
             if (count > 0 && inside == 1.5f) return count;
             maximum = Math.max(maximum, count);
+        }
+        // A full-size junction can blur the first freestanding witness into the shaft.
+        // Move both end witnesses one core pixel inward, retaining all five columns
+        // and accepting only three independently separated parallel printed rails.
+        if (maximum == 0 && inside > 1.5f && span >= gap * 1.5f) {
+            float inset = Math.min(.2f, Math.max(3, Math.round(gap * .22f)) / (float) span);
+            float[] inner = {inset, .25f, .5f, .75f, 1 - inset};
+            for (float fraction : new float[] {.5f, .75f, 1f}) {
+                int count =
+                        countAtContrast(
+                                gray, width, height, a, b, gap, fraction, inside, inner, staffTop,
+                                track);
+                if (count == 3) return 3;
+            }
         }
         // A compact blurred pair can close the white channel close to one stem.
         // Require three separated, aligned double cores on the clear inner side;
@@ -324,6 +373,40 @@ final class PairedGraceBeamInk {
             boolean strictParallel,
             float parallelTolerance,
             float coreTolerance) {
+        return countAtContrast(
+                gray,
+                width,
+                height,
+                a,
+                b,
+                gap,
+                fraction,
+                inside,
+                columns,
+                staffTop,
+                track,
+                strictParallel,
+                parallelTolerance,
+                coreTolerance,
+                2);
+    }
+
+    private static int countAtContrast(
+            byte[] gray,
+            int width,
+            int height,
+            int[] a,
+            int[] b,
+            float gap,
+            float fraction,
+            float inside,
+            float[] columns,
+            float staffTop,
+            StaffPitchTrack track,
+            boolean strictParallel,
+            float parallelTolerance,
+            float coreTolerance,
+            int minimumCores) {
         int wanted = 0;
         float firstSeparation = Float.NaN;
         float[] previous = null;
@@ -411,7 +494,7 @@ final class PairedGraceBeamInk {
                     start = -1;
                 }
             }
-            if (coreCount < 2 || coreCount > 3) return 0;
+            if (coreCount < minimumCores || coreCount > 3) return 0;
             if (strictParallel) {
                 if (coreCount != 2) return 0;
                 float separation = cores[1] - cores[0];

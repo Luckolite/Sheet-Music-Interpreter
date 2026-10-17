@@ -3457,13 +3457,17 @@ final class TripletRhythmDetector {
                 if (min >= w * .45f && max >= w * .7f) lowerOpen++;
                 if (hasLobePocket(gray, width, left, top + y, w)) lowerPocket++;
             }
-            if (y >= h * .94f) foot = Math.max(foot, max);
+            // Include the final pixel band even when the glyph is shorter than 17 rows.
+            if (y + 1 > h * .94f) foot = Math.max(foot, max);
         }
         return bars >= Math.max(2, h / 12)
                 && leftStem >= Math.max(1, h / 12)
                 && lowerOpen >= 1
                 && lowerOpen + lowerPocket >= Math.max(2, h / 8)
-                && lowerEdge - foot >= Math.max(1, (int) (w * .08f));
+                // A descending accent stroke may satisfy the cap and open-right rows,
+                // but a five must curve back into a lower bowl at its foot.
+                && foot >= 0
+                && lowerEdge - foot >= Math.max(2, Math.round(w * .20f));
     }
 
     /** Neighboring disconnected ink cannot supply the lobes of this component. */

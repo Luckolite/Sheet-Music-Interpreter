@@ -18552,6 +18552,7 @@ final class OmrScoreInterpreter {
                     && fadedDoubleBeamJunction(labels, gray, width, height, head, staff, gradient))
                 return 2;
         }
+        if (count == 0 && palePairedSingleRail(gray, width, height, head, staff, heads)) return 1;
         if (count < 2 || gray == null) return count;
         int[] stem = attachedRawStem(gray, width, height, head, staff.gap);
         if (stem == null) return count;
@@ -18575,6 +18576,58 @@ final class OmrScoreInterpreter {
     }
 
     /** Five-column full-size rail evidence between two independently attached shafts. */
+    private static boolean palePairedSingleRail(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        if (gray == null || heads == null) return false;
+        float gap = staff.gap;
+        int threshold = 205;
+        int ownLimit =
+                head.centerY < staff.top - gap * 2.5f || head.centerY > staff.bottom + gap * 2.5f
+                        ? 12
+                        : 9;
+        int[] own =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        gap,
+                        Math.max(1, Math.round(gap * .16f)),
+                        threshold,
+                        ownLimit);
+        if (own == null) return false;
+        for (Component other : heads) {
+            if (other == head
+                    || Math.abs(other.centerX - head.centerX) < gap * .95f
+                    || Math.abs(other.centerX - head.centerX) > gap * 5
+                    || Math.abs(other.centerY - head.centerY) > gap * 5) continue;
+            int pairLimit =
+                    other.centerY < staff.top - gap * 2.5f
+                                    || other.centerY > staff.bottom + gap * 2.5f
+                            ? 12
+                            : 9;
+            int[] pair =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            threshold,
+                            pairLimit);
+            if (PairedGraceBeamInk.countSinglePrinted(
+                            gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
+                    == 1) return true;
+        }
+        return false;
+    }
+
     private static boolean palePairedTripleRails(
             byte[] gray,
             int width,
