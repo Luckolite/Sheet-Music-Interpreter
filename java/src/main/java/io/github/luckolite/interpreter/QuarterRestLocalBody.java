@@ -53,7 +53,7 @@ final class QuarterRestLocalBody {
                             if (!visited[next] && (paper[yy * width + xx] & 255) < 170) {
                                 visited[next] = true;
                                 queue[count++] = next;
-                            }
+                        }
                         }
                 }
                 // A connected stem or rule must never be cropped into a putative rest.
@@ -80,7 +80,7 @@ final class QuarterRestLocalBody {
         return List.copyOf(result);
     }
 
-    private static float[] frame(
+    static float[] frame(
             byte[] gray,
             int width,
             int height,

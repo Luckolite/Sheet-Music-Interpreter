@@ -3421,6 +3421,35 @@ final class SixteenthRestDetector {
         if (quarterRestMasked(
                 gray, width, staff, top, line, left, right, minY, maxY, pairedContours))
             return true;
+        var contrast =
+                QuarterRestRuleContrast.view(
+                        gray,
+                        width,
+                        gray.length / width,
+                        staff,
+                        left,
+                        right,
+                        minY,
+                        maxY,
+                        top,
+                        line);
+        if (contrast != null
+                && quarterRestMasked(
+                        contrast.gray(),
+                        contrast.width(),
+                        new Staff(
+                                contrast.top(),
+                                contrast.bottom(),
+                                contrast.gap(),
+                                staff.index(),
+                                staff.count()),
+                        0,
+                        new boolean[contrast.height()],
+                        contrast.left(),
+                        contrast.right(),
+                        contrast.first(),
+                        contrast.last(),
+                        pairedContours)) return true;
         float gap = staff.gap();
         int height = gray.length / width, margin = Math.max(4, Math.round(gap * 2));
         if (left - margin < 0 || right + margin >= width) return false;

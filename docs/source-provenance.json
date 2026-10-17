@@ -496,13 +496,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "c252b90efaff400217a4a3e77f35c7e0ce2b2310980e270c854f1dd70218bad4",
-      "review_note": "Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities.",
-      "source_normalized_sha256": "ff9b099884a5ce97ad620837e5df0ef2df47bbaad95d083641d5f6bce2053bf1",
+      "source_sha256": "2a199528687ea7515ddbfd9ee9c831d371eda999f90c80551cc4b7c04ea711ab",
+      "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
+      "source_normalized_sha256": "1d8a035d3404743222b92400985d07ffd199d625dca0ce81b47ada1dc9e7e471",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_source_state": "working-tree",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "085df8bdc045cda4f67108056951694cc2c95ff46b22666c713f70a895bdab3c",
+      "standalone_sha256": "d57c0f6f934f3782f556342867aee5e1699b19affa801557dfa091798206b7c8",
       "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
       "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
@@ -1363,10 +1363,11 @@
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
-      "source_sha256": "cc954e2d510b4d3fa0347673647f9c2c6a81678dad788577065b73783084c4ea",
-      "source_normalized_sha256": "cc954e2d510b4d3fa0347673647f9c2c6a81678dad788577065b73783084c4ea",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "e962a1ad833025d86eff106ea92d5ae62c23a334f34fc200b8bd705c7bc1cbc9",
+      "source_normalized_sha256": "ab48d10849b2ea5d89130b6b59bf46b1f86630c1277602c2448c61f23c217cfa",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
+      "standalone_sha256": "aee1f317f31e168ce8c245fca732a16da2204671ca4d85911ea06642f396b762"
     },
     "RestPaperTone.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestPaperTone.java",
@@ -3492,6 +3493,14 @@
       "standalone_sha256": "0997c136648f7ff1280095871f2d4d7beb9a0713ac70371ec2404e94ea9bab28",
       "reviewed_source_state": "working-tree",
       "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes."
+    },
+    "QuarterRestRuleContrast.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestRuleContrast.java",
+      "source_sha256": "8cd355567eace8fa2d0f36db581e0af3079f87b079f66535b31682295c6ee615",
+      "source_normalized_sha256": "76cd706c1937d1c2ce7c2d038a14fc67c76e80f9c7fc8fe2090e20a973bbf736",
+      "standalone_sha256": "0aae63b33757ad6bff058407778fdedb6456a23c491efb2753bde15dab9da71b",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7823,6 +7832,13 @@
     "new_original_java_tests": 14,
     "license": "Original Apache-2.0 geometry plus existing SIL-OFL Bravura font assets.",
     "layout": "Guide290 unchanged; no helper or manifest additions.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "quarter_rest_rule_contrast_review": {
+    "summary": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
+    "new_original_java_tests": 19,
+    "license": "Original procedural Apache-2.0 staff, quarter-rest and bounds fixtures.",
+    "layout": "Guide290 unchanged; new pure-Java helper included in explicit native source manifest.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }
 }
