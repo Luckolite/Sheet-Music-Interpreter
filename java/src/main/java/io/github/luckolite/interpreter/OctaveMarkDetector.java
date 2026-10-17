@@ -306,6 +306,7 @@ final class OctaveMarkDetector {
                 boolean[] visited = new boolean[width * h];
                 int[] stack = new int[width * h];
                 List<InkBox> boxes = new ArrayList<>();
+                List<InkBox> shortFragments = new ArrayList<>();
                 for (int origin = 0; origin < visited.length; origin++) {
                     if (visited[origin] || (gray[top * width + origin] & 255) >= 165) continue;
                     int count = 0, size = 0, left = width, right = -1, y1 = h, y2 = -1;
@@ -329,6 +330,12 @@ final class OctaveMarkDetector {
                                 }
                             }
                     }
+                    if (count >= Math.max(4, gap * gap * .025f)
+                            && y2 - y1 + 1 >= 2
+                            && y2 - y1 + 1 <= gap * .5f
+                            && right - left + 1 >= gap * .2f
+                            && right - left + 1 <= gap * 1.5f)
+                        shortFragments.add(new InkBox(left, top + y1, right, top + y2, count));
                     if (count >= Math.max(4, gap * gap * .025f)
                             && y2 - y1 + 1 >= gap * .55f
                             && y2 - y1 + 1 <= gap * 3.2f
@@ -494,6 +501,8 @@ final class OctaveMarkDetector {
                         }
                     }
                     if (shift == 0 || (below ? shift > 0 : shift < 0)) continue;
+                    if (fragmentedCharacterContext(boxes, shortFragments, left, a, right, b, gap))
+                        continue;
                     String text =
                             switch (shift) {
                                 case 1 -> "8va";
@@ -713,6 +722,63 @@ final class OctaveMarkDetector {
     // Staff rules can divide an accidental into two apparent counters. A bare
     // octave numeral belongs outside the staff, while complete suffix words
     // retain their separate recognition and ownership evidence.
+    /** Two separated strokes and an aligned next character prove a word continues past a match. */
+    private static boolean fragmentedCharacterContext(
+            List<InkBox> boxes,
+            List<InkBox> fragments,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap) {
+        for (int side : new int[] {-1, 1})
+            for (InkBox next : boxes) {
+                int distance = side > 0 ? next.left - right - 1 : left - next.right - 1;
+                if (distance < 2
+                        || distance > gap * 1.8f
+                        || Math.min(bottom, next.bottom) - Math.max(top, next.top) + 1 < gap * .6f)
+                    continue;
+                int gapLeft = side > 0 ? right + 1 : next.right + 1;
+                int gapRight = side > 0 ? next.left - 1 : left - 1;
+                for (int i = 0; i < fragments.size(); i++) {
+                    InkBox first = fragments.get(i);
+                    if (first.left < gapLeft || first.right > gapRight) continue;
+                    for (int j = i + 1; j < fragments.size(); j++) {
+                        InkBox second = fragments.get(j);
+                        if (second.left < gapLeft || second.right > gapRight) continue;
+                        int l = Math.min(first.left, second.left),
+                                r = Math.max(first.right, second.right);
+                        int t = Math.min(first.top, second.top),
+                                b = Math.max(first.bottom, second.bottom);
+                        int separation =
+                                Math.max(first.top, second.top)
+                                        - Math.min(first.bottom, second.bottom)
+                                        - 1;
+                        int overlap =
+                                Math.min(first.right, second.right)
+                                        - Math.max(first.left, second.left)
+                                        + 1;
+                        if (l - gapLeft > gap * .3f
+                                || gapRight - r > gap * .3f
+                                || separation < gap * .25f
+                                || b - t + 1 < gap * .65f
+                                || b - t + 1 > gap * 1.7f
+                                || overlap
+                                        < Math.min(
+                                                        first.right - first.left + 1,
+                                                        second.right - second.left + 1)
+                                                * .4f
+                                || Math.abs(t - next.top) > gap * .3f
+                                || Math.abs(b - next.bottom) > gap * .3f
+                                || t < top - gap * .3f
+                                || b > bottom + gap * .3f) continue;
+                        return true;
+                    }
+                }
+            }
+        return false;
+    }
+
     private static boolean centeredInStaff(
             InkBox box, List<PlayingTechniqueDetector.Staff> staffs) {
         float center = (box.top + box.bottom) * .5f;

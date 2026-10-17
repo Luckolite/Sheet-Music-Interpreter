@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "fc2d74990b487e7f55e818599e769a6af186503c7357e9863dd1f0baee6049fe",
-      "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes.",
-      "source_normalized_sha256": "1acf9e0d25e59dd75e79683a369d263b7aabfbf367122016270930f7c2b953a6",
+      "source_sha256": "c1b5e01ea03ea27eff57491c7c5e280a6d6d24ce5d54d02307338f1bfced9b4c",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes.",
+      "source_normalized_sha256": "1723467763bbce2e57a88bbaf4772525ec49307a4b2c7fad4a8f2ce78cabf76a",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "31dcc9ab306206ec3883d6a1b5833dfb1d7debff2319f4f974147d49cf000c2a",
+      "standalone_sha256": "16eedb4eb54859bd412b45ed1a3460e5b952dffc8533780904cff66e07994129",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -578,11 +578,11 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "1022fbcd0fc1e314417f654647cacf5826da235563f28f763300481a4f9d5f14",
-      "source_normalized_sha256": "c72c8d3c1f28a6ab1adb9c01694eeff31921cbe6ba40448d4a6744687eccc1e2",
-      "review_note": "Reviewed paired recognition57 source; namespace-only Java adaptation or relative Python imports. Guide287 supports end-boundary signatures; audio90 invalidates derived playback.",
-      "reviewed_source_state": "Committed recognition57/guide287/audio90 source; paired package deployment and device acceptance pending.",
-      "standalone_sha256": "9dd919d2e4c354db7b82c13ee706922116e59e7fa057e908e153c56f1353fd15",
+      "source_sha256": "4a5fd82bea0912dc0ef0abbb9610e49917dda4555c149e183c2670ebf5209daa",
+      "source_normalized_sha256": "798a930b973a2677554fac034544053eb24ad882988ac1c01aa94bb11fd2550f",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "c1714338eb9981956c33d664f1b2d05cae7260b5c048b4f953b4271f62fc9d21",
       "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
       "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
@@ -609,9 +609,12 @@
     },
     "OctaveClefDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
-      "source_sha256": "38a074d84d193bb51488af9f47613f18b3d5bd4a71511b45216f733faf306b83",
+      "source_sha256": "88efcaa812a8e9e550ee3b29ef9d04ab7498ab132262e56a7a0b06c0239b179a",
       "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
-      "source_normalized_sha256": "c40b7036300e700170876ec6f06458015763ab46e2f69234f71b54ac795cc6b4"
+      "source_normalized_sha256": "8aea08c3ba116ad63529b6a9acf923756d8a62d7a0764ed120ca355bd0b412dc",
+      "standalone_sha256": "7ac5822233c8c0dc686a131d959e8eef106fedac31f40be9ee35d195424aaa47",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes."
     },
     "ScorePageTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageTimeline.java",
@@ -1867,10 +1870,11 @@
     "SharedStemBeamOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SharedStemBeamOwnership.java",
       "reviewed_app_commit": "b223c5e47a46340aa7d880d1b15273f6c4907db1",
-      "source_sha256": "3366e26c1196bea249f0810fc767f9226cf004be787e1392941237350cfeb979",
-      "source_normalized_sha256": "7dde0aa64e7cc7a696843e5a5bc555e13dbdf43b921e00ea75dcb4cb22c83fd2",
-      "reviewed_source_state": "Reviewed shaft continuity witness and recognition29 invalidation; original synthetic regressions and complete standalone suite.",
-      "review_note": "Original Apache-2.0 raw shaft/face/rail ownership helper with conservative uncertainty, ledger-only foreign-shaft rejection, short secondary beams, both directions and near-coincident quarter protection. Uses existing JDK/labels/raw gray, no new weights or dependency. Thick segmented staff rules are explicitly excluded from beam-band evidence, preventing ordinary notes from borrowing staff lines as additional rails. Nearby independent noteheads do not establish shared voice ownership unless their own raw shaft reaches the current head row. Original synthetic mirrored controls reject the prior override; no private raster or new dependency."
+      "source_sha256": "8b6f163c84a4aa0c6db62fc27c8d65fa4c540e5a38bb44aa430875ca4a00b782",
+      "source_normalized_sha256": "6bfa98608f83f935b96956da305707d3291b59c9d0da0bca6fdb023fa6758c0e",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes.",
+      "standalone_sha256": "889262e5ae37e68c3cd98724e5a4aa1d3921c1055bde74a5df656d29bbb946be"
     },
     "RepeatedTupletNumeral.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RepeatedTupletNumeral.java",
@@ -3371,6 +3375,26 @@
       "standalone_sha256": "be9fd11a85c2f8ae934e108bf9bcbd8c179ca8dd6c9d3ff752cee78f338df373",
       "reviewed_source_state": "working-tree",
       "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes."
+    },
+    "PrintedRuleCrossingBeamPath.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRuleCrossingBeamPath.java",
+      "reviewed_app_base_commit": "edbaa48e53c975d1a0fd16e24a5b99b7c833dcee",
+      "origin": "Original Apache-2.0 geometry helper; no private assets.",
+      "source_sha256": "28b8ce16a7c375ac243e5ac6d109c8978e289480badad511b6e56b66aebd8601",
+      "source_normalized_sha256": "633662cbd9779a34cadb2438d4485caf1fe898c17e2a7d8f8bd03bdf5c2d8b38",
+      "standalone_sha256": "3d35a8fb412897c6e74443df905dd4925b83ec874e3eca44e4833d455c74e2d2",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes."
+    },
+    "PrintedSingleRailCore.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSingleRailCore.java",
+      "reviewed_app_base_commit": "edbaa48e53c975d1a0fd16e24a5b99b7c833dcee",
+      "origin": "Original Apache-2.0 geometry helper; no private assets.",
+      "source_sha256": "eecbb2168a2fbaf7c60568d2a14e44b4024b889b55e15a04251b5a40b99c7885",
+      "source_normalized_sha256": "6dd2c99ac21a8fb275db2b8d00e4602463314c8d2d87206f7b7b490aa75365ad",
+      "standalone_sha256": "d0ab5ab7191b87ab404368ca30fd7cc87acf4a1fcd87e3cc4608058eef88e242",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes."
     }
   },
   "interpreter_speedup_review": {

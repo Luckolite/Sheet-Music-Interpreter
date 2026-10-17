@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
-/** An octave-clef 8 has two enclosed counters; an isolated page/fingering number is not near a clef. */
+/**
+ * An octave-clef 8 has two enclosed counters; an isolated page/fingering number is not near a clef.
+ */
 final class OctaveClefDigit {
     static boolean above(
             byte[] gray,
@@ -86,6 +88,64 @@ final class OctaveClefDigit {
                 if (ink) rows++;
             }
             if (rows >= Math.min(h, gap * 1.5f) * .7f && area >= gap * gap * .15f) return true;
+        }
+        return completeNeighbor(gray, width, height, left, top, w, h, gap);
+    }
+
+    /** A thin neighboring character still needs a complete, aligned letter-sized body. */
+    private static boolean completeNeighbor(
+            byte[] gray, int width, int height, int left, int top, int w, int h, float gap) {
+        int x0 = Math.max(0, Math.round(left - gap * 1.6f));
+        int x1 = Math.min(width - 1, Math.round(left + w + gap * 1.6f));
+        int y0 = Math.max(0, top - Math.max(3, Math.round(h * .5f)));
+        int y1 = Math.min(height - 1, top + h + Math.max(3, Math.round(h * .5f)));
+        int rw = x1 - x0 + 1, rh = y1 - y0 + 1;
+        if (rw <= 0 || rh <= 0) return false;
+        boolean[] seen = new boolean[rw * rh];
+        int[] queue = new int[rw * rh];
+        for (int origin = 0; origin < seen.length; origin++) {
+            if (seen[origin] || (gray[(y0 + origin / rw) * width + x0 + origin % rw] & 255) > 175)
+                continue;
+            int count = 1, at = 0, l = rw, r = -1, t = rh, b = -1;
+            boolean clipped = false;
+            queue[0] = origin;
+            seen[origin] = true;
+            while (at < count) {
+                int p = queue[at++], x = p % rw, y = p / rw;
+                l = Math.min(l, x);
+                r = Math.max(r, x);
+                t = Math.min(t, y);
+                b = Math.max(b, y);
+                clipped |= x == 0 || x == rw - 1 || y == 0 || y == rh - 1;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= rw || yy < 0 || yy >= rh) continue;
+                        int n = yy * rw + xx;
+                        if (!seen[n] && (gray[(y0 + yy) * width + x0 + xx] & 255) <= 175) {
+                            seen[n] = true;
+                            queue[count++] = n;
+                        }
+                    }
+            }
+            int cw = r - l + 1, ch = b - t + 1;
+            int separation =
+                    x0 + r < left
+                            ? left - (x0 + r) - 1
+                            : x0 + l >= left + w ? x0 + l - (left + w) : -1;
+            int tolerance = Math.max(2, Math.round(h * .25f));
+            if (clipped
+                    || separation < 1
+                    || separation > h * .5f
+                    || cw < Math.max(3, h * .2f)
+                    || cw > h * 1.1f
+                    || ch < h * .65f
+                    || ch > h * 1.3f
+                    || Math.abs(y0 + t - top) > tolerance
+                    || Math.abs(y0 + b + 1 - (top + h)) > tolerance
+                    || count < cw + ch
+                    || count > cw * ch * .75f) continue;
+            return true;
         }
         return false;
     }

@@ -1328,6 +1328,13 @@ final class OmrScoreInterpreter {
                             localGap)
                     && pairedPrintedRails(gray, width, height, head, rhythmStaff, heads, beamCount))
                 unbeamedDuration = 0;
+            if (beamCount > 0
+                    && unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                    && filledSinglePrintedRail(
+                            labels, gray, width, height, head, rhythmStaff, heads)) {
+                beamCount = 1;
+                unbeamedDuration = 0;
+            }
             if (unbeamedDuration >= ScoreNoteEvent.DURATION_HALF) beamCount = 0;
             Component dotAnchor =
                     unbeamedDuration == ScoreNoteEvent.DURATION_WHOLE
@@ -17912,6 +17919,45 @@ final class OmrScoreInterpreter {
                                         gap,
                                         staffSlope,
                                         track);
+                    // Bright paper can also leave finite thick islands on a printed rule.
+                    // Both flanks must retain the other rules' phase and ink budget.
+                    if (!printedRule
+                            && Float.isFinite(staffTop)
+                            && leftKey >= 0
+                            && rightKey >= 0
+                            && levelStrokeAcrossStem(
+                                    gray,
+                                    width,
+                                    height,
+                                    stem[0],
+                                    center,
+                                    gap,
+                                    strokeThreshold,
+                                    staffSlope)
+                            && LocalPrintedStaffBand.matchesBeyondStem(
+                                    gray,
+                                    width,
+                                    height,
+                                    stem[0] - side,
+                                    staffTop,
+                                    gap,
+                                    strokeThreshold,
+                                    y - run,
+                                    y - 1,
+                                    staffSlope,
+                                    track)
+                            && LocalPrintedStaffBand.matchesBeyondStem(
+                                    gray,
+                                    width,
+                                    height,
+                                    stem[0] + side,
+                                    staffTop,
+                                    gap,
+                                    strokeThreshold,
+                                    y - run,
+                                    y - 1,
+                                    staffSlope,
+                                    track)) printedRule = true;
                     if (!printedRule
                             && leftKey >= 0
                             && rightKey >= 0
@@ -18251,6 +18297,51 @@ final class OmrScoreInterpreter {
         return local;
     }
 
+    /** Shared voices use the same positive rule ownership as ordinary beam counting. */
+    private static boolean printedSharedRuleBand(
+            byte[] gray, int width, int height, int x, int first, int last, Staff staff) {
+        int size = last - first + 1;
+        if (size < 3 || size > staff.gap * .55f) return false;
+        boolean rule =
+                LocalPrintedStaffBand.matchesBeyondStem(
+                        gray,
+                        width,
+                        height,
+                        x,
+                        staff.top,
+                        staff.gap,
+                        165,
+                        first,
+                        last,
+                        0,
+                        staff.pitchTrack);
+        if (!rule) {
+            if (!staff.sharedRuleTrackChecked) {
+                staff.sharedRuleTrackChecked = true;
+                staff.sharedRuleTrack =
+                        staff.pitchTrack != null && staff.pitchTrack.verified()
+                                ? staff.pitchTrack
+                                : StaffPitchTrack.forPrintedSlurs(
+                                        gray, width, height, staff.top, staff.bottom, staff.gap);
+            }
+            rule =
+                    staff.sharedRuleTrack != null
+                            && staff.sharedRuleTrack.verifiedAt(x)
+                            && PrintedRuleInkOwnership.matches(
+                                    gray,
+                                    width,
+                                    height,
+                                    x,
+                                    first,
+                                    last,
+                                    staff.top,
+                                    staff.gap,
+                                    0,
+                                    staff.sharedRuleTrack);
+        }
+        return rule && !finiteBeamOverRule(gray, width, height, x, first, last, staff, 165);
+    }
+
     private static int detectBeamCount(
             byte[] labels,
             byte[] gray,
@@ -18275,7 +18366,10 @@ final class OmrScoreInterpreter {
                             head.minY,
                             head.maxY,
                             head.centerX,
-                            head.centerY);
+                            head.centerY,
+                            (x, first, last) ->
+                                    printedSharedRuleBand(
+                                            gray, width, height, x, first, last, staff));
             if (owned >= 0) return owned;
         }
         return detectBeamCount(labels, gray, width, height, head, staff, heads);
@@ -18953,6 +19047,103 @@ final class OmrScoreInterpreter {
             if (PairedGraceBeamInk.countPrintedSize(
                             gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
                     == 3) return true;
+        }
+        return false;
+    }
+
+    /** A shaded core needs a complete owned single rail before displacing a false counter. */
+    private static boolean filledSinglePrintedRail(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        float gap = staff.gap;
+        if (!PrintedSingleRailCore.proved(
+                gray,
+                width,
+                height,
+                head.minX,
+                head.minY,
+                head.maxX,
+                head.maxY,
+                head.centerX,
+                head.centerY,
+                gap)) return false;
+        int[] own =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        gap,
+                        Math.max(1, Math.round(gap * .16f)),
+                        205,
+                        9);
+        if (own == null
+                || Math.abs(own[1] - head.centerY) < gap * 2.3f
+                || Math.abs(own[1] - head.centerY) > gap * 5.5f
+                || !thinShaftRun(gray, width, height, head, own[0], own[1], own[2], gap, 170))
+            return false;
+        for (Component other : heads) {
+            if (other == head
+                    || Math.abs(other.centerX - head.centerX) < gap * 2
+                    || Math.abs(other.centerX - head.centerX) > gap * 5
+                    || Math.abs(other.centerY - head.centerY) > gap * 2) continue;
+            int beams = detectBeamCount(labels, gray, width, height, other, staff);
+            if (beams == 0
+                    || detectUnbeamedDuration(labels, gray, width, height, other, gap, beams, heads)
+                            >= ScoreNoteEvent.DURATION_HALF) continue;
+            int[] pair =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            205,
+                            9);
+            if (pair == null
+                    || pair[2] != own[2]
+                    || Math.abs(pair[1] - other.centerY) < gap * 2.3f
+                    || Math.abs(pair[1] - other.centerY) > gap * 5.5f
+                    || !thinShaftRun(
+                            gray, width, height, other, pair[0], pair[1], pair[2], gap, 170))
+                continue;
+            int side = Integer.signum(pair[0] - own[0]);
+            int top = Math.max(0, own[1] - Math.round(gap * (own[2] < 0 ? .2f : 2.2f)));
+            int bottom = Math.min(height - 1, own[1] + Math.round(gap * (own[2] < 0 ? 2.2f : .2f)));
+            boolean one = true;
+            for (float distance : new float[] {.35f, .65f, 1f})
+                for (int threshold : new int[] {165, 175, 185, 205}) {
+                    int x = own[0] + side * Math.round(gap * distance);
+                    if (thickNonHeadBandsAtThreshold(
+                                    gray,
+                                    labels,
+                                    width,
+                                    height,
+                                    x,
+                                    top,
+                                    bottom,
+                                    staff,
+                                    threshold,
+                                    own[0] + side * Math.round(gap * .4f))
+                            != 1) one = false;
+                }
+            if (one
+                    && PrintedRuleCrossingBeamPath.connects(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            own,
+                            pair,
+                            gap,
+                            staff.top,
+                            staff.pitchTrack)) return true;
         }
         return false;
     }
@@ -24308,6 +24499,8 @@ final class OmrScoreInterpreter {
         float pitchBottom, pitchGap, pitchSlope;
         boolean printedPhase, printedSlope;
         StaffPitchTrack pitchTrack;
+        StaffPitchTrack sharedRuleTrack;
+        boolean sharedRuleTrackChecked;
         int index, count = 1;
 
         Staff(float top, float bottom, float gap) {

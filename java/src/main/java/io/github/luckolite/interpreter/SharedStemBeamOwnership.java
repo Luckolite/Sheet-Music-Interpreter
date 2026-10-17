@@ -24,6 +24,27 @@ final class SharedStemBeamOwnership {
             int bottom,
             float cx,
             float cy) {
+        return count(gray, labels, w, h, gap, left, right, top, bottom, cx, cy, null);
+    }
+
+    /** The caller may supply independently proved printed-rule ownership. */
+    interface PrintedRuleBand {
+        boolean matches(int x, int first, int last);
+    }
+
+    static int count(
+            byte[] gray,
+            byte[] labels,
+            int w,
+            int h,
+            float gap,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            float cx,
+            float cy,
+            PrintedRuleBand printedRule) {
         if (gray == null
                 || labels == null
                 || w < 1
@@ -118,7 +139,7 @@ final class SharedStemBeamOwnership {
                         b = Math.min(h - 2, Math.max(start, end) + Math.round(gap * .75f));
                 for (int side : new int[] {-1, 1}) {
                     int x0 = stem + side * Math.round(gap * .55f);
-                    for (Band band : bands(gray, labels, w, h, x0, a, b, gap)) {
+                    for (Band band : bands(gray, labels, w, h, x0, a, b, gap, printedRule)) {
                         if ((band.center - cy) * direction < gap * 1.2f) continue;
                         for (float distance : new float[] {1.5f, 1f}) {
                             int x1 = stem + side * Math.round(gap * distance);
@@ -126,9 +147,12 @@ final class SharedStemBeamOwnership {
                             int x3 = stem + side * Math.round(gap * (distance + 1f));
                             int lo = Math.max(1, Math.round(band.center - gap * 1.2f)),
                                     hi = Math.min(h - 2, Math.round(band.center + gap * 1.2f));
-                            List<Band> firstBands = bands(gray, labels, w, h, x1, lo, hi, gap);
-                            List<Band> middleBands = bands(gray, labels, w, h, x2, lo, hi, gap);
-                            List<Band> lastBands = bands(gray, labels, w, h, x3, lo, hi, gap);
+                            List<Band> firstBands =
+                                    bands(gray, labels, w, h, x1, lo, hi, gap, printedRule);
+                            List<Band> middleBands =
+                                    bands(gray, labels, w, h, x2, lo, hi, gap, printedRule);
+                            List<Band> lastBands =
+                                    bands(gray, labels, w, h, x3, lo, hi, gap, printedRule);
                             for (Band firstBand : firstBands)
                                 for (Band lastBand : lastBands) {
                                     float slope = (lastBand.center - firstBand.center) / (x3 - x1);
@@ -193,7 +217,8 @@ final class SharedStemBeamOwnership {
                                         x0,
                                         Math.max(1, Math.round(expected - gap * .28f)),
                                         Math.min(h - 2, Math.round(expected + gap * .28f)),
-                                        gap),
+                                        gap,
+                                        printedRule),
                                 expected);
                 if (a == null
                         || Math.abs(a.center - (expected + (x0 - first.stem) * first.slope)) > 2f)
@@ -209,7 +234,8 @@ final class SharedStemBeamOwnership {
                                         x1,
                                         Math.max(1, Math.round(center1 - gap * .28f)),
                                         Math.min(h - 2, Math.round(center1 + gap * .28f)),
-                                        gap),
+                                        gap,
+                                        printedRule),
                                 center1);
                 if (b == null || Math.abs(b.center - center1) > 1.5f) break;
                 float railRoot = a.center + (first.stem - x0) * first.slope;
@@ -229,8 +255,10 @@ final class SharedStemBeamOwnership {
         return Math.min(3, roots.size());
     }
 
-    /** A neighboring oval is ambiguous only when its own shaft reaches this head's row.
-     * Nearby notes on ordinary sloped beams must not replace their written beam count. */
+    /**
+     * A neighboring oval is ambiguous only when its own shaft reaches this head's row. Nearby notes
+     * on ordinary sloped beams must not replace their written beam count.
+     */
     private static boolean shaftReachesHead(
             byte[] gray, int w, int h, int x, int headY, int row, float gap) {
         int distance = Math.abs(row - headY);
@@ -267,7 +295,15 @@ final class SharedStemBeamOwnership {
     }
 
     private static List<Band> bands(
-            byte[] gray, byte[] labels, int w, int h, int x, int top, int bottom, float gap) {
+            byte[] gray,
+            byte[] labels,
+            int w,
+            int h,
+            int x,
+            int top,
+            int bottom,
+            float gap,
+            PrintedRuleBand printedRule) {
         List<Band> bands = new ArrayList<>();
         if (x < 1 || x >= w - 1) return bands;
         top = Math.max(1, top);
@@ -281,7 +317,9 @@ final class SharedStemBeamOwnership {
             if (dark && start < 0) start = y;
             if (!dark && start >= 0) {
                 int size = y - start;
-                if (size >= Math.max(3, Math.round(gap * .22f)) && size <= gap * .85f)
+                if (size >= Math.max(3, Math.round(gap * .22f))
+                        && size <= gap * .85f
+                        && (printedRule == null || !printedRule.matches(x, start, y - 1)))
                     bands.add(new Band((start + y - 1) * .5f, size));
                 start = -1;
             }
