@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d154d02480190435ebc08920c62aee68acd1fd4ba0d9e5581d566b6045fc23cc",
-      "review_note": "Retain strict independently rooted beam shafts when a blank-tolerant shaft reaches a proved detached slur; admit exact asymmetric outer probes only with complete existing single-white-row slur and terminal-rail proof. Round only independently established GRACE pairs to the integer envelope of the unchanged width limit. Existing ordinary, frame, curve, rail, size, duration and role guards retained. Thirty original procedural cases; no private pixels, models, schema or helper additions.",
-      "source_normalized_sha256": "746e2936a56bc85da286e608d4cba5d63a267f1ada0f673bf676a41861425521",
+      "source_sha256": "1df9a8a095309aa2d303d71500512720e511836f8bc10c436e1f4e4ab01ce9ab",
+      "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
+      "source_normalized_sha256": "4c57bc48a7d401943008043d8be7a1583d820be9baa347e2bc69f6691901470b",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "8b9097afc70df533aa3dd36731d8d9f986fde35932c241d9b16370b06e175974",
+      "standalone_sha256": "d503de1a439cb481058bfc6dbd9f78a2f3ee78dd7111776f2b725af4a22a5000",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -496,13 +496,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "20960d74f279553dec0a78488b3c46a4c3a05cbc70d98cb95e4d5abdf452951d",
-      "review_note": "A moving voice authorizing a raised rest must actually lie below its contour. Original procedural contours preserve held and correctly placed moving voices; raw gray data unchanged.",
-      "source_normalized_sha256": "f3713b8c879e0258ba6ba23d64a95b7a5c0adf4bdb3a689c89ec26619bd208d8",
+      "source_sha256": "858e0d131d0b16926863114da18eedd6d91b5e01dc16f7a103c40f09aeac7c71",
+      "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
+      "source_normalized_sha256": "33dee995ab6f50b86531687a01567b6df54895166ce46dcd0b6e7be2ed8a085f",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "Committed source;10532 Java and584 Python tests passed;paired deployment and whole-library acceptance pending",
+      "reviewed_source_state": "working-tree",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "015f442ceb0d243900e7e24a598a699a43bac31b75386f5bac7574896b77ade9",
+      "standalone_sha256": "63a0242e7641ef5ca238c30b6d07c4ad78c74d742ec4a194dcff7cb9ca7d5518",
       "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
       "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
@@ -814,12 +814,12 @@
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",
-      "source_sha256": "306b65a9f39ead5f5d54ef9329ba73d2fcd342b80c9483e0a2ce3f016990ca73",
+      "source_sha256": "c26767da251ece839873ae44ff4c933f42195a10a61eec76dca9d4e1f30b524d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "edd1d665a4b6295b02750ee86217f092c85ec2c73f98b176bee831ae78058260",
-      "standalone_sha256": "dc943f244a68149b23446086d4f93566847ed61e605a5799ec13df53e1bde4d2",
-      "reviewed_source_state": "Token-identical integration;10394 Java tests,6 original controls,4 native pages/1388notes. Paired cumulative deployment pending.",
-      "review_note": "Additive compressed quarter-rest contour requires substantial horizontal excursion and full zigzag/hook geometry, with blank nonstaff rows proving a whole glyph. An additional contrast level also requires original-bound isolation; clipped meter numerals remain rejected. Original Bravura/procedural fixtures only; no private pixels, models, dependencies or formats changed."
+      "source_normalized_sha256": "7fe455e8dbfa919a5c78f8aaa225d07e8d1fbb7888b3d31311a8b46398f565fe",
+      "standalone_sha256": "15f716723265a9162271712abb23d13abf51228dd841f4c13bd3a60f1a0610c9",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts."
     },
     "ConnectedItalicDynamic.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ConnectedItalicDynamic.java",
@@ -7686,6 +7686,12 @@
   "detached_shaft_and_quantized_grace_review": {
     "summary": "Retain strict independently rooted beam shafts when a blank-tolerant shaft reaches a proved detached slur; admit exact asymmetric outer probes only with complete existing single-white-row slur and terminal-rail proof. Round only independently established GRACE pairs to the integer envelope of the unchanged width limit. Existing ordinary, frame, curve, rail, size, duration and role guards retained. Thirty original procedural cases; no private pixels, models, schema or helper additions.",
     "new_original_java_tests": 30,
+    "layout": "Guide290/native layouts unchanged.",
+    "deployment": "Source changes; cumulative app/Hub/page/audio worker build and deployment pending."
+  },
+  "corroborated_tie_and_paired_rest_review": {
+    "summary": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
+    "new_original_java_tests": 27,
     "layout": "Guide290/native layouts unchanged.",
     "deployment": "Source changes; cumulative app/Hub/page/audio worker build and deployment pending."
   }

@@ -23046,6 +23046,16 @@ final class OmrScoreInterpreter {
                                 staffs,
                                 result.get(previousIndex),
                                 current);
+            if (!tied && previousIndex >= 0 && !staffs.isEmpty())
+                tied =
+                        hasRuleCrossingTieArc(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                staffs,
+                                result.get(previousIndex),
+                                current);
             // Semantic staff fragments can compress one system's scale. A
             // separately proved local five-rule track may restore only a
             // two-ended system-break tie; ordinary candidates keep their frame.
@@ -23139,6 +23149,78 @@ final class OmrScoreInterpreter {
                             current.staffGap));
         }
         return result;
+    }
+
+    /** Reuses the complete curve proof after independently corroborated rule contrast removal. */
+    private static boolean hasRuleCrossingTieArc(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Staff> staffs,
+            DetectedNote before,
+            DetectedNote after) {
+        if (gray == null
+                || gray.length != labels.length
+                || systemBreakTieCandidate(before, after, width)
+                || before.event.staffIndex() != after.event.staffIndex()
+                || before.event.staffCount() != after.event.staffCount()) return false;
+        Staff first = staffForHead(labels, gray, width, height, staffs, before.head);
+        if (first == null || first != staffForHead(labels, gray, width, height, staffs, after.head))
+            return false;
+        float gap = (before.staffGap + after.staffGap) * .5f;
+        int left = before.head.maxX + 1, right = after.head.minX - 1;
+        if (gap < 8 || right - left < gap * 1.3f || right - left > gap * 6) return false;
+        float cy = (before.head.centerY + after.head.centerY) * .5f;
+        int x0 = Math.max(0, (int) Math.floor(before.head.centerX - gap * 2));
+        int x1 = Math.min(width - 1, (int) Math.ceil(after.head.centerX + gap * 2));
+        int y0 = Math.max(0, (int) Math.floor(Math.min(first.top - gap, cy - gap * 3.2f)));
+        int y1 =
+                Math.min(
+                        height - 1, (int) Math.ceil(Math.max(first.bottom + gap, cy + gap * 3.2f)));
+        int w = x1 - x0 + 1, h = y1 - y0 + 1;
+        if (w > gap * 11 || h > gap * 12) return false;
+        byte[] raw = new byte[w * h], mask = new byte[w * h];
+        for (int y = 0; y < h; y++) {
+            System.arraycopy(gray, (y + y0) * width + x0, raw, y * w, w);
+            System.arraycopy(labels, (y + y0) * width + x0, mask, y * w, w);
+        }
+        StaffPitchTrack track =
+                StaffPitchTrack.forPrintedSlurs(
+                        raw, w, h, first.top - y0, first.bottom - y0, first.gap);
+        if (track == null
+                || !track.verifiedAt(before.head.centerX - x0)
+                || !track.verifiedAt(after.head.centerX - x0)
+                || !LocalTieStaffAlignment.same(
+                        track,
+                        before.head.centerX - x0,
+                        before.head.centerY - y0,
+                        after.head.centerX - x0,
+                        after.head.centerY - y0,
+                        after.event.staffStep())) return false;
+        PrintedCurveRuleInk rule = new PrintedCurveRuleInk(mask, raw, w, h, 205, track);
+        byte[] view = null;
+        for (int x = left - x0; x <= right - x0; x++)
+            for (int y = 0; y < h; y++) {
+                int value = rule.sample(x, y), at = y * w + x;
+                if (value != (raw[at] & 255)) {
+                    if (view == null) view = raw.clone();
+                    view[at] = (byte) value;
+                }
+            }
+        return view != null
+                && rule.corroboratedCrossing()
+                && hasPrintedTieArc(
+                        mask,
+                        view,
+                        w,
+                        h,
+                        left - x0,
+                        right - x0,
+                        cy - y0,
+                        gap,
+                        true,
+                        new TieFrame(track));
     }
 
     /** Tie-only scale reference; never changes emitted pitch, rhythm or geometry. */

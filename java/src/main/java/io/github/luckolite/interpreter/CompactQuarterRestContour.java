@@ -245,6 +245,126 @@ final class CompactQuarterRestContour {
         return false;
     }
 
+    /** Both outlines must independently retain every turn of a narrow complete rest. */
+    static boolean pairedSilhouette(double[] left, double[] right, boolean[] observed, float gap) {
+        if (left == null
+                || right == null
+                || observed == null
+                || left.length != right.length
+                || left.length != observed.length
+                || !Float.isFinite(gap)
+                || gap < 4
+                || left.length < gap * 2.6f
+                || left.length > gap * 3.6f) return false;
+        int n = left.length, evidence = 0;
+        double min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
+        for (int i = 0; i < n; i++) {
+            if (!Double.isFinite(left[i]) || !Double.isFinite(right[i]) || right[i] < left[i])
+                return false;
+            min = Math.min(min, left[i]);
+            max = Math.max(max, right[i]);
+            if (observed[i]) evidence++;
+        }
+        if (evidence < n * .6f
+                || max - min + 1 < gap * .65f
+                || max - min + 1 > gap * 1.15f
+                || !observedPair(observed, 0)
+                || !observedPair(observed, n - 2)) return false;
+        double startRight = pair(right, 0),
+                footLeft = pair(left, n - 2),
+                footRight = pair(right, n - 2);
+        if (pair(right, 0) - pair(left, 0) + 1 > gap * .3f || footRight - footLeft + 1 > gap * .3f)
+            return false;
+        int separation = Math.max(2, Math.round(gap * .2f));
+        for (int first = (int) (n * .15); first <= n * .32; first++) {
+            if (!observedPair(observed, first)
+                    || pair(right, first) - startRight < gap * .35f
+                    || pair(right, first) - pair(left, first) + 1 < gap * .35f) continue;
+            for (int valley = Math.max(first + separation, (int) (n * .32));
+                    valley <= n * .52;
+                    valley++) {
+                if (!observedPair(observed, valley)
+                        || pair(right, first) - pair(right, valley) < gap * .2f
+                        || pair(left, first) - pair(left, valley) < gap * .16f) continue;
+                for (int shoulder = Math.max(valley + separation, (int) (n * .5));
+                        shoulder <= n * .65;
+                        shoulder++) {
+                    if (!observedPair(observed, shoulder)
+                            || pair(left, shoulder) - pair(left, valley) < gap * .2f) continue;
+                    for (int hook = Math.max(shoulder + separation, (int) (n * .65));
+                            hook <= n * .88 && n - 2 - hook >= gap * .35f;
+                            hook++) {
+                        if (!observedPair(observed, hook)
+                                || pair(left, shoulder) - pair(left, hook) < gap * .3f
+                                || footLeft - pair(left, hook) < gap * .2f
+                                || pair(right, shoulder) - footRight < gap * .15f
+                                || pair(right, hook) - pair(left, hook) + 1 < gap * .45f) continue;
+                        boolean returning = true;
+                        for (int i = hook + 2; i < n; i++)
+                            if (left[i] + 1 < left[i - 1]) {
+                                returning = false;
+                                break;
+                            }
+                        if (returning) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /** The observed contour must be one connected raw ink body, including its forked hook. */
+    static boolean connectedInk(byte[] gray, int width, int left, int right, int top, int bottom) {
+        if (gray == null
+                || width < 1
+                || gray.length % width != 0
+                || left < 0
+                || right >= width
+                || right < left
+                || top < 0
+                || bottom >= gray.length / width
+                || bottom < top) return false;
+        int w = right - left + 1, h = bottom - top + 1, first = -1, ink = 0;
+        boolean[] seen = new boolean[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) < 170) {
+                    ink++;
+                    if (first < 0) first = y * w + x;
+                }
+        if (first < 0) return false;
+        java.util.ArrayDeque<Integer> pending = new java.util.ArrayDeque<>();
+        pending.add(first);
+        seen[first] = true;
+        int reached = 0;
+        while (!pending.isEmpty()) {
+            int at = pending.removeFirst(), x = at % w, y = at / w;
+            reached++;
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx >= 0
+                            && xx < w
+                            && yy >= 0
+                            && yy < h
+                            && !seen[yy * w + xx]
+                            && (gray[(top + yy) * width + left + xx] & 255) < 170) {
+                        seen[yy * w + xx] = true;
+                        pending.add(yy * w + xx);
+                    }
+                }
+        }
+        return reached == ink;
+    }
+
+    private static boolean observedPair(boolean[] observed, int i) {
+        return i >= 0 && i + 1 < observed.length && observed[i] && observed[i + 1];
+    }
+
+    private static double pair(double[] edge, int i) {
+        return (edge[i] + edge[i + 1]) * .5;
+    }
+
     private static double average(double[] values, int first, int last) {
         double sum = 0;
         for (int i = first; i < last; i++) sum += values[i];

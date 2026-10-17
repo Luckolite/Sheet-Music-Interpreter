@@ -2100,14 +2100,25 @@ final class SixteenthRestDetector {
                 !thirtySecond
                         && !bulbOnly
                         && (!deepLowered || quarterOnly)
-                        && quarterRest(gray, width, staff, top, line, left, right, minY, maxY);
+                        && quarterRest(
+                                gray,
+                                width,
+                                staff,
+                                top,
+                                line,
+                                left,
+                                right,
+                                minY,
+                                maxY,
+                                faintShapes);
         if (quarterOnly && !quarter) return;
         if (!bulbOnly && !quarter && !half && !whole && !thirtySecond && ordinary) {
             int tail = quarterTailWithoutSpeck(ink, top, minY, maxY, gap);
             if (tail == maxY)
                 tail = quarterTailWithoutRuleEdge(ink, line, top, minY, maxY, gap, staff.bottom());
             if (tail < maxY
-                    && quarterRest(gray, width, staff, top, line, left, right, minY, tail)) {
+                    && quarterRest(
+                            gray, width, staff, top, line, left, right, minY, tail, faintShapes)) {
                 quarter = true;
                 maxY = tail;
             }
@@ -3330,7 +3341,23 @@ final class SixteenthRestDetector {
             int right,
             int minY,
             int maxY) {
-        if (quarterRestMasked(gray, width, staff, top, line, left, right, minY, maxY)) return true;
+        return quarterRest(gray, width, staff, top, line, left, right, minY, maxY, false);
+    }
+
+    private static boolean quarterRest(
+            byte[] gray,
+            int width,
+            Staff staff,
+            int top,
+            boolean[] line,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            boolean pairedContours) {
+        if (quarterRestMasked(
+                gray, width, staff, top, line, left, right, minY, maxY, pairedContours))
+            return true;
         float gap = staff.gap();
         int height = gray.length / width, margin = Math.max(4, Math.round(gap * 2));
         if (left - margin < 0 || right + margin >= width) return false;
@@ -3353,7 +3380,9 @@ final class SixteenthRestDetector {
             }
             if (!found) return false;
         }
-        if (quarterRestMasked(gray, width, staff, top, local, left, right, minY, maxY)) return true;
+        if (quarterRestMasked(
+                gray, width, staff, top, local, left, right, minY, maxY, pairedContours))
+            return true;
         // Ownership uses the outer bounds: a trimmed core cannot authorize an oversized glyph.
         if (maxY - minY + 1 > gap * 3.6f) return false;
         int cw = right - left + 1 + 2 * margin, ch = line.length;
@@ -3398,7 +3427,8 @@ final class SixteenthRestDetector {
                             margin,
                             cw - margin - 1,
                             lo,
-                            hi)) accepted++;
+                            hi,
+                            pairedContours)) accepted++;
         }
         return accepted >= 2;
     }
@@ -3413,6 +3443,20 @@ final class SixteenthRestDetector {
             int right,
             int minY,
             int maxY) {
+        return quarterRestMasked(gray, width, staff, top, line, left, right, minY, maxY, false);
+    }
+
+    private static boolean quarterRestMasked(
+            byte[] gray,
+            int width,
+            Staff staff,
+            int top,
+            boolean[] line,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            boolean pairedContours) {
         float gap = staff.gap();
         int h = maxY - minY + 1;
         if (h < gap * 2.1f
@@ -3426,6 +3470,7 @@ final class SixteenthRestDetector {
         double[] leftEdges = new double[h], rightEdges = new double[h];
         java.util.Arrays.fill(leftEdges, Double.NaN);
         java.util.Arrays.fill(rightEdges, Double.NaN);
+        boolean[] observedRows = new boolean[h];
         int widest = 0;
         for (int y = minY; y <= maxY; y++)
             if (!line[y - top]) {
@@ -3438,7 +3483,10 @@ final class SixteenthRestDetector {
                         n++;
                         sum += x - left;
                     }
-                if (n > 0) centers[y - minY] = sum / n;
+                if (n > 0) {
+                    centers[y - minY] = sum / n;
+                    observedRows[y - minY] = rightEdges[y - minY] - leftEdges[y - minY] + 1 == n;
+                }
                 widest = Math.max(widest, n);
             }
         if (widest < gap * .65f) return false;
@@ -3497,6 +3545,17 @@ final class SixteenthRestDetector {
                                 || CompactQuarterRestContour.leftSilhouette(
                                         leftEdges, rightEdges, gap))
                         && CompactQuarterRestContour.hasContrastedInk(
+                                gray, width, left, right, minY, maxY, line, top, gap)
+                || pairedContours
+                        && CompactQuarterRestContour.pairedSilhouette(
+                                leftEdges, rightEdges, observedRows, gap)
+                        && CompactQuarterRestContour.connectedInk(
+                                gray, width, left, right, minY, maxY)
+                        && isolatedQuarterContour(
+                                gray, width, left, right, minY, maxY, line, top, gap)
+                        && CompactQuarterRestContour.hasContrastedInk(
+                                gray, width, left, right, minY, maxY, line, top, gap)
+                        && !CompactQuarterRestContour.parallelSpines(
                                 gray, width, left, right, minY, maxY, line, top, gap);
     }
 
