@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "1df9a8a095309aa2d303d71500512720e511836f8bc10c436e1f4e4ab01ce9ab",
-      "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
-      "source_normalized_sha256": "4c57bc48a7d401943008043d8be7a1583d820be9baa347e2bc69f6691901470b",
+      "source_sha256": "3dd1d317384277a4b4a4dbb16cf88d57692559f3071f37fa60cc450ae53b3830",
+      "review_note": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts.",
+      "source_normalized_sha256": "81dbf9dcc1ab13328c7e842c5103f2f055c80c64f85cf591a11696749a5a7e6c",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "d503de1a439cb481058bfc6dbd9f78a2f3ee78dd7111776f2b725af4a22a5000",
+      "standalone_sha256": "0e1bc6d09241ab77d072526d22544dc514790d243c4a5f1631717cf12a5ea988",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -562,13 +562,13 @@
     },
     "PrintedMeasureRhythmGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMeasureRhythmGuard.java",
-      "source_sha256": "b5f985a3919df038be7d791ba4ac2c9bc4e803a5946f0fad94314858c60047c0",
+      "source_sha256": "e1e19d5ec75b7fac594c292acd5f63781543053692f6d7716cde96d8209316e4",
       "reviewed_app_commit": "77c8e3ca3217affaaddcc4a0762cb18298e658f8",
-      "source_normalized_sha256": "9c979d6861e929066973887d206373c8eb95c6ef50e8b4846df192d25ba2cb30",
-      "reviewed_source_state": "Committed paired source; cumulative app/Hub deployment and whole-library acceptance pending.",
-      "review_note": "A fading endpoint raster row requires an adjacent independently proved bilateral rule and monotonic local contrast. Fully proved printed rows reject unsupported count inflation only when every original bar was subdivided. Isolated inferred cuts, genuine extra separators and unproved original separators retain fitted recovery. Original procedural controls only.",
+      "source_normalized_sha256": "32bbe95fafa386d0603cdbd98b50b4b3f7121efe766a61f3894cca27e63eb090",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts.",
       "scoped_reviewed_app_commit": "77c8e3ca3217affaaddcc4a0762cb18298e658f8",
-      "standalone_sha256": "99d80e71ee58ac2494a3551714cb056ea90ddaa245732fe91a7af8e686c95cdd"
+      "standalone_sha256": "f32baa74d109dd7f506542aac796000841569dcc770276ff1cffe567beef3e72"
     },
     "PrintedPageEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPageEvidence.java",
@@ -3427,6 +3427,16 @@
       "standalone_sha256": "29acd59ebf81a5f0a3ac3ed75c80e88d771c943f0616e99dcf9c5894f9a8c767",
       "reviewed_source_state": "working-tree",
       "review_note": "Extend original licensed octave-word numeral/suffix raster scales; keep all existing template records and matcher thresholds. Separate complete curved slur caps crossing independently corroborated staff rules using an immutable sample view with three agreeing raw profiles. Original held-out rendering, semantic-secondary, curve and cache controls; no private pixels, models or song-specific rules."
+    },
+    "FilledSparseBeamHead.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FilledSparseBeamHead.java",
+      "license": "Apache-2.0",
+      "origin": "Original project helper, first port in this reviewed working tree.",
+      "source_sha256": "d838482b8e8e6a0f513b9e87b307c0f4d696ec4e82b01b4d490383e640d874ff",
+      "source_normalized_sha256": "85350cd628f66f844e5a417270523dae77ae4a397e7105361a6b530a344bfb88",
+      "standalone_sha256": "30be666ea97cc58f3e4acc519de2476581537a4f67f3ed70aafef0629bdd1ada",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts."
     }
   },
   "interpreter_speedup_review": {
@@ -7694,5 +7704,12 @@
     "new_original_java_tests": 27,
     "layout": "Guide290/native layouts unchanged.",
     "deployment": "Source changes; cumulative app/Hub/page/audio worker build and deployment pending."
+  },
+  "partial_written_capacity_and_retained_beam_review": {
+    "summary": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts.",
+    "new_original_java_tests": 31,
+    "new_helper": "FilledSparseBeamHead.java, original Apache-2.0, explicitly included in native decoder source manifest.",
+    "layout": "Guide290/native layouts unchanged.",
+    "deployment": "Cumulative app/Hub/page/audio worker build and deployment pending."
   }
 }

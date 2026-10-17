@@ -497,13 +497,29 @@ final class OmrScoreInterpreter {
                                 recovered.bottom(),
                                 recovered.x(),
                                 recovered.y());
-                if (heads.stream()
-                        .anyMatch(
-                                existing ->
-                                        Math.abs(existing.centerX - candidate.centerX)
-                                                        < owner.gap * .8f
-                                                && Math.abs(existing.centerY - candidate.centerY)
-                                                        < owner.gap * .65f)) continue;
+                Component retained =
+                        heads.stream()
+                                .filter(
+                                        existing ->
+                                                Math.abs(existing.centerX - candidate.centerX)
+                                                                < owner.gap * .8f
+                                                        && Math.abs(
+                                                                        existing.centerY
+                                                                                - candidate.centerY)
+                                                                < owner.gap * .65f)
+                                .findFirst()
+                                .orElse(null);
+                // A complete sparse oval can revalidate a retained head's beam role.
+                // Keep that head's identity and all ordinary duplicate rejection.
+                if (retained != null
+                        && (!sparseCandidate
+                                || !FilledSparseBeamHead.matches(
+                                        gray,
+                                        width,
+                                        height,
+                                        recovered.x(),
+                                        recovered.y(),
+                                        owner.gap))) continue;
                 int[] own =
                         attachedRawStem(
                                 gray,
@@ -516,6 +532,10 @@ final class OmrScoreInterpreter {
                 if (own == null) continue;
                 boolean proved = false;
                 for (Component main : heads) {
+                    if (retained != null
+                            && !FilledSparseBeamHead.matches(
+                                    gray, width, height, main.centerX, main.centerY, owner.gap))
+                        continue;
                     if (nearestHeadStaff(staffs, main.centerY) != owner
                             || !sparseCandidate
                                     && hasOpenCenter(labels, gray, width, height, main, owner.gap)
@@ -529,8 +549,10 @@ final class OmrScoreInterpreter {
                                     owner.gap,
                                     Math.max(1, Math.round(owner.gap * .16f)),
                                     205);
-                    if (PrintedSingleBeamPath.connects(
-                            gray, width, height, own, other, owner.gap)) {
+                    if (PrintedSingleBeamPath.connects(gray, width, height, own, other, owner.gap)
+                            && (retained == null
+                                    || FilledSparseBeamHead.rootedEnds(
+                                            labels, gray, width, height, own, other, owner.gap))) {
                         proved = true;
                         if (sparseCandidate) {
                             recoveredSingleBeamHeads.add(main);
@@ -540,10 +562,13 @@ final class OmrScoreInterpreter {
                     }
                 }
                 if (proved) {
-                    recoveredSingleBeamHeads.add(candidate);
-                    heads.add(candidate);
-                    recoveredFilledFragmentHeads.add(candidate);
-                    recoveredFadedHeads.add(candidate);
+                    Component accepted = retained == null ? candidate : retained;
+                    recoveredSingleBeamHeads.add(accepted);
+                    recoveredFilledFragmentHeads.add(accepted);
+                    if (retained == null) {
+                        heads.add(candidate);
+                        recoveredFadedHeads.add(candidate);
+                    }
                 }
             }
         }

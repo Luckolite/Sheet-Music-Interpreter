@@ -27,11 +27,195 @@ final class PrintedMeasureRhythmGuard {
         final var guarded = fitted;
         boolean split = raw.stream().anyMatch(region -> fragments(region, guarded).size() == 2);
         if (!split && mergedOpening(raw, fitted).isEmpty()) return fitted;
-        var notes = OmrScoreInterpreter.analyze(labels, gray, width, height, raw).notes();
+        var analysis = OmrScoreInterpreter.analyze(labels, gray, width, height, raw);
+        var notes = analysis.notes();
+        fitted =
+                preservePartialWrittenBars(
+                        raw, fitted, notes, analysis.rests(), gray, width, height);
         var preserved = preserveWrittenOpening(raw, fitted, notes);
         if (!split) return preserved;
         var aligned = alignPrintedSeparators(raw, preserved, notes, gray, width, height);
         return preserveCompleteRuns(raw, aligned, notes, gray, width, height);
+    }
+
+    /** A partial split must not divide one independently complete written bar. */
+    static List<MeasureRegion> preservePartialWrittenBars(
+            List<MeasureRegion> raw,
+            List<MeasureRegion> fitted,
+            List<ScoreNoteEvent> notes,
+            List<ScoreRestEvent> rests,
+            byte[] gray,
+            int width,
+            int height) {
+        if (gray == null || gray.length != (long) width * height) return fitted;
+        var result = new ArrayList<>(fitted);
+        List<ScoreNoteEvent> clockNotes = null;
+        List<ScoreRestEvent> clockRests = null;
+        for (var anchor : raw) {
+            var original =
+                    raw.stream()
+                            .filter(r -> sameRow(anchor, r))
+                            .sorted(Comparator.comparingDouble(MeasureRegion::left))
+                            .toList();
+            if (original.size() < 3 || original.get(0) != anchor) continue;
+            var proposed =
+                    fitted.stream()
+                            .filter(r -> sameRow(anchor, r))
+                            .sorted(Comparator.comparingDouble(MeasureRegion::left))
+                            .toList();
+            if (proposed.size() <= original.size()
+                    || original.stream().allMatch(r -> fragments(r, proposed).size() >= 2)
+                    || Math.abs(proposed.get(0).left() - anchor.left()) > .006f
+                    || Math.abs(
+                                    proposed.get(proposed.size() - 1).right()
+                                            - original.get(original.size() - 1).right())
+                            > .006f) continue;
+            var row =
+                    new MeasureRegion(
+                            anchor.left(),
+                            original.get(original.size() - 1).right(),
+                            anchor.top(),
+                            anchor.bottom());
+            boolean proved = true;
+            for (int i = 1; i < original.size(); i++) {
+                var a = original.get(i - 1);
+                var b = original.get(i);
+                float cut = (a.right() + b.left()) * .5f;
+                if (b.left() <= a.right()
+                        || b.left() - a.right() > .015f
+                        || !printedBarline(row, cut, gray, width, height, true)) {
+                    proved = false;
+                    break;
+                }
+                boolean retained = false;
+                for (int j = 1; j < proposed.size(); j++)
+                    if (Math.abs((proposed.get(j - 1).right() + proposed.get(j).left()) * .5f - cut)
+                            < .006f) retained = true;
+                if (!retained) {
+                    proved = false;
+                    break;
+                }
+            }
+            if (!proved) continue;
+            // Acquire actual ratios before trusting a literal capacity. This validation
+            // snapshot never replaces the caller's note/rest streams.
+            if (clockNotes == null) {
+                var rhythm =
+                        TripletRhythmDetector.withRests(notes, rests, raw, gray, width, height);
+                clockNotes = rhythm.notes();
+                clockRests = rhythm.rests();
+            }
+            double capacity = Double.NaN;
+            int witnesses = 0;
+            for (var bar : original) {
+                var pieces = fragments(bar, proposed);
+                if (pieces.size() != 1 || !pieces.get(0).equals(bar)) continue;
+                int measure = raw.indexOf(bar);
+                double written =
+                        sameLiteralRests(rests, clockRests, measure)
+                                ? literalWrittenCapacity(clockNotes, clockRests, measure)
+                                : Double.NaN;
+                if (!Double.isFinite(written)
+                        || (Double.isFinite(capacity) && !same(capacity, written))) {
+                    proved = false;
+                    break;
+                }
+                capacity = written;
+                witnesses++;
+            }
+            if (!proved || witnesses < 2) continue;
+            for (var bar : original) {
+                var pieces = fragments(bar, proposed);
+                if (pieces.size() != 2
+                        || Math.abs(pieces.get(0).left() - bar.left()) > .006f
+                        || Math.abs(pieces.get(1).right() - bar.right()) > .006f
+                        || pieces.get(1).left() <= pieces.get(0).right()
+                        || pieces.get(1).left() - pieces.get(0).right() > .015f) continue;
+                float cut = (pieces.get(0).right() + pieces.get(1).left()) * .5f;
+                if (printedBarline(bar, cut, gray, width, height, true)
+                        || printedBarline(bar, cut, gray, width, height)
+                        || !sameLiteralRests(rests, clockRests, raw.indexOf(bar))
+                        || !same(
+                                capacity,
+                                literalWrittenCapacity(clockNotes, clockRests, raw.indexOf(bar))))
+                    continue;
+                int at = result.indexOf(pieces.get(0));
+                result.removeAll(pieces);
+                result.add(at, bar);
+            }
+        }
+        return List.copyOf(result);
+    }
+
+    private static boolean sameLiteralRests(
+            List<ScoreRestEvent> source, List<ScoreRestEvent> clock, int measure) {
+        return source.stream()
+                .filter(r -> r.measureIndex() == measure)
+                .toList()
+                .equals(clock.stream().filter(r -> r.measureIndex() == measure).toList());
+    }
+
+    /** Literal evidence only: no meter fill, multi-rest placeholders or mixed clocks. */
+    private static double literalWrittenCapacity(
+            List<ScoreNoteEvent> notes, List<ScoreRestEvent> rests, int measure) {
+        var all = notes.stream().filter(n -> n.measureIndex() == measure).toList();
+        var metrical =
+                all.stream()
+                        .filter(n -> (n.articulations() & NoteOrnament.GRACE) == 0)
+                        .sorted(Comparator.comparingDouble(ScoreNoteEvent::positionInMeasure))
+                        .toList();
+        if (metrical.isEmpty()) return Double.NaN;
+        int direction = metrical.get(0).stemDirection();
+        if (direction == 0) return Double.NaN;
+        for (var n : all) {
+            if (n.staffCount() != 1
+                    || n.staffIndex() != 0
+                    || n.crossStaffBeam()
+                    || n.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || n.tupletDivisor() != 1
+                    || n.tupletNormalNotes() != 1
+                    || !Float.isFinite(n.positionInMeasure())) return Double.NaN;
+            if ((n.articulations() & NoteOrnament.GRACE) != 0) {
+                if (n.leadingRestBeats() != 0 || n.followingRestBeats() != 0) return Double.NaN;
+            } else if (n.stemDirection() != direction
+                    || n.beamCount() < 0
+                    || (n.beamCount() == 0 && !(n.unbeamedDurationBeats() > 0))) return Double.NaN;
+        }
+        var spans = spans(metrical, measure);
+        if (spans.size() != 1 || !Double.isFinite(spans.get(0).beats)) return Double.NaN;
+        double pitched = 0;
+        for (int start = 0; start < metrical.size(); ) {
+            double duration = ScoreNoteTiming.writtenDurationBeats(metrical.get(start));
+            if (!Double.isFinite(duration) || duration <= 0) return Double.NaN;
+            int end = start + 1;
+            while (end < metrical.size()
+                    && metrical.get(end).positionInMeasure()
+                                    - metrical.get(start).positionInMeasure()
+                            <= .018f) {
+                if (!same(duration, ScoreNoteTiming.writtenDurationBeats(metrical.get(end))))
+                    return Double.NaN;
+                end++;
+            }
+            pitched += duration;
+            start = end;
+        }
+        double literal = 0;
+        int restGroups = 0;
+        for (var rest : rests)
+            if (rest.measureIndex() == measure) {
+                if (rest.isFullMeasure()
+                        || rest.staffCount() != 1
+                        || rest.staffIndex() != 0
+                        || !Double.isFinite(rest.durationBeats())
+                        || rest.durationBeats() <= 0
+                        || !Float.isFinite(rest.positionInMeasure())) return Double.NaN;
+                literal += rest.durationBeats();
+                restGroups++;
+            }
+        var span = spans.get(0);
+        return span.groups + restGroups >= 2 && same(span.beats, pitched + literal)
+                ? span.beats
+                : Double.NaN;
     }
 
     /** Count fitting cannot replace a fully proved printed row with unsupported interior cuts. */
