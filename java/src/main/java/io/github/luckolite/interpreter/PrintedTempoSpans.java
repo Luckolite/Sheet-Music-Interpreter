@@ -66,6 +66,7 @@ final class PrintedTempoSpans {
                             s.bottom(),
                             Float.isFinite(s.lastColumn()) ? Math.max(s.lastColumn(), x) : x));
         }
+        var ownershipSystems = printedOwnershipSystems(systems, staffs, gray, width, height);
         var events = new ArrayList<ScoreExpressiveEvent>();
         for (var event : score.expressiveEvents()) {
             if ((!gradual(event.kind()) && !bareFaster(event)) || event.end().isPresent()) {
@@ -96,7 +97,22 @@ final class PrintedTempoSpans {
                                 new PrintedDashSpan.WordBox(
                                         word.left(), word.right(), word.top(), word.bottom()),
                                 gx,
-                                gy);
+                                gy,
+                                ownershipSystems == systems ? List.of() : ownershipSystems,
+                                row[measure.getAsInt()]);
+                if (span.isPresent()
+                        && ownershipSystems != systems
+                        && competingClaim(
+                                event,
+                                span.get(),
+                                score,
+                                words,
+                                runs,
+                                systems,
+                                ownershipSystems,
+                                row,
+                                gx,
+                                gy)) continue;
                 if (span.isEmpty()
                         || start.measureIndex() >= row.length
                         || row[start.measureIndex()] != span.get().firstSystem()) continue;
@@ -245,5 +261,105 @@ final class PrintedTempoSpans {
 
     private static boolean gradual(Kind kind) {
         return kind == Kind.ACCELERANDO || kind == Kind.RITARDANDO || kind == Kind.RALLENTANDO;
+    }
+
+    private static boolean competingClaim(
+            ScoreExpressiveEvent source,
+            PrintedDashSpan.Span span,
+            ScorePageInterpretation score,
+            List<PlayingTechniqueDetector.Word> words,
+            List<PrintedDashChains.Run> runs,
+            List<PrintedDashSpan.SystemBand> systems,
+            List<PrintedDashSpan.SystemBand> printed,
+            int[] row,
+            float gx,
+            float gy) {
+        for (var event : score.expressiveEvents()) {
+            if (event == source || (!gradual(event.kind()) && !bareFaster(event))) continue;
+            var measure = ScoreExpressionDetector.measureOf(event);
+            if (measure.isEmpty() || measure.getAsInt() >= row.length) continue;
+            for (var word : words) {
+                if (event.evidence().stream()
+                        .noneMatch(
+                                e ->
+                                        e.sourceId().equals("printed-expression-word")
+                                                && e.printedText().equals(word.text()))) continue;
+                var competing =
+                        PrintedDashSpan.follow(
+                                runs,
+                                systems,
+                                new PrintedDashSpan.WordBox(
+                                        word.left(), word.right(), word.top(), word.bottom()),
+                                gx,
+                                gy,
+                                printed,
+                                row[measure.getAsInt()]);
+                if (competing.isPresent()
+                        && competing.get().runs().stream().anyMatch(span.runs()::contains))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    // Measure rectangles include engraving gutters. Only complete independently
+    // proved staff rails may narrow ownership; numeric endpoints keep logical bands.
+    private static List<PrintedDashSpan.SystemBand> printedOwnershipSystems(
+            List<PrintedDashSpan.SystemBand> systems,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            byte[] gray,
+            int width,
+            int height) {
+        var proved = new ArrayList<PrintedDashSpan.SystemBand>();
+        for (var system : systems) {
+            PlayingTechniqueDetector.Staff owner = null;
+            for (var staff : staffs) {
+                float center = (staff.top() + staff.bottom()) * .5f / height;
+                if (center < system.top() || center > system.bottom()) continue;
+                if (owner != null || staff.index() != 0 || staff.count() != 1) return systems;
+                owner = staff;
+            }
+            if (owner == null) return systems;
+            float gap = owner.gap();
+            float[] firstWitness = null;
+            float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+            float bottoms = 0, gaps = 0;
+            int witnesses = 0;
+            for (float part : new float[] {.125f, .25f, .375f, .5f, .625f, .75f, .875f}) {
+                float x = (system.left() + (system.right() - system.left()) * part) * width;
+                var found =
+                        PrintedDirectionStaff.printedRules(
+                                gray, width, height, x, owner.bottom(), gap);
+                if (found == null) continue;
+                if (firstWitness != null
+                        && (Math.abs(
+                                                (firstWitness[0] - 4 * firstWitness[1])
+                                                        - (found[0] - 4 * found[1]))
+                                        > gap * .2f
+                                || Math.abs(firstWitness[1] - found[1]) > gap * .08f))
+                    return systems;
+                if (firstWitness == null) firstWitness = found;
+                witnesses++;
+                bottoms += found[0];
+                gaps += found[1];
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+            }
+            if (witnesses < 2 || maxX - minX < gap * 6) return systems;
+            float bottom = bottoms / witnesses, spacing = gaps / witnesses;
+            float top = bottom - 4 * spacing;
+            if (Math.abs(top - owner.top()) > gap * .35f
+                    || Math.abs(spacing - gap) > gap * .12f
+                    || top / height < system.top() - gap / height * .3f
+                    || bottom / height > system.bottom() + gap / height * .3f) return systems;
+            proved.add(
+                    new PrintedDashSpan.SystemBand(
+                            system.left(),
+                            system.right(),
+                            top / height,
+                            bottom / height,
+                            system.lastColumn()));
+        }
+        return List.copyOf(proved);
     }
 }

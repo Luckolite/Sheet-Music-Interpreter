@@ -430,6 +430,7 @@ final class BeamedHeadQuarterRests {
                 byte[] component = new byte[cw * ch];
                 Arrays.fill(component, (byte) 240);
                 for (int p : pixels) component[p] = gray[(p / cw + t) * w + p % cw + l];
+                if (!lower && ownedAccent(component, cw, il, it, ir, ib)) continue;
                 if (lower
                         ? occluded(
                                 component,
@@ -447,6 +448,63 @@ final class BeamedHeadQuarterRests {
                     accepted.add(new int[] {il + l, ir + l, it + t, ib + t});
             }
         return accepted;
+    }
+
+    /** A complete accent owns its two arms; a one-pixel antialias fringe cannot supply a rest. */
+    static boolean ownedAccent(byte[] ink, int stride, int left, int top, int right, int bottom) {
+        if (ink == null
+                || stride < 1
+                || ink.length % stride != 0
+                || left < 0
+                || top < 0
+                || right < left
+                || bottom < top
+                || right >= stride
+                || bottom >= ink.length / stride) return false;
+        int width = right - left + 1, height = bottom - top + 1;
+        long area = (long) width * height;
+        if (area > Integer.MAX_VALUE) return false;
+        int[] pixels = new int[(int) area];
+        int count = 0, l = right, r = left, t = bottom, b = top;
+        for (int y = top; y <= bottom; y++)
+            for (int x = left; x <= right; x++)
+                if ((ink[y * stride + x] & 255) < 140) {
+                    pixels[count++] = y * stride + x;
+                    l = Math.min(l, x);
+                    r = Math.max(r, x);
+                    t = Math.min(t, y);
+                    b = Math.max(b, y);
+                }
+        if (count == 0 || !OpenChevron.matches(pixels, stride, l, t, r, b, count)) return false;
+        // Every darker arm must belong to one connected owner, not unrelated slashes.
+        boolean[] seen = new boolean[(int) area];
+        int[] queue = new int[count];
+        int take = 0, size = 1;
+        queue[0] = pixels[0];
+        seen[(pixels[0] / stride - top) * width + pixels[0] % stride - left] = true;
+        while (take < size) {
+            int p = queue[take++], x = p % stride, y = p / stride;
+            for (int yy = Math.max(top, y - 1); yy <= Math.min(bottom, y + 1); yy++)
+                for (int xx = Math.max(left, x - 1); xx <= Math.min(right, x + 1); xx++) {
+                    int at = (yy - top) * width + xx - left;
+                    if (!seen[at] && (ink[yy * stride + xx] & 255) < 140) {
+                        seen[at] = true;
+                        queue[size++] = yy * stride + xx;
+                    }
+                }
+        }
+        if (size != count) return false;
+        // Weak original ink may only be the immediate fringe of the proved complete core.
+        for (int y = top; y <= bottom; y++)
+            for (int x = left; x <= right; x++)
+                if ((ink[y * stride + x] & 255) < 170) {
+                    boolean near = false;
+                    for (int yy = Math.max(top, y - 1); yy <= Math.min(bottom, y + 1); yy++)
+                        for (int xx = Math.max(left, x - 1); xx <= Math.min(right, x + 1); xx++)
+                            if ((ink[yy * stride + xx] & 255) < 140) near = true;
+                    if (!near) return false;
+                }
+        return true;
     }
 
     static boolean upperQuarter(

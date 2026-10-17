@@ -32,6 +32,43 @@ final class PrintedDashSpan {
             WordBox word,
             float gapX,
             float gapY) {
+        return follow(runs, systems, word, gapX, gapY, run -> owner(run, systems, gapY), -1);
+    }
+
+    /** A word's independently anchored row can prove its side of complete printed staffs. */
+    static Optional<Span> follow(
+            List<PrintedDashChains.Run> runs,
+            List<SystemBand> systems,
+            WordBox word,
+            float gapX,
+            float gapY,
+            List<SystemBand> printed,
+            int firstRow) {
+        if (word == null
+                || printed.size() != systems.size()
+                || firstRow < 0
+                || firstRow >= printed.size()) return follow(runs, systems, word, gapX, gapY);
+        var staff = printed.get(firstRow);
+        int side = word.top() > staff.bottom() ? 1 : word.bottom() < staff.top() ? -1 : 0;
+        if (side == 0) return follow(runs, systems, word, gapX, gapY);
+        return follow(
+                runs,
+                systems,
+                word,
+                gapX,
+                gapY,
+                run -> ownerOnSide(run, systems, printed, gapY, side),
+                firstRow);
+    }
+
+    private static Optional<Span> follow(
+            List<PrintedDashChains.Run> runs,
+            List<SystemBand> systems,
+            WordBox word,
+            float gapX,
+            float gapY,
+            java.util.function.ToIntFunction<PrintedDashChains.Run> resolveOwner,
+            int expectedFirst) {
         if (word == null
                 || !Float.isFinite(gapX)
                 || !Float.isFinite(gapY)
@@ -43,7 +80,8 @@ final class PrintedDashSpan {
             if (run.y() < word.top() - gapY * .4f
                     || run.y() > word.bottom() + gapY * .4f
                     || Math.abs(run.left() - word.right()) > gapX * 2) continue;
-            int owner = owner(run, systems, gapY);
+            int owner = resolveOwner.applyAsInt(run);
+            if (expectedFirst >= 0 && owner != expectedFirst) continue;
             if (owner < 0) continue;
             if (first != null) return Optional.empty();
             first = run;
@@ -70,7 +108,7 @@ final class PrintedDashSpan {
             if (nextSystem.top() <= system.top()) return Optional.empty();
             PrintedDashChains.Run next = null;
             for (var run : runs) {
-                if (owner(run, systems, gapY) != row + 1
+                if (resolveOwner.applyAsInt(run) != row + 1
                         || Math.abs(run.left() - nextSystem.left()) > gapX * 2) continue;
                 if (next != null) return Optional.empty();
                 next = run;
@@ -92,6 +130,31 @@ final class PrintedDashSpan {
             boolean above =
                     run.y() >= system.top() - gapY * 4 && run.y() <= system.top() + gapY * .5f;
             if (!below && !above) continue;
+            if (found >= 0) return -1;
+            found = i;
+        }
+        return found;
+    }
+
+    private static int ownerOnSide(
+            PrintedDashChains.Run run,
+            List<SystemBand> systems,
+            List<SystemBand> printed,
+            float gapY,
+            int side) {
+        int found = -1;
+        for (int i = 0; i < systems.size(); i++) {
+            var system = systems.get(i);
+            var staff = printed.get(i);
+            boolean sameSide =
+                    side > 0
+                            ? run.y() > staff.bottom()
+                                    && run.y() >= system.bottom() - gapY * .5f
+                                    && run.y() <= system.bottom() + gapY * 4
+                            : run.y() < staff.top()
+                                    && run.y() >= system.top() - gapY * 4
+                                    && run.y() <= system.top() + gapY * .5f;
+            if (!sameSide) continue;
             if (found >= 0) return -1;
             found = i;
         }
