@@ -364,11 +364,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "acb22a7466614c30d2d32d26a9dd6f6f8f21a092e068ccb267b61b7efa149700",
-      "source_normalized_sha256": "c0e7b16409ba162c1db12c4c27b7400d443a43913fb11f1d3047348e99bdb87b",
-      "review_note": "Preserve regional extent when independent complete-rule totals and a full run in selected frame prove the prefix/tail and both physical frames agree within quarter gap throughout it. Original procedural curved staff and incomplete/texture controls. No private pixels, models, format or dependency changes.",
+      "source_sha256": "223a464480cade8baa2841e956fdda92e55664cdbdeac74274a627588c266b1d",
+      "source_normalized_sha256": "3a028700769ab6d13b4f6b6ec77af20b899a51c585d6c21efe0918e8a321b0cb",
+      "review_note": "Require center oscillation for the repeated edge-wave barline veto so symmetric staff-crossing width flares preserve straight bars. Three original synthetic scale/paper regressions;125 existing barline/wave controls. No private pixels, dependencies, models or formats.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "0245bd82b2cbd75508717ec6a2a610905443234f5b88e29350f959c90aee17e2",
+      "standalone_sha256": "2aae97dc69dfb568510b6262a0c3ab98cebf17732d3267b35238ce80e13600b3",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },

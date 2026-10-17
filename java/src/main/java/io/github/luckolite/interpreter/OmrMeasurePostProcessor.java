@@ -2109,9 +2109,12 @@ final class OmrMeasurePostProcessor {
                 extreme = center;
             }
         }
+        // Width flares at staff crossings can reverse both edges while the axis stays straight.
+        // Repeated edge motion qualifies a wave only with an oscillating center as well.
         return turns >= 4 && maximum - minimum >= gap * .15
-                || leftEdge.repeated(gap, .15) && rightEdge.turns >= 4
-                || rightEdge.repeated(gap, .15) && leftEdge.turns >= 4;
+                || turns >= 2
+                        && (leftEdge.repeated(gap, .15) && rightEdge.turns >= 4
+                                || rightEdge.repeated(gap, .15) && leftEdge.turns >= 4);
     }
 
     private static boolean hasVerticalInk(
