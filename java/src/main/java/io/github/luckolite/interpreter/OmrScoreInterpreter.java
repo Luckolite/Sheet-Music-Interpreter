@@ -21986,7 +21986,8 @@ final class OmrScoreInterpreter {
             for (int b = 1; b < 4; b++) if (counts[b] > counts[common]) common = b;
             if (!filled
                     || (counts[common] == group.size() && !dotsDiffer)
-                    || bottom - top > gap * 6) continue;
+                    || (bottom - top > gap * 6 && !boundedSixGapChordCenters(group, source, gap)))
+                continue;
             int directions = 0;
             int[] shaft = null;
             int shaftLength = 0;
@@ -22009,6 +22010,9 @@ final class OmrScoreInterpreter {
                 for (int y = shaftTop; y <= shaftBottom; y++)
                     if ((gray[y * width + x] & 255) < 170) ink++;
                 if (ink < (shaftBottom - shaftTop + 1) * .88f) continue;
+                if (bottom - top > gap * 6
+                        && !connectedTallChordShaft(group, source, gray, width, height, x, gap))
+                    continue;
                 Component bounds =
                         new Component(
                                 0,
@@ -22095,6 +22099,106 @@ final class OmrScoreInterpreter {
             }
         }
         return result;
+    }
+
+    /** Outer oval tips are not the musical span of a chord. Extend the
+     * existing six-gap window only for ordinary bounded ovals whose centres
+     * remain on its twelve-step pitch grid within half a diatonic row.
+     * Total centre span is capped at six gaps plus that quarter-gap residual.
+     * The caller still proves one continuous
+     * common shaft, its single direction, and the external printed beam. */
+    private static boolean boundedSixGapChordCenters(
+            List<Integer> group, List<DetectedNote> notes, float gap) {
+        float top = Float.POSITIVE_INFINITY, bottom = Float.NEGATIVE_INFINITY;
+        for (int index : group) {
+            Component head = notes.get(index).head;
+            float width = head.maxX - head.minX + 1;
+            float height = head.maxY - head.minY + 1;
+            if (width > gap * 1.8f || height > gap * 1.15f) return false;
+            top = Math.min(top, head.centerY);
+            bottom = Math.max(bottom, head.centerY);
+        }
+        if (bottom - top > gap * 6.25f) return false;
+        DetectedNote upper = notes.get(group.get(0));
+        int minStep = upper.event.staffStep(), maxStep = minStep;
+        for (int index : group) {
+            DetectedNote note = notes.get(index);
+            minStep = Math.min(minStep, note.event.staffStep());
+            maxStep = Math.max(maxStep, note.event.staffStep());
+            if (note.head.centerY < upper.head.centerY) upper = note;
+        }
+        if (maxStep - minStep > 12) return false;
+        for (int index : group) {
+            DetectedNote note = notes.get(index);
+            float expected =
+                    upper.head.centerY
+                            + (upper.event.staffStep() - note.event.staffStep()) * gap * .5f;
+            // Adjacent diatonic rows are half a gap apart. A quarter-gap
+            // residual cannot borrow a head from the neighbouring pitch row.
+            if (Math.abs(note.head.centerY - expected) > gap * .25f) return false;
+        }
+        return true;
+    }
+
+    /** A tall chord needs one raw connected shaft, not disconnected strokes
+     * separated by paper and a horizontal rule. Confine the proof to a narrow
+     * tube at the already established common head edge; a distant staff rail
+     * or oval cannot complete this path. Semantic mask gaps do not erase ink. */
+    private static boolean connectedTallChordShaft(
+            List<Integer> group,
+            List<DetectedNote> notes,
+            byte[] gray,
+            int width,
+            int height,
+            int shaftX,
+            float gap) {
+        int radius = Math.max(1, Math.round(gap * .12f));
+        int left = Math.max(0, shaftX - radius), right = Math.min(width - 1, shaftX + radius);
+        int top = height, bottom = -1;
+        for (int index : group) {
+            int y = Math.round(notes.get(index).head.centerY);
+            top = Math.min(top, y);
+            bottom = Math.max(bottom, y);
+        }
+        if (top < 0 || bottom >= height || bottom <= top) return false;
+        int stride = right - left + 1, rows = bottom - top + 1;
+        boolean[] seen = new boolean[stride * rows];
+        int[] queue = new int[seen.length];
+        Component first = notes.get(group.get(0)).head;
+        int seedY = Math.round(first.centerY);
+        for (int seedX = left; seedX <= right; seedX++) {
+            int seed = (seedY - top) * stride + seedX - left;
+            if (seen[seed]
+                    || seedX < first.minX
+                    || seedX > first.maxX
+                    || (gray[seedY * width + seedX] & 255) >= 170) continue;
+            int read = 0, count = 1;
+            queue[0] = seed;
+            seen[seed] = true;
+            boolean[] attached = new boolean[group.size()];
+            while (read < count) {
+                int pixel = queue[read++], x = left + pixel % stride, y = top + pixel / stride;
+                for (int i = 0; i < group.size(); i++) {
+                    Component head = notes.get(group.get(i)).head;
+                    if (y == Math.round(head.centerY) && x >= head.minX && x <= head.maxX)
+                        attached[i] = true;
+                }
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < left || xx > right || yy < top || yy > bottom) continue;
+                        int next = (yy - top) * stride + xx - left;
+                        if (!seen[next] && (gray[yy * width + xx] & 255) < 170) {
+                            seen[next] = true;
+                            queue[count++] = next;
+                        }
+                    }
+            }
+            boolean complete = true;
+            for (boolean hit : attached) complete &= hit;
+            if (complete) return true;
+        }
+        return false;
     }
 
     /** Opposite apparent directions inside one chord are not separate voices.
