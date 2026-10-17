@@ -508,11 +508,11 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "8f89bd122610309b2960782ab031d0696afd9083407929aec06f55266810e192",
-      "source_normalized_sha256": "c026fd57766171dc167c53599004594ca40f956780b2e7e448bc0c68c981b0d2",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "4c6eeba0c852070b0fe5605bc84857fececf895a1ffa8baaff5fb79249f0e653",
+      "source_sha256": "588fbbbbc07b857ee88c96de7f82274c45b37495d68bea96e3d70abad8447095",
+      "source_normalized_sha256": "7bc389ed4c605442a1371704e33b972e778f13d683299520e5055c2918f0bb89",
+      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "d1ead05afcfdc1bf8ddb6ea7f21c2a4725122f4d8eea8abf7001fd23b3771e64",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "TripletRhythmDetector.java": {
@@ -1150,11 +1150,11 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "b3f8144030c889889e89c5b763f889cc60cd1df727761d360832004a967ff616",
-      "source_normalized_sha256": "1ea9216b1027eadaf17959e48ee35126abe748ea09802ab2d92f0caafc3e2e78",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "78dfea714d56c7eba54bceeeaa339f5a7cf317e2d05542a5444ee39ab1c274ef",
+      "source_sha256": "59cdf2487273c6f2a3abdc61a64f6437fb2bdcfa4faee910b73777234229e5dc",
+      "source_normalized_sha256": "8052ac8346a855aa1db317d5df3ac9b8e22621128dfd01d57d6bae0c0ae9d310",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
+      "standalone_sha256": "60bfb45525b4440e73a772a21395293e2d00aad48b7518ea8834b1c36efc9f4c",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "NativeDynamicGlyphs.java": {
@@ -2804,13 +2804,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCropStaff.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterCropStaff.java",
       "license": "Apache-2.0",
-      "source_sha256": "355899bb2d355881d87a753ef02064b15c94fb7246820519ce448d3eff0f5c88",
-      "source_normalized_sha256": "26566a539be7d4af4d3905e1645bd727facbc816e6ddb2c00a2ba39db8633884",
+      "source_sha256": "819bf4a2e0b50e7935661f858cdb6f0face4eb2f47ee0ab915b1890e77aee5f2",
+      "source_normalized_sha256": "47fc9c2f66ea2a895fa6f98fc8495547db9f62f6035148276bf03c8fa1e3900d",
       "reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
       "scoped_reviewed_app_commit": "dd930253d6c9b779428747b2d3e037621be8260b",
-      "standalone_sha256": "3f0688b32e06a6d9311c2cb237e9924a95f54681ee772c0967b88c60cbe3cf8e",
-      "review_note": "After bilateral local staff correction, trim only nearly-white outer crop margins. Preserve ink, raster values, crop containment and downstream OCR conflict rules.",
-      "reviewed_source_state": "Committed paired recognition50/guide286/audio83 sources; cumulative package/deployment/runtime validation remains pending."
+      "standalone_sha256": "728dbbb92b8b05148285213d6a543a10bf78db54b4e5c0de04ca1d880eb176d0",
+      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
+      "reviewed_source_state": "working-tree"
     },
     "InteriorStaffScaleEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InteriorStaffScaleEvidence.java",
@@ -3447,6 +3447,26 @@
       "standalone_sha256": "8c83d285c65c06a564ec3685eb63f67f4fa79fdea3ed1f92d19aa3a6efc4b941",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes."
+    },
+    "MeterDigitPadding.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitPadding.java",
+      "license": "Apache-2.0",
+      "origin": "Original project helper, first port in this reviewed working tree.",
+      "source_sha256": "1d3d11a3ed95017c33141191f969eab0101d27f6e1912aed9742506d4563c4aa",
+      "source_normalized_sha256": "4bc47950c4b578cb9c39b29b103e172bf7d9a84ff132349eeae27489e0d21042",
+      "standalone_sha256": "8304dae6f07d1de56c7497b939407f689cade41f762e345995af88dc2c8ec89a",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes."
+    },
+    "OpeningPartTempo.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningPartTempo.java",
+      "license": "Apache-2.0",
+      "origin": "Original project helper, first port in this reviewed working tree.",
+      "source_sha256": "55ef66509d455641ab3399dba567ef3aab0d03d0d9daedc34796d910b8c3f9fa",
+      "source_normalized_sha256": "ef1701827686a497912c0bdc508928509815cff49bdb486b6468dba325fbcaba",
+      "standalone_sha256": "7e58ea2c7469ac9d6e971fd5e328befe939338cc05f8d84afcf29a715e223e5f",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7728,5 +7748,16 @@
     "new_helper": "CorroboratedFaintBeam.java, original Apache-2.0, explicitly included in native decoder source manifest.",
     "layout": "Guide290/native layouts unchanged.",
     "deployment": "Cumulative app/Hub/page/audio worker build and deployment pending."
+  },
+  "opening_tempo_clipped_meter_digit_context_review": {
+    "summary": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
+    "new_original_java_tests": 66,
+    "new_helpers": [
+      "OpeningPartTempo.java",
+      "MeterDigitPadding.java"
+    ],
+    "adapters": "NativeMusicalOcr/MusicalOcr use identical digit bodies; Android SheetOcr adds only a temporary padded bitmap and recycles it in finally.",
+    "layout": "Guide290 and native layouts unchanged.",
+    "deployment": "Cumulative app/Hub/page/audio worker build/deployment and Android device validation pending."
   }
 }

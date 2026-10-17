@@ -386,7 +386,17 @@ public final class MusicalOcr {
 
     private String digits(int[] pixels, int width, int height, int top, int bottom, int scale)
             throws Exception {
-        OcrText text = readPixels(pixels, width, height, 0, top, width, bottom, scale);
+        var padded = MeterDigitPadding.pad(pixels, width, height, top, bottom);
+        OcrText text =
+                readPixels(
+                        padded.pixels(),
+                        padded.width(),
+                        padded.height(),
+                        0,
+                        0,
+                        padded.width(),
+                        padded.height(),
+                        scale);
         var values = new HashSet<String>();
         for (var block : text.blocks())
             for (var line : block.lines()) {

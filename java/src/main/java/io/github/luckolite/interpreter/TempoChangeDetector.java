@@ -523,7 +523,67 @@ final class TempoChangeDetector {
             all.add(accepted);
             proved.put(accepted, eq);
         }
-        return detectProved(all, gray, width, height, measures, proved);
+        var ordinary = detectProved(all, gray, width, height, measures, proved);
+        if (measures == null || measures.isEmpty() || all.size() > 10000 || words.size() > 10000)
+            return ordinary;
+        var contextualMeasures = directionMeasures(measures, gray, width, height);
+        int physicalOpening = OpeningPartTempo.firstMeasure(contextualMeasures);
+        if (ordinary.stream()
+                .anyMatch(
+                        event ->
+                                event.measureIndex() == physicalOpening
+                                        && event.positionInMeasure() == 0f)) return ordinary;
+        var ownedLaterEquations = new java.util.HashSet<PlayingTechniqueDetector.Word>();
+        for (var token : all)
+            for (var word : words) {
+                if (!OpeningPartTempo.equationWord(word, token)) continue;
+                int equals = equalsSignLeft(token, gray, width, height);
+                if (equals < 0) continue;
+                var bounded = printedDigitBounds(token, gray, width, height);
+                if (!Double.isFinite(printedBeatUnit(bounded, gray, width, height, equals, 200))
+                        && !Double.isFinite(
+                                printedBeatUnit(bounded, gray, width, height, equals, 165)))
+                    continue;
+                var literal = detectProved(List.of(token), gray, width, height, measures, proved);
+                if (literal.stream()
+                        .anyMatch(
+                                event ->
+                                        event.measureIndex() == physicalOpening
+                                                && event.positionInMeasure() > 0f
+                                                && ordinary.contains(event)))
+                    ownedLaterEquations.add(word);
+            }
+        var contextual = new ArrayList<ScoreTempoChange>();
+        for (var token : all)
+            for (var word : words) {
+                if (!OpeningPartTempo.equationWord(word, token)) continue;
+                int equals = equalsSignLeft(token, gray, width, height);
+                if (equals < 0) continue;
+                var bounded = printedDigitBounds(token, gray, width, height);
+                double unit = printedBeatUnit(bounded, gray, width, height, equals, 200);
+                if (!Double.isFinite(unit))
+                    unit = printedBeatUnit(bounded, gray, width, height, equals, 165);
+                if (!Double.isFinite(unit)) continue;
+                int owner =
+                        OpeningPartTempo.owner(
+                                word,
+                                words,
+                                gray,
+                                width,
+                                height,
+                                contextualMeasures,
+                                ownedLaterEquations);
+                if (owner < 0) continue;
+                var event = new ScoreTempoChange(owner, 0, token.value() * unit, unit);
+                if (!contextual.contains(event)) contextual.add(event);
+            }
+        if (contextual.size() != 1 || ordinary.contains(contextual.get(0))) return ordinary;
+        var result = new ArrayList<ScoreTempoChange>(ordinary);
+        result.add(contextual.get(0));
+        result.sort(
+                Comparator.comparingInt(ScoreTempoChange::measureIndex)
+                        .thenComparingDouble(ScoreTempoChange::positionInMeasure));
+        return List.copyOf(result);
     }
 
     private static boolean canDeferStaffSearch(
