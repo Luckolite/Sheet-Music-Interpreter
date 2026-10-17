@@ -22552,7 +22552,7 @@ final class OmrScoreInterpreter {
                         : outgoing ? 14 : 7;
         // Returning shoulders may start underneath a head, as with in-system ties.
         // Keep the complete two-ended raw-curve proof on both systems.
-        for (int initial : new int[] {step, -Math.round(gap * .65f)}) {
+        for (int initial : new int[] {step, -Math.round(gap * .65f), -Math.round(gap * 1.3f)}) {
             for (int clearance = initial;
                     clearance <= (initial == step ? gap * 1.8f : 0);
                     clearance += step) {

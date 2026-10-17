@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Paired boundary tie bows may overlap their noteheads deeply; the additional search
+retains earlier raster phases and the complete raw-curve proof at both ends.
+
 Detached miniature outgoing tie bows retain the complete raw-curve and matching
 incoming-end proof; original paired-system fixtures cover missing and false arcs.
 
