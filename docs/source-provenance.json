@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d14fbd9c0fb804f1529424d1831d8e85b553d8c2bffe8fee69cbd8b02641d033",
-      "review_note": "Require raw connected shaft proof for both semantic unison halves before creating separate short/held voices; retain faint-ink local contrast handling and true opposed voices. Three original detached/semantic-only/real-voice regressions,8existing unison and666whole/chord/voice controls. No private pixels, dependencies, models or formats.",
-      "source_normalized_sha256": "0d08ce713ff63532466070a7621979e7d978614d5f22b49d0764dbf13c71d884",
+      "source_sha256": "85520918db14f0231520c63b9991c6736ada72eecd726732a68bd56124a62132",
+      "review_note": "Prove a separately faded inner ledger using bilateral thin protrusions and a connected raw rule at its predicted phase, retaining outer-ledger proof and bounded central shaft crossings. Fallback only for one required inner rule near the second ledger and non-reduced heads. Nine original upper/lower, missing, broken, broad, wrong-phase and immutable-input controls; existing2545controls pass. No private pixels, models, dependencies or formats.",
+      "source_normalized_sha256": "21ef15948795d20805af2badd93f366ef851141c14ebb5b69789747a87f33446",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "76394bf3258b5ca26f941e8794615f69b36f95d82b8584010aec12f7296f33a2",
+      "standalone_sha256": "c8f36674353e45e15a519f972f0f7b6fb872bbe59adf07cdd49d86e106c819d3",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -3348,6 +3348,16 @@
       "standalone_sha256": "48058db978742d145be838f6a85e6e21c26910d0f013c5b9cbff2cbe252e7a73",
       "reviewed_source_state": "working-tree",
       "review_note": "Reject oversized unsupported interior photo-texture staff rows only behind consistent independent printed scale and absent weak rule fragments. Preserve compressed/faint staffs. Compact pale remote lower heads on shaded paper require phase-anchored bilateral ledger contrast. Original synthetic staff/photo/ledger and immutable-input controls; no private pixels, models, dependencies or formats."
+    },
+    "BilateralLedgerContrast.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BilateralLedgerContrast.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BilateralLedgerContrast.java",
+      "license": "Apache-2.0",
+      "source_sha256": "d8eb2235a1c3a48e6735e5d05296da9d55f34ad74695dbf59131aa7df53bd494",
+      "source_normalized_sha256": "1169e062c751aaf9dd74b0ca557a19aca680e7e57885df7b3d85fdcbf6e17be8",
+      "standalone_sha256": "224d7904e8cd1fae143f432664af65b59943fa9ae93867ceb7d98127c24bcbdf",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Prove a separately faded inner ledger using bilateral thin protrusions and a connected raw rule at its predicted phase, retaining outer-ledger proof and bounded central shaft crossings. Fallback only for one required inner rule near the second ledger and non-reduced heads. Nine original upper/lower, missing, broken, broad, wrong-phase and immutable-input controls; existing2545controls pass. No private pixels, models, dependencies or formats."
     }
   },
   "interpreter_speedup_review": {

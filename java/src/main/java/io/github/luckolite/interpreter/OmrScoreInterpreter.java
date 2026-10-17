@@ -9971,7 +9971,19 @@ final class OmrScoreInterpreter {
             // A faded middle rule can be supported by the next complete rule,
             // but every required rule must retain a continuous visible span
             // and its own dark core. One strong underline cannot replace it.
-            if (bestSupport < (inner < required && !reduced ? .4f : .6f)) return false;
+            if (bestSupport < (inner < required && !reduced ? .4f : .6f)) {
+                // A darker oval must not set the ink threshold for a separately faded
+                // inner rule. Require both thin flanks and a connected rule at its phase;
+                // broad vertical lettering still cannot supply the crossing.
+                if (required != 1
+                        || reduced
+                        || distance < gap * 1.6f
+                        || distance > gap * 2.6f
+                        || !BilateralLedgerContrast.proved(
+                                gray, width, height, head.minX, head.maxX, center, gap))
+                    return false;
+                bestSupport = .6f;
+            }
             totalStrongSupport += bestSupport;
         }
         return totalStrongSupport >= required * .6f;
