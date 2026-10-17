@@ -31,6 +31,23 @@ final class InteriorStaffScaleEvidence {
                 || right - left < width * .8f
                 || Math.max(aboveGap, belowGap) > Math.min(aboveGap, belowGap) * 1.2f
                 || gap >= Math.min(aboveGap, belowGap) * .78f) return false;
+        return !printedFragments(gray, width, height, left, right, gap, rules);
+    }
+
+    static boolean printedFragments(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            float gap,
+            PrintedStaffAdmission.Rules rules) {
+        if (gray == null
+                || width < 1
+                || height < 1
+                || gray.length != (long) width * height
+                || gap < 4
+                || rules == null) return false;
         left = Math.max(0, left);
         right = Math.min(width - 1, right);
         int phase = Math.max(1, Math.round(gap * .5f)),
@@ -74,10 +91,10 @@ final class InteriorStaffScaleEvidence {
                     if (Integer.bitCount(subset) == 3 || Integer.bitCount(subset) == 4) {
                         int mask = Integer.bitCount(subset) == 3 ? thinSupport : support;
                         runs[subset] = (mask & subset) == subset ? runs[subset] + 1 : 0;
-                        if (runs[subset] >= Math.max(12, Math.round(gap * 3))) return false;
+                        if (runs[subset] >= Math.max(12, Math.round(gap * 3))) return true;
                     }
             }
         }
-        return true;
+        return false;
     }
 }

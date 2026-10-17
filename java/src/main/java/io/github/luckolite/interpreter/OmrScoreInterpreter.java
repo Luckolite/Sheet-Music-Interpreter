@@ -1138,6 +1138,21 @@ final class OmrScoreInterpreter {
                             head.maxX,
                             head.centerY,
                             physicalStaff.gap)) continue;
+            // A compact pale fragment on shaded paper needs ledger rules at the printed phase.
+            if (physicalStaff != null
+                    && !roundedLedgerGraces.contains(head)
+                    && CompactLedgerContrast.unsupported(
+                            gray,
+                            width,
+                            height,
+                            head.minX,
+                            head.minY,
+                            head.maxX,
+                            head.maxY,
+                            head.area,
+                            head.centerY,
+                            physicalStaff.pitchBottom,
+                            physicalStaff.pitchGap)) continue;
             float ledgerClearance = 1.8f;
             // A detached head-like mark on the first ledger has no shaft to
             // establish notation ownership. Its printed ledger must do so.
@@ -8425,14 +8440,44 @@ final class OmrScoreInterpreter {
                 lastPrinted = Math.max(lastPrinted, center);
             }
         }
+        var printedGaps = new ArrayList<Float>();
+        for (Staff staff : staffs)
+            if (admission.get(staff).printed()) printedGaps.add(staff.pitchGap);
+        float[] printedScale = new float[printedGaps.size()];
+        for (int i = 0; i < printedScale.length; i++) printedScale[i] = printedGaps.get(i);
+        float printedMedian = printedScale.length == 0 ? 0 : median(printedScale);
+        int sameScale = 0;
+        for (float g : printedScale)
+            if (Math.abs(g - printedMedian) <= printedMedian * .08f) sameScale++;
+        final float referenceGap =
+                sameScale >= 3 && sameScale >= printedScale.length * .75f ? printedMedian : 0;
         final float first = firstPrinted, last = lastPrinted;
         staffs.removeIf(
                 staff ->
                         !PrintedStaffAdmission.admitted(
-                                admission.get(staff),
-                                (staff.top + staff.bottom) * .5f,
-                                first,
-                                last));
+                                        admission.get(staff),
+                                        (staff.top + staff.bottom) * .5f,
+                                        first,
+                                        last)
+                                || !admission.get(staff).admitted()
+                                        && referenceGap > 0
+                                        && staff.pitchGap > referenceGap * 1.25f
+                                        && !InteriorStaffScaleEvidence.printedFragments(
+                                                gray,
+                                                width,
+                                                height,
+                                                0,
+                                                width - 1,
+                                                staff.pitchGap,
+                                                (line, x) -> {
+                                                    if (staff.pitchTrack != null) {
+                                                        float[] at = staff.pitchTrack.at(x);
+                                                        return at[0] - (4 - line) * at[1];
+                                                    }
+                                                    return staff.pitchBottom
+                                                            - (4 - line) * staff.pitchGap
+                                                            + staff.pitchSlope * (x - width * .5f);
+                                                }));
         for (var seed : RegionalStaffSeeds.detect(labels, gray, width, height)) {
             Staff recovered = new Staff(seed.top(), seed.bottom(), seed.gap());
             recovered.pitchSlope = seed.slope();

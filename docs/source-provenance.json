@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "31f91860075a502ebc810899bc79d81180636406c66a52a46b4f5d8bc6df7729",
-      "review_note": "Permit bounded longer faint-spine closing only after independently paired semantic sharp crossbars; retain generic .2gap closure and full sharp-shape/pitch proof. Original procedural paired, missingbar/spine, longgap, adjacentpitch and immutableinput controls;334existing sharp/accidental tests. No private pixels, dependencies, models or formats. Retain ordinary faint closing proof before attempting stronger paired closing; existing faint crossbar ownership regression retained.",
-      "source_normalized_sha256": "821eb9b1dd2d16555f9efeacfeca6cd46d5ae52992d432a09cb257d4abba104e",
+      "source_sha256": "b809c767f03127c77cb9822a80a1fc53925f29b8e9dcb4ac9188055792c70780",
+      "review_note": "Reject oversized unsupported interior photo-texture staff rows only behind consistent independent printed scale and absent weak rule fragments. Preserve compressed/faint staffs. Compact pale remote lower heads on shaded paper require phase-anchored bilateral ledger contrast. Original synthetic staff/photo/ledger and immutable-input controls; no private pixels, models, dependencies or formats.",
+      "source_normalized_sha256": "c1434fbf80f046c058ec58cda797ff2a5eaa6ab0fbed4fcb62c692f1e4522010",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "ac79147614c6c56bd8100f297104698f6a9dcaec4867ceba27416cff43538b4f",
+      "standalone_sha256": "c87225133b9e91cf66c9b0ceaee47b6df8d1da9c7050b65c713705020bd8599d",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -2807,13 +2807,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InteriorStaffScaleEvidence.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/InteriorStaffScaleEvidence.java",
       "license": "Apache-2.0",
-      "source_sha256": "1e3f853df561d0d1219a0cfc788b7960e3dfb75f0d18e0044050f15f0c51423e",
-      "source_normalized_sha256": "1e3f853df561d0d1219a0cfc788b7960e3dfb75f0d18e0044050f15f0c51423e",
+      "source_sha256": "abe8e15a4d57d6d36bab04bf190782f9b842c92cbda61762035a11bf162fbae6",
+      "source_normalized_sha256": "5a624a61bf162e48a0b54ac6515342567431e3613a5c478c7a0b1f6a1e40ee8a",
       "reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
       "scoped_reviewed_app_commit": "21815e0e7f8fc53e0cc41b9667eae3f9be85d4f7",
-      "standalone_sha256": "08c6f4be7469ef161db21b35525243f6c3d4061ba787b23dc133d83592535736",
-      "review_note": "Original independent neighboring-staff scale proof rejects broad compressed unsupported interior rows while preserving coherent local thin-rule/four-rule evidence.",
-      "reviewed_source_state": "Committed paired recognition47/guide286/audio80 sources; final cumulative package, deployment and runtime verification remain pending."
+      "standalone_sha256": "b397c42d7b5311ee17167add4510eb5a766fdcc260bfaa0fc75b0a616440f39d",
+      "review_note": "Reject oversized unsupported interior photo-texture staff rows only behind consistent independent printed scale and absent weak rule fragments. Preserve compressed/faint staffs. Compact pale remote lower heads on shaded paper require phase-anchored bilateral ledger contrast. Original synthetic staff/photo/ledger and immutable-input controls; no private pixels, models, dependencies or formats.",
+      "reviewed_source_state": "working-tree"
     },
     "ScoreOpeningProofWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningProofWire.java",
@@ -3338,6 +3338,16 @@
       "standalone_sha256": "4e500c85c0bf5e13df5a961832f1002f865626c7ef4d2378065edabd9de582e5",
       "reviewed_source_state": "working-tree",
       "review_note": "Compact shaded-core evidence overrides false hollow duration only with two independently attached stems and complete paired rails. Full-size rail probe offset scales beyond shaft thickness; grace probe unchanged. Original synthetic shaded/hollow/rule/scratch, scaled and upward-stem controls. No private score pixels, model, dependencies or format changes."
+    },
+    "CompactLedgerContrast.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactLedgerContrast.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompactLedgerContrast.java",
+      "license": "Apache-2.0",
+      "source_sha256": "05e5e85a8a74dec268fa7e07feb612dedd87b21f8537b40c8604c3d5581d65d8",
+      "source_normalized_sha256": "96a1ba14ec833d7fadd1cc40d7c632880afaf4fe8e80292d792a6fcf480a528b",
+      "standalone_sha256": "48058db978742d145be838f6a85e6e21c26910d0f013c5b9cbff2cbe252e7a73",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Reject oversized unsupported interior photo-texture staff rows only behind consistent independent printed scale and absent weak rule fragments. Preserve compressed/faint staffs. Compact pale remote lower heads on shaded paper require phase-anchored bilateral ledger contrast. Original synthetic staff/photo/ledger and immutable-input controls; no private pixels, models, dependencies or formats."
     }
   },
   "interpreter_speedup_review": {
