@@ -16,6 +16,34 @@ final class DetachedSlurStemCap {
             int side,
             float gap,
             int threshold) {
+        return matches(gray, width, height, x, end, refined, side, gap, threshold, 2);
+    }
+
+    /** Used only with a terminal rail proved on two probes and a zero-gap shaft. */
+    static boolean matchesSingleBlankCut(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int end,
+            int refined,
+            int side,
+            float gap,
+            int threshold) {
+        return matches(gray, width, height, x, end, refined, side, gap, threshold, 1);
+    }
+
+    private static boolean matches(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int end,
+            int refined,
+            int side,
+            float gap,
+            int threshold,
+            int blankRows) {
         if (gray == null
                 || width < 3
                 || height < 3
@@ -43,7 +71,7 @@ final class DetachedSlurStemCap {
             for (int xx = x - 1; xx <= x + 1; xx++)
                 if ((gray[y * width + xx] & 255) < threshold) clear = false;
             blank = clear ? blank + 1 : 0;
-            if (blank >= 2) separated = true;
+            if (blank >= blankRows) separated = true;
         }
         if (!separated || (gray[end * width + x] & 255) >= threshold) return false;
         int top = end, bottom = end;

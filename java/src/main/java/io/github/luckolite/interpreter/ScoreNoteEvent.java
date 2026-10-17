@@ -621,6 +621,7 @@ public record ScoreNoteEvent(
     public static final int CLEF_TREBLE_OTTAVA = 37; // E5, treble clef with 8 above
     public static final int CLEF_BASS = 18; // G2
     public static final int CLEF_BASS_OTTAVA = 25; // G3, bass clef with 8 above
+    public static final int CLEF_BASS_QUINDICESIMA = 32; // G4, bass clef with 15 above
 
     public ScoreNoteEvent(
             int measureIndex,
@@ -653,6 +654,22 @@ public record ScoreNoteEvent(
                 followingRestBeats,
                 articulations,
                 CLEF_UNKNOWN);
+    }
+
+    public static int physicalClefBottomDiatonic(int clef) {
+        return switch (clef) {
+            case CLEF_BASS_OTTAVA, CLEF_BASS_QUINDICESIMA -> CLEF_BASS;
+            case CLEF_TREBLE_OTTAVA -> CLEF_TREBLE;
+            default -> clef;
+        };
+    }
+
+    public static int intrinsicClefOctaves(int clef) {
+        return switch (clef) {
+            case CLEF_BASS_QUINDICESIMA -> 2;
+            case CLEF_BASS_OTTAVA, CLEF_TREBLE_OTTAVA -> 1;
+            default -> 0;
+        };
     }
 
     public ScoreNoteEvent withClef(int clef) {
@@ -954,6 +971,7 @@ public record ScoreNoteEvent(
             leadingRestBeats = 0;
         if (clefBottomDiatonic != CLEF_TREBLE
                 && clefBottomDiatonic != CLEF_BASS_OTTAVA
+                && clefBottomDiatonic != CLEF_BASS_QUINDICESIMA
                 && clefBottomDiatonic != CLEF_BASS
                 && clefBottomDiatonic != CLEF_TREBLE_OTTAVA
                 && clefBottomDiatonic != CLEF_ALTO

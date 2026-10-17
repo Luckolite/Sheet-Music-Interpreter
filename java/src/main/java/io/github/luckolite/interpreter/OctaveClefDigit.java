@@ -87,7 +87,10 @@ final class OctaveClefDigit {
                     }
                 if (ink) rows++;
             }
-            if (rows >= Math.min(h, gap * 1.5f) * .7f && area >= gap * gap * .15f) return true;
+            if (rows >= Math.min(h, gap * 1.5f) * .7f
+                    && area >= gap * gap * .15f
+                    && !ClefOctaveNumerals.separateNeighbor(
+                            gray, width, height, left, top, w, h, x0, x1)) return true;
         }
         return completeNeighbor(gray, width, height, left, top, w, h, gap);
     }

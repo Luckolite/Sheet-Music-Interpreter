@@ -6,19 +6,24 @@ package io.github.luckolite.interpreter;
 final class BassOctaveDigit {
     static boolean above(
             byte[] gray, int width, int height, int left, int right, float staffTop, float gap) {
+        return boundsAbove(gray, width, height, left, right, staffTop, gap) != null;
+    }
+
+    static int[] boundsAbove(
+            byte[] gray, int width, int height, int left, int right, float staffTop, float gap) {
         if (gray == null
                 || width < 1
                 || height < 1
                 || gray.length != (long) width * height
                 || !Float.isFinite(staffTop)
                 || !Float.isFinite(gap)
-                || gap < 6) return false;
+                || gap < 6) return null;
         int x0 = Math.max(0, left),
                 x1 = Math.min(width - 1, right),
                 y0 = Math.max(0, Math.round(staffTop - gap * 1.8f)),
                 y1 = Math.min(height - 1, Math.round(staffTop - gap * .2f));
         int w = x1 - x0 + 1, h = y1 - y0 + 1;
-        if (w < 1 || h < 1) return false;
+        if (w < 1 || h < 1) return null;
         boolean[] seen = new boolean[w * h];
         int[] queue = new int[w * h];
         for (int seed = 0; seed < seen.length; seed++) {
@@ -60,10 +65,10 @@ final class BassOctaveDigit {
                                 top,
                                 gw,
                                 Math.min(gh, y1 - top + 1),
-                                gap)) return true;
+                                gap)) return new int[] {x0 + minX, top, gw, gh};
             }
         }
-        return false;
+        return null;
     }
 
     private static boolean neighbor(

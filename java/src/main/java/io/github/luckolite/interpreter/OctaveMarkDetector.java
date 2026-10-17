@@ -70,6 +70,53 @@ final class OctaveMarkDetector {
             if (shift == 0) continue;
             var owner =
                     owner(word, staffs, shift, height, printed.contains(sourceWord), gray, width);
+            // A full alta suffix may still be engraved below its staff. The actual
+            // terminal hook resolves that placement without changing the text parser.
+            if (shift > 0) {
+                var belowOwner =
+                        owner(
+                                word,
+                                staffs,
+                                -shift,
+                                height,
+                                printed.contains(sourceWord),
+                                gray,
+                                width);
+                if (belowOwner != null) {
+                    float end =
+                            dashEnd(
+                                    gray,
+                                    width,
+                                    height,
+                                    word.right() * width,
+                                    word.top() * height,
+                                    word.bottom() * height,
+                                    belowOwner.gap());
+                    int hook =
+                            hookDirection(
+                                    gray,
+                                    width,
+                                    height,
+                                    end,
+                                    word.top() * height,
+                                    word.bottom() * height,
+                                    belowOwner.gap());
+                    if (hook == 0)
+                        hook =
+                                OctaveBracketEnd.direction(
+                                        gray,
+                                        width,
+                                        height,
+                                        end,
+                                        word.top() * height,
+                                        word.bottom() * height,
+                                        belowOwner.gap());
+                    if (end >= 0 && hook < 0) {
+                        owner = belowOwner;
+                        shift = -shift;
+                    }
+                }
+            }
             if (owner == null) continue;
             float gap = owner.gap(), left = word.left() * width - gap * .65f;
             float textRight =

@@ -233,12 +233,12 @@
     },
     "NativeDecoderWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderWire.java",
-      "source_sha256": "a67f386d82e720b951cbfa3c593eeb272534cbf2150642ab0b074419ce49c7d0",
-      "source_normalized_sha256": "688ea0b678295aa7ff1ba9caf9c209fd0bcf44fd37436d81c174ad4da56de5d6",
+      "source_sha256": "c9d9005104701d488bbb382a464aa53682143886065324409788d5f4ebddec19",
+      "source_normalized_sha256": "32cd7994b990f1bcf5587ab4a80246f187ee5f55ca615e0b3522b37f2c3665b6",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "782f4a9a63c1b35167051b3f85a5a390b87a6bcfb49253a987687d2875ab305b",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "a0c3a3646d35910f48a8dbf00b3078a82dd71b34fd427232cee8a2385a451479",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "NativeDecoderStages.java": {
@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c1b5e01ea03ea27eff57491c7c5e280a6d6d24ce5d54d02307338f1bfced9b4c",
-      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes.",
-      "source_normalized_sha256": "1723467763bbce2e57a88bbaf4772525ec49307a4b2c7fad4a8f2ce78cabf76a",
+      "source_sha256": "b3544662e2cd89acb0191362d2b10cede8113cd78a4f3ffe74dcb756743b7c8a",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+      "source_normalized_sha256": "48c1710ead52c5f1a63072b1f1d292d5a98edc18cab7d9bfd261f68c79544070",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "16eedb4eb54859bd412b45ed1a3460e5b952dffc8533780904cff66e07994129",
+      "standalone_sha256": "c5dac8d687f49ce3f5069016a827a2a52b6ea4c468be463d9d5b08ff5e7a810c",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -447,12 +447,12 @@
     },
     "ScoreNoteEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteEvent.java",
-      "source_sha256": "20f548920adaf58e5c95f0ef685e0281b7b86e470ae801a24ed00679f4e8c7ff",
-      "source_normalized_sha256": "cf846df873668252ac95d687ebc1584c7e0cba6bba18ba1511f2a6685d3548a0",
+      "source_sha256": "4689edca8d926777b5440cc896c702743443d30a71234e143383902f1dafc88f",
+      "source_normalized_sha256": "02613f5a76ca0964ea1edc31d2ca801bb2b9b319d65ebb67d245fb66c3699836",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "40f67c4654546cd6c85f9604e02f99eeeb537a14c886d9f76ed619c5d6817d24",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "38aaa1e2e6eef9eca16b9ab0ba5de6b73d82833e7554390e8ca7d747795d7e89",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "ScoreNoteTiming.java": {
@@ -578,11 +578,11 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "4a5fd82bea0912dc0ef0abbb9610e49917dda4555c149e183c2670ebf5209daa",
-      "source_normalized_sha256": "798a930b973a2677554fac034544053eb24ad882988ac1c01aa94bb11fd2550f",
-      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes.",
+      "source_sha256": "bcd1ec68bdfeaf899dea5d9839b2175743f43004782ca730ea062fac4a34584c",
+      "source_normalized_sha256": "e6660cee3beabf4138ddb47661cd6908aacd3092f46d3548705e6e890fbd268d",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "c1714338eb9981956c33d664f1b2d05cae7260b5c048b4f953b4271f62fc9d21",
+      "standalone_sha256": "9df69823fab27b8eb0f2361b25891d1b5bfe468a4bc7114918eb0e8ff940fdd8",
       "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
       "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6"
     },
@@ -609,12 +609,12 @@
     },
     "OctaveClefDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveClefDigit.java",
-      "source_sha256": "88efcaa812a8e9e550ee3b29ef9d04ab7498ab132262e56a7a0b06c0239b179a",
+      "source_sha256": "829949006e3224c3b7e7c4eace194520cf840ef6e5e3459ee25bac46e0dacdbb",
       "reviewed_app_commit": "7c1bf385dc2974fcdf2dd5de6584df9cc3e33a7c",
-      "source_normalized_sha256": "8aea08c3ba116ad63529b6a9acf923756d8a62d7a0764ed120ca355bd0b412dc",
-      "standalone_sha256": "7ac5822233c8c0dc686a131d959e8eef106fedac31f40be9ee35d195424aaa47",
+      "source_normalized_sha256": "66b63a32089c89d07dab9be31f4265cd26907a1bf2066c3a0f853416b48a2880",
+      "standalone_sha256": "8bba6160edde0626ff71c3e36f8e9ba3d4b41c0ddddeb992b7441698035ae803",
       "reviewed_source_state": "working-tree",
-      "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes."
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules."
     },
     "ScorePageTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageTimeline.java",
@@ -1653,11 +1653,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "9a61bd650ca49e6888d6fa6f51fdc8fc32c1d0099b48cfc2acdbd37765126803",
-      "source_normalized_sha256": "36d9fafe541ce004de4130ca4f11cd4c2d86e9ec759f567e291911549d853e79",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Reviewed matching bounded rooted-flag delta and recognition63 identity over previously reviewed source; original synthetic controls. Historical comment/format differences retained.",
-      "standalone_sha256": "56bde16a1eac33c4da8b7d52dba1530f3d76ef4993eb0ebe4b9c47a87f9b55d5",
+      "source_sha256": "41b68e90a92c0d1dd0eb1e8686e10ac80b4ad88a68f583687ddaf401ecbeeda4",
+      "source_normalized_sha256": "cd997efdf621a3bd9d973230b8e07ce61c80698b0be7e98553b9d8d09107a80a",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+      "standalone_sha256": "c5ae23210fe86251e1fce74da7d8367e67fb57dad8f4ee156cabc687058a911c",
       "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7"
     },
     "ScorePlacementMap.java": {
@@ -3025,11 +3025,11 @@
     },
     "BassOctaveDigit.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BassOctaveDigit.java",
-      "source_sha256": "ad2af5b2fedb884b20153e17c45ee5caf4f5fe27885b46a03d0b39fe1cbe2c39",
-      "source_normalized_sha256": "cf64446f3cd484b10ff26bc193aa86525caa35e476c07a6b77e32425ff758b2e",
-      "standalone_sha256": "22047d2fd71761495b1a7232e3b2ddb44d18a50d03e2f47a2507d98a3db96f8e",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "ab87716bda56ca31d0777badfdb2fa8c63b0b0740a9223e7347c9314ba4bc0d0",
+      "source_normalized_sha256": "eb2a545eda8fc4468e21d4dffe44a7cf7b2e7a6426dd77e3538ac13d8859f5d6",
+      "standalone_sha256": "5342fef7c41d61ed52ff191bb2639990be0f95a716f767f0a3b44bdaa8866b83",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "CodaGlyphInk.java": {
@@ -3313,11 +3313,11 @@
     },
     "DetachedSlurStemCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedSlurStemCap.java",
-      "source_sha256": "561feb1c1858f6e129ac32ae6539c5f1a076b011b785154ab854feb55903ae3f",
-      "source_normalized_sha256": "d7bc60c52f853f039b0bce897aa6d227c42610280def5beb71d6ab2fd05d52c1",
-      "standalone_sha256": "c83e8def0352bd8b0760dfed3f98f5f9825f293a9962ecfc5d5464f2d95ab4ef",
-      "reviewed_source_state": "Committed source; 10470 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Reject a lone beam supplied by a detached slur cap. Existing strict endpoint ownership and curved-flag guards remain; multiple bounded spans establish curvature before staff-rule merging. Original mirrored curve/staff fixtures only.",
+      "source_sha256": "36bcb84a9f0514670afd547a8f30b6c7614d81fef82f1f10d8f87d92b6d03389",
+      "source_normalized_sha256": "455f9e4e083e1407ca0aa679b1385f34154a6660a708b19a60f8b9d86146ac5c",
+      "standalone_sha256": "de6b188c5144422df1c657145a92beac2c1a934055f9c15241c1b3087e2ea6f8",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
       "reviewed_app_commit": "ed7d208f5712a127c45fe71bcf53920b9abf2f0c"
     },
     "DetachedMordentBeamCap.java": {
@@ -3395,6 +3395,26 @@
       "standalone_sha256": "d0ab5ab7191b87ab404368ca30fd7cc87acf4a1fcd87e3cc4608058eef88e242",
       "reviewed_source_state": "working-tree",
       "review_note": "Independently prove printed rule ownership for tremolo/shared chord rails; retain semantic secondary-rail veto and filled-core evidence. Recognize complete thin neighboring header characters and fragmented word continuation. Original procedural and already-public licensed-font regressions; no private scores, model, schema, or dependency changes."
+    },
+    "ClefOctaveNumerals.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClefOctaveNumerals.java",
+      "reviewed_app_base_commit": "96ef4e4d83e2a977ffdccec5d3e15b8999a089e6",
+      "origin": "Original Apache-2.0 helper; licensed numeral fixture provenance documented separately.",
+      "source_sha256": "b8bb68aa4628c0c8e70fcf4b909fc5122ef15e3167e90018937e33b0022dca72",
+      "source_normalized_sha256": "85eacf62323291169e114302007bb96dc5d126e0171bea93cb0e8c7f4a363c29",
+      "standalone_sha256": "073a648e0682a00e3dd16bae9df9ef50695b0a2bf8605998a97c290f2ada0721",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules."
+    },
+    "OctaveBracketEnd.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveBracketEnd.java",
+      "reviewed_app_base_commit": "96ef4e4d83e2a977ffdccec5d3e15b8999a089e6",
+      "origin": "Original Apache-2.0 helper; licensed numeral fixture provenance documented separately.",
+      "source_sha256": "0e3648ccd8ce717dc32e81f59a434774260e7bea5a180fa5badbe94a36d2bc48",
+      "source_normalized_sha256": "d0356d5fae660e506defb37ca0d606f4338d1f563392ae9974cef5669775f945",
+      "standalone_sha256": "380f2262f4cc8a1c92ba98157432fd9c36e1e3d075e6878eeb540635072fdfd7",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules."
     }
   },
   "interpreter_speedup_review": {
@@ -7632,5 +7652,13 @@
       "test_musicxml_compound"
     ],
     "runtime_boundary": "Source and desktop regression evidence only; packaged worker/app rollout and full-library acceptance remain separate."
+  },
+  "intrinsic_clef_and_physical_ownership_review": {
+    "summary": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
+    "numeral_provenance": "docs/intrinsic-clef-numeral-provenance.md",
+    "native_analysis_marker": -27,
+    "guide_version": 290,
+    "record_layout": "Existing paired-tremolo and 80-byte note fields retained; old formats reject the new clef enum. Ordinary old-clef analysis stays byte-identical -26.",
+    "deployment": "Source changes only; paired app, Hub, page/audio worker build and deployment require cumulative rollout verification."
   }
 }

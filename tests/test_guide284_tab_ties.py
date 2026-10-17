@@ -60,7 +60,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         new = wire.encode(original)
 
-        self.assertEqual(289, struct.unpack_from('>i', new)[0])
+        self.assertEqual(290, struct.unpack_from('>i', new)[0])
 
         self.assertEqual(63, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire, tremolo_wire
@@ -170,4 +170,4 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
 
-            wire.encode(score(), 290)
+            wire.encode(score(), 291)

@@ -26,6 +26,14 @@ public final class NativeDecoderWire {
 
     static final int ANALYSIS_TREMOLO_FORMAT = -26; // Private candidate, not deployed
 
+    // -27 admits intrinsic two-octave clef32 with the unchanged -26 paired-tremolo layout.
+    // Ordinary old-clef scores retain byte-identical -26 encoding; legacy32 fails closed.
+    static final int ANALYSIS_INTRINSIC_CLEF_FORMAT = -27;
+
+    private static boolean pairedFormat(int marker) {
+        return marker == ANALYSIS_TREMOLO_FORMAT || marker == ANALYSIS_INTRINSIC_CLEF_FORMAT;
+    }
+
     public record Request(
             byte[] labels,
             byte[] gray,
@@ -228,17 +236,26 @@ public final class NativeDecoderWire {
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score)
             throws IOException {
-        writeAnalysis(out, score, ANALYSIS_TREMOLO_FORMAT);
+        writeAnalysis(
+                out,
+                score,
+                score.notes().stream()
+                                .anyMatch(
+                                        n ->
+                                                n.clefBottomDiatonic()
+                                                        == ScoreNoteEvent.CLEF_BASS_QUINDICESIMA)
+                        ? ANALYSIS_INTRINSIC_CLEF_FORMAT
+                        : ANALYSIS_TREMOLO_FORMAT);
     }
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score, int marker)
             throws IOException {
-        if (marker != ANALYSIS_TREMOLO_FORMAT
+        if (!pairedFormat(marker)
                 && marker != ANALYSIS_TAB_TIE_FORMAT
                 && marker != ANALYSIS_REST_KIND_FORMAT
                 && marker != ANALYSIS_KIND_FORMAT)
             throw new IOException("Unsupported analysis writer marker");
-        if (marker != ANALYSIS_TREMOLO_FORMAT
+        if (!pairedFormat(marker)
                 && (!score.tremoloSource().pairs().isEmpty()
                         || score.tremoloSource().noteOrigins().stream()
                                 .anyMatch(java.util.Optional::isPresent)))
@@ -246,15 +263,21 @@ public final class NativeDecoderWire {
         if (marker == ANALYSIS_KIND_FORMAT
                 && score.rests().stream().anyMatch(ScoreRestEvent::isFullMeasure))
             throw new IOException("Legacy analysis would lose full-measure rest kind");
-        if (marker != ANALYSIS_TREMOLO_FORMAT
+        if (!pairedFormat(marker)
                 && score.notes().stream()
                         .anyMatch(n -> n.clefBottomDiatonic() == ScoreNoteEvent.CLEF_BASS_OTTAVA))
             throw new IOException("Legacy analysis would lose octave-bass clef");
+        if (marker != ANALYSIS_INTRINSIC_CLEF_FORMAT
+                && score.notes().stream()
+                        .anyMatch(
+                                n ->
+                                        n.clefBottomDiatonic()
+                                                == ScoreNoteEvent.CLEF_BASS_QUINDICESIMA))
+            throw new IOException("Legacy analysis would lose intrinsic two-octave bass clef");
         for (var note : score.notes()) {
             if (!TabTieIdentity.valid(note.boundaryTies())
                     || TabTieIdentity.typed(note.boundaryTies())
-                            && ((marker != ANALYSIS_TAB_TIE_FORMAT
-                                            && marker != ANALYSIS_TREMOLO_FORMAT)
+                            && ((marker != ANALYSIS_TAB_TIE_FORMAT && !pairedFormat(marker))
                                     || note.kind() != ScoreNoteEvent.Kind.PITCHED))
                 throw new IOException("Unsupported or invalid typed tab tie evidence");
         }
@@ -305,9 +328,9 @@ public final class NativeDecoderWire {
             out.writeDouble(r.durationBeats());
             if (marker == ANALYSIS_REST_KIND_FORMAT
                     || marker == ANALYSIS_TAB_TIE_FORMAT
-                    || marker == ANALYSIS_TREMOLO_FORMAT) out.writeByte(restKindId(r.kind()));
+                    || pairedFormat(marker)) out.writeByte(restKindId(r.kind()));
         }
-        if (marker == ANALYSIS_TREMOLO_FORMAT) ScoreTremoloWire.write(out, score.tremoloSource());
+        if (pairedFormat(marker)) ScoreTremoloWire.write(out, score.tremoloSource());
     }
 
     private static int boundaryTies(DataInputStream in, boolean tabTyped) throws IOException {
@@ -320,7 +343,7 @@ public final class NativeDecoderWire {
     static OmrScoreInterpreter.Analysis readAnalysis(DataInputStream in, int measures)
             throws IOException {
         int marker = in.readInt();
-        boolean paired = marker == ANALYSIS_TREMOLO_FORMAT;
+        boolean paired = pairedFormat(marker);
         boolean tabTyped = paired || marker == ANALYSIS_TAB_TIE_FORMAT;
         boolean restTyped = tabTyped || marker == ANALYSIS_REST_KIND_FORMAT;
         boolean typed = restTyped || marker == ANALYSIS_KIND_FORMAT;
@@ -354,6 +377,13 @@ public final class NativeDecoderWire {
                             normalCount(in),
                             stems ? stemDirection(in) : 0,
                             typed ? noteKind(in) : ScoreNoteEvent.Kind.PITCHED));
+        if (marker != ANALYSIS_INTRINSIC_CLEF_FORMAT
+                && notes.stream()
+                        .anyMatch(
+                                n ->
+                                        n.clefBottomDiatonic()
+                                                == ScoreNoteEvent.CLEF_BASS_QUINDICESIMA))
+            throw new IOException("Legacy analysis contains intrinsic two-octave bass clef");
         if (!paired
                 && notes.stream()
                         .anyMatch(n -> n.clefBottomDiatonic() == ScoreNoteEvent.CLEF_BASS_OTTAVA))

@@ -262,6 +262,7 @@ public final class Main {
                     && clef != 22
                     && clef != 24
                     && clef != 25
+                    && clef != 32
                     && clef != 37)
                 throw new IOException("Unpitched display clef must be a supported retained clef");
             long display = (long) clef + note.staffStep();

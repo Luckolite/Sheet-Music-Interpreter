@@ -17,8 +17,8 @@ from . import semantic_wire
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
 RECOGNITION_REVISION = 63
-GUIDE_VERSION = 289
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289)
+GUIDE_VERSION = 290
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -115,6 +115,11 @@ def encode(score, guide_version=GUIDE_VERSION):
             raise ValueError("Invalid tuplet ratio")
         if guide_version < 276 and normal != default_normal:
             raise ValueError("Explicit tuplet ratio requires guide276")
+        clef = row.get("clefBottomDiatonic")
+        if type(clef) is not int or clef not in (-1, 18, 22, 24, 25, 30, 32, 37):
+            raise ValueError("Invalid intrinsic clef")
+        if guide_version < 290 and clef == 32:
+            raise ValueError("Intrinsic two-octave bass clef requires guide290")
         if guide_version < 289 and row.get("clefBottomDiatonic") == 25:
             raise ValueError("Octave-bass clef requires guide289")
         stem = row.get("stemDirection", 0)

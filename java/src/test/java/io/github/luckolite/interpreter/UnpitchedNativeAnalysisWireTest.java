@@ -159,7 +159,7 @@ public final class UnpitchedNativeAnalysisWireTest {
 
     @Test
     public void unknownSignedMarkersFailClosed() throws Exception {
-        for (int marker : new int[] {-1, -21, -27, Integer.MIN_VALUE}) {
+        for (int marker : new int[] {-1, -21, -28, Integer.MIN_VALUE}) {
             byte[] body = encode(score());
             ByteBuffer.wrap(body).putInt(marker);
             assertThrows(IOException.class, () -> decode(body));

@@ -1668,6 +1668,9 @@ final class OmrScoreInterpreter {
                         .thenComparingDouble(note -> note.event.positionInMeasure())
                         .thenComparingInt(note -> note.event.staffIndex())
                         .thenComparingInt(note -> note.event.staffStep()));
+        detected =
+                recoverCompactGraceAccidentals(
+                        labels, gray, width, height, detected, localAccidentals, heads, staffs);
         List<Component> printedAccidentalHeads = new ArrayList<>();
         for (DetectedNote note : detected)
             if (note.event.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY)
@@ -5078,6 +5081,20 @@ final class OmrScoreInterpreter {
                         clef = ScoreNoteEvent.CLEF_TREBLE;
                         clefReference = printed;
                     }
+                }
+                if (clef == ScoreNoteEvent.CLEF_BASS) {
+                    Staff printed = headerPrintedFrame(staff, glyph.centerX);
+                    int octaves =
+                            ClefOctaveNumerals.aboveBass(
+                                    gray,
+                                    width,
+                                    height,
+                                    glyph.minX,
+                                    glyph.maxX,
+                                    printed.top,
+                                    printed.gap);
+                    if (octaves == 2) clef = ScoreNoteEvent.CLEF_BASS_QUINDICESIMA;
+                    else if (octaves == 1) clef = ScoreNoteEvent.CLEF_BASS_OTTAVA;
                 }
                 if (clef == ScoreNoteEvent.CLEF_TREBLE
                         && OctaveClefDigit.above(
@@ -9457,6 +9474,47 @@ final class OmrScoreInterpreter {
         if (below == 0
                 && completeLowerLedgerChain(gray, width, height, head, upper)
                 && plausibleHead(head, upper.pitchGap)) return upper;
+        // One incidental short stroke need not outweigh a complete opposite ledger chain.
+        // Require every expected inner rule and a shaft reaching that physical staff.
+        if (above > 0 && below > 0) {
+            int upperRequired =
+                    Math.max(
+                            0,
+                            (int)
+                                            Math.ceil(
+                                                    (head.centerY - upper.pitchBottom)
+                                                                    / upper.pitchGap
+                                                            - .65f)
+                                    - 1);
+            int lowerRequired =
+                    Math.max(
+                            0,
+                            (int)
+                                            Math.ceil(
+                                                    (lower.pitchBottom
+                                                                            - lower.pitchGap * 4
+                                                                            - head.centerY)
+                                                                    / lower.pitchGap
+                                                            - .65f)
+                                    - 1);
+            boolean completeUpper = upperRequired >= 2 && above == upperRequired;
+            boolean completeLower = lowerRequired >= 2 && below == lowerRequired;
+            if (completeUpper != completeLower) {
+                int[] shaft =
+                        attachedRawStem(gray, width, height, head, Math.min(upper.gap, lower.gap));
+                if (shaft != null) {
+                    if (completeUpper
+                            && shaft[2] < 0
+                            && shaft[1] <= upperBottom
+                            && head.centerY - upper.bottom <= upper.gap * 6.75f) return upper;
+                    if (completeLower
+                            && shaft[2] > 0
+                            && shaft[1] >= lowerTop
+                            && lower.top - head.centerY <= lower.gap * MAX_HEAD_LEDGER_GAPS)
+                        return lower;
+                }
+            }
+        }
         // Two inner rules can establish ownership; the rule beside/through the head is excluded.
         if (above >= 2 && above >= below + 2 && head.centerY - upper.bottom <= upper.gap * 6.75f)
             return upper;
@@ -14900,6 +14958,65 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    /** Reuse the existing grace font scale only after physical grace ownership is proved. */
+    private static List<DetectedNote> recoverCompactGraceAccidentals(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> source,
+            List<AccidentalCandidate> candidates,
+            List<Component> heads,
+            List<Staff> staffs) {
+        List<ScoreNoteEvent> graceEvents = new ArrayList<>();
+        for (DetectedNote note : source) graceEvents.add(note.event);
+        markGraceHeads(labels, gray, width, height, source, graceEvents);
+        List<DetectedNote> result = new ArrayList<>(source);
+        for (int i = 0; i < source.size(); i++) {
+            DetectedNote note = source.get(i);
+            ScoreNoteEvent event = note.event;
+            if (event.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || event.writtenAccidental() != ScoreNoteEvent.ACCIDENTAL_FROM_KEY
+                    || event.beamCount() == 0
+                    || !smallGraceHead(note)
+                    || (graceEvents.get(i).articulations() & NoteOrnament.GRACE) == 0) continue;
+            Staff staff = staffForHead(labels, gray, width, height, staffs, note.head);
+            if (staff == null) continue;
+            float gap = localStaffPitch(labels, gray, width, height, staff, note.head)[1] * .65f;
+            int accidental =
+                    detectWrittenAccidental(
+                            labels, width, height, candidates, note.head, gap, heads, gray);
+            if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) continue;
+            ScoreNoteEvent corrected =
+                    new ScoreNoteEvent(
+                            event.measureIndex(),
+                            event.positionInMeasure(),
+                            event.staffStep(),
+                            event.staffIndex(),
+                            event.staffCount(),
+                            event.pageY(),
+                            event.tiedFromPrevious(),
+                            event.augmentationDots(),
+                            event.beamCount(),
+                            accidental,
+                            event.unbeamedDurationBeats(),
+                            event.tupletDivisor(),
+                            event.followingRestBeats(),
+                            event.articulations(),
+                            event.clefBottomDiatonic(),
+                            event.crossStaffBeam(),
+                            event.leadingRestBeats(),
+                            event.compactOpening(),
+                            event.octaveShift(),
+                            event.boundaryTies(),
+                            event.tupletNormalNotes(),
+                            event.stemDirection(),
+                            event.kind());
+            result.set(i, new DetectedNote(corrected, note.head, note.staffGap));
+        }
+        return result;
+    }
+
     private static int detectWrittenAccidental(
             byte[] labels,
             int width,
@@ -18297,6 +18414,60 @@ final class OmrScoreInterpreter {
         return local;
     }
 
+    /** A complete curved stroke above an independently rooted terminal rail. */
+    private static boolean singleBlankTerminalSlurCap(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            int[] coarse,
+            int threshold) {
+        if (coarse == null
+                || coarse.length < 3
+                || Math.abs(coarse[2]) != 1
+                || head.maxX - head.minX + 1 <= staff.gap * 1.05f) return false;
+        float gap = staff.gap;
+        int[] strict = attachedRawStem(gray, width, height, head, gap, 0, threshold);
+        if (strict == null || strict[2] != coarse[2] || Math.abs(strict[0] - coarse[0]) > gap * .3f)
+            return false;
+        int end = coarse[1];
+        for (int step = 0; step <= Math.round(gap * .35f); step++) {
+            int y = coarse[1] - coarse[2] * step;
+            if (y < 1 || y >= height - 1) return false;
+            if ((gray[y * width + strict[0]] & 255) < threshold) {
+                end = y;
+                break;
+            }
+        }
+        boolean up = strict[2] < 0;
+        if (hasCurvedFlag(labels, gray, width, height, head, gap, coarse[0], coarse[1], up)
+                || rootedPaleFlag(labels, gray, width, height, head, gap, coarse[0], coarse[1], up)
+                || !DetachedSlurStemCap.matchesSingleBlankCut(
+                        gray, width, height, strict[0], end, strict[1], strict[2], gap, threshold))
+            return false;
+        int inside = Math.round(gap * 1.85f), i = 0;
+        int[] railCounts = new int[4];
+        for (float distance : new float[] {-.65f, -.4f, .4f, .65f}) {
+            int x = strict[0] + Math.round(distance * gap);
+            int near = Math.max(0, strict[1] - (up ? 0 : inside));
+            int far = Math.min(height - 1, strict[1] + (up ? inside : 0));
+            int inner = strict[0] + Math.round(Math.copySign(.4f, distance) * gap);
+            railCounts[i++] =
+                    thickNonHeadBands(
+                            gray, labels, width, height, x, near, far, staff, inner, true);
+        }
+        return (railCounts[0] == 1
+                        && railCounts[1] == 1
+                        && railCounts[2] == 0
+                        && railCounts[3] == 0)
+                || (railCounts[0] == 0
+                        && railCounts[1] == 0
+                        && railCounts[2] == 1
+                        && railCounts[3] == 1);
+    }
+
     /** Shared voices use the same positive rule ownership as ordinary beam counting. */
     private static boolean printedSharedRuleBand(
             byte[] gray, int width, int height, int x, int first, int last, Staff staff) {
@@ -19564,6 +19735,21 @@ final class OmrScoreInterpreter {
                 else if (distance < 0) outerLeft = count;
                 else outerRight = count;
             }
+            if (voiceStem == null
+                    && !smallHead
+                    && thick == 2
+                    && innerThick == 2
+                    && outerLeft == 1
+                    && outerRight == 1
+                    && singleBlankTerminalSlurCap(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff,
+                            new int[] {bestX, stemEnd, upward ? -1 : 1},
+                            stemThreshold)) return 1;
             // A detached curved cap cannot supply a lone beam or a third beam.
             if ((thick == 1 || thick >= 3)
                     && voiceStem == null
@@ -21722,6 +21908,8 @@ final class OmrScoreInterpreter {
                                 gap)
                         + 5;
         int[] strict = attachedRawStem(gray, width, height, head, gap, 1, strictThreshold);
+        if (singleBlankTerminalSlurCap(
+                labels, gray, width, height, head, staff, pale, strictThreshold)) return false;
         if (DetachedMordentBeamCap.crosses(
                 gray, width, height, head.centerY, strict, pale, gap, strictThreshold))
             return false;
