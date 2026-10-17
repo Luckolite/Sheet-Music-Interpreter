@@ -18597,6 +18597,9 @@ final class OmrScoreInterpreter {
         if (count == 0 && palePairedSingleRail(gray, width, height, head, staff, heads)) return 1;
         if (count == 0 && validatedPaleDoubleRails(labels, gray, width, height, head, staff, heads))
             return 2;
+        if (count == 0
+                && semanticOppositeDoubleRails(labels, gray, width, height, head, staff, heads))
+            return 2;
         if (count < 2 || gray == null) return count;
         int[] stem = attachedRawStem(gray, width, height, head, staff.gap);
         if (stem == null) return count;
@@ -18719,6 +18722,102 @@ final class OmrScoreInterpreter {
             }
         }
         return false;
+    }
+
+    /** A longer artwork trace cannot erase a strongly owned opposing beam shaft. */
+    private static boolean semanticOppositeDoubleRails(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        if (labels == null || gray == null || heads == null) return false;
+        float gap = staff.gap;
+        int direction = strongSemanticShaftDirection(labels, width, height, head, gap);
+        if (direction == 0) return false;
+        int threshold =
+                BeamInkThreshold.at(
+                                gray,
+                                width,
+                                height,
+                                Math.round(head.centerX),
+                                Math.round(head.centerY - gap * 5),
+                                Math.round(head.centerY + gap * 5),
+                                gap)
+                        + 5;
+        int[] competing =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        gap,
+                        Math.max(1, Math.round(gap * .16f)),
+                        threshold,
+                        9);
+        if (competing == null
+                || competing[2] == direction
+                || Math.abs(competing[1] - head.centerY) <= gap * 5.5f) return false;
+        int[] own = directionalVoiceShaft(gray, width, height, head, gap, direction);
+        if (own == null || Math.abs(own[1] - head.centerY) > gap * 5.5f) return false;
+        for (Component other : heads) {
+            if (other == head
+                    || Math.abs(other.centerX - head.centerX) < gap * .95f
+                    || Math.abs(other.centerX - head.centerX) > gap * 5
+                    || Math.abs(other.centerY - head.centerY) > gap * 5
+                    || strongSemanticShaftDirection(labels, width, height, other, gap) != direction
+                    || detectBeamCount(labels, gray, width, height, other, staff) != 2) continue;
+            int ink =
+                    BeamInkThreshold.at(
+                                    gray,
+                                    width,
+                                    height,
+                                    Math.round(other.centerX),
+                                    Math.round(other.centerY - gap * 5),
+                                    Math.round(other.centerY + gap * 5),
+                                    gap)
+                            + 5;
+            int[] pair =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            ink,
+                            9);
+            if (pair == null
+                    || pair[2] != direction
+                    || Math.abs(pair[1] - other.centerY) > gap * 5.5f
+                    || !thinShaftRun(
+                            gray, width, height, other, pair[0], pair[1], direction, gap, 170))
+                continue;
+            if (PairedGraceBeamInk.countPrintedSize(
+                            gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
+                    == 2) return true;
+        }
+        return false;
+    }
+
+    private static int strongSemanticShaftDirection(
+            byte[] labels, int width, int height, Component head, float gap) {
+        int above = 0, below = 0;
+        int top = Math.max(0, Math.round(head.centerY - gap * 4.8f)),
+                bottom = Math.min(height - 1, Math.round(head.centerY + gap * 4.8f)),
+                nearTop = Math.max(0, Math.round(head.centerY - gap * .15f)),
+                nearBottom = Math.min(height - 1, Math.round(head.centerY + gap * .15f));
+        for (int x = Math.max(0, Math.round(head.minX - gap * .28f));
+                x <= Math.min(width - 1, Math.round(head.maxX + gap * .28f));
+                x++) {
+            above = Math.max(above, countVertical(labels, width, x, top, nearTop));
+            below = Math.max(below, countVertical(labels, width, x, nearBottom, bottom));
+        }
+        int maximum = Math.max(above, below), minimum = Math.min(above, below);
+        if (maximum < gap * 2.3f || minimum > maximum * .2f) return 0;
+        return above > below ? -1 : 1;
     }
 
     private static boolean palePairedTripleRails(

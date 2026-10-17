@@ -2553,12 +2553,19 @@ final class OmrMeasurePostProcessor {
                                         x,
                                         upper.lastStaff.top,
                                         upper.lastStaff.gap,
-                                        upper.lastStaff.slope)
+                                        upper.lastStaff.slope,
+                                        upper.lastStaff.track)
                                 || staggeredCueBracket(
                                         gray, width, height, x, upper.lastStaff, lower, gap))
                         && horizontalStaffBeside(
-                                gray, width, height, x, lower.top, lower.gap, lower.slope))
-                    return true;
+                                gray,
+                                width,
+                                height,
+                                x,
+                                lower.top,
+                                lower.gap,
+                                lower.slope,
+                                lower.track)) return true;
             }
         }
         return false;
@@ -2606,6 +2613,22 @@ final class OmrMeasurePostProcessor {
     /** A crease can cross every system, but it does not join their five printed rules. */
     private static boolean horizontalStaffBeside(
             byte[] gray, int width, int height, int x, float top, float gap, float slope) {
+        return horizontalStaffBeside(gray, width, height, x, top, gap, slope, null);
+    }
+
+    /** Connector ownership follows the same local five-rule frame as measure geometry. */
+    private static boolean horizontalStaffBeside(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            float top,
+            float gap,
+            float slope,
+            StaffPitchTrack track) {
+        // Keep an already proved affine connection; local tracks add curved-rule evidence.
+        if (track != null && horizontalStaffBeside(gray, width, height, x, top, gap, slope))
+            return true;
         int radius = Math.max(2, Math.round(gap * .25f));
         for (int side : new int[] {-1, 1}) {
             int supported = 0;
@@ -2615,7 +2638,12 @@ final class OmrMeasurePostProcessor {
                     int xx = x + side * offset;
                     if (xx < 0 || xx >= width) continue;
                     samples++;
-                    int yy = Math.round(top + line * gap + slope * (xx - width * .5f));
+                    float[] local = track == null ? null : track.at(xx);
+                    int yy =
+                            Math.round(
+                                    local == null
+                                            ? top + line * gap + slope * (xx - width * .5f)
+                                            : local[0] - (4 - line) * local[1]);
                     if (thinHorizontalInk(gray, width, height, xx, yy, radius, gap)) hits++;
                 }
                 int nearSamples = 0, nearHits = 0;
@@ -2623,7 +2651,12 @@ final class OmrMeasurePostProcessor {
                     int xx = x + side * offset;
                     if (xx < 0 || xx >= width) continue;
                     nearSamples++;
-                    int yy = Math.round(top + line * gap + slope * (xx - width * .5f));
+                    float[] local = track == null ? null : track.at(xx);
+                    int yy =
+                            Math.round(
+                                    local == null
+                                            ? top + line * gap + slope * (xx - width * .5f)
+                                            : local[0] - (4 - line) * local[1]);
                     if (thinHorizontalInk(gray, width, height, xx, yy, radius, gap)) nearHits++;
                 }
                 if (samples >= gap * 2

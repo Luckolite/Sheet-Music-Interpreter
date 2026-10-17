@@ -367,11 +367,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "cf0649572cb576688f5891df9d0b7746851da824ef5df4af519301f0deeef46f",
-      "source_normalized_sha256": "1a90848be6261376e8d9cc07e3e8127290f13ee5b3b4d6cdd35c5201eb3acddd",
-      "review_note": "Restore a clipped row-end head only with positive four/five-rule contrast continuation; recover three printed beam rails only across two independently attached pale shafts and existing primary-beam evidence; veto numeral-like islands on a continuous raw shaft extending beyond both glyph ends. Twenty-two original geometry/rhythm/numeral regressions plus1773/2843/1807broadercontrols; source/native physical-position and origin-remap proof. No private score pixels, models, dependencies or formats.",
+      "source_sha256": "9e78838baaeb50690844cbf47cf6bde07001947a3a20a480836144dd3c391326",
+      "source_normalized_sha256": "992b8df906457fa2ef9bc51043bdc5815a2db718bcd83aaa6fd804df76bdfc9c",
+      "review_note": "Preserve affine staff-connector proof and use verified local rule tracks only with an actual vertical connector and printed near/far rules. Recover opposing owned double rails only with strong semantic shaft direction, bounded thin shaft, independently owned companion and five-column rail proof. Original synthetic regressions; no score-specific conditions, private assets, model or record-format changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "009e5684b718131e6cd324d7b3f8c7674ddb5db421aba6bf32d586140445dc4f",
+      "standalone_sha256": "06d9e0ec87aa351d1ceab02601a8bd2c4561c59472d98cca5b1e71d7503669bd",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "95dd2c3228b3f1b10d41a9923f8cd916e58db86690f753f24629180eb75cdc59",
-      "review_note": "Use physically proven key flats, independently owned shafts, detached bow geometry and confirmed printed rails to retain clefs, accidental identity and written rhythm. Recover a hanging rest only with supporting-rule and fading-edge contrast, and a separator only with validated local five-rule frames. Original synthetic fixtures; no private score pixels, models, dependencies or record-format changes.",
-      "source_normalized_sha256": "eec63cc06dc9e4d34a7e1ca21075984416c07c4a124aeb0fd561458c41c1f33f",
+      "source_sha256": "86b0fba2f07d2a040542f7ed993d9a1be833d80c569321d8e3a71dd3154490cb",
+      "review_note": "Preserve affine staff-connector proof and use verified local rule tracks only with an actual vertical connector and printed near/far rules. Recover opposing owned double rails only with strong semantic shaft direction, bounded thin shaft, independently owned companion and five-column rail proof. Original synthetic regressions; no score-specific conditions, private assets, model or record-format changes.",
+      "source_normalized_sha256": "807de59f6dc1eb0be9f705894dce1259295e84c603c6e37c4da80204eccabd8a",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "dd2654f24874c0fc24a9e0fe460eae945000a9bfa6e510bb40a778b4e218f1df",
+      "standalone_sha256": "ce503179db3b3f1ad7b43142840a2f40b3a6cc9885f789e2567357d75e85ac89",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
