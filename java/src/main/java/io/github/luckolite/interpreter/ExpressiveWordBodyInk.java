@@ -45,6 +45,7 @@ final class ExpressiveWordBodyInk {
         for (var word : words) {
             if (word == null
                     || word.text() == null
+                    || !EnglishCharacterOcrContext.admitted(word)
                     || word.text().replaceAll("[^A-Za-z]", "").length() < 6
                     || ExpressiveDirectionText.parse(word.text()).isEmpty()
                     || !Float.isFinite(word.left())
@@ -86,7 +87,7 @@ final class ExpressiveWordBodyInk {
                                     && (contrasted[(ny + y0) * width + nx + x0] & 255) < 185) {
                                 seen[next] = true;
                                 queue[count++] = next;
-                            }
+                        }
                         }
                 }
                 int bw = right - left + 1, bh = bottom - top + 1;
@@ -118,8 +119,12 @@ final class ExpressiveWordBodyInk {
                             && note.x() <= right + 1
                             && note.y() >= top - 1
                             && note.y() <= bottom + 1) head = true;
-                if (head || notation > count * .1f || counters(ink, bw, bh, gap) == 0) continue;
-                result.add(new Body(left, top, right, bottom, count, ink));
+                if (head || notation > count * .1f) continue;
+                boolean[] owned = counterStrokeOwnership(ink, bw, bh, gap);
+                int ownedCount = 0;
+                for (boolean pixel : owned) if (pixel) ownedCount++;
+                if (ownedCount == 0) continue;
+                result.add(new Body(left, top, right, bottom, ownedCount, owned));
             }
         }
         return List.copyOf(result);
@@ -139,10 +144,9 @@ final class ExpressiveWordBodyInk {
         return false;
     }
 
-    private static int counters(boolean[] ink, int w, int h, float gap) {
-        boolean[] seen = new boolean[ink.length];
+    private static boolean[] counterStrokeOwnership(boolean[] ink, int w, int h, float gap) {
+        boolean[] seen = new boolean[ink.length], owned = new boolean[ink.length];
         int[] queue = new int[ink.length];
-        int result = 0;
         for (int seed = 0; seed < ink.length; seed++) {
             if (ink[seed] || seen[seed]) continue;
             int take = 0, count = 1, left = w, right = 0, top = h, bottom = 0;
@@ -172,8 +176,57 @@ final class ExpressiveWordBodyInk {
                     && count <= w * h * .22f
                     && count >= Math.max(3, Math.round(gap * gap * .045f))
                     && right - left + 1 >= gap * .15f
-                    && bottom - top + 1 >= gap * .2f) result++;
+                    && bottom - top + 1 >= gap * .2f)
+                markCounterStrokeBounds(ink, owned, queue, count, w, h);
         }
-        return result;
+        return owned;
+    }
+
+    /** A pale connection does not make an independent musical mark a letter.
+     * Trace each closed counter's actual enclosing strokes. Robust bounds retain
+     * the letter body without letting a narrow attached branch enlarge it. */
+    private static void markCounterStrokeBounds(
+            boolean[] ink, boolean[] owned, int[] pocket, int count, int w, int h) {
+        int[] firstRow = new int[w], lastRow = new int[w];
+        int[] firstColumn = new int[h], lastColumn = new int[h];
+        Arrays.fill(firstRow, h);
+        Arrays.fill(lastRow, -1);
+        Arrays.fill(firstColumn, w);
+        Arrays.fill(lastColumn, -1);
+        for (int i = 0; i < count; i++) {
+            int x = pocket[i] % w, y = pocket[i] / w;
+            firstRow[x] = Math.min(firstRow[x], y);
+            lastRow[x] = Math.max(lastRow[x], y);
+            firstColumn[y] = Math.min(firstColumn[y], x);
+            lastColumn[y] = Math.max(lastColumn[y], x);
+        }
+        int[] tops = new int[w], bottoms = new int[w], lefts = new int[h], rights = new int[h];
+        int columns = 0, rows = 0;
+        for (int x = 0; x < w; x++)
+            if (lastRow[x] >= 0) {
+                int t = firstRow[x], b = lastRow[x];
+                while (t > 0 && ink[(t - 1) * w + x]) t--;
+                while (b + 1 < h && ink[(b + 1) * w + x]) b++;
+                tops[columns] = t;
+                bottoms[columns++] = b;
+            }
+        for (int y = 0; y < h; y++)
+            if (lastColumn[y] >= 0) {
+                int l = firstColumn[y], r = lastColumn[y];
+                while (l > 0 && ink[y * w + l - 1]) l--;
+                while (r + 1 < w && ink[y * w + r + 1]) r++;
+                lefts[rows] = l;
+                rights[rows++] = r;
+            }
+        if (columns == 0 || rows == 0) return;
+        int top = quantile(tops, columns, 25), bottom = quantile(bottoms, columns, 75);
+        int left = quantile(lefts, rows, 25), right = quantile(rights, rows, 75);
+        for (int y = top; y <= bottom; y++)
+            for (int x = left; x <= right; x++) if (ink[y * w + x]) owned[y * w + x] = true;
+    }
+
+    private static int quantile(int[] values, int count, int percent) {
+        Arrays.sort(values, 0, count);
+        return values[(count - 1) * percent / 100];
     }
 }

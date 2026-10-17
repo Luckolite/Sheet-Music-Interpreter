@@ -45,6 +45,7 @@ final class MusicalOcrEvidence {
             int height) {
         for (var block : text.getTextBlocks())
             for (var line : block.getLines()) {
+                if (EnglishCharacterOcrContext.ownedByProse(text, block, line)) continue;
                 if (NEGATED_DIRECTION
                         .matcher(line.getText().toLowerCase(java.util.Locale.ROOT))
                         .matches()) continue;
@@ -83,7 +84,14 @@ final class MusicalOcrEvidence {
                                         box.left / scale / width,
                                         (top + box.top / scale) / height,
                                         box.right / scale / width,
-                                        (top + box.bottom / scale) / height));
+                                        (top + box.bottom / scale) / height,
+                                        EnglishCharacterOcrContext.character(line.getText())
+                                                        && EnglishCharacterOcrContext.qualifies(
+                                                                text, block, line)
+                                                ? PlayingTechniqueDetector.WordAdmission
+                                                        .CONTEXT_QUALIFIED
+                                                : PlayingTechniqueDetector.WordAdmission
+                                                        .UNCLASSIFIED));
                     continue;
                 }
                 // Keep a compound dynamic/expression line at its printed starting slot.

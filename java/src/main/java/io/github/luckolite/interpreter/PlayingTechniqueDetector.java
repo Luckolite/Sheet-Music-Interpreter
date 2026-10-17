@@ -11,7 +11,26 @@ import java.util.regex.Pattern;
 final class PlayingTechniqueDetector {
     record Staff(float top, float bottom, float gap, int index, int count) {}
 
-    record Word(String text, float left, float top, float right, float bottom) {}
+    enum WordAdmission {
+        UNCLASSIFIED,
+        CONTEXT_QUALIFIED
+    }
+
+    record Word(
+            String text,
+            float left,
+            float top,
+            float right,
+            float bottom,
+            WordAdmission admission) {
+        Word(String text, float left, float top, float right, float bottom) {
+            this(text, left, top, right, bottom, WordAdmission.UNCLASSIFIED);
+        }
+
+        Word {
+            java.util.Objects.requireNonNull(admission);
+        }
+    }
 
     private static final Pattern TOKEN_PUNCTUATION = Pattern.compile("^[.,:;]+|[.,:;]+$");
     private static final Pattern TOKEN_SPACE = Pattern.compile("\\s+");

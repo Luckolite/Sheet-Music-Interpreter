@@ -9,9 +9,20 @@ import java.util.Objects;
  * Preserve ordering, punctuation, duplicate tokens and missing boxes. This is
  * evidence, not a normalized interpretation; absent symbols must not be invented.
  */
-public record OcrText(String text, List<Block> blocks) {
+public record OcrText(String text, List<Block> blocks, Grouping grouping) {
+    public enum Grouping {
+        UNKNOWN,
+        ORIGINAL_BLOCKS,
+        DETECTED_LINES
+    }
+
+    public OcrText(String text, List<Block> blocks) {
+        this(text, blocks, Grouping.UNKNOWN);
+    }
+
     public OcrText {
         Objects.requireNonNull(text);
+        Objects.requireNonNull(grouping);
         blocks = List.copyOf(blocks);
     }
 

@@ -1349,7 +1349,8 @@ final class OmrScoreInterpreter {
                             height,
                             head,
                             physicalStaff,
-                            roundedLedgerGraces.contains(head))
+                            roundedLedgerGraces.contains(head),
+                            staffs)
                     && !(recoveredShadedChordHeads.contains(head)
                             && ShadedChordHeadRecovery.hasLedgerRails(
                                     gray,
@@ -4694,7 +4695,7 @@ final class OmrScoreInterpreter {
                 if (head.centerY >= physical.top - physical.gap * 1.8f
                                 && head.centerY <= physical.bottom + physical.gap * 1.8f
                         || hasHeadLedgerSupport(
-                                labels, gray, width, height, head, physical, true)) {
+                                labels, gray, width, height, head, physical, true, staffs)) {
                     possible = true;
                     break;
                 }
@@ -9935,13 +9936,20 @@ final class OmrScoreInterpreter {
             int height,
             Component head,
             Staff staff,
-            boolean roundedGrace) {
+            boolean roundedGrace,
+            List<Staff> staffs) {
         List<Component> parts = sideBySideSeconds(labels, width, head, staff.gap);
         if (parts.isEmpty()) parts = List.of(head);
-        for (Component part : parts)
-            if (!hasLedgerInk(gray, width, height, part, staff.pitchGap, roundedGrace)
-                    || !hasInnerLedgerInk(gray, width, height, part, staff, roundedGrace))
+        for (Component part : parts) {
+            if (!hasLedgerInk(gray, width, height, part, staff.pitchGap, roundedGrace))
                 return false;
+            // Existing admissions retain their original physical evidence and ownership.
+            if (hasInnerLedgerInk(gray, width, height, part, staff, roundedGrace)) continue;
+            if (!completeUpperLedgerChain(gray, width, height, part, staff)
+                    || !completeUpperLedgerBody(gray, width, height, part, staff.pitchGap)
+                    || competingPrintedCore(labels, gray, width, height, part, staff, staffs))
+                return false;
+        }
         return true;
     }
 
@@ -10231,6 +10239,79 @@ final class OmrScoreInterpreter {
                     && ShadedLedgerRule.thin(gray, width, height, x + d, y, gap)) right = d;
         }
         return left > 0 && right > 0 && left + right - 1 <= maximum;
+    }
+
+    private static boolean competingPrintedCore(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff owner,
+            List<Staff> staffs) {
+        if (staffs == null) return true;
+        for (Staff other : staffs) {
+            float[] frame = localStaffPitch(labels, gray, width, height, other, head);
+            float bottom = frame[0], gap = frame[1], top = bottom - 4 * gap;
+            if (head.maxY < top || head.minY > bottom) continue;
+            if (Math.abs(bottom - owner.pitchBottom) < gap * .5f) continue;
+            // findStaffs already admitted this independent frame. Missing local contrast
+            // cannot establish unique remote ownership for a body crossing its core.
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean completeUpperLedgerBody(
+            byte[] gray, int width, int height, Component head, float gap) {
+        return ClosedLedgerHeadBody.proved(
+                gray,
+                width,
+                height,
+                head.minX,
+                head.minY,
+                head.maxX,
+                head.maxY,
+                gap,
+                attachedRawStem(gray, width, height, head, gap));
+    }
+
+    private static boolean completeUpperLedgerChain(
+            byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null) return false;
+        float gap = staff.pitchGap, distance = (staff.pitchBottom - 4 * gap - head.centerY) / gap;
+        if (distance <= 4.5f || distance > MAX_HEAD_LEDGER_GAPS) return false;
+        int required = Math.max(0, (int) Math.ceil(distance - .65f) - 1);
+        if (required < 4) return false;
+        int left = Math.max(0, Math.round(head.minX - gap * .3f));
+        int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
+        int margin = Math.max(1, Math.round(gap * .18f));
+        for (int rule = 1; rule <= required; rule++) {
+            float line = staff.pitchBottom - 4 * gap - rule * gap;
+            boolean found = false;
+            for (int y = Math.max(0, Math.round(line - gap * .18f));
+                    y <= Math.min(height - 1, Math.round(line + gap * .18f));
+                    y++) {
+                int ink = 0, l = 0, r = 0;
+                for (int x = left; x <= right; x++)
+                    if ((gray[y * width + x] & 255) < 165) {
+                        ink++;
+                        if (x < head.minX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            l++;
+                        if (x > head.maxX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            r++;
+                    }
+                if (ink >= (right - left + 1) * .85f
+                        && l >= margin
+                        && r >= margin
+                        && shortLedgerRule(gray, width, y, head, gap)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return false;
+        }
+        return true;
     }
 
     private static boolean hasInnerLedgerInk(

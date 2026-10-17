@@ -212,17 +212,21 @@
     },
     "PortableOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOcr.java",
-      "source_sha256": "64b5fea893581f282e34f3668b97beeb5218c88f381d4f0e1a20bf53586e5024",
+      "source_sha256": "49f801abd4520a6953f94e0f9e9698d4134d8e184f4ba100e6609754819d4e8a",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "65202fa41a2cbd8faf83371415e758a97739bf34296d835d19318629b48d9010",
-      "reviewed_source_state": "Reviewed current worktree batch; actual mapped source hashes identify the reviewed files.",
-      "review_note": "Opaque gray input reuses one interpolation for three planes; existing ARGB, alpha, rounding, BGR CHW, zero padding, region/CTC/word ordering are retained. Eight original raw-bit/caller/mock-output regressions plus existing goldens. No model or Android dependency. read(int[]) now validates and snapshots fully opaque equal-channel input in one pass before the existing gray path; three probes only reject and never establish eligibility. Original synthetic regressions preserve full raw tensor bits, nested OCR, color/alpha fallback, caller arrays and cancellation. No models, weights, thresholds or platform dependency change."
+      "source_normalized_sha256": "ea96ad262ac14b76568632c93be695a70e7d13e0316f199b0edf1f3be5b7809c",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "9e5f3f6a904dfd90072866742ab66f3b1a3e6fd2fc64847cf794b40e674a47fd"
     },
     "OcrText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrText.java",
-      "source_sha256": "f8493b749f629e21e151857fa79d636f0b8303a480aa680ec82c1e6a17bdafe2",
+      "source_sha256": "971a6d7eae951676ca0a5a5f014ebae7dd7da3cd0edef8dd80d2b757478d25e9",
       "reviewed_app_commit": "38007cbb6226aedaea567cf64fc76cace4d3297c",
-      "source_normalized_sha256": "f8493b749f629e21e151857fa79d636f0b8303a480aa680ec82c1e6a17bdafe2"
+      "source_normalized_sha256": "672e1cc7b1bebfc2dc4e7b6953c44bf5ddfd1d62b8430a96116829684eaf216e",
+      "standalone_sha256": "87335542a0e69974b78b57fdb0c6b64d7cd7dd1b4aa9dfc3382de544da4633b5",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
     },
     "OcrCtcDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrCtcDecoder.java",
@@ -384,22 +388,23 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ca860e6b348c3bf27823d2bf315fef17b7b21ed86b8a560f0e503df02f81808f",
-      "review_note": "Use bounded oval centres on the existing twelve-diatonic-step grid to admit a tall single-shaft chord. One raw eight-connected component inside a narrow common-edge tube must touch every chord head; horizontal staff ink cannot bridge paper or a distant network. Existing short-chord, stem-direction, coverage, separate-voice and external-beam guards unchanged. Thirty original procedural regressions include separated quarter/eighth shafts, horizontal staff bridges, mirrored and translated diagonals, missing semantic masks and distant networks. No private score pixels, source identifiers, weights, dependencies or native formats.",
-      "source_normalized_sha256": "77caa2d96c0bcbc80deb4c6804cd8480d356699c39aa9687567a05c7dc736d08",
+      "source_sha256": "42d161c7d6eb6cda1a1f1fd36039ea6e126bfd1c8461eab206d4e503fea2c4b3",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "source_normalized_sha256": "577ecabe63b999f9f33eda8c1cc08a5312e8017c1f1f3e62dcb78eef7357148b",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "e505e0acb6799f57a7d69136acfda2f2def5edc57473e856f3649f0e79360d6c",
+      "standalone_sha256": "a583ffe90dfa2cd5ad1d0724e6f483f330f96e67f70424974b524b67bda97c8f",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
-      "source_sha256": "8dca36a3e0d967b02d9a43e57692597288ff68a21ffd1e8d1b41a226a9357dbe",
-      "source_normalized_sha256": "8dca36a3e0d967b02d9a43e57692597288ff68a21ffd1e8d1b41a226a9357dbe",
-      "reviewed_source_state": "Music Sheets 1.18.382 frozen reviewed source; decoder 264fa8e50554b08ef3e67cd9cc6554ba0fb3f625c0b7aedef540b71d31cf0b02",
-      "review_note": "Whole-file executable token parity; package and optional diagnostics adapter only. Original generated positive/rejection controls; JDK only; no private score, model or dependency change."
+      "source_sha256": "2af93e3faef08e695be3577ab7761482773397864ed1417205afa4758a8d0770",
+      "source_normalized_sha256": "2cd64008db45651a574e1385103f93e1659dcb0e9467663d9196ef1186341de9",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "92089e95368d112bc4cbd0ffd007092bbef536108c11b2d02a87b74d5efb577d"
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
@@ -901,13 +906,13 @@
     },
     "MusicalOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicalOcrEvidence.java",
-      "source_sha256": "b650a4d3ed92807e6cce6c7c908b92292400c57b4d3bd6878e668fdb696d6bf8",
+      "source_sha256": "f03aab5aa749fb4c3932b8ae64673553ee8fdb9be6e1043a9ed2b7614e32e5f5",
       "reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "source_normalized_sha256": "70d2f42ccbc92c3847138329820003a06549eb02846d93b30076f89bcf83cda2",
-      "reviewed_source_state": "Committed paired recognition49/guide286/audio82 sources; final cumulative package/deployment/runtime verification pending.",
-      "review_note": "Preserve whole OCR ending-selector lines before element filtering while retaining the prior missing-line-box fallback. Raw bracket evidence remains required.",
+      "source_normalized_sha256": "98ee8fd18f67a3233fdaa4e14258dacaccc318003f78ef1a27d0bb9ac90995e9",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
       "scoped_reviewed_app_commit": "0e3d26c342627c949d7d3b62e233cea3f544d548",
-      "standalone_sha256": "ec7c229ba3b6071515369d7cc4692c8b737c1e9bc4fb9fd580353bca474e84b6"
+      "standalone_sha256": "8b4d82804c08c4b8c79a5a8790c36ac591a2457ae26019149af2614ba9b5e798"
     },
     "NavigationSegnoGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NavigationSegnoGlyphs.java",
@@ -1117,12 +1122,12 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "df171c9dd2d2be3d0073a50e9d2c484b511b688fd0cd2e03370d9bd2003d9028",
-      "source_normalized_sha256": "297b4fcf85eb5c0a50d74f07e31d494fb996c6736ac8958bd46ad91b9926c078",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "2f5685cb4b883e7eaae9d331076bb73e76f70f40196801c4cd8a882584c2b6f2",
+      "source_normalized_sha256": "ac96f7e9de73936e4686c0b383b6dd28367c15a18154f14664440ec3a5aaa6e8",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "f73d3c9744a9b980fab50ffbd19e6407bfbc1441ed3cbc7024db28f81910dca8",
+      "standalone_sha256": "25a9132128d9d4a3226292e2dd2547d668548852452f15a207973bb8e5706e83",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "ScorePerformanceTimeline.java": {
@@ -1150,19 +1155,21 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "59cdf2487273c6f2a3abdc61a64f6437fb2bdcfa4faee910b73777234229e5dc",
-      "source_normalized_sha256": "8052ac8346a855aa1db317d5df3ac9b8e22621128dfd01d57d6bae0c0ae9d310",
+      "source_sha256": "2ef022d5ec2985847577728357e019637c5ca40d23fd546887a4ed74c630379a",
+      "source_normalized_sha256": "8f911996e3f036839fd28ad20d6c7f3d808e7d1c0711085eea8ffb0139ee3c04",
       "reviewed_source_state": "working-tree",
-      "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
-      "standalone_sha256": "60bfb45525b4440e73a772a21395293e2d00aad48b7518ea8834b1c36efc9f4c",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "bcb90e04da97fa7e77cf83cc4f0962d2058e0c9c8b3974da84d22d95a8528bef",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
-      "source_sha256": "69579221633fb74d6ea1475efa9b6084cb62abbe422120cf4fb511387b1b1cfb",
+      "source_sha256": "9f27d7ab7bbdc415d8f713c67c781eef71a7ee8c04a32b246aad81acfb1c14b8",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "61433e7ca17b5bdae66da366db4d906bba29deb789511801ccb503e6650e3556",
-      "review_note": "Reviewed sudden-dynamic qualifier retention through OCR and glyph refinement, with bounded same-bar unique note attachment. Ordinary/far/ambiguous during-note levels retain printed anchors. Shared semantic helper used by Android glyph adapters; native constructor retains its pre-existing file/resource loading adapter. Original synthetic and licensed shipped-glyph regressions; no private score, new dependency or model change."
+      "source_normalized_sha256": "0cc23506043277537fb746878dad0ef4080d800ae2196fc371b2069b4e9db898",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "a4767216ca2fc25e5291fef5e706b85174b5481384ba0fb203a9a97460770115",
+      "reviewed_source_state": "working-tree"
     },
     "NativeOrnamentGlyphs.java": {
       "source_path": "tools/native-worker/NativeOrnamentGlyphs.java",
@@ -1482,11 +1489,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "bf6453fc7b209e590b973ec89e122c1bc4d08d0c5b9469e5673cf7271b05631b",
-      "source_normalized_sha256": "7c36988d15a84251367341f7fb36c488656c0a37a132bf4855b0d2fd6aee8241",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "092e24d9d0de5a7a4079f0bf3a9205a15696d2d4d2b81eed3379a669e9cbd248",
+      "source_sha256": "88574a275d58774aacb49a1ce8171cdd0d66c91cea62fdf46076ce03e0658451",
+      "source_normalized_sha256": "da0f99762862892433aeb2e28be81bd64ae6d227ba81e2e9d6a59451e19ff669",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "63659ff94b9791ea505b49d7d497efc0a7f969a3d3a0e708f1c8c0f5892e7d70",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "ScoreExpressionNotation.java": {
@@ -1593,11 +1600,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "933d4e074f0758544b2a3150dc3964ffbea5cd296f080afc28ea5aa52a12c48e",
-      "source_normalized_sha256": "8771e3f114fe3d5206d0f5a7ae6ba37ffa9a86085d66ebf9782cbc62a78432ab",
-      "review_note": "Reviewed matching bounded rooted-flag delta and recognition63 identity over previously reviewed source; original synthetic controls. Historical comment/format differences retained.",
+      "source_sha256": "8262fc6fb4e78e3a14908dfc6d1903395ecb5fc2fea58522f80ea1335a870de8",
+      "source_normalized_sha256": "66475325bf8b2c478aaf8b049b701e419385d4da2e3619eed7a6c25eef37724c",
+      "review_note": "Recognition revision64 invalidates prior derived recognition at unchanged guide layout290; no binary fields added.",
       "reviewed_source_state": "Reviewed exact paired source: reject outer-staff extending note stems as separators; retain proved note-symbol equation position and earlier verbal prefixes; recognition62 with guide288/audio94. Original synthetic regressions. Combined runtime/deployment qualification remains pending.",
-      "standalone_sha256": "9173eb5c75067d23312dee0342278d82fa19c488c35b80ce1de7ac1d4648e95f",
+      "standalone_sha256": "1f490f6b06c92d5e5cde5b606e57f89877b4b854f0efff9b8519a6e06a4da164",
       "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
     },
@@ -1970,11 +1977,12 @@
     "ExpressiveWordBodyInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveWordBodyInk.java",
       "reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "review_note": "Independent OCR identifies a direction word; connected original ink identifies the exact pixels owned by that word. Original Apache-2.0 procedural positive/rejection controls; exact package/diagnostics-adapter token parity and existing JDK/interpreter dependencies only. No private source fixtures, model weights or record layouts are added.",
-      "source_sha256": "fc6c6df591b53879238a2e5b92b3da946f19af4aa99113d1aaea7acd7bb7cb8f",
-      "source_normalized_sha256": "fc6c6df591b53879238a2e5b92b3da946f19af4aa99113d1aaea7acd7bb7cb8f",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "source_sha256": "221fe40f6a68d7fd5dc9a10abb9cfd368c85fd04831c625f4d20d3ec38143a45",
+      "source_normalized_sha256": "4965d95353d6971ed7bc4d9a9ccfc99795ee9525b6a945f1005d727d48c6e90d",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls."
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "99dd737aed184f33e19b3842616ade0dcd0edab8921b6ca10a3c2e2e0a7b2c37"
     },
     "PrintedWordArticulations.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedWordArticulations.java",
@@ -2684,11 +2692,11 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "12ad4f5ad5a3b7c88d12e8c25362be334114b3eeb7a316fab28346ecee07fddd",
-      "source_normalized_sha256": "ab688624ea4144b81d16054b3349bcfc578fdcacd1d6a34060a90f0f9ddb5dfc",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "3cb1da3fd596852e087957d9bfad2b546c4198182972448ee8bac8ca78da935a",
+      "source_sha256": "f4422b5927b10f14cf67d87e90f3eb222d6e9914a32496f6414f421903e31e0a",
+      "source_normalized_sha256": "a0054207aa7c082e188d5ab2cbed7c11215fefdcb831fe5e0e9296f33d76d264",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+      "standalone_sha256": "ce6e36b6ddef103bb7af4d9e80d643485035a1a1881126a2a60821a29a2fa5e7",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "MeterDigitRecognizer.java": {
@@ -3509,6 +3517,60 @@
       "standalone_sha256": "e05827d8efab80f1208419531d19185a4acc1d49260eea77a1b4713b56f75ad1",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover a faint hairpin only from two separately dark straight cores with matching physical staff ownership, bounded fit error, a genuinely inked common apex, complete thin raw-arm paths on uniform bright paper and a clear open interior. Existing hairpin thresholds and routes retained; no incomplete cap, missing column, cross-part, filled triangle, curved or parallel pair is inferred. Twenty-six original procedural regressions; no private score pixels, identifiers, models or native format changes."
+    },
+    "CharacterDirectionEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CharacterDirectionEvidence.java",
+      "license": "Apache-2.0",
+      "source_sha256": "b9f3d0c20667916fdd34b4c013582b8a0a5b926caf4c052d920b2113378ea3ab",
+      "source_normalized_sha256": "bf83370fc137979840a4ecb900294ba778a42c2d345e65bab62de12a6868097c",
+      "standalone_sha256": "2de86af6831955f97ba482ff403c5f63286aec881058795ff99a9f331696c045",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "ClosedLedgerHeadBody.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedLedgerHeadBody.java",
+      "license": "Apache-2.0",
+      "source_sha256": "d31ce3f6643dd5cde7685011c5563aa167b7360f784473f6bd809bc1f5f7d974",
+      "source_normalized_sha256": "523046dcd08b85ffc1109f7cc72e47062ae60a6611058a0b115a258a6b11ae6a",
+      "standalone_sha256": "4876c86cef76ee9254b6fb9f5c2e14bd11ec90539a3695a821d3e45e2098e5d0",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "EnglishCharacterOcrContext.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/EnglishCharacterOcrContext.java",
+      "license": "Apache-2.0",
+      "source_sha256": "464275d7784c6dc531827f67318b2ef221cd7a2552dc27254dd4d024d7bd341b",
+      "source_normalized_sha256": "8f526ad816b0f7f8b82eca17d85ee97e81fba72baf79254b142558411951186c",
+      "standalone_sha256": "b69129ae3f0647027694ed0bd82372c796c79e461564835936daf8e66a3d7bee",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "NativeDirectionOcrCache.java": {
+      "source_path": "tools/native-worker/NativeDirectionOcrCache.java",
+      "license": "Apache-2.0",
+      "source_sha256": "51afda3fe00e8c039cf7ab3252acad7b5f5799a30b54831962d75f09100aeb9d",
+      "source_normalized_sha256": "349f02e66bb87e6e37d718d37f92bdbda7aed4e093fac78c1e3b1c031c989c10",
+      "standalone_sha256": "c50f00af1b53a1b9d9aed2aa36afef179f4e77b2dfd9a8d93fa31204a7352f44",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "NativeEnglishDirectionEvidence.java": {
+      "source_path": "tools/native-worker/NativeEnglishDirectionEvidence.java",
+      "license": "Apache-2.0",
+      "source_sha256": "0b791f946c17ffd3a002daf406fd9de6071e87c9eb5def1e4f5b84a6cabdc90e",
+      "source_normalized_sha256": "d02eebccc338061237399a57126c9fbb66b0ca006dc21eed05351e5f4fc5297c",
+      "standalone_sha256": "a3842b7ca36eec7f0a6209a3b6bbe7ebcc99cc50584c2c4d865dbdaf6230af4a",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+    },
+    "PaperDynamicLiteralReproof.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaperDynamicLiteralReproof.java",
+      "license": "Apache-2.0",
+      "source_sha256": "7b0586f6d8088c3e9ef82ac53b1029f31c8e55f3d1d6fd988986376e39336c75",
+      "source_normalized_sha256": "41875c67103be624bafeee60701c6376897ed4f4aad7d0a537dd2bbb4cbe2ee6",
+      "standalone_sha256": "46ec34198bb1510ee16435ef5b21d980f8e75fba03108ef8ed5ece1e14500b6a",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7869,5 +7931,58 @@
     "license": "Original Apache-2.0 procedural arrays only.",
     "layout": "Existing guide/writer/native layouts and source manifest unchanged.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "closed_upper_ledger_and_contextual_direction_review": {
+    "summary": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
+    "original_java_regressions": [
+      "UpperLedgerAdversarialProbe.java",
+      "UpperLedgerChordTest.java",
+      "UpperLedgerForeignCoreTest.java",
+      "UpperLedgerHollowAliasTest.java",
+      "UpperLedgerNeighborOwnershipTest.java",
+      "UpperLedgerOwnershipChallenge.java",
+      "UpperLedgerPhysicalOwnershipTest.java",
+      "WholeNeighborPhaseProbe.java",
+      "CharacterDirectionsTest.java",
+      "EnglishCharacterDirectionsTest.java",
+      "EnglishCharacterOcrEvidenceTest.java",
+      "EnglishCharacterWordBodyOwnershipTest.java",
+      "EnglishContextOwnershipTest.java",
+      "EnglishFlatAdmissionTest.java",
+      "ExpressiveDirectionTextTest.java",
+      "ExpressiveWordBodyOwnershipTest.java",
+      "LexicalContextTest.java",
+      "NativeDirectionOcrCacheTest.java",
+      "NativeEnglishPositiveTest.java",
+      "NativeStaffStripAdmissionTest.java",
+      "PaperDynamicLiteralReproofTest.java",
+      "ContextualCharacterOwnerTest.java",
+      "OriginalBlockSeparationPreservationTest.java",
+      "ConnectedArticulationTest.java",
+      "CounterEnvelopeArticulationTest.java",
+      "PartialHeadGuardsTest.java",
+      "EnglishCharacterConsumerTest.java"
+    ],
+    "android_adapters": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "fedbfb5c1bb064f8be5020f4af212ae3d464f079524b9a5e04d47502cca4dbd2"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/MlKitTextAdapter.java",
+        "source_sha256": "3b4bc2440117cc244db9f40ba758aa70dc5ad7563af62fa28998b23560c4f760"
+      },
+      {
+        "source_path": "tools/native-worker/decoder-sources.txt",
+        "source_sha256": "ec99e702c15d406b016906148d01e562f66d802b897ac5b13686e70c7475dc3f"
+      },
+      {
+        "source_path": "tools/native-worker/build_decoder.py",
+        "source_sha256": "4538e882e8a71569418e57593c5143815286bdaa3afc080b284c71b828e24463"
+      }
+    ],
+    "wire": "Legacy RSP1/OCR1 word records unchanged, unknown grouping and unclassified admission retained. New evidence stays in process. Guide290 unchanged; recognition revision64.",
+    "validation_boundary": "Source/native recognition and typed actual-Song export qualified privately; Android adapter dependency typecheck only. Cumulative APK and paired Hub/worker deployment deferred.",
+    "consumer_fixture_boundary": "Two downstream clock tests explicitly author CONTEXT_QUALIFIED input and do not claim OCR acquisition. Private copied Android caller-body fixtures and private CTX4/ADW1 codecs are excluded; actual Android adapter typecheck and independent shared-core controls retained."
   }
 }

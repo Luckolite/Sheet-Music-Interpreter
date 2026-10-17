@@ -92,6 +92,7 @@ public final class ScoreExpressionDetector {
             Set<PlayingTechniqueDetector.Word> symbols) {
         var events = new ArrayList<>(score.expressiveEvents());
         for (var word : words) {
+            if (!EnglishCharacterOcrContext.admitted(word)) continue;
             if (coveredPedalWord(word, words)) continue;
             var caption = PrintedTempoCaption.from(word, score);
             String directionText = caption == null ? word.text() : caption.text();

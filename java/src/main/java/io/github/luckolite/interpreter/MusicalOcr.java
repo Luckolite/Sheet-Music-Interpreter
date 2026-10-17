@@ -8,6 +8,7 @@ import java.util.*;
  * The caller retains responsibility for closing its inference runtime. No models or runtime are loaded here. */
 public final class MusicalOcr {
     private final PortableOcr reader;
+    private NativeDirectionOcrCache directionCache;
     private final PortableOcr.Inference inference;
     private final NativeDynamicGlyphs glyphs;
     private final MeterFontMatcher meterFont;
@@ -445,7 +446,9 @@ public final class MusicalOcr {
                             words.addAll(
                                     ScoreDynamicsDetector.ocrWords(
                                             line.text(), word, gray, width, height));
-                            if (!ExpressiveDirectionText.parse(value).isEmpty()) words.add(word);
+                            if (!EnglishCharacterOcrContext.character(value)
+                                    && !ExpressiveDirectionText.parse(value).isEmpty())
+                                words.add(word);
                         }
             }
         if (TRACE) System.err.println("dynamic words=" + words.size());
@@ -453,7 +456,7 @@ public final class MusicalOcr {
         for (var word : words)
             if (!ExpressiveDirectionText.parse(word.text()).isEmpty() && !result.contains(word))
                 result.add(word);
-        return List.copyOf(result);
+        return NativeDirectionOcrCache.legacyStaffStripWords(result);
     }
 
     /** Match Android's bounded raw/staff-cleared text passes for tr and port.
@@ -516,6 +519,72 @@ public final class MusicalOcr {
         return List.copyOf(words);
     }
 
+    private NativeDirectionOcrCache directionCache() {
+        if (directionCache == null)
+            directionCache =
+                    new NativeDirectionOcrCache(
+                            new NativeDirectionOcrCache.Reader() {
+                                public OcrText full(byte[] gray, int width, int height)
+                                        throws Exception {
+                                    return reader.readGray(gray, width, height);
+                                }
+
+                                public OcrText crop(
+                                        byte[] gray,
+                                        int width,
+                                        int height,
+                                        PaperDynamicWord.Crop crop,
+                                        int scale)
+                                        throws Exception {
+                                    return readCrop(
+                                            gray,
+                                            width,
+                                            height,
+                                            crop.left(),
+                                            crop.top(),
+                                            crop.right(),
+                                            crop.bottom(),
+                                            scale);
+                                }
+                            });
+        return directionCache;
+    }
+
+    /** Reuse raw proof OCR with the existing paper-dynamic acquisition pass. */
+    private OcrText contextualCrop(
+            byte[] gray, int width, int height, int left, int top, int right, int bottom, int scale)
+            throws Exception {
+        return directionCache()
+                .rawCrop(
+                        gray,
+                        width,
+                        height,
+                        new PaperDynamicWord.Crop(left, top, right, bottom),
+                        scale);
+    }
+
+    /** Real full-page context plus strict glyph or exact indexed two-scale literal evidence. */
+    List<PlayingTechniqueDetector.Word> contextualDirections(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            List<PlayingTechniqueDetector.Word> dynamicWords,
+            List<PlayingTechniqueDetector.Word> originalOrdinaryWords) {
+        return directionCache()
+                .directions(
+                        gray,
+                        width,
+                        height,
+                        staffs,
+                        measures,
+                        notes,
+                        originalOrdinaryWords,
+                        glyphs.verifiedLiterals(gray, width, height, staffs, dynamicWords));
+    }
+
     /** Supplement original dynamic words with full-body, two-scale literal agreement. */
     List<PlayingTechniqueDetector.Word> dynamics(
             byte[] gray,
@@ -553,7 +622,7 @@ public final class MusicalOcr {
             var crop = PaperDynamicWord.crop(proposal, width, height);
             if (crop == null) continue;
             var twice =
-                    readCrop(
+                    contextualCrop(
                             gray,
                             width,
                             height,
@@ -563,7 +632,7 @@ public final class MusicalOcr {
                             crop.bottom(),
                             2);
             var thrice =
-                    readCrop(
+                    contextualCrop(
                             gray,
                             width,
                             height,

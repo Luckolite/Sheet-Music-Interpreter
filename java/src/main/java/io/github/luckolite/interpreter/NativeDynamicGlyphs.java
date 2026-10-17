@@ -143,6 +143,35 @@ final class NativeDynamicGlyphs {
         return result;
     }
 
+    /** A fresh literal template match, independent of OCR spelling and scalar dynamics. */
+    record Literal(PlayingTechniqueDetector.Word word, float score, float margin) {}
+
+    List<Literal> verifiedLiterals(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<PlayingTechniqueDetector.Word> candidates) {
+        if (gray == null || width <= 0 || height <= 0 || gray.length != (long) width * height)
+            return List.of();
+        var result = new ArrayList<Literal>();
+        for (var word : DynamicOcrBounds.clean(candidates, gray, width, height, staffs)) {
+            if (word == null || !MARK_LITERAL.matcher(word.text().trim()).matches()) continue;
+            int left = Math.max(0, Math.round(word.left() * width)),
+                    top = Math.max(0, Math.round(word.top() * height));
+            int right = Math.min(width, Math.round(word.right() * width)),
+                    bottom = Math.min(height, Math.round(word.bottom() * height));
+            if (right <= left || bottom <= top) continue;
+            var proof = match(gray, width, left, top, right, bottom);
+            if (!proof.accepted() || !proof.text().equals(word.text().trim())) continue;
+            result.add(new Literal(word, proof.score(), proof.margin()));
+        }
+        return List.copyOf(result);
+    }
+
+    private static final java.util.regex.Pattern MARK_LITERAL =
+            java.util.regex.Pattern.compile("ppp|pp|p|mp|mf|f|ff|fff");
+
     private Match match(byte[] gray, int width, int left, int top, int right, int bottom) {
         float aspect = (right - left) / (float) (bottom - top);
         float[] candidate = mask(gray, width, left, top, right, bottom);

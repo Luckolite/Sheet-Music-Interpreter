@@ -155,7 +155,7 @@ public final class PortableOcr {
             text.append(line.text());
             blocks.add(new OcrText.Block(line.text(), line.box(), List.of(line)));
         }
-        return new OcrText(text.toString(), blocks);
+        return new OcrText(text.toString(), blocks, OcrText.Grouping.DETECTED_LINES);
     }
 
     /** Half-pixel bilinear resize, white alpha composition and explicit CHW normalization. */

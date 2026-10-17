@@ -24,14 +24,38 @@ public final class SheetInterpreter {
         }
     }
 
-    public record Word(String text, float left, float top, float right, float bottom) {
+    public enum WordAdmission {
+        UNCLASSIFIED,
+        CONTEXT_QUALIFIED
+    }
+
+    public record Word(
+            String text,
+            float left,
+            float top,
+            float right,
+            float bottom,
+            WordAdmission admission) {
+        public Word(String text, float left, float top, float right, float bottom) {
+            this(text, left, top, right, bottom, WordAdmission.UNCLASSIFIED);
+        }
+
         public Word {
             Objects.requireNonNull(text);
+            Objects.requireNonNull(admission);
             checkBox(left, top, right, bottom);
         }
 
         PlayingTechniqueDetector.Word internal() {
-            return new PlayingTechniqueDetector.Word(text, left, top, right, bottom);
+            return new PlayingTechniqueDetector.Word(
+                    text,
+                    left,
+                    top,
+                    right,
+                    bottom,
+                    admission == WordAdmission.CONTEXT_QUALIFIED
+                            ? PlayingTechniqueDetector.WordAdmission.CONTEXT_QUALIFIED
+                            : PlayingTechniqueDetector.WordAdmission.UNCLASSIFIED);
         }
     }
 
@@ -236,6 +260,10 @@ public final class SheetInterpreter {
                     ocr.supplementDynamics(
                             gray, width, height, staffs, measures, notes, dynamicWords);
         var techniqueWords = new java.util.ArrayList<>(words);
+        if (ocr != null)
+            techniqueWords.addAll(
+                    ocr.contextualDirections(
+                            gray, width, height, staffs, measures, notes, dynamicWords, words));
         if (ocr != null)
             techniqueWords.addAll(ocr.techniques(gray, width, height, staffs, measures, notes));
         var articulationWords = new java.util.ArrayList<>(techniqueWords);
