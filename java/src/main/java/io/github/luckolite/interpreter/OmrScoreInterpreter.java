@@ -2841,13 +2841,16 @@ final class OmrScoreInterpreter {
         if (staff == null) return false;
         if (completeHeaderSharpOwnsHead(gray, width, height, head, staff, heads, clefs, symbols))
             return true;
-        float gap = staff.pitchGap, top = staff.pitchBottom - gap * 4;
+        Staff local = headerPrintedFrame(staff, head.centerX);
+        float gap = staff.pitchTrack != null ? local.gap : staff.pitchGap;
+        float top = staff.pitchTrack != null ? local.top : staff.pitchBottom - gap * 4;
+        float bottom = top + gap * 4;
         if (head.area > gap * gap * .5f
                 || head.maxX - head.minX + 1 > gap * 1.05f
                 || head.maxY - head.minY + 1 > gap * .8f
                 || head.centerX > width * .25f
                 || head.centerY < top - gap * .8f
-                || head.centerY > staff.pitchBottom + gap * .8f
+                || head.centerY > bottom + gap * .8f
                 || attachedRawStem(gray, width, height, head, gap * .65f, 2, 180) != null
                 || hasOpenCenter(labels, gray, width, height, head, gap)) return false;
         boolean clef = false;
@@ -2870,7 +2873,7 @@ final class OmrScoreInterpreter {
                             || part.maxX > head.minX - gap * .6f
                             || part.maxX > seed.maxX + gap * 1.2f
                             || part.minY < top - gap * 3
-                            || part.maxY > staff.pitchBottom + gap * 1.8f
+                            || part.maxY > bottom + gap * 1.8f
                             || part.minY > joined.maxY + gap * 1.2f
                             || part.maxY < joined.minY - gap * 1.2f) continue;
                     int area = joined.area + part.area;
@@ -2892,7 +2895,7 @@ final class OmrScoreInterpreter {
                     && joined.maxX - joined.minX <= gap * 4
                     && joined.area >= gap * gap * 3
                     && joined.minY < top - gap * .6f
-                    && joined.maxY > staff.pitchBottom + gap * .2f) {
+                    && joined.maxY > bottom + gap * .2f) {
                 clef = true;
                 break;
             }

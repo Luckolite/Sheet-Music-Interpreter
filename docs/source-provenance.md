@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Fragmented header sharp crossbars use the existing local printed staff frame;
+connected-glyph, clef and following-note evidence remain required.
+
 Paired boundary tie bows may overlap their noteheads deeply; the additional search
 retains earlier raster phases and the complete raw-curve proof at both ends.
 

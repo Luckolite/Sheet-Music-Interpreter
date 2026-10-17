@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f533502e84384ae09e409b98030565da841c4f65254e453be109bcf7ee3a39c0",
-      "review_note": "Append deeper head-overlap search for paired boundary tie bows while preserving prior raster phases and full raw-curve proof at both endpoints. Original synthetic above/below, missing-end, broken/straight/opposite-side/different-pitch controls. No private pixels, models, format or dependency changes.",
-      "source_normalized_sha256": "a39abd6c7877f250fb797a2d271933712dada1bf80b62424cb181a7e321eb0a0",
+      "source_sha256": "6e7be4858f3415ec5f4d76c7ecc6c05c707978927fc9ffc39755e12e3ad5b494",
+      "review_note": "Use existing local printed staff frame for fragmented header sharp crossbar ownership; preserve global fallback, connected glyph, verified clef and following note requirements. Original procedural local-frame and missing-evidence controls. No private pixels, new dependencies, models or formats.",
+      "source_normalized_sha256": "a0da35f594395832b7a6e2e1132a4bc2deb2b7be14aa12bf48ea1580208ced03",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "b16fc60ca5e17346ba52433e3c04684bfafcd5f1daf3e8d5d9bd3cbb760c3254",
+      "standalone_sha256": "d089895f95e13a6b58bf904f0e3a5d6035b555e13a2e3e0fab3750286cbc0604",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
