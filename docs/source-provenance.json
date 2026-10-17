@@ -364,11 +364,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "6aaf398fefdd00538279c288a84e38743f3abcd9e20a280e435d5472a437a4c6",
-      "source_normalized_sha256": "705f0ff29e8e0d497c711640e6c069c4bb648ab86d84caa9decec3ede43b9977",
-      "review_note": "Retain an already verified closing boundary when independently visible staff rules continue through a proposed textured-margin trim. Requires existing continuity and ordinary closing-bar ownership checks; original procedural texture/disconnected-tail controls.",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "ac05bf6c9c77f6995f090b2df7807ec57671cbd200a6d93eccfeb62957ac7ba2",
+      "source_sha256": "acb22a7466614c30d2d32d26a9dd6f6f8f21a092e068ccb267b61b7efa149700",
+      "source_normalized_sha256": "c0e7b16409ba162c1db12c4c27b7400d443a43913fb11f1d3047348e99bdb87b",
+      "review_note": "Preserve regional extent when independent complete-rule totals and a full run in selected frame prove the prefix/tail and both physical frames agree within quarter gap throughout it. Original procedural curved staff and incomplete/texture controls. No private pixels, models, format or dependency changes.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "0245bd82b2cbd75508717ec6a2a610905443234f5b88e29350f959c90aee17e2",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },

@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Regional replacements retain proved printed extents when both physical frames
+agree throughout the omitted edge and the selected frame proves a complete run.
+
 Fragmented header sharp crossbars use the existing local printed staff frame;
 connected-glyph, clef and following-note evidence remain required.
 

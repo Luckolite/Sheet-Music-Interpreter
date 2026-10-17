@@ -543,6 +543,41 @@ final class OmrMeasurePostProcessor {
                                             && extentLongest[side][frame]
                                                     >= Math.max(
                                                             8, Math.round(frames[frame].gap * 3));
+                        // Subpixel tracking differences can interrupt the older frame's
+                        // run even when both frames describe the same five printed rules.
+                        // The selected frame must independently prove a complete run;
+                        // retain the old edge only while every rule stays within a quarter gap.
+                        if (!proved
+                                && extentComplete[side][0] >= Math.max(24, Math.round(span * .08f))
+                                && extentComplete[side][1] >= Math.max(24, Math.round(span * .08f))
+                                && extentLongest[side][1]
+                                        >= Math.max(8, Math.round(recovered.gap * 3))) {
+                            boolean agrees = true;
+                            int edgeStart = side == 0 ? prior.left : recovered.right + 1;
+                            int edgeEnd = side == 0 ? recovered.left - 1 : prior.right;
+                            for (int x = edgeStart; x <= edgeEnd && agrees; x++) {
+                                float[][] local = new float[2][];
+                                for (int frame = 0; frame < 2; frame++) {
+                                    StaffRun f = frames[frame];
+                                    local[frame] =
+                                            f.track == null
+                                                    ? new float[] {
+                                                        f.bottom + f.slope * (x - width * .5f),
+                                                        f.gap
+                                                    }
+                                                    : f.track.at(x);
+                                }
+                                float tolerance = Math.min(local[0][1], local[1][1]) * .25f;
+                                agrees =
+                                        Math.abs(local[0][0] - local[1][0]) <= tolerance
+                                                && Math.abs(
+                                                                (local[0][0] - 4 * local[0][1])
+                                                                        - (local[1][0]
+                                                                                - 4 * local[1][1]))
+                                                        <= tolerance;
+                            }
+                            proved = agrees;
+                        }
                         // Replacing a regional frame must not discard an already found
                         // closing bar solely because the short tail has broken staff ink.
                         if (!proved && side == 1 && span <= prior.gap * 4) {
