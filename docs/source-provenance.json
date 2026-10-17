@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2a9fea78fea5378a87e99df14fdf4aef70ad80ce24f3e660f3740281ee6f0306",
-      "review_note": "Recover broken oval rims only with opposing edge contrast, semantic/raw shaft ownership and a complete beam to a retained note. The proved beam establishes filled rhythm on both endpoints. Original scaled/mirrored shapes, missing-ink/shaft/beam controls and false rectangles/arcs; no private score data.",
-      "source_normalized_sha256": "431e0808e9acd9a8a11741e2a63ca81be6dbafc3e9e66c162d4d0af9b83984d5",
+      "source_sha256": "e7ddffb01b54a5f82ed64bd65ebd16148a942a087e525d9f01a830af43c2af03",
+      "review_note": "Compact shaded-core evidence overrides false hollow duration only with two independently attached stems and complete paired rails. Full-size rail probe offset scales beyond shaft thickness; grace probe unchanged. Original synthetic shaded/hollow/rule/scratch, scaled and upward-stem controls. No private score pixels, model, dependencies or format changes.",
+      "source_normalized_sha256": "ec515998214b79ace42f97069b6911395bdf68034ae9f135209cd8ea52227e10",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "ace7d4cd254338351376f84a2a05bc9cd60626deb4dae4a9715333b6bf74f22a",
+      "standalone_sha256": "349d623a470f1d1d7c33904fe05ccae582305966fbf10a726412b7d3de9d57d3",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -939,14 +939,14 @@
     },
     "PairedGraceBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedGraceBeamInk.java",
-      "source_sha256": "55ff495ee78918218a075730c7de27318e3af2cf500a2263cadb6f01b2d55c8b",
+      "source_sha256": "f069177b8e7762f77fecd22f7dd22ebab11b52dfd932926c395313f1c726a21e",
       "reviewed_app_commit": "bda749b92001949ea1b2ca07cf3114afe3ada5a8",
-      "source_normalized_sha256": "02b73292a0d03f80ee5607cf027785be0fa377e79b375a8adf249c51dee90edd",
-      "review_note": "Full-size shared rails retain independently established staff-frame evidence and rounded-rule mass checks. Staff-rule exclusions must own the actual narrow core; neighboring narrow samples cannot suppress a wider beam. Four original analytic regressions fail the previous candidate and pass this guard. Pale recovery rejects a bounded complete mordent contour only when its detached cap agrees with the completed shaft. Original Apache-2.0 analytic tests; existing MordentContour/PortableNoteOrnaments and cap helpers reviewed. No private pixels, model, dependency or format changes.",
+      "source_normalized_sha256": "81c460f5f80af195ee1992033f3ff8e21bc91b0cffe10fd749a2ae5bc28f05c5",
+      "review_note": "Compact shaded-core evidence overrides false hollow duration only with two independently attached stems and complete paired rails. Full-size rail probe offset scales beyond shaft thickness; grace probe unchanged. Original synthetic shaded/hollow/rule/scratch, scaled and upward-stem controls. No private score pixels, model, dependencies or format changes.",
       "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "reviewed_source_state": "Tested-token-identical scoped integration;10346 Java tests and18 original app controls passed. Cumulative paired deployment pending.",
+      "reviewed_source_state": "working-tree",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "standalone_sha256": "93271816c6a950a4b0468e4c65fcd0216937a7ce8e239d8bacf3688f863c36f0"
+      "standalone_sha256": "9e1ac198d5a05d5760f46338ab11bb055171d9fb674da98950dc43a9707c03a8"
     },
     "WideTripleBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideTripleBeamInk.java",
@@ -3329,6 +3329,14 @@
       "reviewed_source_state": "Token-identical integration;10375 Java tests,21 original controls,11 native pages,24 private timing probes. Cumulative paired deployment pending.",
       "review_note": "Independently stemmed neighboring head ink cannot become an augmentation dot. A verified short slashed grace with a larger stemmed principal may reject its owned attached stroke or curved connector. Trace across only thin continuous printed rules; isolated dots and broad bands remain protected. Existing grace-slur ownership admits a bounded contrast sweep. Original Apache-2.0 synthetic fixtures; no private pixels, model, dependency or format changes.",
       "reviewed_app_commit": "e075f4122742ccbe717ee18d8497ca5c603ef689"
+    },
+    "CompactPaleHeadCore.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactPaleHeadCore.java",
+      "source_sha256": "cbef2793b1c6ab9461d479cf0b74268ed358163a8dab434ae3f45155dc6a8571",
+      "source_normalized_sha256": "19ef75556a70a240012355fa14d780d886a3cde5f31e75862d27a6a79c88b8e2",
+      "standalone_sha256": "4e500c85c0bf5e13df5a961832f1002f865626c7ef4d2378065edabd9de582e5",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Compact shaded-core evidence overrides false hollow duration only with two independently attached stems and complete paired rails. Full-size rail probe offset scales beyond shaft thickness; grace probe unchanged. Original synthetic shaded/hollow/rule/scratch, scaled and upward-stem controls. No private score pixels, model, dependencies or format changes."
     }
   },
   "interpreter_speedup_review": {

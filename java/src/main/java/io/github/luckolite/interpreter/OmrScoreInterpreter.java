@@ -1296,6 +1296,23 @@ final class OmrScoreInterpreter {
                     unbeamedDuration = 0;
                 }
             }
+            // A compact faded fill can mimic a hollow counter. Its shaded center and
+            // two independently attached shafts joined by complete rails must agree.
+            if (beamCount >= 2
+                    && unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                    && CompactPaleHeadCore.proved(
+                            gray,
+                            width,
+                            height,
+                            head.minX,
+                            head.minY,
+                            head.maxX,
+                            head.maxY,
+                            head.centerX,
+                            head.centerY,
+                            localGap)
+                    && pairedPrintedRails(gray, width, height, head, rhythmStaff, heads, beamCount))
+                unbeamedDuration = 0;
             if (unbeamedDuration >= ScoreNoteEvent.DURATION_HALF) beamCount = 0;
             Component dotAnchor =
                     unbeamedDuration == ScoreNoteEvent.DURATION_WHOLE

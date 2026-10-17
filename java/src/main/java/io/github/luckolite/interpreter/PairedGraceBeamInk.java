@@ -123,7 +123,9 @@ final class PairedGraceBeamInk {
         if (span < gap * .95f || span > gap * maximumSpan || Math.abs(a[1] - b[1]) > maximumRise)
             return 0;
         int maximum = 0;
-        float edge = Math.min(.2f, 2f / span);
+        // Keep the full-size probes beyond the shaft as the printed staff scales.
+        float edge =
+                Math.min(.2f, (inside == 1.5f ? 2f : Math.max(2, Math.round(gap * .15f))) / span);
         float[] probes =
                 inside == 1.5f
                         ? new float[] {.25f, .5f, .75f}

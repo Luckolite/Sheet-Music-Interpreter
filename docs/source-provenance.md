@@ -12,6 +12,10 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Compact faded noteheads require nearly uniform gray interior contrast and independently
+proved paired rails before overriding hollow duration. Full-size rail probes scale
+beyond shaft thickness; original generated fixtures cover hollow heads and scale.
+
 Broken oval rims require independent raw/semantic shaft ownership and a complete
 shared beam before they may become notes or establish filled rhythm.
 
