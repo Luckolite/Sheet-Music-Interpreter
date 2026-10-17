@@ -3457,6 +3457,7 @@ final class TripletRhythmDetector {
                 lowerEdge = Math.max(lowerEdge, max);
                 if (min >= w * .45f && max >= w * .7f) lowerOpen++;
                 if (hasLobePocket(gray, width, left, top + y, w)) lowerPocket++;
+
             }
             // Include the final pixel band even when the glyph is shorter than 17 rows.
             if (y + 1 > h * .94f) foot = Math.max(foot, max);
@@ -3504,6 +3505,7 @@ final class TripletRhythmDetector {
                 }
         }
         int upperOpen = 0, lowerOpen = 0, upperPocket = 0, lowerPocket = 0;
+        int upperRasterPocket = 0, lowerRasterPocket = 0;
         int upperLobe = -1, lowerLobe = -1, waist = w, waistLeft = w, lowerOpenLeft = w;
         for (int y = 0; y < h; y++) {
             // Staff-rule removal can leave a blank scanline through a rest hook.
@@ -3517,6 +3519,7 @@ final class TripletRhythmDetector {
                 upperLobe = Math.max(upperLobe, max[y]);
                 if (min[y] >= w * .40f) upperOpen++;
                 if (hasLobePocket(gray, width, left, top + y, w)) upperPocket++;
+                if (hasLobePocket(gray, width, left, top + y, w, true)) upperRasterPocket++;
             }
             if (nextFraction > .60f && fraction <= .82f) {
                 // The lower curve must bulge before the baseline; a 2 only widens at its foot.
@@ -3528,6 +3531,7 @@ final class TripletRhythmDetector {
                     lowerOpenLeft = Math.min(lowerOpenLeft, min[y]);
                 }
                 if (hasLobePocket(gray, width, left, top + y, w)) lowerPocket++;
+                if (hasLobePocket(gray, width, left, top + y, w, true)) lowerRasterPocket++;
             }
             if (fraction >= .37f && fraction <= .55f) {
                 waist = Math.min(waist, max[y]);
@@ -3561,24 +3565,67 @@ final class TripletRhythmDetector {
         }
         // A tilted 2's full terminal can end above the last antialiased rows.
         // Its solid foot extends beyond the preceding diagonal, not around a lower bowl.
-        return extendedSolidFoot < required
-                && lowerLobe - foot >= indentation
-                && upper
-                && lower
-                && upperLobe - waist >= indentation
-                && (lowerLobe - waist >= indentation
+        boolean lobes =
+                extendedSolidFoot < required
+                        && lowerLobe - foot >= indentation
+                        && upperLobe - waist >= indentation;
+        boolean strictLower =
+                lowerLobe - waist >= indentation
                         || lowerLobe >= w * .5f
                                 && lowerOpen >= required
                                 && lowerOpenLeft - waistLeft >= indentation
-                                && upperLobe - capLeft >= Math.max(2, (int) Math.ceil(w * .25f)));
+                                && upperLobe - capLeft >= Math.max(2, (int) Math.ceil(w * .25f));
+        // Preserve every released recognition path before considering raster recovery.
+        if (lobes && upper && lower && strictLower) return true;
+        boolean rasterUpper =
+                upperOpen >= required || upperOpen >= 1 && upperRasterPocket >= required;
+        boolean rasterLower =
+                lowerOpen >= required || lowerOpen >= 1 && lowerRasterPocket >= required;
+        boolean curledLower =
+                lowerLobe - waist >= indentation
+                        || lowerLobe >= w * .5f
+                                && rasterLower
+                                && lowerOpenLeft - waistLeft >= indentation
+                                && upperLobe - capLeft >= Math.max(2, (int) Math.ceil(w * .25f));
+        if (!(lobes && rasterUpper && rasterLower && curledLower)) return false;
+        // A four's complete spine and crossbar contradict the added two-bowl proposal.
+        // Do not reinterpret a four's narrow diagonal paper pocket as a curled terminal.
+        int area = 0;
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++) if (dark(gray, width, left + x, top + y)) area++;
+        return !completeFourCrossbar(gray, width, area, left, top, w, h);
+    }
+
+    /** A four needs a separately inked crossbar, not a terminal and bowl separated by paper. */
+    private static boolean completeFourCrossbar(
+            byte[] gray, int width, int area, int left, int top, int w, int h) {
+        if (!looksLikeFingerFour(gray, width, area, left, left + w - 1, top, top + h - 1))
+            return false;
+        for (int y = Math.max(0, Math.round(h * .36f));
+                y <= Math.min(h - 1, Math.round(h * .74f));
+                y++) {
+            int run = 0;
+            for (int x = 0; x < w; x++) {
+                run = dark(gray, width, left + x, top + y) ? run + 1 : 0;
+                if (run >= w * .50f) return true;
+            }
+        }
+        return false;
     }
 
     private static boolean hasLobePocket(byte[] gray, int width, int left, int y, int w) {
+        return hasLobePocket(gray, width, left, y, w, false);
+    }
+
+    private static boolean hasLobePocket(
+            byte[] gray, int width, int left, int y, int w, boolean pixelCenter) {
         int run = 0;
         for (int x = Math.round(w * .25f); x < w; x++) {
             if (!dark(gray, width, left + x, y)) run++;
             else {
-                if (run >= Math.max(2, Math.round(w * .22f)) && x >= w * .55f) return true;
+                // Only the additive recovery compares the sampled pixel center.
+                if (run >= Math.max(2, Math.round(w * .22f))
+                        && x + (pixelCenter ? .5f : 0) >= w * .55f) return true;
                 run = 0;
             }
         }

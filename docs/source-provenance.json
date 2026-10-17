@@ -517,11 +517,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "0b8ce448d5973d600f5dbd6477f5fef09af194bdc7325e12872b1fc1d8927b04",
-      "source_normalized_sha256": "aefae24c5c3a722456e6420604eea2f73267d7380eb0905eca12db69b7449fff",
-      "review_note": "When dense ledger beams obscure a local staff projection, retain the existing numeral, beam and ledger guards and require two separated independently complete printed-rule witnesses in other connected measures on the same single-part row. Conflicting phases, multipart and cross-staff evidence abstain. Nineteen original procedural regressions; no song predicates or private score assets.",
+      "source_sha256": "9430c93e03674e4daa47d16ca7db5e82240fd6b89d20a74bc37662e13148c2f8",
+      "source_normalized_sha256": "6ac0cc318fd3ca485161438e0a6db224b502fe970767d9c11d94337530388adc",
+      "review_note": "Preserve the released three recognition path and add bounded curled-bowl recovery using sampled pixel centers and existing complete lower-bowl evidence. Contradict only the added proposal when the unchanged four classifier also proves a continuous crossbar in its existing phase and width bounds. Fourteen original procedural/licensed Bravura regressions cover genuine threes and other digits; 6120 raster cases preserve every released acceptance and introduce no non-three acceptance. No private score pixels, score identifiers, classifier threshold changes, model or native format changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "f30e497fbe517bcd5d033ab83f19d367d5c4500c3934c0384583b48b014ca7a8",
+      "standalone_sha256": "1568a07e293a3e5b57fb7f7063bc5baa77e807a154cf52aa9accb6d65d1079dd",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },
@@ -7815,6 +7815,13 @@
   "complete_header_flat_ownership_review": {
     "summary": "Retain independently recognized printed flat body and pitch metadata so a fully contained mask island cannot truncate a complete key header or become a note. Require verified local staff geometry, complete treble clef, canonical first-flat pitch, body containment and independent following attack separation. Existing flat grammar, sharp ownership, accidental and genuine-note paths remain unchanged. Twelve original procedural regressions cover both staff slopes and real filled/hollow heads at the canonical signature pitch. No private score pixels, score identifiers, model or native format changes.",
     "new_original_java_tests": 12,
+    "layout": "Guide290 unchanged; no helper or manifest additions.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "curled_tuplet_three_review": {
+    "summary": "Preserve the released three recognition path and add bounded curled-bowl recovery using sampled pixel centers and existing complete lower-bowl evidence. Contradict only the added proposal when the unchanged four classifier also proves a continuous crossbar in its existing phase and width bounds. Fourteen original procedural/licensed Bravura regressions cover genuine threes and other digits; 6120 raster cases preserve every released acceptance and introduce no non-three acceptance. No private score pixels, score identifiers, classifier threshold changes, model or native format changes.",
+    "new_original_java_tests": 14,
+    "license": "Original Apache-2.0 geometry plus existing SIL-OFL Bravura font assets.",
     "layout": "Guide290 unchanged; no helper or manifest additions.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }
