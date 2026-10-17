@@ -514,11 +514,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "ac3d22422a7bf9c4e354897a5a38128a95f5c9b7af74443709bb451e540e7fec",
-      "source_normalized_sha256": "1d3b0688fa191589079f32d6853f5ca061bbbf011d6c5a44c661fa2edd7c4c94",
-      "review_note": "Retain short upper returns in a printed six using a height-scaled pocket bound. Extend fully connected bounded secondary-beam and owned-numeral proof to ten staff gaps. Original hooked-six and tall-rail positive/reject, timing/grid, mirrored/sloped/partial-beam controls; no score-specific rules.",
+      "source_sha256": "740c959226801ba8271f9d2560006455376e63cb2407b536323a81842a84210c",
+      "source_normalized_sha256": "b1b42b9915c58598fe1ab57f0d0437f22302692f94f114f528f4e762e4881a83",
+      "review_note": "Resolve competing consecutive three-note windows sharing the same printed numeral by positive bounded-secondary-beam ownership; preserve explicit brackets and unproved alternatives. Six original synthetic ownership, absence, extension and pixel-preservation regressions; no private score assets, helpers, model or format changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "a32f5c5fddecffd2237e739f0a11735a3f41d4d330fd813438421e833ebf1d26",
+      "standalone_sha256": "f3c6f4fc5761fa39046cc924ce97da74188c8dd6f5b6a6bd307f306f2ee25c70",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },

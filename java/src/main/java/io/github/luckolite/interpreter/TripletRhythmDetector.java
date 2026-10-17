@@ -658,6 +658,87 @@ final class TripletRhythmDetector {
                                         numeral.top(),
                                         numeral.bottom(),
                                         gap * .25f);
+                // A shared numeral can fit two consecutive windows under one primary beam.
+                // Prefer the window independently bounded by the secondary beam, while
+                // preserving explicit brackets and groups without a proved alternative.
+                if (!bracket
+                        && first.beamCount() == 2
+                        && a.indices().size() == 1
+                        && b.indices().size() == 1
+                        && c.indices().size() == 1
+                        && a.indices().get(0) < virtualStart
+                        && b.indices().get(0) < virtualStart
+                        && c.indices().get(0) < virtualStart
+                        && i + 3 < groups.size()
+                        && result.get(b.indices().get(0)).beamCount() == 2
+                        && result.get(c.indices().get(0)).beamCount() == 2) {
+                    Onset fourth = matching(groups.get(i + 3), result, first);
+                    if (fourth != null
+                            && fourth.indices().size() == 1
+                            && fourth.indices().get(0) < virtualStart) {
+                        ScoreNoteEvent extra = result.get(fourth.indices().get(0));
+                        if (extra.measureIndex() == first.measureIndex()
+                                && extra.beamCount() == 2
+                                && extra.tupletDivisor() == 1
+                                && extra.augmentationDots() == 0
+                                && (extra.articulations() & NoteOrnament.GRACE) == 0
+                                && extra.stemDirection() == first.stemDirection()) {
+                            float x4 =
+                                    (region.left()
+                                                    + fourth.position()
+                                                            * (region.right() - region.left()))
+                                            * width;
+                            if (!BoundedSecondaryBeam.proves(
+                                            gray,
+                                            width,
+                                            height,
+                                            new float[] {x1, x2, x3},
+                                            new float[] {
+                                                a.top() * height, b.top() * height, c.top() * height
+                                            },
+                                            gap)
+                                    && BoundedSecondaryBeam.proves(
+                                            gray,
+                                            width,
+                                            height,
+                                            new float[] {x2, x3, x4},
+                                            new float[] {
+                                                b.top() * height,
+                                                c.top() * height,
+                                                fourth.top() * height
+                                            },
+                                            gap)) {
+                                Glyph alternative =
+                                        findOwnedNumeral(
+                                                gray,
+                                                width,
+                                                height,
+                                                x2,
+                                                x4,
+                                                Math.min(b.top(), Math.min(c.top(), fourth.top()))
+                                                        * height,
+                                                Math.max(
+                                                                b.bottom(),
+                                                                Math.max(
+                                                                        c.bottom(),
+                                                                        fourth.bottom()))
+                                                        * height,
+                                                gap,
+                                                true,
+                                                Float.NaN,
+                                                Float.NaN,
+                                                3,
+                                                true,
+                                                false,
+                                                result.get(b.indices().get(0)),
+                                                ownershipNotes,
+                                                region,
+                                                measures);
+                                if (numeral.equals(alternative)) continue;
+                            }
+                        }
+                    }
+                }
                 if (first.beamCount() > 0
                         && !bracket
                         && (SeparateBeamGroups.between(
