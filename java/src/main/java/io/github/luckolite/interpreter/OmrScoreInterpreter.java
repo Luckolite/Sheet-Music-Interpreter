@@ -8008,7 +8008,27 @@ final class OmrScoreInterpreter {
                 || left.area < gap * gap * .35f
                 || right.area < gap * gap * .3f
                 || !hasAttachedStem(labels, width, height, left, gap)
-                || !hasAttachedStem(labels, width, height, right, gap)) return List.of();
+                || !hasAttachedStem(labels, width, height, right, gap)
+                || attachedRawStem(
+                                gray,
+                                width,
+                                height,
+                                left,
+                                gap,
+                                Math.max(1, Math.round(gap * .16f)),
+                                205)
+                        == null
+                || attachedRawStem(
+                                gray,
+                                width,
+                                height,
+                                right,
+                                gap,
+                                Math.max(1, Math.round(gap * .16f)),
+                                205)
+                        == null) return List.of();
+        // Nearby semantic paint can come from a detached bow mark. Each voice must
+        // retain a printed shaft attached to its own oval before splitting the attack.
         boolean leftOpen = hasOpenCenter(labels, gray, width, height, left, gap);
         boolean rightOpen = hasOpenCenter(labels, gray, width, height, right, gap);
         if (leftOpen == rightOpen) return List.of();

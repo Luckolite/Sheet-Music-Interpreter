@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "5aff262c3e0c3f7043810894d48091a157a43ec1c0b76ec79bb61a1ddd3aa67e",
-      "review_note": "One-pass local scale calibration from independent inner rules including a physical staff rule, only behind absent outer ledger and bounded spacing disagreement. Preserve existing raw oval morphology and pitch confidence; original filled oval, outer ledger, missing/conflicting rule and doubled raster controls;1355existing staff/pitch/ledger controls. No private pixels, models, dependencies or formats.",
-      "source_normalized_sha256": "b237cd06c6aa58691310f1071c790c30f167f6ed61fa0c9ece865deea74e17f4",
+      "source_sha256": "d14fbd9c0fb804f1529424d1831d8e85b553d8c2bffe8fee69cbd8b02641d033",
+      "review_note": "Require raw connected shaft proof for both semantic unison halves before creating separate short/held voices; retain faint-ink local contrast handling and true opposed voices. Three original detached/semantic-only/real-voice regressions,8existing unison and666whole/chord/voice controls. No private pixels, dependencies, models or formats.",
+      "source_normalized_sha256": "0d08ce713ff63532466070a7621979e7d978614d5f22b49d0764dbf13c71d884",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "6545de274101dcf4c18346406429242d7bcf98e7883ee1f25a5385e6f590a36f",
+      "standalone_sha256": "76394bf3258b5ca26f941e8794615f69b36f95d82b8584010aec12f7296f33a2",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
