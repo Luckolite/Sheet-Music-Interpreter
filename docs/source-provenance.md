@@ -1264,7 +1264,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.
@@ -2491,3 +2491,8 @@ Paired app source: da4b3b9f876e5cec1461d88280172c8c2d0985a4.
 
 A fixed dark-ink threshold can miss a pale outer ledger and incorrectly shift its note into a space. Before making that correction, the interpreter now checks the outer rule with its existing local contrast limits. Other ledger calibration keeps its prior threshold. Six original mirrored pale-rule, missing-rule and dark-rule fixtures cover the distinction; private replay changes one pitch and preserves all other page fields.
 Paired app source: 9513e553f4c84f6cf238839793b4b55862d01b82.
+
+## Complete upper quarter-rest contours
+
+An upper rest proposal can be a clipped part of a note-owned beam. Follow the exact admitted contour seed across its measured upper band before accepting the rest. Existing rule-row, head-occlusion and contrast limits remain unchanged. Fourteen original procedural cases cover independent rests, beam contours and disconnected components with overlapping bounds. Private normal-page qualification removes one false decoder rest and its following-gap counter; saved note clocks and MusicXML remain unchanged. Recognition revision 67 refreshes derived results; Guide290 and binary layouts remain unchanged.
+Paired app source: d9b64a86cf1664b2062ca9870e00c61e338c0ea3.

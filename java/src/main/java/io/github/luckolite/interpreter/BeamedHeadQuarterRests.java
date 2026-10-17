@@ -345,11 +345,27 @@ final class BeamedHeadQuarterRests {
                     for (int x = a; x <= z; x++) if ((gray[y * w + x] & 255) < 170) hits++;
                     if (hits >= (z - a + 1) * .90f) line[y - t] = true;
                 }
-                for (var contour : ownedContours(gray, w, l, r, t, b, line, g, false, hy, l)) {
+                var contourSeeds = new java.util.IdentityHashMap<int[], int[]>();
+                for (var contour :
+                        ownedContours(gray, w, l, r, t, b, line, g, false, hy, l, contourSeeds)) {
                     int il = contour[0], ir = contour[1], it = contour[2], ib = contour[3];
                     if (it == t && !upperHeadClip
                             || ir - il + 1 < g * .6f
                             || ir - il + 1 > g * 1.85f) continue;
+                    if (!completeUpperContour(
+                            gray,
+                            w,
+                            h,
+                            m,
+                            l,
+                            r,
+                            t,
+                            b,
+                            line,
+                            g,
+                            hy,
+                            contourSeeds.get(contour),
+                            upperHeadClip)) continue;
                     int end = Math.round(it + 3 * g) - 1;
                     if (end >= h || end > m.bottom() * h) continue;
                     found.add(
@@ -373,6 +389,82 @@ final class BeamedHeadQuarterRests {
 
     // Read each connected ink owner separately. Only independently proved ruled bands
     // can connect two visible rows; an ordinary paper gap never supplies missing ink.
+
+    // The admission rectangle is a seed window, not proof that its upper stroke ends there.
+    // Follow that exact component over the measured upper band before trusting its shape.
+    // The lower foot/head occlusion and qualified rule-row graph remain the existing contract.
+    private static boolean completeUpperContour(
+            byte[] gray,
+            int w,
+            int h,
+            MeasureRegion measure,
+            int l,
+            int r,
+            int t,
+            int b,
+            boolean[] line,
+            float g,
+            float hy,
+            int[] originalSeed,
+            boolean upperHeadClip) {
+        int left = Math.max(0, (int) Math.floor(measure.left() * w));
+        int right = Math.min(w - 1, (int) Math.ceil(measure.right() * w) - 1);
+        int cw = right - left + 1, ch = b - t + 1;
+        if (left > l || right < r || cw < 1 || ch < 1 || (long) cw * ch > Integer.MAX_VALUE)
+            return false;
+        // Use the original accepted flood's actual first pixel, never a bounding-box rescan.
+        if (originalSeed == null || originalSeed.length != 2) return false;
+        int seedX = originalSeed[0], seedY = originalSeed[1];
+        if (seedX < l
+                || seedX > r
+                || seedY < t
+                || seedY > b
+                || line[seedY - t]
+                || (gray[seedY * w + seedX] & 255) >= 170) return false;
+        boolean[] seen = new boolean[cw * ch];
+        var queue = new ArrayDeque<Integer>();
+        var pixels = new ArrayList<Integer>();
+        int seed = (seedY - t) * cw + seedX - left;
+        queue.add(seed);
+        seen[seed] = true;
+        int il = cw, ir = -1, it = ch, ib = -1;
+        while (!queue.isEmpty()) {
+            int p = queue.removeFirst(), x = p % cw, y = p / cw;
+            pixels.add(p);
+            il = Math.min(il, x);
+            ir = Math.max(ir, x);
+            it = Math.min(it, y);
+            ib = Math.max(ib, y);
+            if (ir - il + 1 > g * 1.85f) return false;
+            // Touch alone is allowed. A continuing nonrule stroke outside the measured
+            // domain is not a proved glyph endpoint, and a page-clipped stroke is unknown.
+            if (x == 0 && (left == 0 || (gray[(y + t) * w + left - 1] & 255) < 170)
+                    || x == cw - 1
+                            && (right == w - 1 || (gray[(y + t) * w + right + 1] & 255) < 170))
+                return false;
+            for (int direction = -1; direction <= 1; direction++) {
+                int yy = y + direction;
+                if (direction != 0) while (yy >= 0 && yy < ch && line[yy]) yy += direction;
+                if (yy < 0 || yy >= ch || Math.abs(yy - y) > g * .35f + 1) continue;
+                int reach = Math.max(1, Math.abs(yy - y));
+                for (int xx = Math.max(0, x - reach); xx <= Math.min(cw - 1, x + reach); xx++) {
+                    int next = yy * cw + xx;
+                    if (seen[next]
+                            || line[yy]
+                            || yy + t >= hy - .55f * g && xx + left < l
+                            || (gray[(yy + t) * w + xx + left] & 255) >= 170) continue;
+                    seen[next] = true;
+                    queue.add(next);
+                }
+            }
+        }
+        if (it == 0 && !upperHeadClip || ir - il + 1 < g * .6f) return false;
+        byte[] component = new byte[cw * ch];
+        Arrays.fill(component, (byte) 240);
+        for (int p : pixels) component[p] = gray[(p / cw + t) * w + p % cw + left];
+        return upperQuarter(component, cw, 0, cw - 1, 0, line, it, ib, g);
+    }
+
     static List<int[]> ownedContours(
             byte[] gray,
             int w,
@@ -385,6 +477,22 @@ final class BeamedHeadQuarterRests {
             boolean lower,
             float hy,
             int lowerLeft) {
+        return ownedContours(gray, w, l, r, t, b, line, g, lower, hy, lowerLeft, null);
+    }
+
+    private static List<int[]> ownedContours(
+            byte[] gray,
+            int w,
+            int l,
+            int r,
+            int t,
+            int b,
+            boolean[] line,
+            float g,
+            boolean lower,
+            float hy,
+            int lowerLeft,
+            java.util.IdentityHashMap<int[], int[]> acceptedSeeds) {
         int cw = r - l + 1, ch = b - t + 1;
         boolean[] seen = new boolean[cw * ch];
         var accepted = new ArrayList<int[]>();
@@ -444,8 +552,12 @@ final class BeamedHeadQuarterRests {
                                 hy - t,
                                 g,
                                 lowerLeft > l ? lowerLeft - l : Float.NEGATIVE_INFINITY)
-                        : upperQuarter(component, cw, 0, cw - 1, 0, line, it, ib, g))
-                    accepted.add(new int[] {il + l, ir + l, it + t, ib + t});
+                        : upperQuarter(component, cw, 0, cw - 1, 0, line, it, ib, g)) {
+                    int[] bounds = new int[] {il + l, ir + l, it + t, ib + t};
+                    accepted.add(bounds);
+                    if (acceptedSeeds != null)
+                        acceptedSeeds.put(bounds, new int[] {sx + l, sy + t});
+                }
             }
         return accepted;
     }

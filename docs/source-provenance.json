@@ -1601,13 +1601,13 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "2508e8f436acbdf76cedd0b6083386654cb7783539e3ef96fce65caa94523124",
-      "source_normalized_sha256": "45a3a43f1daff652b13088f2bced2e4fdfc40fbd527d5263a6fbbde0fc769df8",
-      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields.",
-      "reviewed_source_state": "working-tree",
-      "standalone_sha256": "69e9e3eb81f6ffe133d26c22775787947485de2110a4fcbc6dd6067f7fc97a71",
-      "reviewed_app_commit": "ff47618f0da2d7ca94016d04b883f4fdfeb214f7",
-      "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3"
+      "source_sha256": "83d7fe416fcde0e0f230eea0369916f6c1ea08fb38cf3b0bb1dd9cbec950e5d0",
+      "source_normalized_sha256": "83d7fe416fcde0e0f230eea0369916f6c1ea08fb38cf3b0bb1dd9cbec950e5d0",
+      "review_note": "Track each admitted upper rest contour by its exact original flood seed and verify its complete measured upper component before admission. Preserve qualified staff-rule and lower head-occlusion grammar, original thresholds and legacy API; no bounding-box seed substitution, song-specific rule, model or binary layout change.",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "61ffc3b39f0c4032c462b25362ab2f9486d39e9df78b10da7b92b10fee8d6fe1",
+      "reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
+      "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -2014,13 +2014,13 @@
     },
     "BeamedHeadQuarterRests.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamedHeadQuarterRests.java",
-      "source_sha256": "b740c9b88d663e745e23b6f3bcc9c64b5f335f6a989a8260dd1c114fc891e2d6",
-      "source_normalized_sha256": "d434cefd090d5f6a8ed9ca99e8fc4ab74fb293dbff93422d304bb61f775c1802",
-      "reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
-      "scoped_reviewed_app_commit": "1da0f90e8d71091bdf912e55845f85c44c8b6bfa",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Use complete independently witnessed single-part staff rails and an anchored expression side to own printed tempo-dash continuations; competing expression claims veto shared runs, while generic ownership and numeric endpoint rules remain unchanged. Reject an upper partial quarter-rest proposal only when one connected complete open-chevron core owns every dark pixel plus its immediate antialias fringe. Ordinary and lower rest grammar remain unchanged. Twenty-nine original geometric regressions; no private score assets, song predicates, model or wire changes.",
-      "standalone_sha256": "b6b439b29f6146170048a99b90cd58d1c463fcc13aebb677027fb31f89a62ae2"
+      "source_sha256": "5abe4832162674fe358472141524fb4d14b85d3e717c175afe7710fa26fd52ea",
+      "source_normalized_sha256": "5abe4832162674fe358472141524fb4d14b85d3e717c175afe7710fa26fd52ea",
+      "reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
+      "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
+      "reviewed_source_state": "committed",
+      "review_note": "Track each admitted upper rest contour by its exact original flood seed and verify its complete measured upper component before admission. Preserve qualified staff-rule and lower head-occlusion grammar, original thresholds and legacy API; no bounding-box seed substitution, song-specific rule, model or binary layout change.",
+      "standalone_sha256": "82c367a9da07c714b4f8375f55cc8573744b4c89958da4232f24c84bc89de865"
     },
     "PolyphonicHalfRests.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PolyphonicHalfRests.java",
@@ -8046,5 +8046,21 @@
     "native_manifest_sources": 328,
     "boundaries": "Actual native retained-mask acquisition and actual Song numeric clock/XML consumers reviewed privately. Android dependency typecheck only; device font raster, renderer/audio and cumulative app/paired-worker deployment remain pending.",
     "sharp_staff_ownership": "Semantic and raw positions are checked at their own x against admitted local pitch-track frames; equal-distance ownership abstains. Three original source-free API regressions cover foreign phases, conflicting semantic/raw owners and a genuine lower header."
+  },
+  "covered_quarter_contour_ownership_review": {
+    "license": "Apache-2.0",
+    "scope": "Track each admitted upper rest contour by its exact original flood seed and verify its complete measured upper component before admission. Preserve qualified staff-rule and lower head-occlusion grammar, original thresholds and legacy API; no bounding-box seed substitution, song-specific rule, model or binary layout change.",
+    "recognition_revision": 67,
+    "guide_layout": 290,
+    "native_manifest_sources": 328,
+    "mapped_sources": 400,
+    "original_regressions": [
+      "CoveredFootIndependentTest.java",
+      "DisconnectedOwnerSeedTest.java"
+    ],
+    "regression_scope": "Fourteen original procedural cases in two JUnit methods cover genuine independent wings, note-owned beam contours, qualified staff rows, translation, head occlusion and disconnected overlapping-box decoys. No private score pixels, traces or copied glyphs.",
+    "private_qualification": "Two captured helper contexts remove only the false quarter rest. Normal retained-mask NativePageGuide preserves all 14 fields except that rest and its derived following-rest counter. Actual saved Song note clocks and MusicXML bytes were already correct and remain unchanged. No playback, device or whole-library accuracy claim.",
+    "source_origin": "Original synthetic fixtures, Copyright 2026 Luckolite; Apache-2.0. Models and lineage unchanged.",
+    "reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
   }
 }
