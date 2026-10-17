@@ -16086,6 +16086,17 @@ final class OmrScoreInterpreter {
      * Thin staff/stem ink is removed before centering; three thresholds must agree. */
     private static int printedPitchStep(
             byte[] gray, int width, int height, Component head, float bottom, float gap) {
+        return printedPitchStep(gray, width, height, head, bottom, gap, true);
+    }
+
+    private static int printedPitchStep(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float bottom,
+            float gap,
+            boolean calibrateFrame) {
         float position = (bottom - head.centerY) / (gap * .5f);
         int original = Math.round(position);
         if (gray != null
@@ -16156,8 +16167,33 @@ final class OmrScoreInterpreter {
                 if (threshold > 180)
                     outer =
                             printedLedgerLine(
-                                    gray, width, height, head,
-                                    bottom - original * gap * .5f, gap, false, threshold);
+                                    gray,
+                                    width,
+                                    height,
+                                    head,
+                                    bottom - original * gap * .5f,
+                                    gap,
+                                    false,
+                                    threshold);
+            }
+            // Independent inner rules, including a physical staff rule, may repair a compressed
+            // local scale. Re-enter the existing oval proof only once; retain all shape limits.
+            if (calibrateFrame
+                    && !Float.isFinite(outer)
+                    && Float.isFinite(first)
+                    && Float.isFinite(second)
+                    && secondStep >= 0
+                    && secondStep <= 8
+                    && (first - second) * inward > 0) {
+                float printedGap = Math.abs(first - second);
+                if (Math.abs(printedGap - gap) >= gap * .06f
+                        && Math.abs(printedGap - gap) <= gap * .12f) {
+                    float printedBottom = second + secondStep * printedGap * .5f;
+                    int refined =
+                            printedPitchStep(
+                                    gray, width, height, head, printedBottom, printedGap, false);
+                    if (refined == original + inward) return refined;
+                }
             }
             int space = LedgerSpacePhase.resolve(position, head.centerY, gap, outer, first, second);
             if (space != original) return space;
