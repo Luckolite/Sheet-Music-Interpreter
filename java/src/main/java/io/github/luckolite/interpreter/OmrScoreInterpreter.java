@@ -473,21 +473,28 @@ final class OmrScoreInterpreter {
             }
         }
         List<Component> recoveredSingleBeamHeads = new ArrayList<>();
+        List<CorroboratedFaintBeam.Proof> recoveredFaintBeams = new ArrayList<>();
         for (Staff owner : staffs) {
             int bandTop = Math.round(owner.top - owner.gap * 2.5f),
                     bandBottom = Math.round(owner.bottom + owner.gap * 2.5f);
             var sparse =
                     SymbolStemHeadRecovery.sparseOvals(
                             labels, gray, width, height, owner.gap, bandTop, bandBottom);
+            var extensionSparse =
+                    CorroboratedFaintBeam.outerSparse(
+                            labels, gray, width, height, owner.gap, bandTop, bandBottom);
             var candidates =
                     new ArrayList<>(
                             SymbolStemHeadRecovery.find(
                                     labels, gray, width, height, owner.gap, bandTop, bandBottom));
             candidates.addAll(sparse);
+            candidates.addAll(extensionSparse);
             for (var recovered : candidates) {
                 // A complete owned beam can establish a faded head as filled even when
                 // its surviving rim resembles a hollow note. Preserve ordinary head gates.
-                boolean sparseCandidate = sparse.contains(recovered);
+                boolean extensionOnly = extensionSparse.contains(recovered);
+                if (extensionOnly && nearestHeadStaff(staffs, recovered.y()) != owner) continue;
+                boolean sparseCandidate = sparse.contains(recovered) || extensionOnly;
                 Component candidate =
                         new Component(
                                 recovered.area(),
@@ -497,20 +504,26 @@ final class OmrScoreInterpreter {
                                 recovered.bottom(),
                                 recovered.x(),
                                 recovered.y());
+                Component observedCandidate = candidate;
                 Component retained =
                         heads.stream()
                                 .filter(
                                         existing ->
-                                                Math.abs(existing.centerX - candidate.centerX)
+                                                Math.abs(
+                                                                        existing.centerX
+                                                                                - observedCandidate
+                                                                                        .centerX)
                                                                 < owner.gap * .8f
                                                         && Math.abs(
                                                                         existing.centerY
-                                                                                - candidate.centerY)
+                                                                                - observedCandidate
+                                                                                        .centerY)
                                                                 < owner.gap * .65f)
                                 .findFirst()
                                 .orElse(null);
                 // A complete sparse oval can revalidate a retained head's beam role.
                 // Keep that head's identity and all ordinary duplicate rejection.
+                if (extensionOnly && retained != null) continue;
                 if (retained != null
                         && (!sparseCandidate
                                 || !FilledSparseBeamHead.matches(
@@ -529,9 +542,9 @@ final class OmrScoreInterpreter {
                                 owner.gap,
                                 Math.max(1, Math.round(owner.gap * .16f)),
                                 205);
-                if (own == null) continue;
+                if (own == null && !sparseCandidate) continue;
                 boolean proved = false;
-                for (Component main : heads) {
+                for (Component main : extensionOnly || own == null ? List.<Component>of() : heads) {
                     if (retained != null
                             && !FilledSparseBeamHead.matches(
                                     gray, width, height, main.centerX, main.centerY, owner.gap))
@@ -550,15 +563,99 @@ final class OmrScoreInterpreter {
                                     Math.max(1, Math.round(owner.gap * .16f)),
                                     205);
                     if (PrintedSingleBeamPath.connects(gray, width, height, own, other, owner.gap)
-                            && (retained == null
-                                    || FilledSparseBeamHead.rootedEnds(
-                                            labels, gray, width, height, own, other, owner.gap))) {
+                            && FilledSparseBeamHead.rootedEnds(
+                                    labels, gray, width, height, own, other, owner.gap)
+                            && (retained != null
+                                    || !sparseCandidate
+                                    || FilledSparseBeamHead.completeInterior(
+                                            gray, width, height, recovered, owner.gap))) {
                         proved = true;
                         if (sparseCandidate) {
                             recoveredSingleBeamHeads.add(main);
                             recoveredFilledFragmentHeads.add(main);
                         }
                         break;
+                    }
+                }
+                if (!proved && sparseCandidate && retained == null) {
+                    var refined =
+                            CorroboratedFaintBeam.refine(gray, width, height, recovered, owner.gap);
+                    if (refined != null) {
+                        Component fitted =
+                                new Component(
+                                        refined.area(),
+                                        refined.left(),
+                                        refined.right(),
+                                        refined.top(),
+                                        refined.bottom(),
+                                        refined.x(),
+                                        refined.y());
+                        int[] pale = paleStemEndpoint(labels, gray, width, height, fitted, owner);
+                        if (pale != null) {
+                            for (Component first : heads) {
+                                if (proved
+                                        || nearestHeadStaff(staffs, first.centerY) != owner
+                                        || Math.abs(first.centerX - fitted.centerX) > owner.gap * 10
+                                        || !FilledSparseBeamHead.matches(
+                                                gray,
+                                                width,
+                                                height,
+                                                first.centerX,
+                                                first.centerY,
+                                                owner.gap)) continue;
+                                int[] firstStem =
+                                        attachedRawStem(
+                                                gray,
+                                                width,
+                                                height,
+                                                first,
+                                                owner.gap,
+                                                Math.max(1, Math.round(owner.gap * .16f)),
+                                                205);
+                                if (firstStem == null) continue;
+                                for (Component second : heads) {
+                                    if (first == second
+                                            || nearestHeadStaff(staffs, second.centerY) != owner
+                                            || Math.abs(second.centerX - fitted.centerX)
+                                                    > owner.gap * 10
+                                            || !FilledSparseBeamHead.matches(
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    second.centerX,
+                                                    second.centerY,
+                                                    owner.gap)) continue;
+                                    int[] secondStem =
+                                            attachedRawStem(
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    second,
+                                                    owner.gap,
+                                                    Math.max(1, Math.round(owner.gap * .16f)),
+                                                    205);
+                                    var proof =
+                                            CorroboratedFaintBeam.prove(
+                                                    labels,
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    pale,
+                                                    firstStem,
+                                                    secondStem,
+                                                    owner.gap);
+                                    if (proof == null) continue;
+                                    candidate = fitted;
+                                    recoveredFaintBeams.add(proof);
+                                    recoveredSingleBeamHeads.add(first);
+                                    recoveredSingleBeamHeads.add(second);
+                                    recoveredFilledFragmentHeads.add(first);
+                                    recoveredFilledFragmentHeads.add(second);
+                                    proved = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
                 if (proved) {
@@ -571,6 +668,33 @@ final class OmrScoreInterpreter {
                     }
                 }
             }
+        }
+        if (!recoveredFaintBeams.isEmpty()) {
+            heads.removeIf(
+                    head -> {
+                        Staff staff = nearestHeadStaff(staffs, head.centerY);
+                        if (staff == null
+                                || head.area > staff.gap * staff.gap * .36f
+                                || head.maxX - head.minX + 1 > staff.gap * .85f
+                                || head.maxY - head.minY + 1 > staff.gap * .65f
+                                || attachedRawStem(
+                                                gray,
+                                                width,
+                                                height,
+                                                head,
+                                                staff.gap,
+                                                Math.max(1, Math.round(staff.gap * .16f)),
+                                                205)
+                                        != null
+                                || paleStemEndpoint(labels, gray, width, height, head, staff)
+                                        != null) return false;
+                        return recoveredFaintBeams.stream()
+                                .anyMatch(
+                                        proof ->
+                                                CorroboratedFaintBeam.contains(
+                                                        proof, gray, width, height, head.minX,
+                                                        head.minY, head.maxX, head.maxY));
+                    });
         }
         List<Component> rejectedBeamHeads = beamJunctionHeads(gray, width, height, heads, staffs);
         rejectedBeamHeads.addAll(recoveredGraceCaps);
@@ -18532,6 +18656,20 @@ final class OmrScoreInterpreter {
             Staff staff,
             int[] coarse,
             int threshold) {
+        return singleBlankTerminalSlurCap(
+                labels, gray, width, height, head, staff, coarse, threshold, 1);
+    }
+
+    private static boolean singleBlankTerminalSlurCap(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            int[] coarse,
+            int threshold,
+            int terminalRails) {
         if (coarse == null
                 || coarse.length < 3
                 || Math.abs(coarse[2]) != 1
@@ -18566,14 +18704,14 @@ final class OmrScoreInterpreter {
                     thickNonHeadBands(
                             gray, labels, width, height, x, near, far, staff, inner, true);
         }
-        return (railCounts[0] == 1
-                        && railCounts[1] == 1
+        return (railCounts[0] == terminalRails
+                        && railCounts[1] == terminalRails
                         && railCounts[2] == 0
                         && railCounts[3] == 0)
                 || (railCounts[0] == 0
                         && railCounts[1] == 0
-                        && railCounts[2] == 1
-                        && railCounts[3] == 1);
+                        && railCounts[2] == terminalRails
+                        && railCounts[3] == terminalRails);
     }
 
     /** Shared voices use the same positive rule ownership as ordinary beam counting. */
@@ -19887,6 +20025,36 @@ final class OmrScoreInterpreter {
                             staff,
                             new int[] {bestX, stemEnd, upward ? -1 : 1},
                             stemThreshold)) return 1;
+            // A single white shaft cut may separate a slur from two complete terminal rails.
+            // Both near probes on one side must independently retain the pair; the other side
+            // must have no rail. Recount only the zero-gap owned shaft and preserve real flags.
+            if (voiceStem == null
+                    && !smallHead
+                    && thick == 3
+                    && singleBlankTerminalSlurCap(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            staff,
+                            new int[] {bestX, stemEnd, upward ? -1 : 1},
+                            stemThreshold,
+                            2)) {
+                int[] strict = attachedRawStem(gray, width, height, head, gap, 0, stemThreshold);
+                if (strict != null
+                        && detectBeamCount(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        head,
+                                        staff,
+                                        corroborate,
+                                        allowSinglePale,
+                                        strict)
+                                == 2) return 2;
+            }
             // A detached curved cap cannot supply a lone beam or a third beam.
             if ((thick == 1 || thick >= 3)
                     && voiceStem == null

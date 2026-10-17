@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "3dd1d317384277a4b4a4dbb16cf88d57692559f3071f37fa60cc450ae53b3830",
-      "review_note": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts.",
-      "source_normalized_sha256": "81dbf9dcc1ab13328c7e842c5103f2f055c80c64f85cf591a11696749a5a7e6c",
+      "source_sha256": "51efad0a80eb72bcf9b2d4f3d6281ab5ac8d0fe7b452c8c2c0e9476988fe1d19",
+      "review_note": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes.",
+      "source_normalized_sha256": "2cbb2daa420fc9d64d6b4dfdbf19630c01844ae49fae9b1e18e324f8517f918b",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "0e1bc6d09241ab77d072526d22544dc514790d243c4a5f1631717cf12a5ea988",
+      "standalone_sha256": "099a9314a40516b6fed6f7d998ba3703e9fd090eda54d9cd44b3572ec7363cc1",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -3432,11 +3432,21 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FilledSparseBeamHead.java",
       "license": "Apache-2.0",
       "origin": "Original project helper, first port in this reviewed working tree.",
-      "source_sha256": "d838482b8e8e6a0f513b9e87b307c0f4d696ec4e82b01b4d490383e640d874ff",
-      "source_normalized_sha256": "85350cd628f66f844e5a417270523dae77ae4a397e7105361a6b530a344bfb88",
-      "standalone_sha256": "30be666ea97cc58f3e4acc519de2476581537a4f67f3ed70aafef0629bdd1ada",
+      "source_sha256": "0944c60e05679d27751ed16f5dfde899b2fdeeeb94b9d9d35012505b1ad8d63f",
+      "source_normalized_sha256": "31aec9a77a44e026a88ee1fcf3482835c22a19841f7a14f72e74a1aa4fcaa5df",
+      "standalone_sha256": "8ee645884b94d22a55806a1594c54b04474cb2e7b9a8d5bbc346a43c74ffd185",
       "reviewed_source_state": "working-tree",
-      "review_note": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts."
+      "review_note": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes."
+    },
+    "CorroboratedFaintBeam.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CorroboratedFaintBeam.java",
+      "license": "Apache-2.0",
+      "origin": "Original project helper, first port in this reviewed working tree.",
+      "source_sha256": "e7a9e283725501e7b3cf5c8fd2aee667fd664145dcd8927e7ce2bee177aadeba",
+      "source_normalized_sha256": "f1b53cda78f0a361991388c929a377a50bf2ed1c79dba3cb7a7bfc63eaaa52cc",
+      "standalone_sha256": "8c83d285c65c06a564ec3685eb63f67f4fa79fdea3ed1f92d19aa3a6efc4b941",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7709,6 +7719,13 @@
     "summary": "Preserve individual complete written bars only with two agreeing untouched literal-capacity witnesses, independently proved original separators, actual ratio acquisition and unchanged rest records. Revalidate retained sparse filled-head beam roles only with complete owned shafts, strict rail proof and independently filled interiors/rooted beam caps at both ends. Original procedural regressions include mixed valid/invalid splits, printed tuplets and ordinary staff-rail quarter notes. No private score material, song predicates, models or wire layouts.",
     "new_original_java_tests": 31,
     "new_helper": "FilledSparseBeamHead.java, original Apache-2.0, explicitly included in native decoder source manifest.",
+    "layout": "Guide290/native layouts unchanged.",
+    "deployment": "Cumulative app/Hub/page/audio worker build and deployment pending."
+  },
+  "corroborated_faint_beam_and_sparse_head_review": {
+    "summary": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes.",
+    "new_original_java_tests": 56,
+    "new_helper": "CorroboratedFaintBeam.java, original Apache-2.0, explicitly included in native decoder source manifest.",
     "layout": "Guide290/native layouts unchanged.",
     "deployment": "Cumulative app/Hub/page/audio worker build and deployment pending."
   }

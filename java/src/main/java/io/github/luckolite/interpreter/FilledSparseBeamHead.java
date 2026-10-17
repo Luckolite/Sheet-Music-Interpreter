@@ -27,6 +27,62 @@ final class FilledSparseBeamHead {
         return total >= Math.ceil(gap * gap * .18f) && dark >= total * .8f;
     }
 
+    static boolean completeInterior(
+            byte[] gray, int w, int h, SymbolStemHeadRecovery.Head head, float gap) {
+        if (gray == null
+                || head == null
+                || w < 1
+                || h < 1
+                || gray.length != (long) w * h
+                || !Float.isFinite(gap + head.x() + head.y())
+                || gap < 8
+                || gap > Math.min(w, h) / 8f
+                || head.left() < 0
+                || head.right() >= w
+                || head.top() < 0
+                || head.bottom() >= h
+                || head.left() > head.right()
+                || head.top() > head.bottom()) return false;
+        int radius = Math.max(1, Math.round(gap * .15f));
+        for (int dy = -radius; dy <= radius; dy++)
+            for (int dx = -radius; dx <= radius; dx++) {
+                float x = head.x() + dx, y = head.y() + dy;
+                if (x < head.left() || x > head.right() || y < head.top() || y > head.bottom())
+                    continue;
+                if (completeInterior(gray, w, h, x, y, gap)) return true;
+            }
+        return false;
+    }
+
+    /** Three independently complete inner sectors tolerate one broken rim attachment.
+     * A rail or curved hook cannot establish the missing interior sectors. */
+    static boolean completeInterior(byte[] gray, int w, int h, float x, float y, float gap) {
+        if (gray == null
+                || w < 1
+                || h < 1
+                || gray.length != (long) w * h
+                || !Float.isFinite(x + y + gap)
+                || gap < 8) return false;
+        float rx = gap * .69f, ry = gap * .4f;
+        int reach = (int) Math.ceil(gap);
+        if (x - reach < 0 || x + reach >= w || y - reach < 0 || y + reach >= h) return false;
+        int[] total = new int[4], filled = new int[4];
+        int samples = 0;
+        for (int dy = -reach; dy <= reach; dy++)
+            for (int dx = -reach; dx <= reach; dx++) {
+                float tilted = dy + .4f * dx;
+                if (dx * dx / (rx * rx) + tilted * tilted / (ry * ry) > .45f) continue;
+                int sector = (tilted >= 0 ? 2 : 0) + (dx >= 0 ? 1 : 0);
+                total[sector]++;
+                samples++;
+                if ((gray[Math.round(y + dy) * w + Math.round(x + dx)] & 255) < 225)
+                    filled[sector]++;
+            }
+        int complete = 0;
+        for (int q = 0; q < 4; q++) if (total[q] > 0 && filled[q] == total[q]) complete++;
+        return samples >= Math.ceil(gap * gap * .18f) && complete >= 3;
+    }
+
     static boolean rootedEnds(
             byte[] labels, byte[] gray, int w, int h, int[] a, int[] b, float gap) {
         if (labels == null
