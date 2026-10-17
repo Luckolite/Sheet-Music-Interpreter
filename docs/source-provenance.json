@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "47ee14ebf117aabc14fd3d3daa8f09df58c302746b7c40a4fe6773c8a5f07b92",
-      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
-      "source_normalized_sha256": "24897f63503aa1ab365cff0747c25d9b48b18aacd6bd2acdc25e1822d8e8df16",
+      "source_sha256": "3cdeaed54db167be35de612d9ab5f1817f3f30bc91d8540aae9061fb908963a5",
+      "review_note": "Retain independently recognized printed flat body and pitch metadata so a fully contained mask island cannot truncate a complete key header or become a note. Require verified local staff geometry, complete treble clef, canonical first-flat pitch, body containment and independent following attack separation. Existing flat grammar, sharp ownership, accidental and genuine-note paths remain unchanged. Twelve original procedural regressions cover both staff slopes and real filled/hollow heads at the canonical signature pitch. No private score pixels, score identifiers, model or native format changes.",
+      "source_normalized_sha256": "b1a39a29f85f2eb6a6dac8c38a223918743079ea471796283bcd2fad741b7b24",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "0d7f782d27d029742aeb8ea0e2223ae537be76dfd26e150a06f3e1961029f4b8",
+      "standalone_sha256": "f2b4db13b6e1dde9247d3c07d640b5b5f492b36f3fe2217f61557c6822539692",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -7809,6 +7809,12 @@
   "complete_counter_rule_boundary_review": {
     "summary": "Retain raw double-bar boundaries when complete separately inked parallel rules contradict the rounded-counter veto. Require both fixed columns to retain both ends, nearly the complete between-rule extent, bounded ink holes and independently clear paper between rails. Keep the generic rounded-meter classifier and all original boundary continuity, branch and ownership gates unchanged. Eleven original procedural regressions include connected rounded meter digits with aligned staff crossings. No private score pixels, song predicates, model or native layout changes.",
     "new_original_java_tests": 11,
+    "layout": "Guide290 unchanged; no helper or manifest additions.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "complete_header_flat_ownership_review": {
+    "summary": "Retain independently recognized printed flat body and pitch metadata so a fully contained mask island cannot truncate a complete key header or become a note. Require verified local staff geometry, complete treble clef, canonical first-flat pitch, body containment and independent following attack separation. Existing flat grammar, sharp ownership, accidental and genuine-note paths remain unchanged. Twelve original procedural regressions cover both staff slopes and real filled/hollow heads at the canonical signature pitch. No private score pixels, score identifiers, model or native format changes.",
+    "new_original_java_tests": 12,
     "layout": "Guide290 unchanged; no helper or manifest additions.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }

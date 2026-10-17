@@ -3022,6 +3022,69 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    /** The complete printed key body owns a bounded mask body inside its bounds. */
+    private static boolean completeHeaderFlatOwnsHead(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads,
+            List<Component> clefs,
+            List<Component> symbols) {
+        if (staff.pitchTrack == null || !staff.pitchTrack.verified() || head.centerX > width * .25f)
+            return false;
+        Staff printed = headerPrintedFrame(staff, head.centerX);
+        float gap = printed.gap;
+        if (head.area > gap * gap * 2f
+                || head.maxX - head.minX + 1 > gap * 1.6f
+                || head.maxY - head.minY + 1 > gap * 3.2f) return false;
+        var candidates = new ArrayList<AccidentalCandidate>();
+        for (Component c : clefs)
+            candidates.add(new AccidentalCandidate(c, OmrMeasurePostProcessor.CLEF_OR_KEY));
+        for (Component c : symbols)
+            candidates.add(new AccidentalCandidate(c, OmrMeasurePostProcessor.SYMBOL));
+        Component clef = null;
+        for (AccidentalCandidate c : candidates)
+            if (c.component.maxX < head.minX
+                    && head.centerX - c.component.maxX < gap * 3
+                    && completeHeaderTreble(c.component, staff))
+                if (clef == null || c.component.maxX > clef.maxX) clef = c.component;
+        if (clef == null)
+            clef =
+                    fragmentedHeaderClef(
+                            candidates, gray, width, height, staff, head.maxX + gap * 1.8f);
+        if (clef == null
+                || !completeHeaderTreble(clef, staff)
+                || clef.maxX >= head.minX
+                || head.centerX - clef.maxX > gap * 3) return false;
+        var glyphs =
+                printedHeaderSymbols(
+                        gray, width, height, clef.maxX + gap * .2f, clef.maxX + gap * 10.5f, staff);
+        if (!headerFlatOwnsFragment(glyphs, head, clef, staff)) return false;
+        for (SignatureGlyph glyph : glyphs)
+            if (firstPrintedHeaderFlat(glyph, clef, staff)
+                    && glyph.printedBody != null
+                    && headerFlatOwnsFragment(List.of(glyph), head, clef, staff)) {
+                Component body = glyph.printedBody;
+                float first = Float.MAX_VALUE;
+                for (Component main : heads) {
+                    Staff local = headerPrintedFrame(staff, main.centerX);
+                    if (main != head
+                            && !headerFlatOwnsFragment(List.of(glyph), main, clef, staff)
+                            && main.area > gap * gap * .35f
+                            && main.maxX - main.minX + 1 > gap * .75f
+                            && main.maxY - main.minY + 1 > gap * .4f
+                            && main.minX > clef.maxX
+                            && main.centerY >= local.top - local.gap * 3
+                            && main.centerY <= local.bottom + local.gap * 3)
+                        first = Math.min(first, main.minX);
+                }
+                if (first > body.maxX + gap * 1.5f && first < body.maxX + gap * 10) return true;
+            }
+        return false;
+    }
+
     /** Small connected header crossbars belong to a symbolic glyph, not a chord.
      * This establishes ownership only; it does not infer an accidental value. */
     private static boolean isOwnedHeaderCrossbar(
@@ -3038,6 +3101,8 @@ final class OmrScoreInterpreter {
         Staff staff = nearestHeadStaff(staffs, head.centerY);
         if (staff == null) return false;
         if (completeHeaderSharpOwnsHead(gray, width, height, head, staff, heads, clefs, symbols))
+            return true;
+        if (completeHeaderFlatOwnsHead(gray, width, height, head, staff, heads, clefs, symbols))
             return true;
         Staff local = headerPrintedFrame(staff, head.centerX);
         float gap = staff.pitchTrack != null ? local.gap : staff.pitchGap;
@@ -6476,7 +6541,19 @@ final class OmrScoreInterpreter {
                             left + c.maxX,
                             top + c.maxY,
                             staff.gap))
-                result.add(new SignatureGlyph(left + c.centerX, ScoreNoteEvent.ACCIDENTAL_FLAT));
+                result.add(
+                        new SignatureGlyph(
+                                left + c.centerX,
+                                ScoreNoteEvent.ACCIDENTAL_FLAT,
+                                top + flatPitchCenter(mask, w, candidate, staff.gap),
+                                new Component(
+                                        c.area,
+                                        left + c.minX,
+                                        left + c.maxX,
+                                        top + c.minY,
+                                        top + c.maxY,
+                                        left + c.centerX,
+                                        top + c.centerY)));
         }
         return result;
     }
@@ -6682,6 +6759,31 @@ final class OmrScoreInterpreter {
             List<SignatureGlyph> glyphs, Component head, Component clef, Staff staff) {
         for (SignatureGlyph glyph : glyphs) {
             if (!firstPrintedHeaderSharp(glyph, clef, staff) || glyph.printedBody == null) continue;
+            Component body = glyph.printedBody;
+            if (head.minX >= body.minX - 1
+                    && head.maxX <= body.maxX + 1
+                    && head.minY >= body.minY - 1
+                    && head.maxY <= body.maxY + 1) return true;
+        }
+        return false;
+    }
+
+    private static boolean firstPrintedHeaderFlat(
+            SignatureGlyph glyph, Component clef, Staff staff) {
+        if (clef == null
+                || glyph.accidental != ScoreNoteEvent.ACCIDENTAL_FLAT
+                || !Float.isFinite(glyph.pitchY)) return false;
+        Staff printed = headerPrintedFrame(staff, glyph.x);
+        return glyph.x > clef.maxX
+                && glyph.x - clef.maxX < printed.gap * 2.2f
+                && Math.abs(glyph.pitchY - (printed.top + printed.gap * 2)) <= printed.gap * .35f;
+    }
+
+    /** A mask island contained by the proved printed flat cannot truncate its header. */
+    private static boolean headerFlatOwnsFragment(
+            List<SignatureGlyph> glyphs, Component head, Component clef, Staff staff) {
+        for (SignatureGlyph glyph : glyphs) {
+            if (!firstPrintedHeaderFlat(glyph, clef, staff) || glyph.printedBody == null) continue;
             Component body = glyph.printedBody;
             if (head.minX >= body.minX - 1
                     && head.maxX <= body.maxX + 1
