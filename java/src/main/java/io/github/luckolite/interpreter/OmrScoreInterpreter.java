@@ -13686,7 +13686,7 @@ final class OmrScoreInterpreter {
                 int bottom = Math.min(height - 1, Math.round(lower.maxY + gap * 1.1f));
                 if (right <= left || bottom <= top) continue;
                 if (rawSharpInBounds(
-                        gray, width, height, head, gap, left, right, top, bottom, true))
+                        gray, width, height, head, gap, left, right, top, bottom, true, true))
                     return true;
             }
         return false;
@@ -13703,6 +13703,22 @@ final class OmrScoreInterpreter {
             int top,
             int bottom,
             boolean checkEdges) {
+        return rawSharpInBounds(
+                gray, width, height, head, gap, left, right, top, bottom, checkEdges, false);
+    }
+
+    private static boolean rawSharpInBounds(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float gap,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            boolean checkEdges,
+            boolean pairedCrossbars) {
         int w = right - left + 1, h = bottom - top + 1;
         int reach = Math.max(3, Math.round(gap * .6f)), probe = Math.max(2, Math.round(gap * .2f));
         // Preserve the original exclusive cutoffs for complete semantic seeds.
@@ -13768,7 +13784,12 @@ final class OmrScoreInterpreter {
                 return true;
         }
         if (checkEdges) {
-            byte[] faint = FaintSharpInk.crop(gray, width, height, left, top, right, bottom, gap);
+            byte[] faint =
+                    pairedCrossbars
+                            ? FaintSharpInk.cropPairedCrossbars(
+                                    gray, width, height, left, top, right, bottom, gap)
+                            : FaintSharpInk.crop(
+                                    gray, width, height, left, top, right, bottom, gap);
             if (faint != null) {
                 for (Component glyph :
                         findComponents(faint, w, h, OmrMeasurePostProcessor.CLEF_OR_KEY)) {

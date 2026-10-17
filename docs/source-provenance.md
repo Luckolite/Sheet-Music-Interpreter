@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Paired sharp crossbars can qualify a longer bounded faint-spine bridge; generic
+closing limits and complete sharp-shape/pitch validation remain unchanged.
+
 Regional replacements retain proved printed extents when both physical frames
 agree throughout the omitted edge and the selected frame proves a complete run.
 

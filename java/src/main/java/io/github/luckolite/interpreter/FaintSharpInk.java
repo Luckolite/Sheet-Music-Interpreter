@@ -13,6 +13,32 @@ final class FaintSharpInk {
             int right,
             int bottom,
             float gap) {
+        return crop(gray, width, height, left, top, right, bottom, gap, .2f);
+    }
+
+    /** Only for independently paired semantic crossbars followed by full sharp-shape proof. */
+    static byte[] cropPairedCrossbars(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap) {
+        return crop(gray, width, height, left, top, right, bottom, gap, .35f);
+    }
+
+    private static byte[] crop(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap,
+            float maximumGap) {
         if (gray == null
                 || gray.length != (long) width * height
                 || !Float.isFinite(gap)
@@ -45,7 +71,7 @@ final class FaintSharpInk {
             }
         }
         byte[] closed = mask;
-        int limit = Math.max(1, Math.round(gap * .2f));
+        int limit = Math.max(1, Math.round(gap * maximumGap));
         for (int y = 1; y < h - 2; y++)
             for (int x = 0; x < w; x++)
                 if (mask[y * w + x] != 0 && mask[(y - 1) * w + x] != 0)

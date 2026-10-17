@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "6e7be4858f3415ec5f4d76c7ecc6c05c707978927fc9ffc39755e12e3ad5b494",
-      "review_note": "Use existing local printed staff frame for fragmented header sharp crossbar ownership; preserve global fallback, connected glyph, verified clef and following note requirements. Original procedural local-frame and missing-evidence controls. No private pixels, new dependencies, models or formats.",
-      "source_normalized_sha256": "a0da35f594395832b7a6e2e1132a4bc2deb2b7be14aa12bf48ea1580208ced03",
+      "source_sha256": "4e7a1eb79f43d5ca9b87998b1403a466ccfa78786eb8de771e6a40806260177d",
+      "review_note": "Permit bounded longer faint-spine closing only after independently paired semantic sharp crossbars; retain generic .2gap closure and full sharp-shape/pitch proof. Original procedural paired, missingbar/spine, longgap, adjacentpitch and immutableinput controls;334existing sharp/accidental tests. No private pixels, dependencies, models or formats.",
+      "source_normalized_sha256": "f4b3322083859ccf60c7f83eceb17f84265bda4f82c72b0e7622ad86de05fc6d",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "d089895f95e13a6b58bf904f0e3a5d6035b555e13a2e3e0fab3750286cbc0604",
+      "standalone_sha256": "9f64e354a1992e6d64856f5b8c3e50d0a276d741468e49fb351e00cecaa2e1ec",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -988,11 +988,12 @@
     },
     "FaintSharpInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
-      "source_sha256": "636e5a7d874e12742ae939b874f3db00fbbbfbdc58622e8a5dbf94d41988842d",
+      "source_sha256": "6caff88e1d6e352e13a72491d1ff9c3c8e5634b087118c3acbba9e7ba28b432b",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "review_note": "Original local-background mask used only after established sharp thresholds fail in edge-checked verification. Both individual-pixel and three-row local contrast are required for faint ink; staff rule pixels require vertical support. A bounded, nonrecursive vertical gap closure uses two original support pixels on each side. Separate non-edge-connected components still require established sharpPitchCenter and head-pitch alignment. Complete helper and caller code-and-literal parity reviewed with original procedural contrast, gap, pitch, one-spine, flat-paper and immutability controls; no private pixels, new dependency or model change. Original leaning-sharp and phantom-crossbar drawings cover complete geometry, crop boundaries, ownership, pitch neighbors, one shaft, blank paper, flat/natural/real-head negatives and input immutability. Shared geometry helpers and recognition8 companions reviewed; model weights, dependencies, guide282 layout/protocol1 and platform adapters unchanged.",
-      "source_normalized_sha256": "1a756fe7549e2990a4f5922445842aef1ddeb363807c9932f678f0b9ced2a320",
-      "reviewed_source_state": "Reviewed working-tree leaning/faint sharp geometry and crossbar ownership repair, recognition8; original app commit is the base and does not claim the delta is committed."
+      "review_note": "Permit bounded longer faint-spine closing only after independently paired semantic sharp crossbars; retain generic .2gap closure and full sharp-shape/pitch proof. Original procedural paired, missingbar/spine, longgap, adjacentpitch and immutableinput controls;334existing sharp/accidental tests. No private pixels, dependencies, models or formats.",
+      "source_normalized_sha256": "7f32f0b59fefab9dbf9a0b8d118e6202ab2c0213306b770ce23116da3ff78723",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "3cf9efc68985ae5bb53f6df1972420d3daef4b3391385616c1420e4397ab7676"
     },
     "PortableOrnamentGlyphs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableOrnamentGlyphs.java",
