@@ -598,6 +598,7 @@ final class ScoreDynamicsDetector {
             var strokes = new ArrayList<HairpinContinuation.Stroke>();
             var wedges = new ArrayList<HairpinContinuation.Wedge>();
             var fragments = new ArrayList<ShadedHairpinFragments.Rail>();
+            var faintPairCores = new ArrayList<ShadedHairpinFragments.Rail>();
             for (int p = 0; p < gray.length; p++) {
                 if (seen[p] || (gray[p] & 255) >= 145) continue;
                 int start = 0, n = 1;
@@ -658,6 +659,13 @@ final class ScoreDynamicsDetector {
                     upper[x] = Math.min(upper[x], y);
                     lower[x] = Math.max(lower[x], y);
                 }
+                if (gray == ownershipGray
+                        && w >= gap * 2
+                        && h <= gap
+                        && w >= h * 4
+                        && n <= w * Math.max(8, gap))
+                    faintPairCores.addAll(
+                            ShadedHairpinFragments.pieces(owner, left, right, upper, lower));
                 if (gray != ownershipGray
                         && w >= gap * 2
                         && h <= gap * 3
@@ -735,6 +743,19 @@ final class ScoreDynamicsDetector {
                     }
                 }
             }
+            for (var shape : FaintHairpinPair.recover(faintPairCores, ownershipGray, width, height))
+                add(
+                        result,
+                        shape.staff(),
+                        shape.left() / (float) width,
+                        shape.right() / (float) width,
+                        0,
+                        shape.direction(),
+                        measures,
+                        notes,
+                        width,
+                        height,
+                        false);
             for (var shape : OpenHairpinPairs.detect(ownershipGray, width, height, staffs)) {
                 var proposed = new ArrayList<ScoreDynamicChange>();
                 add(

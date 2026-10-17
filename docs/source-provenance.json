@@ -419,13 +419,13 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "72b6a9a2546c0534f45723210c4a73df0cb82b3503861b166e2c464f3ed7d519",
-      "source_normalized_sha256": "3e00d126c5668afbe0a8cb850da70cc67baf613b01b4c440d3ac9d39f0c8f14a",
-      "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes.",
+      "source_sha256": "1e626c8f176eb367d9b47764de071729a84c089eccf528f1cfe97685f6d05872",
+      "source_normalized_sha256": "ee6a9aa33a20b576cd38d7f293301459ff5c41cee8b7c15b8a9bfc8f31374ea7",
+      "review_note": "Recover a faint hairpin only from two separately dark straight cores with matching physical staff ownership, bounded fit error, a genuinely inked common apex, complete thin raw-arm paths on uniform bright paper and a clear open interior. Existing hairpin thresholds and routes retained; no incomplete cap, missing column, cross-part, filled triangle, curved or parallel pair is inferred. Twenty-six original procedural regressions; no private score pixels, identifiers, models or native format changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "46e761197541a13163f4444d7ecb4e61440566d797c5a3aeca39b325497f0775",
+      "standalone_sha256": "d21592c8a1f45a61d96532d57817a40abd778f0dc4877e094ce5d70392a8c1c3",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "HairpinContinuation.java": {
@@ -3501,6 +3501,14 @@
       "standalone_sha256": "0aae63b33757ad6bff058407778fdedb6456a23c491efb2753bde15dab9da71b",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes."
+    },
+    "FaintHairpinPair.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintHairpinPair.java",
+      "source_sha256": "a850b0c3ba02ff8093bef2edc30a69db643a252312027f88d2863524c6fb3958",
+      "source_normalized_sha256": "26045b73b4ba4da5fe5f3525ba158b3c455b61a252861b71a536e631067552d3",
+      "standalone_sha256": "e05827d8efab80f1208419531d19185a4acc1d49260eea77a1b4713b56f75ad1",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Recover a faint hairpin only from two separately dark straight cores with matching physical staff ownership, bounded fit error, a genuinely inked common apex, complete thin raw-arm paths on uniform bright paper and a clear open interior. Existing hairpin thresholds and routes retained; no incomplete cap, missing column, cross-part, filled triangle, curved or parallel pair is inferred. Twenty-six original procedural regressions; no private score pixels, identifiers, models or native format changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7846,6 +7854,13 @@
     "new_original_java_tests": 29,
     "license": "Original Apache-2.0 geometric fixtures.",
     "layout": "Guide290 and native layouts unchanged; no helper or manifest additions.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "faint_hairpin_pair_review": {
+    "summary": "Recover a faint hairpin only from two separately dark straight cores with matching physical staff ownership, bounded fit error, a genuinely inked common apex, complete thin raw-arm paths on uniform bright paper and a clear open interior. Existing hairpin thresholds and routes retained; no incomplete cap, missing column, cross-part, filled triangle, curved or parallel pair is inferred. Twenty-six original procedural regressions; no private score pixels, identifiers, models or native format changes.",
+    "new_original_java_tests": 26,
+    "license": "Original Apache-2.0 generated straight strokes only.",
+    "layout": "Guide290/native record layouts unchanged; new helper explicitly manifested.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }
 }
