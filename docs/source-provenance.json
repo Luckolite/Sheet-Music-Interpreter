@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "4e7a1eb79f43d5ca9b87998b1403a466ccfa78786eb8de771e6a40806260177d",
-      "review_note": "Permit bounded longer faint-spine closing only after independently paired semantic sharp crossbars; retain generic .2gap closure and full sharp-shape/pitch proof. Original procedural paired, missingbar/spine, longgap, adjacentpitch and immutableinput controls;334existing sharp/accidental tests. No private pixels, dependencies, models or formats.",
-      "source_normalized_sha256": "f4b3322083859ccf60c7f83eceb17f84265bda4f82c72b0e7622ad86de05fc6d",
+      "source_sha256": "31f91860075a502ebc810899bc79d81180636406c66a52a46b4f5d8bc6df7729",
+      "review_note": "Permit bounded longer faint-spine closing only after independently paired semantic sharp crossbars; retain generic .2gap closure and full sharp-shape/pitch proof. Original procedural paired, missingbar/spine, longgap, adjacentpitch and immutableinput controls;334existing sharp/accidental tests. No private pixels, dependencies, models or formats. Retain ordinary faint closing proof before attempting stronger paired closing; existing faint crossbar ownership regression retained.",
+      "source_normalized_sha256": "821eb9b1dd2d16555f9efeacfeca6cd46d5ae52992d432a09cb257d4abba104e",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "9f64e354a1992e6d64856f5b8c3e50d0a276d741468e49fb351e00cecaa2e1ec",
+      "standalone_sha256": "ac79147614c6c56bd8100f297104698f6a9dcaec4867ceba27416cff43538b4f",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"

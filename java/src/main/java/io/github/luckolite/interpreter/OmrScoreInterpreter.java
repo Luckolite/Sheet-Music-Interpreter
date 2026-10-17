@@ -13783,9 +13783,10 @@ final class OmrScoreInterpreter {
             if (Float.isFinite(center) && Math.abs(center + top - head.centerY) < gap * .4f)
                 return true;
         }
-        if (checkEdges) {
+        // Preserve the ordinary faint-ink proof before trying stronger paired-bar closing.
+        for (int faintPass = 0; checkEdges && faintPass < (pairedCrossbars ? 2 : 1); faintPass++) {
             byte[] faint =
-                    pairedCrossbars
+                    faintPass == 1
                             ? FaintSharpInk.cropPairedCrossbars(
                                     gray, width, height, left, top, right, bottom, gap)
                             : FaintSharpInk.crop(
