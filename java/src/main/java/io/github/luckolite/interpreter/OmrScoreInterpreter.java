@@ -1302,6 +1302,30 @@ final class OmrScoreInterpreter {
                             head.centerY,
                             physicalStaff.pitchBottom,
                             physicalStaff.pitchGap)) continue;
+            if (gray != null
+                    && physicalStaff != null
+                    && !roundedLedgerGraces.contains(head)
+                    && (head.centerY < physicalStaff.top - physicalStaff.gap * 1.8f
+                            || head.centerY > physicalStaff.bottom + physicalStaff.gap * 1.8f)
+                    && attachedRawStem(
+                                    gray,
+                                    width,
+                                    height,
+                                    head,
+                                    physicalStaff.gap,
+                                    Math.max(1, Math.round(physicalStaff.gap * .16f)),
+                                    205)
+                            == null
+                    && DiffuseLedgerSurface.matches(
+                            gray,
+                            width,
+                            height,
+                            head.minX,
+                            head.minY,
+                            head.maxX,
+                            head.maxY,
+                            head.centerY,
+                            physicalStaff.gap)) continue;
             float ledgerClearance = 1.8f;
             // A detached head-like mark on the first ledger has no shaft to
             // establish notation ownership. Its printed ledger must do so.
@@ -22483,6 +22507,18 @@ final class OmrScoreInterpreter {
                                         staff.pitchTrack)
                                 && !finiteBeamOverRule(
                                         gray, width, height, x, y - run, y - 1, staff, threshold);
+                provedRuleBand =
+                        provedRuleBand
+                                || (!onlyStaff
+                                        && onStaff
+                                        && run >= 3
+                                        && run <= Math.ceil(gap * .35f)
+                                        && CompleteStaffRuleBeamBand.matches(
+                                                gray, width, height, x, lineTop, gap, threshold,
+                                                y - run, y - 1)
+                                        && !finiteBeamOverRule(
+                                                gray, width, height, x, y - run, y - 1, staff,
+                                                threshold));
                 boolean rooted =
                         run >= 3
                                 && bandReachesInnerProbe(

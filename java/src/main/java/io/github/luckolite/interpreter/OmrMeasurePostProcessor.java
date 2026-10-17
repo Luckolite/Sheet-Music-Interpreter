@@ -378,7 +378,8 @@ final class OmrMeasurePostProcessor {
                     below = witness;
             }
             if (above == null || below == null) continue;
-            if (InteriorStaffScaleEvidence.unsupported(
+            boolean unsupportedScale =
+                    InteriorStaffScaleEvidence.unsupported(
                             gray,
                             width,
                             height,
@@ -389,10 +390,24 @@ final class OmrMeasurePostProcessor {
                                     staff.top + line * staff.gap + staff.slope * (x - width * .5f),
                             admission.get(staff),
                             above.gap,
-                            below.gap)
-                    && StaffPitchTrack.detectForMeasures(
-                                    gray, width, height, staff.top, staff.bottom, staff.gap)
-                            == null) unsupportedInterior.add(staff);
+                            below.gap);
+            boolean unsupportedFrame =
+                    !admission.get(staff).printed()
+                            && staff.slope == 0f
+                            && above.slope == 0f
+                            && below.slope == 0f
+                            && RawStaffLineDetector.unsupportedInteriorFrame(
+                                    regularStaffFrame(above),
+                                    regularStaffFrame(staff),
+                                    regularStaffFrame(below),
+                                    gray,
+                                    width,
+                                    height);
+            if (unsupportedScale || unsupportedFrame) {
+                if (StaffPitchTrack.detectForMeasures(
+                                gray, width, height, staff.top, staff.bottom, staff.gap)
+                        == null) unsupportedInterior.add(staff);
+            }
         }
         result.removeAll(unsupportedInterior);
         final float first = firstPrinted, last = lastPrinted;
@@ -691,6 +706,12 @@ final class OmrMeasurePostProcessor {
             }
         }
         return result;
+    }
+
+    private static RawStaffLineDetector.StaffLines regularStaffFrame(StaffRun staff) {
+        int[] rows = new int[5];
+        for (int line = 0; line < 5; line++) rows[line] = Math.round(staff.top + line * staff.gap);
+        return new RawStaffLineDetector.StaffLines(rows, staff.gap);
     }
 
     /** A short cue above one full-size bar can omit a bracket and clef. */

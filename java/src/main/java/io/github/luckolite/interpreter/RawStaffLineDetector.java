@@ -177,6 +177,28 @@ final class RawStaffLineDetector {
                                         == null);
     }
 
+    /** Apply the existing printed-rule/texture proof to the regular frame emitted downstream. */
+    static boolean unsupportedInteriorFrame(
+            StaffLines above,
+            StaffLines candidate,
+            StaffLines below,
+            byte[] gray,
+            int width,
+            int height) {
+        if (above == null
+                || candidate == null
+                || below == null
+                || gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || above.bottom() >= candidate.top()
+                || below.top() <= candidate.bottom()) return false;
+        var frames = new ArrayList<>(List.of(above, candidate, below));
+        rejectUnsupportedInteriorTexture(frames, gray, width, height);
+        return !frames.contains(candidate);
+    }
+
     /** Multiple texture groups can sit between real systems; each needs its own printed support. */
     private static void rejectUnsupportedInteriorTexture(
             List<StaffLines> staffs, byte[] gray, int width, int height) {

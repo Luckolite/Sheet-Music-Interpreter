@@ -367,11 +367,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "9e78838baaeb50690844cbf47cf6bde07001947a3a20a480836144dd3c391326",
-      "source_normalized_sha256": "992b8df906457fa2ef9bc51043bdc5815a2db718bcd83aaa6fd804df76bdfc9c",
-      "review_note": "Preserve affine staff-connector proof and use verified local rule tracks only with an actual vertical connector and printed near/far rules. Recover opposing owned double rails only with strong semantic shaft direction, bounded thin shaft, independently owned companion and five-column rail proof. Original synthetic regressions; no score-specific conditions, private assets, model or record-format changes.",
+      "source_sha256": "86811cba989499bba0cda39b8d6a8144edfa56b0b65fb3286767fb36b93b3839",
+      "source_normalized_sha256": "3e59122ad85cfb3a8ed64d31d49b5d31e6a1b38b07be72c3ce50b330f2f0fb50",
+      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "06d9e0ec87aa351d1ceab02601a8bd2c4561c59472d98cca5b1e71d7503669bd",
+      "standalone_sha256": "7ea3400fa91a63907200fc7c0f64b18f3ba8a0c49044f374b4230065fa545d2e",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "51efad0a80eb72bcf9b2d4f3d6281ab5ac8d0fe7b452c8c2c0e9476988fe1d19",
-      "review_note": "Recover a faint filled head only with its owned shaft and an independently complete rooted donor beam, bounded coarse-grid phase refinement and one coherent corroborated ink path. Require independently complete sparse-head interior sectors and rooted rail ends before ordinary two-head recovery; preserve broken filled ovals while rejecting hooks and hollow halves. Separate a detached slur from two independently proved terminal rails using an exact strict-shaft recount. Fifty-six original procedural regressions; no song predicates, private score pixels, weights or wire-layout changes.",
-      "source_normalized_sha256": "2cbb2daa420fc9d64d6b4dfdbf19630c01844ae49fae9b1e18e324f8517f918b",
+      "source_sha256": "47ee14ebf117aabc14fd3d3daa8f09df58c302746b7c40a4fe6773c8a5f07b92",
+      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
+      "source_normalized_sha256": "24897f63503aa1ab365cff0747c25d9b48b18aacd6bd2acdc25e1822d8e8df16",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "099a9314a40516b6fed6f7d998ba3703e9fd090eda54d9cd44b3572ec7363cc1",
+      "standalone_sha256": "0d7f782d27d029742aeb8ea0e2223ae537be76dfd26e150a06f3e1961029f4b8",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -403,12 +403,12 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "5d45418a32ff963c85f96417b8f9e0c96bcd2ff589bd47ab929a9de64da76eee",
-      "source_normalized_sha256": "91896a50dfa22b82dc4e061967804b9f5d482bc3ef2688a4391db5da82f4cb9e",
+      "source_sha256": "4599192ed029eb5bd613221a51728b8c71c7edd8c08b030ce63023387ed15779",
+      "source_normalized_sha256": "1eacd57de498137fbc115eca115a5e5195fd5cb59aad4166f4b993657c695d24",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "4c2e64f9cb92ce369a300e204c62c6bbd50ae48cc01dac310417299f9085d297",
+      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "6769fa213f97eed0105ab62cc9d21be0e683033d7cc2369809c321cfa082f361",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "ScoreDynamicChange.java": {
@@ -3476,6 +3476,22 @@
       "standalone_sha256": "7878b8ff02ef6309f222869489ba1edebcea75ef50c92ec1a374a45d4ae1cbe6",
       "reviewed_source_state": "working-tree",
       "review_note": "Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities."
+    },
+    "CompleteStaffRuleBeamBand.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteStaffRuleBeamBand.java",
+      "source_sha256": "b4708950d0a3c28aed479e97495c3200a198328d9fab0e179579c8016a757da0",
+      "source_normalized_sha256": "10bb9d82a10b2fba6c6511f1347900a6bf93a52b20600fb9ec3a5d9323f0eaa7",
+      "standalone_sha256": "edf95f40490f695a72bbb72333a99a23ec97fafa64c2f811c443987ec47b5245",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes."
+    },
+    "DiffuseLedgerSurface.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DiffuseLedgerSurface.java",
+      "source_sha256": "72e1a820d12cd5a87c5c6daee358ae0bfa9f8d02f81f5f56a342c447124f876d",
+      "source_normalized_sha256": "d0562f4d9e8aaaa02c781dde5883c6b0e75019193ddd3b0df1aa199548031a4a",
+      "standalone_sha256": "0997c136648f7ff1280095871f2d4d7beb9a0713ac70371ec2404e94ea9bab28",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes."
     }
   },
   "interpreter_speedup_review": {
@@ -7782,5 +7798,12 @@
     "helpers": "One Apache-2.0 helper explicitly listed in native decoder sources; existing dependencies retained.",
     "layout": "Guide290 and all native record layouts unchanged.",
     "deployment": "Cumulative app/Hub/page/audio-worker rollout pending."
+  },
+  "regularized_staff_beam_and_photographic_head_review": {
+    "summary": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
+    "new_original_java_tests": 63,
+    "helpers": "Two originalApache2helpers explicitlylisted in native source manifest; all original dependencies retained.",
+    "layout": "Guide290,80bytenotes,32byteclefmarker and all native layouts unchanged.",
+    "deployment": "Cumulative app/Hub/page/audio-worker rollout deferred by user."
   }
 }
