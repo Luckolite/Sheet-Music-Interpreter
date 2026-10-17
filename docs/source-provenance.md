@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Slashed grace prefixes retain their own staff ownership across accompaniment.
+Larger rounded masks require a larger principal and complete short-stem slash proof.
+
 Rounded meter counters require curvature on both sides so a bar beside a wavy
 stroke remains a measure boundary. Controls use original geometric pockets.
 

@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "1f24da6d33d2d257aac5f54d8146a985895cdda5409fbbcd4ce83932a1db7aa3",
-      "review_note": "Apply independently printed hollow-second chord proof to compact stacks before the two-lobe fallback. Original pixel-derived compact triad, filled/missing/white-mask/pixel-preservation and stem-owned dot/rest controls.",
-      "source_normalized_sha256": "599378e08be7275c3d29b8745dc70ca32ed8156750a0de4e2213ea859bf3d21d",
+      "source_sha256": "2e1a60777abbf4be46f08eff27c34068d573e3a42a119783927811c8a36ed363",
+      "review_note": "Read slashed grace prefixes against the next same-staff principal. Admit bounded rounded masks only with a larger principal, short shaft and explicit opposing slash/flag evidence. Original interleaved accompaniment and missing-ink/ownership controls; no score-specific data.",
+      "source_normalized_sha256": "52f9a8db75f53a6ff333a90e34b2ca58366ef58db0e450eb25e97997ca52c50e",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "Committed source; full validation and paired deployment pending",
-      "standalone_sha256": "ec9c5bfdcb1c2ee6f82bd2b9e868b3dc949434aa4364f42688760cf7dca31d6c",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "fef387eac48b8356caa9b15f7bd8f1fd71bc2c9d14ad8453ab0f5ff3c656618a",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"

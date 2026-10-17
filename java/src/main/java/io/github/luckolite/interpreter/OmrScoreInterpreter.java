@@ -12299,21 +12299,36 @@ final class OmrScoreInterpreter {
             List<ScoreNoteEvent> events) {
         if (gray == null) return;
         for (int i = 0; i + 1 < detected.size(); i++) {
-            DetectedNote a = detected.get(i), principal = detected.get(i + 1);
+            int principalIndex = adjacentGraceVoiceIndex(detected, i, 1);
+            if (principalIndex < 0) continue;
+            DetectedNote a = detected.get(i), principal = detected.get(principalIndex);
             float gap = a.staffGap;
+            // A larger rounded mask needs a wider principal, a short owned shaft and
+            // the independent slash/flag proof below; accompaniment does not own it.
+            boolean largerSlashed =
+                    a.head.maxX - a.head.minX + 1 <= Math.ceil(gap * 1.2f)
+                            && a.head.maxY - a.head.minY + 1 <= Math.ceil(gap * 1.1f)
+                            && a.head.area <= gap * gap * .95f
+                            && a.event.beamCount() == 1
+                            && a.event.augmentationDots() == 0
+                            && a.event.unbeamedDurationBeats() < ScoreNoteEvent.DURATION_HALF
+                            && principal.head.maxX - principal.head.minX + 1
+                                    > (a.head.maxX - a.head.minX + 1) * 1.2f
+                            && !extendsMetricalBeam(labels, gray, width, height, detected, i);
             if ((events.get(i).articulations() & NoteOrnament.GRACE) != 0
-                    || !(smallGraceHead(a)
+                    || !(largerSlashed
+                            || smallGraceHead(a)
                             || roundedBeamedGraceHead(a, gray, width, height)
                                     && !extendsMetricalBeam(
                                             labels, gray, width, height, detected, i))
                     || a.event.beamCount() > 1
                     || !sameGraceVoice(a, principal)
                     || smallGraceHead(principal)
-                    || principal.head.area <= a.head.area * 1.65f
+                    || principal.head.area <= a.head.area * (largerSlashed ? 1.4f : 1.65f)
                     || principal.head.maxX - principal.head.minX + 1 <= gap * 1.05f) continue;
             float dx = principal.head.centerX - a.head.centerX;
             if (dx < gap * .65f
-                    || dx > gap * 3.2f
+                    || dx > gap * (largerSlashed ? 3.5f : 3.2f)
                     || Math.abs(principal.head.centerY - a.head.centerY) > gap * 2.5f) continue;
             if (i > 0) {
                 DetectedNote previous = detected.get(i - 1);
