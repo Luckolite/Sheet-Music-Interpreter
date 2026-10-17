@@ -93,9 +93,10 @@ final class HalfRestRuleBody {
                         y == rule + direction
                                 ? Math.max(margin * .2f, Math.max(1, Math.round(gap * .10f)))
                                 : margin * .2f;
-                if (rowInk(gray, width, left - margin, left - 1, y) > fringeLimit
-                        || rowInk(gray, width, right + 1, right + margin, y) > fringeLimit)
-                    clear = false;
+                boolean firstHangingRow = hanging && y == rule + 1;
+                if (sideInk(gray, width, left - margin, left - 1, y, firstHangingRow) > fringeLimit
+                        || sideInk(gray, width, right + 1, right + margin, y, firstHangingRow)
+                                > fringeLimit) clear = false;
             }
             if (!clear) continue;
             int outside = 0;
@@ -147,6 +148,21 @@ final class HalfRestRuleBody {
                 && rowInk(g, w, left - span, left - 1, y) >= span * .50f
                 && rowInk(g, w, right + 1, right + span, y) >= span * .50f
                 && rowInk(g, w, left, right, y) >= (right - left + 1) * .90f;
+    }
+
+    /** A rule's blurred edge fades toward paper on the first attached body row only. */
+    private static int sideInk(
+            byte[] g, int w, int left, int right, int y, boolean firstHangingRow) {
+        int unexplained = 0;
+        for (int x = left; x <= right; x++)
+            if (dark(g, w, x, y)) {
+                int tone = g[y * w + x] & 255;
+                if (firstHangingRow
+                        && tone >= (g[(y - 1) * w + x] & 255) + 24
+                        && (g[(y + 1) * w + x] & 255) >= tone + 24) continue;
+                unexplained++;
+            }
+        return unexplained;
     }
 
     private static int rowInk(byte[] g, int w, int left, int right, int y) {

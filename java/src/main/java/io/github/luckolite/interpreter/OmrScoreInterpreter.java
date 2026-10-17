@@ -5023,7 +5023,12 @@ final class OmrScoreInterpreter {
                     if (cue != null) {
                         glyph = cue;
                         clef = ScoreNoteEvent.CLEF_TREBLE;
-                    } else
+                    } else if (!isFlatGlyph(
+                            labels,
+                            width,
+                            height,
+                            new AccidentalCandidate(original, OmrMeasurePostProcessor.CLEF_OR_KEY),
+                            staff.gap))
                         for (float scale : new float[] {.7f, .8f, .9f}) {
                             float cueGap = staff.pitchGap * scale;
                             float cueTop = staff.pitchBottom - 3 * staff.pitchGap - cueGap;
@@ -14846,6 +14851,40 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    /** A labelled ledger/stem fragment cannot become the accidental of a later attack. */
+    private static boolean flatFragmentOnOwnedShaft(
+            byte[] gray,
+            int width,
+            int height,
+            Component glyph,
+            Component head,
+            List<Component> heads,
+            float gap) {
+        if (gray == null || heads == null) return false;
+        for (Component other : heads) {
+            if (other == head
+                    || other.centerX >= head.centerX - gap * .7f
+                    || other.centerY <= glyph.maxY + gap * .35f
+                    || other.centerY - glyph.maxY > gap * 2.5f) continue;
+            int[] shaft =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            205);
+            if (shaft == null
+                    || shaft[2] != -1
+                    || shaft[1] >= glyph.minY - gap * .3f
+                    || Math.abs(shaft[0] - glyph.minX) > gap * .35f
+                    || glyph.maxX - shaft[0] > gap * .8f) continue;
+            return true;
+        }
+        return false;
+    }
+
     private static int detectWrittenAccidental(
             byte[] labels,
             int width,
@@ -14916,6 +14955,9 @@ final class OmrScoreInterpreter {
                                                                     : ScoreNoteEvent
                                                                             .ACCIDENTAL_FROM_KEY;
             if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) continue;
+            if (accidental == ScoreNoteEvent.ACCIDENTAL_FLAT
+                    && flatFragmentOnOwnedShaft(gray, width, height, glyph, head, heads, gap))
+                continue;
             if (accidental == ScoreNoteEvent.ACCIDENTAL_FLAT
                     && (containsCompleteNatural(labels, width, height, candidate, candidates, gap)
                             || heads != null
@@ -18553,6 +18595,8 @@ final class OmrScoreInterpreter {
                 return 2;
         }
         if (count == 0 && palePairedSingleRail(gray, width, height, head, staff, heads)) return 1;
+        if (count == 0 && validatedPaleDoubleRails(labels, gray, width, height, head, staff, heads))
+            return 2;
         if (count < 2 || gray == null) return count;
         int[] stem = attachedRawStem(gray, width, height, head, staff.gap);
         if (stem == null) return count;
@@ -18624,6 +18668,55 @@ final class OmrScoreInterpreter {
             if (PairedGraceBeamInk.countSinglePrinted(
                             gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
                     == 1) return true;
+        }
+        return false;
+    }
+
+    private static boolean validatedPaleDoubleRails(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        if (gray == null || heads == null) return false;
+        float gap = staff.gap;
+        int threshold = 245;
+        int ownLimit =
+                head.centerY < staff.top - gap * 2.5f || head.centerY > staff.bottom + gap * 2.5f
+                        ? 12
+                        : 9;
+        int[] own =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        gap,
+                        Math.max(1, Math.round(gap * .16f)),
+                        threshold,
+                        ownLimit);
+        if (own == null || Math.abs(own[1] - head.centerY) > gap * 5.5f) return false;
+        for (Component other : heads) {
+            if (other == head
+                    || Math.abs(other.centerX - head.centerX) < gap * .95f
+                    || Math.abs(other.centerX - head.centerX) > gap * 5
+                    || Math.abs(other.centerY - head.centerY) > gap * 5) continue;
+            int pairLimit =
+                    other.centerY < staff.top - gap * 2.5f
+                                    || other.centerY > staff.bottom + gap * 2.5f
+                            ? 12
+                            : 9;
+            int[] pair = paleStemEndpoint(labels, gray, width, height, other, staff);
+            if (pair == null || detectBeamCount(labels, gray, width, height, other, staff) < 1)
+                continue;
+            if (PairedGraceBeamInk.countPrintedSize(
+                            gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
+                    == 2) {
+                int[] proved = paleDoubleRailBodyEndpoint(labels, gray, width, height, head, staff);
+                if (proved != null) return true;
+            }
         }
         return false;
     }
@@ -20127,6 +20220,145 @@ final class OmrScoreInterpreter {
         return true;
     }
 
+    // Called only after independent shafts and two full printed rails agree.
+    private static int[] paleDoubleRailBodyEndpoint(
+            byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null) return null;
+        float gap = staff.gap;
+        int[] trace =
+                attachedRawStem(
+                        gray, width, height, head, gap, Math.max(1, Math.round(gap * .16f)), 245);
+        if (trace == null || Math.abs(trace[1] - head.centerY) > gap * 5.5f) return null;
+        int flank = Math.max(3, Math.round(gap * .45f)), direction = trace[2];
+        int centerRadius = Math.max(2, Math.round(gap * .3f));
+        for (int offset = -centerRadius; offset <= centerRadius; offset++) {
+            int x = trace[0] + offset;
+            int edge = direction < 0 ? head.maxX : head.minX;
+            if (x - flank < 0 || x + flank >= width || Math.abs(x - edge) > Math.round(gap * .3f))
+                continue;
+            int blanks = 0;
+            boolean connected = true;
+            for (int y = Math.round(head.centerY);
+                    (trace[1] - y) * direction >= 0;
+                    y += direction) {
+                if ((gray[y * width + x] & 255) < 245) blanks = 0;
+                else if (++blanks > Math.max(1, Math.round(gap * .16f))) {
+                    connected = false;
+                    break;
+                }
+            }
+            if (!connected) continue;
+            float localGap = staff.pitchGap,
+                    localBottom = staff.pitchBottom + staff.pitchSlope * (x - width * .5f);
+            if (staff.pitchTrack != null) {
+                float[] local = staff.pitchTrack.at(x);
+                localBottom = local[0];
+                localGap = local[1];
+            }
+            int first = direction < 0 ? head.minY - 1 : head.maxY + 1;
+            int last = trace[1] - direction * Math.round(gap * 2.2f), samples = 0, support = 0;
+            for (int y = first; (last - y) * direction >= 0; y += direction) {
+                float rule = localBottom + Math.round((y - localBottom) / localGap) * localGap;
+                if (Math.abs(y - rule) <= localGap * .2f) continue;
+                int ink = gray[y * width + x] & 255;
+                samples++;
+                if (ink < 245
+                        && (gray[y * width + x - flank] & 255) >= ink + 8
+                        && (gray[y * width + x + flank] & 255) >= ink + 8) support++;
+            }
+            if (samples < Math.max(8, Math.round(gap * .6f)) || support < samples * .75f) continue;
+            return new int[] {x, trace[1], direction};
+        }
+        return null;
+    }
+
+    /** A complete detached down-bow can extend a pale shaft trace beyond its real tip. */
+    private static boolean detachedBowSeparatesStem(
+            byte[] gray, int width, int height, int[] old, int[] stem, float gap) {
+        if (old[2] != -1
+                || stem[2] != -1
+                || Math.abs(old[0] - stem[0]) > gap * .3f
+                || stem[1] - old[1] < gap) return false;
+        int left = Math.max(0, old[0] - Math.round(gap * 2)),
+                right = Math.min(width - 1, old[0] + Math.round(gap * 2));
+        int top = Math.max(0, old[1] - Math.round(gap * .5f)),
+                bottom = Math.min(height - 1, stem[1] - 1);
+        int w = right - left + 1, h = bottom - top + 1;
+        if (h <= 0 || h > gap * 5) return false;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        for (int sy = top; sy <= Math.min(bottom, old[1] + Math.round(gap * .7f)); sy++)
+            for (int sx = left + 1; sx < right; sx++) {
+                int seed = (sy - top) * w + sx - left;
+                if (seen[seed] || (gray[sy * width + sx] & 255) > 205) continue;
+                int size = 1, take = 0;
+                queue[0] = seed;
+                seen[seed] = true;
+                int minX = right, maxX = left, minY = bottom, maxY = top;
+                while (take < size) {
+                    int at = queue[take++], x = at % w, y = at / w;
+                    minX = Math.min(minX, left + x);
+                    maxX = Math.max(maxX, left + x);
+                    minY = Math.min(minY, top + y);
+                    maxY = Math.max(maxY, top + y);
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int xx = x + dx, yy = y + dy;
+                            if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                            int next = yy * w + xx;
+                            if (!seen[next]
+                                    && (gray[(top + yy) * width + left + xx] & 255) <= 205) {
+                                seen[next] = true;
+                                queue[size++] = next;
+                            }
+                        }
+                }
+                int gw = maxX - minX + 1, gh = maxY - minY + 1;
+                if (minX <= left
+                        || maxX >= right
+                        || minY <= top
+                        || maxY >= bottom
+                        || old[0] < minX
+                        || old[0] > maxX
+                        || Math.abs(minY - old[1]) > gap * .5f
+                        || gw < gap * .65f
+                        || gw > gap * 1.8f
+                        || gh < gap * .65f
+                        || gh > gap * 1.8f) continue;
+                boolean[] member = new boolean[w * h];
+                for (int i = 0; i < size; i++) member[queue[i]] = true;
+                int cap = 0, legs = 0, total = 0;
+                for (int y = minY; y <= maxY; y++) {
+                    int row = 0, a = 0, b = 0, middle = 0;
+                    for (int x = minX; x <= maxX; x++)
+                        if (member[(y - top) * w + x - left]) {
+                            row++;
+                            if (x < minX + gw * .25f) a++;
+                            else if (x > maxX - gw * .25f) b++;
+                            else middle++;
+                        }
+                    if (y < minY + gh * .4f && row >= gw * .75f) cap++;
+                    if (y >= minY + gh * .45f && y < minY + gh * .85f) {
+                        total++;
+                        if (a > 0 && b > 0 && middle <= gw * .1f) legs++;
+                    }
+                }
+                if (cap < Math.max(2, Math.round(gh * .18f)) || total < 3 || legs < total * .9f)
+                    continue;
+                int blanks = 0, longest = 0;
+                for (int y = maxY + 1; y < stem[1]; y++) {
+                    boolean blank = true;
+                    for (int x = Math.max(0, stem[0] - 1);
+                            x <= Math.min(width - 1, stem[0] + 1);
+                            x++) if ((gray[y * width + x] & 255) < 205) blank = false;
+                    blanks = blank ? blanks + 1 : 0;
+                    longest = Math.max(longest, blanks);
+                }
+                if (longest >= Math.max(2, Math.round(gap * .16f))) return true;
+            }
+        return false;
+    }
+
     private static int[] paleStemEndpoint(
             byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null) return null;
@@ -20134,6 +20366,21 @@ final class OmrScoreInterpreter {
         int[] trace =
                 attachedRawStem(
                         gray, width, height, head, gap, Math.max(1, Math.round(gap * .16f)), 245);
+        if (trace != null && Math.abs(trace[1] - head.centerY) > gap * 5.5f) {
+            int[] strict =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            head,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            205);
+            if (strict != null
+                    && Math.abs(strict[1] - head.centerY) <= gap * 5.5f
+                    && detachedBowSeparatesStem(gray, width, height, trace, strict, gap))
+                trace = strict;
+        }
         if (trace == null || Math.abs(trace[1] - head.centerY) > gap * 5.5f) return null;
         int flank = Math.max(3, Math.round(gap * .45f)), direction = trace[2];
         int centerRadius = Math.max(2, Math.round(gap * .3f));

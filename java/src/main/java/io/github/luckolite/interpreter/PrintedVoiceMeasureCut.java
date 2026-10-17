@@ -4,9 +4,11 @@ package io.github.luckolite.interpreter;
 
 import java.util.*;
 
-/** Locates a printed separator between inferred single-staff bars.
- * Balanced written voices are preferred. Otherwise require a unique full-height,
- * staff-terminated separator clear of every recognized head and between notes. */
+/**
+ * Locates a printed separator between inferred single-staff bars. Balanced written voices are
+ * preferred. Otherwise require a unique full-height, staff-terminated separator clear of every
+ * recognized head and between notes.
+ */
 final class PrintedVoiceMeasureCut {
     static Float resolve(
             MeasureRegion region,
@@ -82,6 +84,8 @@ final class PrintedVoiceMeasureCut {
                     RawStaffLineDetector.detectFromStrength(
                             projection, Math.max(24, Math.round(cw * .25f)), ch);
         } else staffs = RawStaffLineDetector.detect(crop, cw, ch);
+        PaleFrame pale = staffs.isEmpty() ? paleFrame(crop, cw, ch) : null;
+        if (pale != null) staffs = List.of(pale.staff());
         if (staffs.size() != 1) return null;
         var staff = staffs.get(0);
         float gap = staff.gap();
@@ -107,8 +111,12 @@ final class PrintedVoiceMeasureCut {
         if (from > to) return null;
         List<Integer> hits = new ArrayList<>();
         StaffPitchTrack curve =
-                StaffPitchTrack.detectForSymbols(crop, cw, ch, staff.top(), staff.bottom(), gap);
+                pale != null
+                        ? pale.track()
+                        : StaffPitchTrack.detectForSymbols(
+                                crop, cw, ch, staff.top(), staff.bottom(), gap);
         for (int x = from; x <= to; x++) {
+            if (pale != null && !pale.track().verifiedAt(x - left)) continue;
             if (physicalOnly) {
                 final int column = x;
                 if (voice.stream()
@@ -119,7 +127,7 @@ final class PrintedVoiceMeasureCut {
                                                                         + n.positionInMeasure()
                                                                                 * span
                                                                         - column)
-                                                        < gap * .65f)
+                                                        < gap * (pale != null ? 1f : .65f))
                         || voice.stream()
                                 .noneMatch(n -> left + n.positionInMeasure() * span < column)
                         || voice.stream()
@@ -134,6 +142,7 @@ final class PrintedVoiceMeasureCut {
                             180,
                             BeamInkThreshold.at(
                                     gray, w, h, x, top + staff.top(), top + staff.bottom(), gap));
+            if (pale != null) columnLimit = pale.limit();
             boolean proved = false;
             for (float lean :
                     new float[] {
@@ -173,9 +182,51 @@ final class PrintedVoiceMeasureCut {
                 }
             }
             if (proved) hits.add(x);
-        }
+    }
+
         if (hits.isEmpty() || hits.get(hits.size() - 1) - hits.get(0) > gap * .65f) return null;
         return hits.get(hits.size() / 2) / (float) w;
+    }
+
+    private record PaleFrame(
+            RawStaffLineDetector.StaffLines staff, StaffPitchTrack track, int limit) {}
+
+    /** Recover faint, tilted rules only from independently validated local five-rule strips. */
+    private static PaleFrame paleFrame(byte[] crop, int w, int h) {
+        int[] histogram = new int[256];
+        for (byte b : crop) histogram[b & 255]++;
+        int paper = 255, count = 0, target = crop.length * 3 / 4;
+        for (int i = 0; i < 256; i++) {
+            count += histogram[i];
+            if (count >= target) {
+                paper = i;
+                break;
+            }
+        }
+        int limit = Math.min(205, paper - 32);
+        if (limit <= 170) return null;
+        int strip = Math.min(w, Math.max(96, Math.round(h * 1.6f)));
+        var samples = new ArrayList<float[]>();
+        RawStaffLineDetector.StaffLines seed = null;
+        int step = Math.max(Math.max(1, strip / 2), (int) Math.ceil((w - strip) / 12.0));
+        for (int left = 0; left + strip <= w; left += step) {
+            byte[] local = new byte[strip * h];
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < strip; x++)
+                    local[y * strip + x] =
+                            (byte) ((crop[y * w + left + x] & 255) <= limit ? 0 : 255);
+            var found = RawStaffLineDetector.detect(local, strip, h);
+            if (found.size() != 1) continue;
+            var staff = found.get(0);
+            if (seed == null) seed = staff;
+            if (Math.abs(staff.gap() - seed.gap()) > seed.gap() * .15f
+                    || Math.abs(staff.center() - seed.center()) > seed.gap() * 1.25f) return null;
+            samples.add(new float[] {left + (strip - 1) * .5f, staff.bottom(), staff.gap()});
+    }
+
+        if (samples.size() < 3 || samples.get(samples.size() - 1)[0] - samples.get(0)[0] < w * .5f)
+            return null;
+        return new PaleFrame(seed, StaffPitchTrack.fromVerifiedSamples(samples), limit);
     }
 
     private static boolean extendsBeyondStaff(
@@ -193,7 +244,7 @@ final class PrintedVoiceMeasureCut {
                 if ((gray[y * w + xx] & 255) < limit) dark++;
             }
             if (dark >= length * .8f) return true;
-        }
+    }
         return false;
     }
 }
