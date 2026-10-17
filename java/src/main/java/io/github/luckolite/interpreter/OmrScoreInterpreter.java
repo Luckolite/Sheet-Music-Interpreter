@@ -9959,7 +9959,8 @@ final class OmrScoreInterpreter {
                     hasContinuousTieArc(arcLabels, gray, width, height, a, b, center, gap, head);
             // A compact tie returns under the heads. Its full dark curve must
             // pass through the small island, with both stemmed endpoints retained.
-            if (!proved && b - a + 1 < gap * 1.3f) {
+            // Reduced grace heads can leave a wider gap while owning the same shoulders.
+            if (!proved && b - a + 1 < gap * 2.1f) {
                 int overlap = Math.round(gap * .6f), step = Math.max(1, Math.round(gap * .1f));
                 int arcLeft = Math.max(Math.round(left.centerX), a - overlap);
                 int arcRight = Math.min(Math.round(right.centerX), b + overlap);

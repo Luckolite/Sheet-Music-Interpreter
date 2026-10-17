@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "2e1a60777abbf4be46f08eff27c34068d573e3a42a119783927811c8a36ed363",
-      "review_note": "Read slashed grace prefixes against the next same-staff principal. Admit bounded rounded masks only with a larger principal, short shaft and explicit opposing slash/flag evidence. Original interleaved accompaniment and missing-ink/ownership controls; no score-specific data.",
-      "source_normalized_sha256": "52f9a8db75f53a6ff333a90e34b2ca58366ef58db0e450eb25e97997ca52c50e",
+      "source_sha256": "fc81460c65494a058c5a7b1fab02553389ceb5f9765bb86b863e5b5e0b43f255",
+      "review_note": "Search bounded overlapping tie shoulders across reduced-head gaps; demote a semantic island only when a continuous returning curve passes through it between two retained stemmed endpoints. Original mirrored/scaled curves and missing-ink/independent-head controls.",
+      "source_normalized_sha256": "63d4340af28b1a8996b7d087840bf69d1d934070ea5072772d7a56199df6fdeb",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "fef387eac48b8356caa9b15f7bd8f1fd71bc2c9d14ad8453ab0f5ff3c656618a",
+      "standalone_sha256": "252b88e4af06e5ede3bf4d98a3e874c787e8b69c3da55f6f5bbc9313ed9d0a94",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"

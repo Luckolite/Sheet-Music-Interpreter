@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Compact tie islands require a complete returning curve through their mask and two
+retained stemmed endpoints, including reduced-head gaps with overlapping shoulders.
+
 Slashed grace prefixes retain their own staff ownership across accompaniment.
 Larger rounded masks require a larger principal and complete short-stem slash proof.
 
