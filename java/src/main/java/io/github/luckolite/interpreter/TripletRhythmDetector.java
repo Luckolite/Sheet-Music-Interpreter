@@ -2036,7 +2036,8 @@ final class TripletRhythmDetector {
                                                 height,
                                                 firstX,
                                                 lastX,
-                                                gap));
+                                                gap,
+                                                measures));
         return extended != null
                         && TupletNumeralInk.hasGlyphContrast(
                                 gray,
@@ -3805,7 +3806,8 @@ final class TripletRhythmDetector {
             int height,
             float firstX,
             float lastX,
-            float gap) {
+            float gap,
+            List<MeasureRegion> measures) {
         boolean upper = first.stemDirection() == -1;
         ScoreNoteEvent last = null;
         for (var n : heads) {
@@ -3857,6 +3859,84 @@ final class TripletRhythmDetector {
                     || last.pageY() * height < staffBottom + gap) continue;
             matches++;
         }
-        return matches == 1;
+        if (matches != 0) return matches == 1;
+        return ledgerRowStaffOwns(
+                glyph, first, last, heads, bar, measures, gray, width, height, gap);
+    }
+
+    /** A dense beam can merge rules in a group projection; separate head columns prove the row. */
+    private static boolean ledgerRowStaffOwns(
+            Glyph glyph,
+            ScoreNoteEvent first,
+            ScoreNoteEvent last,
+            List<ScoreNoteEvent> heads,
+            MeasureRegion bar,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        if (first.staffCount() != 1 || first.crossStaffBeam() || last.crossStaffBeam())
+            return false;
+        float rowLeft = bar.left() * width, rowRight = bar.right() * width;
+        for (int pass = 0; pass < measures.size(); pass++) {
+            float beforeLeft = rowLeft, beforeRight = rowRight;
+            for (var next : measures) {
+                if (Math.abs(next.top() - bar.top()) * height > gap * .7f
+                        || Math.abs(next.bottom() - bar.bottom()) * height > gap * .7f) continue;
+                float left = next.left() * width, right = next.right() * width;
+                if (left > rowRight + gap * 2 || right < rowLeft - gap * 2) continue;
+                rowLeft = Math.min(rowLeft, left);
+                rowRight = Math.max(rowRight, right);
+            }
+            if (rowLeft == beforeLeft && rowRight == beforeRight) break;
+        }
+        float expectedBottom = first.pageY() * height + first.staffStep() * gap * .5f;
+        float proofX = Float.NaN, proofBottom = 0, proofGap = 0;
+        boolean separated = false;
+        for (var head : heads) {
+            if (head.measureIndex() == first.measureIndex()
+                    || head.measureIndex() < 0
+                    || head.measureIndex() >= measures.size()) continue;
+            var region = measures.get(head.measureIndex());
+            if (Math.abs(region.top() - bar.top()) * height > gap * .7f
+                    || Math.abs(region.bottom() - bar.bottom()) * height > gap * .7f) continue;
+            float x =
+                    (region.left() + head.positionInMeasure() * (region.right() - region.left()))
+                            * width;
+            if (x < rowLeft || x > rowRight) continue;
+            if (head.staffIndex() != first.staffIndex()
+                    || head.staffCount() != first.staffCount()
+                    || head.crossStaffBeam()) return false;
+            if (head.kind() == ScoreNoteEvent.Kind.UNPITCHED
+                    || (head.articulations() & NoteOrnament.GRACE) != 0) continue;
+            float bottom = head.pageY() * height + head.staffStep() * gap * .5f;
+            if (Math.abs(bottom - expectedBottom) > gap * .7f) continue;
+            float[] rules = PrintedDirectionStaff.printedRules(gray, width, height, x, bottom, gap);
+            if (rules == null) continue;
+            if (Math.abs(rules[0] - expectedBottom) > gap * .7f
+                    || rules[1] < gap * .8f
+                    || rules[1] > gap * 1.2f) return false;
+            if (!Float.isFinite(proofX)) {
+                proofX = x;
+                proofBottom = rules[0];
+                proofGap = rules[1];
+            } else {
+                if (Math.abs(proofBottom - rules[0]) > gap * .2f
+                        || Math.abs(proofGap - rules[1]) > gap * .08f) return false;
+                separated |= Math.abs(proofX - x) >= gap * 3;
+            }
+        }
+        if (!separated) return false;
+        float staffTop = proofBottom - proofGap * 4;
+        if (first.stemDirection() == -1)
+            return glyph.top() > proofBottom + gap * .15f
+                    && glyph.bottom() <= proofBottom + gap * 2.5f
+                    && first.pageY() * height <= staffTop - gap
+                    && last.pageY() * height <= staffTop - gap;
+        return glyph.bottom() < staffTop - gap * .15f
+                && glyph.top() >= staffTop - gap * 2.5f
+                && first.pageY() * height >= proofBottom + gap
+                && last.pageY() * height >= proofBottom + gap;
     }
 }

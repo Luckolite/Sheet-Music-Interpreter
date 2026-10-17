@@ -23,6 +23,15 @@ final class SixteenthRestDetector {
 
     record InkDot(float x, float y) {}
 
+    /** Optional accepted proposal bounds for one rectified view; recognition is unchanged. */
+    private static final class ContourRests extends ArrayList<ScoreRestEvent> {
+        final java.util.Map<ScoreRestEvent, int[]> bounds;
+
+        ContourRests(java.util.Map<ScoreRestEvent, int[]> bounds) {
+            this.bounds = bounds;
+        }
+    }
+
     private record Placement(Staff staff, float printedCenter) {}
 
     static List<ScoreRestEvent> detect(
@@ -1372,6 +1381,20 @@ final class SixteenthRestDetector {
             List<ScoreNoteEvent> notes,
             boolean refineSymbols,
             boolean faintShapes) {
+        return detectWithDots(
+                gray, width, height, measures, staffs, notes, refineSymbols, faintShapes, null);
+    }
+
+    private static Detection detectWithDots(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            boolean refineSymbols,
+            boolean faintShapes,
+            java.util.Map<ScoreRestEvent, int[]> bounds) {
         if (gray == null || gray.length != width * height)
             return new Detection(List.of(), List.of());
         if (staffs.stream().anyMatch(staff -> staff.pitchTrack() != null)) {
@@ -1399,7 +1422,7 @@ final class SixteenthRestDetector {
                 }
             return collected(combined, dots);
         }
-        List<ScoreRestEvent> result = new ArrayList<>();
+        List<ScoreRestEvent> result = bounds == null ? new ArrayList<>() : new ContourRests(bounds);
         List<RestDot> restDots = new ArrayList<>();
         List<Runnable> componentReads = new ArrayList<>();
         final byte[][] isolatedInk = new byte[1][];
@@ -1878,6 +1901,7 @@ final class SixteenthRestDetector {
                         staff.gap(),
                         staff.index(),
                         staff.count());
+        var contourBounds = new java.util.HashMap<ScoreRestEvent, int[]>();
         Detection detected =
                 halfOnly
                         ? PolyphonicHalfRests.detectWithDots(
@@ -1903,12 +1927,48 @@ final class SixteenthRestDetector {
                                         List.of(rectified),
                                         mappedNotes,
                                         false,
-                                        faintShapes);
+                                        faintShapes,
+                                        contourBounds);
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
-        for (ScoreRestEvent rest : detected.rests())
-            rests.add(sourceRest(rest, staff, measures, width, height, first, bandHeight));
-        for (RestDot dot : detected.dots())
+        var rejectedViewRests = new java.util.HashSet<ScoreRestEvent>();
+        for (ScoreRestEvent rest : detected.rests()) {
+            ScoreRestEvent mapped =
+                    sourceRest(rest, staff, measures, width, height, first, bandHeight);
+            int[] contour = contourBounds.get(rest);
+            if (contour != null
+                    && mapped.durationBeats() == 1
+                    && mapped.kind() == ScoreRestEvent.Kind.LITERAL
+                    && mapped.measureIndex() >= 0
+                    && mapped.measureIndex() < measures.size()) {
+                float originalTop = Float.POSITIVE_INFINITY,
+                        originalBottom = Float.NEGATIVE_INFINITY;
+                for (int x = contour[0]; x <= contour[1]; x++) {
+                    originalTop = Math.min(originalTop, sourceY(staff, x, first + contour[2]));
+                    originalBottom =
+                            Math.max(originalBottom, sourceY(staff, x, first + contour[3]));
+                }
+                // Classify the exact transported proposal in the original raster, not an
+                // estimated box around the event or the rectified contour that admitted it.
+                if (PrintedBoundaryRestInk.owns(
+                        gray,
+                        width,
+                        height,
+                        measures.get(mapped.measureIndex()),
+                        mapped,
+                        staff.gap(),
+                        contour[0],
+                        contour[1],
+                        (int) Math.floor(originalTop),
+                        (int) Math.ceil(originalBottom))) {
+                    rejectedViewRests.add(rest);
+                    continue;
+                }
+            }
+            rests.add(mapped);
+        }
+        for (RestDot dot : detected.dots()) {
+            if (rejectedViewRests.contains(dot.rest())) continue;
             dots.add(
                     new RestDot(
                             dot.x(),
@@ -1921,6 +1981,7 @@ final class SixteenthRestDetector {
                                     height,
                                     first,
                                     bandHeight)));
+        }
         return new Detection(List.copyOf(rests), List.copyOf(dots));
     }
 
@@ -2427,6 +2488,8 @@ final class SixteenthRestDetector {
                                                                             - rest
                                                                                     .positionInMeasure())
                                                             < .018f)) return;
+            if (rest.durationBeats() == 1 && result instanceof ContourRests contours)
+                contours.bounds.putIfAbsent(rest, new int[] {left, right, minY, maxY});
             result.add(rest);
             for (InkDot dot : dots) restDots.add(new RestDot(dot.x(), dot.y(), rest));
             return;

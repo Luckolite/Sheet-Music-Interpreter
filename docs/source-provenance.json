@@ -496,13 +496,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "858e0d131d0b16926863114da18eedd6d91b5e01dc16f7a103c40f09aeac7c71",
-      "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
-      "source_normalized_sha256": "33dee995ab6f50b86531687a01567b6df54895166ce46dcd0b6e7be2ed8a085f",
+      "source_sha256": "c252b90efaff400217a4a3e77f35c7e0ce2b2310980e270c854f1dd70218bad4",
+      "review_note": "Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities.",
+      "source_normalized_sha256": "ff9b099884a5ce97ad620837e5df0ef2df47bbaad95d083641d5f6bce2053bf1",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_source_state": "working-tree",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "63a0242e7641ef5ca238c30b6d07c4ad78c74d742ec4a194dcff7cb9ca7d5518",
+      "standalone_sha256": "085df8bdc045cda4f67108056951694cc2c95ff46b22666c713f70a895bdab3c",
       "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
       "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
@@ -517,11 +517,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "0cf75d4b474a1f1e3e5b57d54b8523b777c8aebe3ad0c4d8bab5c9fcb8170513",
-      "source_normalized_sha256": "10e4be00d5a1faa9c7ce2b1f4749c9b6aa079068c96e98044a365145a744b29e",
-      "review_note": "Reject numeral five without actual returning lower bowl; establish single printed rail between two independent raw shafts; recover triple rails at blurred full-size junction using five inward witnesses. Sixteen original synthetic regression cases,130focusedchecks and exact native283head comparison with12qualified duration corrections. No private score pixels, model, dependency or record-format changes.",
+      "source_sha256": "0b8ce448d5973d600f5dbd6477f5fef09af194bdc7325e12872b1fc1d8927b04",
+      "source_normalized_sha256": "aefae24c5c3a722456e6420604eea2f73267d7380eb0905eca12db69b7449fff",
+      "review_note": "When dense ledger beams obscure a local staff projection, retain the existing numeral, beam and ledger guards and require two separated independently complete printed-rule witnesses in other connected measures on the same single-part row. Conflicting phases, multipart and cross-staff evidence abstain. Nineteen original procedural regressions; no song predicates or private score assets.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "25fe9b1c3571e9dfdcc405713a84a35a504632f4815580aa6d231ca7c213ee1d",
+      "standalone_sha256": "f30e497fbe517bcd5d033ab83f19d367d5c4500c3934c0384583b48b014ca7a8",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },
@@ -3468,6 +3468,14 @@
       "standalone_sha256": "7e58ea2c7469ac9d6e971fd5e328befe939338cc05f8d84afcf29a715e223e5f",
       "reviewed_source_state": "working-tree",
       "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes."
+    },
+    "PrintedBoundaryRestInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBoundaryRestInk.java",
+      "source_sha256": "dcc2e4b26953e28b406f03683ec591c7a55f97e2f4784c3505a265ff5cdb1502",
+      "source_normalized_sha256": "b4cda8847f01f5665062630bd9df32220a6bc002647af1428d12de7f67c963a5",
+      "standalone_sha256": "7878b8ff02ef6309f222869489ba1edebcea75ef50c92ec1a374a45d4ae1cbe6",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities."
     }
   },
   "interpreter_speedup_review": {
@@ -7767,5 +7775,12 @@
     "helpers": "Existing mapped classes only; native source list unchanged.",
     "layout": "Guide290 and native record layouts unchanged.",
     "deployment": "Cumulative app/Hub/page/audio worker build and deployment pending."
+  },
+  "dense_ledger_and_transported_boundary_rest_review": {
+    "summary": "When dense ledger beams obscure a local staff projection, retain the existing numeral, beam and ledger guards and require two separated independently complete printed-rule witnesses in other connected measures on the same single-part row. Conflicting phases, multipart and cross-staff evidence abstain. Nineteen original procedural regressions; no song predicates or private score assets. Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities.",
+    "new_original_java_tests": 46,
+    "helpers": "One Apache-2.0 helper explicitly listed in native decoder sources; existing dependencies retained.",
+    "layout": "Guide290 and all native record layouts unchanged.",
+    "deployment": "Cumulative app/Hub/page/audio-worker rollout pending."
   }
 }
