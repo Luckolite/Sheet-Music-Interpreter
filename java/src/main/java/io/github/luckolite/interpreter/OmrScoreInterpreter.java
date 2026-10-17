@@ -12344,8 +12344,16 @@ final class OmrScoreInterpreter {
                     || principal.head.area <= a.head.area * 1.65f
                     || principal.head.area <= b.head.area * 1.65f) continue;
             if (extendsMetricalBeam(labels, gray, width, height, detected, i)) continue;
-            events.set(i, asEngravedGrace(events.get(i), provedBeams));
-            events.set(bIndex, asEngravedGrace(events.get(bIndex), provedBeams));
+            int[] endpointBeams = GraceBeamEndpointInk.mixed(gray, width, height, first, last, gap);
+            events.set(
+                    i,
+                    asEngravedGrace(
+                            events.get(i), endpointBeams == null ? provedBeams : endpointBeams[0]));
+            events.set(
+                    bIndex,
+                    asEngravedGrace(
+                            events.get(bIndex),
+                            endpointBeams == null ? provedBeams : endpointBeams[1]));
             if (bIndex == i + 1) i++;
         }
     }
@@ -17043,6 +17051,9 @@ final class OmrScoreInterpreter {
             if (gray != null && fadedRuleFragment(gray, width, height, dot, gap)) continue;
             if (gray != null && fadedStemFragment(gray, width, height, dot, gap)) continue;
             if (gray != null
+                    && dotOnPrintedRuleEnd(gray, width, height, dot, gap, neighboringHeads))
+                continue;
+            if (gray != null
                     && AccidentalDotInk.matches(
                             gray, width, height, dot.minX, dot.minY, dot.maxX, dot.maxY, gap))
                 continue;
@@ -17072,6 +17083,80 @@ final class OmrScoreInterpreter {
                         && Math.abs(second.centerY - first.centerY) <= gap * .40f
                 ? 2
                 : 1;
+    }
+
+    /** A dark top/bottom crossing belongs to a bounded five-rule barline, not a dot. */
+    private static boolean dotOnPrintedRuleEnd(
+            byte[] gray, int width, int height, Component dot, float gap, List<Component> heads) {
+        if (gap < 6 || heads == null) return false;
+        int cx = Math.round(dot.centerX), cy = Math.round(dot.centerY);
+        int radius = Math.max(1, Math.round(gap * .12f));
+        int flank = Math.max(3, Math.round(gap * .42f));
+        if (cx - radius - flank < 0 || cx + radius + flank >= width) return false;
+        for (int direction : new int[] {-1, 1}) {
+            int end = Math.round(cy + direction * gap * 4);
+            int low = Math.min(cy, end), high = Math.max(cy, end);
+            if (low - gap < 0 || high + gap >= height) continue;
+            boolean owned = false;
+            for (Component head : heads)
+                if (head.maxX >= cx - gap * .3f
+                        && head.minX <= cx + gap * .3f
+                        && head.maxY >= low - gap * .3f
+                        && head.minY <= high + gap * .3f) owned = true;
+            if (owned) continue;
+            boolean bounded = true;
+            for (int y :
+                    new int[] {
+                        Math.round(cy - direction * gap * .65f),
+                        Math.round(end + direction * gap * .65f)
+                    })
+                for (int x = cx - radius; x <= cx + radius; x++)
+                    if ((gray[y * width + x] & 255) < 205) bounded = false;
+            if (!bounded) continue;
+            boolean shaft = true;
+            for (int space = 0; space < 4; space++) {
+                int samples = 0, hits = 0;
+                for (int step = Math.round((space + .25f) * gap);
+                        step <= Math.round((space + .75f) * gap);
+                        step++) {
+                    int y = cy + direction * step;
+                    samples++;
+                    for (int x = cx - radius; x <= cx + radius; x++) {
+                        int ink = gray[y * width + x] & 255;
+                        if (ink <= 170
+                                && (gray[y * width + x - flank] & 255) >= ink + 25
+                                && (gray[y * width + x + flank] & 255) >= ink + 25) {
+                            hits++;
+                            break;
+                        }
+                    }
+                }
+                if (samples < 3 || hits < samples * .9f) shaft = false;
+            }
+            if (!shaft) continue;
+            int rules = 0;
+            for (int line = 0; line < 5; line++) {
+                int samples = 0, hits = 0, row = Math.round(cy + direction * line * gap);
+                for (int side : new int[] {-1, 1})
+                    for (int step = Math.round(gap * .7f); step <= Math.round(gap * 1.8f); step++) {
+                        int x = cx + side * step;
+                        if (x < 0 || x >= width) continue;
+                        samples++;
+                        for (int y = row - radius; y <= row + radius; y++) {
+                            int ink = gray[y * width + x] & 255;
+                            if (ink <= 170
+                                    && (gray[(y - flank) * width + x] & 255) >= ink + 25
+                                    && (gray[(y + flank) * width + x] & 255) >= ink + 25) {
+                                hits++;
+                                break;
+                            }
+                        }
+                    }
+                if (samples >= gap && hits >= samples * .65f) rules++;
+            }
+            if (rules == 5) return true;
+        }
+        return false;
     }
 
     /** A diagonal fragment can have square bounds without a rounded ink body. */

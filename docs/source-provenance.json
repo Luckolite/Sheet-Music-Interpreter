@@ -384,12 +384,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "86b0fba2f07d2a040542f7ed993d9a1be833d80c569321d8e3a71dd3154490cb",
-      "review_note": "Preserve affine staff-connector proof and use verified local rule tracks only with an actual vertical connector and printed near/far rules. Recover opposing owned double rails only with strong semantic shaft direction, bounded thin shaft, independently owned companion and five-column rail proof. Original synthetic regressions; no score-specific conditions, private assets, model or record-format changes.",
-      "source_normalized_sha256": "807de59f6dc1eb0be9f705894dce1259295e84c603c6e37c4da80204eccabd8a",
+      "source_sha256": "fc2d74990b487e7f55e818599e769a6af186503c7357e9863dd1f0baee6049fe",
+      "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes.",
+      "source_normalized_sha256": "1acf9e0d25e59dd75e79683a369d263b7aabfbf367122016270930f7c2b953a6",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "ce503179db3b3f1ad7b43142840a2f40b3a6cc9885f789e2567357d75e85ac89",
+      "standalone_sha256": "31dcc9ab306206ec3883d6a1b5833dfb1d7debff2319f4f974147d49cf000c2a",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -419,13 +419,13 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "4a3e3b3d80692257c82bc45f912f68eeee50a5b25b0d2055d02a3faa5dc07046",
-      "source_normalized_sha256": "7c2aacb887e437a7000d24ad2031a2e87c1ed495d4ca91b1fe64213971ec6df0",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "72b6a9a2546c0534f45723210c4a73df0cb82b3503861b166e2c464f3ed7d519",
+      "source_normalized_sha256": "3e00d126c5668afbe0a8cb850da70cc67baf613b01b4c440d3ac9d39f0c8f14a",
+      "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "eb46bb8a17819ef85d2447b88fc41c3bcede78ccc0d2737a10b6c10884afaf2b",
+      "reviewed_source_state": "working-tree",
+      "standalone_sha256": "46e761197541a13163f4444d7ecb4e61440566d797c5a3aeca39b325497f0775",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
     },
     "HairpinContinuation.java": {
@@ -3361,6 +3361,16 @@
       "standalone_sha256": "224d7904e8cd1fae143f432664af65b59943fa9ae93867ceb7d98127c24bcbdf",
       "reviewed_source_state": "working-tree",
       "review_note": "Prove a separately faded inner ledger using bilateral thin protrusions and a connected raw rule at its predicted phase, retaining outer-ledger proof and bounded central shaft crossings. Fallback only for one required inner rule near the second ledger and non-reduced heads. Nine original upper/lower, missing, broken, broad, wrong-phase and immutable-input controls; existing2545controls pass. No private pixels, models, dependencies or formats."
+    },
+    "GraceBeamEndpointInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/GraceBeamEndpointInk.java",
+      "reviewed_app_base_commit": "4dcb45634d0744799bee986ae9962c3b02d6e260",
+      "origin": "Original Apache-2.0 geometry helper; no private assets.",
+      "source_sha256": "04a45e30eae9a75a619de54beca2c2c4f4571f256bd62cbd847267b291a1f99c",
+      "source_normalized_sha256": "443a38019058068be2efa7848bc152df5cddf7e3fd2da7b95c91423f3a397236",
+      "standalone_sha256": "be9fd11a85c2f8ae934e108bf9bcbd8c179ca8dd6c9d3ff752cee78f338df373",
+      "reviewed_source_state": "working-tree",
+      "review_note": "Keep a secondary grace-beam stub owned by its physical endpoint only after existing grace admission proof. Reject a dot only with a bounded narrow five-rule barline and no note-shaft owner. Preserve dynamic glyph proposals while offering tightly touching complete fragment bodies to the unchanged font matcher. Original procedural and bundled SIL-OFL font regressions; no private score assets, model, decoder schema or dependency changes."
     }
   },
   "interpreter_speedup_review": {
