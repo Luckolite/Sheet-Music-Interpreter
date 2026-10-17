@@ -18226,6 +18226,11 @@ final class OmrScoreInterpreter {
                             pale[1],
                             pale[2] < 0)) count = 1;
         }
+        // Existing primary-beam evidence plus two independently connected pale shafts
+        // can establish three full printed rails without weakening ordinary beam ink.
+        if (count > 0
+                && count < 3
+                && palePairedTripleRails(gray, width, height, head, staff, heads)) return 3;
         // A reduced neighboring mask does not invalidate three complete printed rails.
         if (count == 2 && pairedPrintedRails(gray, width, height, head, staff, heads, 3)) return 3;
         if (count == 2
@@ -18570,6 +18575,58 @@ final class OmrScoreInterpreter {
     }
 
     /** Five-column full-size rail evidence between two independently attached shafts. */
+    private static boolean palePairedTripleRails(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        if (gray == null || heads == null) return false;
+        float gap = staff.gap;
+        int threshold = 205;
+        int ownLimit =
+                head.centerY < staff.top - gap * 2.5f || head.centerY > staff.bottom + gap * 2.5f
+                        ? 12
+                        : 9;
+        int[] own =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        gap,
+                        Math.max(1, Math.round(gap * .16f)),
+                        threshold,
+                        ownLimit);
+        if (own == null) return false;
+        for (Component other : heads) {
+            if (other == head
+                    || Math.abs(other.centerX - head.centerX) < gap * .95f
+                    || Math.abs(other.centerX - head.centerX) > gap * 5
+                    || Math.abs(other.centerY - head.centerY) > gap * 5) continue;
+            int pairLimit =
+                    other.centerY < staff.top - gap * 2.5f
+                                    || other.centerY > staff.bottom + gap * 2.5f
+                            ? 12
+                            : 9;
+            int[] pair =
+                    attachedRawStem(
+                            gray,
+                            width,
+                            height,
+                            other,
+                            gap,
+                            Math.max(1, Math.round(gap * .16f)),
+                            threshold,
+                            pairLimit);
+            if (PairedGraceBeamInk.countPrintedSize(
+                            gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
+                    == 3) return true;
+        }
+        return false;
+    }
+
     private static boolean pairedPrintedRails(
             byte[] gray,
             int width,

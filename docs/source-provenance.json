@@ -364,11 +364,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "223a464480cade8baa2841e956fdda92e55664cdbdeac74274a627588c266b1d",
-      "source_normalized_sha256": "3a028700769ab6d13b4f6b6ec77af20b899a51c585d6c21efe0918e8a321b0cb",
-      "review_note": "Require center oscillation for the repeated edge-wave barline veto so symmetric staff-crossing width flares preserve straight bars. Three original synthetic scale/paper regressions;125 existing barline/wave controls. No private pixels, dependencies, models or formats.",
+      "source_sha256": "cf0649572cb576688f5891df9d0b7746851da824ef5df4af519301f0deeef46f",
+      "source_normalized_sha256": "1a90848be6261376e8d9cc07e3e8127290f13ee5b3b4d6cdd35c5201eb3acddd",
+      "review_note": "Restore a clipped row-end head only with positive four/five-rule contrast continuation; recover three printed beam rails only across two independently attached pale shafts and existing primary-beam evidence; veto numeral-like islands on a continuous raw shaft extending beyond both glyph ends. Twenty-two original geometry/rhythm/numeral regressions plus1773/2843/1807broadercontrols; source/native physical-position and origin-remap proof. No private score pixels, models, dependencies or formats.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "2aae97dc69dfb568510b6262a0c3ab98cebf17732d3267b35238ce80e13600b3",
+      "standalone_sha256": "009e5684b718131e6cd324d7b3f8c7674ddb5db421aba6bf32d586140445dc4f",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "85520918db14f0231520c63b9991c6736ada72eecd726732a68bd56124a62132",
-      "review_note": "Prove a separately faded inner ledger using bilateral thin protrusions and a connected raw rule at its predicted phase, retaining outer-ledger proof and bounded central shaft crossings. Fallback only for one required inner rule near the second ledger and non-reduced heads. Nine original upper/lower, missing, broken, broad, wrong-phase and immutable-input controls; existing2545controls pass. No private pixels, models, dependencies or formats.",
-      "source_normalized_sha256": "21ef15948795d20805af2badd93f366ef851141c14ebb5b69789747a87f33446",
+      "source_sha256": "cd05087f1f0488359482b862c83dd46ca2dcac341b1e91e4ed276ab05bc09050",
+      "review_note": "Restore a clipped row-end head only with positive four/five-rule contrast continuation; recover three printed beam rails only across two independently attached pale shafts and existing primary-beam evidence; veto numeral-like islands on a continuous raw shaft extending beyond both glyph ends. Twenty-two original geometry/rhythm/numeral regressions plus1773/2843/1807broadercontrols; source/native physical-position and origin-remap proof. No private score pixels, models, dependencies or formats.",
+      "source_normalized_sha256": "f36545d45c953b2232aa3e4c48b718ae9e2e33b7ea10f2a4c47a8616bbae3cdd",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "c8f36674353e45e15a519f972f0f7b6fb872bbe59adf07cdd49d86e106c819d3",
+      "standalone_sha256": "413add828e24828cd613ab5ddadf0870afb630ee6881330337e9fae174e6b683",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
@@ -514,11 +514,11 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "740c959226801ba8271f9d2560006455376e63cb2407b536323a81842a84210c",
-      "source_normalized_sha256": "b1b42b9915c58598fe1ab57f0d0437f22302692f94f114f528f4e762e4881a83",
-      "review_note": "Resolve competing consecutive three-note windows sharing the same printed numeral by positive bounded-secondary-beam ownership; preserve explicit brackets and unproved alternatives. Six original synthetic ownership, absence, extension and pixel-preservation regressions; no private score assets, helpers, model or format changes.",
+      "source_sha256": "41374b6fb3fab657a7d26ccfd6e0926c31315381493b7be496c99dd036b43917",
+      "source_normalized_sha256": "0905cb0d8eace77a693f08fc2f0761b16cbd676641bbb9d049e442bf18eaf066",
+      "review_note": "Restore a clipped row-end head only with positive four/five-rule contrast continuation; recover three printed beam rails only across two independently attached pale shafts and existing primary-beam evidence; veto numeral-like islands on a continuous raw shaft extending beyond both glyph ends. Twenty-two original geometry/rhythm/numeral regressions plus1773/2843/1807broadercontrols; source/native physical-position and origin-remap proof. No private score pixels, models, dependencies or formats.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "f3c6f4fc5761fa39046cc924ce97da74188c8dd6f5b6a6bd307f306f2ee25c70",
+      "standalone_sha256": "cf981f35163961f4b34ef107d761a7e42c092c2f51df0e3fa8e6c0a751f0dfbd",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
     },

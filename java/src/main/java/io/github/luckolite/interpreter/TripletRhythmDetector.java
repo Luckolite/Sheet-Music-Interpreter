@@ -1869,6 +1869,42 @@ final class TripletRhythmDetector {
         return nearest;
     }
 
+    /** A cropped staff/shaft crossing cannot supply a separately printed numeral. */
+    private static boolean numeralCrossedByShaft(
+            Glyph glyph, byte[] gray, int width, int height, float gap) {
+        int extension = Math.max(3, Math.round(gap * .7f)),
+                flank = Math.max(2, Math.round(gap * .35f));
+        int top = glyph.top() - extension, bottom = glyph.bottom() + extension;
+        if (top < 0 || bottom >= height) return false;
+        int local =
+                BeamInkThreshold.at(
+                        gray, width, height, (glyph.left() + glyph.right()) / 2, top, bottom, gap);
+        int limit = local < 153 ? local + 15 : 205;
+        int length = bottom - top + 1, maximumBlank = Math.max(1, Math.round(gap * .16f));
+        for (int x = Math.max(flank, glyph.left());
+                x <= Math.min(width - flank - 1, glyph.right());
+                x++) {
+            int dark = 0, narrow = 0, run = 0, longest = 0, blank = 0;
+            for (int y = top; y <= bottom; y++) {
+                int ink = gray[y * width + x] & 255;
+                if (ink < limit) {
+                    dark++;
+                    run += blank + 1;
+                    blank = 0;
+                    longest = Math.max(longest, run);
+                    if ((gray[y * width + x - flank] & 255) >= ink + 18
+                            && (gray[y * width + x + flank] & 255) >= ink + 18) narrow++;
+                } else if (++blank > maximumBlank) {
+                    run = 0;
+                    blank = 0;
+                }
+            }
+            if (dark >= length * .85f && longest >= length * .9f && narrow >= length * .45f)
+                return true;
+        }
+        return false;
+    }
+
     private static Glyph findOwnedNumeral(
             byte[] gray,
             int width,
@@ -1891,6 +1927,7 @@ final class TripletRhythmDetector {
         java.util.function.Predicate<Glyph> ownership =
                 glyph -> {
                     if (insideOtherSystem(glyph, bar, measures, width, height)) return false;
+                    if (numeralCrossedByShaft(glyph, gray, width, height, gap)) return false;
                     boolean physical =
                             beamOwnsNumeral(
                                     glyph,

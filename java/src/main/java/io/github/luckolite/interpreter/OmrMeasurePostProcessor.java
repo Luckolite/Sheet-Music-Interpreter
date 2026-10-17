@@ -154,6 +154,23 @@ final class OmrMeasurePostProcessor {
                 if (clippedClosingHead(
                         labels, width, height, right, continuedRight, rows, gap, slope))
                     right = continuedRight;
+                // A clipped final head may continue along independently contrasted rules.
+                int contrastedRight = right;
+                if (clippedClosingHead(
+                        labels,
+                        width,
+                        height,
+                        right,
+                        Math.min(width - 1, right + Math.round(gap * 6)),
+                        rows,
+                        gap,
+                        slope))
+                    contrastedRight =
+                            contrastedClosingExtent(
+                                    gray, width, height, right, rows, gap, slope, track);
+                if (clippedClosingHead(
+                        labels, width, height, right, contrastedRight, rows, gap, slope))
+                    right = contrastedRight;
                 // Very faded horizontal rules may disappear while the closing
                 // bar remains clear. A verified full-height bar can preserve
                 // those final notes without guessing a regular measure width.
@@ -1162,6 +1179,46 @@ final class OmrMeasurePostProcessor {
                     && center <= end - inset) return true;
         }
         return false;
+    }
+
+    private static int contrastedClosingExtent(
+            byte[] gray,
+            int width,
+            int height,
+            int right,
+            int[] rows,
+            float gap,
+            float slope,
+            StaffPitchTrack track) {
+        int last = right, missing = 0;
+        int radius = Math.max(2, Math.round(gap * .30f)),
+                flank = Math.max(2, Math.round(gap * .32f));
+        for (int x = right + 1; x < width; x++) {
+            int matched = 0;
+            float[] frame = track == null ? null : track.at(x);
+            for (int line = 0; line < 5; line++) {
+                int row =
+                        frame == null
+                                ? Math.round(rows[line] + slope * (x - width * .5f))
+                                : Math.round(frame[0] - (4 - line) * frame[1]);
+                for (int y = Math.max(flank, row - radius);
+                        y <= Math.min(height - flank - 1, row + radius);
+                        y++) {
+                    int ink = gray[y * width + x] & 255;
+                    if (ink <= 225
+                            && (gray[(y - flank) * width + x] & 255) >= ink + 20
+                            && (gray[(y + flank) * width + x] & 255) >= ink + 20) {
+                        matched++;
+                        break;
+                    }
+                }
+            }
+            if (matched >= 4) {
+                last = x;
+                missing = 0;
+            } else if (++missing > Math.max(2, Math.round(gap))) break;
+        }
+        return last;
     }
 
     /** Follow at least four printed rules, bridging short ink interruptions. */
