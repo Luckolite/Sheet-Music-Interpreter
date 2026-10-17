@@ -2017,7 +2017,8 @@ final class OmrMeasurePostProcessor {
         int span = bottom - top + 1;
         if (!(touchesTop && touchesBottom && darkRows >= span * .68f && longest >= span * .48f))
             return Integer.MIN_VALUE;
-        if (RoundedMeterCounters.matches(gray, width, height, centerX, top, bottom, gap)
+        if ((RoundedMeterCounters.matches(gray, width, height, centerX, top, bottom, gap)
+                        && !completeCounterRulePair(gray, width, height, centerX, top, bottom, gap))
                 || stackedFourCounters(gray, width, height, centerX, top, bottom, gap)
                 || (threeOverFourCounters(gray, width, height, centerX, top, bottom, gap)
                         && !ParallelStaffRules.proved(
@@ -3290,5 +3291,62 @@ final class OmrMeasurePostProcessor {
                 if (!owned && ++unknown > gap * gap * .12f) return false;
             }
         return true;
+    }
+
+    /** Counter walls can imitate rules only within the middle of each staff space. */
+    private static boolean completeCounterRulePair(
+            byte[] gray, int width, int height, int column, int top, int bottom, float gap) {
+        if (top < 0
+                || bottom >= height
+                || bottom - top < gap * 3.5f
+                || !ParallelStaffRules.proved(gray, width, height, column, top, bottom, gap))
+            return false;
+        int first = Math.round(top + gap * .12f), last = Math.round(bottom - gap * .12f);
+        if (first < 0 || last >= height || last <= first) return false;
+        int radius = Math.max(2, Math.round(gap * 1.2f));
+        for (int a = Math.max(0, column - radius); a <= Math.min(width - 1, column + 2); a++) {
+            if (!completeCounterRuleColumn(gray, width, a, first, last, gap)) continue;
+            for (int b = a + Math.max(3, Math.round(gap * .3f));
+                    b <= Math.min(width - 1, a + radius);
+                    b++) {
+                if (Math.min(Math.abs(a - column), Math.abs(b - column)) > 2
+                        || !completeCounterRuleColumn(gray, width, b, first, last, gap)) continue;
+                int sampled = 0, clear = 0;
+                for (int y = first; y <= last; y++) {
+                    float phase = (y - top) / gap;
+                    if (Math.abs(phase - Math.round(phase)) <= .27f) continue;
+                    sampled++;
+                    int longest = 0, run = 0;
+                    for (int x = a + 1; x < b; x++) {
+                        if ((gray[y * width + x] & 255) >= 200) {
+                            run++;
+                            longest = Math.max(longest, run);
+                        } else run = 0;
+                    }
+                    if (longest >= Math.max(2, Math.round(gap * .12f))) clear++;
+                }
+                if (sampled >= gap && clear >= sampled * .85f) return true;
+            }
+        }
+        return false;
+    }
+
+    /** Both ends and the complete between-rule extent must belong to one fixed ink column. */
+    private static boolean completeCounterRuleColumn(
+            byte[] gray, int width, int x, int first, int last, float gap) {
+        if ((gray[first * width + x] & 255) > 160 || (gray[last * width + x] & 255) > 160)
+            return false;
+        int ink = 0, blank = 0, longestBlank = 0;
+        for (int y = first; y <= last; y++) {
+            if ((gray[y * width + x] & 255) <= 160) {
+                ink++;
+                blank = 0;
+            } else {
+                blank++;
+                longestBlank = Math.max(longestBlank, blank);
+            }
+        }
+        return ink >= (last - first + 1) * .95f
+                && longestBlank <= Math.max(1, Math.round(gap * .15f));
     }
 }

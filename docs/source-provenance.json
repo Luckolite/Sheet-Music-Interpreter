@@ -367,11 +367,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "86811cba989499bba0cda39b8d6a8144edfa56b0b65fb3286767fb36b93b3839",
-      "source_normalized_sha256": "3e59122ad85cfb3a8ed64d31d49b5d31e6a1b38b07be72c3ce50b330f2f0fb50",
-      "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
+      "source_sha256": "838bcb075fd1e35871bbb823e2624e2a879a31e1c60a6b826b4b1437d94688dc",
+      "source_normalized_sha256": "b35204ea2cb5b6341d78ead6119d52aa9c8b7ef5433616fc94c0e6b00ec9dd75",
+      "review_note": "Retain raw double-bar boundaries when complete separately inked parallel rules contradict the rounded-counter veto. Require both fixed columns to retain both ends, nearly the complete between-rule extent, bounded ink holes and independently clear paper between rails. Keep the generic rounded-meter classifier and all original boundary continuity, branch and ownership gates unchanged. Eleven original procedural regressions include connected rounded meter digits with aligned staff crossings. No private score pixels, song predicates, model or native layout changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "7ea3400fa91a63907200fc7c0f64b18f3ba8a0c49044f374b4230065fa545d2e",
+      "standalone_sha256": "6f230ea959ec455488ce784d61989da44008d96ea06fa0b39d1beaf8465e0334",
       "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
       "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
     },
@@ -7805,5 +7805,11 @@
     "helpers": "Two originalApache2helpers explicitlylisted in native source manifest; all original dependencies retained.",
     "layout": "Guide290,80bytenotes,32byteclefmarker and all native layouts unchanged.",
     "deployment": "Cumulative app/Hub/page/audio-worker rollout deferred by user."
+  },
+  "complete_counter_rule_boundary_review": {
+    "summary": "Retain raw double-bar boundaries when complete separately inked parallel rules contradict the rounded-counter veto. Require both fixed columns to retain both ends, nearly the complete between-rule extent, bounded ink holes and independently clear paper between rails. Keep the generic rounded-meter classifier and all original boundary continuity, branch and ownership gates unchanged. Eleven original procedural regressions include connected rounded meter digits with aligned staff crossings. No private score pixels, song predicates, model or native layout changes.",
+    "new_original_java_tests": 11,
+    "layout": "Guide290 unchanged; no helper or manifest additions.",
+    "deployment": "Cumulative APK and paired-worker rollout deferred by user."
   }
 }
