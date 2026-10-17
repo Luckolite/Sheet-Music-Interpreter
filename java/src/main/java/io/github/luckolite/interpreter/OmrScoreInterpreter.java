@@ -22578,11 +22578,13 @@ final class OmrScoreInterpreter {
                 }
             }
         }
-        // Preserve the coarse search, then resolve raster phase for short outgoing arcs.
+        // Preserve the coarse search, then resolve detached miniature outgoing bows.
         // The existing ink, continuity and paired-endpoint requirements still apply.
         if (outgoing) {
             for (int clearance = 0; clearance <= Math.round(gap * 1.8f); clearance++) {
-                for (int span = Math.round(gap * 1.6f); span <= Math.round(gap * 3f); span++) {
+                for (int span = Math.max(6, Math.round(gap * .35f));
+                        span <= Math.round(gap * 3f);
+                        span++) {
                     int left = note.head.maxX + clearance;
                     int right = left + span;
                     if (left < 0 || right >= width) continue;

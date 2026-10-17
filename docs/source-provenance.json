@@ -381,12 +381,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "e7ddffb01b54a5f82ed64bd65ebd16148a942a087e525d9f01a830af43c2af03",
-      "review_note": "Compact shaded-core evidence overrides false hollow duration only with two independently attached stems and complete paired rails. Full-size rail probe offset scales beyond shaft thickness; grace probe unchanged. Original synthetic shaded/hollow/rule/scratch, scaled and upward-stem controls. No private score pixels, model, dependencies or format changes.",
-      "source_normalized_sha256": "ec515998214b79ace42f97069b6911395bdf68034ae9f135209cd8ea52227e10",
+      "source_sha256": "2b6a80331985e404dc4de87afca6f936e434784f19d95568a51f1fed3424092d",
+      "review_note": "Detached miniature outgoing tie bows use the existing complete raw-curve proof and independently matched incoming end. Extend only the fine outgoing span search. Original two-system above/below bows, absent/broken/straight/opposite-side/different-pitch guards and input preservation. No private pixels, models, dependencies or format changes.",
+      "source_normalized_sha256": "40f6008e876b6516ae55bb2ef467b81d36e292d3bb53ca04ffce21dd6f5ca818",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "349d623a470f1d1d7c33904fe05ccae582305966fbf10a726412b7d3de9d57d3",
+      "standalone_sha256": "d891aba2a43d43b3f72467b9de50e839b7e72415846b7bf89d95d320f6d677e7",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
       "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"

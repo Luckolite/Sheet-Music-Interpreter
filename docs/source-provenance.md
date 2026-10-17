@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Detached miniature outgoing tie bows retain the complete raw-curve and matching
+incoming-end proof; original paired-system fixtures cover missing and false arcs.
+
 Compact faded noteheads require nearly uniform gray interior contrast and independently
 proved paired rails before overriding hollow duration. Full-size rail probes scale
 beyond shaft thickness; original generated fixtures cover hollow heads and scale.
