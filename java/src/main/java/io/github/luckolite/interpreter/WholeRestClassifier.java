@@ -167,7 +167,7 @@ final class WholeRestClassifier {
                                 || Math.abs(header.firstLine() - lines.top()) > gap * .4f
                                 || header.gap() < gap * .8f
                                 || header.gap() > gap * 1.2f
-                                || header.left() > m.left() * width
+                                || (mi != 0 && header.left() > m.left() * width)
                                 || header.right() <= m.left() * width
                                 || header.right() >= plate.left() - gap
                                 || MeterChangeDetector.followingMeasure(

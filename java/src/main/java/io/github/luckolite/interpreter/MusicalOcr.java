@@ -191,7 +191,7 @@ public final class MusicalOcr {
         }
         var accepted =
                 MeterChangeDetector.filterWholeNoteOcrReadings(found, notes, measures.size());
-        var headers =
+        var acceptedHeaderReadings =
                 headerReadings.stream()
                         .filter(
                                 h ->
@@ -206,7 +206,36 @@ public final class MusicalOcr {
                                                                                                 + "/"
                                                                                                 + m
                                                                                                         .denominator())))
-                        .map(HeaderReading::crop)
+                        .toList();
+        var headerSource = AcceptedMeterHeaderBounds.source(labels, gray, width, height, measures);
+        var acceptedHeaderBounds =
+                acceptedHeaderReadings.stream()
+                        .map(
+                                h -> {
+                                    var value =
+                                            accepted.stream()
+                                                    .filter(
+                                                            m ->
+                                                                    m.measureIndex() == h.measure()
+                                                                            && h.text()
+                                                                                    .equals(
+                                                                                            m
+                                                                                                            .numerator()
+                                                                                                    + "/"
+                                                                                                    + m
+                                                                                                            .denominator()))
+                                                    .findFirst()
+                                                    .orElseThrow();
+                                    return new AcceptedMeterHeaderBounds.Header(
+                                            headerSource,
+                                            measures.get(h.measure()),
+                                            value,
+                                            h.crop(),
+                                            AcceptedMeterHeaderBounds.Producer.PORTABLE);
+                                })
+                        .toList();
+        var headers =
+                AcceptedMeterHeaderBounds.normalize(headerSource, acceptedHeaderBounds).stream()
                         .distinct()
                         .toList();
         return new MeterEvidence(accepted, headers);

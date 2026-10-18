@@ -2536,3 +2536,14 @@ Paired app consumer source: f0b52f27e47e3ab3fde9e2b2960a7d97a3033818.
 
 The Android-only `ConnectedSlideExplicitProof` adapter invokes record equality through an explicit lambda instead of a bound method reference, avoiding the Android API34 method-reference requirement reported by lint on the API26 minimum. Both forms call the same target equality method with the same candidate; membership counts, endpoint proof, and playback output are unchanged. The standalone clipped-target implementation has no corresponding method reference and needs no code change. Recognition72, Guide290 and audio96 remain unchanged. Existing original connected-slide consumer regressions cover the adapter behavior; Android lint separately checks minimum-API compatibility.
 Paired app compatibility source: 25c6b2b59aaaa3bc7bce22fb114aea33670ed744.
+
+## Grace prefixes, detached marcato and accepted meter readings
+
+An interrupted grace prefix may join two independently established grace heads only with short raw shafts, at least two raw beams for every adjacent link, a larger principal, common bar/voice ownership and the existing metrical exclusions. Broad detached marcato admission also requires the existing independent two-arm proof; original caret, up-bow and licensed logical-font digit controls preserve supported shapes.
+
+Accepted same-value meter readings normalize horizontal padding only when their sampled global SYMBOL pixel sets agree exactly and the union adds none. Original invocation, measure owner and producer identity remain required; rival readings veto normalization. This establishes reading identity without claiming outside-component ink ownership or adding OCR votes. Android, native and standalone acquisition adapters share the helper. The opening-bar rest classifier accepts a retained internal header while later-bar exclusions remain unchanged.
+
+Mixed beamed tuplets retain independently established beam-group boundaries. A nearby numeral cannot join separately beamed groups without the existing two-arm bracket proof; connected mixed subdivisions and explicitly bracketed groups remain supported.
+
+Forty-three new original Apache-2.0 procedural regression methods cover these changes. Retained private-page comparisons independently verify one corrected grace flag, one false marcato removed, one false tuplet group removed and one pickup corrected from six to one and a half quarter beats, including unchanged saved-Song playback and MusicXML timing for the pickup. Private score pixels, labels and metadata are excluded from the public fixtures. These are scoped corrections, not full-page or full-library accuracy claims. Recognition75 changes derived-result identity; Guide290/audio96 and wire layouts remain unchanged. Cumulative app/Hub/worker packaging and deployment remain pending.
+Paired app source: a27d30c45fee5b1c64c64a47bcb9277765c6f063.

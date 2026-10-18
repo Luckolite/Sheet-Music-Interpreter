@@ -12779,7 +12779,116 @@ final class OmrScoreInterpreter {
             }
         }
         markPairedGraces(labels, gray, width, height, detected, events);
+        markBeamOwnedGracePrefixes(labels, gray, width, height, detected, events);
         markSlashedGracePrefixes(labels, gray, width, height, detected, events);
+    }
+
+    /** Complete short-beam ownership may join one head to an independently established grace tail. */
+    private static void markBeamOwnedGracePrefixes(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> detected,
+            List<ScoreNoteEvent> events) {
+        if (gray == null) return;
+        for (int i = 0; i < detected.size(); i++) {
+            DetectedNote first = detected.get(i);
+            if ((events.get(i).articulations() & NoteOrnament.GRACE) != 0
+                    || !reducedPairedGrace(first, false)) continue;
+            List<DetectedNote> chain = new ArrayList<>();
+            chain.add(first);
+            int nextIndex = adjacentGraceVoiceIndex(detected, i, 1);
+            while (nextIndex >= 0
+                    && (events.get(nextIndex).articulations() & NoteOrnament.GRACE) != 0) {
+                DetectedNote next = detected.get(nextIndex), previous = chain.get(chain.size() - 1);
+                float dx = next.head.centerX - previous.head.centerX;
+                if (!reducedPairedGrace(next, true)
+                        || dx < first.staffGap * .95f
+                        || dx > first.staffGap * 3
+                        || Math.abs(next.head.centerY - previous.head.centerY)
+                                > first.staffGap * 1.3f) break;
+                chain.add(next);
+                nextIndex = adjacentGraceVoiceIndex(detected, nextIndex, 1);
+            }
+            // Flags establish only the tail's prior classification, never ownership of the new
+            // head.
+            if (chain.size() < 3
+                    || nextIndex < 0
+                    || (events.get(nextIndex).articulations() & NoteOrnament.GRACE) != 0) continue;
+            DetectedNote principal = detected.get(nextIndex), last = chain.get(chain.size() - 1);
+            float dx = principal.head.centerX - last.head.centerX;
+            if (dx < first.staffGap * .65f
+                    || dx > first.staffGap * 4
+                    || principal.head.maxX - principal.head.minX + 1 <= first.staffGap * 1.05f)
+                continue;
+            boolean owned = true;
+            int[] previousStem = null, firstStem = null, secondStem = null;
+            int firstBeams = 0;
+            for (int j = 0; j < chain.size() && owned; j++) {
+                DetectedNote member = chain.get(j);
+                if (principal.head.area <= member.head.area * 1.65f) {
+                    owned = false;
+                    break;
+                }
+                // Exactly the existing paired-grace stem domains, including its pale-ink fallback.
+                int threshold =
+                        BeamInkThreshold.at(
+                                        gray,
+                                        width,
+                                        height,
+                                        Math.round(member.head.centerX),
+                                        Math.round(member.head.centerY - member.staffGap * 5),
+                                        Math.round(member.head.centerY + member.staffGap * 5),
+                                        member.staffGap)
+                                + 5;
+                int[] stem =
+                        attachedRawStem(
+                                gray,
+                                width,
+                                height,
+                                member.head,
+                                member.staffGap * .65f,
+                                Math.max(1, Math.round(member.staffGap * .16f)),
+                                threshold);
+                if (stem == null)
+                    stem =
+                            attachedRawStem(
+                                    gray,
+                                    width,
+                                    height,
+                                    member.head,
+                                    member.staffGap * .65f,
+                                    Math.max(1, Math.round(member.staffGap * .16f)),
+                                    185);
+                if (stem == null
+                        || Math.abs(stem[1] - member.head.centerY) > member.staffGap * 4.8f) {
+                    owned = false;
+                    break;
+                }
+                if (previousStem != null) {
+                    int beams =
+                            PairedGraceBeamInk.count(
+                                    gray, width, height, previousStem, stem, first.staffGap);
+                    if (beams < 2) {
+                        owned = false;
+                        break;
+                    }
+                    if (j == 1) {
+                        firstBeams = beams;
+                        secondStem = stem;
+                    }
+                } else firstStem = stem;
+                previousStem = stem;
+            }
+            if (!owned || extendsMetricalBeam(labels, gray, width, height, detected, i)) continue;
+            int[] endpoints =
+                    GraceBeamEndpointInk.mixed(
+                            gray, width, height, firstStem, secondStem, first.staffGap);
+            events.set(
+                    i,
+                    asEngravedGrace(events.get(i), endpoints == null ? firstBeams : endpoints[0]));
+        }
     }
 
     /** Gray-only callers retain conservative ordinary-beam ownership. */

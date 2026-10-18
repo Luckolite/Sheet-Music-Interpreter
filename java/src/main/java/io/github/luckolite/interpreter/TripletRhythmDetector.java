@@ -1484,7 +1484,7 @@ final class TripletRhythmDetector {
             MeasureRegion bar = measures.get(first.measureIndex());
             float gap = Math.max(4, (bar.bottom() - bar.top()) * height / (8 * first.staffCount()));
             List<Onset> run = new ArrayList<>();
-            boolean subdivided = false;
+            boolean subdivided = false, separated = false;
             for (int j = i; j < groups.size() && j < i + divisor * 2; j++) {
                 Onset raw = groups.get(j);
                 List<Integer> members = new ArrayList<>();
@@ -1510,8 +1510,22 @@ final class TripletRhythmDetector {
                 Onset onset = new Onset(List.copyOf(members), raw.position(), top, bottom);
                 if (!run.isEmpty()) {
                     Onset previous = run.get(run.size() - 1);
-                    // Engravers compress the subdivided slots; beam-group tests
-                    // based on uniform head spacing can split that continuous beam.
+                    // Compression alone is not a beam break. Two independently outward
+                    // beams with a clear interval still delimit different printed groups.
+                    float previousX =
+                            (bar.left() + previous.position() * (bar.right() - bar.left())) * width;
+                    float nextX =
+                            (bar.left() + onset.position() * (bar.right() - bar.left())) * width;
+                    separated |=
+                            SeparateBeamGroups.between(
+                                    gray,
+                                    width,
+                                    height,
+                                    previousX,
+                                    previous.top() * height,
+                                    nextX,
+                                    onset.top() * height,
+                                    gap);
                     if (onset.position() - previous.position() < .012f) break;
                 }
                 run.add(onset);
@@ -1551,6 +1565,27 @@ final class TripletRhythmDetector {
                                 measures);
                 if (numeral == null || insideOtherSystem(numeral, bar, measures, width, height))
                     break;
+                // An explicit bracket can span separately beamed subdivisions. Otherwise,
+                // two outward beam ends cannot be joined merely by a nearby finger numeral.
+                if (separated
+                        && !(bracketArm(
+                                        gray,
+                                        width,
+                                        height,
+                                        Math.round(x1 - gap * .3f),
+                                        numeral.left() - 2,
+                                        numeral.top(),
+                                        numeral.bottom(),
+                                        gap)
+                                && bracketArm(
+                                        gray,
+                                        width,
+                                        height,
+                                        numeral.right() + 2,
+                                        Math.round(x2 + gap * .3f),
+                                        numeral.top(),
+                                        numeral.bottom(),
+                                        gap))) break;
                 for (Onset slot : run)
                     for (int index : slot.indices()) {
                         ScoreNoteEvent n = result.get(index);

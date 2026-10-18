@@ -8,6 +8,24 @@ final class RoundedAngularArticulation {
 
     static boolean matches(
             int[] pixels, int width, int left, int top, int right, int bottom, int kind) {
+        return completeArms(pixels, width, left, top, right, bottom, kind, true);
+    }
+
+    /** Open carets can be thin: complete column support and both fitted arms prove the ink. */
+    static boolean matchesOpen(
+            int[] pixels, int width, int left, int top, int right, int bottom, int kind) {
+        return completeArms(pixels, width, left, top, right, bottom, kind, false);
+    }
+
+    private static boolean completeArms(
+            int[] pixels,
+            int width,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int kind,
+            boolean requireDensity) {
         int transverse = kind == 0 ? bottom - top + 1 : right - left + 1;
         int axial = kind == 0 ? right - left + 1 : bottom - top + 1;
         if (pixels == null
@@ -18,7 +36,7 @@ final class RoundedAngularArticulation {
                 || kind < 0
                 || kind > 2) return false;
         double density = pixels.length / (double) (transverse * axial);
-        if (density < .18 || density > .62) return false;
+        if ((requireDensity && density < .18) || density > .62) return false;
         double[] sum = new double[transverse], mean = new double[transverse];
         int[] count = new int[transverse], low = new int[transverse], high = new int[transverse];
         java.util.Arrays.fill(low, axial);

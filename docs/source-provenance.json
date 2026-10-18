@@ -146,9 +146,14 @@
     },
     "RoundedAngularArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RoundedAngularArticulation.java",
-      "source_sha256": "aef1488d606bc4db36c5431c4a62e870ebf45b3c60dfd53f37b514516e36df10",
+      "source_sha256": "20af7e9121fa853ea03f561029f3517e32223df44520c5e4991cea27052b7295",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "aef1488d606bc4db36c5431c4a62e870ebf45b3c60dfd53f37b514516e36df10"
+      "source_normalized_sha256": "b09d221a2b260f9302410a25327f6aae82b56a5e9d7ddd58eca1f342769d7d2b",
+      "standalone_sha256": "e54620696dd9e2b58485762a6a4287fe6a58ce8ef6010970318eb4f86870699b",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "reviewed_source_state": "committed",
+      "review_note": "Broad detached marcato admission requires complete column support and two independent arm fits. The broad-only open-arm entry preserves thin wide carets without changing the original dense angular API, upper-density or geometric bounds. Existing WideCaret regression and all affected original articulation controls retained; no private pixels or new dependencies.",
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "SlashedGraceFlagInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
@@ -343,16 +348,17 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "44246de0fb38f4b76d0d77fba975db17e6ddd95ffa6360148373be52b72baac9",
-      "review_note": "Recover a complete finite tenuto body only after rejecting an independently supported foreign staff interpretation. Keep registered complete staff identities and genuine mixed-context marks; do not borrow a shifted four-of-five staff subset.",
-      "source_normalized_sha256": "44246de0fb38f4b76d0d77fba975db17e6ddd95ffa6360148373be52b72baac9",
-      "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
+      "source_sha256": "21fa229f5fa2491ab958157b11d92b1fa34ad0b499ac5f0f2dbaae35642f1d04",
+      "review_note": "Broad detached marcato admission requires complete column support and two independent arm fits. The broad-only open-arm entry preserves thin wide carets without changing the original dense angular API, upper-density or geometric bounds. Existing WideCaret regression and all affected original articulation controls retained; no private pixels or new dependencies.",
+      "source_normalized_sha256": "5bf2ca9c42510bb4f9d71e17178d7b7839a264b5a3ebadc1e9e48d1e50c786a1",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
       "reviewed_source_state": "committed",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "68a4106124b8277fa83353c9c7850bdd6011e5f46f444d0a1f5f324f7d691a74",
+      "standalone_sha256": "7beccd2b6bf5a8612916c36b494033445f80be2db92a5209cd3145f1128b5811",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
+      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10",
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -388,15 +394,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d13ef6e6954da76c67ad7d88802da6627367a1cb908e026c3b8d83224100da28",
-      "review_note": "Transport original and derived head/view identity to finite rest ownership while retaining unchanged caller order and independent genuine-rest acquisition.",
-      "source_normalized_sha256": "8afedf90ecfca3ba392d4e3765be5f25e4db15da019f4cf62c30970f960f35e5",
+      "source_sha256": "ab02156d55f243c82ffcbdbc7b23c3db15d1e0407be5e955c1afe47210fbe292",
+      "review_note": "Complete short shafts, two independently established grace tails and at least two raw beams per adjacent link admit an interrupted grace prefix; same-bar/voice, larger principal and existing metrical exclusions remain authoritative. Original Apache-2.0 procedural controls; no private pixels or model changes.",
+      "source_normalized_sha256": "ab02156d55f243c82ffcbdbc7b23c3db15d1e0407be5e955c1afe47210fbe292",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "57e70071cda4638c6c277f44155bf3893b252591e7ebe9bbd7fa1d626a48c934",
-      "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
+      "standalone_sha256": "0d5b0f392d2250e8de6e8df2d59f9f0de0d9208286da2260659e9ed0e45b0779",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
-      "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -524,13 +530,14 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "9430c93e03674e4daa47d16ca7db5e82240fd6b89d20a74bc37662e13148c2f8",
-      "source_normalized_sha256": "6ac0cc318fd3ca485161438e0a6db224b502fe970767d9c11d94337530388adc",
-      "review_note": "Preserve the released three recognition path and add bounded curled-bowl recovery using sampled pixel centers and existing complete lower-bowl evidence. Contradict only the added proposal when the unchanged four classifier also proves a continuous crossbar in its existing phase and width bounds. Fourteen original procedural/licensed Bravura regressions cover genuine threes and other digits; 6120 raster cases preserve every released acceptance and introduce no non-three acceptance. No private score pixels, score identifiers, classifier threshold changes, model or native format changes.",
-      "reviewed_source_state": "working-tree",
-      "standalone_sha256": "1568a07e293a3e5b57fb7f7063bc5baa77e807a154cf52aa9accb6d65d1079dd",
+      "source_sha256": "f9e8880a82092a11b35eb8117b1669a46f4cba30bbc8225ad347a177cc193039",
+      "source_normalized_sha256": "1f12a0a0b198699d7090c42574ab38e6fba79937361cfd19dc5340fd69614f6e",
+      "review_note": "Mixed beamed tuplets cannot borrow a nearby fingering numeral across independently established separated beam groups unless the existing two-arm bracket proof spans the group. Original connected, separated and explicitly bracketed controls; no new helpers, thresholds, models or private pixels.",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "a444271792cf52faccd11ac7188b4baa492431aac4c1af6e5b16088e067d48a0",
       "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
-      "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58"
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1157,13 +1164,15 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "44967d6d360d2d1e127a32e2fbdd6f0d451855e0546aaa85ca1c9a68cc41d49f",
-      "source_normalized_sha256": "3bfaa2537d2dab2468b864f16993aebb31669714daee55b0d9d953242fb25041",
-      "standalone_sha256": "f36219ad7a83bdd2f7e7f01b950968f214a6277b83a975888fefae705525315c",
+      "source_sha256": "112a76beae9a8e01c04707b28ea280ef8c6c17822eba69aaa8618f7cfe79a0dc",
+      "source_normalized_sha256": "112a76beae9a8e01c04707b28ea280ef8c6c17822eba69aaa8618f7cfe79a0dc",
+      "standalone_sha256": "fdc2f6535a09cd2e85dcffbaa82399054af922ff896e5d43fd09e6b1c697dc89",
       "license": "Apache-2.0",
       "reviewed_source_state": "committed",
-      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields. Invocation-local actual OCR acquisition provenance; unique complete actual parent and exact crop-intersection relation. Expression-only alias removal; all current owner/admission and non-expression routes preserved. Original synthetic geometry/text only; no private score/OCR/model/protocol additions. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+      "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1604,14 +1613,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "92b1c627c342eaa3c849cbd7f101e6c177e9bdf5833108f6325b8a4994a73085",
-      "source_normalized_sha256": "1bc68455879afb5ba863d72e9b1994423012edc24a1f7b84b2d429d6b82d2269",
-      "review_note": "Recognition74 invalidates cached results for the reviewed auxiliary-natural acquisition correction; guide290/audio96/wire layouts unchanged. Paired cache identity originals updated to actualrevision.",
+      "source_sha256": "1bf4940782adb3e0c94e4983f71ce64ff6ed3e06feceeec0397ae71c8d5d52e5",
+      "source_normalized_sha256": "1bf4940782adb3e0c94e4983f71ce64ff6ed3e06feceeec0397ae71c8d5d52e5",
+      "review_note": "Recognition75 invalidates derived recognition after paired grace-prefix, marcato, accepted meter-header and mixed-tuplet ownership corrections; Guide290/audio96 and wire layouts remain unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "9b269508ef9e8be1f1c64aab57fe3aaae15955ffa4ff696beb4e458ad078fd01",
+      "standalone_sha256": "c473829e067ba5fce75d8b2eba07993967681ccddba3c0d02f1aa94b029c89d2",
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
-      "license": "Apache-2.0"
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
+      "license": "Apache-2.0",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -2069,13 +2079,15 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "7f7c0314b3fef66bcf1836e645a76bffc5adff52ea874e0e766ea09a9a386a8a",
-      "source_normalized_sha256": "40d5c853b0d99471e0deff907c6dde79f1404232ed6f1e80209f206710d80a79",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Recognize a whole-measure plate only with complete support inside its observed thin rule band. Account for a single optical fringe row only from two external reference stripes, an uninterrupted strict rule core, monotone core/inner/outer/paper falloff, and a positive conditional attenuation profile confined to observed phases with zero quantization slack. Unowned augmentation ink stays literal; retain all existing complete-body, centering, staff, sounding-note and conflict guards. Twenty-nine original procedural tests; no private score pixels, identifiers, models, or format changes.",
-      "standalone_sha256": "18ae36733a05c415477f4d529f2544d88259522c5a338405b0dbf00ef76a8dde",
+      "source_sha256": "7915ebdcb76122ad82e424adcd14f1933e6f6566a5c4d29ab9cd889fc7fad75f",
+      "source_normalized_sha256": "7915ebdcb76122ad82e424adcd14f1933e6f6566a5c4d29ab9cd889fc7fad75f",
+      "reviewed_source_state": "committed",
+      "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
+      "standalone_sha256": "632f277f1c821352045aa5cf0e633dda45f4ffc59fe7eff3aa5320b5b04973ff",
       "reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e",
-      "scoped_reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e"
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "license": "Apache-2.0"
     },
     "WideSystemIncomingTieProof.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WideSystemIncomingTieProof.java",
@@ -3804,6 +3816,17 @@
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_source_state": "committed",
       "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged."
+    },
+    "AcceptedMeterHeaderBounds.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/AcceptedMeterHeaderBounds.java",
+      "source_sha256": "3db86fe878d5cb6ef6999a2172a824d15c98dce8f7bf44a7e373456cd6b0d8b8",
+      "source_normalized_sha256": "c07756cb3dcd03f1ec31da110dd49ea1ed1f0584b06e00faabb228afed7645aa",
+      "standalone_sha256": "56d876d1a1218d7b3f502516b715913f8072f32e8f6fce37ac91bbb382907fad",
+      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "reviewed_source_state": "committed",
+      "license": "Apache-2.0",
+      "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     }
   },
   "interpreter_speedup_review": {

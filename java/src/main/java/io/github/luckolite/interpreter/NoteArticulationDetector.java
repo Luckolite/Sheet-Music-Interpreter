@@ -3093,6 +3093,8 @@ final class NoteArticulationDetector {
                 && h <= gap * 1.7f
                 && h / w >= .45f
                 && openPeak(g, width)
+                && RoundedAngularArticulation.matchesOpen(
+                        g.pixels, width, g.left, g.top, g.right, g.bottom, 1)
                 && !interiorCrossbar(g, width, .45f)) return NoteArticulation.MARCATO;
         return 0;
     }
