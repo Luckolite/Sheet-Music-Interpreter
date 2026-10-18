@@ -948,12 +948,15 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "51ab5423ea4d9d41e6c9c48b9c60f2caa4a434941bb37c86a84300270200fb13",
+      "source_sha256": "12924b7f283d692da3ea6b4fa0d930366d4c9c0bb0eda5a2b6fa8c55a7913bd9",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "fb93ac05037a62abae4ad45923105eb7d77cb6a13d1a0ac77c49d0c5becfca4e",
-      "review_note": "Original raw detector retains preparation and routes to an owned prepared-raster implementation with unchanged ledger removal, fragments, proof thresholds, recursion and ordering. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. Batch902 reuses invariant geometry, ordered visits, regular-expression patterns and call-local query masks; original generic regression fixtures verify output preservation. Weights, thresholds, record layouts and dependencies unchanged.",
-      "reviewed_app_state": "Reviewed uncommitted app902 source on released app901; origin app commit retained.",
-      "reviewed_source_state": "Reviewed output-preserving fixed-work reuse batch902 on public751e894."
+      "source_normalized_sha256": "b58b5d2abbe8ab25181827f991b7069980dd6e3d32e332129112f3ed7d5fb97b",
+      "review_note": "An already accepted unconnected slide component is excluded only when its entire raw150 core exactly matches a complete printed phrase bow with unique preceding raw head owners in the same physical lane and measure. Curved orphan approaches and straight slides remain accepted; ambiguous or partial matches abstain. Existing slur grammar reused without duplicated parsers, threshold changes or private score assets. Original Apache-2.0 procedural fixtures.",
+      "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "34df365882cdf00ca66c847187f3398337627afd030d28957e014e81b98226dc",
+      "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
+      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439"
     },
     "OutlinedBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
@@ -1615,15 +1618,16 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "96924bdea97d3c0cd01137fb8ca2cf72eb8701e8d0a14e4011a6bdeafd3c19ac",
-      "source_normalized_sha256": "96924bdea97d3c0cd01137fb8ca2cf72eb8701e8d0a14e4011a6bdeafd3c19ac",
-      "review_note": "Recognition77 invalidates derived results after detached-note tie ownership, accent/shaft rest ownership and full-silent-bar pickup inference changes. Guide290/audio96 and record layouts remain unchanged.",
+      "source_sha256": "a784a621b305ae8ab85f201d1471722bd2394c1f7942c1f0e94ae850b53db9e9",
+      "source_normalized_sha256": "a784a621b305ae8ab85f201d1471722bd2394c1f7942c1f0e94ae850b53db9e9",
+      "review_note": "Recognition78 invalidates derived results after exact full-component phrase ownership prevents false slide attribution. Guide290/audio96 and record layouts remain unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "6b3264a6209b9c92e758cb3b492b91627ac4c506955337307669938545685fc7",
+      "standalone_sha256": "13d6d5ec06617f2f797b85deac761e4dd42e0bb76a0db303209139726247f15c",
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
+      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74"
+      "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
+      "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -3852,6 +3856,17 @@
       "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
       "reviewed_source_state": "committed",
       "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f"
+    },
+    "PhraseOwnedSlideComponents.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PhraseOwnedSlideComponents.java",
+      "source_sha256": "ec11b274ee6b73ce6533c9e1122161e642d52eff116d68009afe10dba567e183",
+      "source_normalized_sha256": "ff0da4f4c99f3c92f8408fcfaa3050b1c3db3f1212fdc07aa4f509ad4d4a57a3",
+      "standalone_sha256": "ac7b8a9ccfb3d2ecbeb0c30cf2c907a32d6ee343ce22dc2e9946678ecf956502",
+      "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
+      "reviewed_source_state": "committed",
+      "review_note": "An already accepted unconnected slide component is excluded only when its entire raw150 core exactly matches a complete printed phrase bow with unique preceding raw head owners in the same physical lane and measure. Curved orphan approaches and straight slides remain accepted; ambiguous or partial matches abstain. Existing slur grammar reused without duplicated parsers, threshold changes or private score assets. Original Apache-2.0 procedural fixtures.",
+      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
+      "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     }
   },
   "interpreter_speedup_review": {

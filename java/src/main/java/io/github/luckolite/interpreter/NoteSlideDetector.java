@@ -192,8 +192,8 @@ final class NoteSlideDetector {
                     ownerSourceProved = extended;
                 }
             }
-            if (owner >= 0)
-                result.add(
+            if (owner >= 0) {
+                var candidate =
                         new Stroke(
                                 l,
                                 (float) (cy + (l - cx) * slope),
@@ -207,7 +207,12 @@ final class NoteSlideDetector {
                                                 heads.get(owner),
                                                 l,
                                                 cy + (l - cx) * slope,
-                                                slope)));
+                                                slope));
+                if (!candidate.connected()
+                        && PhraseOwnedSlideComponents.owned(
+                                gray, w, h, staffs, heads, owner, queue, end)) continue;
+                result.add(candidate);
+            }
         }
         if (!staffs.isEmpty()) {
             byte[] joined = joinStaffCrossings(clean, gray, w, h, staffs, heads, fragments, result);
