@@ -1959,6 +1959,8 @@ final class OmrScoreInterpreter {
         // Small stemless model heads can be augmentation dots of an independently
         // recognized rest. Re-read those dots without letting the mistaken head
         // claim ownership, but require the same rest to have survived the first pass.
+        CompactRestArbitration restOwnership =
+                compactPrefixRestOwnership(labels, gray, width, height, joined);
         List<DetectedNote> compactDots = new ArrayList<>();
         List<DetectedNote> restBodyHeads = new ArrayList<>();
         for (DetectedNote note : joined) {
@@ -2041,8 +2043,10 @@ final class OmrScoreInterpreter {
                                     <= note.staffGap * (rest.durationBeats() < 1 ? .5f : .4f)
                             && Math.abs(rest.pageY() * height - note.head.centerY)
                                     <= rest.pageHeight() * height * .5f) {
-                        removed.add(note);
-                        verifiedBodies.add(rest);
+                        if (restOwnership.mayRemove(note.head)) {
+                            removed.add(note);
+                            verifiedBodies.add(rest);
+                        }
                         break;
                     }
                 }
@@ -2078,7 +2082,7 @@ final class OmrScoreInterpreter {
                                                                                                     .pageY())
                                                                             < .005f);
                     if (verified) {
-                        removed.add(note);
+                        if (restOwnership.mayRemove(note.head)) removed.add(note);
                         break;
                     }
                 }
@@ -12722,6 +12726,88 @@ final class OmrScoreInterpreter {
     }
 
     /** Reduced heads in a close, stemmed prefix are ornaments, not extra metrical beats. */
+    /** Existing compact-prefix heuristic; unchanged late-marking predicate. */
+    private static boolean compactGraceGroup(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<DetectedNote> detected,
+            List<Integer> prefix,
+            DetectedNote next) {
+        boolean compactGroup = prefix.size() >= 2;
+        for (int k = 0; k < prefix.size() && compactGroup; k++) {
+            DetectedNote member = detected.get(prefix.get(k));
+            compactGroup =
+                    compactBeamedGraceHead(member, gray, width, height)
+                            && next.head.area > member.head.area * 1.28f
+                            && next.head.maxX - next.head.minX + 1
+                                    > (member.head.maxX - member.head.minX + 1) * 1.10f
+                            && (k == 0
+                                    || graceStemsShareBeam(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            detected.get(prefix.get(k - 1)).head,
+                                            member.head,
+                                            member.staffGap));
+        }
+        return compactGroup;
+    }
+
+    /** Invocation-local head identities, not early GRACE flags. This retains the
+     * existing sampled beam heuristic; endpoint checks are not pixel closure. */
+    private static CompactRestArbitration compactPrefixRestOwnership(
+            byte[] labels, byte[] gray, int width, int height, List<DetectedNote> detected) {
+        List<Object> owned = new ArrayList<>();
+        if (gray == null) return CompactRestArbitration.empty();
+        for (int i = 0; i < detected.size(); i++) {
+            DetectedNote first = detected.get(i);
+            if (!(smallGraceHead(first)
+                            || roundedBeamedGraceHead(first, gray, width, height)
+                            || compactBeamedGraceHead(first, gray, width, height))
+                    || attachedRawStem(gray, width, height, first.head, first.staffGap * .65f)
+                            == null) continue;
+            List<Integer> prefix = new ArrayList<>();
+            prefix.add(i);
+            DetectedNote previous = first;
+            for (int j = i + 1; j < detected.size(); j++) {
+                DetectedNote next = detected.get(j);
+                if (next.event.measureIndex() != first.event.measureIndex()) break;
+                if (next.event.staffIndex() != first.event.staffIndex()
+                        || next.event.staffCount() != first.event.staffCount()) continue;
+                float dx = next.head.centerX - previous.head.centerX;
+                if (dx < first.staffGap * .65f
+                        || dx > first.staffGap * 2.8f
+                        || Math.abs(next.head.centerY - previous.head.centerY)
+                                > first.staffGap * 2.5f) break;
+                if (smallGraceHead(next)
+                        || roundedBeamedGraceHead(next, gray, width, height)
+                        || compactBeamedGraceHead(next, gray, width, height)) {
+                    if (attachedRawStem(gray, width, height, next.head, next.staffGap * .65f)
+                            == null) break;
+                    prefix.add(j);
+                    previous = next;
+                    continue;
+                }
+                if (extendsMetricalBeam(labels, gray, width, height, detected, i)) break;
+                boolean proved =
+                        compactGraceGroup(labels, gray, width, height, detected, prefix, next);
+                for (int k = 1; k < prefix.size() && proved; k++) {
+                    DetectedNote a = detected.get(prefix.get(k - 1));
+                    DetectedNote b = detected.get(prefix.get(k));
+                    proved =
+                            graceStemsShareBeam(
+                                    labels, gray, width, height, a.head, b.head, b.staffGap, true);
+                }
+                if (proved) for (int index : prefix) owned.add(detected.get(index).head);
+                break;
+            }
+        }
+        return CompactRestArbitration.proved(owned);
+    }
+
     private static void markGraceHeads(
             byte[] labels,
             byte[] gray,
@@ -12766,24 +12852,8 @@ final class OmrScoreInterpreter {
                     continue;
                 }
                 if (extendsMetricalBeam(labels, gray, width, height, detected, i)) break;
-                boolean compactGroup = prefix.size() >= 2;
-                for (int k = 0; k < prefix.size() && compactGroup; k++) {
-                    DetectedNote member = detected.get(prefix.get(k));
-                    compactGroup =
-                            compactBeamedGraceHead(member, gray, width, height)
-                                    && next.head.area > member.head.area * 1.28f
-                                    && next.head.maxX - next.head.minX + 1
-                                            > (member.head.maxX - member.head.minX + 1) * 1.10f
-                                    && (k == 0
-                                            || graceStemsShareBeam(
-                                                    labels,
-                                                    gray,
-                                                    width,
-                                                    height,
-                                                    detected.get(prefix.get(k - 1)).head,
-                                                    member.head,
-                                                    member.staffGap));
-                }
+                boolean compactGroup =
+                        compactGraceGroup(labels, gray, width, height, detected, prefix, next);
                 if (compactGroup
                         || next.head.area > first.head.area * 1.65f
                                 && next.head.maxX - next.head.minX + 1 > first.staffGap * 1.05f

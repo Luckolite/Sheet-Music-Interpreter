@@ -2565,3 +2565,5 @@ Paired app source: ddd342a275bc764f5a2ec3f89636305f2231f439.
 
 Recognition79 preserves beamed rhythm when an unchanged pale filled-core proof and complete paired printed rails jointly contradict a relative-contrast head pocket. Later semantic tremolo priority, genuine paper counters and incomplete or ambiguous rail ownership retain their existing behavior. Original Apache-2.0 procedural tests contain no captured score data. Guide290/audio96 and record layouts remain unchanged.
 Paired app source: 2c81254f7b27f79721afbb056167eb20f53d1336.
+
+Recognition80 preserves independently supported paired grace heads during rest-conflict cleanup. Identity ownership uses existing compact-prefix geometry with own shafts and sampled beam endpoints; it does not claim complete pixel connectivity. Rest detection, matching order and ordinary late grace marking retain their existing behavior. Original Apache-2.0 procedural regressions exercise raw ownership, immutable identity and preservation of a genuine nearby eighth rest. Guide290/audio96 and wire layouts remain unchanged.
