@@ -427,7 +427,11 @@ public final class SheetInterpreter {
                 finalInterpretation.withOpeningPickup(
                         firstMeasureNumber <= 1
                                 && MeasureNumberReconciler.provesOpeningPickup(
-                                        finalInterpretation.measures(), numbers));
+                                        finalInterpretation.measures(), numbers)
+                                && OpeningPickupContent.keepsNumberedPickup(
+                                        finalInterpretation.notes(),
+                                        finalInterpretation.rests(),
+                                        finalInterpretation.meterChanges()));
         finalInterpretation =
                 VerifiedCourtesyKeyTail.apply(
                         VerifiedCourtesyBoundary.apply(

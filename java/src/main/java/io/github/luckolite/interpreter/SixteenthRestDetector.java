@@ -2464,6 +2464,10 @@ final class SixteenthRestDetector {
                                             + note.positionInMeasure()
                                                     * (region.right() - region.left()))
                                     * width;
+                    if ((eighth || sixteenth)
+                            && AccentedHeadRestOwnership.owns(
+                                    gray, width, height, notes, note, left, right, minY, maxY, line,
+                                    top, gap)) return;
                     if (lowered
                             && !ScoreNoteTiming.hasIndependentSustain(note)
                             && RestStaffRuleEdge.noteStem(

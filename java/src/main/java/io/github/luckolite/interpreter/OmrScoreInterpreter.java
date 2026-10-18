@@ -23921,6 +23921,7 @@ final class OmrScoreInterpreter {
                     tied =
                             systemBreakTieCandidate(before, after, width)
                                     && hasTieArc(labels, gray, width, height, before, after);
+                    if (tied) previousIndex = candidate;
                 }
             }
             if (!tied
@@ -23940,8 +23941,9 @@ final class OmrScoreInterpreter {
                                     staffs,
                                     result.get(previousIndex),
                                     current),
-                            true)) {
-                // Articulations are emitted later; inspect them only for this extra path.
+                            true)) tied = true;
+            if (tied && previousIndex >= 0) {
+                // Both independently owned detached marks retain two attacks on every tie path.
                 if (detachedMarks == null) {
                     List<NoteArticulationDetector.Anchor> tieAnchors = new ArrayList<>();
                     for (DetectedNote note : source) {
@@ -23951,7 +23953,7 @@ final class OmrScoreInterpreter {
                                         note.head.centerX,
                                         note.head.centerY,
                                         note.staffGap,
-                                        staffs.indexOf(owner),
+                                        owner == null ? -1 : staffs.indexOf(owner),
                                         owner == null ? null : owner.pitchTrack));
                     }
                     detachedMarks =
