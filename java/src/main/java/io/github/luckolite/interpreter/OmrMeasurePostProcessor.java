@@ -1965,6 +1965,8 @@ final class OmrMeasurePostProcessor {
             int inkLimit,
             int contrast) {
         shift += printedRuleOffset(gray, width, height, centerX, rows, gap, shift);
+        float[] physicalRows = new float[5];
+        for (int i = 0; i < 5; i++) physicalRows[i] = rows[i] + shift;
         int top = Math.max(0, Math.round(rows[0] + shift - gap * .12f));
         int bottom = Math.min(height - 1, Math.round(rows[4] + shift + gap * .12f));
         if (bottom <= top) return Integer.MIN_VALUE;
@@ -2018,11 +2020,12 @@ final class OmrMeasurePostProcessor {
         if (!(touchesTop && touchesBottom && darkRows >= span * .68f && longest >= span * .48f))
             return Integer.MIN_VALUE;
         if ((RoundedMeterCounters.matches(gray, width, height, centerX, top, bottom, gap)
-                        && !completeCounterRulePair(gray, width, height, centerX, top, bottom, gap))
+                        && !completeCounterRulePair(
+                                gray, width, height, centerX, top, bottom, gap, physicalRows))
                 || stackedFourCounters(gray, width, height, centerX, top, bottom, gap)
                 || (threeOverFourCounters(gray, width, height, centerX, top, bottom, gap)
                         && !ParallelStaffRules.proved(
-                                gray, width, height, centerX, top, bottom, gap)))
+                                gray, width, height, centerX, top, bottom, gap, physicalRows)))
             return Integer.MIN_VALUE;
         // A rest plus the five horizontal staff lines can satisfy the aggregate
         // coverage test while leaving an entire staff space empty. A barline
@@ -3315,6 +3318,49 @@ final class OmrMeasurePostProcessor {
                 for (int y = first; y <= last; y++) {
                     float phase = (y - top) / gap;
                     if (Math.abs(phase - Math.round(phase)) <= .27f) continue;
+                    sampled++;
+                    int longest = 0, run = 0;
+                    for (int x = a + 1; x < b; x++) {
+                        if ((gray[y * width + x] & 255) >= 200) {
+                            run++;
+                            longest = Math.max(longest, run);
+                        } else run = 0;
+                    }
+                    if (longest >= Math.max(2, Math.round(gap * .12f))) clear++;
+                }
+                if (sampled >= gap && clear >= sampled * .85f) return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean completeCounterRulePair(
+            byte[] gray,
+            int width,
+            int height,
+            int column,
+            int top,
+            int bottom,
+            float gap,
+            float[] physicalRows) {
+        if (top < 0
+                || bottom >= height
+                || bottom - top < gap * 3.5f
+                || !ParallelStaffRules.proved(
+                        gray, width, height, column, top, bottom, gap, physicalRows)) return false;
+        int first = Math.round(top + gap * .12f), last = Math.round(bottom - gap * .12f);
+        if (first < 0 || last >= height || last <= first) return false;
+        int radius = Math.max(2, Math.round(gap * 1.2f));
+        for (int a = Math.max(0, column - radius); a <= Math.min(width - 1, column + 2); a++) {
+            if (!completeCounterRuleColumn(gray, width, a, first, last, gap)) continue;
+            for (int b = a + Math.max(3, Math.round(gap * .3f));
+                    b <= Math.min(width - 1, a + radius);
+                    b++) {
+                if (Math.min(Math.abs(a - column), Math.abs(b - column)) > 2
+                        || !completeCounterRuleColumn(gray, width, b, first, last, gap)) continue;
+                int sampled = 0, clear = 0;
+                for (int y = first; y <= last; y++) {
+                    if (ParallelStaffRules.registeredRuleRow(y, physicalRows)) continue;
                     sampled++;
                     int longest = 0, run = 0;
                     for (int x = a + 1; x < b; x++) {

@@ -378,13 +378,16 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "838bcb075fd1e35871bbb823e2624e2a879a31e1c60a6b826b4b1437d94688dc",
-      "source_normalized_sha256": "b35204ea2cb5b6341d78ead6119d52aa9c8b7ef5433616fc94c0e6b00ec9dd75",
-      "review_note": "Retain raw double-bar boundaries when complete separately inked parallel rules contradict the rounded-counter veto. Require both fixed columns to retain both ends, nearly the complete between-rule extent, bounded ink holes and independently clear paper between rails. Keep the generic rounded-meter classifier and all original boundary continuity, branch and ownership gates unchanged. Eleven original procedural regressions include connected rounded meter digits with aligned staff crossings. No private score pixels, song predicates, model or native layout changes.",
-      "reviewed_source_state": "working-tree",
-      "standalone_sha256": "6f230ea959ec455488ce784d61989da44008d96ea06fa0b39d1beaf8465e0334",
-      "reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45",
-      "scoped_reviewed_app_commit": "ca6aafd7c69831c681a9409bb665c848b0221e45"
+      "source_sha256": "0b92f86b9bc1994bc8cdc704a7f27ed9f88e201b165ac8e57f5b72cb92485d1b",
+      "source_normalized_sha256": "0b92f86b9bc1994bc8cdc704a7f27ed9f88e201b165ac8e57f5b72cb92485d1b",
+      "review_note": "Transport the five actual staff rows plus the once-computed printed offset separately from the expanded raw aperture. Registered straight-rule exceptions use physical spaces and phases; raw classifier order, aperture, whole-column endpoints, thresholds and ordinary continuity remain unchanged.",
+      "reviewed_source_state": "committed paired source81",
+      "standalone_sha256": "0987709d0a70cbf70d59429815a96464c30ba2c843e3d73c4dfe2978774d8723",
+      "reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "scoped_reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "reviewed_app_base_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "license": "Apache-2.0",
+      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -1618,16 +1621,16 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "9be817bcf6cd59be106134676bb0b01c9c4e8fe121e1de01ec90cc6ca3d772da",
-      "source_normalized_sha256": "9be817bcf6cd59be106134676bb0b01c9c4e8fe121e1de01ec90cc6ca3d772da",
-      "review_note": "Recognition revision80 prevents reuse of pre-fix cached interpretations; guide290/audio96 and page record layouts unchanged.",
-      "reviewed_source_state": "committed paired source80",
-      "standalone_sha256": "158ac106df68961f70c5a592642458a544a2fd10e3f73288031945a30176b68b",
-      "reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
-      "scoped_reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "source_sha256": "66e9660e7c80d05a6673923ea70a86d84e08937d6dc67e3dca63b7c1085cc8e3",
+      "source_normalized_sha256": "2825d546cdeed137028070f7b7e3e9b69acfc61298e3bba5510442d4dddf8496",
+      "review_note": "Recognition revision81 invalidates pre-fix derived interpretations. Guide290/audio96 and physical record layouts remain unchanged.",
+      "reviewed_source_state": "committed paired source81",
+      "standalone_sha256": "b56a42765004921d63b67ffd1b389b6e52e8229ceed3defec31e53d5d26587ac",
+      "reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "scoped_reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "2c81254f7b27f79721afbb056167eb20f53d1336",
-      "reviewed_app_state": "Recognition80 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
+      "reviewed_app_base_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -3021,13 +3024,16 @@
     },
     "ParallelStaffRules.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelStaffRules.java",
-      "source_sha256": "7a43b529184ab0ab63fc19fcc33d28bf5fce5766c04a8a1b54cb993a696754b9",
-      "source_normalized_sha256": "bb01393324370b668dd2f605e522b030ec4edea2ec286e31e5afd8b98d937ee4",
-      "standalone_sha256": "82ed7f4939255009ee002ceffddfff5f6767a4adaf73381eaaccec7a7a9ff653",
-      "reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
-      "scoped_reviewed_app_commit": "04a70d2e978839716a9a3cabb17c92cf780f82ff",
-      "review_note": "Original pixel-geometry proof of two continuous rules separated by clear paper; generated regression controls, no private score material.",
-      "reviewed_source_state": "Committed paired recognition58/guide287/audio91 sources; packaged deployment and full-document acceptance pending."
+      "source_sha256": "d48fd6845099b7e226855204dd30a33aeb368da3c199ed1a39f96f50b0666aa2",
+      "source_normalized_sha256": "d48fd6845099b7e226855204dd30a33aeb368da3c199ed1a39f96f50b0666aa2",
+      "standalone_sha256": "74011581adb9825390d6d4a18c961b6ef68c1b1069bd25d681f19cfc1e605d77",
+      "reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "scoped_reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "review_note": "Add an explicitly registered five-row proof while preserving the legacy API. Fixed straight columns still require complete physical spaces and independently clear interspace paper; invalid row frames abstain. Original procedural controls contain no captured score data.",
+      "reviewed_source_state": "committed paired source81",
+      "reviewed_app_base_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "license": "Apache-2.0",
+      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "FlagRootStaffRule.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FlagRootStaffRule.java",
@@ -8401,5 +8407,14 @@
     "scope": "Paired package-only PortableNoteOrnaments one gate, original synthetic regression; no model/dependency/input-wire changes.",
     "privateBoundary": "Private whole-page check restores one auxiliary-natural attachment and preserves all other14field values; no private fixture published.",
     "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819"
+  },
+  "physical_staff_registration_review": {
+    "recognition": 81,
+    "guide": 290,
+    "audio": 96,
+    "license": "Apache-2.0",
+    "source": "Original procedural five-rail and fixed-column scenes; no captured score pixels, OCR, semantic masks, models or private metadata.",
+    "tests": "RegisteredFrameOriginalTest: eight new original methods per namespace; legacy proofs and genuine meter preservation remain binding.",
+    "scope": "Actual row registration corrects the independent separator exception. No threshold relaxation, new recognition model or binary layout."
   }
 }
