@@ -548,6 +548,7 @@ final class ScoreDynamicsDetector {
             }
         var shared = GrandStaffDynamics.bracedPairs(staffs, measures, gray, width, height);
         var directionFloors = new DirectionFloors(staffs, notes, measures, height);
+        ContextualMfAdmission contextualMf = null;
         for (var word : words) {
             float db = level(word.text());
             if (!Float.isFinite(db)) continue;
@@ -569,10 +570,17 @@ final class ScoreDynamicsDetector {
                 owner =
                         provedLowerWordOwner(
                                 word, staffs, measures, notes, ownershipGray, width, height);
-            if (owner == null
-                    || word.bottom() - word.top() > owner.gap() * 3 / height
-                            && !ShadedTallDynamicWord.proved(
-                                    word, ownershipGray, width, height, owner.gap())) continue;
+            if (owner == null) continue;
+            if (word.bottom() - word.top() > owner.gap() * 3 / height
+                    && !ShadedTallDynamicWord.proved(
+                            word, ownershipGray, width, height, owner.gap())) {
+                if (!"mf".equalsIgnoreCase(word.text())) continue;
+                if (contextualMf == null)
+                    contextualMf =
+                            new ContextualMfAdmission(
+                                    ownershipGray, width, height, staffs, measures, notes);
+                if (!contextualMf.proved(word, owner)) continue;
+            }
             if (uprightChordF(word, staffs, ownershipGray, width, height)) continue;
             if (BoxedRehearsalF.proved(word, owner, staffs, ownershipGray, width, height)) continue;
             var common =

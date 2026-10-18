@@ -1,0 +1,177 @@
+{
+  "license": "Apache-2.0",
+  "sourceFree": true,
+  "scope": "Original authored finite rasters only; no score scans or extracted commercial pixels",
+  "callerOracleCount": 12,
+  "localizationOracleCount": 8,
+  "identityOracleCount": 3,
+  "budgetOracleCount": 1,
+  "resourceHashes": [
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-imperfect-ocr-left",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-imperfect-ocr-left.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of left body. Must prove raw closure rather than accept clipped seed. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-imperfect-ocr-right",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-imperfect-ocr-right.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of right body. Must prove raw closure rather than accept clipped seed. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-imperfect-ocr-top",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-imperfect-ocr-top.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of top body. Must prove raw closure rather than accept clipped seed. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-imperfect-ocr-bottom",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-imperfect-ocr-bottom.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of bottom body. Must prove raw closure rather than accept clipped seed. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-physically-truncated-mezzo-no-completion",
+      "sha256": "244ed0aa2e120c910d31063176972c9b651e8165b8ff8dada771f52bc8918c17",
+      "resource": "contextual-mf-originals\\caller\\clean-context-physically-truncated-mezzo-no-completion.gray.gz",
+      "expected": false,
+      "role": "Actual glyph pixels missing, not merely OCR localization error; no fitted restoration. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-hidden-foreign-branch",
+      "sha256": "ed6f56a8ca63b1d4616669d39a9f3695621bdaeec65c2da298f70cd397853e51",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-hidden-foreign-branch.gray.gz",
+      "expected": false,
+      "role": "Localization must retain branch outside OCR; do not choose only convenient bounded body. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-light-foreign-corridor",
+      "sha256": "89ed49a1070b6a97b069a9b7761564b7713bb9091d3b266371b7364073eeb1c0",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-light-foreign-corridor.gray.gz",
+      "expected": false,
+      "role": "Unknown foreign light branch remains literal evidence, not white border or ignored outside-crop ink. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-supplied-mf-outside-independent-foreground",
+      "sha256": "078d0f6116a40a0e60f0f79d24d746fe2e600f663e7d437aa68c4c8a11024a33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-supplied-mf-outside-independent-foreground.gray.gz",
+      "expected": false,
+      "role": "Independent unknown foreground in bounded read domain cannot be silently omitted by selected connected body. Oversized white-paper OCR metadata; physical sourcefree quarterhead/stem330,160 added independently. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-tall-whitepaper",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-tall-whitepaper.gray.gz",
+      "expected": true,
+      "role": "Complete literal mf below actual quarter; whitepaper tall OCR route. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-complete-mf-edge-unknown-fringe",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-complete-mf-edge-unknown-fringe.gray.gz",
+      "expected": true,
+      "role": "Observed dark f-edge with authored adjacent light fringe; UNKNOWN retained, not erased. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-supplied-f-not-mezzo-forte",
+      "sha256": "e8c88e2fb98ce73319f789406d832d63a19700a16eee304c0f4947f2461ecf33",
+      "resource": "contextual-mf-originals\\caller\\clean-context-supplied-f-not-mezzo-forte.gray.gz",
+      "expected": false,
+      "role": "No mf literal; additive route must not admit another oversized word. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "caller",
+      "id": "clean-context-supplied-mf-only-f-glyph",
+      "sha256": "5f33e50224eedd43804819de04f779db14654c09610bdd07d6fe99f9cf20bb14",
+      "resource": "contextual-mf-originals\\caller\\clean-context-supplied-mf-only-f-glyph.gray.gz",
+      "expected": false,
+      "role": "OCR mf cannot borrow missing mezzo body from upper curve. DISTINCT independent note/head relocated together to144 withstaffStep4, original body rawbyteexact parent; original head160 variants preserved separately."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-imperfect-ocr-left",
+      "sha256": "2d34cb14f526845bb986feb448622a2c9eef30e03a91234be29a672ad5b66aef",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-imperfect-ocr-left.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of left body. Must prove raw closure rather than accept clipped seed."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-imperfect-ocr-right",
+      "sha256": "2d34cb14f526845bb986feb448622a2c9eef30e03a91234be29a672ad5b66aef",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-imperfect-ocr-right.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of right body. Must prove raw closure rather than accept clipped seed."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-imperfect-ocr-top",
+      "sha256": "2d34cb14f526845bb986feb448622a2c9eef30e03a91234be29a672ad5b66aef",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-imperfect-ocr-top.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of top body. Must prove raw closure rather than accept clipped seed."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-imperfect-ocr-bottom",
+      "sha256": "2d34cb14f526845bb986feb448622a2c9eef30e03a91234be29a672ad5b66aef",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-imperfect-ocr-bottom.gray.gz",
+      "expected": true,
+      "role": "Complete original glyph exists in authentic raw; OCR localization excludes part of bottom body. Must prove raw closure rather than accept clipped seed."
+    },
+    {
+      "group": "localization",
+      "id": "physically-truncated-mezzo-no-completion",
+      "sha256": "0dbb3a8ebac495d9f3d4cbc2b816ea49e4fd4349ec0f738a7cda0b6c4ffdc15e",
+      "resource": "contextual-mf-originals\\localization\\physically-truncated-mezzo-no-completion.gray.gz",
+      "expected": false,
+      "role": "Actual glyph pixels missing, not merely OCR localization error; no fitted restoration."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-hidden-foreign-branch",
+      "sha256": "2efe107ee945f4462364d891be92785e105df5e2870b4fda2d0e99969877703e",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-hidden-foreign-branch.gray.gz",
+      "expected": false,
+      "role": "Localization must retain branch outside OCR; do not choose only convenient bounded body."
+    },
+    {
+      "group": "localization",
+      "id": "complete-mf-light-foreign-corridor",
+      "sha256": "4e7c25fac53bc1373c20f10da1bb5a90029bd0654b6375a43c57fafcb8a497a0",
+      "resource": "contextual-mf-originals\\localization\\complete-mf-light-foreign-corridor.gray.gz",
+      "expected": false,
+      "role": "Unknown foreign light branch remains literal evidence, not white border or ignored outside-crop ink."
+    },
+    {
+      "group": "localization",
+      "id": "supplied-mf-outside-independent-foreground",
+      "sha256": "003d4209edd672db9a35655fa94d42f1ff4ee460cd0ad492475ddd8f7fc7cc99",
+      "resource": "contextual-mf-originals\\localization\\supplied-mf-outside-independent-foreground.gray.gz",
+      "expected": false,
+      "role": "Independent unknown foreground in bounded read domain cannot be silently omitted by selected connected body."
+    }
+  ],
+  "transport": "Exact original gz resources; original geometry/role booleans unchanged. Direct JUnit assertions replace log-only probe result interpretation. Method granularity split does not add new scenes.",
+  "heldBoundaries": [
+    "Original initial merged MF/slur two red controls remain held, not silently included as passing.",
+    "Old160 caller/foreign-halo and erroneous +3mf probe remain historical; clean twelve is independently authored companion.",
+    "No wholepage timing or scope claim; mf literal level0 retained."
+  ]
+}

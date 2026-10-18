@@ -424,14 +424,15 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "64c7006f461ba692e07cf4342ff4e821f71dbce43e50b4efc56ef04f468e7fbb",
-      "source_normalized_sha256": "d16e8a98464ded827446d1a274a129477a1fe1898df843c90819fa2405ea4d13",
-      "review_note": "Reject an OCR F as a scalar dynamic only after complete bounded rehearsal-frame ownership. Existing upright-capital predicate, dynamic levels, faint hairpin routes and ambiguity guards remain unchanged.",
+      "source_sha256": "b96bd85293948b54a41c5cfd3b4af039d7022530def5c473d50e916b36a951da",
+      "source_normalized_sha256": "6ad510dc5b961a74c84fe096c17b6820d24e8506ba9693372be09c696504a4b0",
+      "review_note": "Reject an OCR F as a scalar dynamic only after complete bounded rehearsal-frame ownership. Existing upright-capital predicate, dynamic levels, faint hairpin routes and ambiguity guards remain unchanged. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "8ca968f07261cf3a2b3a315a8c28f33249291649c801fa9715956d2c0f9ca416",
-      "reviewed_app_commit": "432d637efc97faf6037a14640afc6cffb09bd9f4"
+      "standalone_sha256": "65256ece9b1e70fd2eebfff2a9c16d4d0d07f7e3b4f3d9a23a3a1b4f4132d473",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "license": "Apache-2.0"
     },
     "HairpinContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinContinuation.java",
@@ -501,15 +502,16 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "db113cec41f31c245b561b1a2b07e3e159e13fa04c0d2578374f876573af3f30",
-      "review_note": "Apply finite figure ownership to the canonical selected quarter-rest proposal and its exact derived view. Preserve all unproved and independently owned rest candidates.",
-      "source_normalized_sha256": "938497a33bc343e1001b44f3bb103d5c1912c6f81d8052aa2d670e044a45ee03",
+      "source_sha256": "bcb648c6e822b928701055cc790598530e9b70988fb7ee1725f7574b2949279e",
+      "review_note": "Apply finite figure ownership to the canonical selected quarter-rest proposal and its exact derived view. Preserve all unproved and independently owned rest candidates. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "source_normalized_sha256": "878577b2d966d3d851659aa793308df103cf0bc89637839f7c670d57520edf0d",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_source_state": "committed",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "4d8f795a23fa5cc0caeca38942d8f3785b1d6e2afbf8c58f84ab7e3936b22e19",
-      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
-      "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
+      "standalone_sha256": "a4cddfc9fb0512b78e3484513cc92576627de0ab83fcabcff350a47e3b890b26",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
+      "license": "Apache-2.0"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1155,12 +1157,13 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "9f489a16575633771090f87743e1964e9e5d49a40b12870f82b1239524ed664e",
-      "source_normalized_sha256": "873b4af796830c062d48f8e9fe3eef5746bc83f675d53d11884aaac697b273de",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields.",
-      "standalone_sha256": "ebc77772c3252565852e9a647cd9255f15f68b25b18552f25b99ff8c7feca76f",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "44967d6d360d2d1e127a32e2fbdd6f0d451855e0546aaa85ca1c9a68cc41d49f",
+      "source_normalized_sha256": "3bfaa2537d2dab2468b864f16993aebb31669714daee55b0d9d953242fb25041",
+      "standalone_sha256": "f36219ad7a83bdd2f7e7f01b950968f214a6277b83a975888fefae705525315c",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields. Invocation-local actual OCR acquisition provenance; unique complete actual parent and exact crop-intersection relation. Expression-only alias removal; all current owner/admission and non-expression routes preserved. Original synthetic geometry/text only; no private score/OCR/model/protocol additions. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1601,13 +1604,14 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "eab526d3218b18bf47cde146199333ac99774eb32c3acede05c93254f4ad6441",
-      "source_normalized_sha256": "eab526d3218b18bf47cde146199333ac99774eb32c3acede05c93254f4ad6441",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
+      "source_sha256": "efc696863d3d2a5815c4f696362e25643dec9c2c3100970a981b44d4851b80db",
+      "source_normalized_sha256": "75fcc4137eb4329dae620311100b9bfe4371c6dc58ca86a1a06a9675aed730ef",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "975b55fde476191748c4714c7eabdf8a4d7f5c3448fec411092a9de4e741e501",
-      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55",
-      "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
+      "standalone_sha256": "9b269508ef9e8be1f1c64aab57fe3aaae15955ffa4ff696beb4e458ad078fd01",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
+      "license": "Apache-2.0"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1664,12 +1668,13 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "f06f285e321d3ee350d24647f6d0198400cb218bb967bffdc3b64501e833d4b6",
-      "source_normalized_sha256": "5021e0f948521546787356abddc57c166901ca0bea4fd18390f412adddeb1095",
+      "source_sha256": "c1deceb2856ea32eab0d9c3806a8e676d5516c3d694aced476d7f3f40b9b09d3",
+      "source_normalized_sha256": "fe67d480773f7f23ba0bf7ca6cf76a82c1b4cf80a125310349795b52fd661e88",
       "reviewed_source_state": "committed",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
-      "standalone_sha256": "956d866a09b6949353cd71b6fa4d361a586af3f536377acbbd9f25f50e0d1fe5",
-      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55"
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "standalone_sha256": "1034459d6890442b3f294cae293dbf28ff9f08679b8ebf8b3569e02d944cc7cb",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "license": "Apache-2.0"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2574,13 +2579,15 @@
     },
     "PrintedSlurContours.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContours.java",
-      "source_sha256": "7ce5ab87370175790dbb61b791b856906575ee74c9662c58afe28829112c8181",
-      "source_normalized_sha256": "b4c3555edb89b0008f8faba52d70e397854ebb2c05a3780d7ab0a023d2a812b9",
+      "source_sha256": "81756fc290c5369cb7b41e0f590692574c63a1f9546cf0ee8dea4a1392f54762",
+      "source_normalized_sha256": "a525957188ad306ebeb27f96a77c249f8440de5e9995bb718eacd6840b2e3251",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Previously published raw bow and white-cap proof now committed with its actual caller; no source pixels are synthesized. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047"
+      "reviewed_source_state": "committed",
+      "review_note": "Previously published raw bow and white-cap proof now committed with its actual caller; no source pixels are synthesized. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "standalone_sha256": "d0ae6721dd409187bbcdc04f55609780d5d4c1fd554b018e9a51e6a6fcbaf743",
+      "license": "Apache-2.0"
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
@@ -2695,12 +2702,13 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "11931ce907a43a7e13bbecdfd8e56dfa13f451a05760a16401255c98c95295a8",
-      "source_normalized_sha256": "a8590c7c467c6b22a39339fb79a7fba6b45062872f0c0e6b02feda0e5ca3c947",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields.",
-      "standalone_sha256": "db4c57fa191b0da0125f8e670725e9a85cfa7a1fead78030526def1b9fc8c99c",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "e9e0ca3581dacba9e30c96a81b60eb30b61d84f12fed0f7e1cb285dc05deea70",
+      "source_normalized_sha256": "732610d215b8e3bb41152b1d1c11a45736a479fc92a1222f1b3dafe628d50f46",
+      "standalone_sha256": "4b174dfa46f9a0f07568cc875f897e627ab3e1e55339634df93967afca917408",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Acquire an undirected printed arpeggio only from a bounded complete raw wave with independently anchored exclusions and the complete current same-staff chord. Retain source-owned column identity through physical-page/measure rebasing and reject invalid/overflow identities. Emit notation only on original attack fragments after complete available-head and written-clock proof; no performed roll or guessed spread. Python mirrors exact float32 column matching and established four-ULP computed-end normalization. Original procedural regressions and existing licensed assets only; no private score/OCR/library data, models or new protocol fields. Invocation-local actual OCR acquisition provenance; unique complete actual parent and exact crop-intersection relation. Expression-only alias removal; all current owner/admission and non-expression routes preserved. Original synthetic geometry/text only; no private score/OCR/model/protocol additions. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -3550,12 +3558,13 @@
     },
     "NativeDirectionOcrCache.java": {
       "source_path": "tools/native-worker/NativeDirectionOcrCache.java",
+      "source_sha256": "6015f1125c908929ce761082ae71fe5f52a7c3f3f058d6be2988859e630795fa",
+      "source_normalized_sha256": "7a5ce64ac7ccc36b394f639c81855a477ad1734fc6dff667dcaa4034080c957d",
+      "standalone_sha256": "b1f53872c54007a50361153cfb1d17ad10581af7287687dde28579f8e61a378b",
       "license": "Apache-2.0",
-      "source_sha256": "51afda3fe00e8c039cf7ab3252acad7b5f5799a30b54831962d75f09100aeb9d",
-      "source_normalized_sha256": "349f02e66bb87e6e37d718d37f92bdbda7aed4e093fac78c1e3b1c031c989c10",
-      "standalone_sha256": "c50f00af1b53a1b9d9aed2aa36afef179f4e77b2dfd9a8d93fa31204a7352f44",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes."
+      "reviewed_source_state": "committed",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes. Invocation-local actual OCR acquisition provenance; unique complete actual parent and exact crop-intersection relation. Expression-only alias removal; all current owner/admission and non-expression routes preserved. Original synthetic geometry/text only; no private score/OCR/model/protocol additions. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
     },
     "NativeEnglishDirectionEvidence.java": {
       "source_path": "tools/native-worker/NativeEnglishDirectionEvidence.java",
@@ -3720,6 +3729,66 @@
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "DirectionWordProvenance.java": {
+      "source_path": "tools/native-worker/DirectionWordProvenance.java",
+      "source_sha256": "efdee4ff8455e3e0bef8251210bbfe13da7f2d8db8531ba56fc8d0883bd58d60",
+      "source_normalized_sha256": "afd6fd56c2112386f6037d6bd4eb19bad641ac9643c4fb803488342a39422b6a",
+      "standalone_sha256": "4e5dc85b0d308c2c67f0d74a8c79f97fb52115472d5015faa9e48f11e30a69cc",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Invocation-local actual OCR acquisition provenance; unique complete actual parent and exact crop-intersection relation. Expression-only alias removal; all current owner/admission and non-expression routes preserved. Original synthetic geometry/text only; no private score/OCR/model/protocol additions. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "ContextualMfAdmission.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ContextualMfAdmission.java",
+      "source_sha256": "1bf00a027a75f30cad7217a6615c2f9ab1a3ed18d2af2412bd2ac20a23fe60e8",
+      "source_normalized_sha256": "d6676963773ec4851f920a38721a1e599a5b1e6d69a1ad5f1cf6b51ef87ee8b0",
+      "standalone_sha256": "022c2991b6005e92b69365842980b3a02179e38eda94e24db4f36c3686111684",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "ContextualMfBodyEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ContextualMfBodyEvidence.java",
+      "source_sha256": "923a76a71542d202b1e0f0a73e834a4fb7ec3b4eb96f2193fffdf7332ba77c48",
+      "source_normalized_sha256": "ef01088d33de30f3cf1139d25fe3df733fc497fb7a0ae65ba6a76d1a5b04abed",
+      "standalone_sha256": "79773ba594581a349aacc9d8d4b8db977da0223f155c36194b893d1e50d555d9",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "DynamicNotationRawContext.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicNotationRawContext.java",
+      "source_sha256": "b7f63cabbc3262e96c895b1f00f83e165ed4bccff0031fc5880e77f2c78c71e4",
+      "source_normalized_sha256": "66b95d2b21a7d37b55ee90a5e2b325bf0789d0ac342f4f51f3326dd8354414bc",
+      "standalone_sha256": "8a8d0acf2b106f6bea65e59a489d64e8197a11365049c42ccb9b94cc2e4fd623",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "FiniteSlurRibbon.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteSlurRibbon.java",
+      "source_sha256": "c08cb93b6b2f7d89630a82d3d262c0a0a44df8574947a69667bdec90f5fc3b08",
+      "source_normalized_sha256": "2b216d33717e0b31361b36ebfc94b86a43543f1d16627f1a84ac091551d0cace",
+      "standalone_sha256": "d96d1fb6cb3158e66f6dcb7a7aebc9b36b59e57b21f710009983fb9a20198426",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "RestComponentRuleDomain.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestComponentRuleDomain.java",
+      "source_sha256": "4f3fe10323f785be0e30f7fbedce44c57a1e67071cb0c4f3c2a6bbb44abe853a",
+      "source_normalized_sha256": "4f3fe10323f785be0e30f7fbedce44c57a1e67071cb0c4f3c2a6bbb44abe853a",
+      "standalone_sha256": "a25e2bfa47cbf0c1589b9edcabc190c915f630ce0924130b5a97a3a68a52e3db",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
     }
   },
   "interpreter_speedup_review": {

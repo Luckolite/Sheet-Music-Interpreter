@@ -25,10 +25,32 @@ final class NativeDirectionOcrCache {
     private int width, height;
     private boolean poisoned, fullAttempted;
     private OcrText full;
+    private byte[] fullRaster;
+    private long fullEpoch;
     private final Map<CropKey, Read> crops = new HashMap<>();
 
     NativeDirectionOcrCache(Reader reader) {
         this.reader = reader;
+    }
+
+    synchronized long fullEpoch() {
+        return fullEpoch;
+    }
+
+    /** Capability for an already executed read in this invocation; never prepares or schedules OCR. */
+    synchronized OcrText availableFull(DirectionWordProvenance.Scope scope) {
+        return scope != null
+                        && full != null
+                        && fullRaster == scope.raster
+                        && raster == scope.raster
+                        && width == scope.width
+                        && height == scope.height
+                        && fullEpoch > scope.afterFullEpoch
+                        && !poisoned
+                        && scope.current(raster, width, height)
+                        && Arrays.equals(digest, scope.digest)
+                ? full
+                : null;
     }
 
     synchronized OcrText rawCrop(byte[] gray, int w, int h, PaperDynamicWord.Crop crop, int scale)
@@ -76,6 +98,8 @@ final class NativeDirectionOcrCache {
         if (!fullAttempted) {
             fullAttempted = true;
             try {
+                fullRaster = gray;
+                fullEpoch++;
                 full = reader.full(gray, w, h);
             } catch (Exception unavailable) {
                 full = null;
@@ -232,6 +256,7 @@ final class NativeDirectionOcrCache {
         poisoned = false;
         fullAttempted = false;
         full = null;
+        fullRaster = null;
         crops.clear();
         return true;
     }

@@ -247,9 +247,12 @@ public final class SheetInterpreter {
         notes = ArtificialHarmonics.apply(labels, gray, width, height, measures, notes, staffs);
         notes = ScoreTiePitchGuard.apply(notes, score.keyChanges());
         var dynamicEvidence = new java.util.ArrayList<>(words);
-        if (ocr != null)
-            for (var word : ocr.dynamics(gray, width, height, staffs))
+        DirectionWordProvenance.Acquisition dynamicAcquisition = null;
+        if (ocr != null) {
+            dynamicAcquisition = ocr.acquiredDynamics(gray, width, height, staffs, words);
+            for (var word : dynamicAcquisition.words())
                 if (!dynamicEvidence.contains(word)) dynamicEvidence.add(word);
+        }
         var dynamicWords =
                 staffs.isEmpty()
                         ? words
@@ -377,6 +380,11 @@ public final class SheetInterpreter {
                         staffs,
                         meterEvidence.changes(),
                         meterEvidence.headers());
+        var expressionWords =
+                ocr == null
+                        ? techniqueWords
+                        : ocr.expressionWords(
+                                techniqueWords, dynamicAcquisition, gray, width, height);
         var withExpressions =
                 ScoreExpressionDetector.apply(
                         ScoreFermataDetector.withFermatas(
@@ -399,7 +407,7 @@ public final class SheetInterpreter {
                                 width,
                                 height,
                                 staffs),
-                        techniqueWords,
+                        expressionWords,
                         staffs,
                         gray,
                         width,

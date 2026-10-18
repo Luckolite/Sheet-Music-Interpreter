@@ -39,7 +39,38 @@ final class PrintedSlurContours {
         boolean closes(Point cap, int x, int y, boolean first);
     }
 
-    private record Run(int x, float y, float rectified, float gap, float upper, float lower) {}
+    record RawBand(int first, int last) {}
+
+    record RawColumn(int x, int first, List<Integer> rawProfile, List<RawBand> members) {
+        RawColumn {
+            rawProfile = List.copyOf(rawProfile);
+            members = List.copyOf(members);
+        }
+    }
+
+    record RawResult(
+            Result result,
+            Map<Bow, List<RawColumn>> witnesses,
+            Map<Bow, List<RawColumn>> selectedContourWitnesses) {
+        RawResult {
+            witnesses = Collections.unmodifiableMap(new IdentityHashMap<>(witnesses));
+            selectedContourWitnesses =
+                    Collections.unmodifiableMap(new IdentityHashMap<>(selectedContourWitnesses));
+        }
+    }
+
+    private interface RawSink {
+        void accept(Bow bow, List<Run> members, List<Run> selected);
+    }
+
+    private record Run(
+            int x,
+            float y,
+            float rectified,
+            float gap,
+            float upper,
+            float lower,
+            List<RawBand> members) {}
 
     private record Frames(float[] bottoms, float[] gaps) {}
 
@@ -84,6 +115,57 @@ final class PrintedSlurContours {
             StaffPitchTrack track,
             Consumer<Rejection> audit,
             HeadEvidence heads) {
+        return findRaw(
+                gray, labels, width, height, left, top, right, bottom, track, audit, heads, null);
+    }
+
+    static RawResult findWithRawEvidence(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            StaffPitchTrack track,
+            Consumer<Rejection> audit,
+            HeadEvidence heads) {
+        var witnesses = new IdentityHashMap<Bow, List<RawColumn>>();
+        var selectedWitnesses = new IdentityHashMap<Bow, List<RawColumn>>();
+        Result result =
+                findRaw(
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        left,
+                        top,
+                        right,
+                        bottom,
+                        track,
+                        audit,
+                        heads,
+                        (bow, members, selected) -> {
+                            witnesses.put(bow, rawColumns(gray, width, members));
+                            selectedWitnesses.put(bow, rawColumns(gray, width, selected));
+                        });
+        return new RawResult(result, witnesses, selectedWitnesses);
+    }
+
+    private static Result findRaw(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            StaffPitchTrack track,
+            Consumer<Rejection> audit,
+            HeadEvidence heads,
+            RawSink rawSink) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -181,7 +263,10 @@ final class PrintedSlurContours {
                                         (center - base) / gap,
                                         gap,
                                         prior.upper(),
-                                        (last - base) / gap));
+                                        (last - base) / gap,
+                                        rawSink == null
+                                                ? List.of()
+                                                : appendRaw(prior.members(), first, last)));
                         link(priorId, previous, runs, parents, 1, gray, width, height, frames);
                         continue;
                     }
@@ -195,7 +280,8 @@ final class PrintedSlurContours {
                                 (center - base) / gap,
                                 gap,
                                 (first - base) / gap,
-                                (last - base) / gap));
+                                (last - base) / gap,
+                                rawSink == null ? List.of() : List.of(new RawBand(first, last))));
                 current.add(id);
                 boolean connected =
                         link(id, previous, runs, parents, 1, gray, width, height, frames);
@@ -223,16 +309,186 @@ final class PrintedSlurContours {
                     .computeIfAbsent(root(i, parents), ignored -> new ArrayList<>())
                     .add(runs.get(i));
         var bows = new ArrayList<Bow>();
+        var fittedSelections = rawSink == null ? null : new IdentityHashMap<Bow, List<Run>>();
         for (var component : components.values()) {
-            Bow bow = fit(component, audit);
+            Bow bow = fit(component, audit, fittedSelections);
+            List<Run> selected = fittedSelections == null ? null : fittedSelections.remove(bow);
             if (bow == null) continue;
             if (!capped(gray, labels, width, height, bow, track, true, heads, frames))
                 reject(component, "uncapped-start", audit);
             else if (!capped(gray, labels, width, height, bow, track, false, heads, frames))
                 reject(component, "uncapped-end", audit);
-            else bows.add(bow);
+            else {
+                bows.add(bow);
+                if (rawSink != null) rawSink.accept(bow, component, selected);
+            }
         }
-        return new Result(bows, false);
+        boolean fallbackLimit =
+                orientedFallback(
+                        gray, labels, width, height, left, top, right, bottom, track, heads, frames,
+                        bows, rawSink);
+        return new Result(bows, fallbackLimit);
+    }
+
+    /** Additive complete-ribbon route. Legacy axis tests and every old bow stay unchanged. */
+    private static boolean orientedFallback(
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            StaffPitchTrack track,
+            HeadEvidence heads,
+            Frames frames,
+            List<Bow> existing,
+            RawSink sink) {
+        var runs = new ArrayList<Run>();
+        var parents = new int[MAX_RUNS];
+        var legacy = List.copyOf(existing);
+        var planned = new ArrayList<RibbonCandidate>();
+        boolean incomplete = false;
+        var previous = new ArrayList<Integer>();
+        for (int x = left; x <= right; x++) {
+            var current = new ArrayList<Integer>();
+            float base = frames.bottoms()[x], gap = frames.gaps()[x];
+            for (int y = top; y <= bottom; ) {
+                if (!ink(gray, labels, width, height, x, y, base, gap, frames, heads)) {
+                    y++;
+                    continue;
+                }
+                int first = y;
+                while (y <= bottom
+                        && ink(gray, labels, width, height, x, y, base, gap, frames, heads)) y++;
+                int last = y - 1;
+                if (runs.size() == MAX_RUNS) return true;
+                int id = runs.size();
+                parents[id] = id;
+                var run =
+                        new Run(
+                                x,
+                                (first + last) * .5f,
+                                ((first + last) * .5f - base) / gap,
+                                gap,
+                                (first - base) / gap,
+                                (last - base) / gap,
+                                List.of(new RawBand(first, last)));
+                runs.add(run);
+                current.add(id);
+                // Literal adjacent-column contact only: never manufacture a missing column.
+                for (int other : previous) {
+                    Run p = runs.get(other);
+                    int a = p.members().get(0).first(), b = p.members().get(0).last();
+                    if (first <= b + 1 && last >= a - 1)
+                        parents[root(id, parents)] = root(other, parents);
+                }
+            }
+            previous = current;
+        }
+        var components = new LinkedHashMap<Integer, List<Run>>();
+        for (int i = 0; i < runs.size(); i++)
+            components.computeIfAbsent(root(i, parents), k -> new ArrayList<>()).add(runs.get(i));
+        for (var component : components.values()) {
+            if (component.size() < 12) continue;
+            int lo = component.get(0).x(), hi = component.get(component.size() - 1).x();
+            if (lo <= left || hi >= right || component.size() != hi - lo + 1) continue;
+            boolean complete = true, needs = false;
+            int normalMaximum = Integer.MAX_VALUE;
+            for (int i = 0; i < component.size(); i++) {
+                Run r = component.get(i);
+                RawBand band = r.members().get(0);
+                int count = band.last() - band.first() + 1,
+                        maximum = Math.max(2, Math.round(r.gap() * .42f));
+                normalMaximum = Math.min(normalMaximum, maximum);
+                // Same absolute acquisition bound. Multiple runs/branches or clipping abstain.
+                if (r.x() != lo + i
+                        || band.first() <= top
+                        || band.last() >= bottom
+                        || count > r.gap() * 1.4f) {
+                    complete = false;
+                    break;
+                }
+                if (count > maximum
+                        && !thinAcross(
+                                gray,
+                                width,
+                                height,
+                                r.x(),
+                                (band.first() + band.last()) / 2,
+                                maximum)) {
+                    needs = true;
+                    // Width is certified globally below, never by choosing a local angle.
+                }
+            }
+            if (!complete || !needs) continue;
+            var allCells = new HashSet<Long>();
+            for (Run run : component)
+                for (RawBand band : run.members())
+                    for (int y = band.first(); y <= band.last(); y++)
+                        allCells.add(FiniteSlurRibbon.pixel(run.x(), y));
+            var proof = FiniteSlurRibbon.certify(allCells, normalMaximum);
+            incomplete |= proof.limitReached();
+            if (!proof.complete()) continue;
+            // Existing complete returning-curvature grammar independently supplies the role.
+            var selected = new IdentityHashMap<Bow, List<Run>>();
+            Bow bow = fit(component, null, selected);
+            if (bow == null
+                    || !capped(gray, labels, width, height, bow, track, true, heads, frames)
+                    || !capped(gray, labels, width, height, bow, track, false, heads, frames))
+                continue;
+            boolean overlaps = false;
+            for (Bow old : legacy)
+                if (old.start().x() <= hi && old.end().x() >= lo) {
+                    overlaps = true;
+                    break;
+                }
+            if (overlaps) continue; // Never replace an old interpretation or choose between rivals.
+            planned.add(new RibbonCandidate(bow, component, selected.get(bow)));
+        }
+        // A partial search cannot exclude an unsearched rival. Keep all legacy evidence,
+        // but publish no new candidate from that incomplete search.
+        if (incomplete) return true;
+        planned.sort(
+                Comparator.comparingInt((RibbonCandidate c) -> c.bow().start().x())
+                        .thenComparingInt(c -> c.bow().end().x()));
+        for (int i = 0; i < planned.size(); ) {
+            int j = i + 1, rightEdge = planned.get(i).bow().end().x();
+            while (j < planned.size() && planned.get(j).bow().start().x() <= rightEdge) {
+                rightEdge = Math.max(rightEdge, planned.get(j).bow().end().x());
+                j++;
+            }
+            // Entire overlap groups abstain: no first-winner/scan-order selection.
+            if (j == i + 1) {
+                var c = planned.get(i);
+                existing.add(c.bow());
+                if (sink != null) sink.accept(c.bow(), c.component(), c.selected());
+            }
+            i = j;
+        }
+        return false;
+    }
+
+    private record RibbonCandidate(Bow bow, List<Run> component, List<Run> selected) {}
+
+    private static List<RawColumn> rawColumns(byte[] gray, int width, List<Run> runs) {
+        if (runs == null) throw new IllegalStateException("Missing selected contour identity");
+        var columns = new ArrayList<RawColumn>();
+        for (var run : runs) {
+            int first = run.members().get(0).first(),
+                    last = run.members().get(run.members().size() - 1).last();
+            var profile = new ArrayList<Integer>();
+            for (int y = first; y <= last; y++) profile.add(gray[y * width + run.x()] & 255);
+            columns.add(new RawColumn(run.x(), first, profile, run.members()));
+        }
+        return List.copyOf(columns);
+    }
+
+    private static List<RawBand> appendRaw(List<RawBand> old, int first, int last) {
+        var result = new ArrayList<RawBand>(old);
+        result.add(new RawBand(first, last));
+        return List.copyOf(result);
     }
 
     private static boolean ink(
@@ -503,7 +759,10 @@ final class PrintedSlurContours {
         return null;
     }
 
-    private static Bow fit(List<Run> component, Consumer<Rejection> audit) {
+    private static Bow fit(
+            List<Run> component,
+            Consumer<Rejection> audit,
+            IdentityHashMap<Bow, List<Run>> fittedSelections) {
         if (component.size() < 12) return null;
         var columns = new LinkedHashMap<Integer, List<Run>>();
         float gap = 0;
@@ -585,7 +844,9 @@ final class PrintedSlurContours {
                 || Math.abs(rightSlope - leftSlope) < Math.abs(bend) * 1.6)
             return reject(component, "not-returning", audit);
         var points = chosen.stream().map(run -> new Point(run.x(), run.y())).toList();
-        return new Bow(points, bend > 0, (float) Math.abs(bend), (float) rms);
+        var bow = new Bow(points, bend > 0, (float) Math.abs(bend), (float) rms);
+        if (fittedSelections != null) fittedSelections.put(bow, List.copyOf(chosen));
+        return bow;
     }
 
     private static double value(double[] shape, double t, boolean ellipse) {

@@ -1665,8 +1665,8 @@ final class SixteenthRestDetector {
                                     faintShapes);
                             if (result.size() == previousRestCount
                                     && x - start >= staff.gap() * .7f) {
-                                for (var body :
-                                        SeparatedRestInk.find(
+                                var componentDomain =
+                                        RestComponentRuleDomain.bind(
                                                 gray,
                                                 width,
                                                 height,
@@ -1675,12 +1675,27 @@ final class SixteenthRestDetector {
                                                 scanTop,
                                                 scanBottom,
                                                 mask,
-                                                staff.gap())) {
+                                                placement.printedCenter(),
+                                                staff.gap(),
+                                                notes);
+                                for (var body :
+                                        componentDomain == null
+                                                ? List.<SeparatedRestInk.Body>of()
+                                                : SeparatedRestInk.find(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        componentDomain.left(),
+                                                        componentDomain.right(),
+                                                        scanTop,
+                                                        scanBottom,
+                                                        componentDomain.line(),
+                                                        staff.gap())) {
                                     int bodyTop = Math.max(scanTop, body.top() - 1);
                                     int bodyBottom = Math.min(scanBottom, body.bottom() + 1);
                                     boolean[] bodyMask =
                                             java.util.Arrays.copyOfRange(
-                                                    mask,
+                                                    componentDomain.line(),
                                                     bodyTop - scanTop,
                                                     bodyBottom - scanTop + 1);
                                     boolean componentBulbOnly =
@@ -2386,8 +2401,10 @@ final class SixteenthRestDetector {
                         break;
                     }
                 if (!heldBelow && quarter)
-                    heldBelow = raisedQuarterAfterHeldVoice(
-                            gray, width, height, region, notes, m, staff, left, right, minY, maxY, gap);
+                    heldBelow =
+                            raisedQuarterAfterHeldVoice(
+                                    gray, width, height, region, notes, m, staff, left, right, minY,
+                                    maxY, gap);
                 if (!heldBelow) continue;
             }
             if (lowered && !half && !whole) {

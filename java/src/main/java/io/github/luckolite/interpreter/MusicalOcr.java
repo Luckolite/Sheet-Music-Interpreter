@@ -458,6 +458,16 @@ public final class MusicalOcr {
     List<PlayingTechniqueDetector.Word> dynamics(
             byte[] gray, int width, int height, List<PlayingTechniqueDetector.Staff> staffs)
             throws Exception {
+        return staffStripDynamics(gray, width, height, staffs, null);
+    }
+
+    private List<PlayingTechniqueDetector.Word> staffStripDynamics(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<DirectionWordProvenance.Origin> origins)
+            throws Exception {
         var words = new ArrayList<PlayingTechniqueDetector.Word>();
         for (var staff : staffs)
             for (boolean below : new boolean[] {true, false}) {
@@ -491,6 +501,11 @@ public final class MusicalOcr {
                                             (top + box.top / (float) scale) / height,
                                             box.right / (float) (scale * width),
                                             (top + box.bottom / (float) scale) / height);
+                            if (origins != null)
+                                origins.add(
+                                        new DirectionWordProvenance.Origin(
+                                                word, text, line, element, 0, top, width, bottom,
+                                                scale));
                             words.addAll(
                                     ScoreDynamicsDetector.ocrWords(
                                             line.text(), word, gray, width, height));
@@ -565,6 +580,36 @@ public final class MusicalOcr {
                 }
             }
         return List.copyOf(words);
+    }
+
+    DirectionWordProvenance.Acquisition acquiredDynamics(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<PlayingTechniqueDetector.Word> ordinary)
+            throws Exception {
+        var scope =
+                new DirectionWordProvenance.Scope(
+                        gray, width, height, directionCache().fullEpoch(), ordinary);
+        var origins = new ArrayList<DirectionWordProvenance.Origin>();
+        var result = staffStripDynamics(gray, width, height, staffs, origins);
+        return new DirectionWordProvenance.Acquisition(result, origins, scope);
+    }
+
+    List<PlayingTechniqueDetector.Word> expressionWords(
+            List<PlayingTechniqueDetector.Word> input,
+            DirectionWordProvenance.Acquisition acquired,
+            byte[] gray,
+            int width,
+            int height) {
+        return DirectionWordProvenance.reconcile(
+                input,
+                acquired,
+                acquired == null ? null : directionCache().availableFull(acquired.scope()),
+                gray,
+                width,
+                height);
     }
 
     private NativeDirectionOcrCache directionCache() {
