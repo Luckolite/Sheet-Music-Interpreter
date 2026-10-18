@@ -474,6 +474,22 @@ final class OmrScoreInterpreter {
         List<Component> rejectedSlurHeads = new ArrayList<>();
         for (Component head : headComponents) {
             Staff staff = staffForHead(labels, gray, width, height, staffs, head);
+            // A tiny semantic corner is not an oval-sized head. Establish the entire
+            // independently printed cross and its shaft before size/dot arbitration.
+            if (staff != null
+                    && !recoveredShadedChordHeads.contains(head)
+                    && !recoveredFadedHeads.contains(head)
+                    && !recoveredFilledFragmentHeads.contains(head)
+                    && !recoveredPaleChordHeads.contains(head)
+                    && !paleChordRhythmHeads.containsKey(head)
+                    && !recoveredCreaseGraces.containsKey(head)) {
+                Component originalHead = head;
+                head = completeRawCrossHead(gray, width, height, head, staff);
+                if (head != originalHead) {
+                    var origin = restHeadOrigins.get(originalHead);
+                    if (origin != null) restHeadOrigins.put(head, origin);
+                }
+            }
             if (staff != null && plausibleHead(head, staff.gap)) {
                 if (flatStemlessFragment(gray, width, height, head, staff.gap))
                     rejectedSlurHeads.add(head);
@@ -13237,6 +13253,21 @@ final class OmrScoreInterpreter {
             byte[] gray, int width, int height, Component head, Staff staff) {
 
         return unpitchedCrossHead(gray, width, height, head, staff) != null;
+    }
+
+    /** Preserve a complete shaft-owned X even when only a small corner is labelled.
+     * Its measured raw body, rather than the clipped semantic area, owns nearby dots. */
+    private static Component completeRawCrossHead(
+            byte[] gray, int width, int height, Component head, Staff staff) {
+        Component cross = unpitchedCrossHead(gray, width, height, head, staff);
+        if (cross == null || unpitchedStem(gray, width, height, cross, staff.gap) == null)
+            return head;
+        int area = 0;
+        for (int y = cross.minY; y <= cross.maxY; y++)
+            for (int x = cross.minX; x <= cross.maxX; x++)
+                if ((gray[y * width + x] & 255) < 165) area++;
+        return new Component(
+                area, cross.minX, cross.maxX, cross.minY, cross.maxY, cross.centerX, cross.centerY);
     }
 
     private static int[] unpitchedStem(

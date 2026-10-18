@@ -332,13 +332,14 @@
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
-      "source_sha256": "00b699acd48fdaf5863172065f46436d317c4b9ba3018cf55d8c614eafecf70c",
+      "source_sha256": "2ca5f0cb69f215f18cbb7616f2f98b8a032433027ec7159daf022771c5ca288b",
       "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
-      "source_normalized_sha256": "ad9e91a61717a5ea2d914f2187997a703351076b3d35fa9a2f1b8d3cfa6da130",
-      "review_note": "Expose the existing thick horizontal multi-rest proof to shared direction ownership without changing its classification.",
-      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
-      "standalone_sha256": "f5ed3ef902b5ea329a24cf44bd0802450eb7837d10a4c39b1b6fbd4e4fda8868"
+      "source_normalized_sha256": "8a57db23f9ed9a5857e897a8aa395bd60ad991f0964afc1c8f190de9d85f9a61",
+      "review_note": "Closed-terminal six recognition requires an exact digitally convex complete left contour, two isolated paper pockets and a right-only waist, retaining old six guards and ordinary single-bowl admission. Original procedural controls only; no private pixels, font assets, models or dependencies.",
+      "reviewed_source_state": "committed",
+      "scoped_reviewed_app_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
+      "standalone_sha256": "63b098d94dc025465c563a0ac71e29c6b2528d6b4057625104da229feb96fc78",
+      "reviewed_app_base_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
@@ -394,15 +395,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ab02156d55f243c82ffcbdbc7b23c3db15d1e0407be5e955c1afe47210fbe292",
-      "review_note": "Complete short shafts, two independently established grace tails and at least two raw beams per adjacent link admit an interrupted grace prefix; same-bar/voice, larger principal and existing metrical exclusions remain authoritative. Original Apache-2.0 procedural controls; no private pixels or model changes.",
-      "source_normalized_sha256": "ab02156d55f243c82ffcbdbc7b23c3db15d1e0407be5e955c1afe47210fbe292",
+      "source_sha256": "a866b33f8af431220a9eaa2f053ad720ea481087eb9b50fe24521cb6ae8cfd07",
+      "review_note": "Complete shaft-owned raw X bodies establish note identity before oval size and augmentation-dot arbitration when semantic labels retain only a tiny corner. All existing faded/filled/pale/crease/shaded ownership domains abstain from this early route; existing non-null rest origins transfer unchanged. Current75 grace-prefix and other changes preserved; original procedural fixtures, no private assets or new dependencies.",
+      "source_normalized_sha256": "dde48c8be1c497398bcb9d29bfdf235dd3004ad47d218ebd84524f75b8b5a2ea",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "0d5b0f392d2250e8de6e8df2d59f9f0de0d9208286da2260659e9ed0e45b0779",
-      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "standalone_sha256": "db9a25db27e830576c02a7fca4da8b7fbcf8ade21c423e6fc1ad83e935e46eeb",
+      "reviewed_app_base_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
       "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "scoped_reviewed_app_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1613,15 +1614,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "1bf4940782adb3e0c94e4983f71ce64ff6ed3e06feceeec0397ae71c8d5d52e5",
-      "source_normalized_sha256": "1bf4940782adb3e0c94e4983f71ce64ff6ed3e06feceeec0397ae71c8d5d52e5",
-      "review_note": "Recognition75 invalidates derived recognition after paired grace-prefix, marcato, accepted meter-header and mixed-tuplet ownership corrections; Guide290/audio96 and wire layouts remain unchanged.",
+      "source_sha256": "8ec50a373ca47c0226f2e36804a973ea8ff58f84b656b2ea760276eb75e01c70",
+      "source_normalized_sha256": "8ec50a373ca47c0226f2e36804a973ea8ff58f84b656b2ea760276eb75e01c70",
+      "review_note": "Recognition76 invalidates derived results after multi-rest numeral and small cross-head ownership changes; Guide290/audio96 and wire layouts remain unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "c473829e067ba5fce75d8b2eba07993967681ccddba3c0d02f1aa94b029c89d2",
+      "standalone_sha256": "32dd9707ed4f2364e15a4326fa40a191687767488f35d32b9e406bd0781f0715",
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
+      "scoped_reviewed_app_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819"
+      "reviewed_app_base_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",

@@ -2547,3 +2547,12 @@ Mixed beamed tuplets retain independently established beam-group boundaries. A n
 
 Forty-three new original Apache-2.0 procedural regression methods cover these changes. Retained private-page comparisons independently verify one corrected grace flag, one false marcato removed, one false tuplet group removed and one pickup corrected from six to one and a half quarter beats, including unchanged saved-Song playback and MusicXML timing for the pickup. Private score pixels, labels and metadata are excluded from the public fixtures. These are scoped corrections, not full-page or full-library accuracy claims. Recognition75 changes derived-result identity; Guide290/audio96 and wire layouts remain unchanged. Cumulative app/Hub/worker packaging and deployment remain pending.
 Paired app source: a27d30c45fee5b1c64c64a47bcb9277765c6f063.
+
+## Closed-terminal rest numerals and complete cross-head bodies
+
+A closed terminal can give a printed six two enclosed paper pockets. Admission requires an exact digitally convex complete left contour, isolated pockets and a waist on the right only; the existing six size, spine and terminal guards remain authoritative. Ordinary single-bowl six recognition is unchanged.
+
+Complete shaft-owned raw X bodies establish note identity before oval size and augmentation-dot arbitration when semantic labels retain only a tiny corner. Existing faded, filled, pale, crease and shaded recovery ownership abstains from this early route; existing non-null rest origins transfer unchanged. Prior grace-prefix repairs remain intact.
+
+Fourteen new original Apache-2.0 procedural methods cover numeral topology and cross/head/dot ownership. Retained native-page evidence supports a six-bar rest previously expanded to eight and three recovered cross attacks; unrelated saved fields remain exact. This is scoped recognition evidence, not full-library accuracy or device validation. Recognition76 changes derived-result identity; Guide290/audio96 and wire layouts remain unchanged. Cumulative app/Hub/worker packaging and deployment remain pending.
+Paired app source: 7f4cd1d08e180ac7e31619134203bddddd476f74.

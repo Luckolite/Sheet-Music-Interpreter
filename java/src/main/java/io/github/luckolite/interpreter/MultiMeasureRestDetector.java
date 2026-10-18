@@ -686,7 +686,8 @@ final class MultiMeasureRestDetector {
         int w = right - left + 1, h = bottom - top + 1;
         if (h < regionHeight * .13f || h > regionHeight * .48f || w < h * .4f || w > h * .95f)
             return false;
-        if (singleBowlCenter(gray, width, left, right, top, bottom) < .55f) return false;
+        if (singleBowlCenter(gray, width, left, right, top, bottom) < .55f
+                && !closedTerminalSix(gray, width, left, right, top, bottom)) return false;
         int leftSpine = 0, terminalX = 0, terminalInk = 0;
         for (int x = 0; x <= Math.round(w * .45f); x++) {
             int ink = 0;
@@ -703,6 +704,93 @@ final class MultiMeasureRestDetector {
         return leftSpine >= h * .45f
                 && terminalInk > 0
                 && terminalX / (float) terminalInk >= w * .50f;
+    }
+
+    /** A closed terminal may add a second pocket to a six, but never a second outer waist. */
+    private static boolean closedTerminalSix(
+            byte[] gray, int width, int left, int right, int top, int bottom) {
+        int w = right - left + 1, h = bottom - top + 1;
+        int[] starts = new int[h], ends = new int[h];
+        int minimum = w;
+        for (int y = 0; y < h; y++) {
+            starts[y] = w;
+            ends[y] = -1;
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) <= 165) {
+                    starts[y] = Math.min(starts[y], x);
+                    ends[y] = x;
+                }
+            if (ends[y] < 0) return false;
+            minimum = Math.min(minimum, starts[y]);
+        }
+        // A letter B has a straight left edge reaching its top and bottom, not this curved body.
+        if (starts[0] <= minimum || starts[h - 1] <= minimum) return false;
+        int[] hull = new int[h];
+        int length = 0;
+        for (int y = 0; y < h; y++) {
+            while (length >= 2) {
+                int a = hull[length - 2], b = hull[length - 1];
+                long cross =
+                        (long) (b - a) * (starts[y] - starts[a])
+                                - (long) (starts[b] - starts[a]) * (y - a);
+                if (cross > 0) break;
+                length--;
+            }
+            hull[length++] = y;
+        }
+        // Exact digital convexity on the entire unilateral contour rejects a waist or spur.
+        for (int j = 1; j < length; j++) {
+            int a = hull[j - 1], b = hull[j], denominator = b - a;
+            for (int y = a; y <= b; y++) {
+                long numerator = (long) starts[a] * (b - y) + (long) starts[b] * (y - a);
+                if (starts[y] != (numerator + denominator - 1) / denominator) return false;
+            }
+        }
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        List<int[]> pockets = new ArrayList<>();
+        for (int origin = 0; origin < seen.length; origin++) {
+            if (seen[origin] || (gray[(top + origin / w) * width + left + origin % w] & 255) <= 165)
+                continue;
+            int read = 0, size = 1, area = 0, sumY = 0, minY = h, maxY = -1;
+            boolean edge = false;
+            queue[0] = origin;
+            seen[origin] = true;
+            while (read < size) {
+                int at = queue[read++], x = at % w, y = at / w;
+                area++;
+                sumY += y;
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+                edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                for (int next : new int[] {at - 1, at + 1, at - w, at + w})
+                    if (next >= 0
+                            && next < seen.length
+                            && !seen[next]
+                            && Math.abs(next % w - x) + Math.abs(next / w - y) == 1
+                            && (gray[(top + next / w) * width + left + next % w] & 255) > 165) {
+                        seen[next] = true;
+                        queue[size++] = next;
+                    }
+            }
+            if (!edge) {
+                if (area < w * h * .035f || pockets.size() == 2) return false;
+                pockets.add(new int[] {area, sumY, minY, maxY});
+            }
+        }
+        if (pockets.size() != 2) return false;
+        int[] upper = pockets.get(0), lower = pockets.get(1);
+        if (upper[1] / (float) upper[0] >= h * .45f
+                || lower[1] / (float) lower[0] <= h * .55f
+                || upper[3] >= lower[2]) return false;
+        int upperRow = upper[1] / upper[0], lowerRow = lower[1] / lower[0];
+        int rightLimit = Math.min(ends[upperRow], ends[lowerRow]);
+        boolean rightWaist = false, reachesSpine = false;
+        for (int y = upper[3] + 1; y < lower[2]; y++) {
+            rightWaist |= ends[y] < rightLimit;
+            reachesSpine |= starts[y] == minimum;
+        }
+        return rightWaist && reachesSpine;
     }
 
     private static float singleBowlCenter(
