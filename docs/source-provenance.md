@@ -2526,3 +2526,8 @@ Paired app source: e54e02ff74b31069b975fa3f954d177e825d5f55.
 
 Solid MusicXML slides preserve original-head endpoint identity and reuse only live numbers 1 through 16 within each part. Continuous playback approaches the target from the retained predecessor pitch using the final elapsed-time clock; standalone MIDI isolates bend range, channel and sustain state. Original procedural regressions cover navigation, ties, omitted sources, custom transposition, malformed payload clocks and unchanged non-slide output. App complete-target support and standalone qualified clipped-target support remain distinct. Recognition and Guide layouts are unchanged; matching app and desktop audio identity is96. Private score data is excluded.
 Paired app consumer source: f0b52f27e47e3ab3fde9e2b2960a7d97a3033818.
+
+### Android compatibility of the complete-target adapter
+
+The Android-only `ConnectedSlideExplicitProof` adapter invokes record equality through an explicit lambda instead of a bound method reference, avoiding the Android API34 method-reference requirement reported by lint on the API26 minimum. Both forms call the same target equality method with the same candidate; membership counts, endpoint proof, and playback output are unchanged. The standalone clipped-target implementation has no corresponding method reference and needs no code change. Recognition72, Guide290 and audio96 remain unchanged. Existing original connected-slide consumer regressions cover the adapter behavior; Android lint separately checks minimum-API compatibility.
+Paired app compatibility source: 25c6b2b59aaaa3bc7bce22fb114aea33670ed744.
