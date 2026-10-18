@@ -926,7 +926,8 @@ final class NoteArticulationDetector {
                                 height,
                                 Math.round(glyph.x()),
                                 Math.round(glyph.y()),
-                                note.gap)) continue;
+                                note.gap)
+                        && !paperSeparatedTenuto(glyph, note, notes, gray, width, height)) continue;
                 if (candidate == NoteArticulation.STACCATO
                         && (durationDot(glyph, notes)
                                 || (raw
@@ -2771,6 +2772,231 @@ final class NoteArticulationDetector {
             }
             if (samples == 0 || hits < samples * coverage) return false;
         }
+        return true;
+    }
+
+    /** A complete finite dash cannot borrow disconnected flank ink to become a staff rule.
+     * The existing dark-core classifier and all earlier ownership guards have already passed.
+     * Account for its entire component at the same threshold used by the rule veto; retain
+     * independent parallel staff rules even when a dropout separates the candidate row.
+     */
+    private static boolean paperSeparatedTenuto(
+            Glyph core, Anchor note, List<Anchor> notes, byte[] gray, int width, int height) {
+        float gap = note.gap;
+        if (gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || !Float.isFinite(gap)
+                || !Float.isFinite(note.x)
+                || !Float.isFinite(note.y)
+                || gap < 6
+                || gap > Math.min(width, height)
+                || note.staff < 0
+                || core.left < 1
+                || core.top < 1
+                || core.right >= width - 1
+                || core.bottom >= height - 1
+                || core.count < 1
+                || core.pixels.length != core.count) return false;
+        int maxWidth = (int) Math.floor(gap * 1.65f + 1),
+                maxHeight = (int) Math.floor(gap * .4f + 1);
+        if (core.right - core.left + 1 > maxWidth || core.bottom - core.top + 1 > maxHeight)
+            return false;
+        int left = (int) Math.max(0L, (long) core.left - maxWidth),
+                right = (int) Math.min(width - 1L, (long) core.right + maxWidth),
+                top = (int) Math.max(0L, (long) core.top - maxHeight),
+                bottom = (int) Math.min(height - 1L, (long) core.bottom + maxHeight);
+        int w = right - left + 1, h = bottom - top + 1;
+        long cells = (long) w * h;
+        if (cells < 1 || cells > Integer.MAX_VALUE) return false;
+        int seed = core.pixels[0], sx = seed % width, sy = seed / width;
+        if (sx < left || sx > right || sy < top || sy > bottom || (gray[seed] & 255) >= 235)
+            return false;
+        boolean[] seen = new boolean[(int) cells];
+        int[] queue = new int[(int) cells];
+        int read = 0, size = 1, minX = sx, maxX = sx, minY = sy, maxY = sy;
+        queue[0] = (sy - top) * w + sx - left;
+        seen[queue[0]] = true;
+        while (read < size) {
+            int at = queue[read++], x = left + at % w, y = top + at / w;
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+            if (maxX - minX + 1 > maxWidth || maxY - minY + 1 > maxHeight) return false;
+            if (x == 0 || x == width - 1 || y == 0 || y == height - 1) return false;
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if ((gray[yy * width + xx] & 255) >= 235) continue;
+                    if (xx < left || xx > right || yy < top || yy > bottom) return false;
+                    int next = (yy - top) * w + xx - left;
+                    if (!seen[next]) {
+                        seen[next] = true;
+                        queue[size++] = next;
+                    }
+                }
+        }
+        // Every original core pixel and every foreground island in the full body is accounted.
+        for (int pixel : core.pixels) {
+            int x = pixel % width, y = pixel / width;
+            if (x < left || x > right || y < top || y > bottom || !seen[(y - top) * w + x - left])
+                return false;
+        }
+        for (int y = minY; y <= maxY; y++)
+            for (int x = minX; x <= maxX; x++)
+                if ((gray[y * width + x] & 255) < 235 && !seen[(y - top) * w + x - left])
+                    return false;
+        // Full paper on every side proves finite bounds rather than a clipped line.
+        for (int x = minX - 1; x <= maxX + 1; x++)
+            if ((gray[(minY - 1) * width + x] & 255) < 235
+                    || (gray[(maxY + 1) * width + x] & 255) < 235) return false;
+        for (int y = minY; y <= maxY; y++)
+            if ((gray[y * width + minX - 1] & 255) < 235
+                    || (gray[y * width + maxX + 1] & 255) < 235) return false;
+        float cx = (minX + maxX) * .5f, cy = (minY + maxY) * .5f;
+        if (Math.abs(cx - note.x) > gap * .7f
+                || Math.abs(cy - note.y) < gap * .7f
+                || Math.abs(cy - note.y) > gap * 3f) return false;
+        // A bent foreign staff can defeat the old glyph-centered row grid. Its raw
+        // independent rails and actual fifth-member support must be accounted first.
+        if (FiniteTenutoStaffCounter.inspect(
+                        gray, width, height, core.pixels, minX, minY, maxX, maxY, gap, notes)
+                != FiniteTenutoStaffCounter.Decision.CLEAR) return false;
+        // The current row already passed the original raw/contrasted rule veto. Four other
+        // independent parallel raw rules preserve staff ownership despite a short paper dropout.
+        for (int first = 0; first < 5; first++) {
+            boolean complete = true;
+            for (int line = 0; line < 5; line++) {
+                if (line == first) continue;
+                int y = Math.round(cy + (line - first) * gap);
+                int x = Math.round(cx);
+                boolean parallel =
+                        completeStaffRail(gray, width, height, x, y, gap, -1, -1)
+                                || (horizontalRuleInk(gray, width, height, x, y, gap, 235, .50f)
+                                        && contrastedHorizontalRule(
+                                                gray, width, height, x, y, gap));
+                if (!parallel) {
+                    complete = false;
+                    break;
+                }
+            }
+            if (complete
+                    && !registeredCounterBorrowsFourRails(
+                            gray, width, height, note, cx, minY, maxY, cy, gap, first))
+                return false;
+        }
+        return true;
+    }
+
+    /** Reject a shifted counter only after its four supporting rows are independently
+     * accounted for by the complete, raw-confirmed registered owner staff. Unknown staffs
+     * and extrapolated frames retain the original conservative counter. */
+    private static boolean registeredCounterBorrowsFourRails(
+            byte[] gray,
+            int width,
+            int height,
+            Anchor note,
+            float cx,
+            int bodyTop,
+            int bodyBottom,
+            float cy,
+            float gap,
+            int first) {
+        StaffPitchTrack track = note.track;
+        if (track == null || !track.verified()) return false;
+        int near = Math.max(3, Math.round(gap * 1.5f)), far = Math.round(gap * 4f);
+        int x = Math.round(cx), ownerX = Math.round(note.x);
+        if (x - far < 0
+                || x + far >= width
+                || ownerX - far < 0
+                || ownerX + far >= width
+                || !track.verifiedAt(x - far)
+                || !track.verifiedAt(x + far)
+                || !track.verifiedAt(ownerX - far)
+                || !track.verifiedAt(ownerX + far)) return false;
+        float[] frame = track.at(cx);
+        // Reuse the existing tracked-ledger registration contract, without extrapolation.
+        if (!Float.isFinite(frame[0] + frame[1])
+                || frame[1] < 8
+                || Math.abs(frame[1] - gap) > gap * .2f) return false;
+        if (bodyBottom >= frame[0] - 4 * frame[1] && bodyTop <= frame[0]) return false;
+        // A genuinely long independent candidate-row rail remains a conservative veto,
+        // including an unregistered foreign staff which shares other physical rules.
+        if (horizontalRuleInk(gray, width, height, x, Math.round(cy), gap, 235, .85f)
+                && contrastedHorizontalRule(gray, width, height, x, Math.round(cy), gap))
+            return false;
+        if (!registeredFiveRawRules(gray, width, height, track, x, gap)
+                || !registeredFiveRawRules(gray, width, height, track, ownerX, gap)) return false;
+        int reach = Math.max(1, Math.round(gap * .15f)) + 1;
+        boolean[] used = new boolean[5];
+        for (int line = 0; line < 5; line++) {
+            if (line == first) continue;
+            int row = Math.round(cy + (line - first) * gap), member = -1;
+            for (int k = 0; k < 5; k++) {
+                int registered = Math.round(frame[0] - (4 - k) * frame[1]);
+                // This is exactly completeStaffRail's search radius plus its ink band.
+                if (Math.abs(registered - row) <= reach) {
+                    if (member >= 0) return false;
+                    member = k;
+                }
+            }
+            if (member < 0 || used[member]) return false;
+            used[member] = true;
+            for (int direction : new int[] {-1, 1}) {
+                int owned = 0, independent = 0, samples = 0;
+                for (int d = near; d <= far; d++) {
+                    int xx = x + direction * d;
+                    float[] f = track.at(xx);
+                    if (!Float.isFinite(f[0] + f[1])
+                            || f[1] < 8
+                            || Math.abs(f[1] - gap) > gap * .2f) return false;
+                    int seed = Math.round(f[0] - (4 - member) * f[1]);
+                    if (row - reach < 0 || row + reach >= height || seed < 0 || seed >= height)
+                        return false;
+                    samples++;
+                    boolean accounted = false, foreign = false;
+                    for (int yy = row - reach; yy <= row + reach; yy++)
+                        if ((gray[yy * width + xx] & 255) < 235
+                                && sameVerticalInk(gray, width, xx, yy, seed)) accounted = true;
+                    // Account for independent foreground across the SAME complete search
+                    // and ink domain as attributed support. An opposite-edge foreign rule
+                    // retains the old veto; the existing .50 bilateral budget is unchanged.
+                    for (int yy = row - reach; yy <= row + reach; yy++) {
+                        if ((gray[yy * width + xx] & 255) >= 235) continue;
+                        boolean registered = false;
+                        for (int k = 0; k < 5; k++) {
+                            int sy = Math.round(f[0] - (4 - k) * f[1]);
+                            if (sy >= 0
+                                    && sy < height
+                                    && sameVerticalInk(gray, width, xx, yy, sy)) {
+                                registered = true;
+                                break;
+                            }
+                        }
+                        if (!registered) foreign = true;
+                    }
+                    if (accounted) owned++;
+                    if (foreign) independent++;
+                }
+                if (samples == 0 || owned < samples * .50f || independent >= samples * .50f)
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    /** Complete raw rails, sampled in the already observed physical frame at each column. */
+    private static boolean registeredFiveRawRules(
+            byte[] gray, int width, int height, StaffPitchTrack track, int x, float gap) {
+        return FiniteTenutoStaffCounter.registeredFiveRawRules(gray, width, height, track, x, gap);
+    }
+
+    /** Positive continuous raw membership; no paper is removed or recolored. */
+    private static boolean sameVerticalInk(byte[] gray, int width, int x, int first, int last) {
+        for (int y = Math.min(first, last); y <= Math.max(first, last); y++)
+            if ((gray[y * width + x] & 255) >= 235) return false;
         return true;
     }
 

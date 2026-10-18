@@ -343,16 +343,16 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "5d4d939541efa71c5bc2e17ec9244a9f50a5180a27043ef92a5c74886dae3a72",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "source_normalized_sha256": "e7aadec61ce4d8f6d7a18423fb7556deeb90a9456002586be9496037f14f9885",
+      "source_sha256": "44246de0fb38f4b76d0d77fba975db17e6ddd95ffa6360148373be52b72baac9",
+      "review_note": "Recover a complete finite tenuto body only after rejecting an independently supported foreign staff interpretation. Keep registered complete staff identities and genuine mixed-context marks; do not borrow a shifted four-of-five staff subset.",
+      "source_normalized_sha256": "44246de0fb38f4b76d0d77fba975db17e6ddd95ffa6360148373be52b72baac9",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
+      "reviewed_source_state": "committed",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "1092e935f28b4307c152de775eab97a98bb26e27e8d85ab13a0813b3e685ef28",
+      "standalone_sha256": "68a4106124b8277fa83353c9c7850bdd6011e5f46f444d0a1f5f324f7d691a74",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -1601,12 +1601,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "3fca29dba8e011f4fcb565124d8ae89377f21945db7a89d5c6fcccfb695d419c",
-      "source_normalized_sha256": "3fca29dba8e011f4fcb565124d8ae89377f21945db7a89d5c6fcccfb695d419c",
-      "review_note": "Recognition revision68 invalidates prior derived interpretations after complete rehearsal-frame ownership; Guide290, audio95 and all record layouts remain unchanged.",
+      "source_sha256": "7e73ca732c2ac75649447568483b0c69bda9187723a5dfe03a3a07e1e25ce056",
+      "source_normalized_sha256": "7e73ca732c2ac75649447568483b0c69bda9187723a5dfe03a3a07e1e25ce056",
+      "review_note": "Recognition69 invalidates derived interpretations after finite-mark and registered/raw-staff ownership recovery. Guide290, audio95 and all wire fields remain unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "f756942c926874555176cfcab8b947ed936f73b71512791bad292fb03564bd1d",
-      "reviewed_app_commit": "432d637efc97faf6037a14640afc6cffb09bd9f4",
+      "standalone_sha256": "b092d1860aeafc6e7531cb9b798d9c84a578ce0997baabb45e0072c049b8788d",
+      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10",
       "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
     },
     "BeamInkConnectivity.java": {
@@ -1664,12 +1664,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "0132ad3541abcae0eaa54c8e582e3dfb455bf358344b72b81d9129f1aada7898",
-      "source_normalized_sha256": "6634562f717390f41b2b9c808986ddc09fb621c49a1a700389631a0e4c9bd625",
+      "source_sha256": "e0daa3623a692daa02f71b84de227ede4e732129dedcaf593508494146941a50",
+      "source_normalized_sha256": "8a1b2ee454585c13ce7243a8002de87ea194a5afd79a9740c03d3579a77ef7bb",
       "reviewed_source_state": "committed",
-      "review_note": "Keep app, Hub and desktop writer recognition revision68 aligned without a new physical guide layout. Guide290 fields and existing standalone Python behavior remain unchanged.",
-      "standalone_sha256": "a6591bbaa8c1ca7107f38a1bafcdf50f8e83bf95eb2e82c917851c8982596265",
-      "reviewed_app_commit": "432d637efc97faf6037a14640afc6cffb09bd9f4"
+      "review_note": "Align app, Hub and desktop writer recognition69; existing Guide290 and audio95 record layouts are unchanged.",
+      "standalone_sha256": "2f99f347eb3521dd70cb32d0183bec8fb3d0834ebb2ffe8f5e9c8e7eaeb1a35e",
+      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3608,6 +3608,15 @@
       "review_note": "A complete finite outer-convex four-sided ink frame owns one separately complete capital F only with its entire glyph rectangle inside the observed closed hole, paper separation, all OCR foreground owned by that same frame/glyph, and unique printed-staff ownership. Keep irregular inward border width; never trim unknown glyphs or genuine expressive dynamics.",
       "reviewed_source_state": "committed",
       "reviewed_app_commit": "432d637efc97faf6037a14640afc6cffb09bd9f4"
+    },
+    "FiniteTenutoStaffCounter.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteTenutoStaffCounter.java",
+      "source_sha256": "642e37f106ea8cad6ae265cff8df7a002574bb85f437a50a6b5a5ff7a3baad12",
+      "source_normalized_sha256": "642e37f106ea8cad6ae265cff8df7a002574bb85f437a50a6b5a5ff7a3baad12",
+      "standalone_sha256": "fa499c43ac2c60e1a636ca15efcda6dcd11028d5f7451734b3d78e29ce88932b",
+      "review_note": "Preserve all feasible raw-rule branches through compact keyed four-path states and exact gap-interval unions. Require real independent fifth-rule exterior paths and original mark pixels under one common gap constraint; registered owner identities and ambiguity remain explicit. Resource exhaustion retains the veto.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
     }
   },
   "interpreter_speedup_review": {
@@ -8079,5 +8088,13 @@
     "regression_methods": 40,
     "source_boundary": "Original procedural grayscale figures and licensed Bravura-derived dynamics with OFL notice. No commercial score pixels, private libraries, identifiers, logs, model changes or score-specific branches.",
     "verification_scope": "Qualified synthetic regressions and a privately retained whole-page comparison; device and cumulative paired deployment remain separate."
+  },
+  "finite_tenuto_raw_staff_review": {
+    "recognition_revision": 69,
+    "guide_layout": 290,
+    "audio_layout": 95,
+    "new_original_methods": 33,
+    "source_boundary": "Apache-2.0 original procedural geometry and mathematical state/budget controls only. No private score pixels, filenames, models or song-specific branches.",
+    "verification_scope": "Private retained actual301 interpretation and separate full fixed-frame Omr stage change exactly five articulation fields; all other saved notes/rests/key/tremolo fields and source planes remain exact. No fresh native acquisition, device or whole-library claim."
   }
 }

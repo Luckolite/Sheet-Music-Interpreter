@@ -88,7 +88,7 @@ class PrintedStemGuideTests(unittest.TestCase):
 
     def test_current286_keeps_kind_source_and_pickup_after_legacy281(self):
 
-        self.assertEqual(68, wire.RECOGNITION_REVISION)
+        self.assertEqual(69, wire.RECOGNITION_REVISION)
         self.assertEqual(290,wire.GUIDE_VERSION)
 
         score=original_score();score['notes'][0]['stemDirection']=1
