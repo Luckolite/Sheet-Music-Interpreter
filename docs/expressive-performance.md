@@ -93,3 +93,7 @@ Raster templates are derived from the SIL Open Font License Bravura font. Their
 manifest records the font checksum and SMuFL code points. Regressions use original
 generated staff geometry and redistributable font-derived glyphs; no commercial
 score scans or user-library data are included.
+
+## Connected straight slides
+
+Connected straight slides approach the target from the already resolved predecessor pitch on the final elapsed playback clock. MusicXML uses solid slide pairs; wavy glissando notation remains separate. Standalone MIDI uses isolated channels and pitch-bend ranges, with sustain and channel reset kept inside each assigned channel. Unsupported ambiguous endpoint provenance fails rather than inventing a predecessor. App rendering requires complete target intervals; standalone supports qualified clipped targets and continuous fragments. These consumer rules do not imply that recognition acquires every printed slide.

@@ -253,7 +253,7 @@ def _seconds(performance, beat, after):
         if h['beat'] < beat or after and math.isclose(h['beat'], beat, abs_tol=1e-8))
 
 
-def _perform_one(pages, bpm):
+def _perform_one(pages, bpm, slide_group=0):
     pages = resolve_pages(pages)
     beats, numeric, expressions, bindings, sounds, aliases, payloads, directions = [], [], [], {}, [], {}, [], []
     paired_sounds = {}
@@ -291,8 +291,14 @@ def _perform_one(pages, bpm):
                 if alternate is not None and abs(sounds[alternate]['end']-start) <= .04 and (old is None or sounds[old]['end'] < sounds[alternate]['end']):
                     old = alternate
             if note.get('tiedFromPrevious') and old is not None and abs(sounds[old]['end']-start) <= .125 \
-                    and note.get('guitarEffect', {}) == payloads[old].get('guitarEffect', {}):
+                    and note.get('guitarEffect', {}) == payloads[old].get('guitarEffect', {}) \
+                    and (not note.get('_slideRelation') or note['_slideRelation'] == payloads[old].get('_slideRelation')):
                 sounds[old]['end'] = max(sounds[old]['end'], end); aliases[identifier] = old
+                if note.get('_slideOrigins'):
+                    merged = list(payloads[old].get('_slideOrigins', []))
+                    merged.extend(origin for origin in note['_slideOrigins'] if origin not in merged)
+                    payloads[old]['_slideOrigins'] = merged
+
             else:
                 old = len(sounds); sounds.append(dict(id=identifier, start=start, end=end,
                     staff=note['staffIndex'], count=note['staffCount']))
@@ -352,6 +358,27 @@ def _perform_one(pages, bpm):
     for identifier, members in bindings.items():
         data += _text(identifier)+struct.pack('>i', len(members))+b''.join(_text(sounds[i]['id']) for i in sorted(members))
     result = _bridge(data+encode(directions, expressions, len(beats)))
+    slide_visits = {}
+    if any(payload.get('_slideOrigins') for payload in payloads):
+        route = result.get('navigationOccurrences')
+        if not isinstance(route, list):
+            raise ValueError('Continuous slides require explicit performed navigation occurrences')
+        source_starts = [0.]
+        for value in beats:
+            source_starts.append(source_starts[-1]+value)
+        previous_source_end = previous_performed_end = None
+        visit = None
+        for occurrence in route:
+            def absolute(anchor):
+                return source_starts[anchor['measureIndex']]+anchor['quarterBeatOffset']
+            source_start, source_end = absolute(occurrence['start']), absolute(occurrence['end'])
+            contiguous = (previous_source_end is not None
+                          and previous_source_end == source_start
+                          and previous_performed_end == occurrence['performanceStartBeat'])
+            if not contiguous:
+                visit = f"expression:{slide_group}:{occurrence['occurrenceId']}"
+            slide_visits[occurrence['occurrenceId']] = visit
+            previous_source_end, previous_performed_end = source_end, occurrence['performanceEndBeat']
     events = []
     for interval in result['notes']:
         payload = payloads[interval['sourceIndex']]
@@ -374,6 +401,18 @@ def _perform_one(pages, bpm):
             note.update(startBeat=start_seconds*2, durationBeats=(end_seconds-start_seconds)*2,
                         tiedFromPrevious=False, measureIndex=0,
                         performanceId=identifier if not (subdivision or pair) else identifier+f'/tremolo:{ordinal}')
+            if note.get('_slideOrigins'):
+                occurrences = interval['navigationOccurrences']
+                visits = {slide_visits.get(occurrence) for occurrence in occurrences}
+                if not occurrences or None in visits or len(visits) != 1:
+                    raise ValueError('Continuous slide interval lacks a unique performed visit')
+                note['_slideContext'] = dict(visitId=next(iter(visits)),
+                    attack=not interval['clippedEntry'] and ordinal == 0 and not payload.get('tiedFromPrevious', False),
+                    clippedEntry=interval['clippedEntry'] or ordinal != 0,
+                    clippedRelease=interval['clippedRelease'] or b != end,
+                    held=any(identifier in hold['sustainedTargets']
+                             and interval['startBeat'] < hold['beat'] <= interval['endBeat']
+                             for hold in result['holds']))
             if event_kind(note) == 'UNPITCHED':
                 note['_unpitchedAttackId'] = identifier
                 note['_unpitchedContinuation'] = False
@@ -410,6 +449,6 @@ def perform_expressions(document, bpm):
     ranges = navigation_bridge(data)
     played, evidence = [], []
     for group in ranges:
-        page, result = _perform_one(pages[group['firstPage']:group['pageAfterLast']], bpm)
+        page, result = _perform_one(pages[group['firstPage']:group['pageAfterLast']], bpm, group['firstPage'])
         played.append(page); evidence.append(result)
     return dict(document, pages=played, expressivePerformance=evidence)

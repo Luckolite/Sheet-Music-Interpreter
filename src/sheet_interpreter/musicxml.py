@@ -1,3 +1,4 @@
+from . import straight_slide, slide_numbering
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 """MusicXML 4.0 concert-pitch export of the decoded performance (not source engraving)."""
@@ -196,7 +197,7 @@ def expression_direction(measure, mark, offset):
 
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
-              gliss_start=False, gliss_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
+              gliss_start=False, gliss_stop=False, slide_start=False, slide_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
               articulation_flags=0, attack_fragment=True, grace=None):
     node = element(measure, 'note')
     if grace is not None:
@@ -247,7 +248,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
                if mark['release'] == fragment_end]
     paired = event.get('retainedTremolo') if event else None
     arpeggio = bool(event and event.get('retainedArpeggio') and attack_fragment and grace is None)
-    if stop or start or effect or symbols or gliss_start or gliss_stop or articulation_flags or ornament_flags or paired or arpeggio:
+    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio:
         notation = element(node, 'notations')
         if arpeggio:
             element(notation, 'arpeggiate')
@@ -260,6 +261,9 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
             if active:
                 element(notation, 'glissando', type=kind,
                         number=event['gliss_'+kind], **{'line-type':'wavy'})
+        for active, kind in ((slide_stop, 'stop'), (slide_start, 'start')):
+            if active:
+                element(notation, 'slide', type=kind, number=event['slide_'+kind], **{'line-type':'solid'})
         if effect:
             # Preserve unsupported performance details explicitly without inventing endpoints/string numbers.
             description = effect.get('type', 'none')
@@ -398,6 +402,11 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
                                   stealPercent=placement['steal'], graceWrittenDuration=duration,
                                   principalSourceIdentity=first_event+placement['principal'])
+        for source, target, _ in straight_slide.bindings(page):
+            # This global endpoint identity is an internal token, not a MusicXML number.
+            token = first_event + target
+            events[first_event+source]['slide_start'] = token
+            events[first_event+target]['slide_stop'] = token
         from .performance import _column_members, _rest_owned, _rest_span, _rest_identity, _resolve_pedal, _anchor
         def absolute(anchor):
             if anchor is None:
@@ -648,6 +657,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                       start=fragment_end < n['end'] or n['tie_start'], flats=bar['key']<0,
                                       gliss_start=fragment_end==n['end'] and 'gliss_start' in n,
                                       gliss_stop=fragment_start==n['start'] and 'gliss_stop' in n,
+                                      slide_start=fragment_end==n['end'] and 'slide_start' in n,
+                                      slide_stop=fragment_start==n['start'] and 'slide_stop' in n,
                                       fragment_end=fragment_end, articulation_flags=articulation_flags[ci],
                                       attack_fragment=fragment_start==n['start'])
                             if fragment_start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
@@ -658,5 +669,6 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 if cursor < b:
                     emit_rest_gap(measure, cursor, b, voice, rest_symbols, literal_edges)
     slur_export.apply(root, retained_slurs, slur_attacks, events)
+    slide_numbering.assign(root)
     ET.indent(root)
     ET.ElementTree(root).write(Path(path), encoding='utf-8', xml_declaration=True)

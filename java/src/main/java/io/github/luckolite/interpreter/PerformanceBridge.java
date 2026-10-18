@@ -133,6 +133,7 @@ public final class PerformanceBridge {
             output.put("pedalSpans", pedalSpans);
             output.put("pedalControls", PedalPerformance.controls(pedalSpans));
             output.put("notes", notes.notes());
+            output.put("navigationOccurrences", plan.traversal().occurrences());
             output.put("performedBeats", performed.performedBeats());
             output.put("durationSeconds", performed.durationSeconds());
         }

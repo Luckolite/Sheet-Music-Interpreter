@@ -121,12 +121,15 @@ def _project_one(document, bpm=120, source_page_offset=0):
     run_predecessors = {}
     unpitched_visits = {}
     run_visit = None
+    slide_run_visit = None
     for occurrence in route['occurrences']:
         first, last = occurrence['start'], occurrence['end']
         source_start = starts[first['measureIndex']]+first['quarterBeatOffset']
         source_end = starts[last['measureIndex']]+last['quarterBeatOffset']
         performed = occurrence['performanceStartBeat']; span = source_end-source_start
         index = len(spans); spans.append(span)
+        if prior_end is None or prior_end != source_start:
+            slide_run_visit = occurrence['occurrenceId']
         contiguous = prior_end is not None and math.isclose(prior_end, source_start, abs_tol=1e-8)
         if not contiguous:
             run_predecessors.clear()
@@ -160,6 +163,11 @@ def _project_one(document, bpm=120, source_page_offset=0):
             output_notes.append(dict(note, measureIndex=index, startBeat=performed+a-source_start,
                 durationBeats=b-a, tiedFromPrevious=tied, boundaryTies=0,
                 occurrenceId=occurrence['occurrenceId']))
+            if note.get('_slideOrigins'):
+                output_notes[-1]['_slideContext'] = dict(
+                    visitId=f'navigation:{source_page_offset}:{slide_run_visit}',
+                    attack=onset == a and not note.get('tiedFromPrevious', False),
+                    clippedEntry=onset < a, clippedRelease=b < finish)
             lane = (note['staffCount'], note['staffIndex'], note['midi'])
             run_predecessors[lane] = min(onset, run_predecessors.get(lane, onset))
         current = bpm

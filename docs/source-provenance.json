@@ -2084,15 +2084,17 @@
     },
     "src/sheet_interpreter/performance.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "afe435a81abbf5cedac1587af5f07698c80df7c47dd0e48e2d04fb8522cd3153",
-      "reviewed_app_commit": "43f461637b3a621fd7468c5dc13c1412d723cee2",
-      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls."
+      "reviewed_sha256": "f2b7f78b53b83e92cafaf5d1b35d2aafd2696ac39fe59223d4395425f0022685",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim.",
+      "reviewed_source_state": "committed"
     },
     "src/sheet_interpreter/musicxml.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "e9422a868ec9ada2a8d6ace2fb979d4f45f2cdfce2d2073ba0ee2f44d15c0482",
-      "reviewed_app_commit": "468737f015c777824aa4dc2554b7fc4ebe041c48",
-      "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim. Literal pedal words retain final-column PART ownership and exact text without inventing brackets. Revalidate stale/mismatched/overflowed columns. Reviewed against the matching Java policy and original generated controls. Reviewed literal-rest boundary repair: preserve exact proved silent-slot subdivisions, keep incomplete/ambiguous slots unchanged and retain independent full-measure rest voices. Nine original app and seven original standalone controls; app written-clock edits cannot borrow stale source boundaries. Existing clef/tempo/slur export adapters reviewed separately; no recognition, guide, audio, model or wire changes."
+      "reviewed_sha256": "5d2f404f9cd81ab61e2dbace6e9ef96c2ca4243d51f825c4296880b8b2a244c7",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim.",
+      "reviewed_source_state": "committed"
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
@@ -3662,6 +3664,62 @@
       "review_note": "Identity-based original and derived component provenance ties canonical selected rest proposals to their originating heads and photometric views. Unknown and equal-clone ownership abstains.",
       "reviewed_source_state": "committed",
       "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+    },
+    "java/src/main/java/io/github/luckolite/interpreter/Main.java": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "65778b32877087fad644a401c35b6fb19b6c457dc5f03ffa63993437cdb65237",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/slide_numbering.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "b9091b2f9900397885835397aba084856d2d958ae9c430dce0ecc00e4a533acb",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/straight_slide.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "102a343fb86f5af16fb069b6b8797ecebc1624925936e123c221c65ea872b048",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "java/src/main/java/io/github/luckolite/interpreter/PerformanceBridge.java": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "85a3ebc6219aff631245c68bd49bf1217b084276a354891d5442ded974231c6b",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/midi.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "4b8b1c8467cd196567fe01b6b055bae19f117d9edc29999af1c94ff9fc186113",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/continuous_slide_curve.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "ba457c0d45434d04f858204ea2a5b4066e668d95370a89d529f0534523fe369f",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/navigation.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "b44cbd21d9718fb37eb036ce7cb404411bf7f1ce15ffbcbe13def2a47f97f724",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
+    },
+    "src/sheet_interpreter/slide_performance.py": {
+      "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
+      "reviewed_sha256": "57cc4d014b5560e83c560e16f5db7a621a57fad6ef6ab49e4a3820cad5e350cb",
+      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
+      "reviewed_source_state": "committed",
+      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     }
   },
   "interpreter_speedup_review": {
@@ -8163,5 +8221,13 @@
     "new_original_methods": 3,
     "license": "Apache-2.0",
     "boundary": "Original procedural regression only; private retained score evidence excluded. Complete original frame/glyph/competition checks retained; no threshold or song-specific rule."
+  },
+  "connected_slide_consumer_review": {
+    "recognition_revision": 72,
+    "guide_version": 290,
+    "audio_version": 96,
+    "license": "Apache-2.0",
+    "production_sources": 16,
+    "boundary": "Consumer support only. Private actual score evidence and diagnostic recognition candidates excluded. No physical correction allocation."
   }
 }

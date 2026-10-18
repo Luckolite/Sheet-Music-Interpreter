@@ -2521,3 +2521,8 @@ Paired app source: d38b1b35832da0a4674b2ed633d56646856f89d1.
 
 Complete finite rehearsal frames retain their unique printed-staff ownership when a dynamic floor points to an earlier system. Existing full-frame, glyph, capital-letter and competing-staff proofs remain authoritative. Three original procedural regressions preserve genuine forte and ambiguous ownership. Recognition72 changes derived identity; Guide290/audio95 layouts are unchanged. Private retained-page comparison independently confirms one false dynamic removed with all other saved fields exact. No whole-family or whole-library claim.
 Paired app source: e54e02ff74b31069b975fa3f954d177e825d5f55.
+
+## Connected straight-slide consumers
+
+Solid MusicXML slides preserve original-head endpoint identity and reuse only live numbers 1 through 16 within each part. Continuous playback approaches the target from the retained predecessor pitch using the final elapsed-time clock; standalone MIDI isolates bend range, channel and sustain state. Original procedural regressions cover navigation, ties, omitted sources, custom transposition, malformed payload clocks and unchanged non-slide output. App complete-target support and standalone qualified clipped-target support remain distinct. Recognition and Guide layouts are unchanged; matching app and desktop audio identity is96. Private score data is excluded.
+Paired app consumer source: f0b52f27e47e3ab3fde9e2b2960a7d97a3033818.

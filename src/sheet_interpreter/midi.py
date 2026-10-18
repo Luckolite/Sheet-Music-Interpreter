@@ -9,6 +9,8 @@ from .boundary_ties import resolve_boundary_ties
 from .navigation import project_navigation
 from .typed_events import event_kind, validate_unpitched
 from .typed_performance import unpitched_intervals
+from .continuous_slide_curve import curve as continuous_slide_curve, gated_end
+from .slide_performance import prepare_slides, resolve_slides
 
 
 @dataclass(frozen=True)
@@ -73,6 +75,7 @@ def variable_length(value):
 
 def performed_document(document, bpm=120):
     """Resolve the existing source/Java clocks without assigning a backend identity."""
+    document = prepare_slides(document)
     unpitched_intervals(document)
     document = resolve_boundary_ties(document)
     if not math.isfinite(bpm) or not 15 <= bpm <= 400:
@@ -83,6 +86,7 @@ def performed_document(document, bpm=120):
         document = project_navigation(document, bpm)
     else:
         document, bpm = expressive_document, 120
+    document = resolve_slides(document)
     return document, bpm, expressive_document is not None
 
 
@@ -143,6 +147,15 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
                     raise ValueError("Unsupported glissando performance")
                 if step or note.get("guitarEffect"):
                     raise ValueError("Conflicting glissando performance")
+            continuous = note.get('_continuousSlide')
+            if continuous is not None:
+                if (not isinstance(continuous, dict) or set(continuous) not in ({'sourceMidi'}, {'sourceMidi', 'gate'})
+                        or type(continuous['sourceMidi']) is not int or not 0 <= continuous['sourceMidi'] <= 127
+                        or type(continuous.get('gate', 1)) not in (int, float)
+                        or continuous.get('gate', 1) not in (.28, .5, .75, 1.)
+                        or gliss is not None or step or note.get('guitarEffect')
+                        or note.get('tiedFromPrevious')):
+                    raise ValueError('Unsupported conflicting continuous slide performance')
             previous_tone = previous.get(lane)
             # Recognition has already verified both endpoints of this tie.
             # A hidden/restored lower staff must not force a second top-staff attack.
@@ -153,13 +166,14 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
                     previous_tone = alternate
             if (note["tiedFromPrevious"] and previous_tone is not None
                     and gliss is None and previous_tone[5] is None
+                    and continuous is None
                     and note.get("guitarEffect", {}) == previous_tone[4]
                     and (step == 0 or previous_tone[3] == step)
                     and abs(previous_tone[1] - start) <= ppq // 8):
                 previous_tone[1] = max(previous_tone[1], end)
                 previous[lane] = previous_tone
             else:
-                tone = [start, end, pitch, step, note.get("guitarEffect", {}), gliss, note.get("performanceAttack"), note['staffCount']]
+                tone = [start, end, pitch, step, note.get("guitarEffect", {}), gliss, note.get("performanceAttack"), note['staffCount'], continuous]
                 tones.append(tone)
                 previous[lane] = tone
         offset += page["totalBeats"]
@@ -181,20 +195,23 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
         elif part in held_parts:
             pedal_spans.append((part, held_parts.pop(part), control['tick']))
     performed = []
-    for start, end, pitch, step, effect, gliss, attack, part in tones:
+    final_tempos = tuple(events)
+    for start, end, pitch, step, effect, gliss, attack, part, continuous in tones:
+        if continuous is not None:
+            end = gated_end(start, end, continuous.get('gate', 1), final_tempos, ppq)
         if gliss is not None:
-            performed.extend((a, b, midi, effect, attack if a == start else None, part) for a, b, midi in
+            performed.extend((a, b, midi, effect, attack if a == start else None, part, None) for a, b, midi in
                              white_key_gliss(start, end, pitch, gliss["targetMidi"]))
         elif step:
-            performed.extend((tick, min(end, tick + step), pitch, effect, attack if tick == start else None, part) for tick in range(start, end, step))
+            performed.extend((tick, min(end, tick + step), pitch, effect, attack if tick == start else None, part, None) for tick in range(start, end, step))
         else:
-            performed.append((start, end, pitch, effect, attack, part))
-    for start, end, pitch, effect, attack, part in sorted(performed, key=lambda n: (n[0], n[2])):
+            performed.append((start, end, pitch, effect, attack, part, continuous))
+    for start, end, pitch, effect, attack, part, continuous in sorted(performed, key=lambda n: (n[0], n[2])):
         kind = effect.get("type", "none")
         delta = effect.get("semitones", 0)
         if kind not in ("none", "slide", "hammer_on", "pull_off", "bend", "bend_release", "dead", "harmonic", "tap") or not isinstance(delta, (int, float)) or not math.isfinite(delta) or abs(delta) > 24:
             raise ValueError("Unsupported guitar performance effect")
-        expressive = kind in ("slide", "bend", "bend_release") or effect.get("vibrato", False) or attack is not None
+        expressive = kind in ("slide", "bend", "bend_release") or effect.get("vibrato", False) or attack is not None or continuous is not None
         # Pitch bend is channel-wide. Isolate it from every overlapping note, including other pitches.
         channel = next((c for c in range(16) if c != 9 and (not has_pedal or channel_parts.get(c, part) == part) and all(
             stop <= start or (not expressive and not bent and other != pitch)
@@ -223,10 +240,16 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
         sounding_end = start + max(1, round((end-start) * (.12 if kind == "dead" else .45 if effect.get("palmMute") else 1)))
         if expressive:
             # RPN 0: +/-24 semitones, confined to this note's exclusive channel.
-            for controller, value in ((101, 0), (100, 0), (6, 24), (38, 0), (101, 127), (100, 127)):
+            bend_range, continuous_bends = (continuous_slide_curve(start, end, continuous['sourceMidi'], pitch, final_tempos, ppq)
+                                            if continuous is not None else (24, None))
+            for controller, value in ((101, 0), (100, 0), (6, bend_range), (38, 0), (101, 127), (100, 127)):
                 events.append((start, 1, bytes([0xB0 | channel, controller, value])))
-            count = max(2, min(256, (end-start)//15))
-            for i in range(count+1):
+            if continuous_bends is not None:
+                for tick, bend in continuous_bends:
+                    if tick < sounding_end:
+                        events.append((tick, 2, bytes([0xE0 | channel, bend & 127, bend >> 7])))
+            count = 0 if continuous_bends is not None else max(2, min(256, (end-start)//15))
+            for i in range(count+1) if count else ():
                 t = i/count
                 smooth = lambda x: x*x*(3-2*x)
                 pitch_offset = delta*(1-smooth(min(1, t/.3))) if kind == "slide" else delta*smooth(min(1,t/.4)) if kind == "bend" else delta*(smooth(t/.5) if t<.5 else 1-smooth((t-.5)/.5)) if kind == "bend_release" else 0

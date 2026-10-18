@@ -350,6 +350,73 @@ public final class Main {
                         "glissando",
                         Map.of("style", "white_keys", "targetMidi", targetEvent.get("midi")));
         }
+        attachStraightSlides(notes, events);
+    }
+
+    private static void attachStraightSlides(
+            List<ScoreNoteEvent> notes, List<Map<String, Object>> events) {
+        if (notes.size() != events.size()) return;
+        var indices = new java.util.IdentityHashMap<ScoreNoteEvent, Integer>();
+        var duplicate = new java.util.IdentityHashMap<ScoreNoteEvent, Boolean>();
+        for (int i = 0; i < notes.size(); i++)
+            if (indices.put(notes.get(i), i) != null) duplicate.put(notes.get(i), true);
+        var pairs = new ArrayList<int[]>();
+        var outgoing = new int[notes.size()];
+        for (int target = 0; target < notes.size(); target++) {
+            var prior = SlidePitchSource.previous(notes.get(target), notes);
+            Integer source = indices.get(prior);
+            if (source == null
+                    || duplicate.containsKey(prior)
+                    || duplicate.containsKey(notes.get(target))) continue;
+            if (!slideEndpoint(notes.get(source), events.get(source), source)
+                    || !slideEndpoint(notes.get(target), events.get(target), target)) continue;
+            double end =
+                    ((Number) events.get(source).get("startBeat")).doubleValue()
+                            + ((Number) events.get(source).get("durationBeats")).doubleValue();
+            double next = ((Number) events.get(target).get("startBeat")).doubleValue();
+            if (Math.abs(end - next) > 8 * Math.max(Math.ulp(end), Math.ulp(next))) continue;
+            pairs.add(new int[] {source, target});
+            outgoing[source]++;
+        }
+        for (int[] pair : pairs)
+            if (outgoing[pair[0]] == 1)
+                events.get(pair[1])
+                        .put(
+                                "slide",
+                                Map.of(
+                                        "style",
+                                        "continuous",
+                                        "sourceNoteIndex",
+                                        pair[0],
+                                        "sourceMidi",
+                                        events.get(pair[0]).get("midi")));
+    }
+
+    private static boolean slideEndpoint(
+            ScoreNoteEvent note, Map<String, Object> event, int index) {
+        if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                || (note.articulations() & 32768) != 0
+                || note.clefBottomDiatonic() == ScoreNoteEvent.CLEF_UNKNOWN
+                || Boolean.TRUE.equals(event.get("clefInferred"))
+                || !"PITCHED".equals(event.getOrDefault("kind", "PITCHED"))
+                || !Boolean.FALSE.equals(event.get("durationFallback"))
+                || event.containsKey("glissando")
+                || event.containsKey("guitarEffect")) return false;
+        if (!Integer.valueOf(note.measureIndex()).equals(event.get("measureIndex"))
+                || !Integer.valueOf(note.staffIndex()).equals(event.get("staffIndex"))
+                || !Integer.valueOf(note.staffCount()).equals(event.get("staffCount"))
+                || (event.containsKey("sourceNoteIndex")
+                        && !Integer.valueOf(index).equals(event.get("sourceNoteIndex"))))
+            return false;
+        if (!(event.get("midi") instanceof Integer midi)
+                || midi < 0
+                || midi > 127
+                || !(event.get("startBeat") instanceof Number start)
+                || !(event.get("durationBeats") instanceof Number duration)) return false;
+        return Double.isFinite(start.doubleValue())
+                && start.doubleValue() >= 0
+                && Double.isFinite(duration.doubleValue())
+                && duration.doubleValue() > 0;
     }
 
     private static int readCount(DataInputStream in) throws IOException {
