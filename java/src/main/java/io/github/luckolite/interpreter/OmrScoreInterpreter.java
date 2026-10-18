@@ -1465,7 +1465,24 @@ final class OmrScoreInterpreter {
                             head.centerX,
                             head.centerY,
                             localGap,
-                            hollowSlope)) unbeamedDuration = ScoreNoteEvent.DURATION_HALF;
+                            hollowSlope)
+                    // A gray-filled core and two complete owned rails jointly contradict
+                    // a relative-contrast pocket; genuine paper counters remain sustained.
+                    && !(beamCount >= 2
+                            && PaleFilledHeadCore.isFilled(
+                                    gray,
+                                    width,
+                                    height,
+                                    head.minX,
+                                    head.minY,
+                                    head.maxX,
+                                    head.maxY,
+                                    head.centerX,
+                                    head.centerY,
+                                    localGap)
+                            && pairedPrintedRails(
+                                    gray, width, height, head, rhythmStaff, heads, beamCount)))
+                unbeamedDuration = ScoreNoteEvent.DURATION_HALF;
             if (recoveredPaleChordHeads.contains(head)
                     || recoveredFilledFragmentHeads.contains(head))
                 unbeamedDuration = beamCount == 0 ? 1f : 0f;

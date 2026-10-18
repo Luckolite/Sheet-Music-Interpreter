@@ -395,15 +395,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "6f77d3f3b95dec07e5f22ae6981d1f9e0a5ea60fa93b060698207746ac42d454",
-      "review_note": "Independently owned detached marks on both noteheads retain separate attacks after every successful tie route. Printed system geometry retains its actual winning predecessor; standalone callers without a staff owner preserve null-safe ownership. Original analytic staff, arc and dot fixtures only; no private score data or new dependencies.",
-      "source_normalized_sha256": "bbbfbb44d20a879662526032afe354505e0c4a8db183e4c320eac87b77757b6c",
-      "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
+      "source_sha256": "a9c61f13f37ddfc74eb747918bd07f92d7ebc4f6fed35ce9555e153ec6f131e0",
+      "review_note": "Relative-contrast head-pocket half duration abstains when unchanged pale filled-core proof and complete paired printed rail ownership jointly contradict a sustained head. Later semantic tremolo duration priority and all acquisition thresholds remain unchanged. Original Apache-2.0 procedural regressions preserve genuine paper counters and ambiguous or broken rail evidence.",
+      "source_normalized_sha256": "42d8922a467650016dae89db79f0ea04a1f0c6a4d403986b59646fdaa76f3b3c",
+      "reviewed_app_state": "Recognition79 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "6be8690aef180caea311a96ffcc13a20d49ed723ad98198722dceb77c7fc84cb",
-      "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
+      "standalone_sha256": "021e6571022c4404c060fcb24f4d40eb3fc4291c4b4c2d9313369efe47b27317",
+      "reviewed_app_base_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
       "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
-      "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f"
+      "scoped_reviewed_app_commit": "2c81254f7b27f79721afbb056167eb20f53d1336"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1618,16 +1618,16 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "a784a621b305ae8ab85f201d1471722bd2394c1f7942c1f0e94ae850b53db9e9",
-      "source_normalized_sha256": "a784a621b305ae8ab85f201d1471722bd2394c1f7942c1f0e94ae850b53db9e9",
-      "review_note": "Recognition78 invalidates derived results after exact full-component phrase ownership prevents false slide attribution. Guide290/audio96 and record layouts remain unchanged.",
+      "source_sha256": "7b52e7566a0009f9d0e50e8e484821ba45eb4a272f4dc9d53893de4f5fd9ee23",
+      "source_normalized_sha256": "7b52e7566a0009f9d0e50e8e484821ba45eb4a272f4dc9d53893de4f5fd9ee23",
+      "review_note": "Recognition79 invalidates derived results after complete paired-rail and filled-core evidence prevents a contradictory relative-contrast half-head assignment. Guide290/audio96 and record layouts remain unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "13d6d5ec06617f2f797b85deac761e4dd42e0bb76a0db303209139726247f15c",
+      "standalone_sha256": "a425d0c5ad8ec822ab9dba0ab10ccf8e339d7380e4f14988ade1295d60030c72",
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
+      "scoped_reviewed_app_commit": "2c81254f7b27f79721afbb056167eb20f53d1336",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
-      "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
+      "reviewed_app_base_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
+      "reviewed_app_state": "Recognition79 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
