@@ -235,10 +235,13 @@ final class SixteenthRestDetector {
             original = collected(combined, original.dots());
         }
         byte[] contrasted = contrastedRestInk(gray, width, height, staffs);
+        var contrastedNotes =
+                RestFigureOrigins.photometricView(notes, gray, contrasted, width, height);
         Detection additional =
                 contrasted == gray
                         ? new Detection(List.of(), List.of())
-                        : detectWithDots(contrasted, width, height, measures, staffs, notes, true);
+                        : detectWithDots(
+                                contrasted, width, height, measures, staffs, contrastedNotes, true);
         List<ScoreRestEvent> rests = new ArrayList<>(original.rests());
         rests.addAll(additional.rests());
         List<RestDot> dots = new ArrayList<>(original.dots());
@@ -252,8 +255,9 @@ final class SixteenthRestDetector {
                         ? gray
                         : RestPaperTone.normalize(gray, width, height, gaps.get(gaps.size() / 2));
         if (paper != gray) {
+            var paperNotes = RestFigureOrigins.photometricView(notes, gray, paper, width, height);
             Detection isolated =
-                    detectWithDots(paper, width, height, measures, staffs, notes, true);
+                    detectWithDots(paper, width, height, measures, staffs, paperNotes, true);
             List<ScoreRestEvent> complete = new ArrayList<>(isolated.rests());
             List<RestDot> completeDots = new ArrayList<>(isolated.dots());
             java.util.Set<ScoreRestEvent> localSeeds = new java.util.HashSet<>();
@@ -265,7 +269,7 @@ final class SixteenthRestDetector {
                         width,
                         height,
                         measures,
-                        notes,
+                        paperNotes,
                         body.staff(),
                         body.top(),
                         body.bottom(),
@@ -323,8 +327,18 @@ final class SixteenthRestDetector {
                             : RestPaperTone.normalizeOrdinaryRestInk(
                                     gray, width, height, gaps.get(gaps.size() / 2), paperLevel);
             if (ordinaryPaper != gray) {
+                var ordinaryNotes =
+                        RestFigureOrigins.photometricView(
+                                notes, gray, ordinaryPaper, width, height);
                 Detection ordinary =
-                        detectWithDots(ordinaryPaper, width, height, measures, staffs, notes, true);
+                        detectWithDots(
+                                ordinaryPaper,
+                                width,
+                                height,
+                                measures,
+                                staffs,
+                                ordinaryNotes,
+                                true);
                 rests = new ArrayList<>(stable.rests());
                 dots = new ArrayList<>(stable.dots());
                 for (ScoreRestEvent rest : ordinary.rests()) {
@@ -341,14 +355,21 @@ final class SixteenthRestDetector {
                 if (paperLevel == 220)
                     rests.addAll(
                             shadedHalfRests(
-                                    ordinaryPaper, width, height, measures, staffs, notes, dots));
+                                    ordinaryPaper,
+                                    width,
+                                    height,
+                                    measures,
+                                    staffs,
+                                    ordinaryNotes,
+                                    dots));
                 stable = collected(rests, dots);
             }
         }
         byte[] faint = contrastedRestInk(gray, width, height, staffs, 205);
         if (faint == gray) return stable;
+        var faintNotes = RestFigureOrigins.photometricView(notes, gray, faint, width, height);
         Detection recovered =
-                detectWithDots(faint, width, height, measures, staffs, notes, true, true);
+                detectWithDots(faint, width, height, measures, staffs, faintNotes, true, true);
         rests = new ArrayList<>(stable.rests());
         dots = new ArrayList<>(stable.dots());
         for (ScoreRestEvent rest : recovered.rests()) {
@@ -1824,9 +1845,11 @@ final class SixteenthRestDetector {
         if (last <= first) return new Detection(List.of(), List.of());
         int bandHeight = last - first;
         byte[] flat = new byte[width * bandHeight];
+        float[] originBottoms = null;
         if (width > 0 && height > 0 && gray != null && (long) width * height <= gray.length) {
             float[] bottoms = new float[width];
             for (int x = 0; x < width; x++) bottoms[x] = staff.pitchTrack().at(x)[0];
+            originBottoms = bottoms;
             for (int y = 0; y < bandHeight; y++) {
                 int offset = y * width;
                 for (int x = 0; x < width; x++) {
@@ -1860,6 +1883,7 @@ final class SixteenthRestDetector {
                             (flatY(staff, x, region.bottom() * height) - first) / bandHeight));
         }
         List<ScoreNoteEvent> mappedNotes = new ArrayList<>();
+        List<ScoreNoteEvent> mappedSources = new ArrayList<>();
         for (ScoreNoteEvent n : notes) {
             if (n.measureIndex() < 0 || n.measureIndex() >= measures.size()) continue;
             MeasureRegion region = measures.get(n.measureIndex());
@@ -1893,7 +1917,21 @@ final class SixteenthRestDetector {
                             .withStemDirection(n.stemDirection())
                             .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes())
                             .withKind(n.kind()));
+            mappedSources.add(n);
         }
+        mappedNotes =
+                RestFigureOrigins.rectified(
+                        notes,
+                        mappedNotes,
+                        mappedSources,
+                        gray,
+                        width,
+                        height,
+                        flat,
+                        bandHeight,
+                        originBottoms,
+                        first,
+                        staff.bottom());
         Staff rectified =
                 new Staff(
                         staff.top() - first,
@@ -2107,6 +2145,19 @@ final class SixteenthRestDetector {
                 }
             }
         int fullBottom = maxY;
+        RestFigureOrigins.ProposalOrigin finiteProposal =
+                new RestFigureOrigins.ProposalOrigin(
+                        gray,
+                        ownershipGray,
+                        width,
+                        height,
+                        top,
+                        bottom,
+                        line,
+                        left,
+                        right,
+                        minY,
+                        fullBottom);
         maxY =
                 withoutFollowingNoteDot(
                         width, height, measures, notes, staff, left, right, top, ink, line, minY,
@@ -2462,6 +2513,27 @@ final class SixteenthRestDetector {
                                                     gray, width, left, right, minY, maxY, line, top,
                                                     gap, true, true))) return;
                 }
+            if (quarter
+                    && lowered
+                    && !half
+                    && !whole
+                    && FiniteBeamQuarterOwnership.proposalOwnership(
+                                    gray,
+                                    width,
+                                    height,
+                                    region,
+                                    notes,
+                                    m,
+                                    staff.index(),
+                                    staff.count(),
+                                    printedStaffCenter,
+                                    gap,
+                                    left,
+                                    right,
+                                    minY,
+                                    maxY,
+                                    finiteProposal)
+                            == FiniteBeamQuarterOwnership.ProposalResult.OWNED) return;
             List<InkDot> dots =
                     augmentationDots(gray, width, height, staff, right, region, notes, m);
             double duration =

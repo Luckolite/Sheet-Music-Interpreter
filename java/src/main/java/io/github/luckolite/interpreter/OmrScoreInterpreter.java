@@ -54,8 +54,16 @@ final class OmrScoreInterpreter {
                 || measures.isEmpty()) return new Analysis(List.of(), List.of());
         List<Staff> staffs = findStaffs(labels, gray, width, height, measures);
         if (staffs.isEmpty()) return new Analysis(List.of(), List.of());
+        var restHeadOrigins =
+                new java.util.IdentityHashMap<Component, RestFigureOrigins.HeadOrigin>();
         List<Component> rawHeadComponents =
-                findComponents(labels, width, height, OmrMeasurePostProcessor.NOTEHEAD);
+                findComponents(
+                        labels,
+                        width,
+                        height,
+                        OmrMeasurePostProcessor.NOTEHEAD,
+                        gray,
+                        restHeadOrigins);
         List<Component> recoveredFadedHeads = new ArrayList<>();
         List<Component> recoveredFilledFragmentHeads = new ArrayList<>();
         Map<Component, Integer> recoveredCreaseGraces = new HashMap<>();
@@ -1904,7 +1912,7 @@ final class OmrScoreInterpreter {
                         height,
                         measures,
                         restStaffs,
-                        result,
+                        restOriginNotes(result, joined, restHeadOrigins),
                         rawWholeRestDirections(
                                 result,
                                 joined,
@@ -1955,7 +1963,7 @@ final class OmrScoreInterpreter {
                             height,
                             measures,
                             restStaffs,
-                            owners,
+                            restOriginNotes(owners, joined, restHeadOrigins),
                             rawWholeRestDirections(
                                     owners,
                                     joined,
@@ -2054,7 +2062,7 @@ final class OmrScoreInterpreter {
                                 height,
                                 measures,
                                 restStaffs,
-                                result,
+                                restOriginNotes(result, joined, restHeadOrigins),
                                 rawWholeRestDirections(
                                         result,
                                         joined,
@@ -9616,8 +9624,30 @@ final class OmrScoreInterpreter {
         return false;
     }
 
+    private static List<ScoreNoteEvent> restOriginNotes(
+            List<ScoreNoteEvent> notes,
+            List<DetectedNote> joined,
+            java.util.IdentityHashMap<Component, RestFigureOrigins.HeadOrigin> origins) {
+        var byEvent = new java.util.IdentityHashMap<ScoreNoteEvent, RestFigureOrigins.HeadOrigin>();
+        for (DetectedNote joinedNote : joined) {
+            RestFigureOrigins.HeadOrigin origin = origins.get(joinedNote.head);
+            if (origin != null) byEvent.put(joinedNote.event, origin);
+        }
+        return RestFigureOrigins.bind(notes, byEvent);
+    }
+
     private static List<Component> findComponents(
             byte[] labels, int width, int height, byte target) {
+        return findComponents(labels, width, height, target, null, null);
+    }
+
+    private static List<Component> findComponents(
+            byte[] labels,
+            int width,
+            int height,
+            byte target,
+            byte[] rawGray,
+            java.util.IdentityHashMap<Component, RestFigureOrigins.HeadOrigin> origins) {
         // Keep the prior behavior for non-raster arguments, including partial rows.
         if (width <= 0 || height <= 0 || (long) width * height != labels.length)
             return findComponentsByPixel(labels, width, height, target);
@@ -9631,6 +9661,7 @@ final class OmrScoreInterpreter {
             visited[origin] = true;
             int area = 0, minX = width, minY = height, maxX = 0, maxY = 0;
             long sumX = 0, sumY = 0;
+            List<int[]> acceptedRuns = origins == null ? null : new ArrayList<>();
             while (stackSize > 0) {
                 int current = stack[--stackSize];
                 int x = current % width, y = current / width, row = y * width;
@@ -9642,6 +9673,7 @@ final class OmrScoreInterpreter {
                         && labels[row + right + 1] == target) right++;
                 java.util.Arrays.fill(visited, row + left, row + right + 1, true);
                 int count = right - left + 1;
+                if (acceptedRuns != null) acceptedRuns.add(new int[] {y, left, right});
                 area += count;
                 sumX += ((long) left + right) * count / 2;
                 sumY += (long) y * count;
@@ -9678,8 +9710,8 @@ final class OmrScoreInterpreter {
                     }
                 }
             }
-            if (area >= 3)
-                result.add(
+            if (area >= 3) {
+                Component accepted =
                         new Component(
                                 area,
                                 minX,
@@ -9687,7 +9719,15 @@ final class OmrScoreInterpreter {
                                 minY,
                                 maxY,
                                 sumX / (float) area,
-                                sumY / (float) area));
+                                sumY / (float) area);
+                result.add(accepted);
+                if (origins != null) {
+                    var acceptedOrigin =
+                            RestFigureOrigins.HeadOrigin.accepted(
+                                    accepted, rawGray, width, height, acceptedRuns);
+                    if (acceptedOrigin != null) origins.put(accepted, acceptedOrigin);
+                }
+            }
         }
         return result;
     }

@@ -388,14 +388,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "b45e523325be90c959ebafb7afee2f98ed94c30c5574cb22cb83be4a9b952116",
-      "review_note": "Require a complete ordered sharp header and independent semantic-centroid/raw-crossbar ownership by one unique admitted local staff. Preserve legitimate lower headers whose long sharp stems cross another staff core. Legacy raw glyph arithmetic, thresholds and scan selection remain unchanged; no new pitch collar, total-span limit, models or protocol fields.",
-      "source_normalized_sha256": "7af851daa6da3812080c572b5125aa18af5896bb47fc02702f16fc09dc1b9124",
+      "source_sha256": "d13ef6e6954da76c67ad7d88802da6627367a1cb908e026c3b8d83224100da28",
+      "review_note": "Transport original and derived head/view identity to finite rest ownership while retaining unchanged caller order and independent genuine-rest acquisition.",
+      "source_normalized_sha256": "8afedf90ecfca3ba392d4e3765be5f25e4db15da019f4cf62c30970f960f35e5",
       "reviewed_app_state": "Scoped paired source integration; cumulative app/native runtime qualification remains pending.",
-      "reviewed_source_state": "working-tree",
-      "standalone_sha256": "3ed745e1d7e2b2d3fb7e2ac1df80959d12bed759a0c6773943c7d9f795b0f729",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "57e70071cda4638c6c277f44155bf3893b252591e7ebe9bbd7fa1d626a48c934",
       "reviewed_app_base_commit": "967f0686b1f8a8bec6bb38540c49d0002bae6e58",
-      "reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
       "scoped_reviewed_app_commit": "1388bb588a770797d876febd6babc68b530530ab"
     },
     "PlayingTechniqueDetector.java": {
@@ -501,14 +501,14 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "2a199528687ea7515ddbfd9ee9c831d371eda999f90c80551cc4b7c04ea711ab",
-      "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
-      "source_normalized_sha256": "1d8a035d3404743222b92400985d07ffd199d625dca0ce81b47ada1dc9e7e471",
+      "source_sha256": "db113cec41f31c245b561b1a2b07e3e159e13fa04c0d2578374f876573af3f30",
+      "review_note": "Apply finite figure ownership to the canonical selected quarter-rest proposal and its exact derived view. Preserve all unproved and independently owned rest candidates.",
+      "source_normalized_sha256": "938497a33bc343e1001b44f3bb103d5c1912c6f81d8052aa2d670e044a45ee03",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "working-tree",
+      "reviewed_source_state": "committed",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "d57c0f6f934f3782f556342867aee5e1699b19affa801557dfa091798206b7c8",
-      "reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2",
+      "standalone_sha256": "4d8f795a23fa5cc0caeca38942d8f3785b1d6e2afbf8c58f84ab7e3936b22e19",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
       "scoped_reviewed_app_commit": "7fbd7b775716e0989133ea836793cf9c619ae1c2"
     },
     "TempoChangeDetector.java": {
@@ -1601,12 +1601,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "c7441518de56a370ca00987ff312df17461b4dda812d70530cf3d70a3d15964f",
-      "source_normalized_sha256": "c7441518de56a370ca00987ff312df17461b4dda812d70530cf3d70a3d15964f",
-      "review_note": "Recognition70 invalidates derived meter results. Guide290/audio95 record layouts are unchanged.",
+      "source_sha256": "006c5fa61d23e11407aa9dfa0a7e85a0cd8e55ccc6a72d3b1b7376ec3b93c9f1",
+      "source_normalized_sha256": "006c5fa61d23e11407aa9dfa0a7e85a0cd8e55ccc6a72d3b1b7376ec3b93c9f1",
+      "review_note": "Recognition71 invalidates derived rest results; Guide290/audio95 record layouts unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "f83074afa1109e127fe10c8697072d8f7364a0c3a5f8017cf8c4d75b5b0e1f89",
-      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1",
+      "standalone_sha256": "97bfa30abcf75e2347151b24a6340e8fb5cd8bf304a8b679f49fbc7e0ed2eb60",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
       "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
     },
     "BeamInkConnectivity.java": {
@@ -1664,12 +1664,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e0d39b00ba96e4108fb7c038078c444f4531600a7697cefee61926e73cd0fe92",
-      "source_normalized_sha256": "57d65336eaed6ea2c76573372279810319f6d64d62b50f395da5c90804f0cebb",
+      "source_sha256": "d504fd584e935df82461dbae59e9d5f5864d994c5cac1dceecb6f2e08fa06f9f",
+      "source_normalized_sha256": "a123e9281df44ebfa6633395153beeb125f80ed9d80110cb19d0cd64a48dd2ce",
       "reviewed_source_state": "committed",
-      "review_note": "Align app, Hub and native writer recognition70 without changing Guide290/audio95 record layouts.",
-      "standalone_sha256": "0b703a9bf2da4fb432658f02e5b2ef4f375c6737fd4c9bc811bdae1af491fc13",
-      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
+      "review_note": "App, Hub and writer recognition71 agree; Guide290/audio95 record layouts unchanged.",
+      "standalone_sha256": "e974fb39d7670c4381aac493520d9eabc6f788ac4423f96db103a6a2b77ad0d7",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3626,6 +3626,42 @@
       "review_note": "Complete semantic components propose bounded crops only. Retain a complete broad raw five-rule witness and both agreeing complete disjoint near strips when one broad flank is obstructed. Missing, merged, multiple or conflicting raw paths abstain. Existing numeral, header ownership and caller eligibility remain authoritative.",
       "reviewed_source_state": "committed",
       "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
+    },
+    "FiniteBeamQuarterOwnership.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteBeamQuarterOwnership.java",
+      "source_sha256": "837dc8f15c9d9878893b9e90f5aa97edb6bc30d45360fc04c37ffcc58c811dfa",
+      "source_normalized_sha256": "283e82d962fc60d1171220d82db11eb73f45449bcdb8692adc2f9f79642a9f0d",
+      "standalone_sha256": "d7ed664628c5787b347b33327bd6d8a98a8df89fa905d4392918f37d2aad4853",
+      "review_note": "Finite raw beam, shaft and terminal-foot ownership is conservative evidence against a quarter-rest proposal. Retain every required continuation and reject missing or competing owners.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+    },
+    "FiniteParallelBeamBand.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteParallelBeamBand.java",
+      "source_sha256": "b53361a63c42e7cb03fd363368615e905734c2280e6ed112a5f8e051276c3f90",
+      "source_normalized_sha256": "85eadbde8bb12bbdd55c56c9ca739796ec77f9eb516e8d19b468e70c34dbf097",
+      "standalone_sha256": "93194d0adf761d7ea8f0662328f6e07e3ecb46d48459368a0b094d93f832422d",
+      "review_note": "Certify finite parallel beam bands and retain complete original-plane support; no generic ink threshold or region deletion.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+    },
+    "FiniteShaftFoot.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteShaftFoot.java",
+      "source_sha256": "251c8357a8eed7baf18f4987360043ebcba142be2d736f243f1e47184eff7ed1",
+      "source_normalized_sha256": "08fd020f18685cc39df959e8aad78e50105f9cc483f0cb69e80ac43ebc801a7f",
+      "standalone_sha256": "494e22cead763c32420533ae898a749b5f09c1b2d2573db0a47b2c4fd73df007",
+      "review_note": "Bounded terminal shaft-foot ownership preserves genuine detached rest bodies and ambiguous continuations.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+    },
+    "RestFigureOrigins.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestFigureOrigins.java",
+      "source_sha256": "489e9e3b1af18b3bdf24d7f525a842dc642986c40baceeac3e5a1cabd3bfd6d6",
+      "source_normalized_sha256": "1604e44ee32dd5834a4af9e55d2bb59a46a3a4beb1b6827b50ad358ef93acc66",
+      "standalone_sha256": "a14ff9be573e90a7ffc614cd9bee80899feb4b9a7b45d7f3e18fc6ed123eabc5",
+      "review_note": "Identity-based original and derived component provenance ties canonical selected rest proposals to their originating heads and photometric views. Unknown and equal-clone ownership abstains.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
     }
   },
   "interpreter_speedup_review": {
@@ -8113,5 +8149,13 @@
     "new_original_methods": 20,
     "source_boundary": "Apache-2.0 original procedural fixtures only; no private score pixels, titles, filenames, coordinates or models.",
     "verification_scope": "A retained authentic semantic mask and original grayscale through the normal native Guide/OCR pipeline restore one meter event; every other saved field is exact. No fresh segmentation, device or whole-library acceptance claim."
+  },
+  "finite_rest_ownership_review": {
+    "recognition_revision": 71,
+    "guide_layout": 290,
+    "audio_layout": 95,
+    "new_original_methods": 50,
+    "source_boundary": "Original Apache-2.0 procedural sources and fixtures only; no private score pixels, names, filenames, coordinates, logs or models.",
+    "verification_scope": "A retained authentic model mask through normal native geometry/OCR agrees with the independently qualified single physical rest correction and coupled following-rest field; every other saved field is exact. Private source evidence stays private. No device or whole-library claim."
   }
 }
