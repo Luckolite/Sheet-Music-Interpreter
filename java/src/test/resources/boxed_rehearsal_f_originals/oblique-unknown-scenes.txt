@@ -1,0 +1,12 @@
+oblique-sloped-up-capital-F-closed-tail
+oblique-sloped-up-capital-F-closed-spur
+oblique-sloped-down-capital-F-closed-tail
+oblique-sloped-down-capital-F-closed-spur
+oblique-rounded-small-capital-F-closed-tail
+oblique-rounded-small-capital-F-closed-spur
+oblique-rounded-large-capital-F-closed-tail
+oblique-rounded-large-capital-F-closed-spur
+oblique-cut-small-capital-F-closed-tail
+oblique-cut-small-capital-F-closed-spur
+oblique-cut-large-capital-F-closed-tail
+oblique-cut-large-capital-F-closed-spur

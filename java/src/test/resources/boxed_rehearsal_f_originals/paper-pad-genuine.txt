@@ -1,0 +1,9 @@
+paper-pad-sloped-up-italic-f-right24
+paper-pad-sloped-up-italic-mf-right24
+paper-pad-sloped-up-italic-ff-right24
+paper-pad-rounded-small-italic-f-right24
+paper-pad-rounded-small-italic-mf-right24
+paper-pad-rounded-small-italic-ff-right24
+paper-pad-cut-small-italic-f-right24
+paper-pad-cut-small-italic-mf-right24
+paper-pad-cut-small-italic-ff-right24

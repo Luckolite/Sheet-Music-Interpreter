@@ -574,6 +574,7 @@ final class ScoreDynamicsDetector {
                             && !ShadedTallDynamicWord.proved(
                                     word, ownershipGray, width, height, owner.gap())) continue;
             if (uprightChordF(word, staffs, ownershipGray, width, height)) continue;
+            if (BoxedRehearsalF.proved(word, owner, staffs, ownershipGray, width, height)) continue;
             var common =
                     GrandStaffDynamics.directionPart(
                             shared, owner, word.top() * height, word.bottom() * height);

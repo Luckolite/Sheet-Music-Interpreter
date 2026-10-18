@@ -1,0 +1,12 @@
+exterior-boxed-capital-top-20-5-0-1
+exterior-boxed-capital-top-50-9-0-2
+exterior-boxed-capital-top-80-14-0-1
+exterior-boxed-capital-bottom-20-5-0-1
+exterior-boxed-capital-bottom-50-9-0-2
+exterior-boxed-capital-bottom-80-14-0-1
+exterior-boxed-capital-left-20-5-0-1
+exterior-boxed-capital-left-50-9-0-2
+exterior-boxed-capital-left-80-14-0-1
+exterior-boxed-capital-right-20-5-0-1
+exterior-boxed-capital-right-50-9-0-2
+exterior-boxed-capital-right-80-14-0-1

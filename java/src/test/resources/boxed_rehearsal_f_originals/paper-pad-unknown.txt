@@ -1,0 +1,9 @@
+paper-pad-sloped-up-capital-F-foreign-italic-f
+paper-pad-sloped-up-capital-F-foreign-dot
+paper-pad-sloped-up-capital-F-foreign-unknown
+paper-pad-rounded-small-capital-F-foreign-italic-f
+paper-pad-rounded-small-capital-F-foreign-dot
+paper-pad-rounded-small-capital-F-foreign-unknown
+paper-pad-cut-small-capital-F-foreign-italic-f
+paper-pad-cut-small-capital-F-foreign-dot
+paper-pad-cut-small-capital-F-foreign-unknown

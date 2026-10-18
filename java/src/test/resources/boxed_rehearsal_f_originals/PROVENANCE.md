@@ -1,0 +1,3 @@
+# Synthetic rehearsal-frame fixtures
+
+Apache-2.0 original procedural frame, capital and OCR-layout geometry. Italic f, mf and ff raster components derive from Bravura under the adjacent BRAVURA-OFL.txt license. Grayscale scenes are composed with per-pixel minimum so adding a frame or foreign stroke never erases the original glyph. Frozen baseline properties preserve prior API results for unsupported composite capitals; they were not regenerated from the repaired implementation. The separate clipped inward-frame pair is original mathematical geometry and grayscale sampling. No commercial score images or private audit data are included.
