@@ -12,6 +12,11 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+MusicXML octave directions preserve performed pitch while retaining written
+octave placement. Final emitted note order carries voice and staff identity,
+including grace transitions and mixed-shift chords; existing MIDI pitch stays
+unchanged. Regressions use original synthetic notation.
+
 Paired sharp crossbars can qualify a longer bounded faint-spine bridge; generic
 closing limits and complete sharp-shape/pitch validation remain unchanged.
 

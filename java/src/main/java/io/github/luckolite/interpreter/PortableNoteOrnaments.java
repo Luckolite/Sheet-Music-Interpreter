@@ -407,7 +407,7 @@ final class PortableNoteOrnaments {
                 boolean lower = other.top >= box.bottom;
                 if (!upper && !lower) continue;
                 float distance = upper ? box.top - other.bottom : other.top - box.bottom;
-                if (distance > anchor.gap * 1.5 || other.height() > anchor.gap * 2.2) continue;
+                if (distance > anchor.gap * 1.5 || other.height() > anchor.gap * 2.8) continue;
                 var accidental = recognizer.accidental(gray, width, other);
                 if (accidental.accepted())
                     marks = NoteOrnament.withAccidental(marks, upper, accidental.kind() - 2);

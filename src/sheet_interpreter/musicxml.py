@@ -330,6 +330,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
     bars, events, expressions, full_rests, literal_rests = [], [], [], [], []
+    octave_owned = {}
     offset = 0
     current_meter, current_key = meter, key_fifths
     for page_index, page in enumerate(document['pages']):
@@ -554,9 +555,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         groups = defaultdict(list)
         for n in notes:
             if not n.get('grace', False):
-                groups[n['start'], n['end']].append(n)
+                groups[n['start'], n['end'], 0 if event_kind(n) == 'UNPITCHED' else n.get('octaveShift', 0)].append(n)
         voice_ends = []
-        for (start, end), chord in sorted(groups.items()):
+        for (start, end, octave_shift), chord in sorted(groups.items()):
             voice = next((i for i, at in enumerate(voice_ends) if at <= start), len(voice_ends))
             if voice == len(voice_ends):
                 voice_ends.append(end)
@@ -579,6 +580,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             for g in sorted(pending, key=lambda g: (g['graceOrdinal'], g['sourceIdentity'])):
                 emitted = emit_note(measure, g['graceWrittenDuration'], g['voice'], g, flats=flats,
                                     articulation_flags=g['retainedArticulations'], grace=g)
+                octave_owned[emitted] = 0 if event_kind(g) == 'UNPITCHED' else g.get('octaveShift', 0)
                 if g['sourceIdentity'] in requested_slur_owners:
                     slur_attacks[g['sourceIdentity']] = emitted
         for index, bar in enumerate(bars):
@@ -661,6 +663,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                       slide_stop=fragment_start==n['start'] and 'slide_stop' in n,
                                       fragment_end=fragment_end, articulation_flags=articulation_flags[ci],
                                       attack_fragment=fragment_start==n['start'])
+                            octave_owned[emitted] = 0 if event_kind(n) == 'UNPITCHED' else n.get('octaveShift', 0)
                             if fragment_start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
                                 slur_attacks[n['sourceIdentity']] = emitted
                         emit_graces(measure, chord, True, fragment_end, bar['key']<0)
@@ -668,6 +671,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     cursor = end
                 if cursor < b:
                     emit_rest_gap(measure, cursor, b, voice, rest_symbols, literal_edges)
+    from .octave_shift_export import apply as octave_apply
+    octave_apply(root, octave_owned)
     slur_export.apply(root, retained_slurs, slur_attacks, events)
     slide_numbering.assign(root)
     ET.indent(root)

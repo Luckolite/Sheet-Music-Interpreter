@@ -993,11 +993,11 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "1ad2ddccf387a73bd737f10a5964e5f7d8f46e4142b89a4947dd62417e3bcdc0",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "4e9339ffc733f87376a129dfb47861d7c4e491dcf015e67b56b778643307096c",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls.",
-      "review_note": "Wave and slide detectors share staff-line preparation while retaining distinct mutable raster ownership. Original mapping/order and raw fallback guards preserved; original synthetic complete-result/prepared-raster/caller regression. Apache-2.0/JDK-only changes; no private scores, models, weights, dependencies or record layouts changed. The ornament stage can borrow its existing aligned staff records for the same rasters, measures and unmodified notes, removing duplicate staff detection and alignment. The raw entry point retains its original preparation; complete ordered synthetic notes, caller rasters and staff-record identity remain exact. Explicit PITCHED/UNPITCHED kind preserves all22 prior fields and source occurrence ownership; unpitched heads do not supply tonal identity. Actual standalone port and original synthetic regression are selected for the same batch. Physical typed analysis marker-23, guide282/80-byte note and recognition revision4 are reviewed separately from the unchanged protocol1. Models and production dependencies are unchanged.",
+      "source_sha256": "42a70156ec9e65497181e54755392723589bc954ca49350d1d687f7455dff93f",
+      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "source_normalized_sha256": "dcf8facf1f1e49ef3ac05d6168109a54c7f45cd707f73754fd59ed60b8481219",
+      "reviewed_source_state": "committed",
+      "review_note": "Complete upper auxiliary accidentals use the existing2.8staffgap componentinventory limit instead of inconsistent2.2; fullglyph classifier, distance/side ownership and fallbackcrop unchanged. Paired original tallnatural/control/foreign/overheight/lower controls and exact one-note private actual outcome.",
       "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
     },
@@ -1604,12 +1604,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "efc696863d3d2a5815c4f696362e25643dec9c2c3100970a981b44d4851b80db",
-      "source_normalized_sha256": "75fcc4137eb4329dae620311100b9bfe4371c6dc58ca86a1a06a9675aed730ef",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "source_sha256": "92b1c627c342eaa3c849cbd7f101e6c177e9bdf5833108f6325b8a4994a73085",
+      "source_normalized_sha256": "1bc68455879afb5ba863d72e9b1994423012edc24a1f7b84b2d429d6b82d2269",
+      "review_note": "Recognition74 invalidates cached results for the reviewed auxiliary-natural acquisition correction; guide290/audio96/wire layouts unchanged. Paired cache identity originals updated to actualrevision.",
       "reviewed_source_state": "committed",
       "standalone_sha256": "9b269508ef9e8be1f1c64aab57fe3aaae15955ffa4ff696beb4e458ad078fd01",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3",
       "license": "Apache-2.0"
     },
@@ -2095,11 +2095,11 @@
       "reviewed_source_state": "committed"
     },
     "src/sheet_interpreter/musicxml.py": {
-      "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
-      "reviewed_sha256": "5d2f404f9cd81ab61e2dbace6e9ef96c2ca4243d51f825c4296880b8b2a244c7",
-      "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
-      "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim.",
-      "reviewed_source_state": "committed"
+      "origin": "Original standalone Python implementation; Apache-2.0, not an extracted app file.",
+      "reviewed_sha256": "2dc6b8f64925141cf2e2e719b58ff00569eed252091ec710f826ee51fa86c92b",
+      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "reviewed_source_state": "committed",
+      "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged."
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
@@ -3789,6 +3789,21 @@
       "reviewed_source_state": "committed",
       "review_note": "Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
       "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab"
+    },
+    "MusicXmlOctaveShifts.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicXmlOctaveShifts.java",
+      "source_sha256": "f16633f5f67ad12665a6a89feffabb54a136df63e89f30040311b0e0e1f1dfcb",
+      "source_normalized_sha256": "c706db6c2a524e16dce66e88c4bd1c01c7f99d32a23d63c31e9ea82de0e24202",
+      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "reviewed_source_state": "committed",
+      "review_note": "Package-only pure-JDK DOM octave direction planner and final emitted-note provenance. Final voice/staff/order scopes preserve grace transitions and dense mixed shifts. Original Apache-2.0 geometry-free fixtures; no private score, model, dependency or serialized input format change."
+    },
+    "src/sheet_interpreter/octave_shift_export.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0, not an extracted app file.",
+      "reviewed_sha256": "7611a466365a7bdc9ca05f292cf3c3cd91960b85ef43751a873f1367c1efe760",
+      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "reviewed_source_state": "committed",
+      "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged."
     }
   },
   "interpreter_speedup_review": {
@@ -8298,5 +8313,18 @@
     "license": "Apache-2.0",
     "production_sources": 16,
     "boundary": "Consumer support only. Private actual score evidence and diagnostic recognition candidates excluded. No physical correction allocation."
+  },
+  "musicxml_octave_export_review": {
+    "app_exporter": "Reviewed SheetMusicXml sounding pitch minus explicit already-applied octave provenance, shift-aware voice allocation, final emitted-node directions, and SheetStaffClefs/SheetConverter caller transport. App-only exporter is not copied as a standalone Java writer.",
+    "standalone": "Portable DOM helper parity plus original Python musicxml/octave_shift_export apply semantics. No Android dependency required.",
+    "licensing": "Apache-2.0 original helpers/regressions; no commercial score scans, libraries, audit fixtures or actual saved Song metadata copied.",
+    "evidence_scope": "Original controls and exact six-head private writer outcome independently checked with Verovio; not whole-library/device accuracy.",
+    "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819"
+  },
+  "complete_auxiliary_accidental_review": {
+    "recognitionRevision": 74,
+    "scope": "Paired package-only PortableNoteOrnaments one gate, original synthetic regression; no model/dependency/input-wire changes.",
+    "privateBoundary": "Private whole-page check restores one auxiliary-natural attachment and preserves all other14field values; no private fixture published.",
+    "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819"
   }
 }
