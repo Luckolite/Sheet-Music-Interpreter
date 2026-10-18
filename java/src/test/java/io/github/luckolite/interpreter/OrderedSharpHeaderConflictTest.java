@@ -75,7 +75,10 @@ public class OrderedSharpHeaderConflictTest {
                             .getDeclaredConstructors()[0];
             ac.setAccessible(true);
             List<Object> candidates = new ArrayList<>();
-            Method components = method("findComponents");
+            Method components =
+                    o.getDeclaredMethod(
+                            "findComponents", byte[].class, int.class, int.class, byte.class);
+            components.setAccessible(true);
             for (Object c : (List<?>) components.invoke(null, labels, W, H, (byte) 3))
                 candidates.add(ac.newInstance(c, (byte) 3));
             List<Object> heads = new ArrayList<>();

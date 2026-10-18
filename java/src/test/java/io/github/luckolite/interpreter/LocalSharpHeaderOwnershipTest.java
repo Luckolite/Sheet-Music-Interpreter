@@ -36,7 +36,10 @@ public class LocalSharpHeaderOwnershipTest {
         sc.setAccessible(true);
         var ac = Class.forName(o.getName() + "$AccidentalCandidate").getDeclaredConstructors()[0];
         ac.setAccessible(true);
-        var components = OrderedSharpHeaderConflictTest.method("findComponents");
+        var components =
+                o.getDeclaredMethod(
+                        "findComponents", byte[].class, int.class, int.class, byte.class);
+        components.setAccessible(true);
         List<Object> candidates = new ArrayList<>();
         for (Object c : (List<?>) components.invoke(null, p.labels, W, H, (byte) 3))
             candidates.add(ac.newInstance(c, (byte) 3));
