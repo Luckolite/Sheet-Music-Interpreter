@@ -2516,3 +2516,8 @@ Paired app source: d40becdad11d2c9513976bbbc33a4cdff88844e1.
 
 Finite beam bands, complete shafts and terminal feet can establish that an apparent quarter-rest proposal belongs to a printed beamed figure. Canonical selected proposals and exact derived photometric views retain identity and complete original-plane support; unknown, cloned or competing owners abstain. Existing genuine-rest acquisition and independent staff/rule guards remain authoritative. Fifty original Apache-2.0 procedural methods cover finite geometry, original and derived ownership, canonical selection, photometric lineage, genuine rests and ambiguity preservation. The clean procedural full-rest caller is preservation coverage, not a baseline false-rest reproduction. One retained normal native comparison separately supports a single physical rest correction plus its coupled following-rest value; all other saved fields agree. Recognition71 changes derived-result identity; Guide290/audio95 layouts remain unchanged.
 Paired app source: d38b1b35832da0a4674b2ed633d56646856f89d1.
+
+## Rehearsal frame printed-row ownership
+
+Complete finite rehearsal frames retain their unique printed-staff ownership when a dynamic floor points to an earlier system. Existing full-frame, glyph, capital-letter and competing-staff proofs remain authoritative. Three original procedural regressions preserve genuine forte and ambiguous ownership. Recognition72 changes derived identity; Guide290/audio95 layouts are unchanged. Private retained-page comparison independently confirms one false dynamic removed with all other saved fields exact. No whole-family or whole-library claim.
+Paired app source: e54e02ff74b31069b975fa3f954d177e825d5f55.

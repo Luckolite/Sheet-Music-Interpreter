@@ -19,6 +19,29 @@ final class BoxedRehearsalF {
             byte[] gray,
             int width,
             int height) {
+        if (provedForOwner(word, owner, staffs, gray, width, height)) return true;
+        if (!valid(owner) || staffs == null) return false;
+        // A dynamic floor can point to the preceding row. Rehearsal identity is
+        // instead proved by the complete finite frame and its unique printed row.
+        // Each alternate must be the same part; all original competing-row,
+        // whole-frame, whole-glyph, paper and capital-letter proofs still apply.
+        for (var staff : staffs) {
+            if (staff == owner
+                    || !valid(staff)
+                    || staff.index() != owner.index()
+                    || staff.count() != owner.count()) continue;
+            if (provedForOwner(word, staff, staffs, gray, width, height)) return true;
+        }
+        return false;
+    }
+
+    private static boolean provedForOwner(
+            PlayingTechniqueDetector.Word word,
+            PlayingTechniqueDetector.Staff owner,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            byte[] gray,
+            int width,
+            int height) {
         if (word == null
                 || owner == null
                 || staffs == null

@@ -1601,12 +1601,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "006c5fa61d23e11407aa9dfa0a7e85a0cd8e55ccc6a72d3b1b7376ec3b93c9f1",
-      "source_normalized_sha256": "006c5fa61d23e11407aa9dfa0a7e85a0cd8e55ccc6a72d3b1b7376ec3b93c9f1",
-      "review_note": "Recognition71 invalidates derived rest results; Guide290/audio95 record layouts unchanged.",
+      "source_sha256": "eab526d3218b18bf47cde146199333ac99774eb32c3acede05c93254f4ad6441",
+      "source_normalized_sha256": "eab526d3218b18bf47cde146199333ac99774eb32c3acede05c93254f4ad6441",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "97bfa30abcf75e2347151b24a6340e8fb5cd8bf304a8b679f49fbc7e0ed2eb60",
-      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
+      "standalone_sha256": "975b55fde476191748c4714c7eabdf8a4d7f5c3448fec411092a9de4e741e501",
+      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55",
       "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
     },
     "BeamInkConnectivity.java": {
@@ -1664,12 +1664,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d504fd584e935df82461dbae59e9d5f5864d994c5cac1dceecb6f2e08fa06f9f",
-      "source_normalized_sha256": "a123e9281df44ebfa6633395153beeb125f80ed9d80110cb19d0cd64a48dd2ce",
+      "source_sha256": "f06f285e321d3ee350d24647f6d0198400cb218bb967bffdc3b64501e833d4b6",
+      "source_normalized_sha256": "5021e0f948521546787356abddc57c166901ca0bea4fd18390f412adddeb1095",
       "reviewed_source_state": "committed",
-      "review_note": "App, Hub and writer recognition71 agree; Guide290/audio95 record layouts unchanged.",
-      "standalone_sha256": "e974fb39d7670c4381aac493520d9eabc6f788ac4423f96db103a6a2b77ad0d7",
-      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
+      "standalone_sha256": "956d866a09b6949353cd71b6fa4d361a586af3f536377acbbd9f25f50e0d1fe5",
+      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3602,12 +3602,12 @@
     },
     "BoxedRehearsalF.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoxedRehearsalF.java",
-      "source_sha256": "92f7b09c965a21be6fccaa731f1a6c40bce47a37471aeb4f661461e7614f0b7d",
-      "source_normalized_sha256": "92f7b09c965a21be6fccaa731f1a6c40bce47a37471aeb4f661461e7614f0b7d",
-      "standalone_sha256": "d51cc8a1ca909a70e7381f61e468032544889a5718699cf1e221a95549547921",
-      "review_note": "A complete finite outer-convex four-sided ink frame owns one separately complete capital F only with its entire glyph rectangle inside the observed closed hole, paper separation, all OCR foreground owned by that same frame/glyph, and unique printed-staff ownership. Keep irregular inward border width; never trim unknown glyphs or genuine expressive dynamics.",
+      "source_sha256": "475eccd4937b5aaf354d7dfe92022f91928e05e7f1301d9416edd0a2d0d4a4e3",
+      "source_normalized_sha256": "475eccd4937b5aaf354d7dfe92022f91928e05e7f1301d9416edd0a2d0d4a4e3",
+      "standalone_sha256": "d1b907b241ed28d1ae212fe4adc0208542b0fa5452b8c20d37b2993d517f81d0",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
       "reviewed_source_state": "committed",
-      "reviewed_app_commit": "432d637efc97faf6037a14640afc6cffb09bd9f4"
+      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55"
     },
     "FiniteTenutoStaffCounter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteTenutoStaffCounter.java",
@@ -8157,5 +8157,11 @@
     "new_original_methods": 50,
     "source_boundary": "Original Apache-2.0 procedural sources and fixtures only; no private score pixels, names, filenames, coordinates, logs or models.",
     "verification_scope": "A retained authentic model mask through normal native geometry/OCR agrees with the independently qualified single physical rest correction and coupled following-rest field; every other saved field is exact. Private source evidence stays private. No device or whole-library claim."
+  },
+  "boxed_rehearsal_row_review": {
+    "recognition_revision": 72,
+    "new_original_methods": 3,
+    "license": "Apache-2.0",
+    "boundary": "Original procedural regression only; private retained score evidence excluded. Complete original frame/glyph/competition checks retained; no threshold or song-specific rule."
   }
 }
