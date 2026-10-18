@@ -3638,12 +3638,12 @@
     },
     "FiniteParallelBeamBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteParallelBeamBand.java",
-      "source_sha256": "b53361a63c42e7cb03fd363368615e905734c2280e6ed112a5f8e051276c3f90",
-      "source_normalized_sha256": "85eadbde8bb12bbdd55c56c9ca739796ec77f9eb516e8d19b468e70c34dbf097",
-      "standalone_sha256": "93194d0adf761d7ea8f0662328f6e07e3ecb46d48459368a0b094d93f832422d",
-      "review_note": "Certify finite parallel beam bands and retain complete original-plane support; no generic ink threshold or region deletion.",
+      "source_sha256": "b8a831ab0641ff56eb67bafe350fef69cc40c591111a998b0e1ed9ede3a2ffbf",
+      "source_normalized_sha256": "c40f641e1122e86b7352ab551829eb806f09d1fe19c54ee20dceacb9244b3aa1",
+      "standalone_sha256": "fac8a567082dddf2f1fb99794f2af804685f801bead1c50e060046e699b892ad",
+      "review_note": "Certify finite parallel beam bands and retain complete original-plane support; no generic ink threshold or region deletion. Exact floor uses signed bitLength range checking instead of Android31-only intValueExact; negative fractions and signed endpoint/overflow regressions preserve arithmetic semantics.",
       "reviewed_source_state": "committed",
-      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1"
+      "reviewed_app_commit": "9ba3fc7dd3d243ec597eb6b38bc88185e96bd6df"
     },
     "FiniteShaftFoot.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteShaftFoot.java",

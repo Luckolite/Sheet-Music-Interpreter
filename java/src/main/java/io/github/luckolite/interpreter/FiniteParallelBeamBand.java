@@ -40,9 +40,15 @@ final class FiniteParallelBeamBand {
 
         int floor() {
             BigInteger[] z = n.divideAndRemainder(d);
-            return z[0].subtract(
-                            n.signum() < 0 && z[1].signum() != 0 ? BigInteger.ONE : BigInteger.ZERO)
-                    .intValueExact();
+            BigInteger value =
+                    z[0].subtract(
+                            n.signum() < 0 && z[1].signum() != 0
+                                    ? BigInteger.ONE
+                                    : BigInteger.ZERO);
+            // BigInteger.intValueExact requires Android 31; preserve its signed range check.
+            if (value.bitLength() > 31)
+                throw new ArithmeticException("BigInteger out of int range");
+            return value.intValue();
         }
     }
 
