@@ -318,12 +318,12 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "018ec871d2c1543b2b83202438c4cd2a3fa406e068355c56a8f944848370481b",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "source_normalized_sha256": "6042ec87d6f402f01b1f108074057e2e2db9bfb08f54bcc076b324f5f4c16b40",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "16d23fd8b4d9b9e88403a0beacb8aa8c237ff629fc57a5de4e7f566693f30296",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "source_sha256": "5930f61c26945d3993e8986e60d48296746f4bcacbc681d91f93a9202d3680a7",
+      "review_note": "Append complete component seeds after existing projected crops; preserve existing crop order, caller eligibility and total 48-crop budget. No numeric meter value is inferred from semantic labels.",
+      "source_normalized_sha256": "f3fd478b0a4e0218b41df994b008fbf9bb7bbfef81c5739d98589209ff902c7c",
+      "reviewed_source_state": "committed",
+      "standalone_sha256": "1378532e79262256d12cd9813e9733bd0ffc47c4a03a5affb641fdf0a2a34ef4",
+      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -1601,12 +1601,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "7e73ca732c2ac75649447568483b0c69bda9187723a5dfe03a3a07e1e25ce056",
-      "source_normalized_sha256": "7e73ca732c2ac75649447568483b0c69bda9187723a5dfe03a3a07e1e25ce056",
-      "review_note": "Recognition69 invalidates derived interpretations after finite-mark and registered/raw-staff ownership recovery. Guide290, audio95 and all wire fields remain unchanged.",
+      "source_sha256": "c7441518de56a370ca00987ff312df17461b4dda812d70530cf3d70a3d15964f",
+      "source_normalized_sha256": "c7441518de56a370ca00987ff312df17461b4dda812d70530cf3d70a3d15964f",
+      "review_note": "Recognition70 invalidates derived meter results. Guide290/audio95 record layouts are unchanged.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "b092d1860aeafc6e7531cb9b798d9c84a578ce0997baabb45e0072c049b8788d",
-      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10",
+      "standalone_sha256": "f83074afa1109e127fe10c8697072d8f7364a0c3a5f8017cf8c4d75b5b0e1f89",
+      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1",
       "scoped_reviewed_app_commit": "d9b64a86cf1664b2062ca9870e00c61e338c0ea3"
     },
     "BeamInkConnectivity.java": {
@@ -1664,12 +1664,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e0daa3623a692daa02f71b84de227ede4e732129dedcaf593508494146941a50",
-      "source_normalized_sha256": "8a1b2ee454585c13ce7243a8002de87ea194a5afd79a9740c03d3579a77ef7bb",
+      "source_sha256": "e0d39b00ba96e4108fb7c038078c444f4531600a7697cefee61926e73cd0fe92",
+      "source_normalized_sha256": "57d65336eaed6ea2c76573372279810319f6d64d62b50f395da5c90804f0cebb",
       "reviewed_source_state": "committed",
-      "review_note": "Align app, Hub and desktop writer recognition69; existing Guide290 and audio95 record layouts are unchanged.",
-      "standalone_sha256": "2f99f347eb3521dd70cb32d0183bec8fb3d0834ebb2ffe8f5e9c8e7eaeb1a35e",
-      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
+      "review_note": "Align app, Hub and native writer recognition70 without changing Guide290/audio95 record layouts.",
+      "standalone_sha256": "0b703a9bf2da4fb432658f02e5b2ef4f375c6737fd4c9bc811bdae1af491fc13",
+      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3617,6 +3617,15 @@
       "review_note": "Preserve all feasible raw-rule branches through compact keyed four-path states and exact gap-interval unions. Require real independent fifth-rule exterior paths and original mark pixels under one common gap constraint; registered owner identities and ambiguity remain explicit. Resource exhaustion retains the veto.",
       "reviewed_source_state": "committed",
       "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10"
+    },
+    "MeterComponentSeeds.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterComponentSeeds.java",
+      "source_sha256": "9f3449807923ab3306530792475b19174ed1a899bcdb239b1a48f6b81a7a4cb2",
+      "source_normalized_sha256": "4a22afac4fca8add5ad190afc9207fb8bd9c1178d0afee71d9a08e8048b644cb",
+      "standalone_sha256": "670a16f8bfacd20603fcf3d93005ee94bf02d44d400ff1c728e5f978c51f3f77",
+      "review_note": "Complete semantic components propose bounded crops only. Retain a complete broad raw five-rule witness and both agreeing complete disjoint near strips when one broad flank is obstructed. Missing, merged, multiple or conflicting raw paths abstain. Existing numeral, header ownership and caller eligibility remain authoritative.",
+      "reviewed_source_state": "committed",
+      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
     }
   },
   "interpreter_speedup_review": {
@@ -8096,5 +8105,13 @@
     "new_original_methods": 33,
     "source_boundary": "Apache-2.0 original procedural geometry and mathematical state/budget controls only. No private score pixels, filenames, models or song-specific branches.",
     "verification_scope": "Private retained actual301 interpretation and separate full fixed-frame Omr stage change exactly five articulation fields; all other saved notes/rests/key/tremolo fields and source planes remain exact. No fresh native acquisition, device or whole-library claim."
+  },
+  "complete_component_meter_review": {
+    "recognition_revision": 70,
+    "guide_layout": 290,
+    "audio_layout": 95,
+    "new_original_methods": 20,
+    "source_boundary": "Apache-2.0 original procedural fixtures only; no private score pixels, titles, filenames, coordinates or models.",
+    "verification_scope": "A retained authentic semantic mask and original grayscale through the normal native Guide/OCR pipeline restore one meter event; every other saved field is exact. No fresh segmentation, device or whole-library acceptance claim."
   }
 }

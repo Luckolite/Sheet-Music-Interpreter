@@ -343,7 +343,8 @@ public final class MeterChangeDetector {
                 || gray == null
                 || labels.length != width * height
                 || gray.length != width * height) return result;
-        for (var window : localWindows(labels, gray, width, height)) {
+        var windows = localWindows(labels, gray, width, height);
+        for (var window : windows) {
             var geometry = window.geometry();
             var staff = geometry.lines();
             float slope = geometry.slope();
@@ -575,6 +576,20 @@ public final class MeterChangeDetector {
                         eligible);
                 if (result.size() >= 48) return List.copyOf(result);
             }
+        }
+        // Component seeds do not inherit the global raw-projection grouping. The existing
+        // owner predicate still runs BEFORE the unchanged bounded OCR crop budget.
+        var hints = new ArrayList<MeterComponentSeeds.Hint>();
+        for (var window : windows) {
+            var geometry = window.geometry();
+            var hint =
+                    new MeterComponentSeeds.Hint(
+                            geometry.lines().top(), geometry.lines().gap(), geometry.slope());
+            if (!hints.contains(hint)) hints.add(hint);
+        }
+        for (var crop : MeterComponentSeeds.crops(labels, gray, width, height, hints)) {
+            if (!result.contains(crop) && eligible.test(crop)) result.add(crop);
+            if (result.size() >= 48) return List.copyOf(result.subList(0, 48));
         }
         return List.copyOf(result);
     }
