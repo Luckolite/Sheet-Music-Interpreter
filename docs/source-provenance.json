@@ -1687,12 +1687,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "c1deceb2856ea32eab0d9c3806a8e676d5516c3d694aced476d7f3f40b9b09d3",
-      "source_normalized_sha256": "fe67d480773f7f23ba0bf7ca6cf76a82c1b4cf80a125310349795b52fd661e88",
+      "source_sha256": "cfbeffda9861ad4110c0aeeecb46f3122b26330be1faf1e36a06395c2cec3e01",
+      "source_normalized_sha256": "be15829a7f8f48b6698dcb6c613d2f28d57a0ab0c13ee9be9dda71110ec2647d",
       "reviewed_source_state": "committed",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
-      "standalone_sha256": "1034459d6890442b3f294cae293dbf28ff9f08679b8ebf8b3569e02d944cc7cb",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved.",
+      "standalone_sha256": "935408ee4f2b749f94f2602a6a0ac3bf5bf86e7bc87425c5b4e215ebd35b0131",
+      "reviewed_app_commit": "73d42f43161bde7b0f0c2bc1074c2191b0a88a7d",
       "license": "Apache-2.0"
     },
     "ScorePlacementMap.java": {
