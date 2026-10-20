@@ -2106,14 +2106,14 @@
     "WholeRestClassifier.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestClassifier.java",
       "origin": "Original global interpreter helper; Apache-2.0.",
-      "source_sha256": "7915ebdcb76122ad82e424adcd14f1933e6f6566a5c4d29ab9cd889fc7fad75f",
-      "source_normalized_sha256": "7915ebdcb76122ad82e424adcd14f1933e6f6566a5c4d29ab9cd889fc7fad75f",
-      "reviewed_source_state": "committed",
+      "source_sha256": "0127712d7c97ff8744e07db3d480312400540ae1b7ca85b41c31ff081c9501e4",
+      "source_normalized_sha256": "0611b1784972860c3d48958a73ea81b0d54fc73eda1942589b6fc1f57e74c1c8",
+      "reviewed_source_state": "committed reviewed complete ending-bar optical envelope",
       "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
-      "standalone_sha256": "632f277f1c821352045aa5cf0e633dda45f4ffc59fe7eff3aa5320b5b04973ff",
-      "reviewed_app_commit": "41ad9198ead61aa2772136e73daab09ca166a12e",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
-      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "standalone_sha256": "421136f34d688c2e7837e794d8291c94dcd7be606ba78a944e3b0ffa6dc38d26",
+      "reviewed_app_commit": "8bd9acf128cc1cf64c3699c8db8a558181efd4a1",
+      "scoped_reviewed_app_commit": "8bd9acf128cc1cf64c3699c8db8a558181efd4a1",
+      "reviewed_app_base_commit": "f4ebeee8e619a482c1f3295032b18b34aa7e38f5",
       "license": "Apache-2.0"
     },
     "WideSystemIncomingTieProof.java": {
@@ -8590,5 +8590,12 @@
     "private_validation": "Natural geometry/acquisition path and complete ordinary page each change only six tuplet ratio pairs; all other note fields and all other thirteen page sections preserved. Other source passages remain outside this scoped correction.",
     "deployment": "Cumulative APK and matched Hub/page-worker build/deploy deferred during active goal under user instruction; no tag/release.",
     "validation": "58 focused app tests;1244 affected standalone tests;424 mapped-source checks;2833-file package/license verification;2 compound MusicXML tests and PNG/PDF8/8 pitch/duration plus MIDI/MusicXML/MP3 smoke. No new helpers, weights, record layouts or protocol changes."
+  },
+  "complete_ending_bar_rest_ownership_review": {
+    "scope": "A thin complete dark ending-bar core across five registered staff rows owns only its original dark pixels. A separately complete finite optical envelope must fit the same width bound and have observed end paper plus off-rule side collars. Raw augmentation dots disable this additional ownership proof; all other dot/head/prefix uncertainty remains authoritative.",
+    "shareable_regressions": "25 original Apache-2.0 procedural ending-bar/envelope methods; no private score pixels or metadata.",
+    "private_validation": "One retained current native page changes only a single rest kind from LITERAL to FULL_MEASURE. All208notes,92regions,other10rests,nominal4duration,positions and remaining14typedfields exact. Strict productionclock all208notes11restsfinite, zeroerrors; scoped rest resolves3 quarterbeats.",
+    "boundary": "No model/dependency/record-layout change, no full-library accuracy or deployed-device proof. Cumulative app/Hub-worker build deferred by explicit user instruction.",
+    "paired_app_commit": "8bd9acf128cc1cf64c3699c8db8a558181efd4a1"
   }
 }

@@ -2614,3 +2614,8 @@ Recognition83 retains the regional detector's exact quantized rows instead of re
 ## Recognition84: additive supported half rests
 
 Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change. Recognition84 aligns app, Hub and writers; Guide290/audio96 layouts and model weights are unchanged. Rebuild and smoke-test the matched Hub/page/audio pair before deployment. Original helper regressions and targeted private-page preservation are separate from whole-library or Android-device accuracy.
+
+## Complete ending-bar rest ownership
+
+A complete thin ending stroke can own its dark core in a rest augmentation corridor. Five registered staff rows, a separate finite optical envelope, observed end paper and clear off-rule side collars establish the stroke. Only original dark core pixels gain ownership; raw dots, adjacent heads, prefixes and unproved ink retain existing uncertainty. Twenty-five original Apache-2.0 procedural methods cover support and preservation. A retained private-page comparison changes one rest kind only; the production clock resolves the silent 3/4 bar while preserving all other saved fields. No private score material, model, dependency or record-layout changes are included. Cumulative app and paired worker packaging remains deferred.
+Paired app source: 8bd9acf128cc1cf64c3699c8db8a558181efd4a1.

@@ -107,8 +107,7 @@ final class WholeRestClassifier {
                 int hi = Math.min(width - 2, (int) Math.floor(m.right() * width));
                 var plates = new ArrayList<Plate>();
                 // Anchor the hanging body to the detected rule rather than averaged spacing.
-                scanSecondRule(
-                        gray, width, height, lo, hi, lines.rows()[1] - gap, gap, plates);
+                scanSecondRule(gray, width, height, lo, hi, lines.rows()[1] - gap, gap, plates);
                 scanRaised(gray, width, height, lo, hi, lines.top(), gap, plates);
                 for (var plate : plates) {
                     float plateGap = plate.gap();
@@ -134,7 +133,8 @@ final class WholeRestClassifier {
                     }
                     // Failure to trace a dot is not proof of an undotted glyph. Faint, clipped,
                     // irregular or connected marks in the augmentation corridor stay ambiguous.
-                    uncertainDot |= unaccountedDotInk(gray, width, height, plate, m, rawDots);
+                    uncertainDot |=
+                            unaccountedDotInk(gray, width, height, plate, m, rawDots, lines.rows());
                     double duration = dots.isEmpty() ? 4 : dots.size() == 1 ? 6 : 7;
                     float cx = (plate.left() + plate.right()) * .5f / width;
                     float cy = (plate.first() + plate.last()) * .5f / height;
@@ -262,16 +262,24 @@ final class WholeRestClassifier {
             int h,
             Plate p,
             MeasureRegion m,
-            List<SixteenthRestDetector.InkDot> dots) {
+            List<SixteenthRestDetector.InkDot> dots,
+            int[] staffRows) {
         int l = p.right() + Math.max(2, Math.round(p.gap() * .12f));
         int r = Math.min(Math.round(m.right() * w) - 1, p.right() + Math.round(p.gap() * 2.4f));
         int top = Math.max(p.first() + 1, p.rule() + Math.max(2, Math.round(p.gap() * .15f)));
         int bottom = p.rule() + Math.round(p.gap() * .85f);
         if (l < 0 || r >= w || top < 0 || bottom >= h || l >= r || top >= bottom) return true;
+        int[] endingBar = dots.isEmpty() ? completeEndingBar(g, w, h, m, staffRows, p.gap()) : null;
         for (int y = top; y <= bottom; y++) {
             var fringe = ruleFringeEnvelope(g, w, h, p, m, y);
             for (int x = l; x <= r; x++) {
                 if ((g[y * w + x] & 255) >= 225) continue;
+                if (endingBar != null
+                        && x >= endingBar[0]
+                        && x <= endingBar[1]
+                        && y >= staffRows[0]
+                        && y <= staffRows[4]
+                        && (g[y * w + x] & 255) < 170) continue;
                 boolean accounted = false;
                 for (var dot : dots)
                     if (Math.abs(dot.x() - x) <= p.gap() * .45f
@@ -283,6 +291,85 @@ final class WholeRestClassifier {
             }
         }
         return false;
+    }
+
+    /** A complete thin ending stroke owns only its dark core, never adjacent ink. */
+    private static int[] completeEndingBar(
+            byte[] g, int w, int h, MeasureRegion m, int[] rows, float gap) {
+        if (rows == null
+                || rows.length != 5
+                || !Float.isFinite(gap)
+                || gap < 6
+                || rows[0] < 1
+                || rows[4] >= h - 1
+                || rows[4] <= rows[0]) return null;
+        for (int i = 1; i < 5; i++) if (rows[i] <= rows[i - 1]) return null;
+        int edge = Math.round(m.right() * w), radius = Math.max(1, Math.round(gap * .2f));
+        if (edge < radius + 3 || edge >= w - radius - 3) return null;
+        int first = -1, last = -1;
+        for (int x = edge - radius; x <= edge + radius; x++) {
+            boolean complete = true;
+            for (int y = rows[0]; y <= rows[4]; y++)
+                if (!dark(g, w, x, y)) {
+                    complete = false;
+                    break;
+                }
+            if (!complete) continue;
+            if (first >= 0 && x != last + 1) return null;
+            if (first < 0) first = x;
+            last = x;
+        }
+        if (first < 0
+                || last - first + 1 > Math.max(1, Math.round(gap * .2f))
+                || first == edge - radius
+                || last == edge + radius) return null;
+        // The core is darker than its finite optical envelope. Both must be complete.
+        int envelopeFirst = -1, envelopeLast = -1;
+        for (int x = edge - radius; x <= edge + radius; x++) {
+            boolean complete = true;
+            for (int y = rows[0]; y <= rows[4]; y++)
+                if ((g[y * w + x] & 255) >= 225) {
+                    complete = false;
+                    break;
+                }
+            if (!complete) continue;
+            if (envelopeFirst >= 0 && x != envelopeLast + 1) return null;
+            if (envelopeFirst < 0) envelopeFirst = x;
+            envelopeLast = x;
+        }
+        if (envelopeFirst < 0
+                || envelopeFirst > first
+                || envelopeLast < last
+                || envelopeLast - envelopeFirst + 1 > Math.max(1, Math.round(gap * .2f))
+                || envelopeFirst == edge - radius
+                || envelopeLast == edge + radius) return null;
+        int endpoint = Math.max(2, Math.round(gap * .25f));
+        if (rows[0] < endpoint || rows[4] + endpoint >= h) return null;
+        for (int x = envelopeFirst; x <= envelopeLast; x++) {
+            int upper = rows[0] - 1, lower = rows[4] + 1;
+            while (upper >= rows[0] - endpoint && (g[upper * w + x] & 255) < 225) upper--;
+            while (lower <= rows[4] + endpoint && (g[lower * w + x] & 255) < 225) lower++;
+            // Observed paper must begin before the search limit, not outside the crop.
+            if (upper <= rows[0] - endpoint || lower >= rows[4] + endpoint) return null;
+            for (int y = rows[0] - endpoint; y <= upper; y++)
+                if ((g[y * w + x] & 255) < 225) return null;
+            for (int y = lower; y <= rows[4] + endpoint; y++)
+                if ((g[y * w + x] & 255) < 225) return null;
+        }
+        int railBand = Math.max(1, Math.round(gap * .15f));
+        for (int y = rows[0]; y <= rows[4]; y++) {
+            boolean rail = false;
+            for (int row : rows)
+                if (Math.abs(y - row) <= railBand) {
+                    rail = true;
+                    break;
+                }
+            if (rail) continue;
+            for (int x = envelopeFirst - 2; x <= envelopeLast + 2; x++)
+                if ((x < envelopeFirst || x > envelopeLast) && (g[y * w + x] & 255) < 225)
+                    return null;
+        }
+        return new int[] {first, last};
     }
 
     private record OpticalProfile(
