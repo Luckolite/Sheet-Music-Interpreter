@@ -497,7 +497,16 @@ final class OmrScoreInterpreter {
         notationHeads.removeIf(head -> isWholeMeasureRestHead(gray, width, height, head, staffs));
         notationHeads.removeIf(head -> isThickBarlineHead(gray, width, height, head, staffs));
         notationHeads.removeIf(
-                head -> isHeaderFlatHead(labels, gray, width, height, head, staffs, headerGlyphs));
+                head ->
+                        isHeaderFlatHead(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                head,
+                                staffs,
+                                headerGlyphs,
+                                rawHeadComponents));
         notationHeads.removeIf(
                 head ->
                         isOwnedHeaderCrossbar(
@@ -2888,7 +2897,7 @@ final class OmrScoreInterpreter {
             if (bounds == null && isHeavyRestBarFragment(gray, width, height, head, staffs))
                 bounds = new int[] {head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null
-                    && isHeaderFlatHead(labels, gray, width, height, head, staffs, glyphs))
+                    && isHeaderFlatHead(labels, gray, width, height, head, staffs, glyphs, heads))
                 bounds = new int[] {head.minX, head.maxX, head.minY, head.maxY};
             if (bounds == null
                     && isOwnedHeaderCrossbar(
@@ -3395,6 +3404,18 @@ final class OmrScoreInterpreter {
             Component head,
             List<Staff> staffs,
             List<Component> glyphs) {
+        return isHeaderFlatHead(labels, gray, width, height, head, staffs, glyphs, null);
+    }
+
+    private static boolean isHeaderFlatHead(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            List<Staff> staffs,
+            List<Component> glyphs,
+            List<Component> heads) {
         if (gray == null || gray.length != width * height) return false;
         Staff staff = nearestHeadStaff(staffs, head.centerY);
         if (staff == null) return false;
@@ -3405,6 +3426,7 @@ final class OmrScoreInterpreter {
                 || head.centerY < staff.top - gap
                 || head.centerY > staff.bottom + gap) return false;
         boolean header = false;
+        int headerRight = -1;
         for (Component original : glyphs) {
             Component c =
                     joinTrebleCurl(
@@ -3423,18 +3445,38 @@ final class OmrScoreInterpreter {
                             && Math.abs(c.centerY - (staff.top + staff.bottom) * .5f) < gap * 1.1f;
             if (treble || rawBassClef(c, gray, width, height, staff)) {
                 header = true;
+                headerRight = c.maxX;
                 break;
             }
         }
         if (!header) return false;
         for (Component original : glyphs) {
             Component seed = joinHeaderFlatSpine(original, glyphs, head, gap);
-            if (seed.minX >= head.minX
-                    || seed.maxX < head.minX - gap * .6f
-                    || seed.maxX - seed.minX + 1 > gap * .85f
-                    || seed.maxY - seed.minY + 1 < gap * .55f
+            // A label may contain the flat's upper body while NOTEHEAD paints only its lower tip.
+            // Keep the old narrow-spine route; this alternative still needs the complete raw flat,
+            // connected containment, finished strokes, and separation from the first real attack.
+            float seedWidth = seed.maxX - seed.minX + 1, seedHeight = seed.maxY - seed.minY + 1;
+            boolean bodySeed =
+                    seed.minX <= head.maxX
+                            && seed.maxX >= head.minX
+                            && seed.minY < head.minY
+                            && seed.maxY <= head.maxY
+                            && seedWidth >= gap * .24f
+                            && seedWidth <= gap * 1.75f
+                            && seedHeight >= gap * 1.20f
+                            && seedHeight <= gap * 3.35f
+                            && seedHeight >= seedWidth * 1.28f
+                            && seed.area >= gap * gap * .16f
+                            && seed.area <= gap * gap * 1.65f;
+            boolean narrowSpine =
+                    seed.minX < head.minX
+                            && seed.maxX >= head.minX - gap * .6f
+                            && seedWidth <= gap * .85f;
+            if ((!narrowSpine && !bodySeed)
+                    || seedHeight < gap * .55f
                     || seed.minY > head.centerY - gap * .9f
                     || seed.maxY < head.minY - gap * .9f) continue;
+            boolean wholeBodyRoute = !narrowSpine && bodySeed;
             for (int threshold : new int[] {180, 235}) {
                 int margin = Math.max(1, Math.round(gap * .16f));
                 int left = Math.max(0, Math.min(seed.minX, head.minX) - margin);
@@ -3502,7 +3544,7 @@ final class OmrScoreInterpreter {
                         maxY = Math.max(maxY, yy);
                     }
                 }
-                if (threshold > 180) {
+                if (threshold > 180 || wholeBodyRoute) {
                     Component connected = retainSeedConnectedInk(ink, w, h, head, left, top);
                     if (connected == null) continue;
                     area = connected.area;
@@ -3525,6 +3567,52 @@ final class OmrScoreInterpreter {
                                         sx / (float) area,
                                         sy / (float) area),
                                 OmrMeasurePostProcessor.SYMBOL);
+                if (wholeBodyRoute) {
+                    if (head.minX < left + minX - 1
+                            || head.maxX > left + maxX + 1
+                            || head.minY < top + minY - 1
+                            || head.maxY > top + maxY + 1
+                            || rawStrokeLeavesCropAtThreshold(
+                                    gray,
+                                    width,
+                                    height,
+                                    ink,
+                                    w,
+                                    h,
+                                    left,
+                                    top,
+                                    gap,
+                                    Math.max(224, threshold))) continue;
+                    // The real caller supplies the current pool; the compatibility seam computes
+                    // that same immutable mask pool only for this additional body route.
+                    List<Component> actualHeads =
+                            heads != null
+                                    ? heads
+                                    : findComponents(
+                                            labels,
+                                            width,
+                                            height,
+                                            OmrMeasurePostProcessor.NOTEHEAD);
+                    float first = Float.MAX_VALUE;
+                    for (Component main : actualHeads) {
+                        boolean contained =
+                                main.minX >= left + minX - 1
+                                        && main.maxX <= left + maxX + 1
+                                        && main.minY >= top + minY - 1
+                                        && main.maxY <= top + maxY + 1;
+                        if (!contained
+                                && main.minX > headerRight
+                                && main.area > gap * gap * .35f
+                                && main.maxX - main.minX + 1 > gap * .75f
+                                && main.maxY - main.minY + 1 > gap * .4f
+                                && main.centerY >= staff.top - gap * 3
+                                && main.centerY <= staff.bottom + gap * 3)
+                            first = Math.min(first, main.minX);
+                    }
+                    if (!Float.isFinite(first)
+                            || first == Float.MAX_VALUE
+                            || first <= left + maxX + gap * 1.5f) continue;
+                }
                 // A fragmented note label may cover only the lower tip of a
                 // proven flat bowl, away from the accidental's pitch center.
                 if (!isNaturalGlyph(ink, w, h, flat, gap)
@@ -24535,6 +24623,12 @@ final class OmrScoreInterpreter {
             // the identical curved shape, so never use the arc itself to bridge staff positions.
             if (previous.event.diatonicPitchIdentity() != current.event.diatonicPitchIdentity())
                 continue;
+            if (!firstOnset
+                    && !samePrintedOnset(previous, previousOnset)
+                    && !independentTieVoice(notes, index, currentIndex, gray, width, height)
+                    && adjacentPrintedBeamVoice(
+                            notes, previous, previousOnset, current, gray, width, height))
+                return -1;
             if (measureDistance == 0
                     && current.event.positionInMeasure() - previous.event.positionInMeasure() > .68f
                     && !ScoreNoteTiming.hasIndependentSustain(previous.event)) continue;
@@ -24595,6 +24689,46 @@ final class OmrScoreInterpreter {
             return index;
         }
         return -1;
+    }
+
+    /** A complete shared beam fixes the current voice's immediately preceding attack. */
+    private static boolean adjacentPrintedBeamVoice(
+            List<DetectedNote> notes,
+            DetectedNote older,
+            DetectedNote before,
+            DetectedNote after,
+            byte[] gray,
+            int width,
+            int height) {
+        if (gray == null
+                || width < 3
+                || height < 3
+                || gray.length != (long) width * height
+                || before.event.kind() != ScoreNoteEvent.Kind.PITCHED
+                || after.event.kind() != ScoreNoteEvent.Kind.PITCHED
+                || before.event.diatonicPitchIdentity() == after.event.diatonicPitchIdentity()
+                || before.event.measureIndex() != after.event.measureIndex()
+                || before.event.staffIndex() != after.event.staffIndex()
+                || before.event.staffCount() != after.event.staffCount()
+                || samePrintedOnset(before, after)) return false;
+        int first = tieVoiceStemDirections(gray, width, height, before.head, before.staffGap);
+        int last = tieVoiceStemDirections(gray, width, height, after.head, after.staffGap);
+        if ((first != 1 && first != 2)
+                || first != last
+                || tieVoiceStemDirections(gray, width, height, older.head, older.staffGap) != first)
+            return false;
+        for (DetectedNote other : notes) {
+            if (other == before || other == after) continue;
+            if (other.event.staffIndex() == before.event.staffIndex()
+                    && other.event.staffCount() == before.event.staffCount()
+                    && (samePrintedOnset(other, before) || samePrintedOnset(other, after)))
+                return false;
+        }
+        int[] a = attachedRawStem(gray, width, height, before.head, before.staffGap);
+        int[] b = attachedRawStem(gray, width, height, after.head, after.staffGap);
+        if (a == null || b == null || a[2] != (first == 1 ? -1 : 1) || b[2] != a[2]) return false;
+        return PrintedSingleBeamPath.connects(
+                gray, width, height, a, b, (before.staffGap + after.staffGap) * .5f);
     }
 
     /** Regional rules may align endpoints; the raw returning arc still owns the tie. */

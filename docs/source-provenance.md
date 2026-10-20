@@ -12,6 +12,16 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+A complete labelled flat body can own a small notehead-painted lower tip after
+connected raw glyph, header and separate first-attack proof. Geometry excludes
+that proven header glyph and rebases unchanged physical notes into the corrected
+playable interval. Procedural ownership tests preserve ordinary notes and keys.
+
+A complete printed beam can establish consecutive voice attacks before tying an
+older sustained endpoint. Single shaft direction and unambiguous onset columns
+are required; opposing voices and unrelated pitches retain existing eligibility.
+Original procedural regressions include chord and ordering counterexamples.
+
 Complete sparse hollow rims may use an independently owned shaft without a beam
 partner when the unchanged raw central-pocket topology closes. Washed filled
 cores, open hooks, barline axes and opposite-end flag ownership remain vetoes.

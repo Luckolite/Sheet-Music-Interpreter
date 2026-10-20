@@ -408,15 +408,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "822f7f9a903586cdb9ebe2eb536941693e09b025fa7eafc5d035bebda36fa6f4",
-      "review_note": "An independently proved sparse hollow oval with its owned shaft can enter without a beam partner only when the existing raw central-pocket topology closes. The unchanged closed-pocket rule rejects washed filled cores and open hooks; existing beamed recovery naturally retains its original path. Full-staff axes and opposite-end ownership veto ambiguous barline/flag counters; cached producer operands remain identical.",
-      "source_normalized_sha256": "23284789f129ed4a2ffca0d34601dd83dcb7365724a1345b19f49ddf76e078bd",
+      "source_sha256": "45a3595906bc4a2d46499172f11b5b81cfb9b6e99d6c13cb384bb235ad483f94",
+      "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards.",
+      "source_normalized_sha256": "48aacbed9e191759f5377354cc2a11475f5e46ca20b988398345a513aa1db891",
       "reviewed_app_state": "Paired app source committed; cumulative APK deferred during active repair goal.",
-      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
-      "standalone_sha256": "1180f7f1e52069cecd2b5f723bafaac214062fbf81ec6d59489f3cdbdf31e1be",
+      "reviewed_source_state": "Committed reviewed adjacent printed-beam voice and complete header-flat body batch; matching cumulative runtime deferred during active goal.",
+      "standalone_sha256": "e708352e56ada31fc04aeb5d061853ae404e780db3173b3a651041d4f96b57a4",
       "reviewed_app_base_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
-      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
-      "scoped_reviewed_app_commit": "503d8afa16f3965d3996f65ab3dac5d180ab0a64",
+      "reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
+      "scoped_reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
       "license": "Apache-2.0"
     },
     "PlayingTechniqueDetector.java": {
@@ -8560,5 +8560,24 @@
     "private_interaction": "Three combined authentic pages all14exact to individually source-qualified candidates, including two scoops, missing head and five false ties. Remaining family sites are open.",
     "deployment": "Source-only batch. Matched cumulative Hub/page-worker build/deploy and APK deferred during active goal under user instruction; no tagged Hub release requested.",
     "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23"
+  },
+  "adjacent_printed_beam_voice_review": {
+    "scope": "A complete existing printed beam between single-shaft adjacent attacks can identify the current voice. The older same-pitch endpoint must share that single shaft direction; independently proved opposing voices and all competing same-onset columns abstain. Apply only after written-pitch equality, preserving unrelated earlier pitches.",
+    "original_regressions": "11 original procedural endpoint/beam controls in three classes, both namespaces. No private pixels.",
+    "validation": "1025 broad standalone tie/slur/arc tests pass plus11/API focused. One private whole-page candidate removes only one false tie;294notes/63regions/0rests and31 genuine ties plus all remaining fields unchanged.",
+    "boundary": "Adjacent attacks retain their existing written durations; separate hollow/beam duration issue remains unqualified. Cumulative paired runtime rollout pending."
+  },
+  "complete_labelled_flat_body_tip_review": {
+    "scope": "A complete CLEF_OR_KEY upper-body seed may own its NOTEHEAD-painted lower tip only after existing complete connected raw-flat classification, natural/sharp veto, crop completion, containment, genuine header and independently separate first-note proof. Existing narrow-spine and verified-track complete ownership guards remain unchanged.",
+    "original_regressions": "HeaderFlatBodyOwnershipTest:6 original meaningful stage assertions; existing32 preserved. Four malformed tiny-head normal-caller claims remain private diagnostic failures, never changed to pass or exported.",
+    "private_validation": "247to245 notes, removing two physically proved key-flat bulbs.245survivors22fields exact;9geometric position fractions rebase under2corrected playable left bounds with unchanged absolute heads.27fullslurs/origins retain exact physical identities and all other typed page fields unchanged.",
+    "boundary": "Third different clef/header shape remains open. No model/key/pitch assumption, private pixels or staged geometry workaround."
+  },
+  "adjacent_voice_complete_flat_batch_validation": {
+    "scope": "A complete printed beam identifies the immediately preceding voice after written-pitch eligibility; a complete labelled flat body owns only its raw-connected lower tip before a separate genuine attack.",
+    "checks": "49 app focused checks and 1523 standalone affected checks pass; 424 mapped sources match. Fresh standalone PNG/PDF pitch-duration and MIDI/MusicXML/MP3 smoke passes.",
+    "private_interaction": "Two combined authentic full pages exactly match their independently source-qualified candidates across all 14 typed fields. One false tie and two flat bulbs corrected; genuine physical heads and references retained.",
+    "reuse": "Prior unchanged Python tests and model provenance reused. No weight, protocol or production helper change. Original generated regression ink only.",
+    "deployment": "Cumulative APK and matched Hub/page-worker build/deploy deferred during active goal under user instruction. No Hub release tag created."
   }
 }
