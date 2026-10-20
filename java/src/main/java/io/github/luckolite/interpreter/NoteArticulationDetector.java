@@ -595,6 +595,7 @@ final class NoteArticulationDetector {
         boolean[] seen = new boolean[labels.length];
         int[] queue = new int[labels.length];
         List<Glyph> glyphs = new ArrayList<>();
+        java.util.IdentityHashMap<Glyph, Integer> joinedOwners = new java.util.IdentityHashMap<>();
         for (int p = 0; p < labels.length; p++) {
             if (seen[p] || !ink(labels, gray, p, raw)) continue;
             int start = 0, end = 1;
@@ -618,7 +619,31 @@ final class NoteArticulationDetector {
                         }
                     }
             }
-            if (end < 3 || right - left > width * .025f || bottom - top > height * .018f) continue;
+            if (end < 3) continue;
+            if (right - left > width * .025f || bottom - top > height * .018f) {
+                if (raw && end <= SlurEndpointDots.MAX_PIXELS) {
+                    SlurEndpointDots.Result split =
+                            SlurEndpointDots.partition(
+                                    gray,
+                                    width,
+                                    height,
+                                    java.util.Arrays.copyOf(queue, end),
+                                    notes);
+                    for (SlurEndpointDots.Dot dot : split.dots()) {
+                        Glyph body =
+                                new Glyph(
+                                        dot.left(),
+                                        dot.top(),
+                                        dot.right(),
+                                        dot.bottom(),
+                                        dot.pixels().length,
+                                        dot.pixels());
+                        glyphs.add(body);
+                        joinedOwners.put(body, dot.owner());
+                    }
+                }
+                continue;
+            }
             glyphs.add(
                     new Glyph(left, top, right, bottom, end, java.util.Arrays.copyOf(queue, end)));
         }
@@ -705,7 +730,9 @@ final class NoteArticulationDetector {
             int bodyContrast = -1;
             int best = -1, mark = 0;
             double distance = Double.MAX_VALUE;
+            Integer joinedOwner = joinedOwners.get(glyph);
             for (int n = 0; n < notes.size(); n++) {
+                if (joinedOwner != null && n != joinedOwner) continue;
                 Anchor note = notes.get(n);
                 float dx = Math.abs(glyph.x() - note.x) / note.gap,
                         dy = Math.abs(glyph.y() - note.y) / note.gap;

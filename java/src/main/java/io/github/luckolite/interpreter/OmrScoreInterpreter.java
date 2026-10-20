@@ -387,6 +387,74 @@ final class OmrScoreInterpreter {
                     recoveredShadedChordHeads.add(head);
                 }
             }
+        // Sparse raw ovals already prove a complete contrasted rim and an owned
+        // labelled shaft. A genuine hollow unflagged head needs no beam partner.
+        Map<Staff, List<SymbolStemHeadRecovery.Head>> sparseHeadsByStaff =
+                new java.util.IdentityHashMap<>();
+        for (Staff owner : staffs) {
+            var sparse =
+                    SymbolStemHeadRecovery.sparseOvals(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            owner.gap,
+                            Math.round(owner.top - owner.gap * 2.5f),
+                            Math.round(owner.bottom + owner.gap * 2.5f));
+            sparseHeadsByStaff.put(owner, sparse);
+            for (var recovered : sparse) {
+                if (nearestHeadStaff(staffs, recovered.y()) != owner) continue;
+                Component candidate =
+                        new Component(
+                                recovered.area(),
+                                recovered.left(),
+                                recovered.right(),
+                                recovered.top(),
+                                recovered.bottom(),
+                                recovered.x(),
+                                recovered.y());
+                if (rawHeadComponents.stream()
+                                .anyMatch(
+                                        existing ->
+                                                Math.abs(existing.centerX - candidate.centerX)
+                                                                < owner.gap * .8f
+                                                        && Math.abs(
+                                                                        existing.centerY
+                                                                                - candidate.centerY)
+                                                                < owner.gap * .65f)
+                        || !printedOpenOval(labels, gray, width, height, candidate, owner.gap)
+                        // A washed filled core or open hook can pass the ordinary brightness
+                        // test. New raw admission requires an actually enclosed central pocket.
+                        || !enclosedHollowInk(gray, width, candidate, true)) continue;
+                int[] own = attachedRawStem(gray, width, height, candidate, owner.gap);
+                if (own == null || hasWholeStaffAxis(gray, width, height, owner, own[0])) continue;
+                boolean oppositeHead = false;
+                for (Component existing : rawHeadComponents) {
+                    // A flag pocket at the other end of a real note's shaft is
+                    // not a second hollow head. Require the actual same column
+                    // and a long overlapping raw shaft, not nearby x values.
+                    if (own[0] < existing.minX - owner.gap * .3f
+                            || own[0] > existing.maxX + owner.gap * .3f
+                            || nearestHeadStaff(staffs, existing.centerY) != owner) continue;
+                    int[] other = attachedRawStem(gray, width, height, existing, owner.gap);
+                    if (other == null || other[0] != own[0] || other[2] == own[2]) continue;
+                    float overlap =
+                            Math.min(
+                                            Math.max(candidate.centerY, own[1]),
+                                            Math.max(existing.centerY, other[1]))
+                                    - Math.max(
+                                            Math.min(candidate.centerY, own[1]),
+                                            Math.min(existing.centerY, other[1]));
+                    if (overlap >= owner.gap * 2) {
+                        oppositeHead = true;
+                        break;
+                    }
+                }
+                if (oppositeHead) continue;
+                rawHeadComponents.add(candidate);
+                recoveredFadedHeads.add(candidate);
+            }
+        }
         List<Component> symbolComponents =
                 findComponents(labels, width, height, OmrMeasurePostProcessor.SYMBOL);
         List<Component> clefOrKeyComponents =
@@ -501,9 +569,7 @@ final class OmrScoreInterpreter {
         for (Staff owner : staffs) {
             int bandTop = Math.round(owner.top - owner.gap * 2.5f),
                     bandBottom = Math.round(owner.bottom + owner.gap * 2.5f);
-            var sparse =
-                    SymbolStemHeadRecovery.sparseOvals(
-                            labels, gray, width, height, owner.gap, bandTop, bandBottom);
+            var sparse = sparseHeadsByStaff.get(owner);
             var extensionSparse =
                     CorroboratedFaintBeam.outerSparse(
                             labels, gray, width, height, owner.gap, bandTop, bandBottom);
@@ -3604,6 +3670,17 @@ final class OmrScoreInterpreter {
                 return true;
         }
         return false;
+    }
+
+    /** A full-staff axis is ambiguous with a barline, not a new hollow-head shaft.
+     * This veto applies only to additional raw recovery; ordinary labelled heads remain. */
+    private static boolean hasWholeStaffAxis(
+            byte[] gray, int width, int height, Staff staff, int x) {
+        int top = Math.round(staff.top), bottom = Math.round(staff.bottom);
+        if (x < 0 || x >= width || top < 0 || bottom >= height || bottom <= top) return true;
+        int dark = 0, total = bottom - top + 1;
+        for (int y = top; y <= bottom; y++) if ((gray[y * width + x] & 255) < 170) dark++;
+        return dark >= total * .85f;
     }
 
     /** A bounded zigzag above a larger note can contain a false semantic oval.

@@ -4,7 +4,7 @@ package io.github.luckolite.interpreter;
 
 import java.util.*;
 
-/** Isolated approach strokes: remove staff lines, then verify the entire stroke is straight. */
+/** Isolated approaches: complete straight strokes or finite curved strokes owned by one target. */
 final class NoteSlideDetector {
     record Head(float x, float y, float gap, int staff, int measure) {}
 
@@ -65,6 +65,7 @@ final class NoteSlideDetector {
         int[] queue = new int[ink.length];
         List<Stroke> result = new ArrayList<>();
         List<Fragment> fragments = new ArrayList<>();
+        Map<Integer, StaffPitchTrack> curveTracks = new HashMap<>();
         for (int pixel = 0; pixel < ink.length; pixel++) {
             if (!ink[pixel]) continue;
             int start = 0, end = 1;
@@ -133,7 +134,30 @@ final class NoteSlideDetector {
             if (Math.abs(correlation) < (steep ? .85 : .90)
                     || residual > (steep ? 1.4 : 1.3)
                     || Math.abs(slope) < .08
-                    || Math.abs(slope) > 5) continue;
+                    || Math.abs(slope) > 5) {
+                Stroke curved =
+                        finiteCurvedApproach(
+                                gray,
+                                w,
+                                h,
+                                queue,
+                                end,
+                                l,
+                                r,
+                                t,
+                                b,
+                                cx,
+                                cy,
+                                slope,
+                                staffs,
+                                heads,
+                                curveTracks);
+                if (curved != null
+                        && !PhraseOwnedSlideComponents.owned(
+                                gray, w, h, staffs, heads, curved.noteIndex(), queue, end))
+                    result.add(curved);
+                continue;
+            }
             double rightY = cy + (r - cx) * slope;
             int owner = -1;
             boolean ownerSourceProved = false;
@@ -322,6 +346,212 @@ final class NoteSlideDetector {
     }
 
     /** A short ledger rule can join a genuine slide to its source head and stem. */
+    /** A whole thin quarter-bow may be a printed unpitched approach even though it is not straight.
+     * The original straight classifier remains unchanged. No start pitch or envelope is inferred. */
+    private static Stroke finiteCurvedApproach(
+            byte[] gray,
+            int w,
+            int h,
+            int[] pixels,
+            int count,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            double cx,
+            double cy,
+            double slope,
+            List<Staff> staffs,
+            List<Head> heads,
+            Map<Integer, StaffPitchTrack> tracks) {
+        int columns = right - left + 1, rows = bottom - top + 1;
+        if (count > 4096
+                || columns > 128
+                || rows > 128
+                || !Double.isFinite(slope)
+                || slope >= 0
+                || (long) count * heads.size() > 1000000) return null;
+        int[] lo = new int[columns], hi = new int[columns], size = new int[columns];
+        int[] rowLo = new int[rows], rowHi = new int[rows], rowSize = new int[rows];
+        Arrays.fill(lo, h);
+        Arrays.fill(rowLo, w);
+        for (int i = 0; i < count; i++) {
+            int x = pixels[i] % w, y = pixels[i] / w, j = x - left, k = y - top;
+            lo[j] = Math.min(lo[j], y);
+            hi[j] = Math.max(hi[j], y);
+            size[j]++;
+            rowLo[k] = Math.min(rowLo[k], x);
+            rowHi[k] = Math.max(rowHi[k], x);
+            rowSize[k]++;
+        }
+        for (int x = 0; x < columns; x++)
+            if (size[x] == 0 || size[x] != hi[x] - lo[x] + 1) return null;
+        for (int y = 0; y < rows; y++)
+            if (rowSize[y] == 0 || rowSize[y] != rowHi[y] - rowLo[y] + 1) return null;
+        float[] centers = new float[columns];
+        for (int x = 0; x < columns; x++) centers[x] = (lo[x] + hi[x]) * .5f;
+        for (int x = 1; x < columns; x++) if (centers[x] > centers[x - 1] + 1) return null;
+        int owner = -1;
+        for (int n = 0; n < heads.size(); n++) {
+            Head target = heads.get(n);
+            float gap = target.gap;
+            if (target.staff < 0
+                    || !Float.isFinite(target.x + target.y + gap)
+                    || gap < 3
+                    || gap > 64
+                    || columns < gap * .65f
+                    || columns > gap * 3.5f
+                    || rows < gap * .6f
+                    || rows > gap * 2.5f
+                    || count > columns * rows * .6f
+                    || target.y >= top
+                    || target.x - right < gap * .5f
+                    || target.x - right > gap * 3) continue;
+            float[] bins = new float[3];
+            int[] binsN = new int[3];
+            for (int x = 0; x < columns; x++) {
+                int bin = Math.min(2, x * 3 / columns);
+                bins[bin] += centers[x];
+                binsN[bin]++;
+            }
+            if (binsN[0] == 0 || binsN[1] == 0 || binsN[2] == 0) continue;
+            for (int j = 0; j < 3; j++) bins[j] /= binsN[j];
+            if (bins[0] - bins[1] < gap * .08f
+                    || bins[1] - bins[2] < gap * .25f
+                    || bins[1] - (bins[0] + bins[2]) * .5f < gap * .08f) continue;
+            int checked = 0, thin = 0;
+            for (int x = 2; x < columns - 2; x++) {
+                double tangent = (centers[x + 2] - centers[x - 2]) * .25;
+                checked++;
+                if (size[x] / Math.sqrt(1 + tangent * tangent) <= Math.max(3, gap * .35f)) thin++;
+            }
+            if (checked < gap * .7f || thin < checked * .85f) continue;
+            if (!approachSector(target.x, target.y, right, centers)) {
+                StaffPitchTrack track = curveTrack(gray, w, h, staffs, target.staff, tracks);
+                if (track == null) continue;
+                float actualGap = track.at(target.x)[1];
+                if (!Float.isFinite(actualGap)
+                        || actualGap < 3
+                        || actualGap > 64
+                        || !possibleSupportedSector(target.x, target.y, right, centers, actualGap))
+                    continue;
+            }
+            // Topology must nominate one principal before raw-body queries or
+            // foreign-head checks; neither may choose one of competing destinations.
+            if (owner >= 0) return null;
+            owner = n;
+        }
+        if (owner < 0) return null;
+        Head target = heads.get(owner);
+        float gap = target.gap;
+        if (!approachSector(target.x, target.y, right, centers)
+                && !supportedDestination(gray, w, h, staffs, heads, owner, right, centers, tracks))
+            return null;
+        for (int other = 0; other < heads.size(); other++)
+            if (other != owner) {
+                Head a = heads.get(other);
+                for (int i = 0; i < count; i++)
+                    if (Math.abs(a.x - pixels[i] % w) < gap * .6f
+                            && Math.abs(a.y - pixels[i] / w) < gap * .6f) return null;
+                if (a.staff == target.staff
+                        && a.measure == target.measure
+                        && Math.abs(a.x - target.x) <= gap * .35f
+                        && Math.abs(a.y - target.y) <= gap * .35f) return null;
+            }
+        return new Stroke(left, centers[0], right, centers[columns - 1], 1, owner, false);
+    }
+
+    private static boolean approachSector(double x, double y, int right, float[] centers) {
+        int columns = centers.length, terminal = Math.max(1, columns / 3);
+        double dx = x - right, dy = y - centers[columns - 1];
+        double chord = centers[columns - 1] - centers[0];
+        double tail = centers[columns - 1] - centers[columns - 1 - terminal];
+        return dx > 0 && dy * (columns - 1) <= chord * dx && dy * terminal >= tail * dx;
+    }
+
+    /** Cheap negative preflight only: every allowed issuer body lies in this envelope.
+     * An overlapping envelope never owns a pixel; the actual raw issuer is still required. */
+    private static boolean possibleSupportedSector(
+            double x, double y, int right, float[] centers, float gap) {
+        int columns = centers.length, terminal = Math.max(1, columns / 3);
+        double lower = (centers[columns - 1] - centers[columns - 1 - terminal]) / (double) terminal;
+        double upper = (centers[columns - 1] - centers[0]) / (double) (columns - 1);
+        if (lower > upper) return false;
+        // This is the actual raw-verified track gap used by the existing head issuer.
+        double first = Math.max(1, x - .72 * gap - right), last = x + .72 * gap - right;
+        double lowY = y - .55 * gap - centers[columns - 1],
+                highY = y + .55 * gap - centers[columns - 1];
+        if (lower > 0) last = Math.min(last, highY / lower);
+        else if (lower < 0) first = Math.max(first, highY / lower);
+        else if (highY < 0) return false;
+        if (upper > 0) first = Math.max(first, lowY / upper);
+        else if (upper < 0) last = Math.min(last, lowY / upper);
+        else if (lowY > 0) return false;
+        return first <= last;
+    }
+
+    /** Cache only within this exact gray/staff invocation; null retains a failed raw proof. */
+    private static StaffPitchTrack curveTrack(
+            byte[] gray,
+            int w,
+            int h,
+            List<Staff> staffs,
+            int index,
+            Map<Integer, StaffPitchTrack> tracks) {
+        if (index < 0 || index >= staffs.size()) return null;
+        if (tracks.containsKey(index)) return tracks.get(index);
+        Staff staff = staffs.get(index);
+        if (!Float.isFinite(staff.top + staff.bottom + staff.gap)
+                || staff.gap < 3
+                || staff.gap > 64
+                || staff.bottom <= staff.top) return null;
+        StaffPitchTrack track =
+                StaffPitchTrack.forPrintedSlurs(gray, w, h, staff.top, staff.bottom, staff.gap);
+        tracks.put(index, track);
+        return track;
+    }
+
+    /** Reuse the existing raw supported head issuer; exterior paper/ink is not head extent. */
+    private static boolean supportedDestination(
+            byte[] gray,
+            int w,
+            int h,
+            List<Staff> staffs,
+            List<Head> heads,
+            int owner,
+            int right,
+            float[] centers,
+            Map<Integer, StaffPitchTrack> tracks) {
+        Head target = heads.get(owner);
+        if (target.staff < 0
+                || target.staff >= staffs.size()
+                || target.x < 0
+                || target.x >= w
+                || target.y < 0
+                || target.y >= h) return false;
+        StaffPitchTrack track = curveTrack(gray, w, h, staffs, target.staff, tracks);
+        if (track == null) return false;
+        var evidence =
+                PrintedSlurOwners.headEvidence(
+                        List.of(
+                                new PrintedSlurOwners.GeometryHead(
+                                        owner, target.x, target.y, target.staff, staffs.size())),
+                        gray,
+                        w,
+                        h,
+                        track);
+        float gap = track.at(target.x)[1];
+        if (!Float.isFinite(gap) || gap < 3 || gap > 64) return false;
+        for (int y = Math.max(0, Math.round(target.y - gap * .55f));
+                y < h && y <= target.y + gap * .55f;
+                y++)
+            for (int x = Math.max(0, Math.round(target.x - gap * .72f));
+                    x < w && x <= target.x + gap * .72f;
+                    x++)
+                if (evidence.contains(x, y) && approachSector(x, y, right, centers)) return true;
+        return false;
+    }
+
     private static void removeHeadLedgerLines(
             byte[] clean, byte[] gray, int w, int h, List<Staff> staffs, List<Head> heads) {
         for (var head : heads) {

@@ -12,6 +12,20 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Complete sparse hollow rims may use an independently owned shaft without a beam
+partner when the unchanged raw central-pocket topology closes. Washed filled
+cores, open hooks, barline axes and opposite-end flag ownership remain vetoes.
+Finite curved approaches retain complete component and unique destination proof,
+including actual head pixels from the existing raw owner when the head centre
+lies outside the measured sector. A body envelope only rejects impossible
+alternatives. The independent raw phrase-ownership guard remains active. Regressions use
+original procedural notation; private score evidence remains outside this repository.
+
+Compact round endpoint bodies can retain staccato marks while connected to a
+complete finite bow. Exact two-dimensional body samples and independently owned
+connector samples preserve ordinary ties, rounded caps and unknown branches.
+Original procedural notation and raster regressions contain no captured score ink.
+
 An independently proved printed staff pitch retains authority over an incomplete
 local rule fit that would change its diatonic position. Complete local five-rule
 evidence remains authoritative. Original synthetic notation covers conflicting

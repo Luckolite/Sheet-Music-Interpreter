@@ -359,16 +359,16 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "21fa229f5fa2491ab958157b11d92b1fa34ad0b499ac5f0f2dbaae35642f1d04",
-      "review_note": "Broad detached marcato admission requires complete column support and two independent arm fits. The broad-only open-arm entry preserves thin wide carets without changing the original dense angular API, upper-density or geometric bounds. Existing WideCaret regression and all affected original articulation controls retained; no private pixels or new dependencies.",
-      "source_normalized_sha256": "5bf2ca9c42510bb4f9d71e17178d7b7839a264b5a3ebadc1e9e48d1e50c786a1",
+      "source_sha256": "1f2622afc0270bb1b31edb9bfb7f8053af3b164b410f6dc47bf1cd6f24c157d5",
+      "review_note": "Complete raw components may partition into compact terminal dots and a finite returning connector. Exact two-dimensional body samples, complete exposed column runs, all-partition role agreement and union revalidation preserve genuine ties and unknown branches. Existing dot shape, semantic, text, staff and unique-head guards remain active. Original procedural regressions only; no private score pixels or model changes.",
+      "source_normalized_sha256": "1f2622afc0270bb1b31edb9bfb7f8053af3b164b410f6dc47bf1cd6f24c157d5",
       "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "committed",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "7beccd2b6bf5a8612916c36b494033445f80be2db92a5209cd3145f1128b5811",
+      "standalone_sha256": "0c657800e66e6bfee4d56d495814b5627c2beb332a0850eb1ef20e8a865f36fa",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "28ecb246d8bfcce7b68e94d28afe69d6d9859f10",
+      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
       "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
     },
     "OpenChevron.java": {
@@ -408,14 +408,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d055b7cc9a8b3f3ac25414f7462ee15fdb47c20d5d1cece62d7aef284c8f0904",
-      "review_note": "An independently proved printed staff pitch retains authority over an incomplete local occluded-rule fit that would change rounded diatonic position. Complete local five-rule/faded evidence, unproved frames, curved tracks and same-pitch local adjustments retain existing behavior. Original synthetic regression; no model, dependency or wire changes. Complete bounded raw zigzag ownership can reject a semantic note fragment after whole-glyph contrast/lobe proof and a unique independently separated principal; original strict recognition remains first.",
-      "source_normalized_sha256": "4f167b071617a063c643dd1e2a07f86e87593efe7d8d6fab2eea42674389adc6",
+      "source_sha256": "822f7f9a903586cdb9ebe2eb536941693e09b025fa7eafc5d035bebda36fa6f4",
+      "review_note": "An independently proved sparse hollow oval with its owned shaft can enter without a beam partner only when the existing raw central-pocket topology closes. The unchanged closed-pocket rule rejects washed filled cores and open hooks; existing beamed recovery naturally retains its original path. Full-staff axes and opposite-end ownership veto ambiguous barline/flag counters; cached producer operands remain identical.",
+      "source_normalized_sha256": "23284789f129ed4a2ffca0d34601dd83dcb7365724a1345b19f49ddf76e078bd",
       "reviewed_app_state": "Paired app source committed; cumulative APK deferred during active repair goal.",
-      "reviewed_source_state": "Full 12306 Java regressions on pitch guard base, 454 targeted final combined regressions, 729 Python tests (44 skipped), PNG/PDF MIDI/MusicXML/MP3 smoke, package and drift checks passed. Matched Hub/worker rollout queued for cumulative recognition batch; installed recognition84 unchanged.",
-      "standalone_sha256": "7e7bf018f6fdca2e80c9a939313ac6fc1425409d208b2ddccdf3c2c48efa358d",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "standalone_sha256": "1180f7f1e52069cecd2b5f723bafaac214062fbf81ec6d59489f3cdbdf31e1be",
       "reviewed_app_base_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
-      "reviewed_app_commit": "503d8afa16f3965d3996f65ab3dac5d180ab0a64",
+      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
       "scoped_reviewed_app_commit": "503d8afa16f3965d3996f65ab3dac5d180ab0a64",
       "license": "Apache-2.0"
     },
@@ -962,13 +962,13 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "12924b7f283d692da3ea6b4fa0d930366d4c9c0bb0eda5a2b6fa8c55a7913bd9",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "b58b5d2abbe8ab25181827f991b7069980dd6e3d32e332129112f3ed7d5fb97b",
-      "review_note": "An already accepted unconnected slide component is excluded only when its entire raw150 core exactly matches a complete printed phrase bow with unique preceding raw head owners in the same physical lane and measure. Curved orphan approaches and straight slides remain accepted; ambiguous or partial matches abstain. Existing slur grammar reused without duplicated parsers, threshold changes or private score assets. Original Apache-2.0 procedural fixtures.",
+      "source_sha256": "920f50c6fd7f7a54fd394618034ceab560d12f3de2b6f74e95c73f5cafeff81c",
+      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
+      "source_normalized_sha256": "4903f32766db0e021f2b2c91835d2764448ba6b5cc8902f889cb95d6a769972f",
+      "review_note": "A complete bounded monotone curved approach nominates one unique destination. Existing measured chord-to-terminal sector may intersect actual head pixels issued by the existing raw printed-head owner; failed raw tracks and competing destinations abstain. A conservative body envelope only rejects impossible alternatives and never grants ownership. Invocation-local track cache retains the same gray/staff scope. Straight route and independent phrase guard remain unchanged; no starting pitch inferred.",
       "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "34df365882cdf00ca66c847187f3398337627afd030d28957e014e81b98226dc",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "standalone_sha256": "c4e73c86f59190b9b9f5467c904a7120606a7326d23b1885546471c482526935",
       "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
       "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439"
     },
@@ -3950,6 +3950,17 @@
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
       "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
+    },
+    "SlurEndpointDots.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlurEndpointDots.java",
+      "source_sha256": "704267fb721286e09e4c5199c4ca2e8baa4727ac32ccdb5f94824272a2e6b7b0",
+      "source_normalized_sha256": "704267fb721286e09e4c5199c4ca2e8baa4727ac32ccdb5f94824272a2e6b7b0",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SlurEndpointDots.java",
+      "standalone_sha256": "fe268359edc1c37b23363a5f10aff62ca88f1c3e75d0a27ce0d13cffa83a914e",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "review_note": "Complete raw components may partition into compact terminal dots and a finite returning connector. Exact two-dimensional body samples, complete exposed column runs, all-partition role agreement and union revalidation preserve genuine ties and unknown branches. Existing dot shape, semantic, text, staff and unique-head guards remain active. Original procedural regressions only; no private score pixels or model changes.",
+      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23"
     }
   },
   "interpreter_speedup_review": {
@@ -8520,5 +8531,34 @@
     "compatibility": "Guide290 and audio96 record layouts unchanged. Recognition84 invalidates earlier derived guide identities; app, Hub and both writers updated together.",
     "validation": "Standalone Java12302 pass; Python729 pass44skip; native134 pass;19 original procedural fixtures reproduced byte-for-byte; PNG/PDF8-note scale and MIDI/MusicXML/MP3 pass;423 mapped sources and public package boundary reviewed; Hub57 and three packaged parallel4-note pages pass. Live paired rollout is verified separately; no Android device or whole-library accuracy claim.",
     "paired_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1"
+  },
+  "curve_joined_staccato_review": {
+    "scope": "A complete finite bow with independently owned compact round endpoint bodies retains staccato marks and separate attacks through the existing both-detached tie guard. Bare and thick rounded tie caps, unknown branches, incomplete components and foreign/accepted-head ownership abstain.",
+    "original_regressions": [
+      "CurveJoinedStaccatoTest.java: six original generated end-to-end notation scenes",
+      "TerminalBodyRasterTest.java: seven original complete two-dimensional body/connector scenes"
+    ],
+    "validation": "112 targeted tests per namespace pass; old helper fails two new positive raster originals while five preservation controls pass. Private whole-page evidence is retained outside the public repository; no whole-library accuracy or deployed runtime claim.",
+    "models_changed": false,
+    "private_evidence_included": false,
+    "paired_rollout": "Queued with other unreleased recognition changes; guide and audio record layouts unchanged."
+  },
+  "sparse_hollow_owned_shaft_review": {
+    "scope": "Reuse complete original sparse rim and owned-shaft evidence for unlabelled hollow notes; added raw recovery abstains on an axis spanning the full staff or an opposite-end head owning the same shaft. Existing labelled notes and beamed recovery remain active. New raw admission additionally requires unchanged enclosedHollowInk central-pocket closure; all9 sparse/washed/beam regressions pass unchanged.",
+    "original_regressions": "UnbeamedHollowRecoveryTest and StaffGridCounterTest; independent procedural rasters under Apache-2.0. No private score pixels.",
+    "boundary": "A targeted private whole-page result restores one missing pitch while preserving every old full note record. Written duration and other residuals remain unqualified. Cumulative paired rollout pending."
+  },
+  "finite_curved_approach_review": {
+    "scope": "Complete bounded curved approach strokes retain unique destination and independent raw phrase ownership. Existing straight, wavy, ledger and phrase policies remain active; no invented starting pitch.",
+    "original_regressions": "FiniteCurvedApproachTest, CurvedDestinationSectorTest, SupportedCurvedDestinationTest and CurvedUpperStaffCompetitionTest:20 original methods plus67 existing checks per namespace.",
+    "boundary": "Two private whole-page scoop sites restored with all other fields exact; one was previously accepted, one additional correction. Joined and remaining page sites open. No private evidence/model/dependency/wire changes."
+  },
+  "owned_hollow_curve_staccato_batch_validation": {
+    "scope": "Three reviewed global notation fixes; original generated Apache-2.0 tests. No private score ink, models or wire changes.",
+    "checks": "Combined app44 tests PASS; standalone136 affected/new tests PASS; PNG/PDF8of8 pitch+duration, MIDI/MusicXML/MP3 smoke PASS;424mapped sources match.",
+    "full_suite_reuse": "Full combined initial run12352:12343passed,9sparse-head failures. Narrow unchanged-central-pocket topology gate resolves all9, paired36/API affected controls and exact candidate page. Other passed cases reused; no claim of a second full run.",
+    "private_interaction": "Three combined authentic pages all14exact to individually source-qualified candidates, including two scoops, missing head and five false ties. Remaining family sites are open.",
+    "deployment": "Source-only batch. Matched cumulative Hub/page-worker build/deploy and APK deferred during active goal under user instruction; no tagged Hub release requested.",
+    "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23"
   }
 }
