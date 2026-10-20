@@ -1,0 +1,564 @@
+{
+  "format": "unsigned 8-bit grayscale, row-major",
+  "width": 480,
+  "height": 220,
+  "roles": [
+    {
+      "name": "early_remote_g14_phase0",
+      "gap": 14,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "remotePhysicalBox": [
+        320,
+        81.0,
+        450,
+        86
+      ],
+      "rowAudit": [
+        {
+          "y": 85,
+          "darkCount": 146,
+          "localCentreTone": 0
+        },
+        {
+          "y": 86,
+          "darkCount": 150,
+          "localCentreTone": 4
+        },
+        {
+          "y": 87,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 88,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 89,
+          "darkCount": 16,
+          "localCentreTone": 167
+        },
+        {
+          "y": 90,
+          "darkCount": 0,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        116,
+        14,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        81.0,
+        196,
+        88
+      ],
+      "rawProposal": [
+        180,
+        195
+      ],
+      "proposalWidth": 16,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "e05e1d0aa586dfe9902b0c706a7ce2cbf24e8d369ddb8125c413edee91cd49ea"
+    },
+    {
+      "name": "early_remote_g16_phase0",
+      "gap": 16,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "remotePhysicalBox": [
+        320,
+        84.0,
+        450,
+        90
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 148,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 152,
+          "localCentreTone": 4
+        },
+        {
+          "y": 91,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 93,
+          "darkCount": 18,
+          "localCentreTone": 167
+        },
+        {
+          "y": 94,
+          "darkCount": 0,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "4514b1acc2bfd6785ab1c99fd67b0882960ba0cd57ac6f0ced3e23d0fdaca5c1"
+    },
+    {
+      "name": "early_remote_g20_phase0",
+      "gap": 20,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "remotePhysicalBox": [
+        320,
+        90.0,
+        450,
+        98
+      ],
+      "rowAudit": [
+        {
+          "y": 97,
+          "darkCount": 153,
+          "localCentreTone": 0
+        },
+        {
+          "y": 98,
+          "darkCount": 157,
+          "localCentreTone": 4
+        },
+        {
+          "y": 99,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 100,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 101,
+          "darkCount": 23,
+          "localCentreTone": 167
+        },
+        {
+          "y": 102,
+          "darkCount": 0,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        140,
+        20,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        90.0,
+        203,
+        100
+      ],
+      "rawProposal": [
+        180,
+        202
+      ],
+      "proposalWidth": 23,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "931ea2f56d8fbf5bdf5ca2595eefd483ca3f859e93f14d5f9173eab687851372"
+    },
+    {
+      "name": "early_remote_g16_phase0.5",
+      "gap": 16,
+      "phase": 0.5,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "remotePhysicalBox": [
+        320,
+        84.5,
+        450,
+        90.5
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 148,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 152,
+          "localCentreTone": 2
+        },
+        {
+          "y": 91,
+          "darkCount": 438,
+          "localCentreTone": 16
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 58
+        },
+        {
+          "y": 93,
+          "darkCount": 438,
+          "localCentreTone": 128
+        },
+        {
+          "y": 94,
+          "darkCount": 0,
+          "localCentreTone": 197
+        },
+        {
+          "y": 95,
+          "darkCount": 0,
+          "localCentreTone": 239
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60.5,
+        124.5,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.5,
+        198,
+        92.5
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "8c695ba027072b26ea0089bdd8b41079b360ebeea1d410f0442b11448d45bb63"
+    },
+    {
+      "name": "early_adverse_stem",
+      "gap": 16,
+      "phase": 0,
+      "kind": "stem",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "remotePhysicalBox": [
+        320,
+        84.0,
+        450,
+        90
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 148,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 152,
+          "localCentreTone": 4
+        },
+        {
+          "y": 91,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 93,
+          "darkCount": 19,
+          "localCentreTone": 167
+        },
+        {
+          "y": 94,
+          "darkCount": 3,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        198
+      ],
+      "proposalWidth": 19,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "22321e8fd98c151ec50b42cafdda19f63608ea994f3c261620179a8283d90841"
+    },
+    {
+      "name": "early_adverse_branch",
+      "gap": 16,
+      "phase": 0,
+      "kind": "branch",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "remotePhysicalBox": [
+        320,
+        84.0,
+        450,
+        90
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 157,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 161,
+          "localCentreTone": 4
+        },
+        {
+          "y": 91,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 93,
+          "darkCount": 18,
+          "localCentreTone": 167
+        },
+        {
+          "y": 94,
+          "darkCount": 0,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        206
+      ],
+      "proposalWidth": 27,
+      "preconditions": false,
+      "negativeWitnessScope": "WIDTH_LIMIT_ONLY",
+      "sha256": "dd39f918572feb91821acc96f0c69d96925397419d16571179682f7f73f5469f"
+    },
+    {
+      "name": "early_adverse_lower",
+      "gap": 16,
+      "phase": 0,
+      "kind": "lower",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "remotePhysicalBox": [
+        320,
+        84.0,
+        450,
+        90
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 148,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 152,
+          "localCentreTone": 4
+        },
+        {
+          "y": 91,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 93,
+          "darkCount": 18,
+          "localCentreTone": 167
+        },
+        {
+          "y": 94,
+          "darkCount": 4,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "74e607eb480e7405ea236b7b31c44b19a316851ba6c822cdcf146d7d6b65df73"
+    },
+    {
+      "name": "early_adverse_oval",
+      "gap": 16,
+      "phase": 0,
+      "kind": "oval",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "remotePhysicalBox": [
+        320,
+        84.0,
+        450,
+        90
+      ],
+      "rowAudit": [
+        {
+          "y": 89,
+          "darkCount": 148,
+          "localCentreTone": 0
+        },
+        {
+          "y": 90,
+          "darkCount": 152,
+          "localCentreTone": 4
+        },
+        {
+          "y": 91,
+          "darkCount": 440,
+          "localCentreTone": 28
+        },
+        {
+          "y": 92,
+          "darkCount": 440,
+          "localCentreTone": 88
+        },
+        {
+          "y": 93,
+          "darkCount": 14,
+          "localCentreTone": 167
+        },
+        {
+          "y": 94,
+          "darkCount": 0,
+          "localCentreTone": 227
+        }
+      ],
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "00b3a315cbc16f1b6b4a4ff6d5162c6c40db1f060a389297c5f11952646332c7"
+    }
+  ]
+}

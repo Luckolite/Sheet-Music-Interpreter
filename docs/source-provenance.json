@@ -95,12 +95,15 @@
     },
     "HalfRestRuleBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HalfRestRuleBody.java",
-      "source_sha256": "f9a896a7cec8d25458fc105bf64f9522cdf9aa4e8b2bc8d950f7958969378d4d",
+      "source_sha256": "320a779f34b03e757980696faad7443c71f1188e9cecd58c1ff4a5fe7e40b9fc",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "5a4da4ccd81adb2369a1d002b96fe964e2b90f2db7b3de525765ea79169f1db9",
-      "standalone_sha256": "c3ec066a8820b5e74e41ada2ea93f463644edad9ecba2e75078d3306563f22e3",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Use physically proven key flats, independently owned shafts, detached bow geometry and confirmed printed rails to retain clefs, accidental identity and written rhythm. Recover a hanging rest only with supporting-rule and fading-edge contrast, and a separator only with validated local five-rule frames. Original synthetic fixtures; no private score pixels, models, dependencies or record-format changes."
+      "source_normalized_sha256": "9d320eec8ce7b8c987071544474ec63bec4e96458fe0f0dc77aebe03f2443190",
+      "standalone_sha256": "eb1d5382529839ef10873927ec386f6316640a05525ad3577f6096dcee6aa3d5",
+      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
+      "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
+      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal."
     },
     "TupletSixGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
@@ -520,17 +523,17 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "b7e143b36c0d450135f55db532e0a597e3b754aabca201138c268f533bb03e77",
-      "review_note": "An independently owned complete accent and original-gray pitched-head shaft account for every non-rule pixel of a false rest proposal. Bilateral raw five-line support proves ignored rules. Unknown, clipped, disconnected or ambiguous ownership abstains; no rhythm/proximity exclusion. Original Apache-2.0 procedural controls, no private score assets or new external dependency.",
-      "source_normalized_sha256": "a43c90f2bd8c2768b319608fa78f97e2577506323a3fb2848911d290e2d038f8",
+      "source_sha256": "8d1412e2d58dce263248b8f95bd3346aa5c7d10a4d3ed203595061002db885cb",
+      "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
+      "source_normalized_sha256": "c1c64970409db56138c8f1be496d118504bd1bf560803333b43f159f84e80afd",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_source_state": "committed",
-      "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
-      "standalone_sha256": "28b41743242c317e32bf5c99a24db679286a6c4bbc9d3e9727c48c937716cd9a",
+      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
+      "standalone_sha256": "b57c78d314b999f6a63ac010617b95873fc02b01f1b9c19c5ba6fba2544c2025",
       "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
-      "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
+      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74"
+      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52"
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1629,16 +1632,16 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "1def9a466019a49c7a9ac6fa3567332853851512ed89a83ac2d7dbccddfc79d4",
-      "source_normalized_sha256": "f91bd62e4ebdc18d1a4f4e46319c6987e457e6883dc94be9b47a9c23d528564f",
-      "review_note": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
-      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
-      "standalone_sha256": "2026efedf9808e1df03a5a502e4c89d6a66e3c4a9f1de4fe8bbaaa665ee7bf05",
+      "source_sha256": "ae434223a772bedf888d6f3a37e5a1e3d03c9afbb8f48f694320b4fb4deda67a",
+      "source_normalized_sha256": "ae434223a772bedf888d6f3a37e5a1e3d03c9afbb8f48f694320b4fb4deda67a",
+      "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
+      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
+      "standalone_sha256": "bff1c0d4e7db64af52310226a95a9ef2f652753dc448a11756d17a6c033349ea",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
-      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
+      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1695,16 +1698,16 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "a5cebbb8b61488b5c30ab7124e8714aef091bb03623ddb0f77f817e93fba49db",
-      "source_normalized_sha256": "87e805d5c398efb67277125e8189367b728f3f4bbab20fdce5170c6cec8e96d2",
-      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates. Recognition83 changes only cache recognition identity; Guide290/audio96 unchanged.",
-      "standalone_sha256": "ddcfec81fcae9be7fd3323486f90198eb227da0a9c32fe210e60c3d11dabf360",
+      "source_sha256": "6ea733e287a2679424af6e55cb2e95988e1645fb6189da456db1011469215325",
+      "source_normalized_sha256": "6ea733e287a2679424af6e55cb2e95988e1645fb6189da456db1011469215325",
+      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates. Recognition83 changes only cache recognition identity; Guide290/audio96 unchanged. Recognition84 changes only the recognition identity; Guide290/audio96 layouts remain unchanged.",
+      "standalone_sha256": "7889d84062323a540bb129fd0abfdfac8bfbd19855f6c4e790393e1a63f36ba9",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
-      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
-      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
+      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
+      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -8507,5 +8510,15 @@
     "paired_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
     "validation": "Full standalone Java12252 pass; Python729 pass44skip; original fixture geometry reconstructed byte-for-byte; native guide95 pass; PNG/PDF8-note smoke and MIDI/MusicXML/MP3 pass; package boundary reviewed. Matched Hub57 self-tests and three parallel four-note page smoke pass; live deployment pending.",
     "known_limitations": "Seven-rule lattice ownership ambiguity remains held; no Android device or whole-library accuracy claim."
+  },
+  "supported_half_rest_core_review": {
+    "recognition": 84,
+    "scope": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
+    "privateEvidenceIncluded": false,
+    "modelChanges": false,
+    "regressionScope": "Three original direct-helper positive cases fail on the prior API and pass with the supported-core entry. Whole-detector optical cases preserve baseline decisions; separate tests require the new entry and stable merge. Targeted private normal-page comparison preserves every earlier rest and changes only the independently printed missing half-rest silence.",
+    "compatibility": "Guide290 and audio96 record layouts unchanged. Recognition84 invalidates earlier derived guide identities; app, Hub and both writers updated together.",
+    "validation": "Standalone Java12302 pass; Python729 pass44skip; native134 pass;19 original procedural fixtures reproduced byte-for-byte; PNG/PDF8-note scale and MIDI/MusicXML/MP3 pass;423 mapped sources and public package boundary reviewed; Hub57 and three packaged parallel4-note pages pass. Live paired rollout is verified separately; no Android device or whole-library accuracy claim.",
+    "paired_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1"
   }
 }

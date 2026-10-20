@@ -2576,3 +2576,7 @@ Paired app source: 61029a658ee219db344b767df304c5f9555791dc. Android compilation
 ## Regional shared-rule recovery
 
 Recognition83 retains the regional detector's exact quantized rows instead of reconstructing them from its fitted seed. A shared established raw rule cannot justify a second staff when common five-rule support and the original independent line support are insufficient. Prior search bands must be disjoint; incomplete or over-budget proofs preserve the previous admission path. Original procedural fixtures cover independent, fragmented, faint, and shared-rule geometry. Seven-rule ownership ambiguity remains unresolved. Models, dependencies, Guide290 and audio96 layouts are unchanged.
+
+## Recognition84: additive supported half rests
+
+Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change. Recognition84 aligns app, Hub and writers; Guide290/audio96 layouts and model weights are unchanged. Rebuild and smoke-test the matched Hub/page/audio pair before deployment. Original helper regressions and targeted private-page preservation are separate from whole-library or Android-device accuracy.

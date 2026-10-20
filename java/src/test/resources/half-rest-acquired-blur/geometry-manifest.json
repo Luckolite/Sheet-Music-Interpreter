@@ -1,0 +1,348 @@
+{
+  "format": "unsigned 8-bit grayscale, row-major",
+  "width": 480,
+  "height": 220,
+  "roles": [
+    {
+      "name": "plate_g14_phase0",
+      "gap": 14,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        116,
+        14,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        81.0,
+        196,
+        88
+      ],
+      "rawProposal": [
+        180,
+        195
+      ],
+      "proposalWidth": 16,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "90f670d5d4a40876945106f5de992ef96cce04bf55b7c3ac9928adeb001fe39c"
+    },
+    {
+      "name": "plate_g14_phase0.5",
+      "gap": 14,
+      "phase": 0.5,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60.5,
+        116.5,
+        14,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        81.5,
+        196,
+        88.5
+      ],
+      "rawProposal": [
+        180,
+        195
+      ],
+      "proposalWidth": 16,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "013a2f484cccc8c6bf3e89b8fd72a262c2b38b72ef4965e56e506a3026d4fcb9"
+    },
+    {
+      "name": "plate_g16_phase0",
+      "gap": 16,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "9277b1cf399f36878c2beed2fda4a318b4ea86436817625bf3c7bdc131419206"
+    },
+    {
+      "name": "plate_g16_phase0.5",
+      "gap": 16,
+      "phase": 0.5,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60.5,
+        124.5,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.5,
+        198,
+        92.5
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "83d7d7d0afd00a3b2493393bae4ed146c952904dde2e1a6175627d24f74eae3b"
+    },
+    {
+      "name": "plate_g20_phase0",
+      "gap": 20,
+      "phase": 0,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        140,
+        20,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        90.0,
+        203,
+        100
+      ],
+      "rawProposal": [
+        180,
+        202
+      ],
+      "proposalWidth": 23,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "2331e4f2681771e08edabb5184d1d21164693b6e9a5ddb9d4c60ef9519392466"
+    },
+    {
+      "name": "plate_g20_phase0.5",
+      "gap": 20,
+      "phase": 0.5,
+      "kind": "positive",
+      "expectedDirect": 1,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60.5,
+        140.5,
+        20,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        90.5,
+        203,
+        100.5
+      ],
+      "rawProposal": [
+        180,
+        202
+      ],
+      "proposalWidth": 23,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "e14ee5ff83f14bf9962cd70399d501c97ec66c135227e7d70eaddb1f630db656"
+    },
+    {
+      "name": "adverse_stem",
+      "gap": 16,
+      "phase": 0,
+      "kind": "stem",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "ac92b86fe1fa4574428765bce95e492972fcbc5a8d8e19eee0f37a8de672340e"
+    },
+    {
+      "name": "adverse_branch",
+      "gap": 16,
+      "phase": 0,
+      "kind": "branch",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        206
+      ],
+      "proposalWidth": 27,
+      "preconditions": false,
+      "negativeWitnessScope": "WIDTH_LIMIT_ONLY",
+      "sha256": "bf2a4e7e46b5f8eff74a063ac6e76612c811195ebebd7e9aaaec08c29c9fc595"
+    },
+    {
+      "name": "adverse_lower",
+      "gap": 16,
+      "phase": 0,
+      "kind": "lower",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "5a848213e2a012fe6c7138ae8746cc75f427c1102c21e7ba7b15a023247772cf"
+    },
+    {
+      "name": "adverse_oval",
+      "gap": 16,
+      "phase": 0,
+      "kind": "oval",
+      "expectedDirect": 0,
+      "expectedFull": 0,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "a496f8fdd93b36b3b39f1e037ed9014c675e773e2d25f5ed87944daf5caf4a13"
+    },
+    {
+      "name": "interrupted_left_support_retains_ordinary_rest",
+      "gap": 16,
+      "phase": 0,
+      "kind": "supportgap",
+      "expectedDirect": 0,
+      "expectedFull": 1,
+      "w": 480,
+      "h": 220,
+      "staff": [
+        60,
+        124,
+        16,
+        0,
+        1
+      ],
+      "physicalPlate": [
+        180,
+        84.0,
+        198,
+        92
+      ],
+      "rawProposal": [
+        180,
+        197
+      ],
+      "proposalWidth": 18,
+      "preconditions": true,
+      "negativeWitnessScope": "IN_DOMAIN",
+      "sha256": "565ba52eaa7d3ce9c18db321189864adb040d2edea2d3fb949b5f1c7c56cc050"
+    }
+  ]
+}

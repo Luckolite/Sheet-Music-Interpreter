@@ -121,14 +121,203 @@ final class SixteenthRestDetector {
                 for (var dot : candidateDots) if (dot.rest().equals(rest)) dots.add(dot);
             }
         }
-        return ClassifiedWholeRests.apply(
-                collected(combined, dots),
-                gray,
-                width,
-                height,
-                measures,
-                staffs,
-                classificationNotes);
+        Detection strong =
+                ClassifiedWholeRests.apply(
+                        collected(combined, dots),
+                        gray,
+                        width,
+                        height,
+                        measures,
+                        staffs,
+                        classificationNotes);
+        return addSupportedCore(strong, gray, width, height, measures, staffs, notes);
+    }
+
+    /** Merge only after all released detector phases; no new proposal can replace a released rest. */
+    private static Detection addSupportedCore(
+            Detection strong,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes) {
+        if (gray == null
+                || (long) width * height != gray.length
+                || width < 3
+                || height < 3
+                || width > 8192
+                || height > 16384
+                || measures == null
+                || staffs == null
+                || notes == null
+                || staffs.size() > 64) return strong;
+        List<ScoreRestEvent> pending = new ArrayList<>();
+        List<RestDot> dots = new ArrayList<>();
+        for (Staff staff : staffs) {
+            if (staff == null
+                    || !Float.isFinite(staff.gap())
+                    || staff.gap() < 4
+                    || staff.gap() > 64) continue;
+            Detection found =
+                    staff.pitchTrack() == null
+                            ? supportedCoreFlat(gray, width, height, measures, staff, notes)
+                            : detectOnPrintedStaff(
+                                    gray, width, height, measures, staff, notes, false, false,
+                                    false, true);
+            pending.addAll(found.rests());
+            dots.addAll(found.dots());
+        }
+        return mergeSupportedCore(strong, collected(pending, dots));
+    }
+
+    private static Detection mergeSupportedCore(Detection strong, Detection extra) {
+        List<ScoreRestEvent> rests = new ArrayList<>(strong.rests());
+        List<RestDot> dots = new ArrayList<>(strong.dots());
+        boolean added = false;
+        for (ScoreRestEvent rest : extra.rests()) {
+            boolean duplicate =
+                    rests.stream()
+                            .anyMatch(
+                                    old ->
+                                            old.measureIndex() == rest.measureIndex()
+                                                    && old.staffIndex() == rest.staffIndex()
+                                                    && old.staffCount() == rest.staffCount()
+                                                    && Math.abs(
+                                                                    old.positionInMeasure()
+                                                                            - rest
+                                                                                    .positionInMeasure())
+                                                            < .025f
+                                                    && Math.abs(old.pageY() - rest.pageY())
+                                                            < Math.max(
+                                                                    .001f,
+                                                                    Math.max(
+                                                                            old.pageHeight(),
+                                                                            rest.pageHeight())));
+            if (duplicate) continue;
+            // Stable insertion never sorts or reconstructs the released records, including
+            // intentional voices.
+            int at = 0;
+            while (at < rests.size()
+                    && (rests.get(at).measureIndex() < rest.measureIndex()
+                            || rests.get(at).measureIndex() == rest.measureIndex()
+                                    && rests.get(at).positionInMeasure()
+                                            <= rest.positionInMeasure())) at++;
+            rests.add(at, rest);
+            added = true;
+            for (RestDot dot : extra.dots()) if (dot.rest().equals(rest)) dots.add(dot);
+        }
+        return added ? new Detection(List.copyOf(rests), List.copyOf(dots)) : strong;
+    }
+
+    /** Ordinary standing plates only. These seeds do not bypass any original inspectOwned guard. */
+    private static Detection supportedCoreFlat(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            Staff staff,
+            List<ScoreNoteEvent> notes) {
+        float gap = staff.gap();
+        if (!Float.isFinite(staff.top())
+                || !Float.isFinite(staff.bottom())
+                || gap < 4
+                || gap > 64
+                || staff.index() < 0
+                || staff.count() <= staff.index()) return new Detection(List.of(), List.of());
+        int top = Math.max(0, Math.round(staff.top() + gap * .25f));
+        int bottom = Math.min(height - 1, Math.round(staff.bottom() + gap * .3f));
+        if (bottom < top || bottom - top + 1 > Math.ceil(4.5d * gap) + 4)
+            return new Detection(List.of(), List.of());
+        boolean[] narrow = new boolean[bottom - top + 1], wide = new boolean[narrow.length];
+        for (int y = top; y <= bottom; y++) {
+            int dark = 0, longest = 0, run = 0;
+            for (int x = 0; x < width; x++)
+                if ((gray[y * width + x] & 255) < 170) {
+                    dark++;
+                    longest = Math.max(longest, ++run);
+                } else run = 0;
+            float nearest = staff.top() + Math.round((y - staff.top()) / gap) * gap;
+            boolean supported = dark > width * .25f || longest >= gap * 5;
+            narrow[y - top] = Math.abs(y - nearest) <= gap * .2f && supported;
+            wide[y - top] = Math.abs(y - nearest) <= gap * .35f && supported;
+        }
+        List<boolean[]> masks = new ArrayList<>();
+        masks.add(narrow);
+        if (!java.util.Arrays.equals(narrow, wide)) masks.add(wide);
+        boolean[] edge =
+                RestStaffRuleEdge.extend(gray, width, height, top, staff.top(), gap, narrow);
+        if (!java.util.Arrays.equals(edge, narrow) && !java.util.Arrays.equals(edge, wide))
+            masks.add(edge);
+        boolean[] contrast =
+                RestStaffRuleEdge.extendContrasted(
+                        gray, width, height, top, staff.top(), gap, narrow);
+        if (masks.stream().noneMatch(mask -> java.util.Arrays.equals(mask, contrast)))
+            masks.add(contrast);
+        // Complete maximal raw row runs in the union of the existing rule and body-height search
+        // bounds.
+        int first = Math.max(top, (int) Math.ceil(staff.top() + 2 * gap - gap * .90f));
+        int last = Math.min(bottom, (int) Math.floor(staff.top() + 2 * gap + gap * .25f));
+        java.util.Set<Long> seen = new java.util.HashSet<>();
+        List<int[]> proposals = new ArrayList<>();
+        for (int y = first; y <= last; y++)
+            for (int x = 0; x < width; ) {
+                if ((gray[y * width + x] & 255) >= 170) {
+                    x++;
+                    continue;
+                }
+                int left = x;
+                while (x < width && (gray[y * width + x] & 255) < 170) x++;
+                int right = x - 1, count = right - left + 1;
+                if (left == 0 || right == width - 1 || count < gap * .7f || count > gap * 1.6f)
+                    continue;
+                long key = ((long) left << 32) | (right & 0xffffffffL);
+                if (seen.add(key)) {
+                    if (proposals.size() == 256) return new Detection(List.of(), List.of());
+                    proposals.add(new int[] {left, right});
+                }
+            }
+        List<ScoreRestEvent> rests = new ArrayList<>();
+        List<RestDot> dots = new ArrayList<>();
+        for (boolean[] mask : masks)
+            for (int[] proposal : proposals) {
+                int left = proposal[0], right = proposal[1];
+                int[] ink = new int[bottom - top + 1];
+                for (int y = top; y <= bottom; y++)
+                    if (!mask[y - top])
+                        for (int x = left; x <= right; x++)
+                            if ((gray[y * width + x] & 255) < 170) ink[y - top]++;
+                int[] core =
+                        HalfRestRuleBody.findSupportedCore(
+                                gray, width, height, staff.top(), gap, left, right, top, ink);
+                if (core == null) continue;
+                inspectOwnedMode(
+                        gray,
+                        gray,
+                        width,
+                        height,
+                        measures,
+                        notes,
+                        staff,
+                        top,
+                        bottom,
+                        mask,
+                        left,
+                        right,
+                        rests,
+                        dots,
+                        true,
+                        false,
+                        false,
+                        true,
+                        false,
+                        false,
+                        false,
+                        (staff.top() + staff.bottom()) * .5f / height,
+                        false,
+                        core);
+            }
+        return collected(rests, dots);
     }
 
     /** Keep rest masks aligned to five actual raster rules, independently of pitch fitting. */
@@ -1855,6 +2044,30 @@ final class SixteenthRestDetector {
             boolean faintShapes,
             boolean contactOnly,
             boolean halfOnly) {
+        return detectOnPrintedStaff(
+                gray,
+                width,
+                height,
+                measures,
+                staff,
+                notes,
+                faintShapes,
+                contactOnly,
+                halfOnly,
+                false);
+    }
+
+    private static Detection detectOnPrintedStaff(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            Staff staff,
+            List<ScoreNoteEvent> notes,
+            boolean faintShapes,
+            boolean contactOnly,
+            boolean halfOnly,
+            boolean supportedCoreOnly) {
         int first = Math.max(0, (int) Math.floor(staff.top() - staff.gap() * 6));
         int last = Math.min(height, (int) Math.ceil(staff.bottom() + staff.gap() * 6.4f));
         if (last <= first) return new Detection(List.of(), List.of());
@@ -1956,32 +2169,35 @@ final class SixteenthRestDetector {
                         staff.count());
         var contourBounds = new java.util.HashMap<ScoreRestEvent, int[]>();
         Detection detected =
-                halfOnly
-                        ? PolyphonicHalfRests.detectWithDots(
-                                flat,
-                                width,
-                                bandHeight,
-                                mappedMeasures,
-                                List.of(rectified),
-                                mappedNotes)
-                        : contactOnly
-                                ? BeamedHeadQuarterRests.detectWithDots(
+                supportedCoreOnly
+                        ? supportedCoreFlat(
+                                flat, width, bandHeight, mappedMeasures, rectified, mappedNotes)
+                        : halfOnly
+                                ? PolyphonicHalfRests.detectWithDots(
                                         flat,
                                         width,
                                         bandHeight,
                                         mappedMeasures,
                                         List.of(rectified),
                                         mappedNotes)
-                                : detectWithDots(
-                                        flat,
-                                        width,
-                                        bandHeight,
-                                        mappedMeasures,
-                                        List.of(rectified),
-                                        mappedNotes,
-                                        false,
-                                        faintShapes,
-                                        contourBounds);
+                                : contactOnly
+                                        ? BeamedHeadQuarterRests.detectWithDots(
+                                                flat,
+                                                width,
+                                                bandHeight,
+                                                mappedMeasures,
+                                                List.of(rectified),
+                                                mappedNotes)
+                                        : detectWithDots(
+                                                flat,
+                                                width,
+                                                bandHeight,
+                                                mappedMeasures,
+                                                List.of(rectified),
+                                                mappedNotes,
+                                                false,
+                                                faintShapes,
+                                                contourBounds);
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
         var rejectedViewRests = new java.util.HashSet<ScoreRestEvent>();
@@ -2146,6 +2362,58 @@ final class SixteenthRestDetector {
             boolean farRaised,
             float printedStaffCenter,
             boolean faintShapes) {
+        inspectOwnedMode(
+                gray,
+                ownershipGray,
+                width,
+                height,
+                measures,
+                notes,
+                staff,
+                top,
+                bottom,
+                line,
+                left,
+                right,
+                result,
+                restDots,
+                ordinary,
+                lowered,
+                deepLowered,
+                edgeFallback,
+                bulbOnly,
+                quarterOnly,
+                farRaised,
+                printedStaffCenter,
+                faintShapes,
+                null);
+    }
+
+    private static void inspectOwnedMode(
+            byte[] gray,
+            byte[] ownershipGray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            List<ScoreRestEvent> result,
+            List<RestDot> restDots,
+            boolean ordinary,
+            boolean lowered,
+            boolean deepLowered,
+            boolean edgeFallback,
+            boolean bulbOnly,
+            boolean quarterOnly,
+            boolean farRaised,
+            float printedStaffCenter,
+            boolean faintShapes,
+            int[] supportedCoreBounds) {
         float gap = staff.gap();
         if (right - left + 1 < gap * .7f || right - left + 1 > gap * 2f) return;
         int minY = bottom + 1, maxY = top - 1;
@@ -2194,6 +2462,7 @@ final class SixteenthRestDetector {
             int[] bounds =
                     HalfRestRuleBody.find(
                             gray, width, height, staff.top(), gap, left, right, top, ink);
+            if (bounds == null && supportedCoreBounds != null) bounds = supportedCoreBounds;
             if (bounds != null) {
                 half = true;
                 minY = bounds[0];
