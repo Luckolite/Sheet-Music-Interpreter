@@ -3610,8 +3610,14 @@ final class TripletRhythmDetector {
                                 && lowerOpen >= required
                                 && lowerOpenLeft - waistLeft >= indentation
                                 && upperLobe - capLeft >= Math.max(2, (int) Math.ceil(w * .25f));
-        // Preserve every released recognition path before considering raster recovery.
-        if (lobes && upper && lower && strictLower) return true;
+        // Reject a complete four before accepting either three recognition path.
+        if (lobes && upper && lower && strictLower) {
+            int legacyArea = 0;
+            for (int yy = 0; yy < h; yy++)
+                for (int xx = 0; xx < w; xx++)
+                    if (dark(gray, width, left + xx, top + yy)) legacyArea++;
+            return !completeFourCrossbar(gray, width, legacyArea, left, top, w, h);
+        }
         boolean rasterUpper =
                 upperOpen >= required || upperOpen >= 1 && upperRasterPocket >= required;
         boolean rasterLower =

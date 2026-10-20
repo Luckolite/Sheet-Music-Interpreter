@@ -546,14 +546,14 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "f9e8880a82092a11b35eb8117b1669a46f4cba30bbc8225ad347a177cc193039",
-      "source_normalized_sha256": "1f12a0a0b198699d7090c42574ab38e6fba79937361cfd19dc5340fd69614f6e",
-      "review_note": "Mixed beamed tuplets cannot borrow a nearby fingering numeral across independently established separated beam groups unless the existing two-arm bracket proof spans the group. Original connected, separated and explicitly bracketed controls; no new helpers, thresholds, models or private pixels.",
+      "source_sha256": "ff43b47588480e6cdbbe254aebaeaf9fd9db639e157d06541428d7909f7b86be",
+      "source_normalized_sha256": "97f1d77c8a74974820119a81d6db3096cf8812858dc0b174418c11c74172046c",
+      "review_note": "A complete independently recognized four with a continuous crossbar contradicts both released and raster-recovery three recognition paths. Apply the existing contradiction before the legacy early return; keep positive three evidence and all classifier thresholds unchanged. Original Bravura scales/phases and existing genuine-three controls; no private pixels, source-specific exceptions, helpers, models or format changes.",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "a444271792cf52faccd11ac7188b4baa492431aac4c1af6e5b16088e067d48a0",
-      "reviewed_app_commit": "63a6b6c3deff1b859dbaf2c042a5f8e15b38ef43",
-      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "standalone_sha256": "4b8fbd555e5c8f1e77cddc5ede620057cf5397265c898954b2737511c5000faf",
+      "reviewed_app_commit": "f4ebeee8e619a482c1f3295032b18b34aa7e38f5",
+      "reviewed_app_base_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
+      "scoped_reviewed_app_commit": "f4ebeee8e619a482c1f3295032b18b34aa7e38f5"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -8579,5 +8579,16 @@
     "private_interaction": "Two combined authentic full pages exactly match their independently source-qualified candidates across all 14 typed fields. One false tie and two flat bulbs corrected; genuine physical heads and references retained.",
     "reuse": "Prior unchanged Python tests and model provenance reused. No weight, protocol or production helper change. Original generated regression ink only.",
     "deployment": "Cumulative APK and matched Hub/page-worker build/deploy deferred during active goal under user instruction. No Hub release tag created."
+  },
+  "complete_four_three_contradiction_review": {
+    "scope": "Apply the existing complete four/crossbar contradiction to the legacy three path before its early return. Classifier-only change; no tuplet precedence patch or threshold change.",
+    "original_tests": [
+      "CompleteFourThreeContradictionTest:24 procedural Bravura size/phase/shear/width cases plus nonvacuity and removed-crossbar control",
+      "Existing curly/italic/inset three, blank-row, tilted-two and compound controls"
+    ],
+    "license": "Original Apache-2.0 tests using existing SIL-OFL Bravura assets. No private score data or weights.",
+    "private_validation": "Natural geometry/acquisition path and complete ordinary page each change only six tuplet ratio pairs; all other note fields and all other thirteen page sections preserved. Other source passages remain outside this scoped correction.",
+    "deployment": "Cumulative APK and matched Hub/page-worker build/deploy deferred during active goal under user instruction; no tag/release.",
+    "validation": "58 focused app tests;1244 affected standalone tests;424 mapped-source checks;2833-file package/license verification;2 compound MusicXML tests and PNG/PDF8/8 pitch/duration plus MIDI/MusicXML/MP3 smoke. No new helpers, weights, record layouts or protocol changes."
   }
 }
