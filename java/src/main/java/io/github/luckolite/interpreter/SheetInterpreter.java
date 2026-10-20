@@ -173,19 +173,13 @@ public final class SheetInterpreter {
         tabs = TabNotation.rasterRhythm(tabs, gray, width, height, tabWords);
         labels = TablatureDecoder.withoutTabs(labels, width, height, tabs, false);
         gray = TablatureDecoder.withoutTabs(gray, width, height, tabs, true);
-        var measures = OmrMeasurePostProcessor.process(labels, gray, width, height);
-        byte[] prepared =
-                OmrScoreInterpreter.normalizeHeaderSymbols(labels, gray, width, height, measures);
-        // Removing a header head can move the playable edge and the rest-count OCR crop.
-        if (prepared != labels) {
-            byte[] geometry =
-                    OmrScoreInterpreter.normalizeTextGeometry(
-                            labels, gray, width, height, measures);
-            measures = OmrMeasurePostProcessor.process(geometry, gray, width, height, prepared);
-            labels = prepared;
-        }
+        var selectedOrigins = new SelectedMeasureOrigins();
+        var geometry = NativeDecoderStages.geometry(labels, gray, width, height, selectedOrigins);
+        var measures = geometry.measures();
+        labels = geometry.labels();
         measures = TablatureDecoder.reconcileMeasures(measures, tabs, width, height);
         var numbers = annotations.measureNumbers.stream().map(NumberToken::internal).toList();
+        var recognizedRests = new RecognizedMultiRestOrigins(selectedOrigins);
         var rests =
                 MultiMeasureRestDetector.detect(
                         labels,
@@ -193,11 +187,13 @@ public final class SheetInterpreter {
                         width,
                         height,
                         measures,
-                        annotations.restCounts.stream().map(NumberToken::internal).toList());
+                        annotations.restCounts.stream().map(NumberToken::internal).toList(),
+                        recognizedRests);
         var rawMeasures = measures;
         // Unnumbered systems still need the same bounded geometry repair as the native reader.
         measures =
                 MeasureNumberReconciler.reconcile(measures, numbers, rests, labels, width, height);
+        recognizedRests.expanded(rawMeasures, measures);
         measures =
                 PrintedMeasureRhythmGuard.reconcile(
                         rawMeasures, measures, labels, gray, width, height);
@@ -206,6 +202,9 @@ public final class SheetInterpreter {
             firstMeasureNumber =
                     ocr.firstSystemMeasureNumber(labels, gray, width, height, measures);
         var score = OmrScoreInterpreter.analyze(labels, gray, width, height, measures);
+        score =
+                RecognizedMultiRestProjection.apply(
+                        score, measures, labels, gray, width, height, recognizedRests);
         var rhythm =
                 TripletRhythmDetector.withRests(
                         score.notes(), score.rests(), measures, gray, width, height);

@@ -19,6 +19,18 @@ final class MultiMeasureRestDetector {
             int height,
             List<MeasureRegion> measures,
             List<MeasureNumberReconciler.NumberToken> tokens) {
+        return detect(labels, gray, width, height, measures, tokens, null);
+    }
+
+    static List<MeasureNumberReconciler.NumberToken> detect(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<MeasureNumberReconciler.NumberToken> tokens,
+            RecognizedMultiRestOrigins origins) {
+        if (origins != null) origins.begin(labels, gray, width, height, measures);
         if (labels == null
                 || gray == null
                 || width <= 0
@@ -52,7 +64,8 @@ final class MultiMeasureRestDetector {
             if (token.value() < 2 || token.value() > 32) continue;
             float centerX = (token.left() + token.right()) * .5f;
             float centerY = (token.top() + token.bottom()) * .5f;
-            int measureIndex = containingRestBar(restBars, measures, centerX, centerY);
+            RestBarCandidate[] matched = origins == null ? null : new RestBarCandidate[1];
+            int measureIndex = containingRestBar(restBars, measures, centerX, centerY, matched);
             if (measureIndex < 0 || claimedMeasures[measureIndex]) continue;
             // The short-bar fallback can share an opening region with a meter. Its count must
             // be above that staff; preserve the existing caller-OCR contract for long bars.
@@ -61,6 +74,7 @@ final class MultiMeasureRestDetector {
                 continue;
             claimedMeasures[measureIndex] = true;
             result.add(token);
+            if (origins != null) origins.admitted(token, matched[0], measureIndex);
         }
         return List.copyOf(result);
     }
@@ -1070,7 +1084,11 @@ final class MultiMeasureRestDetector {
     }
 
     private static int containingRestBar(
-            List<RestBarCandidate> candidates, List<MeasureRegion> measures, float x, float y) {
+            List<RestBarCandidate> candidates,
+            List<MeasureRegion> measures,
+            float x,
+            float y,
+            RestBarCandidate[] matched) {
         for (RestBarCandidate candidate : candidates) {
             MeasureRegion region = candidate.region;
             float regionHeight = region.bottom() - region.top();
@@ -1081,8 +1099,13 @@ final class MultiMeasureRestDetector {
             for (MeasureRegion other : measures)
                 if (x >= other.left() && x <= other.right() && other.bottom() < parent.top())
                     countTop = Math.max(countTop, (other.bottom() + parent.top()) * .5f);
-            if (x >= region.left() && x <= region.right() && y >= countTop && y <= region.bottom())
+            if (x >= region.left()
+                    && x <= region.right()
+                    && y >= countTop
+                    && y <= region.bottom()) {
+                if (matched != null) matched[0] = candidate;
                 return candidate.measureIndex;
+            }
         }
         return -1;
     }

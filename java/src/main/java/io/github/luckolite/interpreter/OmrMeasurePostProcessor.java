@@ -42,11 +42,22 @@ final class OmrMeasurePostProcessor {
      * Geometry keeps the original segmentation; only header trimming uses the cleaned labels. */
     static List<MeasureRegion> process(
             byte[] labels, byte[] gray, int width, int height, byte[] headerLabels) {
+        return process(labels, gray, width, height, headerLabels, null);
+    }
+
+    static List<MeasureRegion> process(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            byte[] headerLabels,
+            SelectedMeasureOrigins origins) {
         if (labels == null || width <= 0 || height <= 0 || labels.length != width * height)
             return List.of();
         if (headerLabels == null || headerLabels.length != labels.length) return List.of();
         if (gray != null && gray.length != labels.length) gray = null;
-        List<StaffRun> staffs = findStaffs(labels, gray, width, height);
+        if (origins != null) origins.begin(labels, gray, width, height);
+        List<StaffRun> staffs = findStaffs(labels, gray, width, height, origins);
         if (staffs.isEmpty()) return List.of();
         List<SystemRun> systems = mergeAlignedStaffs(staffs, labels, gray, width, height);
         List<MeasureRegion> result = new ArrayList<>();
@@ -59,14 +70,52 @@ final class OmrMeasurePostProcessor {
             if (i > 0) headTop = Math.max(headTop, (systems.get(i - 1).bottom + system.top) / 2f);
             if (i + 1 < systems.size())
                 headBottom = Math.min(headBottom, (system.bottom + systems.get(i + 1).top) / 2f);
-            addMeasures(headerLabels, gray, width, height, system, result, headTop, headBottom);
+            addMeasures(
+                    headerLabels,
+                    gray,
+                    width,
+                    height,
+                    system,
+                    result,
+                    headTop,
+                    headBottom,
+                    origins);
         }
         // Systems already run top to bottom and their boundaries left to right.
         // Sorting tilted measure boxes by their top edge reverses an uphill row.
         return List.copyOf(result);
     }
 
+    /** Carry creation rows only along a real same-frame object replacement. */
+    private static StaffRun retainedStaffOrigin(
+            SelectedMeasureOrigins origins, StaffRun previous, StaffRun replacement) {
+        if (origins != null)
+            origins.replaced(
+                    previous,
+                    replacement,
+                    replacement.gap,
+                    replacement.left,
+                    replacement.right,
+                    replacement.slope,
+                    replacement.track);
+        return replacement;
+    }
+
+    private static void replaceStaff(
+            List<StaffRun> result,
+            int index,
+            StaffRun replacement,
+            SelectedMeasureOrigins origins) {
+        StaffRun previous = result.get(index);
+        result.set(index, retainedStaffOrigin(origins, previous, replacement));
+    }
+
     private static List<StaffRun> findStaffs(byte[] labels, byte[] gray, int width, int height) {
+        return findStaffs(labels, gray, width, height, null);
+    }
+
+    private static List<StaffRun> findStaffs(
+            byte[] labels, byte[] gray, int width, int height, SelectedMeasureOrigins origins) {
         float slope = estimateStaffSlope(labels, width, height);
         int[] rowStrength = new int[height];
         int staffPixelCount = 0;
@@ -200,24 +249,32 @@ final class OmrMeasurePostProcessor {
                 List<Integer> boundaries =
                         findBoundaries(
                                 labels, gray, width, height, rows, gap, left, right, slope, track);
-                if (boundaries.size() >= 2)
-                    result.add(
+                if (boundaries.size() >= 2) {
+                    var accepted =
                             new StaffRun(
-                                    rows[0], rows[4], gap, left, right, boundaries, slope, track));
+                                    rows[0], rows[4], gap, left, right, boundaries, slope, track);
+                    if (origins != null)
+                        origins.born(accepted, rows, gap, left, right, slope, track);
+                    result.add(accepted);
+                }
             } else if (slope == 0f && right - left >= gap * 9) {
                 List<Integer> boundaries =
                         findBoundaries(
                                 labels, gray, width, height, rows, gap, left, right, slope, track);
-                if (boundaries.size() >= 2)
-                    shortCandidates.add(
+                if (boundaries.size() >= 2) {
+                    var accepted =
                             new StaffRun(
-                                    rows[0], rows[4], gap, left, right, boundaries, slope, track));
+                                    rows[0], rows[4], gap, left, right, boundaries, slope, track);
+                    if (origins != null)
+                        origins.born(accepted, rows, gap, left, right, slope, track);
+                    shortCandidates.add(accepted);
+                }
             }
         }
-        recoverRawStaffs(labels, gray, width, height, result, 0f, gray);
+        recoverRawStaffs(labels, gray, width, height, result, 0f, gray, origins);
         // A tilted system may lose every staff label while retaining clear printed rules.
         if (gray != null && Math.abs(slope) > .001f)
-            recoverRawStaffs(labels, gray, width, height, result, slope, semanticGray);
+            recoverRawStaffs(labels, gray, width, height, result, slope, semanticGray, origins);
         for (StaffRun cue : shortCandidates) {
             boolean partner = false;
             for (StaffRun full : result)
@@ -327,7 +384,8 @@ final class OmrMeasurePostProcessor {
                 if (b > printedLeft && b < printedRight) boundaries.add(b);
             boundaries.add(printedRight);
             if (boundaries.size() >= 2)
-                result.set(
+                replaceStaff(
+                        result,
                         index,
                         new StaffRun(
                                 staff.top,
@@ -337,7 +395,8 @@ final class OmrMeasurePostProcessor {
                                 printedRight,
                                 List.copyOf(boundaries),
                                 staff.slope,
-                                staff.track));
+                                staff.track),
+                        origins);
         }
         var admission = new java.util.IdentityHashMap<StaffRun, PrintedStaffAdmission.Evidence>();
         float firstPrinted = Float.POSITIVE_INFINITY, lastPrinted = Float.NEGATIVE_INFINITY;
@@ -491,6 +550,8 @@ final class OmrMeasurePostProcessor {
                             boundaries,
                             seed.slope(),
                             track);
+            if (origins != null)
+                origins.born(recovered, rows, seed.gap(), left, right, seed.slope(), track);
             boolean represented = false;
             for (int index = 0; index < result.size(); index++) {
                 StaffRun prior = result.get(index);
@@ -652,17 +713,20 @@ final class OmrMeasurePostProcessor {
                                         track);
                         if (kept.size() >= 2)
                             recovered =
-                                    new StaffRun(
-                                            recovered.top,
-                                            recovered.bottom,
-                                            recovered.gap,
-                                            keepLeft,
-                                            keepRight,
-                                            kept,
-                                            recovered.slope,
-                                            recovered.track);
+                                    retainedStaffOrigin(
+                                            origins,
+                                            recovered,
+                                            new StaffRun(
+                                                    recovered.top,
+                                                    recovered.bottom,
+                                                    recovered.gap,
+                                                    keepLeft,
+                                                    keepRight,
+                                                    kept,
+                                                    recovered.slope,
+                                                    recovered.track));
                     }
-                    result.set(index, recovered);
+                    replaceStaff(result, index, recovered, origins);
                 }
             }
             if (!represented) result.add(recovered);
@@ -692,7 +756,8 @@ final class OmrMeasurePostProcessor {
                                 .filter(x -> x <= closing)
                                 .collect(java.util.stream.Collectors.toList());
                 if (!bars.contains(closing)) bars.add(closing);
-                result.set(
+                replaceStaff(
+                        result,
                         index,
                         new StaffRun(
                                 staff.top,
@@ -702,7 +767,8 @@ final class OmrMeasurePostProcessor {
                                 closing,
                                 bars,
                                 staff.slope,
-                                staff.track));
+                                staff.track),
+                        origins);
             }
         }
         return result;
@@ -769,6 +835,18 @@ final class OmrMeasurePostProcessor {
             List<StaffRun> result,
             float slope,
             byte[] detectionGray) {
+        recoverRawStaffs(labels, gray, width, height, result, slope, detectionGray, null);
+    }
+
+    private static void recoverRawStaffs(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<StaffRun> result,
+            float slope,
+            byte[] detectionGray,
+            SelectedMeasureOrigins origins) {
         List<Float> semanticCenters = new ArrayList<>();
         for (StaffRun staff : result) semanticCenters.add((staff.top + staff.bottom) * .5f);
         semanticCenters.sort(Float::compare);
@@ -819,7 +897,8 @@ final class OmrMeasurePostProcessor {
                                     existing.right,
                                     existing.slope,
                                     track);
-                    result.set(
+                    replaceStaff(
+                            result,
                             index,
                             new StaffRun(
                                     existing.top,
@@ -829,7 +908,8 @@ final class OmrMeasurePostProcessor {
                                     existing.right,
                                     boundaries,
                                     existing.slope,
-                                    track));
+                                    track),
+                            origins);
                     break;
                 }
             }
@@ -873,7 +953,8 @@ final class OmrMeasurePostProcessor {
             if (representedIndex >= 0) {
                 StaffRun existing = result.get(representedIndex);
                 if (existing.gap < raw.gap() * .68f && rawTrack != null && boundaries.size() >= 2) {
-                    result.set(
+                    replaceStaff(
+                            result,
                             representedIndex,
                             new StaffRun(
                                     raw.top(),
@@ -883,7 +964,8 @@ final class OmrMeasurePostProcessor {
                                     right,
                                     boundaries,
                                     slope,
-                                    rawTrack));
+                                    rawTrack),
+                            origins);
                     continue;
                 }
                 // A nearby complete raw staff can independently recover a bar
@@ -923,7 +1005,8 @@ final class OmrMeasurePostProcessor {
                                 corroboratedInnerBars(
                                         existing.boundaries, boundaries, tracked, existing.gap);
                         if (merged.size() > existing.boundaries.size()) {
-                            result.set(
+                            replaceStaff(
+                                    result,
                                     representedIndex,
                                     new StaffRun(
                                             existing.top,
@@ -933,7 +1016,8 @@ final class OmrMeasurePostProcessor {
                                             existing.right,
                                             merged,
                                             existing.slope,
-                                            existing.track));
+                                            existing.track),
+                                    origins);
                             continue;
                         }
                     }
@@ -946,7 +1030,8 @@ final class OmrMeasurePostProcessor {
                 if (existing.boundaries.size() == 2
                         && boundaries.size() > 2
                         && boundaries.size() <= 9)
-                    result.set(
+                    replaceStaff(
+                            result,
                             representedIndex,
                             new StaffRun(
                                     existing.top,
@@ -956,7 +1041,8 @@ final class OmrMeasurePostProcessor {
                                     right,
                                     boundaries,
                                     existing.slope,
-                                    existing.track));
+                                    existing.track),
+                            origins);
                 else if (Math.abs(raw.top() - existing.top) <= existing.gap * .5f
                         && Math.abs(raw.gap() - existing.gap) <= existing.gap * .18f) {
                     // The mask may fade before the printed staff ends. Preserve
@@ -974,7 +1060,8 @@ final class OmrMeasurePostProcessor {
                         List<Integer> extended = new ArrayList<>(existing.boundaries);
                         extended.set(0, expandedLeft);
                         extended.set(extended.size() - 1, expandedRight);
-                        result.set(
+                        replaceStaff(
+                                result,
                                 representedIndex,
                                 new StaffRun(
                                         existing.top,
@@ -984,7 +1071,8 @@ final class OmrMeasurePostProcessor {
                                         expandedRight,
                                         List.copyOf(extended),
                                         existing.slope,
-                                        existing.track));
+                                        existing.track),
+                                origins);
                     }
                 }
             } else if (boundaries.size() >= 2
@@ -2536,6 +2624,7 @@ final class OmrMeasurePostProcessor {
                     }
                     previous.bottom = staff.bottom;
                     previous.lastStaff = staff;
+                    previous.members.add(staff);
                     previous.gap = (previous.gap + staff.gap) / 2f;
                     previous.boundaries =
                             mergeBoundaries(upperBoundaries, lowerBoundaries, width, previous.gap);
@@ -2802,7 +2891,8 @@ final class OmrMeasurePostProcessor {
             SystemRun system,
             List<MeasureRegion> output,
             float headTop,
-            float headBottom) {
+            float headBottom,
+            SelectedMeasureOrigins origins) {
         List<Integer> boundaries = system.boundaries;
         for (int index = 0; index + 1 < boundaries.size(); index++) {
             int rawLeft = boundaries.get(index), rawRight = boundaries.get(index + 1);
@@ -2927,13 +3017,28 @@ final class OmrMeasurePostProcessor {
                                     Math.round(system.top),
                                     Math.round(system.bottom))
                             == 0) continue;
-            if (playableRight - playableLeft >= Math.max(6, Math.round(system.gap * 2.2f)))
-                output.add(
+            if (playableRight - playableLeft >= Math.max(6, Math.round(system.gap * 2.2f))) {
+                var region =
                         new MeasureRegion(
                                 playableLeft / (float) width,
                                 playableRight / (float) width,
                                 top,
-                                bottom));
+                                bottom);
+                output.add(region);
+                if (origins != null) {
+                    var members = new ArrayList<SelectedMeasureOrigins.PhysicalMember>();
+                    for (StaffRun member : system.members)
+                        members.add(
+                                origins.member(
+                                        member,
+                                        member.gap,
+                                        member.left,
+                                        member.right,
+                                        member.slope,
+                                        member.track));
+                    origins.emitted(system, members, region, rawLeft, rawRight);
+                }
+            }
         }
     }
 
@@ -3142,9 +3247,11 @@ final class OmrMeasurePostProcessor {
         final StaffRun firstStaff;
         // Connector evidence belongs to the adjacent staff, not the system's average scale.
         StaffRun lastStaff;
+        final List<StaffRun> members = new ArrayList<>();
 
         SystemRun(StaffRun staff) {
             this.firstStaff = staff;
+            this.members.add(staff);
             this.top = staff.top;
             this.bottom = staff.bottom;
             this.gap = staff.gap;

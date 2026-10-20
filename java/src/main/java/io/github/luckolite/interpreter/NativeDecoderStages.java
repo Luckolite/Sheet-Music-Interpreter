@@ -12,7 +12,12 @@ public final class NativeDecoderStages {
     private NativeDecoderStages() {}
 
     public static Geometry geometry(byte[] labels, byte[] gray, int width, int height) {
-        var raw = OmrMeasurePostProcessor.process(labels, gray, width, height);
+        return geometry(labels, gray, width, height, null);
+    }
+
+    public static Geometry geometry(
+            byte[] labels, byte[] gray, int width, int height, SelectedMeasureOrigins origins) {
+        var raw = OmrMeasurePostProcessor.process(labels, gray, width, height, labels, origins);
         byte[] prepared =
                 OmrScoreInterpreter.normalizeHeaderSymbols(labels, gray, width, height, raw);
         if (prepared != labels)
@@ -23,7 +28,9 @@ public final class NativeDecoderStages {
                             gray,
                             width,
                             height,
-                            prepared);
+                            prepared,
+                            origins);
+        if (origins != null) origins.prepared(prepared);
         return new Geometry(prepared, raw);
     }
 }

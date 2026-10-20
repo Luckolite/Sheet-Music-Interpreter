@@ -728,8 +728,7 @@ final class OmrScoreInterpreter {
         rejectedBeamHeads.addAll(shortPairedMergedBeamHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(narrowPairedBeamHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(offsetParallelBeamIslandHeads(gray, width, height, heads, staffs));
-        rejectedBeamHeads.addAll(
-                reducedPairBeamIslands(gray, width, height, heads, staffs));
+        rejectedBeamHeads.addAll(reducedPairBeamIslands(gray, width, height, heads, staffs));
         List<Component> recoveredBeamCapGraces = new ArrayList<>();
         rejectedBeamHeads.addAll(
                 reducedPairBorrowedShaftHeads(
@@ -3864,8 +3863,12 @@ final class OmrScoreInterpreter {
                 head.maxX - head.minX + 1 <= gap * .8f
                         && head.maxY - head.minY + 1 <= gap * 1.25f
                         && head.area <= gap * gap * .4f;
+        // Reuse the existing protective small-head shaft witness. A genuine interior shaft
+        // cannot become an intrinsic plate fragment merely because its oval overlaps a rest.
         for (int y = head.minY; y <= head.maxY; y++)
-            if (compact && heavyRestBarAtRow(gray, width, height, Math.round(head.centerX), y, gap)
+            if (compact
+                            && heavyRestBarAtRow(
+                                    gray, width, height, Math.round(head.centerX), y, gap, head)
                     || countedRestBodyAtRow(gray, width, height, head, y, staff)) return true;
         return false;
     }
@@ -3891,7 +3894,9 @@ final class OmrScoreInterpreter {
                 || head.minY < top - gap * .2f
                 || head.maxY > bottom + gap * .2f
                 || !restEndCap(gray, width, height, left, top, bottom, gap)
-                || !restEndCap(gray, width, height, right, top, bottom, gap)) return false;
+                || !restEndCap(gray, width, height, right, top, bottom, gap)
+                || interiorRestBandShaft(gray, width, height, head, left, right, top, bottom, gap))
+            return false;
         float staffTop = staff.pitchBottom - gap * 4;
         MeasureRegion region =
                 new MeasureRegion(
@@ -3913,6 +3918,11 @@ final class OmrScoreInterpreter {
 
     private static boolean heavyRestBarAtRow(
             byte[] gray, int width, int height, int x, int y, float gap) {
+        return heavyRestBarAtRow(gray, width, height, x, y, gap, null);
+    }
+
+    private static boolean heavyRestBarAtRow(
+            byte[] gray, int width, int height, int x, int y, float gap, Component head) {
         // A thin staff rule can run through the centre of the thick rest. Inspect
         // the predicted fragment's rows so that rule cannot hide the end caps.
         if ((gray[y * width + x] & 255) >= 165) return false;
@@ -3924,9 +3934,46 @@ final class OmrScoreInterpreter {
         while (top > 0 && restBandRow(gray, width, left, right, top - 1)) top--;
         while (bottom + 1 < height && restBandRow(gray, width, left, right, bottom + 1)) bottom++;
         int thick = bottom - top + 1;
-        if (thick < gap * .35f || thick > gap * 1.2f) return false;
+        if (thick < gap * .35f
+                || thick > gap * 1.2f
+                || interiorRestBandShaft(gray, width, height, head, left, right, top, bottom, gap))
+            return false;
         return restEndCap(gray, width, height, left, top, bottom, gap)
                 && restEndCap(gray, width, height, right, top, bottom, gap);
+    }
+
+    /** Select only eligible interior shafts before reducing competing columns by length. */
+    private static boolean interiorRestBandShaft(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            float gap) {
+        if (head == null) return false;
+        float protectiveGap = gap * .65f;
+        return attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        protectiveGap,
+                        Math.max(1, Math.round(protectiveGap * .16f)),
+                        170,
+                        9,
+                        new int[] {left, right, top, bottom, Math.max(2, Math.round(gap * .25f))})
+                != null;
+    }
+
+    /** A null band preserves the legacy unfiltered shaft contract. */
+    private static boolean eligibleRestBandShaft(int[] band, int x, int end, int direction) {
+        return band == null
+                || x > band[0] + band[4]
+                        && x < band[1] - band[4]
+                        && (direction < 0 ? end < band[2] : end > band[3]);
     }
 
     private static boolean restBandRow(byte[] gray, int width, int left, int right, int y) {
@@ -10731,7 +10778,6 @@ final class OmrScoreInterpreter {
         return result;
     }
 
-
     private static boolean ownedGraceHookAcrossContrasts(
             byte[] gray, int width, int height, Component head, float gap, int threshold) {
         for (float fraction : new float[] {1f, .85f, .7f, .55f, .4f, .25f})
@@ -10750,6 +10796,7 @@ final class OmrScoreInterpreter {
                     Math.round(threshold * fraction))) return true;
         return false;
     }
+
     /** The small curved connector below a grace and its principal note has no
      * independent stem. Its unequal endpoints are not the geometry of a tie. */
     private static List<Component> graceSlurHeads(
@@ -12430,6 +12477,7 @@ final class OmrScoreInterpreter {
         protectedHeads.removeAll(rejected);
         return tieLabelsWithoutSlurHeads(labels, width, rejected, protectedHeads);
     }
+
     /** Two separate thin curves can be merged into one semantic head island. */
     private static boolean rawNestedCurves(
             byte[] gray, int width, int height, Component head, float gap) {
@@ -12525,6 +12573,7 @@ final class OmrScoreInterpreter {
         }
         return proved >= 2 && totalOverlap >= head.area * .35f;
     }
+
     /** A segmentation island can cover only the roundest part of a longer slur.
      * Inspect its complete raw component after removing thin, continuous staff rules. */
     private static boolean rawSlurBowl(
@@ -17723,7 +17772,6 @@ final class OmrScoreInterpreter {
         return true;
     }
 
-
     private static boolean graceOwnedDot(
             byte[] gray,
             int width,
@@ -17788,6 +17836,7 @@ final class OmrScoreInterpreter {
                     threshold)) return true;
         return false;
     }
+
     private static int countAugmentationDots(
             List<Component> candidates,
             Component head,
@@ -17889,7 +17938,8 @@ final class OmrScoreInterpreter {
                     if (core.area >= gap * gap * .06f
                             && core.maxX - core.minX + 1 >= gap * .22f
                             && core.maxY - core.minY + 1 >= gap * .22f
-                            && roundDarkDotCore(gray, width, core, coreThreshold)) combined.add(core);
+                            && roundDarkDotCore(gray, width, core, coreThreshold))
+                        combined.add(core);
         if (gray != null && gray.length == width * height)
             combined.addAll(fadedAugmentationDots(gray, width, height, head, gap));
         if (gray != null
@@ -17972,8 +18022,7 @@ final class OmrScoreInterpreter {
                     duplicate = true;
                     break;
                 }
-            if (!duplicate
-                    && !graceOwnedDot(gray, width, height, head, dot, gap, neighboringHeads))
+            if (!duplicate && !graceOwnedDot(gray, width, height, head, dot, gap, neighboringHeads))
                 aligned.add(dot);
         }
         aligned.sort(Comparator.comparingDouble(Component::centerX));
@@ -22341,6 +22390,20 @@ final class OmrScoreInterpreter {
             int maxBlank,
             int inkThreshold,
             int maxStemGaps) {
+        return attachedRawStem(
+                gray, width, height, head, gap, maxBlank, inkThreshold, maxStemGaps, null);
+    }
+
+    private static int[] attachedRawStem(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float gap,
+            int maxBlank,
+            int inkThreshold,
+            int maxStemGaps,
+            int[] restBand) {
         if (gray == null) return null;
         // A photographed page can be darker than the fixed stem threshold.
         // Retain the pale-ink fallback on light paper; shaded paper must have
@@ -22367,7 +22430,7 @@ final class OmrScoreInterpreter {
                     } else if (++blank > maxBlank) break;
                 }
                 int length = Math.abs(end - Math.round(head.centerY));
-                if (length > bestLength) {
+                if (length > bestLength && eligibleRestBandShaft(restBand, x, end, direction)) {
                     bestLength = length;
                     best = new int[] {x, end, direction};
                 }
@@ -22396,7 +22459,7 @@ final class OmrScoreInterpreter {
                     }
                     int outside = direction < 0 ? head.minY - end : end - head.maxY;
                     int length = Math.abs(end - Math.round(head.centerY));
-                    if (outside >= gap * 2) {
+                    if (outside >= gap * 2 && eligibleRestBandShaft(restBand, x, end, direction)) {
                         directions |= direction < 0 ? 1 : 2;
                         if (length > bestLength) {
                             bestLength = length;
@@ -23187,12 +23250,30 @@ final class OmrScoreInterpreter {
                         && run >= 3
                         && run <= Math.ceil(gap * .35f)
                         && LocalPrintedStaffBand.matchesBeyondStem(
-                                gray, width, height, x, lineTop, gap, threshold, y - run, y - 1,
-                                0, staff.pitchTrack)
+                                gray,
+                                width,
+                                height,
+                                x,
+                                lineTop,
+                                gap,
+                                threshold,
+                                y - run,
+                                y - 1,
+                                0,
+                                staff.pitchTrack)
                         && (run <= gap * .35f
                                 || LocalPrintedStaffBand.matchesRoundedBeyondStem(
-                                        gray, width, height, x, lineTop, gap, threshold, y - run,
-                                        y - 1, 0, staff.pitchTrack))
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        lineTop,
+                                        gap,
+                                        threshold,
+                                        y - run,
+                                        y - 1,
+                                        0,
+                                        staff.pitchTrack))
                         && !finiteBeamOverRule(
                                 gray, width, height, x, y - run, y - 1, staff, threshold))
                     onlyStaff = true;
@@ -23534,7 +23615,8 @@ final class OmrScoreInterpreter {
         int coveredRows = 0;
         for (int step = 0; step <= Math.round(rootDistance); step++) {
             int y = end + (upward ? step : -step);
-            if (y >= 0 && y < height
+            if (y >= 0
+                    && y < height
                     && rawRuleBeyondFlag(gray, width, y, stemX, gap, flagThreshold)) coveredRows++;
         }
         rootDistance += Math.min(coveredRows, Math.round(gap * .30f));
@@ -24951,7 +25033,8 @@ final class OmrScoreInterpreter {
                 for (int first = 0; first <= clearanceCount; first++)
                     for (int last = 0; last <= clearanceCount; last++) {
                         int a = left + first * clearanceStep, b = right - last * clearanceStep;
-                        // Narrow ties retain both a relative span and an absolute staff-scale floor.
+                        // Narrow ties retain both a relative span and an absolute staff-scale
+                        // floor.
                         if (b - a
                                 < Math.max(
                                         gap * (right - left < gap * 2.5f ? .6f : .9f),

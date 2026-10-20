@@ -252,9 +252,15 @@
     },
     "NativeDecoderStages.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NativeDecoderStages.java",
-      "source_sha256": "4bec25cf043be8856a59ed76a9ed126f6e2fbc62ed89cc71b502143d6bfd51fe",
-      "reviewed_app_commit": "38007cb",
-      "source_normalized_sha256": "4bec25cf043be8856a59ed76a9ed126f6e2fbc62ed89cc71b502143d6bfd51fe"
+      "source_sha256": "3cb12b9bc67cb877dc6880588a63c49233c2e7c2ee155c874b9fb001e48039b3",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "source_normalized_sha256": "f2752b8b4a00af70e01d3ba4f1bc5f21c1f5aea0385ff024bbec75e0b58ad1c3",
+      "standalone_sha256": "638970231fb2d858325b4aaa9207e6a2ff5be1e0d564deecf7c4ec9e6594318c",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
     },
     "NativeDecoderServer.java": {
       "source_path": "tools/native-worker/NativeDecoderServer.java",
@@ -332,14 +338,15 @@
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
-      "source_sha256": "2ca5f0cb69f215f18cbb7616f2f98b8a032433027ec7159daf022771c5ca288b",
-      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
-      "source_normalized_sha256": "8a57db23f9ed9a5857e897a8aa395bd60ad991f0964afc1c8f190de9d85f9a61",
-      "review_note": "Closed-terminal six recognition requires an exact digitally convex complete left contour, two isolated paper pockets and a right-only waist, retaining old six guards and ordinary single-bowl admission. Original procedural controls only; no private pixels, font assets, models or dependencies.",
-      "reviewed_source_state": "committed",
-      "scoped_reviewed_app_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
-      "standalone_sha256": "63b098d94dc025465c563a0ac71e29c6b2528d6b4057625104da229feb96fc78",
-      "reviewed_app_base_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "source_sha256": "663e1a5b38bf124d5b2d5d662a8d35adac774adcbf51b4cf1e50cf61f6ea7d72",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "source_normalized_sha256": "7286f0bd8845ac226e53631125aed4b6b698104f95ac68a71697ef4130b4ae07",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "standalone_sha256": "be0402d1e1e6e8e876cdde75d6271d8fca47f1a169a56da5f76981b52c7540a1",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
+      "license": "Apache-2.0"
     },
     "NoteArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulation.java",
@@ -378,14 +385,14 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "0b92f86b9bc1994bc8cdc704a7f27ed9f88e201b165ac8e57f5b72cb92485d1b",
-      "source_normalized_sha256": "0b92f86b9bc1994bc8cdc704a7f27ed9f88e201b165ac8e57f5b72cb92485d1b",
-      "review_note": "Transport the five actual staff rows plus the once-computed printed offset separately from the expanded raw aperture. Registered straight-rule exceptions use physical spaces and phases; raw classifier order, aperture, whole-column endpoints, thresholds and ordinary continuity remain unchanged.",
-      "reviewed_source_state": "committed paired source81",
-      "standalone_sha256": "0987709d0a70cbf70d59429815a96464c30ba2c843e3d73c4dfe2978774d8723",
-      "reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
-      "scoped_reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
-      "reviewed_app_base_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "source_sha256": "0d612f8b0ffe2a0e7046989f7fbd881b9d1881fac54445075740c1ef12ac312c",
+      "source_normalized_sha256": "81aa040233f3ce9381ed145cfe86b5f1a5290f2e2d635853339f17128313845f",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts. Preserve the seven-argument legacy raw-staff helper overload by delegating with null origins; metadata-aware production calls and their body remain unchanged.",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "standalone_sha256": "57fcc9c2153562459635f8716177e37749ade8ceffa455a191e87b59c71ecaec",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
       "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
@@ -398,15 +405,16 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "4a969db1287552ccffe8d452c4d50cf5d0647a02f71765b83a62e112ac464107",
-      "review_note": "Protect an independently supported compact paired grace prefix from an already matched rest/body or dot cleanup. Existing acquisition, rest candidate lists/detector, geometry, parent verification and first-match order remain unchanged. Late compact-group predicate is extracted without changing late grace marking; early protection adds own-shaft and sampled beam-endpoint conjunction. Original Apache-2.0 raw producer and genuine eighth-rest caller regressions contain no captured score inputs.",
-      "source_normalized_sha256": "c46cb8a0bd3a7a317ad4dab503ed391d971675b0cf3c468077f8ce5a4be85c95",
+      "source_sha256": "631c9568ee095bf04508868e2721da9b5bbb4f7a9dd9fa201556283ff6305694",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "source_normalized_sha256": "8b5ae93c8662b1d11841911f1bdb3641e64f8584a9db28ea219f5d1451e95997",
       "reviewed_app_state": "Recognition80 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
-      "reviewed_source_state": "committed paired source80",
-      "standalone_sha256": "77fea59ac716cb29c80e46e7a6e89cfb708ae140f23c9175641ac55d227ced0e",
-      "reviewed_app_base_commit": "2c81254f7b27f79721afbb056167eb20f53d1336",
-      "reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
-      "scoped_reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d"
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "standalone_sha256": "8298bf4a8c31105107acaaad2561b927e2f86cbd9f35e20a3ba36a77dad9e39c",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "license": "Apache-2.0"
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1621,15 +1629,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "66e9660e7c80d05a6673923ea70a86d84e08937d6dc67e3dca63b7c1085cc8e3",
-      "source_normalized_sha256": "2825d546cdeed137028070f7b7e3e9b69acfc61298e3bba5510442d4dddf8496",
-      "review_note": "Recognition revision81 invalidates pre-fix derived interpretations. Guide290/audio96 and physical record layouts remain unchanged.",
-      "reviewed_source_state": "committed paired source81",
-      "standalone_sha256": "b56a42765004921d63b67ffd1b389b6e52e8229ceed3defec31e53d5d26587ac",
-      "reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
-      "scoped_reviewed_app_commit": "e9bfb006996ee68471b6e72ff681aa01cf8da0b1",
+      "source_sha256": "b286630a42aaf834569b48d21c9b06ed74caa7dc6f45d4da33522cb12e94af84",
+      "source_normalized_sha256": "3492e9281c123638768fdd26948e23a6fb143c77924916a8247c2598779bd34e",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "standalone_sha256": "096a4ccfc8f11c0be9118a976f012501bf1f32e4188298ec2873d2e0eba3f03a",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
     },
     "BeamInkConnectivity.java": {
@@ -1687,13 +1695,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "cfbeffda9861ad4110c0aeeecb46f3122b26330be1faf1e36a06395c2cec3e01",
-      "source_normalized_sha256": "be15829a7f8f48b6698dcb6c613d2f28d57a0ab0c13ee9be9dda71110ec2647d",
-      "reviewed_source_state": "committed",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved.",
-      "standalone_sha256": "935408ee4f2b749f94f2602a6a0ac3bf5bf86e7bc87425c5b4e215ebd35b0131",
-      "reviewed_app_commit": "73d42f43161bde7b0f0c2bc1074c2191b0a88a7d",
-      "license": "Apache-2.0"
+      "source_sha256": "d23c950f92a5842f23f0a3887eb5a65d1437be483ee2fe0b6fd51d9fd95da6cb",
+      "source_normalized_sha256": "b2113b73ac919f5424aad35edf53e6a1ceb3a9cc9ea1833261ce25e9214b58db",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates.",
+      "standalone_sha256": "d9532f1e551a19a37e7e9f96505b92de805496afc5f3bbb516d3b40e12cca676",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "license": "Apache-2.0",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2723,15 +2733,15 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "7313c3fa98358e77aaa24162d4b7d19fb847414c7db977f6f166e5fb096385b1",
-      "source_normalized_sha256": "98a2060d6427ed64d49882ade88eb8b8be88feda0d1c870b0ad96a0c5d907486",
-      "standalone_sha256": "dbbd08eac0bac349ca55baa62700aa86fff26ca33282505d1fdb72060c500b37",
+      "source_sha256": "bd31f32989f79e63379f085acf2a80874fcff2ec48232e22cbb3b567afdd5c62",
+      "source_normalized_sha256": "f2d438cfb6ee7915b4a29533dbf84115958f14c24760efa9d5978b7d7e04d3b5",
+      "standalone_sha256": "363639b88d3cd694822dfabb9bc1919ceb27889787a46f5ce6c2fb7b917a3485",
       "license": "Apache-2.0",
-      "reviewed_source_state": "committed",
-      "review_note": "A complete silent opening bar vetoes numbering-only pickup only with explicit unique opening meter, no opening attacks and one unambiguous nominal-span rest in every known staff lane. Unknown, duplicate, conflicting, incomplete or short contents preserve prior inference. Native and standalone callers share the same AND guard. Original Apache-2.0 generated scenarios; no private score assets or protocol/model change.",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
-      "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
-      "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f"
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc"
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -3885,6 +3895,42 @@
       "reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
       "scoped_reviewed_app_commit": "11a263536cfe8c1341e00ac3d4512db58686b36d",
       "reviewed_app_state": "Recognition80 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
+    },
+    "RecognizedMultiRestOrigins.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RecognizedMultiRestOrigins.java",
+      "source_sha256": "e5cfb7e9103da0ad8fd85901bd6ecbacf383949e6b873943cc86186ebe47bc49",
+      "source_normalized_sha256": "554b5c3a898b5bda5785df1440ce564af2d598578b4505d8ac378aa318425dcd",
+      "standalone_sha256": "f13ee33f91e3a7fecbdb229bebc9be9bc66f2a7b6668db9d1dcb83fc5c631df0",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
+    },
+    "RecognizedMultiRestProjection.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RecognizedMultiRestProjection.java",
+      "source_sha256": "e1cb9f264dfa96efc50d689929df7274c71c79196c97357c4fd40b1b4fcebe4c",
+      "source_normalized_sha256": "7463126a2d381c2580d696e014123bfe3d60ff113e9fed7bf35a6b9c7071755f",
+      "standalone_sha256": "cfe3f83e6b8ea2efd7f4d182189281dc2a007f53dfba73605786469ad587ae84",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
+    },
+    "SelectedMeasureOrigins.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SelectedMeasureOrigins.java",
+      "source_sha256": "a57a06a1ca16ed07082f38706c549ecdd0f5357ee115044bcd20558f2c6dbf40",
+      "source_normalized_sha256": "b19219451f8339ebe4d0694ce519f137e4d91c071cc3cdc82659e5922c4d593f",
+      "standalone_sha256": "5a097dd6adc691bc2c8e93806504b4e2532cb9f80b7f3790114eabb55b2b7d72",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
+      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
     }
   },
   "interpreter_speedup_review": {
@@ -8416,5 +8462,24 @@
     "source": "Original procedural five-rail and fixed-column scenes; no captured score pixels, OCR, semantic masks, models or private metadata.",
     "tests": "RegisteredFrameOriginalTest: eight new original methods per namespace; legacy proofs and genuine meter preservation remain binding.",
     "scope": "Actual row registration corrects the independent separator exception. No threshold relaxation, new recognition model or binary layout."
+  },
+  "recognized_multi_rest_identity_review": {
+    "recognition": 82,
+    "license": "Apache-2.0",
+    "new_helpers": [
+      "SelectedMeasureOrigins.java",
+      "RecognizedMultiRestOrigins.java",
+      "RecognizedMultiRestProjection.java"
+    ],
+    "generated_regressions": "31 app /35 standalone original procedural JUnit methods plus unchanged independently frozen cap-competition main/wrapper, full local-stage and real standalone facade consumers. Original failed controls with invalid roles remain private evidence, never rewritten to pass.",
+    "android_adapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "source_sha256": "42035340f0ebff5cd3dea62b9174e7c8fe323916de00b073a9cff1dce1995a03",
+      "review": "Collector only for actual local geometry fallback. Originless remote geometry abstains; no wire changes, extra recognition or fabricated local rerun. Android source compile pending; no physical-device claim. Android compilation and31 original new tests pass; six curved-staff and three cache checks pass. No physical-device claim."
+    },
+    "native_evidence": "Retained private-page normal pipeline:189 note records and all existing rests preserved; four logical full-rest records added for one physical four-measure rest. Final guard successor score byte-identical to earlier qualified rest candidate. Private source pixels, artifacts and logs excluded from public tree.",
+    "boundary": "Targeted evidence; no whole-page/full-library accuracy, paired deployment or Android device proof.",
+    "paired_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+    "validation": "Broad standalone run12237:12235 passed; missing private legacy signature and old81epoch assertion were corrected, then original legacy/epoch and all new rest cases44/44 pass. No broad repeat: other production paths unchanged by null-delegating overload. Python729 pass/44skip with explicit active src/JBR, package2773 files, PNG/PDF smoke8pitches/durations and MIDI/MusicXML/MP3 pass. Native decoder builds with3 new helpers; packaged pair/Android APK rollout pending."
   }
 }
