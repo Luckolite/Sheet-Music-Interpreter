@@ -405,15 +405,15 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "631c9568ee095bf04508868e2721da9b5bbb4f7a9dd9fa201556283ff6305694",
-      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
-      "source_normalized_sha256": "8b5ae93c8662b1d11841911f1bdb3641e64f8584a9db28ea219f5d1451e95997",
-      "reviewed_app_state": "Recognition80 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
-      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
-      "standalone_sha256": "8298bf4a8c31105107acaaad2561b927e2f86cbd9f35e20a3ba36a77dad9e39c",
+      "source_sha256": "d9934be59003ddfb3e6eacac790214a1a8134dbfe23b31f2f81db569918f638e",
+      "review_note": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
+      "source_normalized_sha256": "8d9fe378ac4af66138d86f450e3b062b7abd3dc3e3e3bfe6c34f5b31852ce6e9",
+      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal.",
+      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
+      "standalone_sha256": "3aaad182addd771a78962cd0fa9ed46bec99b12457318dd3ebbe0e2cfc8008aa",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
       "license": "Apache-2.0"
     },
     "PlayingTechniqueDetector.java": {
@@ -1629,16 +1629,16 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "b286630a42aaf834569b48d21c9b06ed74caa7dc6f45d4da33522cb12e94af84",
-      "source_normalized_sha256": "3492e9281c123638768fdd26948e23a6fb143c77924916a8247c2598779bd34e",
-      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
-      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
-      "standalone_sha256": "096a4ccfc8f11c0be9118a976f012501bf1f32e4188298ec2873d2e0eba3f03a",
+      "source_sha256": "1def9a466019a49c7a9ac6fa3567332853851512ed89a83ac2d7dbccddfc79d4",
+      "source_normalized_sha256": "f91bd62e4ebdc18d1a4f4e46319c6987e457e6883dc94be9b47a9c23d528564f",
+      "review_note": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
+      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
+      "standalone_sha256": "2026efedf9808e1df03a5a502e4c89d6a66e3c4a9f1de4fe8bbaaa665ee7bf05",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
-      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
+      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1695,15 +1695,16 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d23c950f92a5842f23f0a3887eb5a65d1437be483ee2fe0b6fd51d9fd95da6cb",
-      "source_normalized_sha256": "b2113b73ac919f5424aad35edf53e6a1ceb3a9cc9ea1833261ce25e9214b58db",
-      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates.",
-      "standalone_sha256": "d9532f1e551a19a37e7e9f96505b92de805496afc5f3bbb516d3b40e12cca676",
+      "source_sha256": "a5cebbb8b61488b5c30ab7124e8714aef091bb03623ddb0f77f817e93fba49db",
+      "source_normalized_sha256": "87e805d5c398efb67277125e8189367b728f3f4bbab20fdce5170c6cec8e96d2",
+      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
+      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates. Recognition83 changes only cache recognition identity; Guide290/audio96 unchanged.",
+      "standalone_sha256": "ddcfec81fcae9be7fd3323486f90198eb227da0a9c32fe210e60c3d11dabf360",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
+      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
+      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -1932,10 +1933,14 @@
     },
     "RegionalStaffSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffSeeds.java",
-      "source_sha256": "1ab97d885e6f4b3f15538d23ce4a70024c82540247ffe0d9884e2b63c8bc5786",
-      "source_normalized_sha256": "4f5fc0b4d523d7f3865d6eacee36e9bd21990e5c5b21260968980098c17edfa5",
-      "reviewed_source_state": "Frozen recognition19 app source; package and diagnostics adapter token parity verified",
-      "review_note": "Global physical staff, printed glyph or written owner repair; original procedural regressions. Full executable token parity after the explicit standalone adapter. Historical origin commits are retained; current frozen app bytes are identified by the source hashes. No model, dependency, wire layout or private source material changes."
+      "source_sha256": "1096f272d9c0c4c83d6af4e57b24ea332389dc75d3df2beccb30d3b79fdfb166",
+      "source_normalized_sha256": "90dcf13c954580fb9ea319ffdcb96b0e5a7ac830b518106d391548c6e9062878",
+      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
+      "review_note": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
+      "standalone_sha256": "ec0eadbe03359377e006093cc6063f143a3677e49f5775491cc4d88c4a9a0da0",
+      "license": "Apache-2.0",
+      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
     },
     "PrintedSystemNumberOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSystemNumberOcr.java",
@@ -3931,6 +3936,17 @@
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17"
+    },
+    "RegionalStaffConflict.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RegionalStaffConflict.java",
+      "source_sha256": "06a4fa484a603ad9dab324ef9a2c23598a953d00db4b2c1b5ca27a0f99db1319",
+      "source_normalized_sha256": "06a4fa484a603ad9dab324ef9a2c23598a953d00db4b2c1b5ca27a0f99db1319",
+      "standalone_sha256": "6a0b847e8113c1bd2a3a461d26cb7c98ddabd33f93ed3aad41f37cb79e21b021",
+      "reviewed_source_state": "Recognition83 source committed; required source/synthetic checks passed; paired deployment pending",
+      "review_note": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
+      "license": "Apache-2.0",
+      "scoped_reviewed_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+      "reviewed_app_state": "Recognition83 reviewed and committed; APK deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -8481,5 +8497,15 @@
     "boundary": "Targeted evidence; no whole-page/full-library accuracy, paired deployment or Android device proof.",
     "paired_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
     "validation": "Broad standalone run12237:12235 passed; missing private legacy signature and old81epoch assertion were corrected, then original legacy/epoch and all new rest cases44/44 pass. No broad repeat: other production paths unchanged by null-delegating overload. Python729 pass/44skip with explicit active src/JBR, package2773 files, PNG/PDF smoke8pitches/durations and MIDI/MusicXML/MP3 pass. Native decoder builds with3 new helpers; packaged pair/Android APK rollout pending."
+  },
+  "regional_shared_rule_review": {
+    "recognition": 83,
+    "scope": "Regional staff recovery retains exact producer rows and rejects a shared established raw rule only when aggregate common-five and original per-line support are insufficient. Disjoint prior bands bound predecessor work; incomplete proof retains prior admission. Original Apache-2.0 geometry regressions only; no models, dependencies or wire layout changes.",
+    "tests": "15 runnable helper tests plus existing regional regressions; seven-rule ambiguity remains explicitly held. Full caller validation separate.",
+    "privateEvidenceIncluded": false,
+    "modelChanges": false,
+    "paired_app_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
+    "validation": "Full standalone Java12252 pass; Python729 pass44skip; original fixture geometry reconstructed byte-for-byte; native guide95 pass; PNG/PDF8-note smoke and MIDI/MusicXML/MP3 pass; package boundary reviewed. Matched Hub57 self-tests and three parallel four-note page smoke pass; live deployment pending.",
+    "known_limitations": "Seven-rule lattice ownership ambiguity remains held; no Android device or whole-library accuracy claim."
   }
 }

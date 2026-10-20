@@ -11,6 +11,18 @@ import java.util.List;
 final class RegionalStaffSeeds {
     record Seed(float top, float bottom, float gap, float slope) {}
 
+    /** Exact quantized producer rows; no reconstruction from the fitted seed. */
+    record Evidence(Seed seed, int[] rows, int offset) {
+        Evidence {
+            rows = rows.clone();
+        }
+
+        @Override
+        public int[] rows() {
+            return rows.clone();
+        }
+    }
+
     /** Follows a proved staff's changing printed spacing in the original source coordinates. */
     static StaffPitchTrack track(byte[] labels, byte[] gray, int width, int height, Seed seed) {
         if (labels == null
@@ -164,6 +176,13 @@ final class RegionalStaffSeeds {
     }
 
     static List<Seed> detect(byte[] labels, byte[] gray, int width, int height) {
+        List<Seed> seeds = new ArrayList<>();
+        for (Evidence evidence : detectEvidence(labels, gray, width, height))
+            seeds.add(evidence.seed());
+        return List.copyOf(seeds);
+    }
+
+    static List<Evidence> detectEvidence(byte[] labels, byte[] gray, int width, int height) {
         if (labels == null
                 || gray == null
                 || width <= 0
@@ -178,7 +197,7 @@ final class RegionalStaffSeeds {
         int minimum = Math.max(10, width / 80), hole = Math.max(3, width / 170);
         int margin = Math.max(8, width / 50);
         int maximumEnvelope = Math.max(width / 3, height / 4);
-        List<Seed> result = new ArrayList<>();
+        List<Evidence> result = new ArrayList<>();
         int first = -1, lastInk = -1, total = 0;
         for (int y = 0; y <= height; y++) {
             boolean ink = y < height && strength[y] >= minimum;
@@ -204,7 +223,7 @@ final class RegionalStaffSeeds {
                 total = 0;
             }
         }
-        result.sort(Comparator.comparingDouble(Seed::top));
+        result.sort(Comparator.comparingDouble(value -> value.seed().top()));
         return List.copyOf(result);
     }
 
@@ -215,7 +234,7 @@ final class RegionalStaffSeeds {
             int height,
             int first,
             int last,
-            List<Seed> result) {
+            List<Evidence> result) {
         int localHeight = last - first;
         if (localHeight <= 0) return;
         byte[] local = Arrays.copyOfRange(labels, first * width, last * width);
@@ -236,7 +255,8 @@ final class RegionalStaffSeeds {
                 continue;
             boolean represented = false;
             float center = (candidate.top + candidate.bottom) * .5f;
-            for (Seed old : result) {
+            for (Evidence oldEvidence : result) {
+                Seed old = oldEvidence.seed();
                 float gap = Math.min(old.gap, candidate.gap);
                 if (Math.abs((old.top + old.bottom) * .5f - center) <= gap * 2
                         && Math.abs(old.gap - candidate.gap) <= gap * .18f) {
@@ -244,7 +264,7 @@ final class RegionalStaffSeeds {
                     break;
                 }
             }
-            if (!represented) result.add(candidate);
+            if (!represented) result.add(new Evidence(candidate, lines.rows(), first));
         }
     }
 

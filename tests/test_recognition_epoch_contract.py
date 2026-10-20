@@ -15,7 +15,7 @@ class RecognitionEpochContractTest(unittest.TestCase):
         source = (root / "java/src/main/java/io/github/luckolite/interpreter/"
                   "GuideCacheIdentity.java").read_text(encoding="utf-8")
         revision = int(re.search(r"RECOGNITION_REVISION\s*=\s*(\d+)", source)[1])
-        self.assertEqual(82, revision)
+        self.assertEqual(83, revision)
         self.assertEqual(revision, wire.RECOGNITION_REVISION)
         self.assertEqual(290, wire.GUIDE_VERSION)
 
@@ -24,7 +24,7 @@ class RecognitionEpochContractTest(unittest.TestCase):
                         notes=[], firstMeasureNumber=1, keyChanges=[], tempoChanges=[],
                         meterChanges=[], rests=[], techniqueChanges=[], dynamicChanges=[])
         current = wire.encode(original, 290)
-        for historical_revision in (72, 73, 80):
+        for historical_revision in (72, 73, 80, 81, 82):
             with self.subTest(revision=historical_revision):
                 with patch.object(wire, "RECOGNITION_REVISION", historical_revision):
                     self.assertEqual(current, wire.encode(original, 290))

@@ -8993,7 +8993,8 @@ final class OmrScoreInterpreter {
                                                             - (4 - line) * staff.pitchGap
                                                             + staff.pitchSlope * (x - width * .5f);
                                                 }));
-        for (var seed : RegionalStaffSeeds.detect(labels, gray, width, height)) {
+        for (var regionalEvidence : RegionalStaffSeeds.detectEvidence(labels, gray, width, height)) {
+            var seed = regionalEvidence.seed();
             Staff recovered = new Staff(seed.top(), seed.bottom(), seed.gap());
             recovered.pitchSlope = seed.slope();
             recovered.printedSlope = true;
@@ -9005,6 +9006,19 @@ final class OmrScoreInterpreter {
             float[] proposed = recovered.pitchTrack.at(width * .5f);
             for (Staff existing : staffs) {
                 if (!existing.printedPhase) continue;
+                if (RegionalStaffConflict.unsupportedAlias(
+                        gray, width, height, regionalEvidence, existing.pitchGap,
+                        (line, x) -> {
+                            if (existing.pitchTrack != null) {
+                                float[] at = existing.pitchTrack.at(x);
+                                return at[0] - (4 - line) * at[1];
+                            }
+                            return existing.pitchBottom - (4 - line) * existing.pitchGap
+                                    + existing.pitchSlope * (x - width * .5f);
+                        })) {
+                    established = true;
+                    break;
+                }
                 float[] prior =
                         existing.pitchTrack == null
                                 ? new float[] {existing.pitchBottom, existing.pitchGap}
