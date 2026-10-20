@@ -3608,7 +3608,109 @@ final class OmrScoreInterpreter {
 
     /** A bounded zigzag above a larger note can contain a false semantic oval.
      * Its dark center must fall, rise, and fall again across four distinct lobes. */
+    /** Complete raw zigzag ownership when a model oval covers only one lobe. */
     private static boolean isZigzagOrnamentHead(
+            byte[] labels, byte[] gray, int width, int height, Component head,
+            List<Staff> staffs, List<Component> heads) {
+        return isStrictZigzagOrnamentHead(labels, gray, width, height, head, staffs, heads)
+                || isCompleteZigzagOrnamentHead(labels, gray, width, height, head, staffs, heads);
+    }
+
+    private static boolean isCompleteZigzagOrnamentHead(
+            byte[] labels, byte[] gray, int width, int height, Component head,
+            List<Staff> staffs, List<Component> heads) {
+        if (labels == null || gray == null || width < 1 || height < 1
+                || (long) width * height != gray.length || labels.length != gray.length) return false;
+        Staff staff = nearestHeadStaff(staffs, head.centerY);
+        if (staff == null) return false;
+        float gap = staff.pitchGap;
+        if (!(gap >= 4 && gap <= 128) || !Float.isFinite(gap)
+                || head.maxY > staff.pitchBottom - gap * 4.5f
+                || head.centerY < staff.pitchBottom - gap * 8
+                || head.area > gap * gap * .9f
+                || head.maxX - head.minX + 1 > gap * 1.3f
+                || head.maxY - head.minY + 1 > gap
+                || attachedRawStem(gray, width, height, head, gap * .65f, 2, 180) != null)
+            return false;
+        // The permitted complete glyph may extend beyond either side of the seed.
+        int left = Math.round(head.minX - gap * 3.2f), right = Math.round(head.maxX + gap * 3.2f);
+        int top = Math.round(head.minY - gap * 1.3f), bottom = Math.round(head.maxY + gap * 1.3f);
+        if (left < 0 || right >= width || top < 0 || bottom >= height
+                || right < left || bottom < top || (long) (right - left + 1) * (bottom - top + 1) > 65536)
+            return false;
+        int w = right - left + 1, h = bottom - top + 1;
+        byte[] ink = new byte[w * h];
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                if ((gray[(top + y) * width + left + x] & 255) < 205) ink[y * w + x] = 5;
+        Component glyph = retainSeedConnectedInk(ink, w, h, head, left, top);
+        if (glyph == null) return false;
+        int span = glyph.maxX - glyph.minX + 1, rise = glyph.maxY - glyph.minY + 1;
+        if (glyph.minX == 0 || glyph.maxX == w - 1 || glyph.minY == 0 || glyph.maxY == h - 1
+                || span < gap * 1.8f || span > gap * 3.2f || rise < gap * .6f || rise > gap * 1.3f)
+            return false;
+        int symbol = 0;
+        float[] centers = new float[span];
+        boolean[] strong = new boolean[4];
+        // Whole observed support contributes its measured contrast; faint columns are
+        // not required to contain an uninterrupted strict-core centerline.
+        for (int x = glyph.minX; x <= glyph.maxX; x++) {
+            int mass = 0, moment = 0;
+            int bin = Math.min(3, (x - glyph.minX) * 4 / span);
+            for (int y = glyph.minY; y <= glyph.maxY; y++) {
+                if (ink[y * w + x] == 0) continue;
+                int at = (top + y) * width + left + x, tone = gray[at] & 255;
+                int contrast = 205 - tone;
+                mass += contrast;
+                moment += contrast * y;
+                if (tone < 165) strong[bin] = true;
+                if (labels[at] == 5) symbol++;
+            }
+            if (mass == 0) return false;
+            centers[x - glyph.minX] = moment / (float) mass;
+        }
+        if (symbol < glyph.area * .2f) return false;
+        for (boolean core : strong) if (!core) return false;
+        float[] extremes = {Float.MAX_VALUE, -Float.MAX_VALUE, Float.MAX_VALUE, -Float.MAX_VALUE};
+        int[] at = new int[4];
+        for (int x = 1; x < span - 1; x++) {
+            float value = (centers[x - 1] + centers[x] + centers[x + 1]) / 3;
+            int bin = Math.min(3, x * 4 / span);
+            if (bin % 2 == 0 ? value < extremes[bin] : value > extremes[bin]) {
+                extremes[bin] = value;
+                at[bin] = x;
+            }
+        }
+        for (int i = 1; i < 4; i++) if (at[i] - at[i - 1] < gap * .3f) return false;
+        if (extremes[1] - extremes[0] < gap * .12f
+                || extremes[1] - extremes[2] < gap * .12f
+                || extremes[3] - extremes[2] < gap * .12f) return false;
+        // A complete measured glyph and a clear separating row replace the old
+        // seed-center distance assumption; the principal is still independent.
+        Component owner = null;
+        for (Component main : heads) {
+            if (main == head || main.area < head.area * 1.4f
+                    || main.maxX - main.minX + 1 < gap
+                    || main.centerX < left + glyph.minX || main.centerX > left + glyph.maxX
+                    || main.minY <= top + glyph.maxY + 1
+                    || main.centerY - (top + glyph.maxY) > gap * 7
+                    || nearestHeadStaff(staffs, main.centerY) != staff) continue;
+            boolean separated = false;
+            for (int y = top + glyph.maxY + 1; y < main.minY; y++) {
+                boolean clear = true;
+                for (int x = Math.max(main.minX, left + glyph.minX);
+                        x <= Math.min(main.maxX, left + glyph.maxX); x++)
+                    if ((gray[y * width + x] & 255) < 205) { clear = false; break; }
+                if (clear) { separated = true; break; }
+            }
+            if (!separated) continue;
+            if (owner != null) return false;
+            owner = main;
+        }
+        return owner != null;
+    }
+
+    private static boolean isStrictZigzagOrnamentHead(
             byte[] labels,
             byte[] gray,
             int width,
@@ -17391,10 +17493,14 @@ final class OmrScoreInterpreter {
                             head.maxX,
                             referenceBottom,
                             gap);
+            // A partial/occluded local group cannot change a pitch already established
+            // by the printed frame. Complete local five-rule evidence was tried above.
             if (complete != null
                     && staff.printedPhase
                     && !curved
-                    && Math.abs(complete[1] - gap) > gap * .035f)
+                    && (Math.abs(complete[1] - gap) > gap * .035f
+                            || Math.round((complete[0] - head.centerY) / (complete[1] * .5f))
+                                    != Math.round((referenceBottom - head.centerY) / (gap * .5f))))
                 return new float[] {referenceBottom, gap};
         }
         if (complete == null)

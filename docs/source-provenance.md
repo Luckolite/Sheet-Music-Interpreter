@@ -12,6 +12,16 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+An independently proved printed staff pitch retains authority over an incomplete
+local rule fit that would change its diatonic position. Complete local five-rule
+evidence remains authoritative. Original synthetic notation covers conflicting
+partial strips, unproved frames, same-pitch adjustments and complete local rules.
+
+Complete bounded raw zigzags can own a small semantic note fragment after
+whole-glyph contrast, alternating-lobe and independently separated principal
+proof. The original strict ornament path remains first. Procedural regressions
+preserve close genuine notes, stemmed grace notes and incomplete glyphs.
+
 MusicXML octave directions preserve performed pitch while retaining written
 octave placement. Final emitted note order carries voice and staff identity,
 including grace transitions and mixed-shift chords; existing MIDI pitch stays
