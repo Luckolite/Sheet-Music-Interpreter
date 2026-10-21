@@ -2619,3 +2619,28 @@ Standing half-rest plates require a complete bilaterally supported staff-rule co
 
 A complete thin ending stroke can own its dark core in a rest augmentation corridor. Five registered staff rows, a separate finite optical envelope, observed end paper and clear off-rule side collars establish the stroke. Only original dark core pixels gain ownership; raw dots, adjacent heads, prefixes and unproved ink retain existing uncertainty. Twenty-five original Apache-2.0 procedural methods cover support and preservation. A retained private-page comparison changes one rest kind only; the production clock resolves the silent 3/4 bar while preserving all other saved fields. No private score material, model, dependency or record-layout changes are included. Cumulative app and paired worker packaging remains deferred.
 Paired app source: 8bd9acf128cc1cf64c3699c8db8a558181efd4a1.
+
+## Observed rule-joined shape and curled numeral preservation
+
+Rule-joined marcato requires complete two-arm support. Only independently removed
+staff rows account for missing support, and only fully observed contiguous ink
+can bypass the column-span heuristic. Existing ownership guards and legacy
+shape APIs remain active. A separately observed lower bowl also prevents a
+three's middle waist from being treated as a four's crossbar; existing genuine
+three/four controls pass on Java17 and21. Original procedural and generated-font
+regressions contain no private score material. One retained real-page comparison
+changes a single articulation while preserving all remaining typed page data.
+Models, dependencies and record layouts are unchanged; cumulative app/Hub-worker
+packaging remains deferred.
+Paired app source: cb837eed837cdbe6f36214e34e0079053adae02c.
+
+## Independent meter crop refinements
+
+Refined crops remain alternatives of one physical staff. Every alternative still
+requires complete staff support and agreeing font evidence; complete-link groups
+reject ambiguous bridges and at least two independent staffs remain necessary.
+Six original generated controls preserve the twelve existing independent-copy
+controls. A retained actual-page comparison restores a previously verified meter
+and full-rest behavior while preserving all notes, regions and unrelated fields.
+No private score material, model, dependency or record-layout changes are included.
+Paired app source: cb837eed837cdbe6f36214e34e0079053adae02c.

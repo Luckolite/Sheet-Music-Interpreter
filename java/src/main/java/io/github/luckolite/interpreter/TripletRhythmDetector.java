@@ -3098,8 +3098,15 @@ final class TripletRhythmDetector {
                                                     ? TupletSixGlyph.matches(
                                                             gray, width, minX, minY, gw, gh)
                                                     : looksLikeComponentThree(
-                                                            component, count, localWidth, left, top, minX, minY, gw, gh)))
-                continue;
+                                                            component,
+                                                            count,
+                                                            localWidth,
+                                                            left,
+                                                            top,
+                                                            minX,
+                                                            minY,
+                                                            gw,
+                                                            gh))) continue;
             if (TupletNumeralNeighbors.joinedText(gray, width, height, minX, minY, maxX, maxY))
                 continue;
             // Quarter-note tuplets need the two bracket arms. For beamed/flagged short notes,
@@ -3492,7 +3499,6 @@ final class TripletRhythmDetector {
                 lowerEdge = Math.max(lowerEdge, max);
                 if (min >= w * .45f && max >= w * .7f) lowerOpen++;
                 if (hasLobePocket(gray, width, left, top + y, w)) lowerPocket++;
-
             }
             // Include the final pixel band even when the glyph is shorter than 17 rows.
             if (y + 1 > h * .94f) foot = Math.max(foot, max);
@@ -3642,9 +3648,24 @@ final class TripletRhythmDetector {
             byte[] gray, int width, int area, int left, int top, int w, int h) {
         if (!looksLikeFingerFour(gray, width, area, left, left + w - 1, top, top + h - 1))
             return false;
+        // A waist joining two bowls is not a four's bar above a single lower stem.
+        int lastLowerBowl = -1;
+        for (int y = 0; y < h; y++) {
+            if ((y + 1) / (float) h <= .60f || y / (float) h > .82f) continue;
+            boolean leftInk = false;
+            int paper = 0;
+            for (int x = 0; x < w; x++) {
+                if (dark(gray, width, left + x, top + y)) {
+                    if (leftInk && paper >= Math.max(2, Math.round(w * .22f))) lastLowerBowl = y;
+                    leftInk = true;
+                    paper = 0;
+                } else if (leftInk) paper++;
+            }
+        }
         for (int y = Math.max(0, Math.round(h * .36f));
                 y <= Math.min(h - 1, Math.round(h * .74f));
                 y++) {
+            if (y < lastLowerBowl) continue;
             int run = 0;
             for (int x = 0; x < w; x++) {
                 run = dark(gray, width, left + x, top + y) ? run + 1 : 0;

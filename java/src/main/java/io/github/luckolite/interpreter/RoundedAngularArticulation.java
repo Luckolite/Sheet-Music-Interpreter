@@ -17,6 +17,26 @@ final class RoundedAngularArticulation {
         return completeArms(pixels, width, left, top, right, bottom, kind, false);
     }
 
+    /**
+     * Rule-joined up-carets retain only observed ink. The caller supplies the exact independent
+     * rule-row mask used to remove rows while collecting this glyph, never inferred missing ink.
+     */
+    static boolean matchesRuleJoinedOpen(
+            int[] pixels,
+            int width,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            boolean[] rules,
+            int rulesTop) {
+        if (rules == null
+                || top < rulesTop
+                || bottom < top
+                || (long) bottom - rulesTop >= rules.length) return false;
+        return completeArms(pixels, width, left, top, right, bottom, 1, false, rules, rulesTop);
+    }
+
     private static boolean completeArms(
             int[] pixels,
             int width,
@@ -26,6 +46,20 @@ final class RoundedAngularArticulation {
             int bottom,
             int kind,
             boolean requireDensity) {
+        return completeArms(pixels, width, left, top, right, bottom, kind, requireDensity, null, 0);
+    }
+
+    private static boolean completeArms(
+            int[] pixels,
+            int width,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int kind,
+            boolean requireDensity,
+            boolean[] rules,
+            int rulesTop) {
         int transverse = kind == 0 ? bottom - top + 1 : right - left + 1;
         int axial = kind == 0 ? right - left + 1 : bottom - top + 1;
         if (pixels == null
@@ -44,6 +78,7 @@ final class RoundedAngularArticulation {
             int x = p % width - left, y = p / width - top;
             int t = kind == 0 ? y : x, u = kind == 0 ? x : kind == 1 ? bottom - top - y : y;
             if (t < 0 || t >= transverse || u < 0 || u >= axial) return false;
+            if (rules != null && rules[p / width - rulesTop]) return false;
             sum[t] += u;
             count[t]++;
             low[t] = Math.min(low[t], u);
@@ -51,9 +86,14 @@ final class RoundedAngularArticulation {
         }
         int peak = 0;
         for (int t = 0; t < transverse; t++) {
+            int observedSpan = high[t] - low[t] + 1;
+            int requiredSupport = observedSpan;
+            if (rules != null)
+                for (int u = low[t]; u <= high[t]; u++)
+                    if (rules[bottom - u - rulesTop]) requiredSupport--;
             if (count[t] == 0
-                    || high[t] - low[t] + 1 > axial * .78
-                    || count[t] < (high[t] - low[t] + 1) * .8) return false;
+                    || (observedSpan > axial * .78 && (rules == null || count[t] != observedSpan))
+                    || count[t] < requiredSupport * .8) return false;
             mean[t] = sum[t] / count[t];
             if (mean[t] > mean[peak]) peak = t;
         }

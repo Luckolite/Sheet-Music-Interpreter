@@ -41,12 +41,16 @@ final class MeterCopyFontEvidence {
             if (choice == null || choice.measureIndex() != measure) return null;
         String agreement = null;
         var accepted = new java.util.ArrayList<MeterChangeDetector.Crop>();
+        var groups = new java.util.ArrayList<Integer>();
+        int independent = 0;
         for (var copy : copies) {
             if (copy == null
                     || copy.measure() != measure
                     || !completeStaff(gray, width, height, copy.crop())) return null;
             var crop = copy.crop();
-            for (var previous : accepted) {
+            int sameGroup = -1;
+            for (int i = 0; i < accepted.size(); i++) {
+                var previous = accepted.get(i);
                 float gap = Math.min(previous.gap(), crop.gap());
                 if (Math.abs(previous.gap() - crop.gap()) > gap * .12f
                         || Math.abs(
@@ -59,10 +63,22 @@ final class MeterCopyFontEvidence {
                         || Math.abs(
                                         (previous.right() - previous.left())
                                                 - (crop.right() - crop.left()))
-                                > gap * .5f
-                        || Math.abs(previous.firstLine() - crop.firstLine()) <= 6 * gap)
-                    return null;
+                                > gap * .5f) return null;
+                if (Math.abs(previous.firstLine() - crop.firstLine()) <= 6 * gap) {
+                    if (sameGroup >= 0 && sameGroup != groups.get(i)) return null;
+                    sameGroup = groups.get(i);
+                }
             }
+            // A refinement must match every member of one physical staff group.
+            // It cannot bridge two groups or extend a group by transitive overlap.
+            if (sameGroup >= 0)
+                for (int i = 0; i < accepted.size(); i++)
+                    if (groups.get(i) == sameGroup) {
+                        var previous = accepted.get(i);
+                        float gap = Math.min(previous.gap(), crop.gap());
+                        if (Math.abs(previous.firstLine() - crop.firstLine()) > 6 * gap)
+                            return null;
+                    }
             int cw = crop.right() - crop.left(), ch = crop.bottom() - crop.top();
             int[] pixels = new int[cw * ch];
             for (int y = 0; y < ch; y++)
@@ -94,8 +110,9 @@ final class MeterCopyFontEvidence {
                 return null;
             agreement = supported;
             accepted.add(crop);
+            groups.add(sameGroup < 0 ? independent++ : sameGroup);
         }
-        if (accepted.size() < 2) return null;
+        if (independent < 2) return null;
         for (var choice : choices)
             if ((choice.numerator() + "/" + choice.denominator()).equals(agreement)) return choice;
         return null;

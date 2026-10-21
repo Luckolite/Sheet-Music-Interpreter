@@ -149,14 +149,14 @@
     },
     "RoundedAngularArticulation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RoundedAngularArticulation.java",
-      "source_sha256": "20af7e9121fa853ea03f561029f3517e32223df44520c5e4991cea27052b7295",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "b09d221a2b260f9302410a25327f6aae82b56a5e9d7ddd58eca1f342769d7d2b",
-      "standalone_sha256": "e54620696dd9e2b58485762a6a4287fe6a58ce8ef6010970318eb4f86870699b",
+      "source_sha256": "2c67b9dbf8a0e9daae57f5eb6b529f4bf8c8fe87c876a5c3dbe4fbb050e06956",
+      "reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+      "source_normalized_sha256": "4d44e14508ebbad62df33e132396b0f370c57fd487e70cb83b37d0d207b020c7",
+      "standalone_sha256": "143901ad51ac792b2153201f2e49cc22f17f3f9a3d64764257477db90f126813",
       "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "reviewed_source_state": "committed",
-      "review_note": "Broad detached marcato admission requires complete column support and two independent arm fits. The broad-only open-arm entry preserves thin wide carets without changing the original dense angular API, upper-density or geometric bounds. Existing WideCaret regression and all affected original articulation controls retained; no private pixels or new dependencies.",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "review_note": "A dedicated rule-joined API accounts only for independently removed rows between observed pixels; the long-span exception requires completely contiguous actual ink. Legacy detached/head APIs and all other two-arm guards remain unchanged.",
+      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c"
     },
     "SlashedGraceFlagInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
@@ -359,17 +359,17 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "1f2622afc0270bb1b31edb9bfb7f8053af3b164b410f6dc47bf1cd6f24c157d5",
-      "review_note": "Complete raw components may partition into compact terminal dots and a finite returning connector. Exact two-dimensional body samples, complete exposed column runs, all-partition role agreement and union revalidation preserve genuine ties and unknown branches. Existing dot shape, semantic, text, staff and unique-head guards remain active. Original procedural regressions only; no private score pixels or model changes.",
-      "source_normalized_sha256": "1f2622afc0270bb1b31edb9bfb7f8053af3b164b410f6dc47bf1cd6f24c157d5",
+      "source_sha256": "8a1ce4862ba505e759abc131c362cd563f811aaf6b60eba35b820fe830d2fd88",
+      "review_note": "Rule-joined marcato additionally requires complete two-arm support. The independently derived erased-rule mask retains original observed ink; all prior owner, shape, text, crossbar and proximity guards remain active.",
+      "source_normalized_sha256": "3a0ac7a9e39fbe2947a383629f86c33ef8b97851c794c277091441ac6c9b68ea",
       "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
       "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "0c657800e66e6bfee4d56d495814b5627c2beb332a0850eb1ef20e8a865f36fa",
+      "standalone_sha256": "03cf5fe618d8cacadb9aebe35823505666bb5e788a2bb9518ce0ab0d4a1f6e34",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c"
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -546,14 +546,14 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "ff43b47588480e6cdbbe254aebaeaf9fd9db639e157d06541428d7909f7b86be",
-      "source_normalized_sha256": "97f1d77c8a74974820119a81d6db3096cf8812858dc0b174418c11c74172046c",
-      "review_note": "A complete independently recognized four with a continuous crossbar contradicts both released and raster-recovery three recognition paths. Apply the existing contradiction before the legacy early return; keep positive three evidence and all classifier thresholds unchanged. Original Bravura scales/phases and existing genuine-three controls; no private pixels, source-specific exceptions, helpers, models or format changes.",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "4b8fbd555e5c8f1e77cddc5ede620057cf5397265c898954b2737511c5000faf",
-      "reviewed_app_commit": "f4ebeee8e619a482c1f3295032b18b34aa7e38f5",
+      "source_sha256": "0b5e5259fc89ec6df05ce0798488c9b3c1b1f5ca224e154b7461fdb000bcbc12",
+      "source_normalized_sha256": "6075fc448bffff54a1d54f7e0348db9f2c5b39a549fbf3eaee1d962538cfcc03",
+      "review_note": "A continuous middle waist is not a four crossbar if a separately observed two-sided lower bowl exists below it. Reuse existing lower-lobe/paper dimensions; preserve complete-four contradiction, positive-three rules and original Java17/21 regressions.",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "standalone_sha256": "d40c068fb66175ae938767a79c9ae8405d08fbb85283922efb36a8d3412a1d83",
+      "reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
       "reviewed_app_base_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
-      "scoped_reviewed_app_commit": "f4ebeee8e619a482c1f3295032b18b34aa7e38f5"
+      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c"
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -3649,11 +3649,13 @@
     "MeterCopyFontEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterCopyFontEvidence.java",
       "license": "Apache-2.0",
-      "source_sha256": "5b9922c866a3ff27528c6a1470cebf9143ccbd6db988f14a75b3f3b2ec188da2",
-      "source_normalized_sha256": "9977b536cbaeffdd3ceae7ff8d27833c81a4223b2f3ad2d7be9c0a30185482f2",
-      "standalone_sha256": "ab22137a289d0519d1aeb2847ec9b6b5d70791ac124ded120c5b1ba65ec9ac0a",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Resolve an otherwise unsupported conflicting meter only from multiple complete independent printed staff copies with unanimous existing strong font evidence and unchanged ownership/raster vetoes. Resolve a flat/sharp raster conflict only for a complete ordered raw-and-semantic sharp cohort anchored to a complete treble header; preserve natural, flat-only, incomplete and foreign-owner rejection. Original procedural regressions and existing licensed Bravura font only; no private score pixels, OCR, library data, model changes or protocol fields."
+      "source_sha256": "ac082da634fa25b967ffb9141fde695a2025aeb54fa8c90e5383b2d02535fe8d",
+      "source_normalized_sha256": "bb2e54a97c330c20072bf4f62efe4d6fce12819bedd7c2e1d28ce617065fc51e",
+      "standalone_sha256": "bb0c57202d2cc8a1dbcf4e6fd1801cdfc547ae01d885720f0bad2ccfa7441fd6",
+      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "review_note": "Every meter crop alternative must retain complete staff support and font agreement. Group refinements only when pairwise close to every physical staff group member, reject ambiguous bridges, and require at least two independent staff groups; duplicate crops add no votes.",
+      "reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c"
     },
     "BoxedRehearsalF.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoxedRehearsalF.java",
@@ -8597,5 +8599,19 @@
     "private_validation": "One retained current native page changes only a single rest kind from LITERAL to FULL_MEASURE. All208notes,92regions,other10rests,nominal4duration,positions and remaining14typedfields exact. Strict productionclock all208notes11restsfinite, zeroerrors; scoped rest resolves3 quarterbeats.",
     "boundary": "No model/dependency/record-layout change, no full-library accuracy or deployed-device proof. Cumulative app/Hub-worker build deferred by explicit user instruction.",
     "paired_app_commit": "8bd9acf128cc1cf64c3699c8db8a558181efd4a1"
+  },
+  "observed_rule_joined_shape_and_curled_three_review": {
+    "scope": "Complete observed two-arm support in rule-joined marcato, and observed lower-bowl contradiction of false four crossbars. No numeric threshold widening, private score data, models, dependencies or record-layout changes.",
+    "shareable_regressions": "Twelve original Apache-2.0 methods cover independent removed rows, complete filled-column adverses and four generated logical-font digit instances. Existing Bravura three/four tests are retained without oracle changes.",
+    "validation": "App73/public73+expanded684 onJava21; unchanged expanded684 onJava17; existing74tuplet tests passJava17/21. A retained actual page changes exactly one articulation, preserving all remaining typed14 data. Integrated app11businessclasses match qualified private instruction streams.",
+    "paired_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+    "boundary": "Full Java, package and smoke evidence recorded separately. No whole-library/device accuracy claim; cumulative app/Hub-worker packaging explicitly deferred."
+  },
+  "independent_meter_crop_refinements_review": {
+    "scope": "Refined crops remain alternatives of the same physical staff; every candidate retains complete-staff, font, gap/alignment and measure guards. Complete-link grouping rejects bridging ambiguity; two independent staff groups remain necessary.",
+    "shareable_regressions": "Six original Apache-2.0 generated staff/crop methods plus twelve unchanged original independent-copy controls. No private score material.",
+    "validation": "Paired18+18 focused controls and one retained native page restore a previously verified quarter-meter event and two full-measure-rest kinds. All303notes,28regions and unrelated12typedpagefields remain exact. No additional physical-correction allocation.",
+    "paired_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+    "boundary": "No model, dependency, wire/layout change or device/full-library proof; cumulative matched runtime build remains deferred."
   }
 }

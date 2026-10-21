@@ -1336,6 +1336,15 @@ final class NoteArticulationDetector {
                                     glyph.count,
                                     mirrored),
                             width)
+                    && RoundedAngularArticulation.matchesRuleJoinedOpen(
+                            glyph.pixels,
+                            width,
+                            glyph.left,
+                            glyph.top,
+                            glyph.right,
+                            glyph.bottom,
+                            rules,
+                            top)
                     && !interiorCrossbar(glyph, width, .45f)
                     && (Math.abs(glyph.y() - note.y) <= gap * 3f
                             || beamOwnedMarcato(glyph, note, gray, width, height, true)))
