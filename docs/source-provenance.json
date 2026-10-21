@@ -421,11 +421,13 @@
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
-      "source_sha256": "2af93e3faef08e695be3577ab7761482773397864ed1417205afa4758a8d0770",
-      "source_normalized_sha256": "2cd64008db45651a574e1385103f93e1659dcb0e9467663d9196ef1186341de9",
-      "reviewed_source_state": "working-tree",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "standalone_sha256": "92089e95368d112bc4cbd0ffd007092bbef536108c11b2d02a87b74d5efb577d"
+      "source_sha256": "38b643e5bb7152a868ed43c58ccbf2ef9b45cfdb05939e416d139f745a587fe1",
+      "source_normalized_sha256": "1378fe4e8f468d861213e7717f04cdbba4e545add1f8fdf3c29135f1bf760c43",
+      "reviewed_source_state": "committed",
+      "review_note": "Preserve process-local visually qualified fp admission; recognize a physical arco/pizzicato mode followed by one complete existing character qualifier without consuming expressive text. Prose, negation, unknown qualifiers and a second technique remain excluded.",
+      "standalone_sha256": "b790dc2f659cd2e872274ba0e9c78c0d846e56bb3ac2137657e8e434994b9f06",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "license": "Apache-2.0"
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
@@ -445,14 +447,14 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "b96bd85293948b54a41c5cfd3b4af039d7022530def5c473d50e916b36a951da",
-      "source_normalized_sha256": "6ad510dc5b961a74c84fe096c17b6820d24e8506ba9693372be09c696504a4b0",
-      "review_note": "Reject an OCR F as a scalar dynamic only after complete bounded rehearsal-frame ownership. Existing upright-capital predicate, dynamic levels, faint hairpin routes and ambiguity guards remain unchanged. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
+      "source_sha256": "49f4cd570e3b21e2b30f283622b6c3341aeb21bce94b260016d290d2971e5e20",
+      "source_normalized_sha256": "1d0e464630a97206ac714f5db7059d6c20b7876b4a4e56a794fbfa6d13f4d71a",
+      "review_note": "Preserve one visually qualified fp as an atomic ordered forte/piano pair at an actual onset; reject a bare m only when unchanged raw contour and pre-existing note-owned mordent evidence agree. Other literal levels and timing guards remain unchanged.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
+      "reviewed_app_state": "Committed paired source at ed704d71e4325db9061414f44e5b881cfae1e8e1",
       "reviewed_source_state": "committed",
-      "standalone_sha256": "65256ece9b1e70fd2eebfff2a9c16d4d0d07f7e3b4f3d9a23a3a1b4f4132d473",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "standalone_sha256": "92bfe10e485af5168004d397fefde4cc9797b9e9afdf4fb90ded900a960c0687",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
       "license": "Apache-2.0"
     },
     "HairpinContinuation.java": {
@@ -874,13 +876,14 @@
     },
     "DynamicOcrBounds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DynamicOcrBounds.java",
-      "source_sha256": "890d7b38b7f523356ad7fd7fec3e7ee419b08cca7f93502c64c712709829aeb6",
-      "reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
-      "source_normalized_sha256": "326ebb84bf189ac913e1cb5a3e9819bd94390728c17179b89f7eb0fe157aa505",
+      "source_sha256": "cefb116543e6fceba3a87ef425287e796e9e9881c995191b529cefbc7f9f8055",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "source_normalized_sha256": "1a0f496bb6e96382e81216227f30a6afe44e3d2e7f0e51218d9293e2197418e3",
       "scoped_reviewed_app_commit": "458a5970892cf497b2e259abafe19847c27a5106",
-      "standalone_sha256": "11818ddf30de454b917877ca06480f6d24fd2fe9d9a62b3d62ab193b0883a030",
-      "review_note": "Remove only shallow detached notation above a fully blank text separator, recursively rechecking the retained text for continuing stems.",
-      "reviewed_source_state": "Committed paired recognition51/guide286/audio84 sources; cumulative deployment and runtime validation pending."
+      "standalone_sha256": "2d822093d064ae3803fd1cd0eda95af95963a5fa05780500d3108e3650e72ada",
+      "review_note": "Refine an existing compound literal only to one complete connected component independently accepted as the same full text by the ordinary matcher. Preserve contrast, continuing-stem, ambiguity and bounded-work guards.",
+      "reviewed_source_state": "committed",
+      "license": "Apache-2.0"
     },
     "ExplicitEmptySignature.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExplicitEmptySignature.java",
@@ -1195,12 +1198,13 @@
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
-      "source_sha256": "9f27d7ab7bbdc415d8f713c67c781eef71a7ee8c04a32b246aad81acfb1c14b8",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "0cc23506043277537fb746878dad0ef4080d800ae2196fc371b2069b4e9db898",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "standalone_sha256": "a4767216ca2fc25e5291fef5e706b85174b5481384ba0fb203a9a97460770115",
-      "reviewed_source_state": "working-tree"
+      "source_sha256": "2199810075e7ea22891425c75af5daebe4f5ead4d259215bf6e993a0b217e47b",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "source_normalized_sha256": "b99b48b9a405047b03d05a122e8b31c43d7b2d4f6a67568c0ad9e67f4a4e40fe",
+      "review_note": "Retain complete visually supported compound literals and reconcile qualified fp contributors. Existing standalone GlyphResources access, verified-literal handling and ordinary match thresholds are preserved.",
+      "standalone_sha256": "ab943641e44f1b8472d618130c5be2929bd0ec17b1dd764bbc0b72c8bd46bf4b",
+      "reviewed_source_state": "committed",
+      "license": "Apache-2.0"
     },
     "NativeOrnamentGlyphs.java": {
       "source_path": "tools/native-worker/NativeOrnamentGlyphs.java",
@@ -1351,11 +1355,14 @@
     },
     "PrintedDynamicNoteOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDynamicNoteOwnership.java",
-      "source_sha256": "fbb67fcdbf842c8ded81ff2075af8b7f61b971a381d1c8e724dfc62b2139f886",
-      "source_normalized_sha256": "826de27c4e36e1dd00d4d2a1b6b1709c3ef80b8e99f7d77783f2d4b470021e9b",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_state": "Reviewed frozen uncommitted app1.18.381/code854 source based on recorded app commit",
-      "review_note": "Six global geometry repairs including complete paired printed-rail recovery with39 original generated controls. Full token parity with package and existing diagnostics adapters. Existing compact rail APIs retain their three-gap bound; written rails use five unchanged aligned-core probes within five gaps. Model, dependencies and full framed record layout unchanged; no private score or device material."
+      "source_sha256": "9062f800ac4a95d2fb849c63a1bbbf5eb9086c5c6356bc46de456385b53088a2",
+      "source_normalized_sha256": "a1eb498af520e86ff924d955531152cb3e3994cb042d49097b54fc6b8500269f",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "reviewed_app_state": "Committed paired source at ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "review_note": "Recognize a duplicate dynamic m only from an actual note-owned mordent, local placement and the unchanged contour law on the complete word or observed ink box.",
+      "standalone_sha256": "ccddbcb27be51f69b61515a15d80ac2f3417296cf78eaae3feb515a3fd607e87",
+      "reviewed_source_state": "committed",
+      "license": "Apache-2.0"
     },
     "BeamRuleLocalSlope.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamRuleLocalSlope.java",
@@ -3963,6 +3970,16 @@
       "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
       "review_note": "Complete raw components may partition into compact terminal dots and a finite returning connector. Exact two-dimensional body samples, complete exposed column runs, all-partition role agreement and union revalidation preserve genuine ties and unknown branches. Existing dot shape, semantic, text, staff and unique-head guards remain active. Original procedural regressions only; no private score pixels or model changes.",
       "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23"
+    },
+    "CompoundDynamicEvidence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompoundDynamicEvidence.java",
+      "source_sha256": "ed56e778079d9b9b1fe1479b74aba121640467e828c634678ce005cc0764a4a9",
+      "source_normalized_sha256": "ed56e778079d9b9b1fe1479b74aba121640467e828c634678ce005cc0764a4a9",
+      "standalone_sha256": "062962dd2c1dded8ccb6e95b5debd6c3e7dcc78999b336d768e50143664b220d",
+      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+      "reviewed_source_state": "committed",
+      "license": "Apache-2.0",
+      "review_note": "New process-local helper retains one original fp only after independently accepted ordered overlapping f/p glyphs with a unique original owner. Output bounds are the observed glyph union; no serialized score field is added."
     }
   },
   "interpreter_speedup_review": {
@@ -8613,5 +8630,13 @@
     "validation": "Paired18+18 focused controls and one retained native page restore a previously verified quarter-meter event and two full-measure-rest kinds. All303notes,28regions and unrelated12typedpagefields remain exact. No additional physical-correction allocation.",
     "paired_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
     "boundary": "No model, dependency, wire/layout change or device/full-library proof; cumulative matched runtime build remains deferred."
+  },
+  "compound_dynamics_and_qualified_technique_review": {
+    "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
+    "scope": "Complete literal dynamics, visually qualified fp attack/sustain, duplicate mordent text, and physical technique plus complete character qualifier.",
+    "new_helper": "CompoundDynamicEvidence.java is pure java.base; explicit native decoder source manifest includes it. Android and standalone native adapters have matching hooks.",
+    "unchanged": "Models/checksums, external dependencies, ordinary acceptance thresholds, serialized score/guide/audio layouts, standalone resource adapters.",
+    "original_regressions": "35 new public tests plus focused app producer/envelope tests; procedural geometry and one SIL OFL-derived Bravura compound raster, no score pages.",
+    "glyph_fixture": "java/src/test/resources/dynamic-original/README.md records generator, license and SHA-256."
   }
 }

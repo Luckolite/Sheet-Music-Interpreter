@@ -417,6 +417,22 @@ final class ScoreDynamicsDetector {
     static List<PlayingTechniqueDetector.Word> ocrWords(
             String line, PlayingTechniqueDetector.Word word, byte[] gray, int width, int height) {
         if (!dynamicLine(line) && textDirection(word.text()) == 0) return List.of();
+        if (CompoundDynamicEvidence.literal(word)) {
+            if (!CompoundDynamicEvidence.valid(word)) return List.of();
+            float middle = word.left() + (word.right() - word.left()) * .5f;
+            var f =
+                    new PlayingTechniqueDetector.Word(
+                            "f", word.left(), word.top(), middle, word.bottom());
+            var p =
+                    new PlayingTechniqueDetector.Word(
+                            "p", middle, word.top(), word.right(), word.bottom());
+            // Keep one original identity, but do not confer visual admission here.
+            return containsInk(f, gray, width, height) && containsInk(p, gray, width, height)
+                    ? List.of(
+                            new PlayingTechniqueDetector.Word(
+                                    "fp", word.left(), word.top(), word.right(), word.bottom()))
+                    : List.of();
+        }
         var packed = packedLevels(word.text());
         if (packed.isEmpty()) packed = joinedDirection(word.text());
         if (!packed.isEmpty()) {
@@ -550,9 +566,12 @@ final class ScoreDynamicsDetector {
         var directionFloors = new DirectionFloors(staffs, notes, measures, height);
         ContextualMfAdmission contextualMf = null;
         for (var word : words) {
-            float db = level(word.text());
+            boolean compound = CompoundDynamicEvidence.qualified(word);
+            float db = compound ? level("f") : level(word.text());
             if (!Float.isFinite(db)) continue;
             if (PrintedDynamicNoteOwnership.containsBeamedHead(word, measures, notes)) continue;
+            if (PrintedDynamicNoteOwnership.containsOwnedMordent(
+                    word, staffs, measures, notes, ownershipGray, width, height)) continue;
             var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
             if (owner == null)
                 owner =
@@ -588,6 +607,10 @@ final class ScoreDynamicsDetector {
                             shared, owner, word.top() * height, word.bottom() * height);
             var target = common == null ? owner : common;
             float anchor = literalAnchor(word, target, measures, notes, width, height);
+            if (compound) {
+                addCompound(result, target, anchor, measures, notes, width, height, common != null);
+                continue;
+            }
             add(
                     result,
                     target,
@@ -1416,6 +1439,54 @@ final class ScoreDynamicsDetector {
                 }
             }
         return new Slot(found, position);
+    }
+
+    /** One visual compound, one actual note onset, and one ordered attack/sustain pair. */
+    private static void addCompound(
+            List<ScoreDynamicChange> result,
+            PlayingTechniqueDetector.Staff owner,
+            float anchor,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int width,
+            int height,
+            boolean shared) {
+        Slot at = slot(anchor, owner, measures, notes, width, height);
+        if (at == null) return;
+        boolean actualOnset = false;
+        for (var note : notes)
+            if (note.measureIndex() == at.measure
+                    && note.staffIndex() == owner.index()
+                    && note.staffCount() == owner.count()
+                    && note.positionInMeasure() == at.position) actualOnset = true;
+        if (!actualOnset) return;
+        var attack =
+                new ScoreDynamicChange(
+                        at.measure,
+                        at.position,
+                        owner.index(),
+                        owner.count(),
+                        at.measure,
+                        at.position,
+                        level("f"),
+                        0,
+                        shared);
+        var sustain =
+                new ScoreDynamicChange(
+                        at.measure,
+                        at.position,
+                        owner.index(),
+                        owner.count(),
+                        at.measure,
+                        at.position,
+                        level("p"),
+                        0,
+                        shared);
+        for (int i = 0; i + 1 < result.size(); i++)
+            if (result.get(i).equals(attack) && result.get(i + 1).equals(sustain)) return;
+        // Independent near-position deduplication must not split this atomic pair.
+        result.add(attack);
+        result.add(sustain);
     }
 
     private static void add(

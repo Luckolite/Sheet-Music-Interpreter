@@ -73,6 +73,30 @@ final class NativeDynamicGlyphs {
                 break;
             }
         }
+        cleanedWords =
+                new ArrayList<>(
+                        DynamicOcrBounds.refineComponents(
+                                cleanedWords,
+                                gray,
+                                width,
+                                height,
+                                staffs,
+                                candidate -> {
+                                    var proof =
+                                            match(
+                                                    gray,
+                                                    width,
+                                                    Math.round(candidate.left() * width),
+                                                    Math.round(candidate.top() * height),
+                                                    Math.round(candidate.right() * width),
+                                                    Math.round(candidate.bottom() * height));
+                                    return proof.accepted()
+                                            && proof.text()
+                                                    .equals(
+                                                            ScoreDynamicsDetector.glyphLevelText(
+                                                                    candidate.text()));
+                                }));
+        var compounds = new CompoundDynamicEvidence(cleanedWords);
         var result = new ArrayList<PlayingTechniqueDetector.Word>(cleanedWords);
         var boxes = new ArrayList<>(ScoreDynamicsDetector.symbolBoxes(gray, staffs, width, height));
         // Generic OCR often pads a short italic mark beyond the staff-local size limit.
@@ -132,6 +156,7 @@ final class NativeDynamicGlyphs {
                                                             word.right()));
             if (clipped) continue;
             var recognized = ScoreDynamicsDetector.recognizedWord(match.text(), box, result);
+            if (match.accepted()) compounds.accepted(match.text(), box, recognized);
             result.removeIf(
                     word ->
                             word.left() < box.right()
@@ -140,6 +165,7 @@ final class NativeDynamicGlyphs {
                                     && word.bottom() > box.top());
             result.add(recognized);
         }
+        compounds.finish(result);
         return result;
     }
 

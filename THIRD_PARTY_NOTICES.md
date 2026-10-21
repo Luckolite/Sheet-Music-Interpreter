@@ -38,6 +38,8 @@ SHA-256 checksums are packaged beside the templates under
 These materials are not relicensed under Apache-2.0. The build verifies their
 manifest and includes all resource bytes in the decoder fingerprint.
 
+The test-only [`dynamic-original/fp.png`](java/src/test/resources/dynamic-original/fp.png) is an original compound raster generated from the same Bravura font and remains under SIL OFL 1.1. Its [fixture notes](java/src/test/resources/dynamic-original/README.md) record the generator and checksum; the complete notice is [Bravura-OFL.txt](java/assets/Bravura-OFL.txt). It is not included in the runtime glyph manifest.
+
 The desktop adapter also renders `tr`/`tr.` in the user's JDK logical serif font
 at runtime; those generated candidates are not bundled font assets.
 

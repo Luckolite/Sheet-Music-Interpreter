@@ -13,7 +13,8 @@ final class PlayingTechniqueDetector {
 
     enum WordAdmission {
         UNCLASSIFIED,
-        CONTEXT_QUALIFIED
+        CONTEXT_QUALIFIED,
+        FP_GLYPH_QUALIFIED
     }
 
     record Word(
@@ -47,6 +48,22 @@ final class PlayingTechniqueDetector {
         String[] phrase = TOKEN_SPACE.split(clean);
         if (phrase.length == 2 && DYNAMIC_TOKEN.matcher(phrase[0]).matches())
             clean = TOKEN_PUNCTUATION.matcher(phrase[1]).replaceAll("");
+        if (phrase.length == 2) {
+            int mode = singleTechnique(TOKEN_PUNCTUATION.matcher(phrase[0]).replaceAll(""));
+            String qualifier = TOKEN_PUNCTUATION.matcher(phrase[1]).replaceAll("");
+            if ((mode == ScoreTechniqueChange.ARCO || mode == ScoreTechniqueChange.PIZZICATO)
+                    && singleTechnique(qualifier) < 0) {
+                var directions = ExpressiveDirectionText.parse(qualifier);
+                if (directions.size() == 1
+                        && directions.get(0).kind()
+                                == ScoreExpressiveEvent.Kind.UNRESOLVED_DIRECTION
+                        && directions.get(0).qualifierText().isEmpty()) return mode;
+            }
+        }
+        return singleTechnique(clean);
+    }
+
+    private static int singleTechnique(String clean) {
         return switch (clean) {
             case "pizz", "pizzicato" -> ScoreTechniqueChange.PIZZICATO;
             case "arco" -> ScoreTechniqueChange.ARCO;
