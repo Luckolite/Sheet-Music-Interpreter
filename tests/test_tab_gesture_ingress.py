@@ -44,7 +44,7 @@ class TabGestureIngressTests(unittest.TestCase):
         cls.jar=ROOT/'src/sheet_interpreter/interpreter.jar'
         if not cls.jar.is_file():
             raise unittest.SkipTest('Build the Java core before file-ingress tests')
-        cls.java=str(Path(os.environ['JAVA_HOME'])/'bin/java.exe') if os.environ.get('JAVA_HOME') else 'java'
+        cls.java=str(Path(os.environ['JAVA_HOME'])/'bin'/('java.exe' if os.name == 'nt' else 'java')) if os.environ.get('JAVA_HOME') else 'java'
 
     def test_actual_bridge_emits_fractional_and_directional_events(self):
         with tempfile.TemporaryDirectory(prefix='tab-gesture-') as folder:
