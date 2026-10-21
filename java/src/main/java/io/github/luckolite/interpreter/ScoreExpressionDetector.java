@@ -189,6 +189,14 @@ public final class ScoreExpressionDetector {
             if (closest == null && staff != null && word.right() > word.left())
                 closest =
                         closestDirectionNote(score, staff, width, height, x, word.right() * width);
+            if (release && symbols.contains(word) && staff != null) {
+                var terminal = terminalReleaseNote(score, staff, width, height, word);
+                // Preserve an existing owner in this measure. A different measure's
+                // nearby attack cannot own a proved terminal release inside this one.
+                if (terminal != null
+                        && (closest == null || closest.measureIndex() != terminal.measureIndex()))
+                    closest = terminal;
+            }
             var rest =
                     closest == null
                             ? PrintedRestDirection.find(score, staffs, word, gray, width, height)
@@ -289,6 +297,111 @@ public final class ScoreExpressionDetector {
             }
         }
         return closest;
+    }
+
+    /** A raster-proved isolated release sign belongs to its containing written measure. */
+    private static ScoreNoteEvent terminalReleaseNote(
+            ScorePageInterpretation score,
+            PlayingTechniqueDetector.Staff staff,
+            int width,
+            int height,
+            PlayingTechniqueDetector.Word word) {
+        if (width <= 0
+                || height <= 0
+                || !Float.isFinite(staff.top())
+                || !Float.isFinite(staff.bottom())
+                || !Float.isFinite(staff.gap())
+                || staff.gap() <= 0
+                || staff.top() >= staff.bottom()
+                || staff.top() < 0
+                || staff.bottom() > height
+                || staff.count() <= 0
+                || staff.index() < 0
+                || staff.index() >= staff.count()
+                || !Float.isFinite(word.left())
+                || !Float.isFinite(word.right())
+                || !Float.isFinite(word.top())
+                || !Float.isFinite(word.bottom())
+                || word.left() < 0
+                || word.right() > 1
+                || word.left() >= word.right()
+                || word.top() < 0
+                || word.bottom() > 1
+                || word.top() >= word.bottom()) return null;
+        float center = (staff.top() + staff.bottom()) * .5f / height;
+        float margin = staff.gap() / height;
+        if (!Float.isFinite(center) || !Float.isFinite(margin)) return null;
+        int measure = -1;
+        for (int i = 0; i < score.measures().size(); i++) {
+            var region = score.measures().get(i);
+            if (!Float.isFinite(region.left())
+                    || !Float.isFinite(region.right())
+                    || !Float.isFinite(region.top())
+                    || !Float.isFinite(region.bottom())
+                    || region.left() < 0
+                    || region.right() > 1
+                    || region.left() >= region.right()
+                    || region.top() < 0
+                    || region.bottom() > 1
+                    || region.top() >= region.bottom()) return null;
+            if (center < region.top() - margin
+                    || center > region.bottom() + margin
+                    || word.left() < region.left()
+                    || word.right() > region.right()) continue;
+            if (measure >= 0) return null;
+            measure = i;
+        }
+        if (measure < 0) return null;
+        var region = score.measures().get(measure);
+        ScoreNoteEvent terminal = null;
+        for (var note : score.notes()) {
+            if (note.measureIndex() != measure) continue;
+            if (note.crossStaffBeam()
+                    || note.staffCount() != staff.count()
+                    || note.staffIndex() < 0
+                    || note.staffIndex() >= staff.count()) return null;
+            if (note.staffIndex() != staff.index()) continue;
+            float position = note.positionInMeasure();
+            if (!Float.isFinite(position)
+                    || position < 0
+                    || position > 1
+                    || !Float.isFinite(note.pageY())
+                    || note.pageY() < 0
+                    || note.pageY() > 1) return null;
+            float nx = (region.left() + position * (region.right() - region.left())) * width;
+            // Every column in this lane must precede the glyph, not just a favorable note.
+            if (!Float.isFinite(nx) || nx >= word.left() * width) return null;
+            if (terminal == null || position > terminal.positionInMeasure()) terminal = note;
+        }
+        if (terminal == null) return null;
+        // Use the resolver's existing column tolerance; all notes it will select
+        // must be pitched. Its unchanged common-onset/common-release proof follows.
+        for (var note : score.notes())
+            if (note.measureIndex() == measure
+                    && note.staffIndex() == staff.index()
+                    && note.staffCount() == staff.count()
+                    && Math.abs(note.positionInMeasure() - terminal.positionInMeasure()) <= .018f
+                    && note.kind() != ScoreNoteEvent.Kind.PITCHED) return null;
+        for (var rest : score.rests()) {
+            if (rest.measureIndex() != measure) continue;
+            if (rest.staffCount() != staff.count()
+                    || rest.staffIndex() < 0
+                    || rest.staffIndex() >= staff.count()) return null;
+            if (rest.staffIndex() != staff.index()) continue;
+            if (!Float.isFinite(rest.positionInMeasure())
+                    || rest.positionInMeasure() < 0
+                    || rest.positionInMeasure() > 1
+                    || !Float.isFinite(rest.pageY())
+                    || rest.pageY() < 0
+                    || rest.pageY() > 1
+                    || !Double.isFinite(rest.durationBeats())
+                    || rest.durationBeats() <= 0
+                    || rest.kind() == ScoreRestEvent.Kind.FULL_MEASURE
+                    || rest.positionInMeasure() >= terminal.positionInMeasure()
+                    || Math.abs(rest.positionInMeasure() - terminal.positionInMeasure()) <= .018f)
+                return null;
+        }
+        return terminal;
     }
 
     private static String target(int measure, int staff, int count, float position, boolean rest) {

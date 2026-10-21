@@ -1166,6 +1166,19 @@ final class NoteArticulationDetector {
                     for (int x = Math.max(0, gx0 - 1); x <= Math.min(width - 1, gx1 + 1); x++)
                         continues |= (gray[beyond * width + x] & 255) < 155;
                 if (continues) continue;
+                // A flag can be sliced at both ends by two independent rules.
+                // The broad face of a real wedge may overlap the second rule,
+                // but it must end there: retain the same paper test on that side.
+                int opposite = direction < 0 ? gy0 - 1 : gy1 + 1;
+                if (opposite >= top && opposite <= bottom && rules[opposite - top]) {
+                    while (opposite >= top && opposite <= bottom && rules[opposite - top])
+                        opposite += direction;
+                    boolean broadContinues = opposite < top || opposite > bottom;
+                    if (!broadContinues)
+                        for (int x = Math.max(0, gx0 - 1); x <= Math.min(width - 1, gx1 + 1); x++)
+                            broadContinues |= (gray[opposite * width + x] & 255) < 155;
+                    if (broadContinues) continue;
+                }
                 int[] pixels = new int[size];
                 for (int i = 0; i < size; i++)
                     pixels[i] = (top + queue[i] / w) * width + left + queue[i] % w;
