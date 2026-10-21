@@ -9,6 +9,7 @@ from .boundary_ties import resolve_boundary_ties
 from .navigation import project_navigation
 from .typed_events import event_kind, validate_unpitched
 from .typed_performance import unpitched_intervals
+from .guitar_effect import validate as validate_guitar, pitch_offset as guitar_pitch_offset
 from .continuous_slide_curve import curve as continuous_slide_curve, gated_end
 from .slide_performance import prepare_slides, resolve_slides
 
@@ -206,12 +207,15 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
             performed.extend((tick, min(end, tick + step), pitch, effect, attack if tick == start else None, part, None) for tick in range(start, end, step))
         else:
             performed.append((start, end, pitch, effect, attack, part, continuous))
-    for start, end, pitch, effect, attack, part, continuous in sorted(performed, key=lambda n: (n[0], n[2])):
+    spread = []
+    for start, end, pitch, effect, attack, part, continuous in performed:
+        _, _, rank = validate_guitar(effect)
+        start += round(rank * min(ppq * .024, (end-start)/14))
+        spread.append((start, end, pitch, effect, attack, part, continuous))
+    for start, end, pitch, effect, attack, part, continuous in sorted(spread, key=lambda n: (n[0], n[2])):
         kind = effect.get("type", "none")
         delta = effect.get("semitones", 0)
-        if kind not in ("none", "slide", "hammer_on", "pull_off", "bend", "bend_release", "dead", "harmonic", "tap") or not isinstance(delta, (int, float)) or not math.isfinite(delta) or abs(delta) > 24:
-            raise ValueError("Unsupported guitar performance effect")
-        expressive = kind in ("slide", "bend", "bend_release") or effect.get("vibrato", False) or attack is not None or continuous is not None
+        expressive = kind in ("slide", "bend", "bend_release", "whammy", "whammy_release", "pre_bend") or effect.get("vibrato", False) or attack is not None or continuous is not None
         # Pitch bend is channel-wide. Isolate it from every overlapping note, including other pitches.
         channel = next((c for c in range(16) if c != 9 and (not has_pedal or channel_parts.get(c, part) == part) and all(
             stop <= start or (not expressive and not bent and other != pitch)
@@ -252,7 +256,7 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
             for i in range(count+1) if count else ():
                 t = i/count
                 smooth = lambda x: x*x*(3-2*x)
-                pitch_offset = delta*(1-smooth(min(1, t/.3))) if kind == "slide" else delta*smooth(min(1,t/.4)) if kind == "bend" else delta*(smooth(t/.5) if t<.5 else 1-smooth((t-.5)/.5)) if kind == "bend_release" else 0
+                pitch_offset = guitar_pitch_offset(kind, delta, t)
                 if effect.get("vibrato"):
                     age = t*(end-start)/ppq*60/bpm
                     pitch_offset += .18*math.sin(age*math.pi*10)*min(1,t*8)

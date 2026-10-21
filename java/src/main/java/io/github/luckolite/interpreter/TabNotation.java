@@ -349,7 +349,8 @@ public final class TabNotation {
                 }
             result.add(t.withFrets(fs));
         }
-        return TabPerformanceMarks.apply(List.copyOf(result), words, w, h);
+        return TabGestureMarks.apply(
+                TabPerformanceMarks.apply(List.copyOf(result), words, w, h), words, gray, w, h);
     }
 
     /** External stems and beams used by common tab engraving; ambiguous/no-stem values stay unknown. */

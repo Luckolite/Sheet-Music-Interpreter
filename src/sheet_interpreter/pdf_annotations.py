@@ -3,7 +3,7 @@
 """Optional native PDF tablature text; geometry and symbol semantics remain in Java."""
 import re
 
-_TOKEN = re.compile(r"<[0-9]{1,2}>|\([0-9]{1,2}\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|[xXHPT=]|[\uE1E7\uE241\uE243\uE245\uE4E3-\uE4E8\uE4A2\uEAB2\uE080-\uE089\uECA5\uECA6\uECB7]")
+_TOKEN = re.compile(r"-(?:[12]|(?i:full))|(?i:full|whammy|w/bar|bar|upstroke|downstroke|strum up|strum down)|-?(?:1 1/2|1/4|1/2|3/4|1\u00bd|[\u00bc\u00bd\u00be])|[\uE846\uE847]|<[0-9]{1,2}>|\([0-9]{1,2}\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|[xXHPT=]|[\uE1E7\uE241\uE243\uE245\uE4E3-\uE4E8\uE4A2\uEAB2\uE080-\uE089\uECA5\uECA6\uECB7]")
 
 def tuning_header(page):
     textpage = page.get_textpage()

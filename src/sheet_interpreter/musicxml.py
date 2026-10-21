@@ -13,6 +13,7 @@ import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
 from . import bow_export, clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
+from . import guitar_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -265,13 +266,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
             if active:
                 element(notation, 'slide', type=kind, number=event['slide_'+kind], **{'line-type':'solid'})
         if effect:
-            # Preserve unsupported performance details explicitly without inventing endpoints/string numbers.
-            description = effect.get('type', 'none')
-            if effect.get('semitones'):
-                description += f" ({effect['semitones']:+g} semitones)"
-            if effect.get('vibrato'):
-                description += ' vibrato'
-            element(notation, 'other-notation', description, type='single')
+            guitar_export.write(notation, effect)
         if articulation_flags:
             articulation_export.write(notation, articulation_flags)
         if bow_direction is not None:

@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Labelled tab arrows retain half-semitone pitch amounts, bar direction and return
+strokes; complete strum arrows order attacks by string. `TabGestureMarks` and
+`TabEffect` are shared Java sources with package-only adaptations. `TabGuitarXml`
+and the standalone Python guitar exporters retain equivalent MusicXML semantics.
+Original generated arrow, tie, channel-isolation, raw-bridge, duration and cache
+controls cover the change. App-only OCR crops and playback/export wiring are
+reviewed separately; no private score material or model changes are included.
+
 A complete labelled flat body can own a small notehead-painted lower tip after
 connected raw glyph, header and separate first-attack proof. Geometry excludes
 that proven header glyph and rebases unchanged physical notes into the corrected

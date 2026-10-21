@@ -51,15 +51,15 @@ class WrittenDurationPartsTests(unittest.TestCase):
         root = self.export([event(0,2.5,guitarEffect=dict(type='bend',semitones=2))],
                            notes=[dict(measureIndex=0,staffIndex=0,staffCount=1,articulations=1)])
         self.assertEqual(1,len(root.findall('.//accent')))
-        self.assertEqual(1,len(root.findall('.//other-notation')))
-        self.assertEqual('bend (+2 semitones)',root.findtext('.//other-notation'))
+        self.assertEqual(1,len(root.findall('.//technical/bend')))
+        self.assertEqual('2',root.findtext('.//bend-alter'))
 
     def test_cross_bar_continuation_has_no_extra_attack_or_missing_tie(self):
         root = self.export([event(0,6.5,guitarEffect=dict(type='bend'))],beats=(4,4))
         notes = [n for n in root.findall('.//note') if n.find('pitch') is not None]
         self.assertEqual(['whole','half','eighth'],[n.findtext('type') for n in notes])
         self.assertEqual(4,len(root.findall('.//tied')))
-        self.assertEqual(1,len(root.findall('.//other-notation')))
+        self.assertEqual(1,len(root.findall('.//technical/bend')))
 
     def test_supported_single_values_and_tuplets_stay_single(self):
         for beats in (.5,1,1.5,1.75,2,3,3.5,4,1/3,4/5,4/7):

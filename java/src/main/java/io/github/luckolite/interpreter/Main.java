@@ -209,18 +209,19 @@ public final class Main {
                 if (NoteOrnament.tremoloBeams(note.articulations()) > 0)
                     event.put("tremoloBeats", NoteOrnament.tremoloBeats(note.articulations()));
                 int guitar = note.articulations() & TabEffect.ALL;
-                if (guitar != 0)
-                    event.put(
-                            "guitarEffect",
-                            Map.of(
-                                    "type",
-                                    TabEffect.name(guitar),
-                                    "semitones",
-                                    TabEffect.kind(guitar) == 0 ? 0 : TabEffect.delta(guitar),
-                                    "vibrato",
-                                    (guitar & TabEffect.VIBRATO) != 0,
-                                    "palmMute",
-                                    (guitar & TabEffect.PALM_MUTE) != 0));
+                if (guitar != 0) {
+                    var effect = new LinkedHashMap<String, Object>();
+                    int kind = TabEffect.kind(guitar);
+                    effect.put("type", TabEffect.name(guitar));
+                    if (kind <= TabEffect.TAP)
+                        effect.put("semitones", kind == 0 ? 0 : TabEffect.delta(guitar));
+                    else effect.put("semitones", TabEffect.semitones(guitar));
+                    effect.put("vibrato", (guitar & TabEffect.VIBRATO) != 0);
+                    effect.put("palmMute", (guitar & TabEffect.PALM_MUTE) != 0);
+                    if (kind == TabEffect.STRUM_DOWN || kind == TabEffect.STRUM_UP)
+                        effect.put("strumIndex", TabEffect.strumIndex(guitar));
+                    event.put("guitarEffect", effect);
+                }
                 event.put("durationBeats", duration);
                 event.put("durationFallback", estimated);
                 event.put("tiedFromPrevious", note.tiedFromPrevious());

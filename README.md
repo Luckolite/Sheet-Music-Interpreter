@@ -17,7 +17,7 @@ You do not need to publish your own code. Follow the [license and notice require
 - Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses, sf/sfz/sfp attacks and paired tremolos. See [the shared playback policy](docs/expressive-performance.md).
 - Piano pedal brackets carry through to MIDI sustain, audio previews and MusicXML.
 
-- Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Graphical bends, quarter-tone bends, whammy-bar directions and strum direction aren't supported.
+- Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Labelled graphical bend arrows include quarter-tone amounts and return strokes; explicit whammy-bar arrows retain their pitch direction, and up/down strum marks order chord attacks. See [gesture evidence and limits](docs/tab-gestures.md).
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing with retained clefs, slurs, articulations, ornaments and grace notes.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).

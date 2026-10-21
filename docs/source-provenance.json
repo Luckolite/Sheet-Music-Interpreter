@@ -684,19 +684,21 @@
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
-      "source_sha256": "ac8ea20d5ed4253002b208c568a64cbb28ea1c5314aee38de52665e2cee7dab3",
-      "reviewed_app_commit": "e9ddb5a5bd10088db6721a0fb8bab417bad3bd03",
-      "source_normalized_sha256": "094d289d6b00e240a9690c7325a5c1e4a5a958b0c5efd7c95bc8eb28e5466995",
+      "source_sha256": "eca37d5f2659a27c61e29dcdd4d9d660da6fbec806afdce659d0385fde594ed3",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "source_normalized_sha256": "c0792eaacad23be0a04365bd59ac69a1765ce493a4f9328521340bf8e340d56a",
       "scoped_reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
       "reviewed_source_state": "App943 /1.18.470; complete package-adapted AOSP parity for tab rhythm, technique and tuning repairs; recognition27 with unchanged guide284 records.",
-      "review_note": "Global full-measure rest classification requires independently proved raw voice ownership; literal legacy rests remain literal. Complete joined beam/shaft/numeral ownership recovers triplets. Adjacent complete homologous systems and returning raw bows prove incoming ties without widening ordinary distance caps. Guide283 appends actual rest Kind to33-byte records; analysis marker-24, audio77 and recognition25 are implemented, strict and legacy-compatible. Original Apache-2.0 controls; no source scans, private logs, model or dependency changes.",
-      "standalone_sha256": "2b4704611ff3c566f87e962950c87fe49236edd86d2876b0a266110929a23381"
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
+      "standalone_sha256": "589cf9844e2e85c5d419f11690826f1e63119eeae0b2e40112d1fd809303872e"
     },
     "TabEffect.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabEffect.java",
-      "source_sha256": "1e72d4ec50a46052a4e30a0844bcbf64f2bd21d806190dfdf51765ac5d8a75ca",
-      "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
-      "source_normalized_sha256": "1e72d4ec50a46052a4e30a0844bcbf64f2bd21d806190dfdf51765ac5d8a75ca"
+      "source_sha256": "4bc1e3751da6592832695ca7fdc6eaa27d3b10e2c4d168ca8db9ea45db1ec89f",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "source_normalized_sha256": "0d2d9d07b428f94e2dea5920d2bdb14da103f18bd7ba5114b32508479d3b9923",
+      "standalone_sha256": "521b3a5e222b88c344f6b88688a7a7dbf9ca1d09ba003a95379809083807a6eb",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
     },
     "ArtificialHarmonics.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ArtificialHarmonics.java",
@@ -776,9 +778,11 @@
     },
     "TabTextSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
-      "source_sha256": "0b86a6ab2c2bf5aa241361a0ddb031221e73e58edc37e897f8e06d58f8e50ba5",
-      "reviewed_app_commit": "48390be229c8af4a1ff1afe6adc3753cabbfa711",
-      "source_normalized_sha256": "a6f70840235832302f1c867def0ce4afe44291fbc19bfd531895fb68febb8d78"
+      "source_sha256": "0aa4ba985875573d117d72bf6cf34c113c4736ab44752bcdeda07dd71ea71904",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "source_normalized_sha256": "dc09eef21b2bf3cbca8660ebbf79226b5e0a036d23da1c9045cb16b8d595d530",
+      "standalone_sha256": "595c15aad56aefe5491b43da958f6a33750f41f600bfbd2c43a07fbb58b7030c",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
     },
     "TabTuning.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTuning.java",
@@ -1650,12 +1654,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "82ecc75f9391195fb73d8e01dfc50fdce640a4cabcf7d4097c63259962335e7f",
-      "source_normalized_sha256": "82ecc75f9391195fb73d8e01dfc50fdce640a4cabcf7d4097c63259962335e7f",
-      "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
+      "source_sha256": "32a27668a498dc7ab0857103f3f51828faf33ddce51d34ee3ae20831b41b4c67",
+      "source_normalized_sha256": "8394e8333e00e72c63f86f75652250ca8086f102610bfc0b0253307e296fe96e",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
       "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
-      "standalone_sha256": "8b3b864b57ea2a4eb645d51d9f303e47e5271a0de1623f190dfffdf36a02363a",
-      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "standalone_sha256": "06d447123f53ec3fe99afdb4d12003d094c20654aee68416a7eeafede4f9c847",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
@@ -1717,12 +1721,12 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "756a4f2e4b5fbc03620c859808ad3d83fb3e9aad79441643f04898886dbef570",
-      "source_normalized_sha256": "dcf626595b07c15c323bd1f3ffed18c5484f9d1cda7bd54bdaa7a04134f27d3d",
+      "source_sha256": "d4b3cb5738e48695945efa8d815c051f5420d0951aa0ff6690b0dc9b4b1a92ad",
+      "source_normalized_sha256": "981e9a3c2a1762af1362a63f96095001b68a770d5e8bd9dcf26ecc096f47b7f6",
       "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
-      "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates. Recognition83 changes only cache recognition identity; Guide290/audio96 unchanged. Recognition84 changes only the recognition identity; Guide290/audio96 layouts remain unchanged.",
-      "standalone_sha256": "5a5316f01f0caacceba2fa603db6981c3ec1dfe05a1daeeede334e57e8330f8e",
-      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
+      "standalone_sha256": "734614034dc2b0e1000cdecaef9993638a7677ce05d76222f21d13a2fc5107a4",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
@@ -4015,6 +4019,22 @@
       "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "bow291_review_note": "Complete connected raw bow bodies retain every component pixel and uniquely own one exact staff attack; ordinary word techniques and existing optical exclusion predicates remain unchanged. New pure-JDK helper; no private score fixture."
+    },
+    "TabGestureMarks.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabGestureMarks.java",
+      "source_sha256": "e3f79617013b3e976e7d67fb2a0b6f19ea0adce52a1c49852014b29b0967a6b1",
+      "source_normalized_sha256": "07de260788a6672daeffc4bafc3285cc3d7967286272f8e9c7ff749fda0ceb4b",
+      "standalone_sha256": "6d7652d44475a1f3fa7e31239fb53d565e436480268c2e272ad1c94baa5dce29",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
+    },
+    "TabGuitarXml.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabGuitarXml.java",
+      "source_sha256": "4e7de5515eaf9a19539746ada8324db2b7a7a178bb5ebc2653a3a21bc19da304",
+      "source_normalized_sha256": "434e53dce81090fd2454a8caa9c945b799dee4fc4541c813c9e4f9332a939ab8",
+      "standalone_sha256": "6398b530ec978c0b54794850e5e8d5e885704512f6f2372d812607cb6137932b",
+      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
     }
   },
   "interpreter_speedup_review": {
@@ -8744,5 +8764,38 @@
     "synthetic_regression": "StaffClosedSlurPocketTest",
     "limitations": "Closed pockets may span a proved staff rule. This additional empirical refusal does not establish universal pixel ownership or whole-library accuracy.",
     "private_evidence_excluded": true
+  },
+  "tab_gestures_review": {
+    "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+    "shared_sources": [
+      "TabEffect.java",
+      "TabGestureMarks.java",
+      "TabGuitarXml.java",
+      "TabNotation.java",
+      "TabTextSource.java",
+      "GuideCacheIdentity.java",
+      "guide_writer.py"
+    ],
+    "app_only_adapter_normalized_sha256": {
+      "app/src/main/java/com/musicsheets/app/pdf/TablatureOcr.java": "2c5494c976438b464be1956fc3cf95edccdf60431baa020ab8b9352f8d58a474",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java": "b503db36429db3c606f14bd43072aa4646b4d538cd9fadc0cba7ba9e61d76f97",
+      "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java": "167ddf1bc131fe2096db99b078abc10e57b11d079d0dccdd388ef17e0e942039",
+      "tools/native-worker/decoder-sources.txt": "bf3db5fc40557977a6e18b396d9db242647705a296106255d8b26ced4d441869"
+    },
+    "standalone_adapters": [
+      "Main.java",
+      "guitar_effect.py",
+      "guitar_export.py",
+      "midi.py",
+      "musicxml.py",
+      "pdf_annotations.py"
+    ],
+    "original_regressions": [
+      "TabGestureMarksTest",
+      "TabGuitarXmlTest",
+      "test_tab_gestures.py",
+      "test_tab_gesture_ingress.py"
+    ],
+    "boundary": "Labelled connected arrow and explicit strum cases only; no universal real-score or arbitrary multi-stage gesture accuracy claim. Per-head simultaneous independent strum/pitch effects remain unresolved. App-only OCR crop, exact recorded-voice playback and export wiring reviewed separately. Guide291/recognition86/audio97 require paired package/runtime verification. No model, private score, phone log, signing material or app history imported."
   }
 }
