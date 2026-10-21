@@ -75,6 +75,26 @@ final class PlayingTechniqueDetector {
         };
     }
 
+    static List<ScoreTechniqueChange> detectWithBows(
+            List<Word> words,
+            List<Staff> staffs,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height) {
+        List<ScoreTechniqueChange> result =
+                new ArrayList<>(detect(words, staffs, measures, notes, width, height));
+        result.addAll(
+                BowDirectionDetector.detect(labels, gray, width, height, staffs, measures, notes));
+        result.sort(
+                Comparator.comparingInt(ScoreTechniqueChange::measureIndex)
+                        .thenComparingDouble(ScoreTechniqueChange::positionInMeasure)
+                        .thenComparingInt(ScoreTechniqueChange::staffIndex));
+        return List.copyOf(result);
+    }
+
     static List<ScoreTechniqueChange> detect(
             List<Word> words,
             List<Staff> staffs,

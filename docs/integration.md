@@ -262,3 +262,24 @@ Guide285 appends bounded source framing after the semantic sections. SLT1 bytes
 remain unchanged for confirmed-only data; SLT2 carries a separate deferred arc
 section. The Python `guide_writer` accepts both source shapes, and older guide
 formats reject a downgrade that would lose retained source evidence.
+
+## Attack-local bow directions and Guide291
+
+Complete connected raw up-bow and down-bow signs attach to one exact written
+attack on their own staff. They use technique values6 and7 in the existing
+five-field record and never become persistent instrument or character state.
+Contradictory directions remain unresolved. Android rendering uses the owning
+rendered head/onset; Java and Python MusicXML emit technical bow signs only on
+the attack fragment, once per shared chord.
+
+Guide291 explicitly distinguishes these semantics: older-format writers refuse
+bow entries, and legacy-version readers reject6/7. Existing values0..5 retain
+their behavior. Exact source-attack and count validation applies across app,
+Hub and both writers. Recognition85 invalidates derived recognition separately;
+audio96 and model weights remain unchanged. The standalone caller preserves
+its existing template/resource adapters. Original logical, licensed-font and
+procedural controls contain no private score material.
+
+Source qualification does not establish a deployed pair. Build the matching
+app/Hub/page-worker/audio-worker, pass contract/drift and packaged synthetic
+smoke checks, then verify installed capabilities and live processing.

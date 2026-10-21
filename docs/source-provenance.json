@@ -359,17 +359,18 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "fb1c1e32e1ca8211473df2f7d0f3bde2c9a328d42a61e51229afa8c6f2cf2e8b",
+      "source_sha256": "2accdd489c5583938337c78bc151864a4fb6ffd4f5c5a1966497a18e72143af0",
       "review_note": "Rule-joined marcato additionally requires complete two-arm support. The independently derived erased-rule mask retains original observed ink; all prior owner, shape, text, crossbar and proximity guards remain active. A rule-joined wedge also requires paper beyond an opposite ruled-row contact; raw continuation into a flag refuses that fragment, while complete two-rule triangles remain valid. Original procedural controls only.",
-      "source_normalized_sha256": "bf61d1d2cd9a721f5685315108176107446b6a0e9ec5abc46373d88e9f54ad9a",
-      "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
+      "source_normalized_sha256": "629b21aa85435fcdc931650209176e96262cf8315da03dca879c40a2fa72a2de",
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "be76ca592c7319e9fa784bae064e7b35e5f29fe96cb4be1428020e31f1eb9b1c",
+      "standalone_sha256": "203569e0b61bbd65e51bf0c177502ea4611cef569064087401ca26e4fb0da6ba",
       "license": "Apache-2.0",
       "reviewed_app_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c"
+      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
+      "bow291_review_note": "Add complete measured bow-cap/two-leg detection with unique actual attack and above-own-staff context; existing articulation exclusions and opposite-rule continuation guards remain unchanged."
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -408,12 +409,12 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "45a3595906bc4a2d46499172f11b5b81cfb9b6e99d6c13cb384bb235ad483f94",
-      "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards.",
-      "source_normalized_sha256": "48aacbed9e191759f5377354cc2a11475f5e46ca20b988398345a513aa1db891",
+      "source_sha256": "dad680b93dc6a60efc367233d96faaf8790b698af5efbdd819c1ec9074e6bfdf",
+      "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
+      "source_normalized_sha256": "dad680b93dc6a60efc367233d96faaf8790b698af5efbdd819c1ec9074e6bfdf",
       "reviewed_app_state": "Paired app source committed; cumulative APK deferred during active repair goal.",
-      "reviewed_source_state": "Committed reviewed adjacent printed-beam voice and complete header-flat body batch; matching cumulative runtime deferred during active goal.",
-      "standalone_sha256": "e708352e56ada31fc04aeb5d061853ae404e780db3173b3a651041d4f96b57a4",
+      "reviewed_source_state": "Reviewed paired raw-hollow contour refusal; current release source, final checks pending",
+      "standalone_sha256": "4f32a0b789161cc1a3898058366a842be7e366643207901f9a856ab6ca31ce22",
       "reviewed_app_base_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
       "scoped_reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
@@ -421,13 +422,15 @@
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
-      "source_sha256": "38b643e5bb7152a868ed43c58ccbf2ef9b45cfdb05939e416d139f745a587fe1",
-      "source_normalized_sha256": "1378fe4e8f468d861213e7717f04cdbba4e545add1f8fdf3c29135f1bf760c43",
-      "reviewed_source_state": "committed",
+      "source_sha256": "b964054211bb0afdaaf569b309b276a724bec3b494b5ed350605f6f1ba95762a",
+      "source_normalized_sha256": "dcf1bb3a346348c922db7e0556c69a5602aa7426b8759167c4bba7751b694945",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "review_note": "Preserve process-local visually qualified fp admission; recognize a physical arco/pizzicato mode followed by one complete existing character qualifier without consuming expressive text. Prose, negation, unknown qualifiers and a second technique remain excluded.",
-      "standalone_sha256": "b790dc2f659cd2e872274ba0e9c78c0d846e56bb3ac2137657e8e434994b9f06",
+      "standalone_sha256": "514e38ff5c51ab8759318344bba75462aa6eb190819cd686349053868223608f",
       "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
-      "license": "Apache-2.0"
+      "license": "Apache-2.0",
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "bow291_review_note": "Add attack-local bow detection after unchanged word technique acquisition; do not interpret bow directions as persistent character or instrument modes."
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
@@ -514,8 +517,13 @@
     },
     "ScoreTechniqueChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTechniqueChange.java",
-      "source_sha256": "9490b2c8d43eb8e98fba1512d56178eb0e041c897c76b5235b998ed8eea3b502",
-      "source_normalized_sha256": "9490b2c8d43eb8e98fba1512d56178eb0e041c897c76b5235b998ed8eea3b502"
+      "source_sha256": "71d3481f68562666b46546ce6c7f98070a4d65e7b4270e46934d7089b49f4318",
+      "source_normalized_sha256": "fb26a188695c8bbe02a201f1f129fb267543de834ed24c5a3f88b92dd9d38799",
+      "standalone_sha256": "62d1cec176411cc144fc7ff7bc13edf51377b703ba32ab2a48902862400e6f24",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "bow291_review_note": "Guide291 reuses five fields, explicitly adds UP_BOW6/DOWN_BOW7; canonical exact-float attack map refuses conflicting directions. Legacy modes0..5 retain semantics."
     },
     "ScoreTempoChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTempoChange.java",
@@ -1127,13 +1135,16 @@
     },
     "ScoreNavigationProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationProjection.java",
-      "source_sha256": "a1b5b203422959f61533bb9ce57a5f7f35e1289ac5090496837a7a71ce8c1ea0",
-      "source_normalized_sha256": "a62764e375a5f1568d47f589a32a265c237f94b60616561e688ffb0caab4766b",
+      "source_sha256": "b78435b49085938b2a04fb413a6535ef745c9540bf1a789426bf102999dee1fa",
+      "source_normalized_sha256": "ae72c8e7bead69650088e43b668e4ea9734e4c0defebd9845850900a75772510",
       "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "acf1211664a65086b21a57b66f8af72dd413859a33931dd61e140eb537044d3d",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "standalone_sha256": "1cdbd03eee72bb60a5b02a0bf3238526ba5d521d4000e25edc0c112f9d02a2e4",
+      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
+      "license": "Apache-2.0",
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "bow291_review_note": "Exclude bow signs from persistent checkpoint restoration; map actual in-run signs onto repeated source attacks without carrying them into later runs."
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
@@ -1398,13 +1409,13 @@
     },
     "PrintedDirectionStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDirectionStaff.java",
-      "source_sha256": "9c55a6b18227f31dc26ec9181bb8579d01b30f0f73aafb1c5d69d34873402c0d",
-      "source_normalized_sha256": "972b7b1d2255b839824014793a7f750f98fffa65d5fdb6e79ddd3dfa307d5350",
-      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending.",
-      "review_note": "Preserve strict local staff proof, then permit independently supported faint five-rail evidence with bounded geometry and agreement across crop widths.",
+      "source_sha256": "2f6abfd68345ac4f06590cc3b128f77f3852fd72243decca447092d0a03239ce",
+      "source_normalized_sha256": "1bc20dfab56c892e98e8cc0f92b7aab5d71f3a150893f974dde4f4f8606baf2e",
+      "reviewed_source_state": "working-tree; paired reviewed patch; grouped checks/publication pending",
+      "review_note": "Preserve strict local staff proof, then permit independently supported faint five-rail evidence with bounded geometry and agreement across crop widths. When the original owner-required rail fit fails at the unique final written measure, a full-width strict window shifted inside that domain must retain the original query frame, all five query/link rails, unchanged bilateral contrast support and phase agreement. Legacy/interior rail APIs are unchanged.",
       "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "0ed2b52de9d3f694e5b40f525590abb9802dbe315d0b88937a62dc1d12730a46",
+      "standalone_sha256": "67f37bce1248cb6bd003a56e1a9c7b2a2dd8cceb8a7ce32d56943766ef2ee04e",
       "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56"
     },
     "QuarterRestLocalBody.java": {
@@ -1528,11 +1539,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "8e88f54842a448de6e32556cd6d3cb3dc2891ee1e8d1124d8b34b2da786b8e1f",
-      "source_normalized_sha256": "8e88f54842a448de6e32556cd6d3cb3dc2891ee1e8d1124d8b34b2da786b8e1f",
-      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes. Naturally recognized release signs may use the unique containing measure terminal pitched column; complete lane ordering and rest/metadata ambiguity guards preserve legacy timing. New original licensed-font controls only.",
-      "standalone_sha256": "034bb5a680d98b1161682b075cc1ee5cc6ef971251606870459e70f1d4ac8d5f",
+      "source_sha256": "01021d3d803348f7173ae924e88cc5026a16055d58396f245ba7522e030a1a22",
+      "source_normalized_sha256": "01021d3d803348f7173ae924e88cc5026a16055d58396f245ba7522e030a1a22",
+      "reviewed_source_state": "working-tree; paired reviewed patch; grouped checks/publication pending",
+      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes. Naturally recognized release signs may use the unique containing measure terminal pitched column; complete lane ordering and rest/metadata ambiguity guards preserve legacy timing. New original licensed-font controls only. Naturally recognized release signs may be owned by a unique terminal literal rest. Existing exact silent-slot onset plus literal rest duration resolves the release; unknown timing remains unresolved. Full-measure rests, competing notes/rests and off-staff owners abstain. Original licensed-font controls only.",
+      "standalone_sha256": "59a7dd246a4505662a27dd42cce92b935fbadfcc07f547eb3b70ce9457597328",
       "reviewed_app_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8"
     },
     "ScoreExpressionNotation.java": {
@@ -1639,16 +1650,17 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "ae434223a772bedf888d6f3a37e5a1e3d03c9afbb8f48f694320b4fb4deda67a",
-      "source_normalized_sha256": "ae434223a772bedf888d6f3a37e5a1e3d03c9afbb8f48f694320b4fb4deda67a",
+      "source_sha256": "82ecc75f9391195fb73d8e01dfc50fdce640a4cabcf7d4097c63259962335e7f",
+      "source_normalized_sha256": "82ecc75f9391195fb73d8e01dfc50fdce640a4cabcf7d4097c63259962335e7f",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
-      "standalone_sha256": "bff1c0d4e7db64af52310226a95a9ef2f652753dc448a11756d17a6c033349ea",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "standalone_sha256": "8b3b864b57ea2a4eb645d51d9f303e47e5271a0de1623f190dfffdf36a02363a",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
-      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal."
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
+      "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1705,16 +1717,17 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "6ea733e287a2679424af6e55cb2e95988e1645fb6189da456db1011469215325",
-      "source_normalized_sha256": "6ea733e287a2679424af6e55cb2e95988e1645fb6189da456db1011469215325",
-      "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
+      "source_sha256": "756a4f2e4b5fbc03620c859808ad3d83fb3e9aad79441643f04898886dbef570",
+      "source_normalized_sha256": "dcf626595b07c15c323bd1f3ffed18c5484f9d1cda7bd54bdaa7a04134f27d3d",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency. Paired rollout aligns Hub and both writers with published recognition81; Guide290 wire layout and audio96 are unchanged. Writer function ASTs and historical wire fixtures are preserved. Recognition82 aligns both writers with app and Hub. All function/class ASTs byte-structurally unchanged; only recognition constant updates. Recognition83 changes only cache recognition identity; Guide290/audio96 unchanged. Recognition84 changes only the recognition identity; Guide290/audio96 layouts remain unchanged.",
-      "standalone_sha256": "7889d84062323a540bb129fd0abfdfac8bfbd19855f6c4e790393e1a63f36ba9",
+      "standalone_sha256": "5a5316f01f0caacceba2fa603db6981c3ec1dfe05a1daeeede334e57e8330f8e",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
-      "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
-      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal."
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
+      "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2748,15 +2761,16 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "bd31f32989f79e63379f085acf2a80874fcff2ec48232e22cbb3b567afdd5c62",
-      "source_normalized_sha256": "f2d438cfb6ee7915b4a29533dbf84115958f14c24760efa9d5978b7d7e04d3b5",
-      "standalone_sha256": "363639b88d3cd694822dfabb9bc1919ceb27889787a46f5ce6c2fb7b917a3485",
+      "source_sha256": "0a3bdebf5d82f146f2e8589d7290235f780f80c79a29c3dfa892af4cf71faaa7",
+      "source_normalized_sha256": "8da00720c4e4a9e6626c12125c0497f95b4384fa68c16756cfbbc2ae091429c9",
+      "standalone_sha256": "2e4ff2b04ada333ac63693f1e26c991d7ad83539823c000944c233b3b81bca08",
       "license": "Apache-2.0",
-      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
       "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
-      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc"
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "bow291_review_note": "Standalone caller and native NativePageGuide both add raw bow acquisition through detectWithBows using unchanged actual labels, gray, staffs, measures and notes; resource/constructor/diagnostic adapters remain portable."
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -3980,6 +3994,27 @@
       "reviewed_source_state": "committed",
       "license": "Apache-2.0",
       "review_note": "New process-local helper retains one original fp only after independently accepted ordered overlapping f/p glyphs with a unique original owner. Output bounds are the observed glyph union; no serialized score field is added."
+    },
+    "TerminalDirectionRails.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TerminalDirectionRails.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TerminalDirectionRails.java",
+      "license": "Apache-2.0",
+      "review_note": "Complete strict terminal written-domain rail window with original nine slopes, three reference shifts, bilateral contrast support and five-rail link to actual query; no private score fixture, model, dependency or format change.",
+      "source_sha256": "a3e53e70d0af925085b547f0031b40e369679419393272d5b50b70c4e39f30d5",
+      "source_normalized_sha256": "c7ba6055fff2cba02efc93735d386b8155008fca655b5692be140cc6c8072aee",
+      "standalone_sha256": "202548c3e4bd8c68c85fdf0840b0e602aae02d7d82d5e1bf75b468629a2eca18",
+      "reviewed_source_state": "working-tree; paired reviewed patch; grouped checks/publication pending"
+    },
+    "BowDirectionDetector.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BowDirectionDetector.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BowDirectionDetector.java",
+      "license": "Apache-2.0",
+      "source_sha256": "db27e145c6382f2578638bbac54060032a189e041fa8cd751136398a0acbcab9",
+      "source_normalized_sha256": "9402faa8397b8f81f48b263704dcaba531753fd118fdabc268d412e151fceff7",
+      "standalone_sha256": "9c7d3aca799a8a0f3383866a0148cf55d433d59984b5b79b9d8669b0ef6c8f54",
+      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+      "bow291_review_note": "Complete connected raw bow bodies retain every component pixel and uniquely own one exact staff attack; ordinary word techniques and existing optical exclusion predicates remain unchanged. New pure-JDK helper; no private score fixture."
     }
   },
   "interpreter_speedup_review": {
@@ -8638,5 +8673,76 @@
     "unchanged": "Models/checksums, external dependencies, ordinary acceptance thresholds, serialized score/guide/audio layouts, standalone resource adapters.",
     "original_regressions": "35 new public tests plus focused app producer/envelope tests; procedural geometry and one SIL OFL-derived Bravura compound raster, no score pages.",
     "glyph_fixture": "java/src/test/resources/dynamic-original/README.md records generator, license and SHA-256."
+  },
+  "attack_local_bow291_review": {
+    "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
+    "reviewed_source_state": "Working-tree final reviewed delta; source publication and paired packaging pending",
+    "scope": "Complete retained raw bow signs use an exact written attack on their own physical staff; no persistent audio or character state. One new pure-JDK helper; standalone context patches preserve existing adapters.",
+    "mapping": "427 mapped app sources; all previous provenance, including terminal written-direction rail review, remains retained.",
+    "source_review": "Current standalone Java executable tokens match reviewed context-preserving bow output. Python AST matches reviewed output except explicit recognition84-to85 identity. Native and standalone callers use equivalent detectWithBows arguments; constructor/template and package imports remain platform-specific.",
+    "guide_contract": "Guide291 is an explicit semantic fence for UP_BOW6/DOWN_BOW7 on the existing five-field technique list. All readers/writers preserve0..5; requested pre291 output refuses bows and legacy readers reject6/7. Count bounds and exact source-note attack checks apply. Recognition85 and audio96 are separate identities.",
+    "consumer_boundary": "Android rendering uses actual per-staff rendered head/onset positions and conflict-refusing exact attack map. Audio and navigation checkpoint state exclude bows. Java/Python MusicXML preserve technical up-bow/down-bow only on the attack fragment, suppress duplicate chord marks, and preserve grace/tie identity. Android engraved reuse requires exact source system rather than moving signs by equal coordinates.",
+    "reviewed_platform_sources": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+        "source_sha256": "b4e5c095baf73d73e7de0bdfd65ec1a79669b313f54d26829af4b58c05afb6b7",
+        "source_normalized_sha256": "a7cde93831981631c23d98a813207f81b0ddf5d1b7f286821b40817d08333705"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PdfPageRenderCache.java",
+        "source_sha256": "9c70763b7904b90e7df8760b9316286061791df29fc6a541b24480121b80bc43",
+        "source_normalized_sha256": "1a13b12280b2190c3f24f77c4601ef830335b8f1175b4ac1c15bbd990ceab4a7"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConverter.java",
+        "source_sha256": "17a799314b3dc056168ef478cee4991089e65878f4a6b1660d99c7e464fb9e72",
+        "source_normalized_sha256": "f793bedd34718347586a62bd4697308f3bc7dfb7dbc624d9c505ecdd32c2a2af"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConversionEngravingPolicy.java",
+        "source_sha256": "c385db5e2f3de77e6b0f87930089e919ed860987d1e767f649b2184f65c2691f",
+        "source_normalized_sha256": "9c4a79d35966aa7762b7ecf40391ff0119e12f28c891892db9a612c5ccbf59c3"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java",
+        "source_sha256": "0d23ebd76ef0de9151547242779f647a603cf0e5a8a4e8cbb87600e724e6e3bc",
+        "source_normalized_sha256": "b105f84fbc6d812e7a8fad0dd24bb7240bb7ca90182f71075644b87fbcee7629"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java",
+        "source_sha256": "e206d2f9506e28fd364f46ac9e107d6bce53519fe44b9b66c4921edd2c4b1f30",
+        "source_normalized_sha256": "9bd25f1709fdcc02ae3a103ae6f5b93ef4a4928aca5cc9e5fdacd5ad1f43a288"
+      },
+      {
+        "source_path": "tools/native-worker/NativePageGuide.java",
+        "source_sha256": "0a3bdebf5d82f146f2e8589d7290235f780f80c79a29c3dfa892af4cf71faaa7",
+        "source_normalized_sha256": "8da00720c4e4a9e6626c12125c0497f95b4384fa68c16756cfbbc2ae091429c9"
+      },
+      {
+        "source_path": "tools/native-worker/audit_guide_sections.py",
+        "source_sha256": "457f25565cfb7a21203fc3417b31be58acc6780d86df80f4678c7d0a6812b1b6",
+        "source_normalized_sha256": "e61e2b92dbd0cb03e953551b890ea4966cd0aa6135f31beccb745a7f8852ebcb"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuideArtifact.cs",
+        "source_sha256": "796539ad352bf7204dd8b937df2daaae90e9f702c55bc1d3289a682227b0e496",
+        "source_normalized_sha256": "cfbba3f75c7145f97ab7e72dd034d0426af071517625fbf7e12553a7341c04a6"
+      },
+      {
+        "source_path": "windows-sync-hub/NativeGuidePlan.cs",
+        "source_sha256": "89ab7b1b7487e5ba6f2cd1a54268e27a046d859e8576738884faa2ff00910a14",
+        "source_normalized_sha256": "dbfc1b33dac5a230494cb335428f34c852f724444980734fc09cd3853c389fa2"
+      }
+    ],
+    "original_controls": "Original licensed-font and independent geometry tests plus logical XML/navigation/audio/cache/writer/legacy-version controls. No private score image, source name, phone log, library data, model or signing material included.",
+    "release_boundary": "Focused source/private saved-stage evidence is not final app/Hub/page-worker/audio-worker deployment, broad library accuracy or device/export acceptance. Paired contract, drift, builds, packaged synthetic smoke and installed capabilities remain required."
+  },
+  "raw_hollow_contour_refusal_review": {
+    "scope": "Only new unlabelled raw recovery; unchanged existing shape/stem/closed-pocket admission checks remain mandatory",
+    "source_sha256": "dad680b93dc6a60efc367233d96faaf8790b698af5efbdd819c1ec9074e6bfdf",
+    "standalone_sha256": "4f32a0b789161cc1a3898058366a842be7e366643207901f9a856ab6ca31ce22",
+    "synthetic_regression": "StaffClosedSlurPocketTest",
+    "limitations": "Closed pockets may span a proved staff rule. This additional empirical refusal does not establish universal pixel ownership or whole-library accuracy.",
+    "private_evidence_excluded": true
   }
 }

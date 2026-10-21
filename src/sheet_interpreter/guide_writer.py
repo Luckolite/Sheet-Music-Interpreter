@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 84
-GUIDE_VERSION = 290
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290)
+RECOGNITION_REVISION = 85
+GUIDE_VERSION = 291
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -166,9 +166,21 @@ def encode(score, guide_version=GUIDE_VERSION):
             raise ValueError("Full-measure rest requires guide283")
         normalized_rests.append(dict(row, kind=0 if kind == "LITERAL" else 1))
     _records(output, normalized_rests, rest_fields, 250_000)
-    _records(output, score["techniqueChanges"], (("measureIndex", "i"),
+    techniques=score["techniqueChanges"]
+    if (not isinstance(techniques,list) or any(not isinstance(row,dict)
+            or type(row.get("technique")) is not int or not 0<=row["technique"]<=7 for row in techniques)):
+        raise ValueError("Invalid playing technique")
+    if guide_version < 291 and any(row["technique"] in (6,7) for row in techniques):
+        raise ValueError("Attack-local bow directions require guide291")
+    # Bow entries are exact attacks, never persistent instructions. Validate before writing.
+    fields=("measureIndex","positionInMeasure","staffIndex","staffCount")
+    attacks={tuple(note.get(k) for k in fields) for note in notes}
+    for row in techniques:
+        if row["technique"] in (6,7) and tuple(row.get(k) for k in fields) not in attacks:
+            raise ValueError("Bow direction has no exact source attack")
+    _records(output, techniques, (("measureIndex", "i"),
         ("positionInMeasure", "f"), ("staffIndex", "i"), ("staffCount", "i"),
-        ("technique", "i")), len(measures) * 16)
+        ("technique", "i")), len(measures) * 16 + (len(notes) if guide_version >= 291 else 0))
     dynamics = score["dynamicChanges"]
     if not isinstance(dynamics, list) or any(not isinstance(row, dict)
             or type(row.get("fixedTarget", False)) is not bool

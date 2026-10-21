@@ -12,7 +12,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
+from . import bow_export, clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -198,7 +198,7 @@ def expression_direction(measure, mark, offset):
 
 def emit_note(measure, duration, voice, event=None, chord=False, stop=False, start=False, flats=False,
               gliss_start=False, gliss_stop=False, slide_start=False, slide_stop=False, fragment_end=None, rest_symbols=(), full_measure=False,
-              articulation_flags=0, attack_fragment=True, grace=None):
+              articulation_flags=0, attack_fragment=True, grace=None, bow_direction=None):
     node = element(measure, 'note')
     if grace is not None:
         element(node, 'grace', **{('steal-time-previous' if grace['afterGrace'] else 'steal-time-following'): grace['stealPercent']})
@@ -248,7 +248,7 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
                if mark['release'] == fragment_end]
     paired = event.get('retainedTremolo') if event else None
     arpeggio = bool(event and event.get('retainedArpeggio') and attack_fragment and grace is None)
-    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio:
+    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio or bow_direction is not None:
         notation = element(node, 'notations')
         if arpeggio:
             element(notation, 'arpeggiate')
@@ -274,6 +274,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
             element(notation, 'other-notation', description, type='single')
         if articulation_flags:
             articulation_export.write(notation, articulation_flags)
+        if bow_direction is not None:
+            bow_export.write(notation, bow_direction)
         if ornament_flags:
             ornament_export.write(notation, ornament_flags)
         for symbol in symbols:
@@ -396,6 +398,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             events.append(dict(n, start=offset+start, end=offset+(start if is_grace else min(local_start,start+duration)), tie_stop=False, tie_start=False,
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
                                retainedArticulations=articulation_export.retained(page, note_index),
+                               retainedBow=bow_export.retained(page, note_index),
                                retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index),
                                retainedTremolo=paired_tremolos.get(note_index), retainedArpeggio=False))
@@ -579,7 +582,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                        for g in grace_groups.get((n['sourceIdentity'], after), ())]
             for g in sorted(pending, key=lambda g: (g['graceOrdinal'], g['sourceIdentity'])):
                 emitted = emit_note(measure, g['graceWrittenDuration'], g['voice'], g, flats=flats,
-                                    articulation_flags=g['retainedArticulations'], grace=g)
+                                    articulation_flags=g['retainedArticulations'], grace=g, bow_direction=g.get('retainedBow'))
                 octave_owned[emitted] = 0 if event_kind(g) == 'UNPITCHED' else g.get('octaveShift', 0)
                 if g['sourceIdentity'] in requested_slur_owners:
                     slur_attacks[g['sourceIdentity']] = emitted
@@ -653,6 +656,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                             emitted_clefs.add(start)
                         emit_graces(measure, chord, False, fragment_start, bar['key']<0)
                         articulation_flags = articulation_export.chord_marks(chord, fragment_start)
+                        bow_directions = bow_export.chord_marks(chord, fragment_start)
                         for ci, n in enumerate(chord):
                             emitted = emit_note(measure, duration, voice, n, chord=ci>0,
                                       stop=fragment_start > n['start'] or n['tie_stop'],
@@ -662,7 +666,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                       slide_start=fragment_end==n['end'] and 'slide_start' in n,
                                       slide_stop=fragment_start==n['start'] and 'slide_stop' in n,
                                       fragment_end=fragment_end, articulation_flags=articulation_flags[ci],
-                                      attack_fragment=fragment_start==n['start'])
+                                      attack_fragment=fragment_start==n['start'], bow_direction=bow_directions[ci])
                             octave_owned[emitted] = 0 if event_kind(n) == 'UNPITCHED' else n.get('octaveShift', 0)
                             if fragment_start == n['start'] and n['sourceIdentity'] in requested_slur_owners:
                                 slur_attacks[n['sourceIdentity']] = emitted

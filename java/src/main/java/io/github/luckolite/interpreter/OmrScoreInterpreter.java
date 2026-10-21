@@ -425,7 +425,9 @@ final class OmrScoreInterpreter {
                         || !printedOpenOval(labels, gray, width, height, candidate, owner.gap)
                         // A washed filled core or open hook can pass the ordinary brightness
                         // test. New raw admission requires an actually enclosed central pocket.
-                        || !enclosedHollowInk(gray, width, candidate, true)) continue;
+                        || !enclosedHollowInk(gray, width, candidate, true)
+                        || !independentHollowContours(gray, width, height, candidate, owner.gap))
+                    continue;
                 int[] own = attachedRawStem(gray, width, height, candidate, owner.gap);
                 if (own == null || hasWholeStaffAxis(gray, width, height, owner, own[0])) continue;
                 boolean oppositeHead = false;
@@ -14515,6 +14517,69 @@ final class OmrScoreInterpreter {
             if (ink >= (right - left + 1) * .9f) return true;
         }
         return false;
+    }
+
+    /** A hollow raw recovery needs turning oval walls, not a wedge closed by staff rules. */
+    private static boolean independentHollowContours(
+            byte[] gray, int width, int height, Component head, float gap) {
+        int w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        int flank = Math.max(1, Math.round(gap));
+        if (head.minX < flank || head.maxX + flank >= width) return false;
+        boolean[] leftRule = new boolean[h], rightRule = new boolean[h], rule = new boolean[h];
+        for (int y = 0; y < h; y++) {
+            int left = 0, right = 0;
+            for (int d = 1; d <= flank; d++) {
+                if ((gray[(head.minY + y) * width + head.minX - d] & 255) < 185) left++;
+                if ((gray[(head.minY + y) * width + head.maxX + d] & 255) < 185) right++;
+            }
+            leftRule[y] = left >= flank * .8f;
+            rightRule[y] = right >= flank * .8f;
+            rule[y] = leftRule[y] && rightRule[y];
+        }
+        // A rule edge can be obscured on one side by the nearby glyph. Extend only
+        // a bilaterally observed band through contiguous support on either flank.
+        for (int y = 0; y < h; y++)
+            if (rule[y]) {
+                for (int yy = y - 1; yy >= 0 && (leftRule[yy] || rightRule[yy]); yy--)
+                    rule[yy] = true;
+                for (int yy = y + 1; yy < h && (leftRule[yy] || rightRule[yy]); yy++)
+                    rule[yy] = true;
+            }
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h], spans = new int[h];
+        for (int seed = 0; seed < w * h; seed++) {
+            if (seen[seed]
+                    || (gray[(head.minY + seed / w) * width + head.minX + seed % w] & 255) < 185)
+                continue;
+            int size = 1, read = 0;
+            boolean edge = false;
+            seen[seed] = true;
+            queue[0] = seed;
+            while (read < size) {
+                int at = queue[read++], x = at % w, y = at / w;
+                edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                        int next = yy * w + xx;
+                        if (!seen[next]
+                                && (gray[(head.minY + yy) * width + head.minX + xx] & 255) >= 185) {
+                            seen[next] = true;
+                            queue[size++] = next;
+                        }
+                    }
+            }
+            if (!edge) for (int i = 0; i < size; i++) spans[queue[i] / w]++;
+        }
+        int first = -1, last = -1, peak = 0;
+        for (int y = 0; y < h; y++)
+            if (!rule[y] && spans[y] > 0) {
+                if (first < 0) first = spans[y];
+                last = spans[y];
+                peak = Math.max(peak, spans[y]);
+            }
+        return first >= 0 && peak > first && peak > last;
     }
 
     /** A closed white pocket, not the exterior beside a diagonal tremolo stroke. */

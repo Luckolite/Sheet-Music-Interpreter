@@ -321,11 +321,13 @@ public final class SheetInterpreter {
                                                 measures),
                                         meters,
                                         rhythm.rests(),
-                                        PlayingTechniqueDetector.detect(
+                                        PlayingTechniqueDetector.detectWithBows(
                                                 techniqueWords,
                                                 staffs,
                                                 measures,
                                                 notes,
+                                                labels,
+                                                gray,
                                                 width,
                                                 height),
                                         dynamicDetection.changes())

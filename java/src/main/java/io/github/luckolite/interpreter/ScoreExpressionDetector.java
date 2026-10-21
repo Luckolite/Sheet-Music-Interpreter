@@ -197,10 +197,20 @@ public final class ScoreExpressionDetector {
                         && (closest == null || closest.measureIndex() != terminal.measureIndex()))
                     closest = terminal;
             }
-            var rest =
-                    closest == null
-                            ? PrintedRestDirection.find(score, staffs, word, gray, width, height)
+            var terminalRest =
+                    release && symbols.contains(word) && staff != null
+                            ? terminalReleaseRest(score, staff, width, height, word)
                             : null;
+            // A proved terminal silent column owns the sign after it, not an earlier
+            // sounding note or a closer attack in the following written measure.
+            if (terminalRest != null) closest = null;
+            var rest =
+                    terminalRest != null
+                            ? terminalRest
+                            : closest == null
+                                    ? PrintedRestDirection.find(
+                                            score, staffs, word, gray, width, height)
+                                    : null;
             if (closest == null && rest == null) continue;
             if (caption != null
                     && (closest != null ? closest.measureIndex() : rest.measureIndex())
@@ -227,7 +237,11 @@ public final class ScoreExpressionDetector {
                             anchor.position(),
                             anchor.rest());
             for (var direction : directions) {
-                if (anchor.rest() && !PrintedRestDirection.allows(direction.kind())) continue;
+                if (anchor.rest()
+                        && !PrintedRestDirection.allows(direction.kind())
+                        && !(terminalRest != null
+                                && (direction.kind() == Kind.BREATH
+                                        || direction.kind() == Kind.CAESURA))) continue;
                 String id =
                         "printed-expression:"
                                 + direction.kind()
@@ -404,6 +418,147 @@ public final class ScoreExpressionDetector {
         return terminal;
     }
 
+    /** A literal terminal rest is an explicit silent owner; no rest is inferred from a note. */
+    private static ScoreRestEvent terminalReleaseRest(
+            ScorePageInterpretation score,
+            PlayingTechniqueDetector.Staff staff,
+            int width,
+            int height,
+            PlayingTechniqueDetector.Word word) {
+        if (width <= 0
+                || height <= 0
+                || !Float.isFinite(staff.top())
+                || !Float.isFinite(staff.bottom())
+                || !Float.isFinite(staff.gap())
+                || staff.gap() <= 0
+                || staff.top() >= staff.bottom()
+                || staff.top() < 0
+                || staff.bottom() > height
+                || staff.count() <= 0
+                || staff.index() < 0
+                || staff.index() >= staff.count()
+                || !Float.isFinite(word.left())
+                || !Float.isFinite(word.right())
+                || !Float.isFinite(word.top())
+                || !Float.isFinite(word.bottom())
+                || word.left() < 0
+                || word.right() > 1
+                || word.left() >= word.right()
+                || word.top() < 0
+                || word.bottom() > 1
+                || word.top() >= word.bottom()) return null;
+        float center = (staff.top() + staff.bottom()) * .5f / height;
+        float margin = staff.gap() / height;
+        if (!Float.isFinite(center) || !Float.isFinite(margin)) return null;
+        int measure = -1;
+        for (int i = 0; i < score.measures().size(); i++) {
+            var region = score.measures().get(i);
+            if (!Float.isFinite(region.left())
+                    || !Float.isFinite(region.right())
+                    || !Float.isFinite(region.top())
+                    || !Float.isFinite(region.bottom())
+                    || region.left() < 0
+                    || region.right() > 1
+                    || region.left() >= region.right()
+                    || region.top() < 0
+                    || region.bottom() > 1
+                    || region.top() >= region.bottom()) return null;
+            if (center < region.top() - margin
+                    || center > region.bottom() + margin
+                    || word.left() < region.left()
+                    || word.right() > region.right()) continue;
+            if (measure >= 0) return null;
+            measure = i;
+        }
+        if (measure < 0) return null;
+        var region = score.measures().get(measure);
+        ScoreRestEvent terminal = null;
+        for (var rest : score.rests()) {
+            if (rest.measureIndex() != measure) continue;
+            if (rest.staffCount() != staff.count()
+                    || rest.staffIndex() < 0
+                    || rest.staffIndex() >= staff.count()) return null;
+            if (rest.staffIndex() != staff.index()) continue;
+            float position = rest.positionInMeasure();
+            if (!Float.isFinite(position)
+                    || position < 0
+                    || position > 1
+                    || !Float.isFinite(rest.pageY())
+                    || rest.pageY() < 0
+                    || rest.pageY() > 1
+                    || Math.abs(rest.pageY() * height - (staff.top() + staff.bottom()) * .5f)
+                            > staff.gap() * 2.5f
+                    || !Float.isFinite(rest.pageHeight())
+                    || rest.pageHeight() <= 0
+                    || rest.pageHeight() > 1
+                    || !Double.isFinite(rest.durationBeats())
+                    || rest.durationBeats() <= 0
+                    || rest.isFullMeasure()) return null;
+            float rx = (region.left() + position * (region.right() - region.left())) * width;
+            if (!Float.isFinite(rx) || rx >= word.left() * width) return null;
+            if (terminal == null || position > terminal.positionInMeasure()) terminal = rest;
+        }
+        if (terminal == null) return null;
+        int owners = 0;
+        for (var rest : score.rests())
+            if (rest.measureIndex() == measure
+                    && rest.staffIndex() == staff.index()
+                    && rest.staffCount() == staff.count()
+                    && Math.abs(rest.positionInMeasure() - terminal.positionInMeasure()) <= .018f)
+                owners++;
+        if (owners != 1) return null;
+        for (var note : score.notes()) {
+            if (note.measureIndex() != measure) continue;
+            if (note.crossStaffBeam()
+                    || note.staffCount() != staff.count()
+                    || note.staffIndex() < 0
+                    || note.staffIndex() >= staff.count()) return null;
+            if (note.staffIndex() != staff.index()) continue;
+            float position = note.positionInMeasure();
+            if (!Float.isFinite(position)
+                    || position < 0
+                    || position > 1
+                    || !Float.isFinite(note.pageY())
+                    || note.pageY() < 0
+                    || note.pageY() > 1
+                    || note.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || position >= terminal.positionInMeasure()
+                    || Math.abs(position - terminal.positionInMeasure()) <= .018f) return null;
+        }
+        return terminal;
+    }
+
+    /** Re-use exact silent-slot accounting; a spatially selected rest supplies no guessed beat. */
+    private static double restRelease(ScorePageInterpretation score, Column column, float beats) {
+        ScoreRestEvent target = null;
+        for (var rest : score.rests())
+            if (rest.measureIndex() == column.measure()
+                    && rest.staffIndex() == column.staff()
+                    && rest.staffCount() == column.count()
+                    && Math.abs(rest.positionInMeasure() - column.position()) <= .018f) {
+                if (target != null || rest.isFullMeasure()) return Double.NaN;
+                target = rest;
+            }
+        if (target == null) return Double.NaN;
+        double start =
+                PrintedRestDirection.onset(
+                        score,
+                        column.measure(),
+                        column.staff(),
+                        column.count(),
+                        column.position(),
+                        beats);
+        double duration = target.resolvedDurationBeats(beats), end = start + duration;
+        if (!Double.isFinite(start)
+                || start < 0
+                || !Double.isFinite(duration)
+                || duration <= 0
+                || !Double.isFinite(end)
+                || end <= start
+                || end > beats) return Double.NaN;
+        return end;
+    }
+
     private static String target(int measure, int staff, int count, float position, boolean rest) {
         return (rest ? REST_TARGET : TARGET)
                 + measure
@@ -571,6 +726,12 @@ public final class ScoreExpressionDetector {
                                     && start < meter.beatsInMeasure(c.get().measure());
                 }
                 boolean breath = event.kind() == Kind.BREATH || event.kind() == Kind.CAESURA;
+                if (c.get().rest()
+                        && breath
+                        && event.evidence().stream().anyMatch(e -> e.sourceId().equals(SYMBOL))) {
+                    release = restRelease(score, c.get(), meter.beatsInMeasure(c.get().measure()));
+                    proved = Double.isFinite(release);
+                }
                 boolean attack =
                         event.kind() == Kind.SFORZANDO
                                 || event.kind() == Kind.SFORZATO

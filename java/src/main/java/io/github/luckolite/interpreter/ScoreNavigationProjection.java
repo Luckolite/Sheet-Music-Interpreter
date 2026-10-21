@@ -239,7 +239,9 @@ public final class ScoreNavigationProjection {
                     int technique = ScoreTechniqueChange.ARCO,
                             expression = ScoreTechniqueChange.ORDINARIO;
                     for (var t : orderedTechniques)
-                        if (t.staffIndex() == lane.staff() && t.measureIndex() < run.source()) {
+                        if (t.staffIndex() == lane.staff()
+                                && t.measureIndex() < run.source()
+                                && !ScoreTechniqueChange.isBow(t.technique())) {
                             if (t.technique() <= ScoreTechniqueChange.PIZZICATO)
                                 technique = t.technique();
                             else expression = t.technique();

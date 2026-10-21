@@ -28,6 +28,160 @@ final class NoteArticulationDetector {
 
     record FermataMark(int noteIndex, float x, float y, boolean inverted) {}
 
+    record BowMark(int owner, int technique) {}
+
+    /** Complete finite raw bow bodies, with unique attack ownership. Never articulation bits. */
+    static List<BowMark> bowMarks(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Anchor> notes,
+            List<ScoreNoteEvent> events,
+            List<PlayingTechniqueDetector.Staff> staffs) {
+        long area = (long) width * height;
+        if (width <= 0
+                || height <= 0
+                || area > 20_000_000
+                || gray == null
+                || labels == null
+                || gray.length != area
+                || labels.length != area
+                || notes == null
+                || events == null
+                || staffs == null
+                || notes.size() != events.size()
+                || notes.size() > 4096) return List.of();
+        // Same raw component threshold as ordinary articulation recognition. One bounded page
+        // traversal, at most4096 complete components and no crop manufacture/whitening.
+        long work = area * 20;
+        if (work > 256_000_000L) return List.of();
+        boolean[] seen = new boolean[gray.length];
+        int[] queue = new int[gray.length];
+        List<Glyph> glyphs = new ArrayList<>();
+        for (int seed = 0; seed < gray.length; seed++) {
+            if (seen[seed] || (gray[seed] & 255) >= 155) continue;
+            int size = 1, take = 0, l = width, r = 0, t = height, b = 0;
+            queue[0] = seed;
+            seen[seed] = true;
+            while (take < size) {
+                int at = queue[take++], x = at % width, y = at / width;
+                l = Math.min(l, x);
+                r = Math.max(r, x);
+                t = Math.min(t, y);
+                b = Math.max(b, y);
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= width || yy < 0 || yy >= height) continue;
+                        int next = yy * width + xx;
+                        if (!seen[next] && (gray[next] & 255) < 155) {
+                            seen[next] = true;
+                            queue[size++] = next;
+                        }
+                    }
+            }
+            if (glyphs.size() == 4096) return List.of();
+            glyphs.add(new Glyph(l, t, r, b, size, Arrays.copyOf(queue, size)));
+        }
+        work += (long) glyphs.size() * notes.size() * 8;
+        if (work > 256_000_000L) return List.of();
+        List<BowMark> result = new ArrayList<>();
+        for (Glyph g : glyphs) {
+            if (g.count < 5
+                    || g.left == 0
+                    || g.top == 0
+                    || g.right == width - 1
+                    || g.bottom == height - 1) continue;
+            int owner = -1;
+            boolean ambiguous = false;
+            for (int i = 0; i < notes.size(); i++) {
+                Anchor n = notes.get(i);
+                float gap = n.gap;
+                if (n.staff < 0
+                        || !Float.isFinite(gap)
+                        || gap < 6
+                        || !Float.isFinite(n.x)
+                        || !Float.isFinite(n.y)) continue;
+                if (n.staff >= staffs.size()) continue;
+                var frame = staffs.get(n.staff);
+                float above = (frame.top() - g.bottom) / gap;
+                float w = g.right - g.left + 1, h = g.bottom - g.top + 1;
+                if (above < -.6f
+                        || above > 4.2f
+                        || w < gap * .65f
+                        || w > gap * 3
+                        || h < gap * .8f
+                        || h > gap * 3.5f
+                        || h / w < .65f
+                        || h / w > 2.2f
+                        || Math.abs(g.x() - n.x) > gap * .7f
+                        || n.y - g.bottom < gap * .7f) continue;
+                if (owner >= 0) {
+                    var a = events.get(owner);
+                    var b = events.get(i);
+                    if (a.measureIndex() != b.measureIndex()
+                            || a.staffIndex() != b.staffIndex()
+                            || a.staffCount() != b.staffCount()
+                            || a.positionInMeasure() != b.positionInMeasure()) ambiguous = true;
+                } else owner = i;
+            }
+            if (owner < 0 || ambiguous) continue;
+            Anchor n = notes.get(owner);
+            // This includes every glyph the existing directionText grammar can use:
+            // its letters reach36g left, bounded3g width, and dashes12g right.
+            List<Glyph> context = new ArrayList<>();
+            long contextPixels = 0;
+            for (var other : glyphs)
+                if (other.right >= g.left - 40 * n.gap
+                        && other.left <= g.right + 14 * n.gap
+                        && other.bottom >= g.y() - 3 * n.gap
+                        && other.top <= g.y() + 3 * n.gap) {
+                    context.add(other);
+                    contextPixels += other.count;
+                }
+            if (context.size() > 256) continue;
+            int padding = Math.max(3, Math.max(g.right - g.left + 1, g.bottom - g.top + 1) / 2);
+            long background =
+                    (long)
+                                    (Math.min(width - 1, g.right + padding)
+                                            - Math.max(0, g.left - padding)
+                                            + 1)
+                            * (Math.min(height - 1, g.bottom + padding)
+                                    - Math.max(0, g.top - padding)
+                                    + 1);
+            long c = context.size();
+            work +=
+                    background * 4
+                            + (long) g.count * 20
+                            + notes.size() * 8L
+                            + c * c * c
+                            + contextPixels * 2;
+            if (work > 256_000_000L) return List.of();
+            if (nearHead(g, notes)
+                    || !printedBodyContrast(g, gray, width, height)
+                    || directionText(g, context, n.gap, labels)) continue;
+            boolean up = upBowShape(g, width),
+                    down = completeDownBowShape(g, width) || measuredDownBowShape(g, width);
+            if (up == down) continue;
+            result.add(
+                    new BowMark(
+                            owner,
+                            up ? ScoreTechniqueChange.UP_BOW : ScoreTechniqueChange.DOWN_BOW));
+        }
+        // Conflicting directions abstain. Index exact attacks once; no quadratic
+        // rescan of every output component against all other components.
+        var unique = new java.util.LinkedHashMap<ScoreTechniqueChange.Attack, BowMark>();
+        var conflicts = new java.util.HashSet<ScoreTechniqueChange.Attack>();
+        for (var mark : result) {
+            var key = ScoreTechniqueChange.attackOf(events.get(mark.owner));
+            var prior = unique.putIfAbsent(key, mark);
+            if (prior != null && prior.technique != mark.technique) conflicts.add(key);
+        }
+        conflicts.forEach(unique::remove);
+        return List.copyOf(unique.values());
+    }
+
     /** The same independently proved roof that shelters a dot also preserves its hold symbol. */
     static List<FermataMark> fermataMarks(
             byte[] labels, byte[] gray, int width, int height, List<Anchor> notes) {
@@ -360,6 +514,94 @@ final class NoteArticulationDetector {
         int covered = 0;
         for (boolean bin : bins) if (bin) covered++;
         return hits >= g.count * .85 && covered >= Math.ceil(binCount * 10d / 12);
+    }
+
+    /** A complete cap and two measured legs, including a thick engraved cap. */
+    private static boolean measuredDownBowShape(Glyph g, int width) {
+        int h = g.bottom - g.top + 1, w = g.right - g.left + 1;
+        if (w < 5 || h < 5) return false;
+        // The caller prepays the larger contrast rectangle. This local occupancy
+        // table uses only the already extracted complete component, not gray reads.
+        boolean[] ink = new boolean[w * h];
+        int[] count = new int[h], left = new int[h], right = new int[h];
+        java.util.Arrays.fill(left, Integer.MAX_VALUE);
+        java.util.Arrays.fill(right, -1);
+        for (int p : g.pixels) {
+            int y = p / width - g.top, x = p % width - g.left;
+            ink[y * w + x] = true;
+            count[y]++;
+            left[y] = Math.min(left[y], x);
+            right[y] = Math.max(right[y], x);
+        }
+        int first = 0;
+        if (count[0] < w * .9f) {
+            if (count[1] < w * .9f || count[0] == 0 || left[0] < left[1] || right[0] > right[1])
+                return false;
+            first = 1;
+        }
+        int capEnd = first;
+        while (capEnd < h && count[capEnd] >= w * .9f) capEnd++;
+        int capRows = capEnd - first;
+        if (capRows < 2) return false;
+        // One raster shoulder is permitted only when each of its actual pixels
+        // touches the fully observed cap above. All subsequent rows are two legs.
+        for (int shoulder = 0; shoulder <= 1; shoulder++) {
+            int legStart = capEnd + shoulder;
+            if (h - legStart < capRows || legStart >= h) continue;
+            boolean valid = true;
+            if (shoulder == 1)
+                for (int x = 0; x < w; x++)
+                    if (ink[capEnd * w + x]) {
+                        boolean attached = false;
+                        for (int dx = -1; dx <= 1; dx++)
+                            if (x + dx >= 0 && x + dx < w && ink[(capEnd - 1) * w + x + dx])
+                                attached = true;
+                        if (!attached) {
+                            valid = false;
+                            break;
+                        }
+                    }
+            int lastL0 = -1, lastL1 = -1, lastR0 = -1, lastR1 = -1;
+            for (int y = legStart; valid && y < h; y++) {
+                int[] bounds = new int[4];
+                int runs = 0;
+                boolean in = false;
+                for (int x = 0; x < w; x++) {
+                    boolean at = ink[y * w + x];
+                    if (at && !in) {
+                        if (runs == 2) {
+                            valid = false;
+                            break;
+                        }
+                        bounds[runs * 2] = x;
+                        in = true;
+                    }
+                    if (in && (!at || x == w - 1)) {
+                        bounds[runs * 2 + 1] = at ? x : x - 1;
+                        runs++;
+                        in = false;
+                    }
+                }
+                if (!valid || runs != 2 || bounds[1] >= w * .30f || bounds[2] <= w * .70f) {
+                    valid = false;
+                    break;
+                }
+                if (y > legStart
+                        && (bounds[0] > lastL1 + 1
+                                || bounds[1] < lastL0 - 1
+                                || bounds[2] > lastR1 + 1
+                                || bounds[3] < lastR0 - 1)) {
+                    valid = false;
+                    break;
+                }
+                lastL0 = bounds[0];
+                lastL1 = bounds[1];
+                lastR0 = bounds[2];
+                lastR1 = bounds[3];
+            }
+            if (valid) return true;
+        }
+        return false;
     }
 
     /** A contrasted component owns only its own bow pixels, never another mark on the note. */

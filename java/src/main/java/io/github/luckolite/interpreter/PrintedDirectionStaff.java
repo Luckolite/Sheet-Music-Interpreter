@@ -100,6 +100,20 @@ final class PrintedDirectionStaff {
             }
             if (witness == null) continue;
             var rules = printedRules(gray, width, height, x, hint, gap);
+            if (rules == null && requireOwner) {
+                var terminal = terminalRegion(measures, witness, staff, width, height, x);
+                if (terminal != null)
+                    rules =
+                            TerminalDirectionRails.read(
+                                    gray,
+                                    width,
+                                    height,
+                                    x,
+                                    hint,
+                                    gap,
+                                    terminal.left(),
+                                    terminal.right());
+            }
             if (rules == null
                     || rules.length < 2
                     || !Float.isFinite(rules[0])
@@ -145,6 +159,49 @@ final class PrintedDirectionStaff {
             }
         }
         return best;
+    }
+
+    /** A finite last written measure bounds the fallback; ordinary rail APIs stay bilateral. */
+    private static MeasureRegion terminalRegion(
+            List<MeasureRegion> measures,
+            ScoreNoteEvent witness,
+            PlayingTechniqueDetector.Staff staff,
+            int width,
+            int height,
+            float x) {
+        float center = (staff.top() + staff.bottom()) * .5f / height;
+        float margin = staff.gap() / height;
+        int selected = -1;
+        for (int i = 0; i < measures.size(); i++) {
+            var m = measures.get(i);
+            if (!Float.isFinite(m.left())
+                    || !Float.isFinite(m.right())
+                    || !Float.isFinite(m.top())
+                    || !Float.isFinite(m.bottom())
+                    || m.left() < 0
+                    || m.right() > 1
+                    || m.left() >= m.right()
+                    || m.top() < 0
+                    || m.bottom() > 1
+                    || m.top() >= m.bottom()) return null;
+            if (center < m.top() - margin || center > m.bottom() + margin) continue;
+            if (x >= m.left() * width && x <= m.right() * width) {
+                if (selected >= 0) return null;
+                selected = i;
+            }
+        }
+        if (selected < 0 || witness.measureIndex() != selected) return null;
+        var last = measures.get(selected);
+        for (int i = 0; i < measures.size(); i++) {
+            var m = measures.get(i);
+            if (i != selected
+                    && center >= m.top() - margin
+                    && center <= m.bottom() + margin
+                    && m.right() > last.right()) return null;
+        }
+        int radius = Math.round(staff.gap() * 3.5f);
+        if (last.right() * width - x > radius) return null;
+        return last;
     }
 
     static float[] printedRules(
