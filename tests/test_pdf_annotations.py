@@ -9,8 +9,9 @@ import unittest
 from sheet_interpreter.pdf_annotations import tab_words, tuning_header
 
 
-def fixture():
-    stream = b'BT /F1 12 Tf 30 370 Td (Tuning : E A D G B E) Tj ET\nBT /F1 14 Tf 100 280 Td (12) Tj ET\nBT /F1 14 Tf 170 280 Td (1) Tj ET\nBT /F1 14 Tf 184 280 Td (4) Tj ET'
+def fixture(stream=None):
+    if stream is None:
+        stream = b'BT /F1 12 Tf 30 370 Td (Tuning : E A D G B E) Tj ET\nBT /F1 14 Tf 100 280 Td (12) Tj ET\nBT /F1 14 Tf 170 280 Td (1) Tj ET\nBT /F1 14 Tf 184 280 Td (4) Tj ET'
     objects = [b'<< /Type /Catalog /Pages 2 0 R >>', b'<< /Type /Pages /Kids [3 0 R] /Count 1 >>', b'<< /Type /Page /Parent 2 0 R /MediaBox [0 0 500 400] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>', b'<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>', b'<< /Length ' + str(len(stream)).encode() + b' >>\nstream\n' + stream + b'\nendstream']
     out = bytearray(b'%PDF-1.4\n'); offsets = [0]
     for i, obj in enumerate(objects, 1):
@@ -23,6 +24,18 @@ def fixture():
 
 @unittest.skipUnless(importlib.util.find_spec('pypdfium2'), 'optional PDF dependency')
 class PdfTextTest(unittest.TestCase):
+    def test_vertical_chord_digits_never_form_a_tall_compound_fret(self):
+        import pypdfium2 as pdfium
+        stream=b'BT /F1 12 Tf 96 256 Td (5) Tj ET\nBT /F1 12 Tf 96 156 Td (5) Tj ET'
+        with tempfile.TemporaryDirectory() as folder:
+            path=Path(folder)/'original-chord.pdf';path.write_bytes(fixture(stream))
+            with closing(pdfium.PdfDocument(path)) as doc:
+                page=doc[0]
+                try:
+                    words=tab_words(page)
+                    self.assertEqual(2,sum(w['text']=='5' for w in words))
+                    self.assertFalse(any(w['text']=='55' for w in words))
+                finally:page.close()
     def test_header_and_normalized_fret_boxes(self):
         import pypdfium2 as pdfium
         with tempfile.TemporaryDirectory() as folder:

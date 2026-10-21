@@ -31,6 +31,13 @@ def tab_words(page, header=""):
                 while (match := search.get_next()) is not None:
                     index, count = match
                     boxes = [textpage.get_charbox(i) for i in range(index, index + count)]
+                    # PDF text search can concatenate frets on different strings into "55".
+                    # Such a tall box must not suppress the two valid single-character boxes.
+                    if len(token) > 1 and token.isdigit():
+                        visible = [b for b in boxes if b[2] > b[0] and b[3] > b[1]]
+                        centers = [(b[1]+b[3])/2 for b in visible]
+                        if centers and max(centers)-min(centers) > max(b[3]-b[1] for b in visible):
+                            continue
                     left = min(b[0] for b in boxes) / width
                     right = max(b[2] for b in boxes) / width
                     top = 1 - max(b[3] for b in boxes) / height

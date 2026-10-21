@@ -20,6 +20,10 @@ fret numbers. Each successive attack is delayed 0.024 quarter beats, reduced for
 short chords so all attacks remain inside their written duration. Releases,
 source pitch, fret count and written rhythm remain unchanged.
 
+Native PDF text sometimes concatenates frets on separate strings into one tall
+numeric search result. Character-row evidence rejects that false compound while
+preserving each chord member and genuine same-row multi-digit frets.
+
 JSON `guitarEffect` retains `type` and `semitones` (fractional values included),
 plus `strumIndex` for strums (zero-based attack order). Other effects keep their
 existing JSON keys. MIDI/audio

@@ -36,6 +36,7 @@ public final class TabTextSource {
                 Comparator.comparingInt((TablatureDecoder.Word v) -> v.text().length()).reversed());
         var out = new ArrayList<TablatureDecoder.Word>();
         for (var v : sorted) {
+            if (crossesDigitRows(v, input)) continue;
             float area = (v.right() - v.left()) * (v.bottom() - v.top());
             boolean covered = false;
             for (var old : out) {
@@ -61,6 +62,23 @@ public final class TabTextSource {
         for (int i = 0; i < input.size(); i++) order.putIfAbsent(input.get(i), i);
         out.sort(Comparator.comparingInt(order::get));
         return List.copyOf(out);
+    }
+
+    private static boolean crossesDigitRows(
+            TablatureDecoder.Word word, List<TablatureDecoder.Word> input) {
+        if (!word.text().matches("[0-9]{2,3}")) return false;
+        var digits = new ArrayList<TablatureDecoder.Word>();
+        for (var v : input)
+            if (v.text().matches("[0-9]")
+                    && v.left() >= word.left() - .00001f
+                    && v.right() <= word.right() + .00001f
+                    && v.top() >= word.top() - .00001f
+                    && v.bottom() <= word.bottom() + .00001f) digits.add(v);
+        for (var a : digits)
+            for (var b : digits)
+                if (Math.abs((a.top() + a.bottom() - b.top() - b.bottom()) * .5f)
+                        > Math.max(a.bottom() - a.top(), b.bottom() - b.top()) * 1.25f) return true;
+        return false;
     }
 
     public static List<TablatureDecoder.Word> joinDigits(

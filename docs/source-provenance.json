@@ -778,11 +778,11 @@
     },
     "TabTextSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
-      "source_sha256": "0aa4ba985875573d117d72bf6cf34c113c4736ab44752bcdeda07dd71ea71904",
-      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
-      "source_normalized_sha256": "dc09eef21b2bf3cbca8660ebbf79226b5e0a036d23da1c9045cb16b8d595d530",
-      "standalone_sha256": "595c15aad56aefe5491b43da958f6a33750f41f600bfbd2c43a07fbb58b7030c",
-      "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
+      "source_sha256": "071852c0dfa4cde56ff6b453a4cfc442059595c8a24a659fa62bfa7996a6fe10",
+      "reviewed_app_commit": "1c3c49612944d58fec8b671545ccdddb6a0e2caa",
+      "source_normalized_sha256": "4fce487ccf5da760db7549c3fde2e4c9ea5e0dcaa6717ec15b37e13e3de18014",
+      "standalone_sha256": "7f2e72d392d8a0d18f434728a8e1306ba4bd6aa83d1f5ca1afcb9a8baaea435c",
+      "review_note": "Native numeric compounds spanning separate digit rows cannot suppress valid single-string fret boxes. Same-row multi-digit frets and legacy token precedence are preserved. Original raw-PDF text extraction and shared Java counter-controls reproduce the chord/strum ingress defect; no private input or model change."
     },
     "TabTuning.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTuning.java",
@@ -8796,6 +8796,15 @@
       "test_tab_gestures.py",
       "test_tab_gesture_ingress.py"
     ],
-    "boundary": "Labelled connected arrow and explicit strum cases only; no universal real-score or arbitrary multi-stage gesture accuracy claim. Per-head simultaneous independent strum/pitch effects remain unresolved. App-only OCR crop, exact recorded-voice playback and export wiring reviewed separately. Guide291/recognition86/audio97 require paired package/runtime verification. No model, private score, phone log, signing material or app history imported."
+    "boundary": "Labelled connected arrow and explicit strum cases only; no universal real-score or arbitrary multi-stage gesture accuracy claim. Per-head simultaneous independent strum/pitch effects remain unresolved. App-only OCR crop, exact recorded-voice playback and export wiring reviewed separately. Guide291/recognition86/audio97 require paired package/runtime verification. No model, private score, phone log, signing material or app history imported.",
+    "native_pdf_chord_followup": {
+      "reviewed_app_commit": "1c3c49612944d58fec8b671545ccdddb6a0e2caa",
+      "standalone_adapter": "src/sheet_interpreter/pdf_annotations.py",
+      "regressions": [
+        "test_vertical_chord_digits_never_form_a_tall_compound_fret",
+        "TabGestureMarksTest.tallPdfCompoundCannotHideSeparateChordFrets"
+      ],
+      "boundary": "Original authored text positions and independent row evidence, no song-specific rule. New source PDF is not a commercial fixture. App PDF adapter and shared decoder keep row ownership separate."
+    }
   }
 }

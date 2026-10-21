@@ -8,6 +8,19 @@ import static org.junit.Assert.*;
 
 /** Original generated marks; no score scans, font assets or song coordinates. */
 public class TabGestureMarksTest {
+    @Test
+    public void tallPdfCompoundCannotHideSeparateChordFrets() {
+        var upper = new TablatureDecoder.Word("5", .19f, .33f, .21f, .36f);
+        var lower = new TablatureDecoder.Word("5", .19f, .58f, .21f, .61f);
+        var tall = new TablatureDecoder.Word("55", .19f, .33f, .21f, .61f);
+        var result = TabTextSource.disjoint(List.of(tall, upper, lower));
+        assertEquals(List.of(upper, lower), result);
+        var left = new TablatureDecoder.Word("1", .19f, .33f, .20f, .36f);
+        var right = new TablatureDecoder.Word("2", .20f, .33f, .21f, .36f);
+        var normal = new TablatureDecoder.Word("12", .19f, .33f, .21f, .36f);
+        assertEquals(List.of(normal), TabTextSource.disjoint(List.of(normal, left, right)));
+    }
+
     private final int w = 500, h = 400;
     private final TablatureDecoder.Fret fret = new TablatureDecoder.Fret(100, 140, 0, 5);
 
