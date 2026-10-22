@@ -90,6 +90,10 @@ final class OpenHairpinPairs {
                                         c.lower()[left + x - c.left()]);
                     }
                     double[] up = fit(u, gap), lo = fit(l, gap);
+                    if (up == null && lo != null)
+                        up = finiteArmEndpoint(u, lo, gray, w, h, left, gap, true);
+                    else if (lo == null && up != null)
+                        lo = finiteArmEndpoint(l, up, gray, w, h, left, gap, false);
                     if (up == null || lo == null || up[0] * lo[0] >= 0) continue;
                     double first = lo[1] - up[1],
                             last = first + (lo[0] - up[0]) * (len - 1),
@@ -170,6 +174,65 @@ final class OpenHairpinPairs {
             }
             if (total == 0 || total > gap * .35f) continue;
             for (int x = 0; x < result.length; x++) result[x] |= candidate[x];
+        }
+        return result;
+    }
+
+    /** One terminal sample may belong solely to the independently fitted opposite arm.
+     * Keep the original full interval for all later raw arm/interior checks.
+     */
+    private static double[] finiteArmEndpoint(
+            int[] observed,
+            double[] other,
+            byte[] gray,
+            int w,
+            int h,
+            int left,
+            float gap,
+            boolean upper) {
+        double tolerance = Math.max(1.5, gap * .15);
+        int reach = (int) Math.ceil(tolerance);
+        double[] result = null;
+        for (int endpoint : new int[] {0, observed.length - 1}) {
+            int value = observed[endpoint];
+            if (value == Integer.MAX_VALUE || value == Integer.MIN_VALUE) continue;
+            double otherAt = other[1] + other[0] * endpoint;
+            if (Math.abs(value - otherAt) > tolerance) continue;
+            int[] own = observed.clone();
+            own[endpoint] = Integer.MAX_VALUE;
+            double[] line = fit(own, gap);
+            if (line == null) continue;
+            double at = line[1] + line[0] * endpoint;
+            if ((upper ? otherAt - at : at - otherAt) < gap * .55) continue;
+            int direction = endpoint == 0 ? -1 : 1;
+            int inside = endpoint - direction;
+            if (inside < 0
+                    || inside >= observed.length
+                    || observed[inside] == Integer.MAX_VALUE
+                    || observed[inside] == Integer.MIN_VALUE
+                    || Math.abs(observed[inside] - line[1] - line[0] * inside) > tolerance)
+                continue;
+            boolean supported = false, finite = true;
+            int ix = left + inside, iy = (int) Math.round(line[1] + line[0] * inside);
+            if (ix < 0 || ix >= w || iy < 2 || iy >= h - 2) continue;
+            for (int dy = -2; dy <= 2; dy++) supported |= (gray[(iy + dy) * w + ix] & 255) < 145;
+            if (!supported) continue;
+            for (int step = 0; step <= reach && finite; step++) {
+                int localX = endpoint + direction * step,
+                        x = left + localX,
+                        y = (int) Math.round(line[1] + line[0] * localX);
+                if (x < 0 || x >= w || y < 2 || y >= h - 2) {
+                    finite = false;
+                    break;
+                }
+                for (int dy = -2; dy <= 2; dy++) {
+                    int grayValue = gray[(y + dy) * w + x] & 255;
+                    if (grayValue < 145 || step == reach && grayValue < 225) finite = false;
+                }
+            }
+            if (!finite) continue;
+            if (result != null) return null; // no arbitrary choice of terminal correspondence
+            result = line;
         }
         return result;
     }

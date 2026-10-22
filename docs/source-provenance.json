@@ -1662,20 +1662,21 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "0ee5fa7258f43d343671c8f288ce8377413bf22a152cf5cd9067077e4f68330b",
-      "source_normalized_sha256": "e10fe1cc5bd6db1d4f62fa5c8dd3827f678ae230b4280ae52cf5d6d21f229c50",
+      "source_sha256": "7f1db00613802a4c9f00c515a29e5dcb9379305358eed7527630fdf8c80f79d6",
+      "source_normalized_sha256": "9466e22d001f62d389797b6d7863843ccd374b3f1057c5bf5d51584d0bb0b741",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "3d30e59e91765d7e4c9c568e8b714a818c8bb7980954d35a36436b782429535a",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
+      "standalone_sha256": "6eeaf9ad6cb79df149e9a3e7625fccd3a30d8cdef56eeeb3ddc431f3e337e3c6",
+      "reviewed_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition90 batch committed; cumulative paired rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes."
+      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
+      "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1732,15 +1733,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "fa41b70e71471d22766570c7c689cfb76d32c103ff84e58cd26505ae38c5b2a2",
-      "source_normalized_sha256": "e3072cf83e1db566d7f64d8db681db5cc06700349cd71743048a70cae01d89a1",
+      "source_sha256": "ac0af6aa20df8953ba6c8cb7446332f92a52058dcc6e2632192312d2cbdb1994",
+      "source_normalized_sha256": "d510eb57734c05960735e2ba3d2a5c111183b1a17136c066ed3f980997b13a64",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "3e06a7f8b3b594a16e6e06c82a468bb848e208e4c240b4a54157b8b62bd7f2fa",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
+      "standalone_sha256": "314d32ccb3ec83693dfecb71c70bb15f0a2af4288777bc57e719a860a4eaf80f",
+      "reviewed_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition90 batch committed; cumulative paired rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py"
@@ -3201,15 +3202,16 @@
     },
     "OpenHairpinPairs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenHairpinPairs.java",
-      "source_sha256": "334232dfcca476e2ea306b6a242535d2b607d4a365ad93b01fc6564141d83006",
-      "source_normalized_sha256": "480b538830bb42b69de35c0137396348d76ace781ab1207a7c716ca7348855cf",
-      "standalone_sha256": "5213a2450bc8f38fc1b94ec37388d898827d906aa4803d3b6cba6eb7b07403b5",
+      "source_sha256": "c1b5c035f2ae35834fa82e5a9f69cb70a0e7d9114425ea61444a96f154a19ec8",
+      "source_normalized_sha256": "8ce0124e97a246a77f163804de86d9b8df58ae42a0d55d1e26c6603c73691696",
+      "standalone_sha256": "87aec881b3bdd7ff9bd4facb9f30d2cb952aa29a722b20672ba53c1f86ddd1ac",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
+      "reviewed_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpenHairpinPairs.java",
       "license": "Apache-2.0",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal."
+      "reviewed_app_state": "Compatible recognition90 batch committed; cumulative paired rollout deferred during active goal.",
+      "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged."
     },
     "OpeningBeamPickup.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningBeamPickup.java",
@@ -4142,14 +4144,15 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "26ffb455feb6639e526a0d452c3c9a308a4f00de406f8f06ce584b3967f47a40",
-      "source_normalized_sha256": "fce59bf743017de4b91f3a3a9f35b2e6f327bd34008b19d5837871ba14794e7c",
-      "standalone_sha256": "cc791ae97090029b57734009389069581e1ae1cd7f7fba8a2fb91d8abe75a924",
+      "source_sha256": "41c468b609944a033c2a88ff5b3fe4ff5882e6e871909cbdf49a663bdfad65ea",
+      "source_normalized_sha256": "d9727dcf6bf8501a2c008199e60fefbd7c7cb2bd454fb3ee0d37ce298c90b993",
+      "standalone_sha256": "2c16cf073a049370a5f92cec603cee02d3a6e3ef47e754bd3cfa25af62ea6ed7",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal.",
-      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes."
+      "reviewed_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
+      "reviewed_app_state": "Compatible recognition90 batch committed; cumulative paired rollout deferred during active goal.",
+      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
+      "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -4315,6 +4318,17 @@
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
       "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "FiniteHairpinEndpointOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FiniteHairpinEndpointOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FiniteHairpinEndpointOriginalTest.java",
+      "source_sha256": "babefd431181d7222d46e759ec9790ccb5bbf9c9ec23ef88ea6b6ce8d6d2ddc3",
+      "source_normalized_sha256": "c8c048dd221e18ab07b44f3a9e4d3658edb8ec730cdf775e513f29be2e7579ba",
+      "standalone_sha256": "6d02805625b0a5841ec61cce4b44d6722c2df841f32ea22bae5b96a29613eeab",
+      "license": "Apache-2.0",
+      "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
+      "reviewed_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
+      "reviewed_app_state": "Compatible recognition90 batch committed; cumulative paired rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -9174,5 +9188,26 @@
     "appFocusedTests": 203,
     "combinedFourPagesExact": true,
     "lateHairpinExpressionPreserved": true
+  },
+  "recognition90_review": {
+    "newOriginalTests": 10,
+    "expectedJavaTests": 12722,
+    "expectedJavaClasses": 1665,
+    "mappedSources": 454,
+    "scope": "OpenHairpinPairs finite independently owned endpoints and complete interstaff bar-core accounting; existing hairpin fit/arm/clearance thresholds preserved.",
+    "sourceBoundary": "Original procedural tests only; no private score images/masks/probes/coordinates. No new helper, manifest, model, dependency, wire or audio changes.",
+    "runtimeBoundary": "Source recognition90; Guide291/audio97 unchanged. Cumulative matched app/Hub/worker packaging deferred during active goal; no APK/Hub tag.",
+    "paired_app_commit": "84ba705ec2d19c8b9caed616bed4583fc524c6f1",
+    "standaloneFullSuiteTests": 12722,
+    "currentJavaClassesCovered": 1665,
+    "allCurrentClassesCoveredExactlyOnce": true,
+    "appFocusedTests": 213,
+    "hubSelfTests": 57,
+    "nativePythonTests": 21,
+    "publicPythonTests": 21,
+    "driftMappedFiles": 454,
+    "td185ExpressionStagePreserved": true,
+    "externalFourPagePreservationBoundary": "Four frozen89 helper inputs/outputs exact to90; byte-identical deterministic caller implies dynamics preserved. Separate TD185 saved expression-stage emits exact5dynamics. No fresh model/OCR/Omr/Guide or four-page end-to-end run claimed.",
+    "rootPreservationReviewSha256": "8934fcefcf626e42379496204ff4edf081757dd838898963373a7bf807d942b7"
   }
 }

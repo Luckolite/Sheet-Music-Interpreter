@@ -2807,3 +2807,12 @@ unchanged; no new proposal replaces an already retained rest.
 App, Hub and both writers share recognition89; Guide291/audio97, dependencies
 and model weights are unchanged. Only original procedural regressions are public.
 Cumulative matched packaging/deployment remains deferred during the active goal.
+
+Recognition90 retains complete interstaff bar-core ownership and admits finite
+hairpin endpoints only with their independently observed raw geometry. Existing
+arm, clearance and contrast laws remain. Ten original procedural regressions
+cover both ends and arm directions, missing rails, foreign ink, unexplained
+continuations and dark interiors.
+App, Hub and both writers share recognition90; Guide291/audio97, models,
+dependencies and record layouts are unchanged. Cumulative matched packaging
+and deployment remain deferred during the active goal.
