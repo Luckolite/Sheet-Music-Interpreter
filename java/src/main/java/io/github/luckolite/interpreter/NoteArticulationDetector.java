@@ -1600,9 +1600,10 @@ final class NoteArticulationDetector {
                             glyph.bottom,
                             rules,
                             top)
-                    && !interiorCrossbar(glyph, width, .45f)
+                    && !ruledCaretCrossbar(glyph, width, gray)
                     && (Math.abs(glyph.y() - note.y) <= gap * 3f
-                            || beamOwnedMarcato(glyph, note, gray, width, height, true)))
+                            || beamOwnedMarcato(glyph, note, gray, width, height, true)
+                            || terminatedStemMarcato(glyph, note, gray, width, height)))
                 return true;
         }
         return false;
@@ -2397,6 +2398,149 @@ final class NoteArticulationDetector {
         for (Anchor note : notes)
             if (Math.abs(glyph.x() - note.x) < note.gap * 1.2f
                     && Math.abs(glyph.y() - note.y) < note.gap * .7f) return true;
+        return false;
+    }
+
+    /** A positively proved short crossing owns its complete observed thin vertical envelope. */
+    private static boolean finiteShaftCrossing(
+            byte[] gray,
+            int width,
+            int height,
+            Anchor note,
+            Glyph mark,
+            int shaftX,
+            int row,
+            int start,
+            int maximumThickness) {
+        int limit = Math.max(1, Math.round(note.gap * 1.5f));
+        int minX = Math.round(note.x) - limit, maxX = Math.round(note.x) + limit;
+        int left = shaftX, right = shaftX;
+        while (left > 0 && left >= minX && (gray[row * width + left - 1] & 255) < 225) left--;
+        while (right + 1 < width && right <= maxX && (gray[row * width + right + 1] & 255) < 225)
+            right++;
+        if (left < 1 || right >= width - 1 || left < minX || right > maxX) return false;
+        for (int centre = Math.max(maximumThickness, row - maximumThickness);
+                centre <= Math.min(height - 1 - maximumThickness, row + maximumThickness);
+                centre++) {
+            if ((gray[centre * width + Math.round(note.x)] & 255) >= 155
+                    || !shortLedgerStroke(
+                            gray,
+                            width,
+                            height,
+                            note.x,
+                            centre,
+                            note.gap,
+                            mark.bottom + 1,
+                            start,
+                            note.gap)) continue;
+            int shafts = 0;
+            boolean complete = true;
+            for (int xx = left; xx <= right && complete; xx++) {
+                for (int yy = Math.min(row, centre); yy <= Math.max(row, centre); yy++)
+                    if ((gray[yy * width + xx] & 255) >= 225) {
+                        complete = false;
+                        break;
+                    }
+                int top = row, bottom = row;
+                while (top > 0
+                        && row - top <= maximumThickness
+                        && (gray[(top - 1) * width + xx] & 255) < 225) top--;
+                while (bottom + 1 < height
+                        && bottom - row <= maximumThickness
+                        && (gray[(bottom + 1) * width + xx] & 255) < 225) bottom++;
+                if (bottom - top + 1 > maximumThickness) {
+                    if (Math.abs(xx - shaftX) >= maximumThickness || ++shafts > maximumThickness)
+                        complete = false;
+                } else if (top == 0 || bottom == height - 1) complete = false;
+            }
+            if (complete) return true;
+        }
+        return false;
+    }
+
+    /** An unbeamed quarter can own a distant ruled caret through its complete thin shaft. */
+    private static boolean terminatedStemMarcato(
+            Glyph mark, Anchor note, byte[] gray, int width, int height) {
+        float gap = note.gap;
+        if (mark.bottom >= note.y
+                || note.y - mark.y() > gap * 6f
+                || PrintedStemDirection.detect(gray, width, height, note.x, note.y, gap) != 1)
+            return false;
+        int headRow = Math.round(note.y), headX = Math.round(note.x);
+        int start = Math.round(note.y - gap * .3f);
+        int maxWidth = Math.max(1, (int) Math.ceil(gap * .25f));
+        for (int offset = Math.round(gap * .3f); offset <= Math.round(gap * .85f); offset++) {
+            int x = headX + offset;
+            if (x < 1 || x >= width - 1 || start < 0 || headRow >= height) continue;
+            boolean connected = true;
+            for (int xx = headX; xx <= x; xx++)
+                if ((gray[headRow * width + xx] & 255) >= 155) connected = false;
+            if (!connected) continue;
+            int y = start;
+            boolean thin = true;
+            while (y > mark.bottom && (gray[y * width + x] & 255) < 155) {
+                if (y < note.y - gap * .7f
+                        && !thinIndependentRule(gray, width, height, x, y, gap)
+                        && !finiteShaftCrossing(
+                                gray, width, height, note, mark, x, y, start, maxWidth)) {
+                    int left = x, right = x;
+                    while (left > 0
+                            && x - left <= maxWidth
+                            && (gray[y * width + left - 1] & 255) < 155) left--;
+                    while (right + 1 < width
+                            && right - x <= maxWidth
+                            && (gray[y * width + right + 1] & 255) < 155) right++;
+                    if (right - left + 1 > maxWidth) {
+                        thin = false;
+                        break;
+                    }
+                }
+                y--;
+            }
+            int end = y + 1;
+            if (!thin
+                    || y < 2
+                    || y <= mark.bottom
+                    || start - end + 1 < gap * 2.5f
+                    || end - mark.bottom > gap * 2.5f) continue;
+            boolean cap = true;
+            for (int yy = y - 2; yy <= y; yy++)
+                for (int xx = x - 1; xx <= x + 1; xx++)
+                    if ((gray[yy * width + xx] & 255) < 225) cap = false;
+            if (cap) return true;
+        }
+        return false;
+    }
+
+    /** A crossbar closes an already observed open interior; a thick peak does not. */
+    private static boolean ruledCaretCrossbar(Glyph mark, int width, byte[] gray) {
+        int h = mark.bottom - mark.top + 1, w = mark.right - mark.left + 1;
+        boolean opened = false;
+        int bridges = 0;
+        for (int y = mark.top + (int) Math.ceil(h * .2f);
+                y <= mark.top + (int) Math.floor(h * .8f);
+                y++) {
+            int left = Integer.MAX_VALUE, right = -1;
+            for (int p : mark.pixels)
+                if (p / width == y) {
+                    left = Math.min(left, p % width);
+                    right = Math.max(right, p % width);
+                }
+            // Independently removed rule rows supply no glyph evidence.
+            if (right < left) continue;
+            boolean paper = false, bridge = true;
+            for (int x = left; x <= right; x++) {
+                int ink = gray[y * width + x] & 255;
+                if (x > left && x < right && ink >= 225) paper = true;
+                if (ink >= 225) bridge = false;
+            }
+            if (paper) {
+                opened = true;
+                bridges = 0;
+            } else if (opened && bridge && right - left + 1 >= w * .45f) {
+                if (++bridges >= 2) return true;
+            } else bridges = 0;
+        }
         return false;
     }
 

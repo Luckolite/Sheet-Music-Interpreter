@@ -97,5 +97,10 @@ python -m unittest discover -s tests
 python scripts/smoke_test.py
 ```
 
+Use `python scripts/test_java.py --jobs 4` in place of the serial Java test
+command to run every class once across four isolated JVMs. Each parallel JVM
+defaults to a 512 MiB heap; per-batch logs and results are saved under
+`build/test-parallel`. A failed batch makes the command fail.
+
 Bug reports and contributions are welcome. Use shareable examples and keep private logs
 and commercial scores out of public posts. See [CONTRIBUTING.md](CONTRIBUTING.md).

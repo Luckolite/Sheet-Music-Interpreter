@@ -172,12 +172,12 @@
     },
     "FadedNoteheadRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FadedNoteheadRecovery.java",
-      "source_sha256": "9e56ae2ca0c8876030213b1de8194b039941ed265958741973a249eff88088fc",
-      "source_normalized_sha256": "4f4b8472b848535df7ffd03d382bb42c59fbc059864451bdc05961b0b5655655",
-      "standalone_sha256": "f6a6fda39923bf2543acab47b0d60e1ee6b97df4950517198330618f147e7184",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
+      "source_sha256": "5664c7d22101f31c87d30d644b384888e4fb6bb2b5001eb4c689c97a8218d4f4",
+      "source_normalized_sha256": "58073f38aab015648da9fa24479f784eb7939948fbf5e08130064271328e26e1",
+      "standalone_sha256": "f6be3fe74e58ffafd6795c2454077535484383f86b2703859abfa869f8d20628",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes."
     },
     "PrintedNoteContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedNoteContrast.java",
@@ -359,18 +359,18 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "2accdd489c5583938337c78bc151864a4fb6ffd4f5c5a1966497a18e72143af0",
+      "source_sha256": "3b913d90863cdecf939e231c881c15162aac28dacc645ba2f63caf6ae802e867",
       "review_note": "Rule-joined marcato additionally requires complete two-arm support. The independently derived erased-rule mask retains original observed ink; all prior owner, shape, text, crossbar and proximity guards remain active. A rule-joined wedge also requires paper beyond an opposite ruled-row contact; raw continuation into a flag refuses that fragment, while complete two-rule triangles remain valid. Original procedural controls only.",
-      "source_normalized_sha256": "629b21aa85435fcdc931650209176e96262cf8315da03dca879c40a2fa72a2de",
+      "source_normalized_sha256": "d619d5a7b6ef8a5a0761c99e6939b92283d1ac76da79fb4fdae4a13bd0e1a290",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "reviewed_app_state": "Reviewed scoped recognition revision272 source; original base commits are retained separately and exact source hashes pin the standalone extraction.",
-      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "203569e0b61bbd65e51bf0c177502ea4611cef569064087401ca26e4fb0da6ba",
+      "standalone_sha256": "014faa31b3e9e23dee06e4ec83afb428a83c0c6cccbc00e4a0d9fba9f6ed649a",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
-      "bow291_review_note": "Add complete measured bow-cap/two-leg detection with unique actual attack and above-own-staff context; existing articulation exclusions and opposite-rule continuation guards remain unchanged."
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "bow291_review_note": "Add complete measured bow-cap/two-leg detection with unique actual attack and above-own-staff context; existing articulation exclusions and opposite-rule continuation guards remain unchanged.",
+      "ruled_caret_review_note": "An interior crossbar must close an already observed raw opening. A distant ruled caret additionally requires its own continuous thin terminated stem; independently proved short ledger crossings retain their finite raw envelope. Original procedural controls include AA text crossbars, detached/broken shafts and thick/partial ledger refusals. No private score content or model changes."
     },
     "OpenChevron.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenChevron.java",
@@ -389,16 +389,16 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "0d612f8b0ffe2a0e7046989f7fbd881b9d1881fac54445075740c1ef12ac312c",
-      "source_normalized_sha256": "81aa040233f3ce9381ed145cfe86b5f1a5290f2e2d635853339f17128313845f",
+      "source_sha256": "a4427604e44ce44dd4d46031a15aeca23fbb3539d2f4917f6b4e9fd6f6efc569",
+      "source_normalized_sha256": "3122b9a101a9254963e0cfc1ec1dd30968242271bbf74cbda1e186ef0c4fe5c0",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts. Preserve the seven-argument legacy raw-staff helper overload by delegating with null origins; metadata-aware production calls and their body remain unchanged.",
-      "reviewed_source_state": "committed paired recognition82 source; cumulative runtime publication pending",
-      "standalone_sha256": "57fcc9c2153562459635f8716177e37749ade8ceffa455a191e87b59c71ecaec",
-      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "standalone_sha256": "20cf054ea1c76a329ebb3bbf1c0926a0dcbb2a9d8109c8f54a37063326f5b558",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
-      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal."
+      "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
+      "rounded_rule_separation_review_note": "Keep legacy floor-phase head contact veto. A rounded complete five-rule frame can separate a full-height bar from an off-axis, independently filled complete head with own opposite shaft and observed exterior paper before the bar. Partial, faint, on-axis, missing-rule and thick-rule evidence retains the existing veto. Six original procedural methods; no captured score pixels/model changes. No unused guard/helper candidate ported."
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -409,16 +409,17 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "dad680b93dc6a60efc367233d96faaf8790b698af5efbdd819c1ec9074e6bfdf",
+      "source_sha256": "be86f703cc98c0e48a4e98d08106d8993eae268ee938844ca3f375126d598ada",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "dad680b93dc6a60efc367233d96faaf8790b698af5efbdd819c1ec9074e6bfdf",
-      "reviewed_app_state": "Paired app source committed; cumulative APK deferred during active repair goal.",
-      "reviewed_source_state": "Reviewed paired raw-hollow contour refusal; current release source, final checks pending",
-      "standalone_sha256": "4f32a0b789161cc1a3898058366a842be7e366643207901f9a856ab6ca31ce22",
-      "reviewed_app_base_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
-      "reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
-      "scoped_reviewed_app_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
-      "license": "Apache-2.0"
+      "source_normalized_sha256": "9bb6567b97e4ac619ca371d492b3524fbe4d7f9c5060107788d27b6720c25b63",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
+      "standalone_sha256": "5474d2edef435f6631e71e098c50b815641488588a1762b613f00ed4e4fa0d38",
+      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "license": "Apache-2.0",
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
+      "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1654,17 +1655,17 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "32a27668a498dc7ab0857103f3f51828faf33ddce51d34ee3ae20831b41b4c67",
-      "source_normalized_sha256": "8394e8333e00e72c63f86f75652250ca8086f102610bfc0b0253307e296fe96e",
+      "source_sha256": "fd420ceea776f96b622f1394b483de29245f6a175eef6dfb4bc9c4bbb814619e",
+      "source_normalized_sha256": "cc0c6e6a4ca38ded0ffc02b5519af24a4007a66b4d57c0b6453ced2669dbdcee",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
-      "standalone_sha256": "06d447123f53ec3fe99afdb4d12003d094c20654aee68416a7eeafede4f9c847",
-      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
-      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
+      "standalone_sha256": "69521ef160339cbf2bc0ec1e7bf9efa542a2ac3033c0a784c14ac5f1fa5444b0",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
-      "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented."
+      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
+      "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1721,17 +1722,17 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d4b3cb5738e48695945efa8d815c051f5420d0951aa0ff6690b0dc9b4b1a92ad",
-      "source_normalized_sha256": "981e9a3c2a1762af1362a63f96095001b68a770d5e8bd9dcf26ecc096f47b7f6",
-      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
+      "source_sha256": "7992d57268035e084e170db455562edea3e9ec89ca7466ecf875287812cecd82",
+      "source_normalized_sha256": "e8e901ea23ffc14b48db6fb24e137d3bac97e7c43a213cfa517ebf03b04a8c42",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "734614034dc2b0e1000cdecaef9993638a7677ce05d76222f21d13a2fc5107a4",
-      "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
+      "standalone_sha256": "f12ddd8a7fd152eb68ab23b93c8ede0027d4fcefa71de6babb83079c46b63f19",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
-      "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
-      "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub."
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
+      "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -4035,6 +4036,60 @@
       "standalone_sha256": "6398b530ec978c0b54794850e5e8d5e885704512f6f2372d812607cb6137932b",
       "reviewed_app_commit": "40d9330c0300e39385b11f88ffa3f41da3c15bdd",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes."
+    },
+    "CueHeadFlagTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CueHeadFlagTest.java",
+      "source_sha256": "c5625a467ca14f278afb10fc4a2581d7a97405012241babf61213383850cdfc9",
+      "source_normalized_sha256": "c5625a467ca14f278afb10fc4a2581d7a97405012241babf61213383850cdfc9",
+      "standalone_sha256": "3e90dfaf9815a0eeaa1957f05b39b3c21f81d556faa2a80ae57b67ac7b79f375",
+      "license": "Apache-2.0",
+      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal."
+    },
+    "TerminatedStemCaretOwnershipTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TerminatedStemCaretOwnershipTest.java",
+      "source_sha256": "2170fc71553e4d4dc6cfdf31b5085fb3d980dbf47538ff2ce7dd77ed214b70d9",
+      "source_normalized_sha256": "801349baa8d19705a32d3f0737b09bcb75f8cb472c84b11b7f053ff1d066592e",
+      "standalone_sha256": "c5f2cc81f17da40a9866700ba53240c03b938011161e8b13ec481ef87a294669",
+      "license": "Apache-2.0",
+      "ruled_caret_review_note": "An interior crossbar must close an already observed raw opening. A distant ruled caret additionally requires its own continuous thin terminated stem; independently proved short ledger crossings retain their finite raw envelope. Original procedural controls include AA text crossbars, detached/broken shafts and thick/partial ledger refusals. No private score content or model changes.",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal."
+    },
+    "SeededFlagPocketTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/SeededFlagPocketTest.java",
+      "source_sha256": "c83d4d843405f0be7b8a5e8e50ae6c62a1a2b7962e06773a7cb8ac4d59c46568",
+      "source_normalized_sha256": "20386e991f256467db8ee9bd822036346bd42c48b18f90696ad1f2ba52072745",
+      "standalone_sha256": "b140012defbba82720d2fbba76790708c519cedf24ce3380b5f3a4cf11dd8fec",
+      "license": "Apache-2.0",
+      "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes.",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal."
+    },
+    "RoundedRuleBandOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RoundedRuleBandOriginalTest.java",
+      "source_sha256": "068900beefb3384b0c91393d77b2fb3eca9a91a337f8db10696c59615e322cf6",
+      "source_normalized_sha256": "cca9914b2195fa94237a8fc946a70e08ca8f08afd9c82b25be880ef6a2e9e441",
+      "standalone_sha256": "81933f90a6ee2e8e802dcf9e63490225c639db69d7237c7ae28b1b74941896c2",
+      "license": "Apache-2.0",
+      "rounded_rule_separation_review_note": "Keep legacy floor-phase head contact veto. A rounded complete five-rule frame can separate a full-height bar from an off-axis, independently filled complete head with own opposite shaft and observed exterior paper before the bar. Partial, faint, on-axis, missing-rule and thick-rule evidence retains the existing veto. Six original procedural methods; no captured score pixels/model changes. No unused guard/helper candidate ported.",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RoundedRuleBandOriginalTest.java"
+    },
+    "RoundedPartialMaskOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RoundedPartialMaskOriginalTest.java",
+      "source_sha256": "6b749efce8836503528fe022a89577f014c0fbbf6eb8986b17cb6c4495c0e81f",
+      "source_normalized_sha256": "f6cfffccb1760af05cb72ffb2e57ffc8a44f68a7cb3de1a615c6b9c7f73c6aad",
+      "standalone_sha256": "874eeae49938aa644ac714cd9130402ed6f7e7a003e04b2e918e0a6290db60e0",
+      "license": "Apache-2.0",
+      "rounded_rule_separation_review_note": "Keep legacy floor-phase head contact veto. A rounded complete five-rule frame can separate a full-height bar from an off-axis, independently filled complete head with own opposite shaft and observed exterior paper before the bar. Partial, faint, on-axis, missing-rule and thick-rule evidence retains the existing veto. Six original procedural methods; no captured score pixels/model changes. No unused guard/helper candidate ported.",
+      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RoundedPartialMaskOriginalTest.java"
     }
   },
   "interpreter_speedup_review": {
@@ -8806,5 +8861,55 @@
       ],
       "boundary": "Original authored text positions and independent row evidence, no song-specific rule. New source PDF is not a commercial fixture. App PDF adapter and shared decoder keep row ownership separate."
     }
+  },
+  "cue_size_flag_review": {
+    "recognition": 87,
+    "guide": 291,
+    "audio": 97,
+    "newOriginalMethods": 8,
+    "appFlagControls": 214,
+    "standaloneOriginalControls": 8,
+    "actualEvidence": "Private four-page comparison changes one note flag/duration only; all1240 note identities preserved. Does not prove legacy voice projection fix.",
+    "boundary": "No commercial scores, retained masks, device logs, signing material or private paths imported. Paired packaging/deployment pending cumulative rollout.",
+    "paired_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa"
+  },
+  "ruled_caret87_review": {
+    "newOriginalMethods": 16,
+    "controlsEachApi": 71,
+    "scope": "Saved226-note detector stage plus authentic same-page RAW; sole missing marcato restored; other225 marks and all anchors unchanged. Reconstructed historical context, not captured original caller/fullNative.",
+    "paired_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b"
+  },
+  "seeded_flag_pocket87_review": {
+    "originalTests": 8,
+    "priorAppFlagControlsReused": 220,
+    "publicNewOriginals": 8,
+    "actualScope": "One phantom head removed on4-page retained native replay; other1239 notes and page fields exact;44 unresolved slur candidates preserve physical endpoints after reference remap.",
+    "newTaylorCredits": 0,
+    "paired_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+    "focusedTests": 27,
+    "otherFlagControls": 214,
+    "totalUniqueAuthorControls": 241,
+    "realGracePreservation": true,
+    "mechanism": "Match the recognized owner head to the same raw shaft and opposite direction; keep faded recovery null-owner route unchanged.",
+    "supersedes": "The broad geometry-only semantic consumer was held after two existing grace regressions; four-page actual outputs remain the same sole phantom deletion with stricter owner."
+  },
+  "parallel_java_test_review": {
+    "scope": "Optional1..4 isolated JVM batches; default serial command retained. Every discovered class scheduled once; per-batch logs, bounded heaps, failure propagation and launch failures covered by5 stdlib tests. No interpreter/model/Android app behavior change.",
+    "dependencyChanges": []
+  },
+  "rounded_rule_separation87_review": {
+    "newOriginalMethodsEachApi": 6,
+    "relatedPassingEachApi": 71,
+    "source": "Only OmrMeasurePostProcessor; native decoder manifest already includes this source. No new dependency or record format.",
+    "actual": "Current86 fullNative from retained authentic mask restores genuine48/49 boundary and removes false51 split; all272 non-location note fields, four rests, first36 and11other pagefields exact. Matched positions differ under0.000048px.",
+    "negativeBoundary": "Four historical private positive misses remain unchanged; no universal boundary accuracy claim.",
+    "paired_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b"
+  },
+  "recognition87_final_validation": {
+    "javaTests": 12584,
+    "javaClasses": 1652,
+    "appFocusedTests": 60,
+    "sharedSourceState": "Narrow same-shaft owner plus minimal rounded-rule postprocessor",
+    "boundary": "Source verification only; cumulative matched app/Hub/worker packaging and deployment deferred during active goal."
   }
 }

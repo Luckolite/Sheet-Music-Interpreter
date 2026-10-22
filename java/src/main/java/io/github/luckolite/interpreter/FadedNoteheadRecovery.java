@@ -151,6 +151,27 @@ final class FadedNoteheadRecovery {
             int right,
             int bottom,
             float gap) {
+        return flagPocketOnOwnedStem(
+                labels, gray, width, height, left, top, right, bottom, gap, null);
+    }
+
+    @FunctionalInterface
+    interface StemOwner {
+        boolean owns(int stemX, int headY, int direction);
+    }
+
+    /** Semantic seeds additionally require the recognized owner to use this exact shaft. */
+    static boolean flagPocketOnOwnedStem(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap,
+            StemOwner owner) {
         if (labels == null
                 || gray == null
                 || width < 1
@@ -188,7 +209,10 @@ final class FadedNoteheadRecovery {
                                 && (gray[y * width + x] & 255) < 175) headInk++;
                     }
                     headRows = headInk >= gap * .5f ? headRows + 1 : 0;
-                    if (headRows >= 3 && ink >= rows * .85f && semantic >= rows * .5f) return true;
+                    if (headRows >= 3
+                            && ink >= rows * .85f
+                            && semantic >= rows * .5f
+                            && (owner == null || owner.owns(sx, y, direction))) return true;
                 }
             }
         }

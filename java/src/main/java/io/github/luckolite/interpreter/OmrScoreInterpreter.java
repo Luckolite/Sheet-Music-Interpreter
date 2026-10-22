@@ -1328,6 +1328,7 @@ final class OmrScoreInterpreter {
             Staff staff = staffForHead(labels, gray, width, height, staffs, head);
             if (staff == null) continue;
             if (isHeavyRestCount(gray, width, height, head, staff)) continue;
+            if (semanticFlagPocketHead(labels, gray, width, height, head, staff, heads)) continue;
 
             Component crossHead =
                     recoveredShadedChordHeads.contains(head)
@@ -3777,21 +3778,36 @@ final class OmrScoreInterpreter {
      * Its dark center must fall, rise, and fall again across four distinct lobes. */
     /** Complete raw zigzag ownership when a model oval covers only one lobe. */
     private static boolean isZigzagOrnamentHead(
-            byte[] labels, byte[] gray, int width, int height, Component head,
-            List<Staff> staffs, List<Component> heads) {
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            List<Staff> staffs,
+            List<Component> heads) {
         return isStrictZigzagOrnamentHead(labels, gray, width, height, head, staffs, heads)
                 || isCompleteZigzagOrnamentHead(labels, gray, width, height, head, staffs, heads);
     }
 
     private static boolean isCompleteZigzagOrnamentHead(
-            byte[] labels, byte[] gray, int width, int height, Component head,
-            List<Staff> staffs, List<Component> heads) {
-        if (labels == null || gray == null || width < 1 || height < 1
-                || (long) width * height != gray.length || labels.length != gray.length) return false;
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            List<Staff> staffs,
+            List<Component> heads) {
+        if (labels == null
+                || gray == null
+                || width < 1
+                || height < 1
+                || (long) width * height != gray.length
+                || labels.length != gray.length) return false;
         Staff staff = nearestHeadStaff(staffs, head.centerY);
         if (staff == null) return false;
         float gap = staff.pitchGap;
-        if (!(gap >= 4 && gap <= 128) || !Float.isFinite(gap)
+        if (!(gap >= 4 && gap <= 128)
+                || !Float.isFinite(gap)
                 || head.maxY > staff.pitchBottom - gap * 4.5f
                 || head.centerY < staff.pitchBottom - gap * 8
                 || head.area > gap * gap * .9f
@@ -3802,9 +3818,13 @@ final class OmrScoreInterpreter {
         // The permitted complete glyph may extend beyond either side of the seed.
         int left = Math.round(head.minX - gap * 3.2f), right = Math.round(head.maxX + gap * 3.2f);
         int top = Math.round(head.minY - gap * 1.3f), bottom = Math.round(head.maxY + gap * 1.3f);
-        if (left < 0 || right >= width || top < 0 || bottom >= height
-                || right < left || bottom < top || (long) (right - left + 1) * (bottom - top + 1) > 65536)
-            return false;
+        if (left < 0
+                || right >= width
+                || top < 0
+                || bottom >= height
+                || right < left
+                || bottom < top
+                || (long) (right - left + 1) * (bottom - top + 1) > 65536) return false;
         int w = right - left + 1, h = bottom - top + 1;
         byte[] ink = new byte[w * h];
         for (int y = 0; y < h; y++)
@@ -3813,9 +3833,14 @@ final class OmrScoreInterpreter {
         Component glyph = retainSeedConnectedInk(ink, w, h, head, left, top);
         if (glyph == null) return false;
         int span = glyph.maxX - glyph.minX + 1, rise = glyph.maxY - glyph.minY + 1;
-        if (glyph.minX == 0 || glyph.maxX == w - 1 || glyph.minY == 0 || glyph.maxY == h - 1
-                || span < gap * 1.8f || span > gap * 3.2f || rise < gap * .6f || rise > gap * 1.3f)
-            return false;
+        if (glyph.minX == 0
+                || glyph.maxX == w - 1
+                || glyph.minY == 0
+                || glyph.maxY == h - 1
+                || span < gap * 1.8f
+                || span > gap * 3.2f
+                || rise < gap * .6f
+                || rise > gap * 1.3f) return false;
         int symbol = 0;
         float[] centers = new float[span];
         boolean[] strong = new boolean[4];
@@ -3856,9 +3881,11 @@ final class OmrScoreInterpreter {
         // seed-center distance assumption; the principal is still independent.
         Component owner = null;
         for (Component main : heads) {
-            if (main == head || main.area < head.area * 1.4f
+            if (main == head
+                    || main.area < head.area * 1.4f
                     || main.maxX - main.minX + 1 < gap
-                    || main.centerX < left + glyph.minX || main.centerX > left + glyph.maxX
+                    || main.centerX < left + glyph.minX
+                    || main.centerX > left + glyph.maxX
                     || main.minY <= top + glyph.maxY + 1
                     || main.centerY - (top + glyph.maxY) > gap * 7
                     || nearestHeadStaff(staffs, main.centerY) != staff) continue;
@@ -3866,9 +3893,16 @@ final class OmrScoreInterpreter {
             for (int y = top + glyph.maxY + 1; y < main.minY; y++) {
                 boolean clear = true;
                 for (int x = Math.max(main.minX, left + glyph.minX);
-                        x <= Math.min(main.maxX, left + glyph.maxX); x++)
-                    if ((gray[y * width + x] & 255) < 205) { clear = false; break; }
-                if (clear) { separated = true; break; }
+                        x <= Math.min(main.maxX, left + glyph.maxX);
+                        x++)
+                    if ((gray[y * width + x] & 255) < 205) {
+                        clear = false;
+                        break;
+                    }
+                if (clear) {
+                    separated = true;
+                    break;
+                }
             }
             if (!separated) continue;
             if (owner != null) return false;
@@ -9262,7 +9296,8 @@ final class OmrScoreInterpreter {
                                                             - (4 - line) * staff.pitchGap
                                                             + staff.pitchSlope * (x - width * .5f);
                                                 }));
-        for (var regionalEvidence : RegionalStaffSeeds.detectEvidence(labels, gray, width, height)) {
+        for (var regionalEvidence :
+                RegionalStaffSeeds.detectEvidence(labels, gray, width, height)) {
             var seed = regionalEvidence.seed();
             Staff recovered = new Staff(seed.top(), seed.bottom(), seed.gap());
             recovered.pitchSlope = seed.slope();
@@ -9276,13 +9311,18 @@ final class OmrScoreInterpreter {
             for (Staff existing : staffs) {
                 if (!existing.printedPhase) continue;
                 if (RegionalStaffConflict.unsupportedAlias(
-                        gray, width, height, regionalEvidence, existing.pitchGap,
+                        gray,
+                        width,
+                        height,
+                        regionalEvidence,
+                        existing.pitchGap,
                         (line, x) -> {
                             if (existing.pitchTrack != null) {
                                 float[] at = existing.pitchTrack.at(x);
                                 return at[0] - (4 - line) * at[1];
                             }
-                            return existing.pitchBottom - (4 - line) * existing.pitchGap
+                            return existing.pitchBottom
+                                    - (4 - line) * existing.pitchGap
                                     + existing.pitchSlope * (x - width * .5f);
                         })) {
                     established = true;
@@ -20887,6 +20927,10 @@ final class OmrScoreInterpreter {
                 && gray != null
                 && hasCurvedFlag(labels, gray, width, height, head, gap, bestX, stemEnd, upward))
             beams = 1;
+        if (beams == 0
+                && smallHead
+                && gray != null
+                && cueHeadFlag(labels, gray, width, height, head, gap)) beams = 1;
         // A thin staff line through the white gap can fuse two sloped beams at the stem.
         // Recover only when thick ink bands on BOTH sides independently prove two beams;
         // this cannot borrow a neighbour's one-sided partial beam.
@@ -23923,6 +23967,71 @@ final class OmrScoreInterpreter {
             }
         }
         return bands;
+    }
+
+    /** A nearby note on a different shaft cannot own a real small/grace note's stem. */
+    private static boolean semanticFlagPocketHead(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads) {
+        return FadedNoteheadRecovery.flagPocketOnOwnedStem(
+                labels,
+                gray,
+                width,
+                height,
+                head.minX,
+                head.minY,
+                head.maxX,
+                head.maxY,
+                staff.gap,
+                (stemX, headY, direction) -> {
+                    for (Component other : heads) {
+                        if (other == head
+                                || Math.abs(other.centerY - headY) > staff.gap * .9f
+                                || (other.centerY - head.centerY) * direction < staff.gap * .75f
+                                || Math.abs(other.centerX - stemX) > staff.gap * 2) continue;
+                        int[] own = attachedRawStem(gray, width, height, other, staff.gap);
+                        if (own != null
+                                && own[2] == -direction
+                                && Math.abs(own[0] - stemX)
+                                        <= Math.max(1, Math.round(staff.gap * .08f))) return true;
+                    }
+                    return false;
+                });
+    }
+
+    /** Cue glyphs have shorter shafts than the surrounding staff's full-size notation. */
+    private static boolean cueHeadFlag(
+            byte[] labels, byte[] gray, int width, int height, Component head, float staffGap) {
+        float cueGap = Math.max((head.maxX - head.minX + 1) * .8f, head.maxY - head.minY + 1);
+        if (cueGap < 6 || cueGap < staffGap * .5f || cueGap >= staffGap * .95f) return false;
+        int threshold =
+                BeamInkThreshold.at(
+                                gray,
+                                width,
+                                height,
+                                Math.round(head.centerX),
+                                Math.round(head.centerY - cueGap * 5),
+                                Math.round(head.centerY + cueGap * 5),
+                                cueGap)
+                        + 5;
+        int[] stem =
+                attachedRawStem(
+                        gray,
+                        width,
+                        height,
+                        head,
+                        cueGap,
+                        Math.max(1, Math.round(cueGap * .16f)),
+                        threshold,
+                        9);
+        return stem != null
+                && hasCurvedFlag(
+                        labels, gray, width, height, head, cueGap, stem[0], stem[1], stem[2] < 0);
     }
 
     /** A single flag is a narrow curved hook, not a horizontal beam-width run. */

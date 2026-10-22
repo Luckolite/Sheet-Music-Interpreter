@@ -1719,7 +1719,12 @@ final class OmrMeasurePostProcessor {
             int[] rows,
             float gap,
             float shift) {
-        float[] printedRows = connectionStaffRows(gray, width, height, x, rows, gap, shift);
+        float[] printedRows = connectionStaffRows(gray, width, height, x, rows, gap, shift, false);
+        float[] roundedRows =
+                printedRows == null
+                        ? connectionStaffRows(gray, width, height, x, rows, gap, shift, true)
+                        : null;
+        java.util.Map<Integer, Boolean> separatedHeads = new java.util.HashMap<>();
         boolean verifiedPrintedRows = printedRows != null;
         if (printedRows == null) {
             printedRows = new float[5];
@@ -1743,17 +1748,154 @@ final class OmrMeasurePostProcessor {
                                 || xx >= width
                                 || (gray[y * width + xx] & 255) > RAW_BARLINE_DARK) break;
                         if (labels[y * width + xx] == NOTEHEAD
-                                && (!fringe || Math.abs(xx - x) <= Math.max(2, gap * .2f)))
+                                && (!fringe || Math.abs(xx - x) <= Math.max(2, gap * .2f))) {
+                            boolean roundedRule = false;
+                            if (roundedRows != null)
+                                for (float row : roundedRows)
+                                    roundedRule |= Math.abs(y - row) <= Math.max(1, gap * .25f);
+                            if (roundedRule
+                                    && isolatedFullHeightRule(
+                                            gray, width, height, x, rows, gap, shift)
+                                    && separatedRuleHead(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            x,
+                                            xx,
+                                            y,
+                                            gap,
+                                            separatedHeads)) continue;
                             return true;
+                        }
                     }
         }
         return false;
+    }
+
+    /** Exterior paper must be observed before the independent bar, not behind it. */
+    private static boolean separatedHeadRim(
+            byte[] g, int w, int h, float cx, float cy, float gap, int bar) {
+        float rx = gap * .69f, ry = gap * .4f;
+        int reach = (int) Math.ceil(gap * 1.6f);
+        if (cx - reach < 0 || cx + reach >= w || cy - reach < 0 || cy + reach >= h) return false;
+        int[] q = new int[4];
+        int score = 0, r = Math.max(1, Math.round(gap * .07f));
+        for (int k = 0; k < 48; k++) {
+            double angle = k * Math.PI / 24;
+            float u = rx * (float) Math.cos(angle), v = ry * (float) Math.sin(angle) - .4f * u;
+            int x = Math.round(cx + u), y = Math.round(cy + v), dark = 255;
+            for (int dy = -r; dy <= r; dy++)
+                for (int dx = -r; dx <= r; dx++)
+                    dark = Math.min(dark, g[(y + dy) * w + x + dx] & 255);
+            boolean paper = false;
+            for (int step = 12; step <= 16; step++) {
+                int xx = Math.round(cx + u * step / 10f), yy = Math.round(cy + v * step / 10f);
+                if (Math.hypot(xx - x, yy - y) < 2
+                        || bar > cx && xx >= bar - 2
+                        || bar < cx && xx <= bar + 2) continue;
+                if ((g[yy * w + xx] & 255) - dark >= 30) paper = true;
+            }
+            if (dark < 205 && paper) {
+                score++;
+                q[k / 12]++;
+            }
+        }
+        return score >= 39 && q[0] >= 8 && q[1] >= 8 && q[2] >= 8 && q[3] >= 8;
+    }
+
+    /** Complete off-axis filled head on its own opposite shaft; staff-only joins are not stems. */
+    private static boolean separatedRuleHead(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            int bar,
+            int sx,
+            int sy,
+            float gap,
+            java.util.Map<Integer, Boolean> cache) {
+        int seed = sy * w + sx;
+        Boolean known = cache.get(seed);
+        if (known != null) return known;
+        if (!Float.isFinite(gap) || gap < 8 || gap > 32) return false;
+        int reach = (int) Math.ceil(gap * 2.5f),
+                l = Math.max(0, sx - reach),
+                r = Math.min(w - 1, sx + reach),
+                t = Math.max(0, sy - reach),
+                b = Math.min(h - 1, sy + reach),
+                cw = r - l + 1;
+        long pixels = (long) cw * (b - t + 1);
+        if (pixels > 65536) return false;
+        boolean[] seen = new boolean[(int) pixels];
+        int[] queue = new int[seen.length];
+        int read = 0, n = 1, x0 = sx, x1 = sx, y0 = sy, y1 = sy;
+        long sumX = 0, sumY = 0;
+        boolean clipped = false;
+        queue[0] = (sy - t) * cw + sx - l;
+        seen[queue[0]] = true;
+        while (read < n) {
+            int at = queue[read++], x = l + at % cw, y = t + at / cw;
+            sumX += x;
+            sumY += y;
+            x0 = Math.min(x0, x);
+            x1 = Math.max(x1, x);
+            y0 = Math.min(y0, y);
+            y1 = Math.max(y1, y);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx < 0 || xx >= w || yy < 0 || yy >= h || labels[yy * w + xx] != NOTEHEAD)
+                        continue;
+                    if (xx < l || xx > r || yy < t || yy > b) {
+                        clipped = true;
+                        continue;
+                    }
+                    int next = (yy - t) * cw + xx - l;
+                    if (!seen[next]) {
+                        seen[next] = true;
+                        queue[n++] = next;
+                    }
+                }
+        }
+        float cx = sumX / (float) n, cy = sumY / (float) n;
+        boolean right = bar > cx;
+        boolean separated =
+                right ? bar - x1 > Math.max(2, gap * .2f) : x0 - bar > Math.max(2, gap * .2f);
+        boolean proved =
+                !clipped
+                        && separated
+                        && n >= gap * gap * .3f
+                        && x1 - x0 + 1 >= gap * .95f
+                        && x1 - x0 + 1 <= gap * 2.2f
+                        && y1 - y0 + 1 >= gap * .7f
+                        && y1 - y0 + 1 <= gap * 1.5f
+                        && FilledSparseBeamHead.matches(gray, w, h, cx, cy, gap)
+                        && separatedHeadRim(gray, w, h, cx, cy, gap, bar)
+                        && PrintedStemDirection.detect(gray, w, h, cx, cy, gap) == (right ? -1 : 1);
+        for (int i = 0; i < n; i++) {
+            int at = queue[i];
+            cache.put((t + at / cw) * w + l + at % cw, proved);
+        }
+        return proved;
     }
 
     /** Use thin bilateral raw rules when semantic centers drift into the spaces.
      * Require all five lines; short ledger rules and nearby beams cannot relocate a staff. */
     private static float[] connectionStaffRows(
             byte[] gray, int width, int height, int x, int[] rows, float gap, float shift) {
+        return connectionStaffRows(gray, width, height, x, rows, gap, shift, true);
+    }
+
+    private static float[] connectionStaffRows(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int[] rows,
+            float gap,
+            float shift,
+            boolean sampledWidth) {
         float[] original = new float[5], refined = new float[5];
         for (int line = 0; line < 5; line++) original[line] = rows[line] + shift;
         int inner = Math.max(3, Math.round(gap * .45f));
@@ -1774,7 +1916,10 @@ final class OmrMeasurePostProcessor {
                 if (first < 0) first = y;
                 last = y;
             }
-            if (first < 0 || last - first + 1 > Math.max(2, gap * .3f)) return null;
+            if (first < 0
+                    || last - first + 1
+                            > Math.max(2, sampledWidth ? Math.ceil(gap * .3f) : gap * .3f))
+                return null;
             refined[line] = (first + last) / 2f;
             if (line > 0 && Math.abs(refined[line] - refined[line - 1] - gap) > gap * .2f)
                 return null;

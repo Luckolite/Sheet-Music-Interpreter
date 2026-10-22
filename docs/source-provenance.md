@@ -2725,3 +2725,46 @@ procedural controls contain no private score material.
 Source qualification does not establish a deployed pair. Build the matching
 app/Hub/page-worker/audio-worker, pass contract/drift and packaged synthetic
 smoke checks, then verify installed capabilities and live processing.
+
+## Recognition87: flags on cue-size notes
+
+Cue-size heads derive a local glyph scale before applying the existing own-stem
+and curved-flag proofs. Quarter notes, detached hooks, broken shafts and slurs
+retain their existing behavior. Original Apache-2.0 procedural tests cover both
+stem directions, scale and faded ink. One retained four-page comparison changes
+only a single note's flag and derived unbeamed duration; all other notes and page
+fields are unchanged. This does not establish a fix for legacy voice projection.
+App, Hub and writers share recognition87; Guide291/audio97 layouts and model
+weights are unchanged. Cumulative matched packaging and deployment remain pending;
+no APK is built per repair during the active goal.
+
+The same recognition87 batch restores a staff-crossed caret on an independently
+owned terminated thin quarter-note stem. A text crossbar must close an already
+observed raw opening; finite short ledger crossings retain their complete thin
+envelope. Sixteen new original procedural methods accompany55 unchanged
+controls per API. A retained226-note detector-stage comparison changes one
+marcato only. This reconstructed saved-stage evidence is separate from current
+full-page acquisition, whole-library accuracy and performed playback.
+
+Semantic head seeds also pass the existing complete flag-pocket ownership proof
+used for recovered heads. Eight original end-to-end semantic-seed controls retain
+genuine heads and refuse missing/broken ownership. A retained four-page replay
+removes one false head only, preserving other1239 note records and physical
+slur/tremolo references. Models, thresholds and record layouts are unchanged.
+
+The recognition87 geometry batch retains the legacy staff-phase head-contact
+veto. A complete rounded five-rule frame may separate a full-height bar from
+an independently filled off-axis head only with its own opposite shaft and
+observed exterior paper before the bar. Partial, faint and on-axis evidence
+retains the previous veto. Six original procedural methods accompany71 related
+controls per API. A retained-mask current86 fullNative comparison restores one
+genuine separator and removes one false split, preserving272 note scalars,
+four rests, opening36 and all unrelated page fields. Only PP changes are ported;
+unused experimental guards/helpers remain private. No model or layout change.
+
+The semantic flag-pocket consumer additionally matches a recognized other head
+to the very same attached raw shaft and direction. A nearby note on its own
+separate shaft cannot suppress a real grace note. The old faded-recovery entry
+retains its null-owner behavior. Eight semantic-seed originals and both released
+entrance-stroke classes pass, with214 other flag controls. Four retained page
+outputs equal the previously qualified sole phantom-head deletion.
