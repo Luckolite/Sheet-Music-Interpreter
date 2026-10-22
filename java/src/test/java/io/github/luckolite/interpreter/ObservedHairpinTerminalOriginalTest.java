@@ -1,0 +1,109 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
+package io.github.luckolite.interpreter;
+
+import java.util.*;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/** Original finite raw terminal missed by the long horizontal core seed. */
+public class ObservedHairpinTerminalOriginalTest {
+    final int w = 360, h = 280;
+    final byte[] gray = new byte[w * h];
+    final List<PlayingTechniqueDetector.Staff> staffs =
+            List.of(
+                    new PlayingTechniqueDetector.Staff(20, 84, 16, 0, 2),
+                    new PlayingTechniqueDetector.Staff(180, 244, 16, 1, 2));
+
+    public ObservedHairpinTerminalOriginalTest() {
+        Arrays.fill(gray, (byte) 255);
+    }
+
+    void draw(boolean upper) {
+        for (int x = 40; x <= 280; x++) {
+            int u = Math.round(120 - (upper ? 8 : 12) * (x - 40) / 240f),
+                    l = Math.round(120 + (upper ? 12 : 8) * (x - 40) / 240f);
+            for (int y = u; y <= u + 1; y++) gray[y * w + x] = 0;
+            for (int y = l; y <= l + 1; y++) gray[y * w + x] = 0;
+            if (x == 280) {
+                if (upper) {
+                    gray[u * w + x] = 0;
+                    gray[(u + 1) * w + x] = (byte) 150;
+                } else {
+                    gray[l * w + x] = (byte) 150;
+                    gray[(l + 1) * w + x] = 0;
+                }
+            }
+        }
+    }
+
+    void mirror() {
+        byte[] a = gray.clone();
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++) gray[y * w + w - 1 - x] = a[y * w + x];
+    }
+
+    boolean found() {
+        byte[] a = gray.clone();
+        boolean yes =
+                OpenHairpinPairs.detect(gray, w, h, staffs).stream()
+                        .anyMatch(s -> s.staff().index() == 0);
+        assertArrayEquals(a, gray);
+        return yes;
+    }
+
+    @Test
+    public void observedUpperTerminalContinuesTheEstablishedArm() {
+        draw(true);
+        assertTrue(found());
+    }
+
+    @Test
+    public void observedLowerTerminalContinuesTheEstablishedArm() {
+        draw(false);
+        assertTrue(found());
+    }
+
+    @Test
+    public void observedLeftUpperTerminalHasTheSamePhysicalProof() {
+        draw(true);
+        mirror();
+        assertTrue(found());
+    }
+
+    @Test
+    public void observedLeftLowerTerminalHasTheSamePhysicalProof() {
+        draw(false);
+        mirror();
+        assertTrue(found());
+    }
+
+    @Test
+    public void nearbyRawPointOutsideTheArmRibbonCannotOwnEndpoint() {
+        draw(true);
+        gray[112 * w + 280] = (byte) 150;
+        gray[114 * w + 280] = 0;
+        assertFalse(found());
+    }
+
+    @Test
+    public void splitTerminalInkHasNoSingleOwnedRun() {
+        draw(true);
+        gray[114 * w + 280] = 0;
+        assertFalse(found());
+    }
+
+    @Test
+    public void terminalNeedsItsLastObservedOwnArmColumn() {
+        draw(true);
+        for (int y = 110; y <= 115; y++) gray[y * w + 279] = (byte) 150;
+        assertFalse(found());
+    }
+
+    @Test
+    public void unboundedDarkContinuationCannotBecomeFiniteTerminal() {
+        draw(true);
+        for (int x = 281; x <= 284; x++) gray[112 * w + x] = 0;
+        assertFalse(found());
+    }
+}

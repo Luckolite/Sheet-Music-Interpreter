@@ -14,6 +14,7 @@ final class OpenHairpinPairs {
             byte[] gray, int w, int h, List<PlayingTechniqueDetector.Staff> staffs) {
         if (gray == null || gray.length != (long) w * h || w <= 0 || h <= 0) return List.of();
         var result = new ArrayList<Shape>();
+        long[] completionBudget = {4_000_000L};
         for (var staff : staffs) {
             float gap = staff.gap();
             if (!Float.isFinite(gap) || gap < 4) continue;
@@ -70,6 +71,7 @@ final class OpenHairpinPairs {
                 }
                 cores.add(new Core(left, right, u, l));
             }
+            completeBoundaryCores(cores, gray, w, h, bottom, gap, staffs, staff, completionBudget);
             for (int i = 0; i < cores.size(); i++)
                 for (int j = i; j < cores.size(); j++) {
                     Core a = cores.get(i), c = cores.get(j);
@@ -178,6 +180,128 @@ final class OpenHairpinPairs {
         return result;
     }
 
+    /** Finish only an observed lower core that crossed the proposal band, under a complete
+     * opposite-arm anchor. The old maximum two-gap opening bounds this connected search;
+     * the original full-interval fit and optical checks still decide admission. */
+    private static void completeBoundaryCores(
+            List<Core> cores,
+            byte[] gray,
+            int w,
+            int h,
+            int bottom,
+            float gap,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            PlayingTechniqueDetector.Staff staff,
+            long[] budget) {
+        if (cores.size() > budget[0]) return;
+        budget[0] -= cores.size();
+        var original = List.copyOf(cores);
+        for (Core anchor : original) {
+            long anchorWork = anchor.upper().length * 6L + 64;
+            if (anchorWork > budget[0]) return;
+            budget[0] -= anchorWork;
+            double[] up = fit(anchor.upper(), gap), lo = fit(anchor.lower(), gap);
+            if (up == null || lo == null) continue;
+            boolean thin = true;
+            for (int x = 0; x < anchor.upper().length; x++)
+                if (anchor.upper()[x] != Integer.MAX_VALUE
+                        && anchor.lower()[x] - anchor.upper()[x] > 4) thin = false;
+            if (!thin) continue;
+            int end =
+                    (int)
+                            Math.ceil(
+                                    Math.max(
+                                                    up[1],
+                                                    up[1]
+                                                            + up[0]
+                                                                    * (anchor.right()
+                                                                            - anchor.left()))
+                                            + gap * 2
+                                            + 2);
+            if (end <= bottom || end >= h - 1) continue;
+            long staffWork = staffs.size();
+            if (staffWork > budget[0]) return;
+            budget[0] -= staffWork;
+            boolean overlap = false;
+            for (var next : staffs)
+                if (next.top() > staff.bottom() && end >= Math.floor(next.top() - gap * .3))
+                    overlap = true;
+            if (overlap) continue;
+            int margin = Math.round(gap * .5f),
+                    left = Math.max(0, anchor.left() - margin),
+                    right = Math.min(w - 1, anchor.right() + margin),
+                    width = right - left + 1;
+            for (Core seed : original) {
+                long seedWork = seed.lower().length + 16L;
+                if (seedWork > budget[0]) return;
+                budget[0] -= seedWork;
+                if (seed == anchor || seed.left() < left || seed.right() > right) continue;
+                boolean clipped = false;
+                for (int y : seed.lower()) if (y == bottom) clipped = true;
+                if (!clipped) continue;
+                long area = (long) width * (end - bottom + 1);
+                long charge = area * 32 + seed.upper().length * 2L + 64;
+                if (area > Integer.MAX_VALUE || charge > budget[0]) return;
+                budget[0] -= charge;
+                boolean[] mask = new boolean[(int) area];
+                int[] queue = new int[(int) area];
+                int count = 0;
+                for (int x = seed.left(); x <= seed.right(); x++)
+                    if (seed.lower()[x - seed.left()] == bottom) queue[count++] = x - left;
+                int run = Math.max(6, Math.round(gap * 1.5f));
+                for (int y = bottom + 1; y <= end; y++) {
+                    int x = left;
+                    while (x <= right) {
+                        while (x <= right && (gray[y * w + x] & 255) >= 145) x++;
+                        int start = x;
+                        while (x <= right && (gray[y * w + x] & 255) < 145) x++;
+                        if (x - start >= run)
+                            Arrays.fill(
+                                    mask,
+                                    (y - bottom) * width + start - left,
+                                    (y - bottom) * width + x - left,
+                                    true);
+                    }
+                }
+                int seeds = count;
+                boolean cut = false;
+                for (int at = 0; at < count; at++) {
+                    int p = queue[at], x = p % width, y = p / width;
+                    if (y > 0 && (x == 0 || x == width - 1 || y == end - bottom)) cut = true;
+                    for (int dy = -2; dy <= 2; dy++)
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int xx = x + dx, yy = y + dy;
+                            if (xx < 0 || xx >= width || yy <= 0 || yy > end - bottom) continue;
+                            int q = yy * width + xx;
+                            if (mask[q]) {
+                                mask[q] = false;
+                                queue[count++] = q;
+                            }
+                        }
+                }
+                if (cut || count == seeds) continue;
+                int min = seed.left(), max = seed.right();
+                for (int k = seeds; k < count; k++) {
+                    min = Math.min(min, left + queue[k] % width);
+                    max = Math.max(max, left + queue[k] % width);
+                }
+                int[] upper = new int[max - min + 1], lower = new int[upper.length];
+                Arrays.fill(upper, Integer.MAX_VALUE);
+                Arrays.fill(lower, Integer.MIN_VALUE);
+                for (int x = seed.left(); x <= seed.right(); x++) {
+                    upper[x - min] = seed.upper()[x - seed.left()];
+                    lower[x - min] = seed.lower()[x - seed.left()];
+                }
+                for (int k = seeds; k < count; k++) {
+                    int x = left + queue[k] % width - min, y = bottom + queue[k] / width;
+                    upper[x] = Math.min(upper[x], y);
+                    lower[x] = Math.max(lower[x], y);
+                }
+                cores.add(new Core(min, max, upper, lower));
+            }
+        }
+    }
+
     /** One terminal sample may belong solely to the independently fitted opposite arm.
      * Keep the original full interval for all later raw arm/interior checks.
      */
@@ -217,6 +341,9 @@ final class OpenHairpinPairs {
             if (ix < 0 || ix >= w || iy < 2 || iy >= h - 2) continue;
             for (int dy = -2; dy <= 2; dy++) supported |= (gray[(iy + dy) * w + ix] & 255) < 145;
             if (!supported) continue;
+            boolean terminalOwned =
+                    observedArmTerminal(
+                            observed, line, gray, w, h, left, endpoint, direction, reach);
             for (int step = 0; step <= reach && finite; step++) {
                 int localX = endpoint + direction * step,
                         x = left + localX,
@@ -227,7 +354,8 @@ final class OpenHairpinPairs {
                 }
                 for (int dy = -2; dy <= 2; dy++) {
                     int grayValue = gray[(y + dy) * w + x] & 255;
-                    if (grayValue < 145 || step == reach && grayValue < 225) finite = false;
+                    if (grayValue < 145 && (step != 0 || !terminalOwned)
+                            || step == reach && grayValue < 225) finite = false;
                 }
             }
             if (!finite) continue;
@@ -235,6 +363,51 @@ final class OpenHairpinPairs {
             result = line;
         }
         return result;
+    }
+
+    private static boolean observedArmTerminal(
+            int[] observed,
+            double[] line,
+            byte[] gray,
+            int w,
+            int h,
+            int left,
+            int endpoint,
+            int direction,
+            int reach) {
+        int previousFirst = -1, previousLast = -1, previousY = 0;
+        for (int step = reach; step >= 0; step--) {
+            int localX = endpoint - direction * step,
+                    x = left + localX,
+                    y = (int) Math.round(line[1] + line[0] * localX);
+            if (localX < 0 || localX >= observed.length || x < 0 || x >= w || y < 2 || y >= h - 2)
+                return false;
+            int first = Integer.MAX_VALUE, last = Integer.MIN_VALUE, count = 0;
+            for (int dy = -2; dy <= 2; dy++)
+                if ((gray[(y + dy) * w + x] & 255) < 145) {
+                    first = Math.min(first, y + dy);
+                    last = Math.max(last, y + dy);
+                    count++;
+                }
+            // No split, clipped, absent, or unconnected terminal/core cross-section.
+            if (count == 0 || count != last - first + 1 || first == y - 2 || last == y + 2)
+                return false;
+            if (previousFirst >= 0 && (first > previousLast + 1 || last < previousFirst - 1))
+                return false;
+            if (step > 0) {
+                int own = observed[localX];
+                if (own < first || own > last) return false;
+            } else {
+                int phase = y - previousY;
+                if (previousFirst < 0
+                        || first < previousFirst + phase
+                        || last > previousLast + phase) return false;
+            }
+            previousFirst = first;
+            previousLast = last;
+            previousY = y;
+        }
+        return true;
     }
 
     private static double[] fit(int[] y, float gap) {

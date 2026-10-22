@@ -2816,3 +2816,14 @@ continuations and dark interiors.
 App, Hub and both writers share recognition90; Guide291/audio97, models,
 dependencies and record layouts are unchanged. Cumulative matched packaging
 and deployment remain deferred during the active goal.
+
+Recognition91 preserves observed hairpin terminal ribbons and completes raw
+boundary-crossing proposals from their fitted upper anchor and connected lower
+arm. Anchor coordinate-span is at most 4 pixels; a new 4,000,000-operation
+proposal budget abstains on exhaustion. Original admission fits and 145/225 raw
+boundaries, complete-interval arm and interior checks remain. Independently
+complete raw beam evidence preserves following-rest voice membership.
+App, Hub and both writers share recognition91; Guide291/audio97, model weights,
+dependencies and record layouts remain unchanged. Only original procedural
+regressions are public. Cumulative matched packaging/deployment stays deferred
+during the active goal; no APK or Hub tag is produced by this prep.

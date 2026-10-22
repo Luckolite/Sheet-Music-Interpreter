@@ -2301,8 +2301,20 @@ final class OmrScoreInterpreter {
                 if (rest.measureIndex() == event.measureIndex()
                         && rest.staffIndex() == event.staffIndex()
                         && rest.staffCount() == event.staffCount()
-                        && restSharesStemVoice(
-                                rest.pageY() * height, restMiddle, note.staffGap, voiceDirection)
+                        && (restSharesStemVoice(
+                                        rest.pageY() * height,
+                                        restMiddle,
+                                        note.staffGap,
+                                        voiceDirection)
+                                || BeamedRestVoice.owns(
+                                        rest,
+                                        event,
+                                        result,
+                                        measures.get(event.measureIndex()),
+                                        gray,
+                                        width,
+                                        height,
+                                        note.staffGap))
                         && rest.positionInMeasure() > event.positionInMeasure()
                         && rest.positionInMeasure() < next
                         && restIsSeparateAttack(
