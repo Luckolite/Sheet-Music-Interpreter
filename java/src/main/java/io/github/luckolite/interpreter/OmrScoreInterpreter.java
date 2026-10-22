@@ -389,6 +389,8 @@ final class OmrScoreInterpreter {
             }
         // Sparse raw ovals already prove a complete contrasted rim and an owned
         // labelled shaft. A genuine hollow unflagged head needs no beam partner.
+        java.util.Map<Component, Staff> finiteCapFilledHeads = new java.util.HashMap<>();
+        var finiteHollowCapBudget = new FiniteHollowShaftCap.Budget(262144);
         Map<Staff, List<SymbolStemHeadRecovery.Head>> sparseHeadsByStaff =
                 new java.util.IdentityHashMap<>();
         for (Staff owner : staffs) {
@@ -429,7 +431,44 @@ final class OmrScoreInterpreter {
                         || !independentHollowContours(gray, width, height, candidate, owner.gap))
                     continue;
                 int[] own = attachedRawStem(gray, width, height, candidate, owner.gap);
-                if (own == null || hasWholeStaffAxis(gray, width, height, owner, own[0])) continue;
+                if (own == null) continue;
+                // A projected staff-height shaft can still end in a complete hollow oval.
+                // Require observed paper caps and no unexplained continuation; never waive
+                // the existing oval, turning-counter or independently labelled-shaft proofs.
+                boolean fullStaffAxis = hasWholeStaffAxis(gray, width, height, owner, own[0]);
+                if (fullStaffAxis
+                        && !FiniteHollowShaftCap.proves(
+                                gray,
+                                width,
+                                height,
+                                candidate.minX,
+                                candidate.minY,
+                                candidate.maxX,
+                                candidate.maxY,
+                                candidate.centerX,
+                                candidate.centerY,
+                                owner.gap,
+                                own,
+                                owner.top,
+                                owner.bottom,
+                                finiteHollowCapBudget)) continue;
+                boolean finiteCapFilledBody = false;
+                if (fullStaffAxis) {
+                    finiteCapFilledBody =
+                            PaleFilledHeadBody.isFilled(
+                                    gray,
+                                    width,
+                                    height,
+                                    candidate.minX,
+                                    candidate.minY,
+                                    candidate.maxX,
+                                    candidate.maxY,
+                                    candidate.centerX,
+                                    candidate.centerY,
+                                    owner.gap,
+                                    finiteHollowCapBudget);
+                    if (finiteHollowCapBudget.refused()) continue;
+                }
                 boolean oppositeHead = false;
                 for (Component existing : rawHeadComponents) {
                     // A flag pocket at the other end of a real note's shaft is
@@ -454,6 +493,8 @@ final class OmrScoreInterpreter {
                 }
                 if (oppositeHead) continue;
                 rawHeadComponents.add(candidate);
+                if (fullStaffAxis && finiteCapFilledBody)
+                    finiteCapFilledHeads.put(candidate, owner);
                 recoveredFadedHeads.add(candidate);
             }
         }
@@ -801,6 +842,7 @@ final class OmrScoreInterpreter {
         rejectedBeamHeads.addAll(recoveredGraceCaps);
         rejectedBeamHeads.addAll(wideSingleBeamTipHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(partialBeamContourHeads(gray, width, height, heads, staffs));
+        rejectedBeamHeads.addAll(mergedPartialBeamMaskHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(mergedBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(singleBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(shortPairedMergedBeamHeads(gray, width, height, heads, staffs));
@@ -1521,9 +1563,11 @@ final class OmrScoreInterpreter {
                         Math.max(
                                 beamCount,
                                 beamsBeyondTremolo(gray, beamLabels, width, height, head, staff));
+            boolean finiteCapFilled = finiteCapFilledHeads.get(head) == staff;
             float unbeamedDuration =
                     detectUnbeamedDuration(
                             labels, gray, width, height, head, staff.gap, beamCount, heads);
+            if (finiteCapFilled) unbeamedDuration = beamCount > 0 ? 0f : 1f;
             float hollowSlope =
                     rhythmStaff.pitchTrack == null
                             ? 0
@@ -1532,6 +1576,7 @@ final class OmrScoreInterpreter {
                                     / localGap;
             if (unbeamedDuration < ScoreNoteEvent.DURATION_HALF
                     && !unpitched
+                    && !finiteCapFilled
                     && !(beamCount > 0
                             && CompactFilledHeadCore.isFilled(
                                     labels,
@@ -11279,6 +11324,56 @@ final class OmrScoreInterpreter {
                 for (int j = i + 1; j < owners.size() && !found; j++)
                     found =
                             PartialBeamHeadContour.proved(
+                                    gray,
+                                    width,
+                                    height,
+                                    owners.get(i),
+                                    owners.get(j),
+                                    head.centerX,
+                                    head.centerY,
+                                    head.minX,
+                                    head.minY,
+                                    head.maxX,
+                                    head.maxY,
+                                    head.area,
+                                    gap);
+            if (found) rejected.add(head);
+        }
+        return rejected;
+    }
+
+    /** A finite secondary lane belongs to two independently recognized stem owners. */
+    private static List<Component> mergedPartialBeamMaskHeads(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        List<Component> rejected = new ArrayList<>();
+        if (gray == null) return rejected;
+        for (Component head : heads) {
+            Staff staff = nearestHeadStaff(staffs, head.centerY);
+            if (staff == null) continue;
+            float gap = staff.pitchTrack == null ? staff.gap : staff.pitchTrack.at(head.centerX)[1];
+            if (head.maxX - head.minX + 1 > gap * 1.5f
+                    || head.maxY - head.minY + 1 > gap * 1.8f
+                    || head.area > gap * gap * 1.8f) continue;
+            if (head.maxY - head.minY + 1 <= gap * 1.05f && head.area <= gap * gap * 1.2f) continue;
+            List<int[]> owners = new ArrayList<>();
+            for (Component main : heads) {
+                float verticalClearance = Math.max(head.minY - main.maxY, main.minY - head.maxY);
+                if (main == head
+                        || main.area < gap * gap * .9f
+                        || nearestHeadStaff(staffs, main.centerY) != staff
+                        || Math.abs(main.centerX - head.centerX) > gap * 6
+                        || verticalClearance < gap * .45f
+                        || Math.abs(main.centerY - head.centerY) > gap * 7) continue;
+                int[] stem = attachedRawStem(gray, width, height, main, gap);
+                if (stem != null
+                        && (head.centerY - main.centerY) * stem[2] > 0
+                        && Math.abs(stem[1] - head.centerY) <= gap * 1.8f) owners.add(stem);
+            }
+            boolean found = false;
+            for (int i = 0; i < owners.size() && !found; i++)
+                for (int j = i + 1; j < owners.size() && !found; j++)
+                    found =
+                            PartialBeamHeadContour.provedMerged(
                                     gray,
                                     width,
                                     height,

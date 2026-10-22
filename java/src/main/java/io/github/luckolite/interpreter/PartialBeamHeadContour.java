@@ -26,6 +26,42 @@ final class PartialBeamHeadContour {
             int bottom,
             int area,
             float gap) {
+        return provedShape(gray, w, h, a, b, cx, cy, left, top, right, bottom, area, gap, false);
+    }
+
+    static boolean provedMerged(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int area,
+            float gap) {
+        if (bottom - top + 1 <= gap * 1.05f && area <= gap * gap * 1.2f) return false;
+        return provedShape(gray, w, h, a, b, cx, cy, left, top, right, bottom, area, gap, true);
+    }
+
+    private static boolean provedShape(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int area,
+            float gap,
+            boolean mergedMask) {
         if (gray == null
                 || w < 1
                 || h < 1
@@ -60,9 +96,9 @@ final class PartialBeamHeadContour {
                 || cy < top
                 || cy > bottom
                 || right - left + 1 > gap * 1.5f
-                || bottom - top + 1 > gap * 1.05f
+                || bottom - top + 1 > gap * (mergedMask ? 1.8f : 1.05f)
                 || area < 1
-                || area > gap * gap * 1.2f) return false;
+                || area > gap * gap * (mergedMask ? 1.8f : 1.2f)) return false;
         int[] first = a[0] < b[0] ? a : b, last = a[0] < b[0] ? b : a;
         float span = last[0] - first[0], slope = (last[1] - first[1]) / span;
         if (span < gap * 2
@@ -98,12 +134,14 @@ final class PartialBeamHeadContour {
             if (total < gap
                     || primary.size() < total * .94f
                     || !stable(primary, gap)
-                    || primaryHead && !stableAcrossHead(primary, gap, left, right)) continue;
+                    || mergedMask && !stableOutsideHead(primary, gap, left, right)
+                    || primaryHead && !mergedMask && !stableAcrossHead(primary, gap, left, right))
+                continue;
             boolean nearFirst = Math.abs(cx - first[0]) <= Math.abs(cx - last[0]);
             int owner = nearFirst ? first[0] : last[0], direction = nearFirst ? 1 : -1;
-            float secondaryCenter = primaryHead ? primaryAtHead - a[2] * gap : cy;
-            for (int phase = -Math.round(gap * (primaryHead ? .5f : .3f));
-                    phase <= Math.round(gap * (primaryHead ? .5f : .3f));
+            float secondaryCenter = (primaryHead || mergedMask) ? primaryAtHead - a[2] * gap : cy;
+            for (int phase = -Math.round(gap * ((primaryHead || mergedMask) ? .5f : .3f));
+                    phase <= Math.round(gap * ((primaryHead || mergedMask) ? .5f : .3f));
                     phase++) {
                 List<Sample> partial = new ArrayList<>();
                 int endDistance = margin;
@@ -121,7 +159,7 @@ final class PartialBeamHeadContour {
                 if (partial.size() < gap * .65f
                         || endDistance > span * .8f
                         || !stable(partial, gap)) continue;
-                if (primaryHead
+                if ((primaryHead || mergedMask)
                         && !ownedLanes(
                                 gray, w, h, left, right, top, bottom, first, last, slope, shift,
                                 partial, gap, threshold)) continue;
@@ -202,9 +240,9 @@ final class PartialBeamHeadContour {
             List<Sample> partial,
             float gap,
             int threshold) {
-        int margin = Math.max(1, Math.round(gap * .16f));
-        for (int x = Math.max(left, first[0] + margin + 1);
-                x <= Math.min(right, last[0] - margin - 1);
+        int margin = Math.max(3, Math.round(gap * .22f));
+        for (int x = Math.max(left, first[0] + margin);
+                x <= Math.min(right, last[0] - margin);
                 x++) {
             Sample primary =
                     sample(
@@ -322,6 +360,45 @@ final class PartialBeamHeadContour {
                     return false;
                 witnesses++;
             }
+        return witnesses >= 3;
+    }
+
+    /** Quantized shaft endpoints need not share the raw beam edge's exact slope. */
+    private static boolean stableOutsideHead(List<Sample> samples, float gap, int left, int right) {
+        int witnesses = 0;
+        for (boolean upper : new boolean[] {true, false}) {
+            int count = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+            double sx = 0, sy = 0, sxx = 0, sxy = 0;
+            for (var sample : samples)
+                if ((sample.x < left || sample.x > right)
+                        && (upper ? sample.topClear : sample.bottomClear)) {
+                    double x = sample.x - left, y = upper ? sample.top : sample.bottom;
+                    count++;
+                    sx += x;
+                    sy += y;
+                    sxx += x * x;
+                    sxy += x * y;
+                    min = Math.min(min, sample.x);
+                    max = Math.max(max, sample.x);
+                }
+            if (count < 3 || max - min < gap * .25f) return false;
+            double denominator = count * sxx - sx * sx;
+            if (denominator <= 0) return false;
+            double slope = (count * sxy - sx * sy) / denominator,
+                    intercept = (sy - slope * sx) / count;
+            if (Math.abs(slope) > .7) return false;
+            for (var sample : samples)
+                if (sample.x >= left
+                        && sample.x <= right
+                        && (upper ? sample.topClear : sample.bottomClear)) {
+                    double edge = upper ? sample.top : sample.bottom;
+                    double excess =
+                            (edge - (intercept + slope * (sample.x - left))) * (upper ? -1 : 1);
+                    // Inward clipping at a shaft does not supply the outward ink of an oval.
+                    if (excess > Math.max(1, gap * .08f)) return false;
+                    witnesses++;
+                }
+        }
         return witnesses >= 3;
     }
 }

@@ -100,6 +100,8 @@ final class OpenHairpinPairs {
                             || open > gap * 2
                             || open - closed < gap * .3
                             || closed > open * .75) continue;
+                    boolean[] barColumns =
+                            interstaffBarColumns(gray, w, h, staffs, staff, left, right);
                     int both = 0, eligible = 0, clear = 0;
                     for (int x = 0; x < len; x++) {
                         int uy = (int) Math.round(up[1] + up[0] * x),
@@ -112,8 +114,14 @@ final class OpenHairpinPairs {
                         }
                         if (ui && li) both++;
                         if (ly - uy >= gap * .35) {
+                            int middle = gray[((uy + ly) / 2) * w + left + x] & 255;
+                            // Independently owned bar ink is neither paper nor unexplained wedge
+                            // ink.
+                            // Its halo and every other original sample remain subject to the old
+                            // law.
+                            if (barColumns[x] && middle < 145) continue;
                             eligible++;
-                            if ((gray[((uy + ly) / 2) * w + left + x] & 255) >= 225) clear++;
+                            if (middle >= 225) clear++;
                         }
                     }
                     if (both < len * .95 || eligible < len * .25 || clear < eligible * .9) continue;
@@ -127,6 +135,43 @@ final class OpenHairpinPairs {
                 }
         }
         return List.copyOf(result);
+    }
+
+    /** Same full inter-staff raw-column authority used by DynamicBarlineCrop.
+     * No pixels are erased; only a dark core sample of a complete, thin bar is accounted for.
+     */
+    private static boolean[] interstaffBarColumns(
+            byte[] gray,
+            int w,
+            int h,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            PlayingTechniqueDetector.Staff upper,
+            int left,
+            int right) {
+        boolean[] result = new boolean[right - left + 1];
+        for (var lower : staffs) {
+            if (lower.index() != upper.index() + 1
+                    || lower.count() != upper.count()
+                    || lower.top() <= upper.bottom()) continue;
+            float gap = Math.max(upper.gap(), lower.gap());
+            if (!Float.isFinite(gap) || gap < 4) continue;
+            int top = Math.max(0, Math.round(upper.top())),
+                    bottom = Math.min(h - 1, Math.round(lower.bottom()));
+            if (bottom - top < gap * 8 || bottom - top > gap * 24) continue;
+            boolean[] candidate = new boolean[result.length];
+            int total = 0;
+            for (int x = left; x <= right; x++) {
+                int hits = 0;
+                for (int y = top; y <= bottom; y++) if ((gray[y * w + x] & 255) < 145) hits++;
+                if (hits >= (bottom - top + 1) * .92f) {
+                    candidate[x - left] = true;
+                    total++;
+                }
+            }
+            if (total == 0 || total > gap * .35f) continue;
+            for (int x = 0; x < result.length; x++) result[x] |= candidate[x];
+        }
+        return result;
     }
 
     private static double[] fit(int[] y, float gap) {

@@ -81,6 +81,7 @@ final class SixteenthRestDetector {
             List<Staff> staffs,
             List<ScoreNoteEvent> notes,
             List<ScoreNoteEvent> classificationNotes) {
+        List<Staff> originalFrames = staffs;
         staffs = printedRestFrames(gray, width, height, staffs);
         Detection baseline = detectWithDotsReleased(gray, width, height, measures, staffs, notes);
         List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
@@ -130,7 +131,42 @@ final class SixteenthRestDetector {
                         measures,
                         staffs,
                         classificationNotes);
-        return addSupportedCore(strong, gray, width, height, measures, staffs, notes);
+        Detection current = addSupportedCore(strong, gray, width, height, measures, staffs, notes);
+        return addOriginalFrameRests(
+                current, gray, width, height, measures, originalFrames, staffs, notes);
+    }
+
+    /** A supported original frame remains a valid glyph view after quantized rule snapping. */
+    private static Detection addOriginalFrameRests(
+            Detection current,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> original,
+            List<Staff> snapped,
+            List<ScoreNoteEvent> notes) {
+        if (original == null
+                || snapped == null
+                || original.size() != snapped.size()
+                || original.size() > 64) return current;
+        List<ScoreRestEvent> rests = new ArrayList<>();
+        List<RestDot> dots = new ArrayList<>();
+        for (int i = 0; i < original.size(); i++) {
+            Staff frame = original.get(i), mapped = snapped.get(i);
+            if (frame == null
+                    || mapped == null
+                    || frame.pitchTrack() != null
+                    || frame.equals(mapped)
+                    || !OriginalRestFrameRules.supported(
+                            gray, width, height, frame.top(), frame.bottom(), frame.gap()))
+                continue;
+            Detection found =
+                    detectWithDotsReleased(gray, width, height, measures, List.of(frame), notes);
+            rests.addAll(found.rests());
+            dots.addAll(found.dots());
+        }
+        return mergeSupportedCore(current, collected(rests, dots));
     }
 
     /** Merge only after all released detector phases; no new proposal can replace a released rest. */

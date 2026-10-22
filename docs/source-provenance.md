@@ -2788,3 +2788,22 @@ beam, flag and grace controls. Three new pure-Java helpers are explicit in the
 native decoder source list. App, Hub and both writers share recognition88 while
 Guide291/audio97 and model weights remain unchanged. Cumulative matched
 packaging/deployment remains deferred during the active goal.
+
+Recognition89 admits a previously rejected oval only after its independently
+labelled finite shaft has a paper-bounded cap. Existing pale filled-body and
+closed-counter evidence then preserves written duration, with precharged bounded
+work and abstention when evidence is unavailable. A complete merged beam contour
+requires independent real head/shaft owners and complete raw lanes; genuine
+side-attached cue ovals remain protected.
+
+Hairpin interior clearance reuses independently proved full interstaff bar
+authority; only its dark core samples leave the eligible denominator. Ordinary
+stems, partial bars, broad objects and unexplained interior ink remain vetoes.
+
+Original flat rest frames remain additive glyph views only after all five long
+raster staff rules are independently supported. The released rest classifier is
+unchanged; no new proposal replaces an already retained rest.
+
+App, Hub and both writers share recognition89; Guide291/audio97, dependencies
+and model weights are unchanged. Only original procedural regressions are public.
+Cumulative matched packaging/deployment remains deferred during the active goal.
