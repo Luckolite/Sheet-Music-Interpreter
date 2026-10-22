@@ -2768,3 +2768,23 @@ separate shaft cannot suppress a real grace note. The old faded-recovery entry
 retains its null-owner behavior. Eight semantic-seed originals and both released
 entrance-stroke classes pass, with214 other flag controls. Four retained page
 outputs equal the previously qualified sole phantom-head deletion.
+
+Recognition88 preserves a complete admitted filled head on its independently
+observed faded upward shaft during short-rest arbitration, with finite per-head
+and per-measure work limits. Compact filled bodies can retain independently
+proved beams only after semantic completeness and local contrast evidence;
+relative closed counters preserve true hollow notes. No head or beam is invented.
+
+Complete template-accepted strict two-cycle mordents stay separate during
+detached trill-letter grouping. Existing ornament thresholds and later ownership
+guards remain unchanged. Six procedural originals preserve neighboring slurs,
+broken cycles and genuine detached trill lettering.
+
+A finite partial beam contour needs two independently recognized heads and
+own shafts, a complete primary raw lane and finite parallel secondary lane.
+Independent full/cue ovals, missing or broken owners, detached hooks and absent
+raw input remain preserved. Thirty-two procedural originals accompany existing
+beam, flag and grace controls. Three new pure-Java helpers are explicit in the
+native decoder source list. App, Hub and both writers share recognition88 while
+Guide291/audio97 and model weights remain unchanged. Cumulative matched
+packaging/deployment remains deferred during the active goal.

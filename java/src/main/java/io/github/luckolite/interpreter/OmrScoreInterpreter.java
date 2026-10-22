@@ -800,6 +800,7 @@ final class OmrScoreInterpreter {
         List<Component> rejectedBeamHeads = beamJunctionHeads(gray, width, height, heads, staffs);
         rejectedBeamHeads.addAll(recoveredGraceCaps);
         rejectedBeamHeads.addAll(wideSingleBeamTipHeads(gray, width, height, heads, staffs));
+        rejectedBeamHeads.addAll(partialBeamContourHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(mergedBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(singleBeamInteriorHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(shortPairedMergedBeamHeads(gray, width, height, heads, staffs));
@@ -1531,6 +1532,19 @@ final class OmrScoreInterpreter {
                                     / localGap;
             if (unbeamedDuration < ScoreNoteEvent.DURATION_HALF
                     && !unpitched
+                    && !(beamCount > 0
+                            && CompactFilledHeadCore.isFilled(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    head.minX,
+                                    head.minY,
+                                    head.maxX,
+                                    head.maxY,
+                                    head.centerX,
+                                    head.centerY,
+                                    localGap))
                     && ClosedWrittenHeadPocket.proved(
                             gray,
                             width,
@@ -2088,6 +2102,7 @@ final class OmrScoreInterpreter {
                                     height));
             List<DetectedNote> removed = new ArrayList<>();
             List<ScoreRestEvent> verifiedBodies = new ArrayList<>();
+            var fadedUpStemBudget = new FadedUpStemNoteSupport.Budget(262144);
             // An independently recognized complete quarter-rest body can
             // establish ownership even when its false head blocked the first
             // pass. Continuous stems remain excluded from the body candidates.
@@ -2120,6 +2135,20 @@ final class OmrScoreInterpreter {
                                     <= note.staffGap * (rest.durationBeats() < 1 ? .5f : .4f)
                             && Math.abs(rest.pageY() * height - note.head.centerY)
                                     <= rest.pageHeight() * height * .5f) {
+                        // A separately supported upward note shaft contradicts a short rest's
+                        // descending bulb/tail. Preserve this admitted head; infer no raster ink.
+                        if (rest.durationBeats() < 1f
+                                && FadedUpStemNoteSupport.proves(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        note.head.minX,
+                                        note.head.minY,
+                                        note.head.maxX,
+                                        note.head.maxY,
+                                        note.staffGap,
+                                        fadedUpStemBudget)) continue;
                         if (restOwnership.mayRemove(note.head)) {
                             removed.add(note);
                             verifiedBodies.add(rest);
@@ -11219,6 +11248,55 @@ final class OmrScoreInterpreter {
         return result;
     }
 
+    /** A finite secondary lane belongs to two independently recognized stem owners. */
+    private static List<Component> partialBeamContourHeads(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+        List<Component> rejected = new ArrayList<>();
+        if (gray == null) return rejected;
+        for (Component head : heads) {
+            Staff staff = nearestHeadStaff(staffs, head.centerY);
+            if (staff == null) continue;
+            float gap = staff.pitchTrack == null ? staff.gap : staff.pitchTrack.at(head.centerX)[1];
+            if (head.maxX - head.minX + 1 > gap * 1.5f
+                    || head.maxY - head.minY + 1 > gap * 1.05f
+                    || head.area > gap * gap * 1.2f) continue;
+            List<int[]> owners = new ArrayList<>();
+            for (Component main : heads) {
+                float verticalClearance = Math.max(head.minY - main.maxY, main.minY - head.maxY);
+                if (main == head
+                        || main.area < Math.max(gap * gap * .9f, head.area * 1.25f)
+                        || nearestHeadStaff(staffs, main.centerY) != staff
+                        || Math.abs(main.centerX - head.centerX) > gap * 6
+                        || verticalClearance < gap * .45f
+                        || Math.abs(main.centerY - head.centerY) > gap * 7) continue;
+                int[] stem = attachedRawStem(gray, width, height, main, gap);
+                if (stem != null
+                        && (head.centerY - main.centerY) * stem[2] > 0
+                        && Math.abs(stem[1] - head.centerY) <= gap * 1.8f) owners.add(stem);
+            }
+            boolean found = false;
+            for (int i = 0; i < owners.size() && !found; i++)
+                for (int j = i + 1; j < owners.size() && !found; j++)
+                    found =
+                            PartialBeamHeadContour.proved(
+                                    gray,
+                                    width,
+                                    height,
+                                    owners.get(i),
+                                    owners.get(j),
+                                    head.centerX,
+                                    head.centerY,
+                                    head.minX,
+                                    head.minY,
+                                    head.maxX,
+                                    head.maxY,
+                                    head.area,
+                                    gap);
+            if (found) rejected.add(head);
+        }
+        return rejected;
+    }
+
     /** A complete single beam can own a wider partial mask at its tip. */
     private static List<Component> wideSingleBeamTipHeads(
             byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
@@ -14329,17 +14407,29 @@ final class OmrScoreInterpreter {
         boolean open = hasOpenCenter(labels, gray, width, height, head, gap);
         if (open
                 && beamCount > 0
-                && PaleFilledHeadCore.isFilled(
-                        gray,
-                        width,
-                        height,
-                        head.minX,
-                        head.minY,
-                        head.maxX,
-                        head.maxY,
-                        head.centerX,
-                        head.centerY,
-                        gap)) open = false;
+                && (PaleFilledHeadCore.isFilled(
+                                gray,
+                                width,
+                                height,
+                                head.minX,
+                                head.minY,
+                                head.maxX,
+                                head.maxY,
+                                head.centerX,
+                                head.centerY,
+                                gap)
+                        || CompactFilledHeadCore.isFilled(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                head.minX,
+                                head.minY,
+                                head.maxX,
+                                head.maxY,
+                                head.centerX,
+                                head.centerY,
+                                gap))) open = false;
         boolean stem = hasAttachedStem(labels, width, height, head, gap);
         // A horizontal whole oval can sit immediately below a separate melody
         // head. Nearby semantic stem pixels do not establish physical attachment.

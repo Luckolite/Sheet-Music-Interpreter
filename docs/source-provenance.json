@@ -409,17 +409,19 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "be86f703cc98c0e48a4e98d08106d8993eae268ee938844ca3f375126d598ada",
+      "source_sha256": "fc6bc02069c278e3a912267275b578f317d93c8e0197454860fdd11ab4b30543",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "9bb6567b97e4ac619ca371d492b3524fbe4d7f9c5060107788d27b6720c25b63",
-      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
-      "standalone_sha256": "5474d2edef435f6631e71e098c50b815641488588a1762b613f00ed4e4fa0d38",
+      "source_normalized_sha256": "f1eccf8260d49140c3a618f4e9b353fe60c4977ef1837895ddde3323df5e3612",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal.",
+      "standalone_sha256": "365ca5e2d5d13559ee19d367a62a6563ad8b2f126d92ba156a222b7516ff1755",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
-      "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes."
+      "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OmrScoreInterpreter.java",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes."
     },
     "PlayingTechniqueDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PlayingTechniqueDetector.java",
@@ -1035,13 +1037,16 @@
     },
     "PortableNoteOrnaments.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PortableNoteOrnaments.java",
-      "source_sha256": "42a70156ec9e65497181e54755392723589bc954ca49350d1d687f7455dff93f",
-      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "source_normalized_sha256": "dcf8facf1f1e49ef3ac05d6168109a54c7f45cd707f73754fd59ed60b8481219",
-      "reviewed_source_state": "committed",
+      "source_sha256": "716b0702b0f8f683e1c486fe2cd78f2a10e20362f9b6f9ac44f5b885da21e18f",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "source_normalized_sha256": "96b9b49fbcf4e4faed998dc5dfc7f3bb449eba16b609ced01695c33cd4a664ed",
       "review_note": "Complete upper auxiliary accidentals use the existing2.8staffgap componentinventory limit instead of inconsistent2.2; fullglyph classifier, distance/side ownership and fallbackcrop unchanged. Paired original tallnatural/control/foreign/overheight/lower controls and exact one-note private actual outcome.",
-      "reviewed_app_state": "Reviewed uncommitted source snapshot for app890; recorded app commit remains the origin base.",
-      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f"
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal.",
+      "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PortableNoteOrnaments.java",
+      "standalone_sha256": "f23f18fc915c5e23515f9cc993adac95f04de43c4a7b4ca76940e34935e55b9c",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes."
     },
     "FaintSharpInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintSharpInk.java",
@@ -1655,17 +1660,19 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "fd420ceea776f96b622f1394b483de29245f6a175eef6dfb4bc9c4bbb814619e",
-      "source_normalized_sha256": "cc0c6e6a4ca38ded0ffc02b5519af24a4007a66b4d57c0b6453ced2669dbdcee",
+      "source_sha256": "06f1f63abde0371530ccd0e22c8b0ca6086285b8bd268f65efb930d67010d712",
+      "source_normalized_sha256": "16bc3829ecbaa7445a24a73e882945989f852027594c0abd9046fdc44bf20d61",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "69521ef160339cbf2bc0ec1e7bf9efa542a2ac3033c0a784c14ac5f1fa5444b0",
-      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "standalone_sha256": "aa75a5a76e50c705ba868aed5e479de0f053c4430676aef5e92f23ccb8e8164c",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
-      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change."
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1722,17 +1729,18 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "7992d57268035e084e170db455562edea3e9ec89ca7466ecf875287812cecd82",
-      "source_normalized_sha256": "e8e901ea23ffc14b48db6fb24e137d3bac97e7c43a213cfa517ebf03b04a8c42",
+      "source_sha256": "c992068274e1b69ad0f6fb63db567a5e1bbdc7dab69e0eef71dc5d8f99042fd3",
+      "source_normalized_sha256": "25d4cd5676d0316bdd597398621753347956b9020389814cf66b7a990408ae9e",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "f12ddd8a7fd152eb68ab23b93c8ede0027d4fcefa71de6babb83079c46b63f19",
-      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "standalone_sha256": "c5e82d23ecc8fcc115bd3f8269ff6c543cd2b223acf7e83fa59cfb8f84e1797b",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Paired recognition87 batch committed; cumulative APK and desktop rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
-      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change."
+      "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
+      "standalone_path": "src/sheet_interpreter/guide_writer.py"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -4090,6 +4098,116 @@
       "rounded_rule_separation_review_note": "Keep legacy floor-phase head contact veto. A rounded complete five-rule frame can separate a full-height bar from an off-axis, independently filled complete head with own opposite shaft and observed exterior paper before the bar. Partial, faint, on-axis, missing-rule and thick-rule evidence retains the existing veto. Six original procedural methods; no captured score pixels/model changes. No unused guard/helper candidate ported.",
       "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RoundedPartialMaskOriginalTest.java"
+    },
+    "FadedUpStemNoteSupport.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FadedUpStemNoteSupport.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FadedUpStemNoteSupport.java",
+      "source_sha256": "0c00b86dcb7b7382d4f1c2a6195e19dd93177d1c7e91f2ccce98ae7db07d12b0",
+      "source_normalized_sha256": "3870ac7a5d25786fdead1b69e26410c53981f93cd8740167d34cd3b706898a5f",
+      "standalone_sha256": "ea1ce130685c31f122eecabb910e4066bf072edd6b0990afadd684294acae8dc",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "CompactFilledHeadCore.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactFilledHeadCore.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompactFilledHeadCore.java",
+      "source_sha256": "975420c1a92f6288d2bf194391a607932bf9c621ee835f19a59c6ecfe0d06077",
+      "source_normalized_sha256": "388e40ae86493576e66866ea07ee71e504a412c332fe2ec1815d49fe9d612286",
+      "standalone_sha256": "c9a27bf4c415a149dcc63694df7897aa82f1e354df50ae3735987a1a043a712c",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "PartialBeamHeadContour.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PartialBeamHeadContour.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PartialBeamHeadContour.java",
+      "source_sha256": "6937baccb5e7eb883aabf0bedc37f45d718c1829c1e26fa3ceed69158e32dc42",
+      "source_normalized_sha256": "b80a2cd079bfaeff42675ebafd767690573f079aa9405faebd83bc16215f7a3b",
+      "standalone_sha256": "b8627d8b5883b745a4854a6712e18d59568c5238c908e177e13969c7a2124178",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "GuideCacheIdentityTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
+      "source_sha256": "23ce72068ed7037f3edd36263b96d1a740feaf3f0e33a1cefe86db00613ef6f4",
+      "source_normalized_sha256": "d2428d855990e61ff653a3e45f82664ed24c2d9f3e094f6711135e08e58109f7",
+      "standalone_sha256": "3ae6d11017401f70a9a990b344822d2dbd4607adc9acf6024c908864e602ffb5",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "FadedUpStemNoteSupportTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FadedUpStemNoteSupportTest.java",
+      "source_sha256": "e2cbf65c59fcc53dadf98c6748ac358c7c0d1b11e2f5e3cd6422252953648b91",
+      "source_normalized_sha256": "ae263cc0c45d8d4e991cb023238607dadfcab0fb3cbb794f7a610f341cba1da1",
+      "standalone_sha256": "c93db95bf831db223265979cced16f82aee9bb5b5dbf3061913d4263607e275f",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "FadedUpStemRestAdversesTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemRestAdversesTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FadedUpStemRestAdversesTest.java",
+      "source_sha256": "81049b1af61af6b9508a458b926bc7a5e722f3e2909de97cefa373482dfd50db",
+      "source_normalized_sha256": "7b974a4b5bb0e18abccc529ad52bb6bd2dbaeea60447606333fe7650bef7c787",
+      "standalone_sha256": "ca6e35e93579a2708b802112c1eae9422d958c5907c20fcab01d1d0530c93ff4",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "CompactFilledHeadCoreOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompactFilledHeadCoreOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompactFilledHeadCoreOriginalTest.java",
+      "source_sha256": "334d59308992dc9a17b0f586d6e6d506a1c1f245701cdfa48a70eb37a94b29fe",
+      "source_normalized_sha256": "e00aafab903ddf30eca0e2bace0456c5ac48f2e3ebddb50d240865a783a8a400",
+      "standalone_sha256": "c88c53584510911a8c7c86876a81fc80fa824a9ba913c2be3b46476cd69af1ee",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "PartialBeamHeadContourTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PartialBeamHeadContourTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PartialBeamHeadContourTest.java",
+      "source_sha256": "7f7d0fe4cd7053a166a0249409529b45f316e119c72fe9dda86f69e567df844e",
+      "source_normalized_sha256": "6a29d72184dedfb5aa30d89563aee7abb496137e14c49a5bf3a85d4b904532a0",
+      "standalone_sha256": "09cc40c21e609018216c37f22e253df8603ce769d5a9aaf194fff4a9573bc9b6",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "CompleteMordentBesideSlurOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteMordentBesideSlurOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteMordentBesideSlurOriginalTest.java",
+      "source_sha256": "ab4e1cdc13239469fdedaceb6971cd4442383b5875cd9046c080068810c78ebd",
+      "source_normalized_sha256": "f18e48c5bd1ee63c194fd6cfb10116fd7e25ddc0f8096bf5a6e6fdf6266fb038",
+      "standalone_sha256": "d3a0d4781304943f3aa1d1f8311910d64c19320318525ce9aab5ad6815d6d09b",
+      "license": "Apache-2.0",
+      "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
+    },
+    "CompactFilledHollowCounterOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompactFilledHollowCounterOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompactFilledHollowCounterOriginalTest.java",
+      "source_sha256": "a11f7f2be2628d7e37ffe8b116d8cac4de5673f1af9f223209838330dfe4f21d",
+      "source_normalized_sha256": "934bdb5c7a237ae283089d49d2dc88bedd227842cbaf0e136998d69473906abb",
+      "standalone_sha256": "ec209a6ce1d217f5cbcc9476624a0565e71ec41ef0de1064254a2f79ec5f3857",
+      "license": "Apache-2.0",
+      "review_note": "Eight original real hollow half/whole heads, local shadow, gradient and staff-crossed counters must remain hollow even when the semantic mask paints the entire counter as NOTEHEAD. No captured source pixels or score coordinates.",
+      "reviewed_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+      "reviewed_app_state": "Compatible recognition88 source batch committed; cumulative paired rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -8911,5 +9029,25 @@
     "appFocusedTests": 60,
     "sharedSourceState": "Narrow same-shaft owner plus minimal rounded-rule postprocessor",
     "boundary": "Source verification only; cumulative matched app/Hub/worker packaging and deployment deferred during active goal."
+  },
+  "recognition88_review": {
+    "newOriginalTests": 67,
+    "scopedEvidence": {
+      "filledOwnShaft": "One retained natural stage restores a B4 written eighth in place of a false eighth rest. Other185notes preserved except required preceding rest link. A4 remains unresolved.",
+      "completeMordent": "Three complete accepted two-cycle mordents remain separate from neighboring slur boxes during detached tr-letter grouping. Saved182-note expression stage changes only three articulation fields.",
+      "partialBeamContour": "Two independently recognized larger heads and their own shafts must own complete primary and finite secondary raw lanes. Five false semantic heads removed on four retained pages; two written beam counts corrected, every other note/page field and physical references preserved."
+    },
+    "sourceBoundary": "Original procedural tests only; private score images, masks, probes and coordinates excluded. No model, dependency, wire291 or audio97 changes.",
+    "runtimeBoundary": "Source recognition88; installed pair remains86/291/97. Cumulative app/Hub/worker packaging deferred during active goal; no per-fix APK or Hub tag.",
+    "newOriginalTestClasses": 6,
+    "paired_app_commit": "0be0531e6572fb9e1893afd10ac910ec678316bf",
+    "standaloneFullSuiteTests": 12643,
+    "additionalIndependentCounterTests": 8,
+    "standaloneTotalTests": 12651,
+    "currentJavaClassesCovered": 1658,
+    "allCurrentClassesCoveredExactlyOnce": true,
+    "appFocusedTests": 134,
+    "combinedFourPagesExact": true,
+    "validationBoundary": "Full Java suite snapshot covers1657classes; one test-only independent-counter class added after discovery passes8 separately against the same unchanged production closure. Together every current class is covered exactly once. No cumulative packaged runtime deployment claimed."
   }
 }

@@ -304,7 +304,7 @@ final class PortableNoteOrnaments {
             gray =
                     RestPaperTone.normalizeOrdinaryRestInk(
                             gray, width, height, staffs.get(0).gap(), 220f);
-        var boxes = boxes(gray, width, height, staffs, tracks);
+        var boxes = boxes(gray, width, height, staffs, tracks, recognizer);
         List<Found> found = new ArrayList<>();
         var repeatedTrills = new PageTrillEvidence(recognizer, gray, width, height, boxes, trills);
         Set<Bounds> textTrills = new HashSet<>();
@@ -511,7 +511,7 @@ final class PortableNoteOrnaments {
         if (!staffs.isEmpty())
             gray = RestPaperTone.normalizeOrdinaryRestInk(gray, w, h, staffs.get(0).gap(), 220f);
         var tracks = ornamentTracks(null, gray, w, h, staffs);
-        return boxes(gray, w, h, staffs, tracks);
+        return boxes(gray, w, h, staffs, tracks, null);
     }
 
     private static List<Bounds> boxes(
@@ -519,7 +519,8 @@ final class PortableNoteOrnaments {
             int w,
             int h,
             List<PlayingTechniqueDetector.Staff> staffs,
-            List<StaffPitchTrack> tracks) {
+            List<StaffPitchTrack> tracks,
+            PortableOrnamentGlyphs recognizer) {
         boolean[] seen = new boolean[gray.length];
         int[] queue = new int[gray.length];
         List<Bounds> parts = new ArrayList<>();
@@ -564,11 +565,21 @@ final class PortableNoteOrnaments {
         // The letters in tr may be separate components. Merge only letters on the same
         // baseline; dots and vertically placed auxiliary accidentals remain separate.
         parts.sort(Comparator.comparingInt(r -> r.left));
+        Set<Bounds> completeMordents = new HashSet<>();
+        if (recognizer != null)
+            for (var part : parts)
+                if (MordentContour.matches(gray, w, part)) {
+                    var match = recognizer.match(gray, w, part);
+                    if (match.kind() == NoteOrnament.MORDENT && match.accepted())
+                        completeMordents.add(part);
+                }
         List<Bounds> joined = new ArrayList<>();
         for (var b : parts) {
             Bounds prior = null;
             for (var a : joined)
-                if (b.left >= a.left
+                if (!completeMordents.contains(a)
+                        && !completeMordents.contains(b)
+                        && b.left >= a.left
                         && b.left - a.right < Math.min(a.height(), b.height()) * .32
                         && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)
                                 > Math.min(a.height(), b.height()) * .55) prior = a;
