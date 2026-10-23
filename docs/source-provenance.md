@@ -2867,3 +2867,8 @@ Guide292 appends bounded MRG1 printed-rest records after TRS1; old291 caches
 have no groups. App, native writer, standalone writer and Hub reader share
 the real layout. Recognition95/audio97; matched packaging/deployment remains
 deferred during the active goal.
+
+Recognition96 adds the following reviewed source changes.
+Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.
+Guide292/audio97 and model lineage remain unchanged; matched cumulative
+packaging/deployment is deferred during the active goal.

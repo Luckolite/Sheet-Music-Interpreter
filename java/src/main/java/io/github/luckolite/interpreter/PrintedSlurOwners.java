@@ -285,10 +285,27 @@ final class PrintedSlurOwners {
             }
 
             public boolean closes(PrintedSlurContours.Point cap, int x, int y, boolean first) {
-                if (!contains(x, y)) return false;
+                if (x < 0
+                        || x >= width
+                        || y < 0
+                        || y >= height
+                        || (gray[y * width + x] & 255) > 205
+                        || columns.get(x) == null) return false;
                 for (var visible : columns.get(x)) {
                     var head = visible.head();
-                    if (!inside(visible, x, y)
+                    boolean body = inside(visible, x, y);
+                    // Raster fringe ink must touch strict dark ink of this independently
+                    // proved head body. White pixels, a detached mark, and a bare rail
+                    // cannot borrow the one-pixel boundary adjacency.
+                    for (int dy = -1; !body && dy <= 1; dy++)
+                        for (int dx = -1; !body && dx <= 1; dx++)
+                            if (x + dx >= 0
+                                    && x + dx < width
+                                    && y + dy >= 0
+                                    && y + dy < height
+                                    && inside(visible, x + dx, y + dy)
+                                    && (gray[(y + dy) * width + x + dx] & 255) < 165) body = true;
+                    if (!body
                             || Math.abs(cap.x() - head.x()) > visible.gap() * .85f
                             || Math.abs(cap.y() - head.y()) > visible.gap() * 2
                             || (first ? cap.x() + 1 < head.x() : cap.x() - 1 > head.x())) continue;

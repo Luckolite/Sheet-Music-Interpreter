@@ -1007,15 +1007,17 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "920f50c6fd7f7a54fd394618034ceab560d12f3de2b6f74e95c73f5cafeff81c",
-      "reviewed_app_commit": "8a98bd48f3a0208c67e21cfd8c7f92713bd9cd23",
-      "source_normalized_sha256": "4903f32766db0e021f2b2c91835d2764448ba6b5cc8902f889cb95d6a769972f",
+      "source_sha256": "9e2ad78a43e393110891b1eaa6a4db0c27c6345c979d56b025c7b009a3903c28",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "source_normalized_sha256": "9e2ad78a43e393110891b1eaa6a4db0c27c6345c979d56b025c7b009a3903c28",
       "review_note": "A complete bounded monotone curved approach nominates one unique destination. Existing measured chord-to-terminal sector may intersect actual head pixels issued by the existing raw printed-head owner; failed raw tracks and competing destinations abstain. A conservative body envelope only rejects impossible alternatives and never grants ownership. Invocation-local track cache retains the same gray/staff scope. Straight route and independent phrase guard remain unchanged; no starting pitch inferred.",
-      "reviewed_app_state": "Recognition78 paired source reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
-      "reviewed_source_state": "committed paired source; cumulative matched runtime rollout deferred during active goal",
-      "standalone_sha256": "c4e73c86f59190b9b9f5467c904a7120606a7326d23b1885546471c482526935",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
+      "standalone_sha256": "1fd4027ed16031657c1aa46fb41e840f99ac00fe7493531ada1ddc36efb333e1",
       "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
-      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439"
+      "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteSlideDetector.java",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
     },
     "OutlinedBeamInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OutlinedBeamInk.java",
@@ -1691,15 +1693,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "f9f61a612e916d5bb3ef38f8486e652c421b407e33e08ec4103a42787e35fcf6",
-      "source_normalized_sha256": "8adaa9f806541b8242daab08aeb81bd16c2e31ded6817feb46a2d40490309a0f",
+      "source_sha256": "0c8e1af0a914716b8eef86b7072efdb2398088d690410e3c5070597bbcc0c922",
+      "source_normalized_sha256": "8519ac08194c643dc84e56145a8f2acab484b2f894ca31cb417de0e5c9eb3db5",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "694e1cf1b81970b3999243b84e4e4d6eeb4d03b8ac85f96b16dc0865da211c69",
-      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_sha256": "a3d5b050ef63e5b4ce84b29005d79168b5f5503eefa9f060e263e68552af7146",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1711,7 +1713,8 @@
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
-      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1768,20 +1771,21 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "883db7c157e4827746a295cb149515e653651eb5709b8117258b743dbffa19ac",
-      "source_normalized_sha256": "883db7c157e4827746a295cb149515e653651eb5709b8117258b743dbffa19ac",
+      "source_sha256": "3b1b1007f41c92fa8d652142e423b2620e9f1199cbe9b638129431f74ed4e7fc",
+      "source_normalized_sha256": "3b1b1007f41c92fa8d652142e423b2620e9f1199cbe9b638129431f74ed4e7fc",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "8f4b29a35de283e70b594f3dfa1566077c525e8972d770cd0f575b0323f77879",
-      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_sha256": "0c98a97220a31dfe732c1f5aed6322f130f56fbdd6c5bc7c6537ab3fbb7d9859",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
-      "recognition95_adapter_review": "semantic-adapter"
+      "recognition95_adapter_review": "semantic-adapter",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2713,16 +2717,17 @@
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
-      "source_sha256": "b88611d07dd06778ccfcd1c4459c8a47ee33d2e5b00cda4717b5bbca320d4734",
-      "source_normalized_sha256": "b88611d07dd06778ccfcd1c4459c8a47ee33d2e5b00cda4717b5bbca320d4734",
+      "source_sha256": "38d7e6bebbed732ec05f73de240e145afaeaa4069a1df89691c121b0df5cb533",
+      "source_normalized_sha256": "38d7e6bebbed732ec05f73de240e145afaeaa4069a1df89691c121b0df5cb533",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "6cb6ef9e311e05d1af0261970504bbcd6ab74cd3719d6c47cfef63506c91bdfe",
-      "reviewed_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82",
+      "standalone_sha256": "e0a7202a0276f36a96a2fd305b106f1b2e5305bbe7ae80293be319a7512e719b",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurOwners.java",
       "license": "Apache-2.0",
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
-      "reviewed_app_state": "Reviewed recognition94 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
     },
     "PrintedSlurPageCapture.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
@@ -4214,13 +4219,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "0a4060e385083f342f165aa40c3de311e44b38b907d323419d7b74dbc9f3ba7b",
-      "source_normalized_sha256": "b2bd97d314916d2615aa29bec17467603ca5d8c0b6abedb5548d9046e8fcc332",
-      "standalone_sha256": "af8f8cd41e4ef5b83ed4ab10c46f17bfa92b379decb879e294249d10f11b0ff1",
+      "source_sha256": "76313092423cf2082833ef7662212a51fc3a90b71f895985ca632005a0be1f61",
+      "source_normalized_sha256": "d85ab8ac921a015089818fb4c4741d1b94d220d564840b97cdfae116e4e92d66",
+      "standalone_sha256": "6728bc460d27bee2c610c7ce7e7e68c080a9faff52af382577520f13e4efb667",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
-      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4228,7 +4233,8 @@
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
-      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -4772,6 +4778,82 @@
       "license": "Apache-2.0",
       "reviewed_source_state": "Reviewed recognition95 standalone consumers; see recognition95_review paired app commit.",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
+    },
+    "AttachedApproachBranches.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/AttachedApproachBranches.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AttachedApproachBranches.java",
+      "source_sha256": "4360739556e46e4fd3e5619f3bbc799cb871c41de3a499dd7b997851b448747c",
+      "source_normalized_sha256": "4360739556e46e4fd3e5619f3bbc799cb871c41de3a499dd7b997851b448747c",
+      "standalone_sha256": "84e1ea7e6c4dd72e24845aa56024409cf077bbd20c5b006b22252043368e58fd",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "AttachedCurvedApproachTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/AttachedCurvedApproachTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/AttachedCurvedApproachTest.java",
+      "source_sha256": "321823d45d014c324d6d8626efb97253de1437eaeaeee6ea7419aab7f5cb9537",
+      "source_normalized_sha256": "321823d45d014c324d6d8626efb97253de1437eaeaeee6ea7419aab7f5cb9537",
+      "standalone_sha256": "fd731a693b379a0706340590ab8f7664ba96e8e3666fcb702ae20a0adfeede6c",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "src/sheet_interpreter/ornament_export.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0.",
+      "standalone_path": "src/sheet_interpreter/ornament_export.py",
+      "standalone_sha256": "5c4a27bcb2547c9d7b3dda1174790bfea7a30f63fef563f5719c4d2a09bdb570",
+      "reviewed_sha256": "5c4a27bcb2547c9d7b3dda1174790bfea7a30f63fef563f5719c4d2a09bdb570",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RawHeadFringeCapOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RawHeadFringeCapOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RawHeadFringeCapOriginalTest.java",
+      "source_sha256": "4dcb13a72f1f948c51db5c98d25f7443d807b3da66dfae8bcfea6af24f66bb79",
+      "source_normalized_sha256": "4dcb13a72f1f948c51db5c98d25f7443d807b3da66dfae8bcfea6af24f66bb79",
+      "standalone_sha256": "e007453c0376530a94dbd5251f0fd0d80a31091b23d401851a8e49c0295e1179",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RailTerminatedPhraseOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RailTerminatedPhraseOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RailTerminatedPhraseOriginalTest.java",
+      "source_sha256": "32d9a697b77360a20b43b28d40a33ff6267c17f94297e109394de5bf77cb5f5a",
+      "source_normalized_sha256": "32d9a697b77360a20b43b28d40a33ff6267c17f94297e109394de5bf77cb5f5a",
+      "standalone_sha256": "116b957d05b56ea09df7312d1f1f0e8a0a19dbaffb4fc08043f0c3aa3b074f03",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RailCapHeadRimOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RailCapHeadRimOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RailCapHeadRimOriginalTest.java",
+      "source_sha256": "c1ee515767f2479b202203c748821eff838a9c4567f354e8648e0d4980f6bd18",
+      "source_normalized_sha256": "c1ee515767f2479b202203c748821eff838a9c4567f354e8648e0d4980f6bd18",
+      "standalone_sha256": "0263d1d0d5b9e357e49bc9ef815bc175c72a95e15db20ac9932c3de4b144c54c",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "EllipticalRailPhraseOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/EllipticalRailPhraseOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/EllipticalRailPhraseOriginalTest.java",
+      "source_sha256": "cc56ca8270e0b4a66b9465a40af26081c448162cb388797d5a1ed5315e468f64",
+      "source_normalized_sha256": "cc56ca8270e0b4a66b9465a40af26081c448162cb388797d5a1ed5315e468f64",
+      "standalone_sha256": "d3c964bc0ceb0c32760fa74732988c1da0e2853db07729730199d18fa9e95788",
+      "license": "Apache-2.0",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -9749,5 +9831,25 @@
     "runtimeBoundary": "Source95/Guide292/audio97; installed86/Guide291/audio97 distinct. Cumulative matched packaging/deployment deferred during active goal; no APK or Hub tag.",
     "validationBoundary": "Planned counts; final combined logs required.",
     "paired_app_commit": "8dd683feff39cb12509561d137584e0f5564353e"
+  },
+  "recognition96_review": {
+    "newOriginalTests": 29,
+    "additionalAppOnlyOriginalTests": 6,
+    "standalonePythonOriginals": 6,
+    "scope": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+    "expected": {
+      "newOriginalTests": 29,
+      "javaTests": 12941,
+      "javaClasses": 1693,
+      "appFocused": 614,
+      "mappedSources": 492,
+      "nativeSources": 369,
+      "publicFiles": 2937
+    },
+    "boundary": "Reviewed global source and original synthetic regressions only; no private scores, raster evidence, coordinates or signing material.",
+    "wireLayout": "Guide292 MRG1/audio97 unchanged.",
+    "runtimeBoundary": "Source96 pending; installed86/Guide291/audio97 unchanged. Matched cumulative packaging/deployment deferred during active goal; no APK or Hub tag.",
+    "validationBoundary": "Final combined source gate required.",
+    "paired_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5"
   }
 }

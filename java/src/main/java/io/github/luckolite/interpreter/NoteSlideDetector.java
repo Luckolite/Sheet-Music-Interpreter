@@ -64,6 +64,8 @@ final class NoteSlideDetector {
         for (int i = 0; i < ink.length; i++) ink[i] = (clean[i] & 255) < 150;
         int[] queue = new int[ink.length];
         List<Stroke> result = new ArrayList<>();
+        List<Stroke> attachedApproaches = new ArrayList<>();
+        var attachedBudget = new AttachedApproachBranches.Budget(64_000_000);
         List<Fragment> fragments = new ArrayList<>();
         Map<Integer, StaffPitchTrack> curveTracks = new HashMap<>();
         for (int pixel = 0; pixel < ink.length; pixel++) {
@@ -156,6 +158,51 @@ final class NoteSlideDetector {
                         && !PhraseOwnedSlideComponents.owned(
                                 gray, w, h, staffs, heads, curved.noteIndex(), queue, end))
                     result.add(curved);
+                if (curved == null && !attachedBudget.refused) {
+                    var branches =
+                            AttachedApproachBranches.find(
+                                    gray,
+                                    w,
+                                    h,
+                                    queue,
+                                    end,
+                                    staffs,
+                                    heads,
+                                    curveTracks,
+                                    attachedBudget);
+                    var accepted = new ArrayList<Stroke>();
+                    for (var part : branches) {
+                        var approach =
+                                finiteCurvedApproach(
+                                        gray,
+                                        w,
+                                        h,
+                                        part.pixels(),
+                                        part.pixels().length,
+                                        part.left(),
+                                        part.right(),
+                                        part.top(),
+                                        part.bottom(),
+                                        part.cx(),
+                                        part.cy(),
+                                        part.slope(),
+                                        staffs,
+                                        heads,
+                                        curveTracks);
+                        if (approach != null
+                                && approach.noteIndex() == part.owner()
+                                && !PhraseOwnedSlideComponents.owned(
+                                        gray,
+                                        w,
+                                        h,
+                                        staffs,
+                                        heads,
+                                        approach.noteIndex(),
+                                        part.pixels(),
+                                        part.pixels().length)) accepted.add(approach);
+                    }
+                    if (accepted.size() == branches.size()) attachedApproaches.addAll(accepted);
+                }
                 continue;
             }
             double rightY = cy + (r - cx) * slope;
@@ -245,6 +292,10 @@ final class NoteSlideDetector {
                     if (result.stream().noneMatch(s -> s.noteIndex == stroke.noteIndex))
                         result.add(stroke);
         }
+        if (!attachedBudget.refused)
+            for (var approach : attachedApproaches)
+                if (result.stream().noneMatch(old -> old.noteIndex() == approach.noteIndex()))
+                    result.add(approach);
         return List.copyOf(result);
     }
 

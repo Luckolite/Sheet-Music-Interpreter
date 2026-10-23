@@ -7,15 +7,18 @@ from .typed_events import event_kind
 
 TYPES = {1: 'trill-mark', 2: 'turn', 3: 'inverted-turn',
          4: 'inverted-mordent', 5: 'mordent'}
-MASK = (7 << 5) | (1 << 8) | (3 << 9) | (3 << 11) | (7 << 16)
+MASK = (7 << 5) | (1 << 8) | (3 << 9) | (3 << 11) | (1 << 13) | (1 << 14) | (7 << 16)
 
 
 def retained(page, index):
     flags = source_flags(page, index) & MASK
     kind, beams = (flags >> 5) & 7, (flags >> 16) & 7
-    if kind not in TYPES and not 1 <= beams <= 4:
+    isolated = kind == 6 and not flags & (1 << 14)
+    if kind not in TYPES and not isolated and not 1 <= beams <= 4:
         return 0
     if event_kind(page['events'][index]) != 'PITCHED':
+        if isolated and not 1 <= beams <= 4:
+            return 0
         raise ValueError('Unpitched source ornaments need explicit instrument semantics')
     return flags
 
@@ -25,6 +28,11 @@ def write(notation, flags):
     glyph = TYPES.get(kind)
     beams = (flags >> 16) & 7
     beams = beams if 1 <= beams <= 4 else 0
+    if kind == 6 and not flags & (1 << 14):
+        articulations = notation.find('articulations')
+        if articulations is None:
+            articulations = ET.SubElement(notation, 'articulations')
+        ET.SubElement(articulations, 'plop' if flags & (1 << 13) else 'scoop')
     if glyph is None and not beams:
         return
     ornaments = ET.SubElement(notation, 'ornaments')
