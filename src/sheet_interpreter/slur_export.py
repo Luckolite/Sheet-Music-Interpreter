@@ -6,7 +6,7 @@ from .slur_wire import anchor, encode_source
 from .grace_export import order as musical_order
 
 
-def retained_spans(pages):
+def retained_spans(pages, include_candidates=False):
     owners, spans, identities = {}, [], set()
     offset = 0
     for page in pages:
@@ -15,7 +15,7 @@ def retained_spans(pages):
         source = score.get('slurSource')
         if source is not None:
             encode_source(source, len(notes))  # Reuse the bounded retained-source contract.
-            arcs = source['spans']
+            arcs = source['spans'] + (source.get('candidates', []) if include_candidates else [])
             if any(source['noteOrigins']) and len(notes) != len(events):
                 raise ValueError('Slur source needs one event per decoded note')
             for index, origin in enumerate(source['noteOrigins']):
@@ -41,6 +41,46 @@ def retained_spans(pages):
     # Deleted/unselected original endpoints stay retained in source, without borrowing a note.
     return [(span, owners[anchor(span['start'])], owners[anchor(span['end'])])
             for span in spans if anchor(span['start']) in owners and anchor(span['end']) in owners]
+
+
+def classify(spans, pages, events, ties, known_context, exported_parts=None):
+    """Resolve retained geometry only from the actual assembled sounding owners."""
+    candidate_ids = {span['id'] for page in pages
+                     for span in (page.get('score', {}).get('slurSource') or {}).get('candidates', [])}
+    def known(event):
+        return (event.get('retainedClef') is not None and not event.get('durationFallback', False)
+                and type(event.get('midi')) is int and 0 <= event['midi'] <= 127
+                and event.get('kind', 'PITCHED') == 'PITCHED')
+    def part(event):
+        index, count = event.get('staffIndex'), event.get('staffCount')
+        return ((index, count) if type(index) is int and type(count) is int
+                and 0 <= index < count else None)
+    selected = []
+    exported_parts = {} if exported_parts is None else exported_parts
+    for span, start, end in spans:
+        if span['id'] not in candidate_ids:
+            selected.append((span, start, end))
+            continue
+        a, b = events[start], events[end]
+        if not known_context or not known(a) or not known(b) or musical_order(a) >= musical_order(b):
+            continue
+        actual_part = exported_parts.get(start)
+        if (part(a) is None or part(b) is None or actual_part is None
+                or actual_part is not exported_parts.get(end)):
+            continue
+        if (start, end) in ties:
+            continue
+        phrase = a['midi'] != b['midi']
+        if not phrase and part(a) is not None and part(a) == part(b) and a['end'] <= b['start']:
+            phrase = any(known(middle) and part(middle) == part(a)
+                         and middle['midi'] != a['midi']
+                         and a['start'] < middle['start'] < b['start']
+                         and middle['end'] > middle['start']
+                         and a['end'] <= middle['start'] and middle['end'] <= b['start']
+                         for middle in events)
+        if phrase:
+            selected.append((span, start, end))
+    return selected
 
 
 def apply(root, spans, attacks, events):

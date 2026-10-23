@@ -82,32 +82,32 @@ class PrintedStemGuideTests(unittest.TestCase):
 
     def test_unknown_future_layout_is_rejected(self):
 
-        with self.assertRaises(ValueError):wire.encode(original_score(),292)
+        with self.assertRaises(ValueError):wire.encode(original_score(),293)
 
 
 
     def test_current286_keeps_kind_source_and_pickup_after_legacy281(self):
 
-        self.assertEqual(94, wire.RECOGNITION_REVISION)
-        self.assertEqual(291,wire.GUIDE_VERSION)
+        self.assertEqual(95, wire.RECOGNITION_REVISION)
+        self.assertEqual(292,wire.GUIDE_VERSION)
 
         score=original_score();score['notes'][0]['stemDirection']=1
 
         legacy=wire.encode(score,281);encoded=wire.encode(score)
 
-        self.assertEqual(291,struct.unpack('>i',encoded[:4])[0])
+        self.assertEqual(292,struct.unpack('>i',encoded[:4])[0])
 
-        self.assertEqual(len(legacy)+1+24+1+20,len(encoded))
+        self.assertEqual(len(legacy)+1+24+1+20+12,len(encoded))
 
         self.assertEqual(legacy[4:111],encoded[4:111])
 
         self.assertEqual(0,encoded[111])
 
-        self.assertEqual(legacy[111:],encoded[112:-45])
+        self.assertEqual(legacy[111:],encoded[112:-57])
 
         from sheet_interpreter import slur_wire, tremolo_wire
 
-        self.assertTrue(encoded.endswith(slur_wire.encode_source(None,len(score['notes'])) + b'\x00' + tremolo_wire.encode_source(None,len(score['notes']))))
+        self.assertTrue(encoded.endswith(slur_wire.encode_source(None,len(score['notes'])) + b'\x00' + tremolo_wire.encode_source(None,len(score['notes'])) + struct.pack('>iii',0x4D524731,4,0)))
 
 
 

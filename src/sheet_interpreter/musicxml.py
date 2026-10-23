@@ -316,7 +316,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     from .printed_tempo_spans import resolve_pages, preserve_end, SOURCE, GRADUAL
     document = dict(document, pages=resolve_pages(document['pages']))
     from . import slur_export
-    retained_slurs = slur_export.retained_spans(document['pages'])
+    retained_slurs = slur_export.retained_spans(document['pages'], include_candidates=True)
+    retained_slur_ties = set()
     requested_slur_owners = {owner for _, a, b in retained_slurs for owner in (a, b)}
     slur_attacks = {}
     meter = tuple(document.get('initialMeter', meter))
@@ -327,6 +328,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
     bars, events, expressions, full_rests, literal_rests = [], [], [], [], []
+    printed_rest_groups = []
     octave_owned = {}
     offset = 0
     current_meter, current_key = meter, key_fifths
@@ -334,6 +336,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         score = page['score']
         local_start = 0
         first_bar = len(bars)
+        from . import multi_rest_wire
+        for group in multi_rest_wire.checked_score(score):
+            printed_rest_groups.append(dict(group, firstBar=first_bar+group['firstMeasureIndex']))
         for index, beats in enumerate(page['measureBeats']):
             length = ticks(beats)
             if length <= 0:
@@ -549,6 +554,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             if n.get('tiedFromPrevious') and prior and abs(prior['end']-n['start']) <= 2:
                 prior['tie_start'] = True
                 n['tie_stop'] = True
+                retained_slur_ties.add((prior['sourceIdentity'], n['sourceIdentity']))
             previous[n['midi']] = n
         groups = defaultdict(list)
         for n in notes:
@@ -585,6 +591,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             measure = element(part, 'measure', number=index+1)
             attributes = element(measure, 'attributes')
             element(attributes, 'divisions', DIVISIONS)
+            for group in printed_rest_groups:
+                if group['firstBar'] == index and same_staff(group):
+                    element(element(attributes, 'measure-style'), 'multiple-rest', group['measureCount'])
             element(element(attributes, 'key'), 'fifths', bar['key'])
             time = element(attributes, 'time')
             numerator, denominator = bar['meter']
@@ -672,6 +681,16 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     emit_rest_gap(measure, cursor, b, voice, rest_symbols, literal_edges)
     from .octave_shift_export import apply as octave_apply
     octave_apply(root, octave_owned)
+    first_score = document['pages'][0].get('score', {})
+    known_meter = 'initialMeter' in document or any(
+        c.get('measureIndex') == 0 for c in first_score.get('meterChanges', []))
+    known_key = 'initialKeyFifths' in document or any(
+        c.get('measureIndex') == 0 for c in first_score.get('keyChanges', []))
+    part_nodes = {note: part for part in root.findall('part') for note in part.iter('note')}
+    exported_slur_parts = {owner: part_nodes.get(note) for owner, note in slur_attacks.items()}
+    retained_slurs = slur_export.classify(retained_slurs, document['pages'], events,
+                                        retained_slur_ties, known_meter and known_key,
+                                        exported_slur_parts)
     slur_export.apply(root, retained_slurs, slur_attacks, events)
     slide_numbering.assign(root)
     ET.indent(root)

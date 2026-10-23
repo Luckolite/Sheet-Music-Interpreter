@@ -331,6 +331,15 @@ public final class SheetInterpreter {
                                                 width,
                                                 height),
                                         dynamicDetection.changes())
+                                .withMultiRestGroups(
+                                        PrintedMultiRestGroups.capture(
+                                                score,
+                                                measures,
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                recognizedRests))
                                 .withTremoloSource(
                                         score.tremoloSource()
                                                 .retainFinalHeads(score.notes(), notes)

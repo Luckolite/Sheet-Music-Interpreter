@@ -332,12 +332,15 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "5930f61c26945d3993e8986e60d48296746f4bcacbc681d91f93a9202d3680a7",
+      "source_sha256": "9234316ccb28d6c5c41d572e62174b1cd7c8c478afe0a5bb5b833ab3278745ae",
       "review_note": "Append complete component seeds after existing projected crops; preserve existing crop order, caller eligibility and total 48-crop budget. No numeric meter value is inferred from semantic labels.",
-      "source_normalized_sha256": "f3fd478b0a4e0218b41df994b008fbf9bb7bbfef81c5739d98589209ff902c7c",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "1378532e79262256d12cd9813e9733bd0ffc47c4a03a5affb641fdf0a2a34ef4",
-      "reviewed_app_commit": "d40becdad11d2c9513976bbbc33a4cdff88844e1"
+      "source_normalized_sha256": "49ff1adf0bfa9a9cb137f1c3e323200b69c8a706c99f627dff7ea65311ff58f5",
+      "standalone_sha256": "890e162564c5a6991861d0819735f359a29bb996a7926c69038bcc679a7ccfee",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterChangeDetector.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "MultiMeasureRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MultiMeasureRestDetector.java",
@@ -505,12 +508,15 @@
     },
     "ScorePageInterpretation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageInterpretation.java",
-      "source_sha256": "c2258da0b171fe488d092b76981822a68dab98a0221ed02f4505fcfd3095a35d",
-      "source_normalized_sha256": "e04aeb49922fc0cba23c57023171611612d5b96bc7cc09c72587bed0bb0c51f0",
-      "standalone_sha256": "cc10b311c94f9c0ae2cade03a8b916f83121bcc90ed10d1045b9a81f6ca1300a",
+      "source_sha256": "740ffda7ff19c1af0a11b2521dbb210cef9d766b5ed23d44b79815c152c29e92",
+      "source_normalized_sha256": "67948a2690ad45ab144c9a1dcd2361e61a3f32f24870f3191e04ac28bef8fc15",
+      "standalone_sha256": "cebccbfd57b2d6fb83591805539198eae4b1e350746bff246d060d2f9b448920",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScorePageInterpretation.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "ScoreRestEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreRestEvent.java",
@@ -539,13 +545,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "b060d0bb1ee0d24d897144ca13d6464140f3417c3612ec7a31819dc3a1b7e7a0",
+      "source_sha256": "bcc36f6ed8383d7178a3b736677055e5f4ed4d570c58857d1f5f9b28292cb837",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "source_normalized_sha256": "d285b4966aa522ccbc10b043d9df4eb8e071dbbbf1e538b36f86c9e71176eecc",
+      "source_normalized_sha256": "bcc36f6ed8383d7178a3b736677055e5f4ed4d570c58857d1f5f9b28292cb837",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_app_state": "Reviewed recognition93 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "d6f7a2bc5b5b36a18b1ef5da515e1e3aa2134e39a690a4a645c88200d0e30040",
-      "reviewed_app_commit": "e50bb69f50332fce5050e8ca8a65196e9078d1cb",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
+      "standalone_sha256": "ce117a6d99536e7c6b2ac121daba8a704bf8abb05bb28febff12457f75447472",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
@@ -553,7 +559,8 @@
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
-      "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged."
+      "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -687,13 +694,15 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "d0a0d6980b6becc3c7fbb5b24ba234c6f32df4aa9a5319651bffe4c1b802a384",
-      "source_normalized_sha256": "f8e2f535748248ec4c1d6cc3282700fa5bfb1e560556e9e0f88c43fdda2a8eb9",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "source_sha256": "ada1c5e00c57099cd8940f9a5eb502f46a9ee546b2608f43fb74317c428507c4",
+      "source_normalized_sha256": "cc1dbd53599fc98e1a31f43a361f5886a8a6cc74a7bdd97663f2bf49c1ebb48a",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "251dea9ef837a78749f9393240aff713a24a6c7373578a89877c017d102968a0",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "standalone_sha256": "dd526c593dd8b320b2f451f5e89db60f8bfbd5b7e078e684fd4ebc258c086b50",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TablatureDecoder.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "TabNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabNotation.java",
@@ -757,21 +766,27 @@
     },
     "TabMeter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabMeter.java",
-      "source_sha256": "0f08e17bd3be43effed4e2182a38b51d0d360558b7559c23bead1cc034336eaa",
-      "source_normalized_sha256": "5641abf1eec2cc25683d261c13a5b1e48ee2171b171f2f7d487e310bcc230e86",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
+      "source_sha256": "a1aeb462d81da688944447acf615c36be18bf175dfa4098d5ab495a7d272414b",
+      "source_normalized_sha256": "9cb304a2d5c8b71ae290850128bde62276878ce14bfd6b6997e71d8ba71cf3d6",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "32f48de049fb4ed5aca69b2a45083ed233998a6cc41bc20fd7f8213ee5f0da92",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "standalone_sha256": "c323e9f0c7ff590df7aee278307b80d622cb3e01823c462532b91ea609861123",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TabMeter.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "TabTempo.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTempo.java",
-      "source_sha256": "6ba71b2f33941604dd0e4b2737842f6fdb6f393fca17f0c79b397bb3aace72d3",
-      "source_normalized_sha256": "d3c68b6e90f4868a9ca6bfb73681a0cd7117289f436e5c0a84e707677ad29e81",
-      "standalone_sha256": "c07ca9c423da17c0470716490839ba1307507384349148e96f3a94a4bd4a09a1",
+      "source_sha256": "fbb825bec4601d27c079376c30ed310be2044236c8fdeced11d9a62a0126fabc",
+      "source_normalized_sha256": "7cd528266ccaf98bf45e19e5030c761e02a6e9470809152ddaa38cbc9babd95c",
+      "standalone_sha256": "3d95867c6cdf0b8d5f76b7bd4fd2fc86ad22356bf6da983b4c763b9b587433fc",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TabTempo.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "TabPerformanceMarks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPerformanceMarks.java",
@@ -807,13 +822,15 @@
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
-      "source_sha256": "b334ed64298236db9893387b617585e63d8b221901ecd6d11f786808197de2d4",
-      "source_normalized_sha256": "12c39d6ff70c11fe0c6c609f4e62b0879953dbc4b65a3d5a9c487d0c837589fb",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "source_sha256": "f10e6b5382bb8df0aa5757b4225520252ddd908258b9357995f79acd6cd334db",
+      "source_normalized_sha256": "71ec6311c576bcd12f9676581cf61c6978053b6d92ad5e2e6af9d71c5d89540d",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "4bb45b4f9336641012cde8743e78f75d8d95a7da552090e292c156aade30d9bd",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "standalone_sha256": "5fc97fe25f85ad843adea00cabb14d5e5e5981cc5c1316044d063abb5c64a20b",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreTiePitchGuard.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "ScoreTempoSelection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/playback/ScoreTempoSelection.java",
@@ -1155,16 +1172,17 @@
     },
     "ScoreNavigationProjection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationProjection.java",
-      "source_sha256": "b78435b49085938b2a04fb413a6535ef745c9540bf1a789426bf102999dee1fa",
-      "source_normalized_sha256": "ae72c8e7bead69650088e43b668e4ea9734e4c0defebd9845850900a75772510",
-      "reviewed_app_state": "Reviewed source snapshot based on accepted app869 /1.18.396; executable-token parity after standalone package/diagnostic adaptation.",
+      "source_sha256": "c5b8854cc686627ba0eed66651087a8cdc4524a1f5eba2bad1f9bafb075c441e",
+      "source_normalized_sha256": "c80c3a88692726e994972746c106f197383fea0426e07c7d20b7374a71a5dcc7",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
-      "standalone_sha256": "1cdbd03eee72bb60a5b02a0bf3238526ba5d521d4000e25edc0c112f9d02a2e4",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
+      "standalone_sha256": "00df84d28d8119ba11e423f83d231cb2fe8352cf20859125c91830c7d2b37e8e",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
-      "bow291_review_note": "Exclude bow signs from persistent checkpoint restoration; map actual in-run signs onto repeated source attacks without carrying them into later runs."
+      "bow291_review_note": "Exclude bow signs from persistent checkpoint restoration; map actual in-run signs onto repeated source attacks without carrying them into later runs.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreNavigationProjection.java",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
@@ -1673,15 +1691,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "e73987ad80c6b3bddb0900d8be3691e83cc6337c90955336066f604ef5cbd020",
-      "source_normalized_sha256": "7a02a06fb59b0f4f9323aa99b91301ae8c532f581d57abc460930b8c70227254",
+      "source_sha256": "f9f61a612e916d5bb3ef38f8486e652c421b407e33e08ec4103a42787e35fcf6",
+      "source_normalized_sha256": "8adaa9f806541b8242daab08aeb81bd16c2e31ded6817feb46a2d40490309a0f",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "7a68852facf3deb08bd9280d65643d075557f0913d1ff2fbffd7dcc3b7c9396d",
-      "reviewed_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82",
+      "standalone_sha256": "694e1cf1b81970b3999243b84e4e4d6eeb4d03b8ac85f96b16dc0865da211c69",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition94 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1692,7 +1710,8 @@
       "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change."
+      "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1749,18 +1768,20 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "66cddde64992a109d5fb5d75b918912e902439a992f50b87f56622915f5c697b",
-      "source_normalized_sha256": "0605d8ccf61c73f4d1b4d078d211e5f6535035a9bcbc59c344a0664b363d92c2",
+      "source_sha256": "883db7c157e4827746a295cb149515e653651eb5709b8117258b743dbffa19ac",
+      "source_normalized_sha256": "883db7c157e4827746a295cb149515e653651eb5709b8117258b743dbffa19ac",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "3cca8add638aef4b16c6993ceb4babaa58be543e4baa30a7a84ae7f15a325283",
-      "reviewed_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82",
+      "standalone_sha256": "8f4b29a35de283e70b594f3dfa1566077c525e8972d770cd0f575b0323f77879",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition94 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
-      "standalone_path": "src/sheet_interpreter/guide_writer.py"
+      "standalone_path": "src/sheet_interpreter/guide_writer.py",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition95_adapter_review": "semantic-adapter"
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2187,11 +2208,14 @@
       "reviewed_source_state": "committed"
     },
     "src/sheet_interpreter/musicxml.py": {
-      "origin": "Original standalone Python implementation; Apache-2.0, not an extracted app file.",
-      "reviewed_sha256": "2dc6b8f64925141cf2e2e719b58ff00569eed252091ec710f826ee51fa86c92b",
-      "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "reviewed_source_state": "committed",
-      "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged."
+      "origin": "Original standalone Python implementation; Apache-2.0.",
+      "reviewed_sha256": "4f2ba5cc43011a45c961ae91a6264b7338884f7b9169c72a3015e4166d54a45c",
+      "reviewed_source_state": "Reviewed recognition95 standalone consumers; see recognition95_review paired app commit.",
+      "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged.",
+      "standalone_path": "src/sheet_interpreter/musicxml.py",
+      "standalone_sha256": "4f2ba5cc43011a45c961ae91a6264b7338884f7b9169c72a3015e4166d54a45c",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
@@ -2201,12 +2225,15 @@
     },
     "TabBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabBoundaryTies.java",
-      "source_sha256": "94b8b3ab1dd71ea45ed3f0effa716ddbe25ddb632bdec6689159c5cc5c16879a",
-      "source_normalized_sha256": "c3e2b2da2c560188e3c33c09745002f85715fc06557945bb9690598a2924cdee",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "09a4453b1edf3110d57e85e4dc79f5c147e49d8c644ec83a727270ba1561d22c",
+      "source_sha256": "3eb04f3a2551810e8ddc84a8ed6be98998d5dee77df3acba8a3546507f1b265e",
+      "source_normalized_sha256": "9829e7298488e9bdd96b086dc8e588bccb3226030ecd393aa522729236033b8d",
+      "standalone_sha256": "404f9a071460e5661abc6a07eb5151e727b209f96299e5e5c3790fc54bfd8545",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TabBoundaryTies.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "TabTieIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTieIdentity.java",
@@ -2772,12 +2799,16 @@
     },
     "ScoreSlurClassification.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreSlurClassification.java",
-      "source_sha256": "745a9140ef62819865ac2b059feaf0eb84a889f7f1db75589f0e7e2c6b9f8dd5",
-      "source_normalized_sha256": "745a9140ef62819865ac2b059feaf0eb84a889f7f1db75589f0e7e2c6b9f8dd5",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "source_sha256": "ee259575fd4955f62cea090619d66154d89ce982df5de9e694e07114ee09bcd2",
+      "source_normalized_sha256": "ee259575fd4955f62cea090619d66154d89ce982df5de9e694e07114ee09bcd2",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Require actual assembled note owners, written clock/grace order, sounding pitches and exact ties. Missing/ambiguous evidence remains deferred; confirmed user intent is retained. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+      "review_note": "Require actual assembled note owners, written clock/grace order, sounding pitches and exact ties. Missing/ambiguous evidence remains deferred; confirmed user intent is retained. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreSlurClassification.java",
+      "standalone_sha256": "6703811b66ed58036b0b67f8517cf4c8346215a8afb956e92b0579b57f49093d",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "PrintedSlurRecognition.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurRecognition.java",
@@ -2800,16 +2831,19 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "0a3bdebf5d82f146f2e8589d7290235f780f80c79a29c3dfa892af4cf71faaa7",
-      "source_normalized_sha256": "8da00720c4e4a9e6626c12125c0497f95b4384fa68c16756cfbbc2ae091429c9",
-      "standalone_sha256": "2e4ff2b04ada333ac63693f1e26c991d7ad83539823c000944c233b3b81bca08",
+      "source_sha256": "d884cd542f375a6f0e346cdbe72734860979af01e3c906108a22506aa3b1f181",
+      "source_normalized_sha256": "d5fc3ac57bb6c33c1c3295807be562bd0a1e2857e966ac0ac9870bc82ec2fd09",
+      "standalone_sha256": "bc655c1e33837958f73516b524c1e9bef50ebfe58abe331a0c51568d1154ee76",
       "license": "Apache-2.0",
-      "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
-      "reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
-      "bow291_review_note": "Standalone caller and native NativePageGuide both add raw bow acquisition through detectWithBows using unchanged actual labels, gray, staffs, measures and notes; resource/constructor/diagnostic adapters remain portable."
+      "bow291_review_note": "Standalone caller and native NativePageGuide both add raw bow acquisition through detectWithBows using unchanged actual labels, gray, staffs, measures and notes; resource/constructor/diagnostic adapters remain portable.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SheetInterpreter.java",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition95_adapter_review": "semantic-adapter",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -3093,12 +3127,15 @@
     },
     "VerifiedCourtesyBoundary.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/VerifiedCourtesyBoundary.java",
-      "source_sha256": "da908bc6a5ed562a213032b8f0911617f2cefd22f37b19d1c52b56eecd1f9a05",
-      "source_normalized_sha256": "5b70b16d041921442d5cfd7e4863cf267d78e6c121abc177d5db05c5919cd601",
-      "standalone_sha256": "a5be286ff25d077f55d6894fa57c801d476c975f6556dbbff9345bb6562e3af0",
+      "source_sha256": "3c106362c3cc62e6ec002aa97d37e46489cc490bdd2bcc5c82f32b82252dc253",
+      "source_normalized_sha256": "a6a68ac981efd92e528d62a4461f9f783cbd01b650271a2f02f8c8869d31a0b0",
+      "standalone_sha256": "33f7ab010d0d7ace8e0ae7a313662a83cd38942d11a327acb3a1dfab9de43646",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/VerifiedCourtesyBoundary.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "ParallelStaffRules.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ParallelStaffRules.java",
@@ -3135,12 +3172,15 @@
     },
     "WholeRestMeterContext.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeRestMeterContext.java",
-      "source_sha256": "df7136b741ed3a3d00a2f8c253c28bfa5eb77a4a84b5bd214b0c7705fc6e735f",
-      "source_normalized_sha256": "a72943163b3108337ee7942cc8f06bef3f85b78b9275d06b1d55e875b6e56c79",
-      "standalone_sha256": "f570146f3b2bf16011fcc5689faaead1f341ed04426b7bbf0cad6ae08ef924fa",
+      "source_sha256": "7fa144d5578a5ed143dfbf6005a5808c3e8ea01fbb3c6284c5cd8b774f9fd878",
+      "source_normalized_sha256": "864e6d811078a3c409948df0d99af15d1a01d6dcb8c649349523da05706da307",
+      "standalone_sha256": "584697e37a19c167ba51bc92b238a76187fc229c56dfec0fbc9a786242f2f556",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/WholeRestMeterContext.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "DetachedBeamTailCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/DetachedBeamTailCap.java",
@@ -3188,12 +3228,15 @@
     },
     "CourtesyMeasureRemap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CourtesyMeasureRemap.java",
-      "source_sha256": "cf75b8014cfe6b5e77f9551bf8064fee3b4cc7aca88eeadc78d00ee41ada2824",
-      "source_normalized_sha256": "bf0c2642cfa03ab0c007bbbdf99c431b748ab7466467f43d42ab7d22e2bda5bd",
-      "standalone_sha256": "c2097c3eb47c1b07b3ac3d0c85d385d8bf203e0b0234567ef3377e201552bf18",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
+      "source_sha256": "6e78b2cfaa8eb2fc6dd23451d1a671930fafb1a48658360c5e824dbfc36dc9d7",
+      "source_normalized_sha256": "ca4cd933090975e413bcd9a6a55a5eaae5e414a039f9bce4de5272f910798633",
+      "standalone_sha256": "479a3fa3cefaaa1dc3d01c84c4b524ff9d57aefef56c792d6c00510919930f6f",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360"
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CourtesyMeasureRemap.java",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
     },
     "LedgerRuleContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/LedgerRuleContrast.java",
@@ -4171,20 +4214,21 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "57d31c1e146f46c4b4abf10d8a5b47b5dd38d1dfb61131c2d735185604a9f81a",
-      "source_normalized_sha256": "c0e9209bb9905bc7d6103a9bfcd236e97f39e4e54ffea4636c4d90b732b59585",
-      "standalone_sha256": "eae7c6215fc5e80c9c049ec8981d66fc3c6a06b361ad35c525d9e990c9f46272",
+      "source_sha256": "0a4060e385083f342f165aa40c3de311e44b38b907d323419d7b74dbc9f3ba7b",
+      "source_normalized_sha256": "b2bd97d314916d2615aa29bec17467603ca5d8c0b6abedb5548d9046e8fcc332",
+      "standalone_sha256": "af8f8cd41e4ef5b83ed4ab10c46f17bfa92b379decb879e294249d10f11b0ff1",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82",
-      "reviewed_app_state": "Reviewed recognition94 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change."
+      "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -4574,6 +4618,160 @@
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
       "reviewed_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82",
       "reviewed_app_state": "Reviewed recognition94 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedMultiRestGroups.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedMultiRestGroups.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedMultiRestGroups.java",
+      "source_sha256": "0849852f6fffe755319556902ac6a2ec97690b597239ba5e5acc415f107ff348",
+      "source_normalized_sha256": "a3f6ce5b82fa5b538517ee0244f76b139fc5774aca18936bec0c6a31ed71ca1b",
+      "standalone_sha256": "6c166da997164ae91431d9e803581c7de62196cc53b48075ee84c42a5215037f",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RawBeamedTwoBulbRests.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawBeamedTwoBulbRests.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawBeamedTwoBulbRests.java",
+      "source_sha256": "ff3f1303e6e32089a866341956367ebd3f355c97dca3b926024d00b30c453a5f",
+      "source_normalized_sha256": "ff3f1303e6e32089a866341956367ebd3f355c97dca3b926024d00b30c453a5f",
+      "standalone_sha256": "69d82ac044bad7721f552292dad1a7e820da08b09c6c785bc83531dcb46f6a39",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ScoreMultiRestGroup.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreMultiRestGroup.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreMultiRestGroup.java",
+      "source_sha256": "3913406ce06f80b50790cec12422d6e8b20b32c3442967a7d2f9f6435bf495dd",
+      "source_normalized_sha256": "6ee197c73738fedb10f5f01603ba6355db450772cc767ad4c525a1ebe4b6b905",
+      "standalone_sha256": "28e2393848c1a28c61a3ab1f6b5f65385434de7083bf9389f6353524d9219837",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ScoreMultiRestWire.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreMultiRestWire.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreMultiRestWire.java",
+      "source_sha256": "39caab9a3094dbc627dc90c17edbc65d17db591b0afbf2ff26cecb964d5b9d18",
+      "source_normalized_sha256": "282c360a9aa60ba84e4768d1f0e36f0c322fb92843784271417ea1b8b40548e6",
+      "standalone_sha256": "dfc494f5f0c002bd99441acb642da1eca05398450b181c01a5b79fc8f38b53c8",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "CompleteUpperRestCapTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteUpperRestCapTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteUpperRestCapTest.java",
+      "source_sha256": "07bbc959cf7199b9d7fef3a1c6bbdbeacd294a27cbfc99940f1d16b9d92e4bd8",
+      "source_normalized_sha256": "07bbc959cf7199b9d7fef3a1c6bbdbeacd294a27cbfc99940f1d16b9d92e4bd8",
+      "standalone_sha256": "0dbbfc3baa88da01a53b084dff69dfbe4eb19cd21c23dd8657feba35d1b23e5c",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedMultiRestGroupsOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedMultiRestGroupsOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedMultiRestGroupsOriginalTest.java",
+      "source_sha256": "4a532e7e85b327f1a05f4b4ecbed82a3ef56e710fce77bc86e7d1928352becbe",
+      "source_normalized_sha256": "6132e1a631ac1b40dee9aaf554b475fd2b24f6b52cd7251ecd2c25ce0c663f6e",
+      "standalone_sha256": "6de64aa6be00b95a09ae9fcc0aae159f2508e5b84df41ff1758dacc887615a69",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedMultiRestSelectionOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedMultiRestSelectionOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedMultiRestSelectionOriginalTest.java",
+      "source_sha256": "b79609313ca490bae7a2c2cf70621d84b9737f03334d1a55f9df860a0fc4af14",
+      "source_normalized_sha256": "bac74343b3bcb23fbd5256c2b26d1ee0c4262bf684de9b496bd707f9a83e525f",
+      "standalone_sha256": "becb1fa9fa267e33c36045d6ea089789e93bcfdefa4a13760a5211a29c28ff8a",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedMultiRestWireOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedMultiRestWireOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedMultiRestWireOriginalTest.java",
+      "source_sha256": "ab29fb3d9bc980de2dc65dd2990b6660e0743dfa88209e31598073356aef18ff",
+      "source_normalized_sha256": "e28baafaa88a81f61901a300a948d9c0cce54b539cbef07a11d64943e7241526",
+      "standalone_sha256": "20c218cae985ab4bcc03e6c57e978ede9b8eed68cb138f3b672d78aaac22581b",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RawBeamedTwoBulbRestTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RawBeamedTwoBulbRestTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RawBeamedTwoBulbRestTest.java",
+      "source_sha256": "cd2cd9478747e7ea7d0101c6173130db21ce7213470a0f0df63a0a027532e526",
+      "source_normalized_sha256": "cd2cd9478747e7ea7d0101c6173130db21ce7213470a0f0df63a0a027532e526",
+      "standalone_sha256": "a0f444d0acb9ec3005ce03265c00d118ceb98ee912aecf4748c14004ece89089",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "RawRestCapPaperOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RawRestCapPaperOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RawRestCapPaperOriginalTest.java",
+      "source_sha256": "10d466cceaf30d98b6bae5b2259c4a0a8941ae2de0cdf5ab1c0d12b8bb0f5fc9",
+      "source_normalized_sha256": "10d466cceaf30d98b6bae5b2259c4a0a8941ae2de0cdf5ab1c0d12b8bb0f5fc9",
+      "standalone_sha256": "a8681da0b70ffbdc63ec09312c853646d092cd8c1bf37787aa2b1367900c0247",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ReturningPitchPhraseTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ReturningPitchPhraseTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ReturningPitchPhraseTest.java",
+      "source_sha256": "64028b3ed3dcd236985a277ae1a390f31f172bf94780959a02875d94afc2b193",
+      "source_normalized_sha256": "64028b3ed3dcd236985a277ae1a390f31f172bf94780959a02875d94afc2b193",
+      "standalone_sha256": "6f734a9035375b33a82c5405a1f3658ebce6df107c80d924ff4f43c5ce3bc42b",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition95_adapter_review": "Standalone adaptation omits app-only Song/SheetMusicXml writer integration test; all15portable classifier originals unchanged. Equivalent real writer behavior covered by standalone Python consumer originals.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ThreeBulbUpperCompletionOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ThreeBulbUpperCompletionOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ThreeBulbUpperCompletionOriginalTest.java",
+      "source_sha256": "1a88e7f4daa61c0449091f0de0dcfca2cd345b28a47f09badb9f3beb148321ff",
+      "source_normalized_sha256": "1a88e7f4daa61c0449091f0de0dcfca2cd345b28a47f09badb9f3beb148321ff",
+      "standalone_sha256": "34a54febecb892e0b18a0807901132aa618568ed0b45b7378f3ba0e19ad6eeba",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "multi_rest_wire.py": {
+      "source_path": "tools/native-worker/multi_rest_wire.py",
+      "standalone_path": "src/sheet_interpreter/multi_rest_wire.py",
+      "source_sha256": "0975cd86d9da38c4cf3351fc7452dab2301b0040111ed3d0b64946421b632702",
+      "source_normalized_sha256": "9351b90daf70bfcdfb3c12714d0bf24962630b10651314078ee439f5de05cf94",
+      "standalone_sha256": "0975cd86d9da38c4cf3351fc7452dab2301b0040111ed3d0b64946421b632702",
+      "license": "Apache-2.0",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "recognition95_adapter_review": "package-import-adapter",
+      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "src/sheet_interpreter/slur_export.py": {
+      "origin": "Original standalone Python implementation; Apache-2.0.",
+      "standalone_path": "src/sheet_interpreter/slur_export.py",
+      "standalone_sha256": "86cc4deb35ab056cfa8722ff25d926d59de46f21a33cd69c92ebd046d0865a15",
+      "reviewed_sha256": "86cc4deb35ab056cfa8722ff25d926d59de46f21a33cd69c92ebd046d0865a15",
+      "license": "Apache-2.0",
+      "reviewed_source_state": "Reviewed recognition95 standalone consumers; see recognition95_review paired app commit.",
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     }
   },
   "interpreter_speedup_review": {
@@ -9532,5 +9730,24 @@
       "publicFiles": 2913
     },
     "paired_app_commit": "7bf96e1009ad72f2c0fcc6f90fc7075f63a3af82"
+  },
+  "recognition95_review": {
+    "newOriginalTests": 64,
+    "additionalAppOnlyOriginalTests": 18,
+    "scope": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+    "expected": {
+      "newOriginalTests": 64,
+      "javaTests": 12912,
+      "javaClasses": 1688,
+      "appFocused": 579,
+      "mappedSources": 486,
+      "nativeSources": 368,
+      "publicFiles": 2930
+    },
+    "boundary": "Only reviewed global source and original synthetic tests are public. No private scores, raster evidence, source coordinates or signing material included.",
+    "wireLayout": "Guide292 appends bounded MRG1 after TRS1: magic, exact framed length, count and four-int group records. Legacy291 has no groups; nonempty groups cannot downgrade.",
+    "runtimeBoundary": "Source95/Guide292/audio97; installed86/Guide291/audio97 distinct. Cumulative matched packaging/deployment deferred during active goal; no APK or Hub tag.",
+    "validationBoundary": "Planned counts; final combined logs required.",
+    "paired_app_commit": "8dd683feff39cb12509561d137584e0f5564353e"
   }
 }

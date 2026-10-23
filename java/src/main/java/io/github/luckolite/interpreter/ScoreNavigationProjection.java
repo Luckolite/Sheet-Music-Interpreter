@@ -334,7 +334,14 @@ public final class ScoreNavigationProjection {
                 .withOpeningPickup(
                         source.openingPickup()
                                 && plan.measureCount() > 0
-                                && plan.sourceMeasure(0) == 0);
+                                && plan.sourceMeasure(0) == 0)
+                .withMultiRestGroups(
+                        PrintedMultiRestGroups.remap(
+                                source.multiRestGroups(),
+                                java.util.stream.IntStream.range(0, plan.measureCount())
+                                        .map(plan::sourceMeasure)
+                                        .boxed()
+                                        .toList()));
     }
 
     private static boolean inside(int measure, Run run) {

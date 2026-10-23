@@ -162,6 +162,12 @@ final class CourtesyMeasureRemap {
                 expressions,
                 s.slurSource(),
                 s.openingPickup(),
-                s.tremoloSource());
+                s.tremoloSource(),
+                PrintedMultiRestGroups.remap(
+                        s.multiRestGroups(),
+                        java.util.stream.IntStream.range(0, s.measures().size())
+                                .filter(i -> i != cut)
+                                .boxed()
+                                .toList()));
     }
 }

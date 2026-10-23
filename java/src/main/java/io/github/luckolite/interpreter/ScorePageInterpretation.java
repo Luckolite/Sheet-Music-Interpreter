@@ -19,7 +19,71 @@ public record ScorePageInterpretation(
         List<ScoreExpressiveEvent> expressiveEvents,
         ScoreSlurSource slurSource,
         boolean openingPickup,
-        ScoreTremoloSource tremoloSource) {
+        ScoreTremoloSource tremoloSource,
+        List<ScoreMultiRestGroup> multiRestGroups) {
+    /** Ordinary score copies retain groups only with the exact ordered source geometry. */
+    public ScorePageInterpretation carryMultiRestGroupsFrom(ScorePageInterpretation source) {
+        if (source.measures().size() != measures.size()) return this;
+        for (int i = 0; i < measures.size(); i++)
+            if (source.measures().get(i) != measures.get(i)) return this;
+        return withMultiRestGroups(
+                PrintedMultiRestGroups.retainSilent(
+                        source.multiRestGroups(), measures.size(), notes, rests));
+    }
+
+    /** Pre-group records carry no printed H-bar identity. Silence alone never creates one. */
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int first,
+            List<ScoreKeyChange> keys,
+            List<ScoreTempoChange> tempos,
+            List<ScoreMeterChange> meters,
+            List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniques,
+            List<ScoreDynamicChange> dynamics,
+            List<ScorePlaybackDirection> directions,
+            List<ScoreExpressiveEvent> expressions,
+            ScoreSlurSource slurs,
+            boolean pickup,
+            ScoreTremoloSource tremolos) {
+        this(
+                measures,
+                notes,
+                first,
+                keys,
+                tempos,
+                meters,
+                rests,
+                techniques,
+                dynamics,
+                directions,
+                expressions,
+                slurs,
+                pickup,
+                tremolos,
+                List.of());
+    }
+
+    public ScorePageInterpretation withMultiRestGroups(List<ScoreMultiRestGroup> groups) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                openingPickup,
+                tremoloSource,
+                groups);
+    }
+
     /** Legacy constructors carry no paired tremolo source. */
     public ScorePageInterpretation(
             List<MeasureRegion> measures,
@@ -67,7 +131,8 @@ public record ScorePageInterpretation(
                 expressiveEvents,
                 slurSource,
                 openingPickup,
-                source);
+                source,
+                multiRestGroups);
     }
 
     /** Legacy callers do not carry independent opening-number proof. */
@@ -115,7 +180,8 @@ public record ScorePageInterpretation(
                 expressiveEvents,
                 slurSource,
                 proof,
-                tremoloSource);
+                tremoloSource,
+                multiRestGroups);
     }
 
     public ScorePageInterpretation(
@@ -160,7 +226,8 @@ public record ScorePageInterpretation(
                 expressiveEvents,
                 source,
                 openingPickup,
-                tremoloSource);
+                tremoloSource,
+                multiRestGroups);
     }
 
     /** Explicit source owners preserve original printed endpoints through a note edit. */
@@ -182,7 +249,9 @@ public record ScorePageInterpretation(
                 expressiveEvents,
                 slurSource.edited(sourceOwners),
                 openingPickup,
-                tremoloSource.edited(sourceOwners));
+                tremoloSource.edited(sourceOwners),
+                PrintedMultiRestGroups.retainSilent(
+                        multiRestGroups, measures.size(), edited, rests));
     }
 
     public ScorePageInterpretation(
@@ -238,7 +307,8 @@ public record ScorePageInterpretation(
                 expressiveEvents,
                 slurSource,
                 openingPickup,
-                tremoloSource);
+                tremoloSource,
+                multiRestGroups);
     }
 
     public ScorePageInterpretation withExpressiveEvents(List<ScoreExpressiveEvent> events) {
@@ -256,7 +326,8 @@ public record ScorePageInterpretation(
                 events,
                 slurSource,
                 openingPickup,
-                tremoloSource);
+                tremoloSource,
+                multiRestGroups);
     }
 
     public ScorePageInterpretation(
@@ -327,6 +398,8 @@ public record ScorePageInterpretation(
         tempoChanges = tempoChanges == null ? List.of() : List.copyOf(tempoChanges);
         meterChanges = meterChanges == null ? List.of() : List.copyOf(meterChanges);
         rests = rests == null ? List.of() : List.copyOf(rests);
+        multiRestGroups =
+                PrintedMultiRestGroups.validate(multiRestGroups, measures.size(), notes, rests);
         techniqueChanges = techniqueChanges == null ? List.of() : List.copyOf(techniqueChanges);
         dynamicChanges = dynamicChanges == null ? List.of() : List.copyOf(dynamicChanges);
         playbackDirections =

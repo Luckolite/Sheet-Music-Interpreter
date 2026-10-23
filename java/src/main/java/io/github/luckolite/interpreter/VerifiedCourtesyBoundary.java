@@ -81,6 +81,9 @@ final class VerifiedCourtesyBoundary {
                 s.expressiveEvents(),
                 s.slurSource(),
                 s.openingPickup(),
-                s.tremoloSource());
+                s.tremoloSource(),
+                PrintedMultiRestGroups.remap(
+                        s.multiRestGroups(),
+                        java.util.stream.IntStream.range(0, last).boxed().toList()));
     }
 }

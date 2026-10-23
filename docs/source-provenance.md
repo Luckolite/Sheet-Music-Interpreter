@@ -2860,3 +2860,10 @@ Reviewed recognition94: complete raw returning slurs may use a coherent engraved
 App, Hub and both writers share recognition94; Guide291/audio97 and record
 layouts remain unchanged. Cumulative matched packaging/deployment remains
 deferred during the active goal.
+
+Recognition95 adds the following reviewed source changes.
+Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.
+Guide292 appends bounded MRG1 printed-rest records after TRS1; old291 caches
+have no groups. App, native writer, standalone writer and Hub reader share
+the real layout. Recognition95/audio97; matched packaging/deployment remains
+deferred during the active goal.

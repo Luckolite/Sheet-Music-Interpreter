@@ -34,20 +34,21 @@ final class ScoreTiePitchGuard {
         var notes = recheckWithKeyContext(score.notes(), keys);
         if (notes == score.notes()) return score;
         return new ScorePageInterpretation(
-                score.measures(),
-                notes,
-                score.firstMeasureNumber(),
-                score.keyChanges(),
-                score.tempoChanges(),
-                score.meterChanges(),
-                score.rests(),
-                score.techniqueChanges(),
-                score.dynamicChanges(),
-                score.playbackDirections(),
-                score.expressiveEvents(),
-                score.slurSource(),
-                score.openingPickup(),
-                score.tremoloSource());
+                        score.measures(),
+                        notes,
+                        score.firstMeasureNumber(),
+                        score.keyChanges(),
+                        score.tempoChanges(),
+                        score.meterChanges(),
+                        score.rests(),
+                        score.techniqueChanges(),
+                        score.dynamicChanges(),
+                        score.playbackDirections(),
+                        score.expressiveEvents(),
+                        score.slurSource(),
+                        score.openingPickup(),
+                        score.tremoloSource())
+                .carryMultiRestGroupsFrom(score);
     }
 
     private static List<ScoreNoteEvent> apply(

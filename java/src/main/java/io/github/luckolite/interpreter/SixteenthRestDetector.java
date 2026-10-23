@@ -132,8 +132,10 @@ final class SixteenthRestDetector {
                         staffs,
                         classificationNotes);
         Detection current = addSupportedCore(strong, gray, width, height, measures, staffs, notes);
-        return addOriginalFrameRests(
-                current, gray, width, height, measures, originalFrames, staffs, notes);
+        current =
+                addOriginalFrameRests(
+                        current, gray, width, height, measures, originalFrames, staffs, notes);
+        return RawBeamedTwoBulbRests.add(current, gray, width, height, measures, staffs, notes);
     }
 
     /** A supported original frame remains a valid glyph view after quantized rule snapping. */

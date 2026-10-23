@@ -291,20 +291,21 @@ public final class MeterChangeDetector {
                         score.meterChanges(), score.notes(), score.measures().size());
         if (meters.equals(score.meterChanges())) return score;
         return new ScorePageInterpretation(
-                score.measures(),
-                score.notes(),
-                score.firstMeasureNumber(),
-                score.keyChanges(),
-                score.tempoChanges(),
-                meters,
-                score.rests(),
-                score.techniqueChanges(),
-                score.dynamicChanges(),
-                score.playbackDirections(),
-                score.expressiveEvents(),
-                score.slurSource(),
-                score.openingPickup(),
-                score.tremoloSource());
+                        score.measures(),
+                        score.notes(),
+                        score.firstMeasureNumber(),
+                        score.keyChanges(),
+                        score.tempoChanges(),
+                        meters,
+                        score.rests(),
+                        score.techniqueChanges(),
+                        score.dynamicChanges(),
+                        score.playbackDirections(),
+                        score.expressiveEvents(),
+                        score.slurSource(),
+                        score.openingPickup(),
+                        score.tremoloSource())
+                .carryMultiRestGroupsFrom(score);
     }
 
     public static List<Crop> candidates(byte[] labels, byte[] gray, int width, int height) {

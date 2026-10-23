@@ -100,20 +100,21 @@ public final class TabBoundaryTies {
                 notes.set(edge.note(), withIdentity(note, edge, last, lastTuning, false));
         }
         return new ScorePageInterpretation(
-                score.measures(),
-                notes,
-                score.firstMeasureNumber(),
-                score.keyChanges(),
-                score.tempoChanges(),
-                score.meterChanges(),
-                score.rests(),
-                score.techniqueChanges(),
-                score.dynamicChanges(),
-                score.playbackDirections(),
-                score.expressiveEvents(),
-                score.slurSource(),
-                score.openingPickup(),
-                score.tremoloSource());
+                        score.measures(),
+                        notes,
+                        score.firstMeasureNumber(),
+                        score.keyChanges(),
+                        score.tempoChanges(),
+                        score.meterChanges(),
+                        score.rests(),
+                        score.techniqueChanges(),
+                        score.dynamicChanges(),
+                        score.playbackDirections(),
+                        score.expressiveEvents(),
+                        score.slurSource(),
+                        score.openingPickup(),
+                        score.tremoloSource())
+                .carryMultiRestGroupsFrom(score);
     }
 
     private static List<Edge> edges(

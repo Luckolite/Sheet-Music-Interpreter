@@ -94,19 +94,20 @@ public final class TabTempo {
                 Comparator.comparingInt(ScoreTempoChange::measureIndex)
                         .thenComparingDouble(ScoreTempoChange::positionInMeasure));
         return new ScorePageInterpretation(
-                score.measures(),
-                score.notes(),
-                score.firstMeasureNumber(),
-                score.keyChanges(),
-                changes,
-                score.meterChanges(),
-                score.rests(),
-                score.techniqueChanges(),
-                score.dynamicChanges(),
-                score.playbackDirections(),
-                score.expressiveEvents(),
-                score.slurSource(),
-                score.openingPickup(),
-                score.tremoloSource());
+                        score.measures(),
+                        score.notes(),
+                        score.firstMeasureNumber(),
+                        score.keyChanges(),
+                        changes,
+                        score.meterChanges(),
+                        score.rests(),
+                        score.techniqueChanges(),
+                        score.dynamicChanges(),
+                        score.playbackDirections(),
+                        score.expressiveEvents(),
+                        score.slurSource(),
+                        score.openingPickup(),
+                        score.tremoloSource())
+                .carryMultiRestGroupsFrom(score);
     }
 }

@@ -6,9 +6,27 @@ import java.util.*;
 
 /** Classifies proved pixel endpoints only after actual assembled musical owners are available. */
 public final class ScoreSlurClassification {
-    public record Note(int owner, long attack, int graceOrder, int soundingPitch) {
+    public record Note(
+            int owner,
+            long attack,
+            int graceOrder,
+            int soundingPitch,
+            long release,
+            int partIndex,
+            int partCount) {
+        /** Legacy callers without assembled duration/part evidence remain conservative. */
+        public Note(int owner, long attack, int graceOrder, int soundingPitch) {
+            this(owner, attack, graceOrder, soundingPitch, attack, -1, 0);
+        }
+
         public Note {
-            if (owner < 0 || attack < 0 || soundingPitch < -1 || soundingPitch > 127)
+            if (owner < 0
+                    || attack < 0
+                    || soundingPitch < -1
+                    || soundingPitch > 127
+                    || release < attack
+                    || partCount < 0
+                    || (partCount == 0 ? partIndex != -1 : partIndex < 0 || partIndex >= partCount))
                 throw new IllegalArgumentException("Invalid assembled arc owner");
         }
     }
@@ -63,9 +81,29 @@ public final class ScoreSlurClassification {
                 if (a.soundingPitch() != b.soundingPitch()) pending.add(arc);
                 continue; // An exact, equal-pitch sounding tie is already represented.
             }
-            if (a.soundingPitch() == b.soundingPitch()) pending.add(arc);
+            if (a.soundingPitch() == b.soundingPitch() && !interveningPhrase(a, b, notes))
+                pending.add(arc);
             else confirmed.add(arc);
         }
         return new ScoreSlurSource(confirmed, source.noteOrigins(), pending);
+    }
+
+    /** A different-pitch attack between nonoverlapping owners disproves a direct sounding tie. */
+    private static boolean interveningPhrase(Note start, Note end, List<Note> notes) {
+        if (start.partCount() == 0
+                || start.partIndex() != end.partIndex()
+                || start.partCount() != end.partCount()
+                || start.release() > end.attack()) return false;
+        for (var middle : notes)
+            if (middle.partIndex() == start.partIndex()
+                    && middle.partCount() == start.partCount()
+                    && middle.soundingPitch() >= 0
+                    && middle.soundingPitch() != start.soundingPitch()
+                    && middle.attack() > start.attack()
+                    && middle.attack() < end.attack()
+                    && middle.release() > middle.attack()
+                    && start.release() <= middle.attack()
+                    && middle.release() <= end.attack()) return true;
+        return false;
     }
 }

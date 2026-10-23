@@ -141,19 +141,20 @@ final class WholeRestMeterContext {
         }
         if (rests.equals(s.rests())) return s;
         return new ScorePageInterpretation(
-                s.measures(),
-                s.notes(),
-                s.firstMeasureNumber(),
-                s.keyChanges(),
-                s.tempoChanges(),
-                s.meterChanges(),
-                List.copyOf(rests),
-                s.techniqueChanges(),
-                s.dynamicChanges(),
-                s.playbackDirections(),
-                s.expressiveEvents(),
-                s.slurSource(),
-                s.openingPickup(),
-                s.tremoloSource());
+                        s.measures(),
+                        s.notes(),
+                        s.firstMeasureNumber(),
+                        s.keyChanges(),
+                        s.tempoChanges(),
+                        s.meterChanges(),
+                        List.copyOf(rests),
+                        s.techniqueChanges(),
+                        s.dynamicChanges(),
+                        s.playbackDirections(),
+                        s.expressiveEvents(),
+                        s.slurSource(),
+                        s.openingPickup(),
+                        s.tremoloSource())
+                .carryMultiRestGroupsFrom(s);
     }
 }
