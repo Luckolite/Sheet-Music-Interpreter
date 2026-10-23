@@ -342,7 +342,14 @@ final class ScoreDynamicsDetector {
 
     static float level(String text) {
         if (text == null) return Float.NaN;
-        String token = text.trim().toLowerCase(Locale.ROOT).replaceAll("[.,:;]$", "");
+        String token =
+                SuddenDynamicText.parse(text)
+                        .map(SuddenDynamicText.Mark::level)
+                        .orElseGet(
+                                () ->
+                                        text.trim()
+                                                .toLowerCase(Locale.ROOT)
+                                                .replaceAll("[.,:;]$", ""));
         // OCR can merge the sudden-dynamic qualifier with its level. Only accept
         // a complete qualified level, so ordinary words and lyrics stay excluded.
         token = token.replaceFirst("^(?:subito|sub)\\.?\\s*(?=(?:ppp|pp|p|mp|mf|fff|ff|f)$)", "");
@@ -465,20 +472,11 @@ final class ScoreDynamicsDetector {
     }
 
     static boolean isSuddenLevel(String text) {
-        return text != null
-                && Float.isFinite(level(text))
-                && text.trim()
-                        .toLowerCase(Locale.ROOT)
-                        .matches("(?:subito|sub)\\.?\\s*(?:ppp|pp|p|mp|mf|fff|ff|f)[.,:;]?");
+        return SuddenDynamicText.parse(text).isPresent();
     }
 
     static String glyphLevelText(String text) {
-        return isSuddenLevel(text)
-                ? text.trim()
-                        .toLowerCase(Locale.ROOT)
-                        .replaceFirst("^(?:subito|sub)\\.?\\s*", "")
-                        .replaceAll("[.,:;]$", "")
-                : text;
+        return SuddenDynamicText.parse(text).map(SuddenDynamicText.Mark::level).orElse(text);
     }
 
     /** Glyph refinement changes bounds without erasing a verified sudden instruction. */

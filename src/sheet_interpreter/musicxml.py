@@ -167,7 +167,13 @@ def expression_direction(measure, mark, offset):
         element(type_node, 'wedge', type=mark['_hairpin'], number=mark['_hairpinNumber'])
     elif mark.get('_absoluteDynamic'):
         direction.set('placement', 'below')
+        caption = mark.get('_suddenDynamic')
+        if caption and caption['before']:
+            element(type_node, 'words', caption['qualifier']+' ')
+            type_node = element(direction, 'direction-type')
         element(element(type_node, 'dynamics'), mark['_absoluteDynamic'])
+        if caption and not caption['before']:
+            element(element(direction, 'direction-type'), 'words', ' '+caption['qualifier'])
     elif kind in ('PEDAL_DOWN', 'PEDAL_UP'):
         literal = (mark.get('targetEventId') or '').startswith('expression-column:') and any(
             e.get('sourceId') == 'printed-expression-word' for e in mark.get('evidence', []))
@@ -482,6 +488,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         offset += local_start
     if not bars:
         raise ValueError('No interpreted measures to export')
+    from .sudden_dynamic import combine as combine_sudden_dynamics
+    expressions = combine_sudden_dynamics(expressions)
     root = ET.Element('score-partwise', version='4.0')
     element(element(root, 'work'), 'work-title', document.get('inputName', 'Interpreted score'))
     identification = element(root, 'identification')

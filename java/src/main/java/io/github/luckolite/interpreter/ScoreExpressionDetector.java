@@ -777,6 +777,30 @@ public final class ScoreExpressionDetector {
                                                                                 == Kind.PEDAL_UP
                                                                         || PrintedRestDirection
                                                                                 .pedalCaption(event)
+                                                                        || event.kind()
+                                                                                        == Kind
+                                                                                                .UNRESOLVED_DIRECTION
+                                                                                && event
+                                                                                        .evidence()
+                                                                                        .stream()
+                                                                                        .anyMatch(
+                                                                                                v ->
+                                                                                                        v.sourceId()
+                                                                                                                        .equals(
+                                                                                                                                SOURCE)
+                                                                                                                && v
+                                                                                                                                .staffIndex()
+                                                                                                                        == event
+                                                                                                                                .staffIndex()
+                                                                                                                && v
+                                                                                                                                .staffCount()
+                                                                                                                        == event
+                                                                                                                                .staffCount()
+                                                                                                                && SuddenDynamicText
+                                                                                                                        .parse(
+                                                                                                                                v
+                                                                                                                                        .printedText())
+                                                                                                                        .isPresent())
                                                                 ? Scope.PART
                                                                 : Scope.SCORE)
                                         : Scope.UNRESOLVED,

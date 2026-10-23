@@ -66,6 +66,9 @@ public final class ExpressiveDirectionText {
 
     public static List<Direction> parse(String printed) {
         if (printed == null || printed.isBlank()) return List.of();
+        if (SuddenDynamicText.parse(printed).isPresent())
+            return List.of(
+                    new Direction(Kind.UNRESOLVED_DIRECTION, Strength.UNSPECIFIED, printed, ""));
         String normalized =
                 COMBINING_MARKS
                         .matcher(Normalizer.normalize(printed, Normalizer.Form.NFD))

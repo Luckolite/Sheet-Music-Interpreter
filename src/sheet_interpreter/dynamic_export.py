@@ -70,6 +70,7 @@ def plan(page, rendered, bars, page_identity):
             seen.add(key)
             result.append(dict(identity=f'{page_identity}/absolute-dynamic:{index}:{target}',
                 kind='ABSOLUTE_DYNAMIC', scope='PART', staffIndex=target, staffCount=count,
-                startTick=start, endTick=None, ownerIds=[], evidence=[],
+                startTick=start, endTick=None, ownerIds=[rendered[i]['sourceIdentity'] for i in owners if notes[i]['staffIndex']==target], evidence=[],
+                _dynamicGroup=f'{page_identity}/absolute-dynamic:{index}',
                 _absoluteDynamic=name, _absoluteDynamicBarStart=bars[m]['start']))
     return result
