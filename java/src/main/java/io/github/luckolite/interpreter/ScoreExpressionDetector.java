@@ -203,14 +203,18 @@ public final class ScoreExpressionDetector {
                             : null;
             // A proved terminal silent column owns the sign after it, not an earlier
             // sounding note or a closer attack in the following written measure.
-            if (terminalRest != null) closest = null;
+            var pedalCaptionRest =
+                    PrintedRestDirection.findPedalCaption(score, staffs, word, gray, width, height);
+            if (terminalRest != null || pedalCaptionRest != null) closest = null;
             var rest =
                     terminalRest != null
                             ? terminalRest
-                            : closest == null
-                                    ? PrintedRestDirection.find(
-                                            score, staffs, word, gray, width, height)
-                                    : null;
+                            : pedalCaptionRest != null
+                                    ? pedalCaptionRest
+                                    : closest == null
+                                            ? PrintedRestDirection.find(
+                                                    score, staffs, word, gray, width, height)
+                                            : null;
             if (closest == null && rest == null) continue;
             if (caption != null
                     && (closest != null ? closest.measureIndex() : rest.measureIndex())
@@ -239,6 +243,8 @@ public final class ScoreExpressionDetector {
             for (var direction : directions) {
                 if (anchor.rest()
                         && !PrintedRestDirection.allows(direction.kind())
+                        && !PrintedRestDirection.allowsPedalCaption(
+                                direction.kind(), direction.printedText())
                         && !(terminalRest != null
                                 && (direction.kind() == Kind.BREATH
                                         || direction.kind() == Kind.CAESURA))) continue;
@@ -720,7 +726,8 @@ public final class ScoreExpressionDetector {
                                     c.get().position(),
                                     meter.beatsInMeasure(c.get().measure()));
                     proved =
-                            PrintedRestDirection.allows(event.kind())
+                            (PrintedRestDirection.allows(event.kind())
+                                            || PrintedRestDirection.pedalCaption(event))
                                     && Double.isFinite(start)
                                     && start >= 0
                                     && start < meter.beatsInMeasure(c.get().measure());
@@ -768,6 +775,8 @@ public final class ScoreExpressionDetector {
                                                                                 == Kind.PEDAL_DOWN
                                                                         || event.kind()
                                                                                 == Kind.PEDAL_UP
+                                                                        || PrintedRestDirection
+                                                                                .pedalCaption(event)
                                                                 ? Scope.PART
                                                                 : Scope.SCORE)
                                         : Scope.UNRESOLVED,

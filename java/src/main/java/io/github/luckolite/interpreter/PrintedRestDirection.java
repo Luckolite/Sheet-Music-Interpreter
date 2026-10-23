@@ -28,6 +28,61 @@ final class PrintedRestDirection {
             byte[] gray,
             int w,
             int h) {
+        return find(score, staffs, word, gray, w, h, false);
+    }
+
+    static ScoreRestEvent findPedalCaption(
+            ScorePageInterpretation score,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            PlayingTechniqueDetector.Word word,
+            byte[] gray,
+            int w,
+            int h) {
+        if (!ExpressiveDirectionText.pedalRingCaption(word.text())) return null;
+        return find(score, staffs, word, gray, w, h, true);
+    }
+
+    static boolean allowsPedalCaption(ScoreExpressiveEvent.Kind kind, String text) {
+        return kind == ScoreExpressiveEvent.Kind.UNRESOLVED_DIRECTION
+                && ExpressiveDirectionText.pedalRingCaption(text);
+    }
+
+    static boolean pedalCaption(ScoreExpressiveEvent event) {
+        return event.kind() == ScoreExpressiveEvent.Kind.UNRESOLVED_DIRECTION
+                && !event.evidence().isEmpty()
+                && event.targetEventId()
+                        .filter(id -> id.startsWith("expression-rest-column:"))
+                        .isPresent()
+                && event.evidence().stream()
+                        .allMatch(
+                                e ->
+                                        e.sourceId().equals("printed-expression-word")
+                                                && allowsPedalCaption(
+                                                        event.kind(), e.printedText()));
+    }
+
+    private static boolean uniqueFullRest(ScorePageInterpretation score, ScoreRestEvent rest) {
+        if (!rest.isFullMeasure()) return false;
+        for (var note : score.notes())
+            if (note.measureIndex() == rest.measureIndex()
+                    && note.staffIndex() == rest.staffIndex()
+                    && note.staffCount() == rest.staffCount()) return false;
+        for (var other : score.rests())
+            if (other != rest
+                    && other.measureIndex() == rest.measureIndex()
+                    && other.staffIndex() == rest.staffIndex()
+                    && other.staffCount() == rest.staffCount()) return false;
+        return true;
+    }
+
+    private static ScoreRestEvent find(
+            ScorePageInterpretation score,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            PlayingTechniqueDetector.Word word,
+            byte[] gray,
+            int w,
+            int h,
+            boolean caption) {
         if (gray == null || w <= 0 || h <= 0 || gray.length != (long) w * h) return null;
         float x = word.left() * w, top = word.top() * h, bottom = word.bottom() * h;
         if (!Float.isFinite(x)
@@ -52,7 +107,11 @@ final class PrintedRestDirection {
                     || rest.positionInMeasure() < 0
                     || rest.positionInMeasure() > 1) continue;
             var m = score.measures().get(rest.measureIndex());
-            if (word.left() < m.left() || word.left() > m.right()) continue;
+            float ownerX = caption ? (word.left() + word.right()) * .5f : word.left();
+            if (ownerX < m.left()
+                    || ownerX > m.right()
+                    || caption && (!uniqueFullRest(score, rest) || word.right() > m.right()))
+                continue;
             float rx = (m.left() + rest.positionInMeasure() * (m.right() - m.left())) * w;
             float dx = Math.max(0, Math.max(x - rx, rx - word.right() * w));
             for (var staff : staffs) {
@@ -67,16 +126,23 @@ final class PrintedRestDirection {
                         || Math.abs(rest.pageY() * h - center) > gap * 2.5f
                         || (dx > gap * 3 && !measureStartWholeRest(score, rest, word, gap, w)))
                     continue;
-                var rules = PrintedDirectionStaff.printedRules(gray, w, h, x, staff.bottom(), gap);
+                var rules =
+                        PrintedDirectionStaff.printedRules(
+                                gray, w, h, ownerX * w, staff.bottom(), gap);
                 if (rules == null
                         || Math.abs(rules[0] - staff.bottom()) > gap * .5f
                         || Math.abs(rules[1] - gap) > gap * .15f) continue;
                 float localTop = rules[0] - rules[1] * 4;
+                float observedTop = top;
+                if (caption && top < rules[0] + gap * .25f && bottom > rules[0]) {
+                    float body = CaptionRuleSeparator.bodyTop(gray, w, h, word, rules[0], rules[1]);
+                    if (Float.isFinite(body)) observedTop = body;
+                }
                 float vertical =
                         bottom <= localTop - gap * .25f
                                 ? (localTop - bottom) / gap
-                                : top >= rules[0] + gap * .25f
-                                        ? (top - rules[0]) / gap
+                                : observedTop >= rules[0] + gap * .25f
+                                        ? (observedTop - rules[0]) / gap
                                         : Float.POSITIVE_INFINITY;
                 if (vertical > 4.5f) continue;
                 float distance = vertical + dx / gap * .05f;
@@ -90,7 +156,7 @@ final class PrintedRestDirection {
         if (ambiguous) return null;
         return best != null
                 ? best
-                : PrintedMultiRestDirection.find(score, staffs, word, gray, w, h);
+                : caption ? null : PrintedMultiRestDirection.find(score, staffs, word, gray, w, h);
     }
 
     /** A leading direction can precede the centered glyph of an otherwise silent bar. */

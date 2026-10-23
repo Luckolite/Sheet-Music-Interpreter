@@ -311,6 +311,7 @@ final class PrintedSlurContours {
             beforePrevious = previous;
             previous = current;
         }
+        completeRuleGaps(runs, parents, gray, labels, width, height, track, frames, heads);
         var components = new LinkedHashMap<Integer, List<Run>>();
         for (int i = 0; i < runs.size(); i++)
             components
@@ -778,6 +779,183 @@ final class PrintedSlurContours {
                 blank = 0;
                 if (++dark >= 3) return false;
             } else if (++blank >= Math.max(2, Math.round(gap * .18f))) return true;
+        }
+        return false;
+    }
+
+    private record RailEnd(int root, List<Run> runs, boolean simple) {
+        Run first() {
+            return runs.get(0);
+        }
+
+        Run last() {
+            return runs.get(runs.size() - 1);
+        }
+    }
+
+    private record RailLink(RailEnd left, RailEnd right) {}
+
+    /** Additional complete raw-rule crossings, bounded in physical staff units.
+     * No unions are published until the entire optional search and each full bow close. */
+    private static void completeRuleGaps(
+            List<Run> runs,
+            int[] parents,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads) {
+        long work = 8_000_000L - (long) runs.size() * 16;
+        if (work < 0) return;
+        var groups = new LinkedHashMap<Integer, List<Run>>();
+        for (int i = 0; i < runs.size(); i++)
+            groups.computeIfAbsent(root(i, parents), k -> new ArrayList<>()).add(runs.get(i));
+        var ends = new ArrayList<RailEnd>();
+        var starts = new HashMap<Integer, List<RailEnd>>();
+        for (var group : groups.entrySet()) {
+            var rows = group.getValue();
+            // Keep unknown or branched rivals in the search; never silently discard
+            // their possible connection while selecting a simpler neighbouring tip.
+            boolean simple = rows.size() >= 2;
+            for (int i = 1; i < rows.size(); i++)
+                if (rows.get(i).x() <= rows.get(i - 1).x()) {
+                    simple = false;
+                    break;
+                }
+            var end = new RailEnd(group.getKey(), rows, simple);
+            ends.add(end);
+            starts.computeIfAbsent(end.first().x(), k -> new ArrayList<>()).add(end);
+        }
+        var proposed = new ArrayList<RailLink>();
+        for (var a : ends) {
+            // One staff space bounds the unresolved rail footprint. Longer occlusion abstains.
+            int span = (int) Math.ceil(a.last().gap());
+            if (span < 7 || span > 100) continue;
+            for (int distance = 7; distance <= span; distance++) {
+                var choices = starts.get(a.last().x() + distance);
+                if (choices == null) continue;
+                for (var b : choices) {
+                    boolean supported = false;
+                    for (int ai = a.runs().size() - 1;
+                            ai >= 0 && a.runs().get(ai).x() == a.last().x() && !supported;
+                            ai--)
+                        for (int bi = 0;
+                                bi < b.runs().size()
+                                        && b.runs().get(bi).x() == b.first().x()
+                                        && !supported;
+                                bi++) {
+                            Run tail = a.runs().get(ai), tip = b.runs().get(bi);
+                            if ((work -= 128L + distance * 96L) < 0) return;
+                            supported =
+                                    distance <= Math.ceil(Math.min(tail.gap(), tip.gap()))
+                                            && rawRuleGap(
+                                                    tail, tip, gray, labels, width, height, track,
+                                                    frames, heads);
+                        }
+                    if (!supported) continue;
+                    if (proposed.size() >= 4096) return;
+                    proposed.add(new RailLink(a, b));
+                }
+            }
+        }
+        var outgoing = new HashMap<Integer, Integer>();
+        var incoming = new HashMap<Integer, Integer>();
+        for (var link : proposed) {
+            outgoing.merge(link.left().root(), 1, Integer::sum);
+            incoming.merge(link.right().root(), 1, Integer::sum);
+        }
+        if ((work -= (long) proposed.size() * 96) < 0) return;
+        var neighbours = new HashMap<Integer, List<Integer>>();
+        var tainted = new HashSet<Integer>();
+        for (var link : proposed) {
+            int a = link.left().root(), b = link.right().root();
+            neighbours.computeIfAbsent(a, k -> new ArrayList<>()).add(b);
+            neighbours.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
+            if (!link.left().simple() || outgoing.get(a) > 1) tainted.add(a);
+            if (!link.right().simple() || incoming.get(b) > 1) tainted.add(b);
+        }
+        var queue = new ArrayDeque<Integer>(tainted);
+        while (!queue.isEmpty())
+            for (int n : neighbours.get(queue.remove())) if (tainted.add(n)) queue.add(n);
+        var next = new HashMap<Integer, RailLink>();
+        var previous = new HashMap<Integer, RailLink>();
+        for (var link : proposed)
+            if (!tainted.contains(link.left().root()) && !tainted.contains(link.right().root())) {
+                next.put(link.left().root(), link);
+                previous.put(link.right().root(), link);
+            }
+        var approved = new ArrayList<List<RailLink>>();
+        for (var start : ends) {
+            if (previous.containsKey(start.root()) || !next.containsKey(start.root())) continue;
+            var chain = new ArrayList<RailLink>();
+            var joined = new ArrayList<Run>();
+            joined.addAll(start.runs());
+            RailEnd current = start;
+            while (next.containsKey(current.root())) {
+                var link = next.get(current.root());
+                chain.add(link);
+                joined.addAll(link.right().runs());
+                current = link.right();
+            }
+            if ((work -= (long) joined.size() * 128 + 2048) < 0) return;
+            Bow whole = fit(joined, null, null);
+            if (whole != null
+                    && capped(gray, labels, width, height, whole, track, true, heads, frames)
+                    && capped(gray, labels, width, height, whole, track, false, heads, frames))
+                approved.add(chain);
+        }
+        for (var chain : approved)
+            for (var link : chain)
+                parents[root(link.right().root(), parents)] = root(link.left().root(), parents);
+    }
+
+    private static boolean rawRuleGap(
+            Run a,
+            Run b,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads) {
+        int distance = b.x() - a.x();
+        if (distance < 7 || Math.abs(b.rectified() - a.rectified()) > .25f * distance) return false;
+        for (int rule = 0; rule < 5; rule++) {
+            if ((a.rectified() + rule) * (b.rectified() + rule) >= 0) continue;
+            boolean supported = true;
+            for (int step = 1; step < distance && supported; step++) {
+                int x = a.x() + step;
+                float[] staff = track.at(x);
+                float relative = a.rectified() + (b.rectified() - a.rectified()) * step / distance;
+                float y = staff[0] + relative * staff[1];
+                int rail = Math.round(staff[0] - rule * staff[1]);
+                if (Math.abs(y - rail) > Math.max(2, staff[1] * .3f)
+                        || rail < 1
+                        || rail >= height - 1
+                        || !followsRail(
+                                gray, width, height, x, rail, staff[0], staff[1], rule, frames)) {
+                    supported = false;
+                    break;
+                }
+                boolean ink = false, ruleInk = false;
+                for (int dy = -1; dy <= 1; dy++) {
+                    if ((gray[(rail + dy) * width + x] & 255) <= 205) ruleInk = true;
+                    int row = Math.round(y) + dy;
+                    if (row < 0 || row >= height) continue;
+                    int at = row * width + x;
+                    if (heads != null && heads.contains(x, row)
+                            || labels != null
+                                    && (labels[at] == OmrMeasurePostProcessor.NOTEHEAD
+                                            || labels[at] == OmrMeasurePostProcessor.CLEF_OR_KEY))
+                        continue;
+                    if ((gray[at] & 255) <= 205) ink = true;
+                }
+                supported = ink && ruleInk;
+            }
+            if (supported) return true;
         }
         return false;
     }

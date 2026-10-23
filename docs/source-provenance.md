@@ -2872,3 +2872,8 @@ Recognition96 adds the following reviewed source changes.
 Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.
 Guide292/audio97 and model lineage remain unchanged; matched cumulative
 packaging/deployment is deferred during the active goal.
+
+Recognition97 adds the following reviewed source changes.
+Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.
+Guide292/audio97 and model lineage remain unchanged; matched cumulative
+packaging/deployment is deferred during the active goal.

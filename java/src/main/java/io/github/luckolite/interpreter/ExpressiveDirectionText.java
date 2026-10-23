@@ -18,6 +18,8 @@ public final class ExpressiveDirectionText {
         return new Rule(kind, Pattern.compile("(?<![a-z])(?:" + expression + ")(?![a-z])"));
     }
 
+    private static final Rule PEDAL_RING =
+            rule(Kind.UNRESOLVED_DIRECTION, "^\\s*let\\s+(?:the\\s+)?pedal\\s+ring[.!]?\\s*$");
     private static final Rule PEDAL_RELEASE = rule(Kind.PEDAL_UP, "senza\\s+(?:pedale|ped\\.?)");
     private static final Pattern PROGRESSION = Pattern.compile("\\b(?:a\\s+)?poco\\s+a\\s+poco\\b");
     private static final Pattern COMBINING_MARKS = Pattern.compile("\\p{M}+");
@@ -41,6 +43,7 @@ public final class ExpressiveDirectionText {
                     rule(Kind.CAESURA, "caesura"),
                     rule(Kind.PEDAL_DOWN, "ped\\.?|pedale"),
                     PEDAL_RELEASE,
+                    PEDAL_RING,
                     rule(
                             Kind.UNRESOLVED_DIRECTION,
                             "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"
@@ -55,6 +58,11 @@ public final class ExpressiveDirectionText {
                                     + "|giocoso|maestoso|appassionato|leggiero|free\\s+time|^\\s*(?:freely|gently)(?:\\s*(?:,|and)\\s*(?:freely|gently))*[.!]?\\s*$"));
 
     private ExpressiveDirectionText() {}
+
+    static boolean pedalRingCaption(String printed) {
+        return printed != null
+                && PEDAL_RING.pattern().matcher(printed.toLowerCase(Locale.ROOT)).matches();
+    }
 
     public static List<Direction> parse(String printed) {
         if (printed == null || printed.isBlank()) return List.of();

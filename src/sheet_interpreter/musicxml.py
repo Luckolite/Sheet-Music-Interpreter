@@ -159,7 +159,8 @@ def tempo_mark(tempo):
 
 def expression_direction(measure, mark, offset):
     kind = mark['kind']
-    direction = element(measure, 'direction', placement='below' if kind in ('PEDAL_DOWN', 'PEDAL_UP') else 'above')
+    caption = mark.get('_neutralRestCaption', False)
+    direction = element(measure, 'direction', placement='below' if caption or kind in ('PEDAL_DOWN', 'PEDAL_UP') else 'above')
     type_node = element(direction, 'direction-type')
     if kind in ('PEDAL_DOWN', 'PEDAL_UP'):
         literal = (mark.get('targetEventId') or '').startswith('expression-column:') and any(
@@ -422,13 +423,19 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 raise ValueError('Expression anchor outside MusicXML measure')
             return offset+ticks(sum(page['measureBeats'][:m])+q)
         from .arpeggio_notation import plan as arpeggio_plan
+        from .neutral_rest_caption import is_caption, start as caption_start
         for supplied in score.get('expressiveEvents', []):
             if supplied.get('kind') == 'ARPEGGIO':
                 for source_index in arpeggio_plan(supplied, page):
                     events[first_event+source_index]['retainedArpeggio'] = True
                 continue  # A source-owned note symbol, never a generic words direction.
             mark = _resolve_pedal(dict(supplied), page)
-            if _rest_owned(mark):
+            mark.pop('_neutralRestCaption', None)
+            if is_caption(mark):
+                mark['start'], mark['end'] = caption_start(mark, page), None
+                mark['scope'] = 'PART' if mark['start'] is not None else 'UNRESOLVED'
+                mark['_neutralRestCaption'] = mark['start'] is not None
+            elif _rest_owned(mark):
                 span = _rest_span(mark, page)
                 mark['start'], mark['end'] = span if span else (None, None)
                 mark['scope'] = 'REST' if span else 'UNRESOLVED'
