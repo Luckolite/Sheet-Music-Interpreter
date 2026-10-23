@@ -2897,3 +2897,8 @@ Recognition101 adds the following reviewed source changes.
 Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.
 Guide292/audio97 and model lineage remain unchanged; cumulative matched
 packaging/deployment is deferred during the active goal.
+
+Recognition102 adds the following reviewed source changes.
+Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.
+Guide292/audio97 and model lineage remain unchanged; cumulative matched
+packaging/deployment is deferred during the active goal.

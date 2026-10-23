@@ -21,6 +21,7 @@ You do not need to publish your own code. Follow the [license and notice require
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing with retained clefs, slurs, articulations, ornaments and grace notes.
 - Staff-owned arco, pizzicato and expression labels in MusicXML follow the first proved affected note's exported clock.
+- Absolute dynamics at retained note columns use their proved written onsets in MusicXML, including staff ownership and edited timing.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 
 - MusicXML reconstructs a concert-pitch score, not the original layout or tab placement.

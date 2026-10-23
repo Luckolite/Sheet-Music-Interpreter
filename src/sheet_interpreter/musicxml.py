@@ -162,7 +162,10 @@ def expression_direction(measure, mark, offset):
     caption = mark.get('_neutralRestCaption', False)
     direction = element(measure, 'direction', placement='below' if caption or kind in ('PEDAL_DOWN', 'PEDAL_UP') else 'above')
     type_node = element(direction, 'direction-type')
-    if kind in ('PEDAL_DOWN', 'PEDAL_UP'):
+    if mark.get('_absoluteDynamic'):
+        direction.set('placement', 'below')
+        element(element(type_node, 'dynamics'), mark['_absoluteDynamic'])
+    elif kind in ('PEDAL_DOWN', 'PEDAL_UP'):
         literal = (mark.get('targetEventId') or '').startswith('expression-column:') and any(
             e.get('sourceId') == 'printed-expression-word' for e in mark.get('evidence', []))
         if literal:
@@ -409,6 +412,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                   principalSourceIdentity=first_event+placement['principal'])
         from . import technique_export
         expressions.extend(technique_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
+        from . import dynamic_export
+        expressions.extend(dynamic_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
         for source, target, _ in straight_slide.bindings(page):
             # This global endpoint identity is an internal token, not a MusicXML number.
             token = first_event + target
@@ -629,7 +634,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 element(direction, 'sound', tempo=str(tempo['bpm']))
             a, b = bar['start'], bar['start']+bar['length']
             for mark in marks:
-                if mark.get('_playingInstruction'):
+                if mark.get('_absoluteDynamic'):
+                    owns = mark['_absoluteDynamicBarStart'] == a and a <= mark['startTick'] <= b
+                elif mark.get('_playingInstruction'):
                     # A terminal after-grace still belongs to its original written bar.
                     owns = mark['_playingInstructionBarStart'] == a and a <= mark['startTick'] <= b
                 else:

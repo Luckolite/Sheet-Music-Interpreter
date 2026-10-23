@@ -464,15 +464,16 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "49f4cd570e3b21e2b30f283622b6c3341aeb21bce94b260016d290d2971e5e20",
-      "source_normalized_sha256": "1d0e464630a97206ac714f5db7059d6c20b7876b4a4e56a794fbfa6d13f4d71a",
+      "source_sha256": "4b05ddfd4d9463d21d68b2fabccfdd603b1b209322efc8e0056ec2daa9a6985f",
+      "source_normalized_sha256": "8f5220f167d08bd0966b470437edd297f745054e2d5cb351f88ba4251ed56eb0",
       "review_note": "Preserve one visually qualified fp as an atomic ordered forte/piano pair at an actual onset; reject a bare m only when unchanged raw contour and pre-existing note-owned mordent evidence agree. Other literal levels and timing guards remain unchanged.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "reviewed_app_state": "Committed paired source at ed704d71e4325db9061414f44e5b881cfae1e8e1",
-      "reviewed_source_state": "committed",
-      "standalone_sha256": "92bfe10e485af5168004d397fefde4cc9797b9e9afdf4fb90ded900a960c0687",
-      "reviewed_app_commit": "ed704d71e4325db9061414f44e5b881cfae1e8e1",
-      "license": "Apache-2.0"
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal.",
+      "standalone_sha256": "2449b5789a500b42a3041b542ac22a5b6d6a6a136069c07ac85dcf38d596a96e",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "license": "Apache-2.0",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicsDetector.java",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes."
     },
     "HairpinContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HairpinContinuation.java",
@@ -1706,15 +1707,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "cd94ab4dd61adab119286fd6bd27ff089c08755c9adf1636f8f70a0a2d6eae40",
-      "source_normalized_sha256": "fd6aaa20e244b06a5659f602a612635d0f20c909f9f5f23d3a92d583c5ee025c",
+      "source_sha256": "b19b9a12270488edc30064ed70ff47de88362915b13675924de765a1b357d377",
+      "source_normalized_sha256": "3302b3219785b7879fab3cc430f9328ff4a7fa2f35b6e1227ab0b81c3ea5c78a",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "bad11f471e583e94baa56f25a161209c0ffdf9ad2679db30a38290485aa27445",
-      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "standalone_sha256": "fa6977fbf437127b3005388a09f1f6b7a025426e2b4ea53c544eecb0ba11d25f",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1732,7 +1733,8 @@
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
-      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1789,15 +1791,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "10514bf0f5e77e7e5d036ca2248cc02c2c0301e6f76d278c57d024bec57b5aec",
-      "source_normalized_sha256": "10514bf0f5e77e7e5d036ca2248cc02c2c0301e6f76d278c57d024bec57b5aec",
+      "source_sha256": "335d74e335220683aa9887b93e40b0e60ed0d791640fc7aace7ccdbcadaebb45",
+      "source_normalized_sha256": "335d74e335220683aa9887b93e40b0e60ed0d791640fc7aace7ccdbcadaebb45",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "e140fe63bd8727cfe588acefe6814d13e8968b2e057b69763b136cf0d0d6c018",
-      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "standalone_sha256": "1d45dab57674891ca4c7e47ed20bae01f0933c48f2b1a41eb66394d1580cae3f",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -1808,7 +1810,8 @@
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
-      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2239,17 +2242,18 @@
       "reviewed_source_state": "committed"
     },
     "src/sheet_interpreter/musicxml.py": {
-      "origin": "Original standalone implementation and adapter; Apache-2.0.",
-      "reviewed_sha256": "e52a307b6a627d2f22e899c26724b12b4af25cff3165e47a66497cce1df03d0c",
+      "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
+      "reviewed_sha256": "b1b4bbbd4fb0bb366515faf77f7d8eb8c3f695709de9737549a463689d18f2b1",
       "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged.",
       "standalone_path": "src/sheet_interpreter/musicxml.py",
-      "standalone_sha256": "e52a307b6a627d2f22e899c26724b12b4af25cff3165e47a66497cce1df03d0c",
+      "standalone_sha256": "b1b4bbbd4fb0bb366515faf77f7d8eb8c3f695709de9737549a463689d18f2b1",
       "license": "Apache-2.0",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
-      "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
-      "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24"
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes."
     },
     "src/sheet_interpreter/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
@@ -4267,13 +4271,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "ea26d31526bc8335e309958854da9ff066cdd246e5ce5c3cdb9fda9a4680fd22",
-      "source_normalized_sha256": "9ab0d839c6ba5580d5ef1d5ce43f5ff3c8a2b4fecba3b1e4570d04578d6d96ef",
-      "standalone_sha256": "6c672da3fbeb4e7a1a69da84d0a49e4eabe7caf5e8785f53e90aae75c2fe50ac",
+      "source_sha256": "a387f999ecf11bbbf529b4fc8643e148ad267d4ad0b2904d9fe50118fe1f6acd",
+      "source_normalized_sha256": "907928f41a0bd4df91adec35f62798fc08883fe4868f6560097650d86e48f747",
+      "standalone_sha256": "04a48ebf1538af6fc87d0348f55bfaa44d560b5eaa0b0e29ecebca7244031256",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
-      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4287,7 +4291,8 @@
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
-      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -5334,6 +5339,113 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ScoreDynamicClock.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicClock.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicClock.java",
+      "source_sha256": "ea42c825876c0903950b75a9244c791e12cc96d92eb555ebd72d4f8d311de5da",
+      "source_normalized_sha256": "ea42c825876c0903950b75a9244c791e12cc96d92eb555ebd72d4f8d311de5da",
+      "standalone_sha256": "d53d3890b2384eeff6b580cc189f2526c53a4df5f180644e910283acc0774da5",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedDynamicInkColumn.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedDynamicInkColumn.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedDynamicInkColumn.java",
+      "source_sha256": "b416e8898dc194d7a6252e480e086f63dfc94b7f0f4724d24e2e9a11fe9f61e0",
+      "source_normalized_sha256": "b416e8898dc194d7a6252e480e086f63dfc94b7f0f4724d24e2e9a11fe9f61e0",
+      "standalone_sha256": "3f5ed4a7957d0bfa41b1b7cdd4df88e4de349b10c7498b30cbfb3a96bc20085b",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ScoreUnisonRhythm.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreUnisonRhythm.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreUnisonRhythm.java",
+      "source_sha256": "39373085f2db087ea2e28c2836ca53b144c60756179e6c73357e2b70fd4a4326",
+      "source_normalized_sha256": "39373085f2db087ea2e28c2836ca53b144c60756179e6c73357e2b70fd4a4326",
+      "standalone_sha256": "7a220f4ff053b19706264ff037850550e4492df31b998e90376c7ce815bfae6b",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "DynamicColumnClockOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/DynamicColumnClockOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/DynamicColumnClockOriginalTest.java",
+      "source_sha256": "519deaed4eb9049465f8e4bff4b4491d96ef574bb41ae2d025986da68ab61a67",
+      "source_normalized_sha256": "519deaed4eb9049465f8e4bff4b4491d96ef574bb41ae2d025986da68ab61a67",
+      "standalone_sha256": "0bebf1ef850dc23e900eff73582899743a79a9544129a9c3daca844ce0f9c3b2",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedDynamicInkColumnOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedDynamicInkColumnOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedDynamicInkColumnOriginalTest.java",
+      "source_sha256": "ec49dbb2a6d315bb3d7ce7a0de1762ede4f42c7017dd43776dfce745e8fdb5ae",
+      "source_normalized_sha256": "ec49dbb2a6d315bb3d7ce7a0de1762ede4f42c7017dd43776dfce745e8fdb5ae",
+      "standalone_sha256": "46d35d55e06b8cc74c6eb18ab9b6d94843d76f994deb0b22b415620626211a16",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedDynamicInkCallerOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedDynamicInkCallerOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedDynamicInkCallerOriginalTest.java",
+      "source_sha256": "1c2f172f70a44bfce7a04862150108af9dae8e7b8034916c12974295c18f5993",
+      "source_normalized_sha256": "1c2f172f70a44bfce7a04862150108af9dae8e7b8034916c12974295c18f5993",
+      "standalone_sha256": "261193fba7536cc79ddceb67ca10ae5fda1330eac4030f38cba8de8e7fb77841",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "UnisonWrittenDurationOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/UnisonWrittenDurationOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/UnisonWrittenDurationOriginalTest.java",
+      "source_sha256": "40eb6b976c07de9aca42c347cd2c9ef031bfcf1a6743fb3a03a25506a8a01586",
+      "source_normalized_sha256": "40eb6b976c07de9aca42c347cd2c9ef031bfcf1a6743fb3a03a25506a8a01586",
+      "standalone_sha256": "f20d31fd61832ea46b41beb5e3a0b1eb7d121792e99dd4ec804f941b831454a8",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "src/sheet_interpreter/dynamic_export.py": {
+      "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
+      "standalone_path": "src/sheet_interpreter/dynamic_export.py",
+      "standalone_sha256": "803229af8697da7ec8cfa9e4122fb67b7c20829b15d55dfdfafc89e4e78e390d",
+      "reviewed_sha256": "803229af8697da7ec8cfa9e4122fb67b7c20829b15d55dfdfafc89e4e78e390d",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "tests/test_dynamic_column_clock.py": {
+      "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
+      "standalone_path": "tests/test_dynamic_column_clock.py",
+      "standalone_sha256": "425da86be4c75bd9377ac301fbc88aa10284bad188c68e67153635847c7f3360",
+      "reviewed_sha256": "425da86be4c75bd9377ac301fbc88aa10284bad188c68e67153635847c7f3360",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "tests/test_unison_duration_consumer.py": {
+      "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
+      "standalone_path": "tests/test_unison_duration_consumer.py",
+      "standalone_sha256": "9bfa226db68c3bc7675f154b4cf6427d2cee2b444585e3b8a6c398244f7d6ae7",
+      "reviewed_sha256": "9bfa226db68c3bc7675f154b4cf6427d2cee2b444585e3b8a6c398244f7d6ae7",
+      "license": "Apache-2.0",
+      "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+      "reviewed_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84",
+      "reviewed_app_state": "Reviewed recognition102 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -10470,5 +10582,48 @@
     "runtimeBoundary": "Source101 pending; installed86/Guide291/audio97 unchanged. Cumulative matched packaging/deployment deferred during active goal.",
     "validationBoundary": "Combined source gate required; saved actual stages do not prove fresh whole native/model/device/clock/export validation.",
     "paired_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861"
+  },
+  "recognition102_review": {
+    "newOriginalTests": 39,
+    "additionalAppOnlyOriginalTests": 13,
+    "standalonePythonOriginals": 20,
+    "additionalExistingAppControls": 20,
+    "revisedExistingAppContracts": 2,
+    "scope": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
+    "expected": {
+      "newOriginalTests": 39,
+      "javaTests": 13128,
+      "javaClasses": 1722,
+      "appFocused": 866,
+      "appSelectedClasses": 109,
+      "mappedSources": 526,
+      "nativeSources": 375,
+      "publicFiles": 2985,
+      "hubTests": 58,
+      "nativePythonTests": 33,
+      "publicPythonTests": 251,
+      "newPortableJavaOriginals": 39,
+      "newStandaloneJavaOriginals": 0,
+      "newAppOnlyOriginals": 13,
+      "newPythonOriginals": 20,
+      "oldBowChecksAddedToPipeline": 0,
+      "status": "ROOT_REVIEWED_PLAN_GATE_PENDING",
+      "publicPythonUnique": 251,
+      "publicPythonExecutions": 284,
+      "additionalExistingAppControls": 20
+    },
+    "appOnlySourceReview": {
+      "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java": "20c5adb22d24f3ddd1612bfe87c7622b15e45f8912e1c9ff2ae7181c25884f28",
+      "app/src/main/java/com/musicsheets/app/pdf/SheetConversionPlan.java": "a79ac45129bb788beaa21e902e178b7bcdea8bf32c31952e09b2b531f4639ac8",
+      "app/src/test/java/com/musicsheets/app/pdf/SheetConversionPlanTest.java": "56cbc0d93b4eadbb3f4d298d748cc99fc66255a9aed156110fe17c1b51cae08c",
+      "app/src/test/java/com/musicsheets/app/pdf/DynamicColumnClockAppOriginalTest.java": "91dc54672552b517b88f228f0b248fd96858d96fb8385c58d397dad0aedf17cb",
+      "app/src/test/java/com/musicsheets/app/pdf/UnisonWrittenDurationAppOriginalTest.java": "6235841279a78c4296f972c7a060d5b874773cac042d11e288d37337eb2cd35c"
+    },
+    "appOnlyBoundary": "App Java writer and merge-selection lifecycle have no same-language standalone caller. Exact namespace helpers and scalar controls are mirrored; standalone Python has its own reviewed exact-clock consumer and unequal-duration export contracts.",
+    "wireLayout": "Guide292 MRG1/audio97 unchanged.",
+    "boundary": "No commercial score pixels/PDF, private captures, libraries, logs, signing material, model weights or new dependencies. Existing licensed font controls retained.",
+    "runtimeBoundary": "Source102 pending; installed86/Guide291/audio97 unchanged; cumulative matched packaging/deployment deferred during active goal.",
+    "validationBoundary": "Combined source gate required. Captured source-stage evidence and source101 API qualification do not prove fresh full native/model/device/render validation.",
+    "paired_app_commit": "57c29f0dcf7a952fa650b7271bcb0af99db9fe84"
   }
 }

@@ -607,6 +607,27 @@ final class ScoreDynamicsDetector {
                             shared, owner, word.top() * height, word.bottom() * height);
             var target = common == null ? owner : common;
             float anchor = literalAnchor(word, target, measures, notes, width, height);
+            var established = slot(anchor, target, measures, notes, width, height);
+            if (established != null
+                    && notes.stream()
+                            .noneMatch(
+                                    n ->
+                                            n.measureIndex() == established.measure()
+                                                    && n.staffIndex() == target.index()
+                                                    && n.staffCount() == target.count()
+                                                    && n.positionInMeasure()
+                                                            == established.position()))
+                anchor =
+                        PrintedDynamicInkColumn.anchor(
+                                word,
+                                target,
+                                measures,
+                                notes,
+                                ownershipGray,
+                                width,
+                                height,
+                                anchor,
+                                established.measure());
             if (compound) {
                 addCompound(result, target, anchor, measures, notes, width, height, common != null);
                 continue;
