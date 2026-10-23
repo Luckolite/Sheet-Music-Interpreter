@@ -25632,7 +25632,7 @@ final class OmrScoreInterpreter {
         if (!outgoing) {
             for (int clearance = 0; clearance <= Math.round(gap * 1.8f); clearance++) {
                 for (int span = Math.max(6, Math.round(gap * .35f));
-                        span < Math.round(gap * 1.6f);
+                        span <= Math.round(gap * 3f);
                         span++) {
                     int right = note.head.minX - clearance;
                     int left = right - span;

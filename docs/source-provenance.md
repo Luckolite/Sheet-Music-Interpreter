@@ -2904,3 +2904,5 @@ Guide292/audio97 and model lineage remain unchanged; cumulative matched
 packaging/deployment is deferred during the active goal.
 
 Recognition103 adds identity-preserving reindexing for previously accepted multi-rest origins after rhythm reconciliation. The 12 original procedural tests are mirrored in app and standalone namespaces; no private score material, model, OCR, timing, or wire change is included.
+
+Recognition104 extends only the final incoming pixel-resolution returning-tie search to three staff gaps while retaining the existing complete raw-curve and ownership checks. Fourteen Apache-2.0 procedural tests are mirrored across app and standalone namespaces; no private score material or new runtime dependency is included.
