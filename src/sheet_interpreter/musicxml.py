@@ -407,6 +407,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
                                   stealPercent=placement['steal'], graceWrittenDuration=duration,
                                   principalSourceIdentity=first_event+placement['principal'])
+        from . import technique_export
+        expressions.extend(technique_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
         for source, target, _ in straight_slide.bindings(page):
             # This global endpoint identity is an internal token, not a MusicXML number.
             token = first_event + target
@@ -627,8 +629,13 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 element(direction, 'sound', tempo=str(tempo['bpm']))
             a, b = bar['start'], bar['start']+bar['length']
             for mark in marks:
-                if mark['identity'] not in rendered and (a <= mark['startTick'] < b
-                        or index == len(bars)-1 and mark['kind'] == 'PEDAL_UP' and mark['startTick'] == b):
+                if mark.get('_playingInstruction'):
+                    # A terminal after-grace still belongs to its original written bar.
+                    owns = mark['_playingInstructionBarStart'] == a and a <= mark['startTick'] <= b
+                else:
+                    owns = (a <= mark['startTick'] < b
+                            or index == len(bars)-1 and mark['kind'] == 'PEDAL_UP' and mark['startTick'] == b)
+                if mark['identity'] not in rendered and owns:
                     expression_direction(measure, mark, mark['startTick']-a)
                     if mark['identity'] in dash_numbers:
                         dash = element(measure, 'direction', placement='above')

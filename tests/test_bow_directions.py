@@ -32,7 +32,7 @@ class BowConsumers(unittest.TestCase):
   for field,value in [('positionInMeasure',.5),('staffIndex',1),('measureIndex',1)]:
    s=score();b=bow(s);b[field]=value;s['techniqueChanges']=[b];self.assertFalse(self.xml(doc(s)).findall('.//technical'))
  def test_291_wire_fence_and_exact_attack(self):
-  s=score();s['techniqueChanges']=[bow(s,7)];self.assertEqual(291,struct.unpack('>i',wire.encode(s)[:4])[0])
+  s=score();s['techniqueChanges']=[bow(s,7)];self.assertEqual(291,struct.unpack('>i',wire.encode(s,291)[:4])[0])
   with self.assertRaises(ValueError):wire.encode(s,290)
   s['techniqueChanges'][0]['positionInMeasure']=.5
   with self.assertRaises(ValueError):wire.encode(s)

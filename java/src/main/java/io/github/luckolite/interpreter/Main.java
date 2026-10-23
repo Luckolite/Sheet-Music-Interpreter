@@ -333,6 +333,8 @@ public final class Main {
             List<ScoreNoteEvent> notes, List<Map<String, Object>> events) {
         for (int index = 0; index < notes.size(); index++) {
             var note = notes.get(index);
+            if (!events.get(index).containsKey("sourceNoteIndex"))
+                events.get(index).put("sourceNoteIndex", index);
             if (note.tupletDivisor() != 1) {
                 events.get(index).put("tupletActualNotes", note.tupletDivisor());
                 events.get(index).put("tupletNormalNotes", note.tupletNormalNotes());

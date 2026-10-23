@@ -2882,3 +2882,8 @@ Recognition98 adds the following reviewed source changes.
 Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.
 Guide292/audio97 and model lineage remain unchanged; matched cumulative
 packaging/deployment is deferred during the active goal.
+
+Recognition99 adds the following reviewed source changes.
+Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.
+Guide292/audio97 and model lineage remain unchanged; matched cumulative
+packaging/deployment is deferred during the active goal.

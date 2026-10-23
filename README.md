@@ -20,6 +20,7 @@ You do not need to publish your own code. Follow the [license and notice require
 - Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Labelled graphical bend arrows include quarter-tone amounts and return strokes; explicit whammy-bar arrows retain their pitch direction, and up/down strum marks order chord attacks. See [gesture evidence and limits](docs/tab-gestures.md).
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing with retained clefs, slurs, articulations, ornaments and grace notes.
+- Staff-owned arco, pizzicato and expression labels in MusicXML follow the first proved affected note's exported clock.
 - Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
 
 - MusicXML reconstructs a concert-pitch score, not the original layout or tab placement.
@@ -51,6 +52,9 @@ Images work too. `--midi` and `--musicxml` are optional. Use `--meter 3/4`, `--b
 Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
 and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
 reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.
+Decoded events include `sourceNoteIndex`, the zero-based head index within that page.
+Persistent instruction labels require matching source identities and consistent note clocks;
+older saved JSON without these identities keeps its prior omission of those labels.
 Everything runs locally after installation; no account or server is required.
 
 ### MP3 audio previews
