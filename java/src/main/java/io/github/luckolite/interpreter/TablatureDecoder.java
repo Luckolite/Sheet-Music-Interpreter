@@ -876,7 +876,8 @@ public final class TablatureDecoder {
                         n.boundaryTies(),
                         n.tupletNormalNotes())
                 .withStemDirection(n.stemDirection())
-                .withKind(n.kind());
+                .withKind(n.kind())
+                .withVisualSize(n.visualSize());
     }
 
     private static int printedMidi(ScoreNoteEvent n, ScorePageInterpretation score) {
@@ -927,6 +928,7 @@ public final class TablatureDecoder {
                         n.leadingRestBeats(),
                         n.compactOpening(),
                         0)
+                .withVisualSize(n.visualSize())
                 .withStemDirection(n.stemDirection())
                 .withTupletRatio(n.tupletDivisor(), n.tupletNormalNotes());
     }

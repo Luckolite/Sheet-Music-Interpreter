@@ -53,6 +53,9 @@ def _anchor(beat, starts):
 
 
 def _column_members(expression, page):
+    from . import cue_caption
+    if cue_caption.owns(expression):
+        return cue_caption.members(expression, page)
     if expression.get('kind') == 'ARPEGGIO':
         from .arpeggio_notation import target_indices
         return target_indices(expression, page)

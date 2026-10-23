@@ -97,7 +97,7 @@ final class NoteSlideDetector {
                         }
                     }
             }
-            if (end < 8 || r - l < 6 || b - t < 5 || b - t > (r - l) * 5) continue;
+            if (end < 8 || r - l < 3 || b - t < 5 || b - t > (r - l) * 5) continue;
             double cx = sx / end,
                     cy = sy / end,
                     vx = sxx / end - cx * cx,
@@ -112,6 +112,30 @@ final class NoteSlideDetector {
                                     0,
                                     (vx + vy - Math.sqrt((vx - vy) * (vx - vy) + 4 * cov * cov))
                                             / 2));
+            var compact =
+                    CompactApproachStrokes.find(
+                            gray,
+                            w,
+                            h,
+                            queue,
+                            end,
+                            l,
+                            r,
+                            t,
+                            b,
+                            cx,
+                            cy,
+                            slope,
+                            correlation,
+                            residual,
+                            staffs,
+                            heads,
+                            curveTracks);
+            if (compact != null) {
+                result.add(compact);
+                continue;
+            }
+            if (r - l < 6) continue;
             // A nearly vertical raster has little horizontal variance, so its
             // stroke thickness lowers Pearson correlation. Both printed heads
             // are mandatory below for these steep strokes.

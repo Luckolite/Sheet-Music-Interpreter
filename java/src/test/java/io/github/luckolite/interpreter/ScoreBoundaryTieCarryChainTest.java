@@ -287,7 +287,8 @@ public final class ScoreBoundaryTieCarryChainTest {
         var input = List.of(note(0, -1, 8).withOctaveShift(1), middle, last);
         var result = resolve(input, C, List.of(1, 2));
         assertChain(result, -1);
-        assertEquals(23, ScoreNoteEvent.class.getRecordComponents().length);
+        assertEquals(24, ScoreNoteEvent.class.getRecordComponents().length);
+        assertEquals("visualSize", ScoreNoteEvent.class.getRecordComponents()[23].getName());
         for (int i = 1; i < 3; i++)
             for (RecordComponent field : ScoreNoteEvent.class.getRecordComponents())
                 if (!field.getName().equals("writtenAccidental")

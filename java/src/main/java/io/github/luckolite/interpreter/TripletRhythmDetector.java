@@ -139,7 +139,8 @@ final class TripletRhythmDetector {
                                     note.boundaryTies(),
                                     note.tupletNormalNotes())
                             .withStemDirection(note.stemDirection())
-                            .withKind(note.kind()));
+                            .withKind(note.kind())
+                            .withVisualSize(note.visualSize()));
         }
         return new Rhythm(List.copyOf(result), List.copyOf(scaled));
     }
@@ -829,7 +830,8 @@ final class TripletRhythmDetector {
                                                 n.octaveShift(),
                                                 n.boundaryTies())
                                         .withStemDirection(n.stemDirection())
-                                        .withKind(n.kind()));
+                                        .withKind(n.kind())
+                                        .withVisualSize(n.visualSize()));
                     }
                 if (recoveredJoined) {
                     var last = result.get(c.indices().get(0));
@@ -967,7 +969,8 @@ final class TripletRhythmDetector {
                                         n.octaveShift(),
                                         n.boundaryTies())
                                 .withStemDirection(n.stemDirection())
-                                .withKind(n.kind()));
+                                .withKind(n.kind())
+                                .withVisualSize(n.visualSize()));
             }
             i++;
         }
@@ -1282,6 +1285,7 @@ final class TripletRhythmDetector {
                                                 n.boundaryTies())
                                         .withStemDirection(n.stemDirection())
                                         .withKind(n.kind())
+                                        .withVisualSize(n.visualSize())
                                         .withTupletRatio(
                                                 divisor,
                                                 divisor == 2
@@ -1613,7 +1617,8 @@ final class TripletRhythmDetector {
                                                 n.octaveShift(),
                                                 n.boundaryTies())
                                         .withStemDirection(n.stemDirection())
-                                        .withKind(n.kind()));
+                                        .withKind(n.kind())
+                                        .withVisualSize(n.visualSize()));
                     }
                 break;
             }

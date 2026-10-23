@@ -1,3 +1,4 @@
+from test_guide293_visual_size import legacy_full_note_layout
 # Copyright 2026 Luckolite
 
 # SPDX-License-Identifier: Apache-2.0
@@ -60,9 +61,11 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         new = wire.encode(original)
 
-        self.assertEqual(292, struct.unpack_from('>i', new)[0])
+        self.assertEqual(293, struct.unpack_from('>i', new)[0])
 
-        self.assertEqual(108, wire.RECOGNITION_REVISION)
+        new = legacy_full_note_layout(new)
+
+        self.assertEqual(109, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire, tremolo_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))
@@ -76,7 +79,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         original['notes'][0]['boundaryTies'] = identity()
 
-        typed = wire.encode(original)
+        typed = legacy_full_note_layout(wire.encode(original))
 
         self.assertEqual(len(new), len(typed))
 
@@ -170,4 +173,4 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
 
-            wire.encode(score(), 293)
+            wire.encode(score(), 294)

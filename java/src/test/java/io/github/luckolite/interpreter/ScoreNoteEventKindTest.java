@@ -69,11 +69,17 @@ public class ScoreNoteEventKindTest {
                 Arrays.stream(ScoreNoteEvent.class.getRecordComponents())
                         .map(RecordComponent::getName)
                         .toList();
-        assertEquals(23, fields.size());
+        assertEquals(24, fields.size());
         assertEquals(LEGACY_FIELDS, fields.subList(0, 22));
         assertEquals("kind", fields.get(22));
+        assertEquals("visualSize", fields.get(23));
         ScoreNoteEvent legacy = (ScoreNoteEvent) constructor(22).newInstance(LEGACY_VALUES);
+        ScoreNoteEvent legacyKind =
+                (ScoreNoteEvent) constructor(23).newInstance(appendKind(LEGACY_VALUES));
         assertEquals(ScoreNoteEvent.Kind.PITCHED, legacy.kind());
+        assertEquals(ScoreNoteEvent.Kind.PITCHED, legacyKind.kind());
+        assertEquals(ScoreNoteEvent.VisualSize.FULL, legacy.visualSize());
+        assertEquals(ScoreNoteEvent.VisualSize.FULL, legacyKind.visualSize());
         assertEquals(30, legacy.diatonicPitchIdentity());
         Map<String, Object> values = values(legacy);
         for (int i = 0; i < 22; i++)
@@ -83,21 +89,29 @@ public class ScoreNoteEventKindTest {
     @Test
     public void everyLegacyConstructorDefaultsToPitched() throws Exception {
         Set<Integer> expected =
-                Set.of(5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22);
+                Set.of(5, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23);
         Set<Integer> observed =
                 Arrays.stream(ScoreNoteEvent.class.getConstructors())
-                        .filter(c -> c.getParameterCount() != 23)
+                        .filter(c -> c.getParameterCount() != 24)
                         .map(Constructor::getParameterCount)
                         .collect(Collectors.toSet());
         assertEquals("No existing constructor may disappear", expected, observed);
         for (int count : expected) {
             ScoreNoteEvent legacy =
                     (ScoreNoteEvent)
-                            constructor(count).newInstance(Arrays.copyOf(LEGACY_VALUES, count));
+                            constructor(count)
+                                    .newInstance(
+                                            count == 23
+                                                    ? appendKind(LEGACY_VALUES)
+                                                    : Arrays.copyOf(LEGACY_VALUES, count));
             assertEquals(
                     "Constructor with " + count + " parameters",
                     ScoreNoteEvent.Kind.PITCHED,
                     legacy.kind());
+            assertEquals(
+                    "Legacy constructor defaults visual size to FULL",
+                    ScoreNoteEvent.VisualSize.FULL,
+                    legacy.visualSize());
         }
     }
 
@@ -130,6 +144,10 @@ public class ScoreNoteEventKindTest {
                 source,
                 source.withKind(ScoreNoteEvent.Kind.PITCHED),
                 Map.of("kind", ScoreNoteEvent.Kind.PITCHED));
+        assertCopy(
+                source,
+                source.withVisualSize(ScoreNoteEvent.VisualSize.CUE),
+                Map.of("visualSize", ScoreNoteEvent.VisualSize.CUE));
         assertEquals("Copies cannot mutate their source", before, values(source));
         Set<String> copies =
                 Arrays.stream(ScoreNoteEvent.class.getDeclaredMethods())
@@ -151,7 +169,8 @@ public class ScoreNoteEventKindTest {
                         "withCrossStaffBeam",
                         "withClef",
                         "withArticulations",
-                        "withKind"),
+                        "withKind",
+                        "withVisualSize"),
                 copies);
     }
 
@@ -253,6 +272,12 @@ public class ScoreNoteEventKindTest {
                 3,
                 -1,
                 ScoreNoteEvent.Kind.UNPITCHED);
+    }
+
+    private static Object[] appendKind(Object[] values) {
+        Object[] result = Arrays.copyOf(values, 23);
+        result[22] = ScoreNoteEvent.Kind.PITCHED;
+        return result;
     }
 
     private static Constructor<?> constructor(int count) {

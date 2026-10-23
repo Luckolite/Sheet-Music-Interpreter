@@ -288,29 +288,30 @@ public final class TabBoundaryTies {
 
     private static ScoreNoteEvent tied(ScoreNoteEvent n) {
         return new ScoreNoteEvent(
-                n.measureIndex(),
-                n.positionInMeasure(),
-                n.staffStep(),
-                n.staffIndex(),
-                n.staffCount(),
-                n.pageY(),
-                true,
-                n.augmentationDots(),
-                n.beamCount(),
-                n.writtenAccidental(),
-                n.unbeamedDurationBeats(),
-                n.tupletDivisor(),
-                n.followingRestBeats(),
-                n.articulations(),
-                n.clefBottomDiatonic(),
-                n.crossStaffBeam(),
-                n.leadingRestBeats(),
-                n.compactOpening(),
-                n.octaveShift(),
-                n.boundaryTies(),
-                n.tupletNormalNotes(),
-                n.stemDirection(),
-                n.kind());
+                        n.measureIndex(),
+                        n.positionInMeasure(),
+                        n.staffStep(),
+                        n.staffIndex(),
+                        n.staffCount(),
+                        n.pageY(),
+                        true,
+                        n.augmentationDots(),
+                        n.beamCount(),
+                        n.writtenAccidental(),
+                        n.unbeamedDurationBeats(),
+                        n.tupletDivisor(),
+                        n.followingRestBeats(),
+                        n.articulations(),
+                        n.clefBottomDiatonic(),
+                        n.crossStaffBeam(),
+                        n.leadingRestBeats(),
+                        n.compactOpening(),
+                        n.octaveShift(),
+                        n.boundaryTies(),
+                        n.tupletNormalNotes(),
+                        n.stemDirection(),
+                        n.kind())
+                .withVisualSize(n.visualSize());
     }
 
     private static int shoulders(

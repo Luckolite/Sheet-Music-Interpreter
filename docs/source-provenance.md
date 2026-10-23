@@ -2914,3 +2914,7 @@ Recognition106 adds printed hairpin clocks from proved staff-scoped arrivals and
 Recognition107 projects tempo captions from a uniquely owned written source beat while preserving numeric BPM and legacy fallback for unknown clocks. Fourteen portable Java, five app-only Java, and seventeen Python originals; no private score data or model changes.
 
 Recognition108 preserves complete, uniquely owned sudden-dynamic qualifiers at their source-written clock and repeated printed technique captions at their owned site; ambiguous or unowned captions abstain. Includes 27 portable Java, 35 app-only Java, and 10 Python originals.
+
+Recognition109 and Guide293 add an explicit visual-size field for FULL versus CUE records, preserving Guide292 compatibility and existing note payloads. Includes 21 portable Java, 24 app-only Java, and 14 Python originals.
+
+Compact approach adds one short bounded upward raw-ink path only when complete component membership, one unique destination, independently supported physical-head evidence and no competing body all agree. Seventeen portable source-free originals are mirrored; no private score material, model, Guide or audio change.

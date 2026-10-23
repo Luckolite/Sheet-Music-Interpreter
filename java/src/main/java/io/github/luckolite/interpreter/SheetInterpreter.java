@@ -481,6 +481,9 @@ public final class SheetInterpreter {
                         height,
                         staffs,
                         Math.max(0, physicalPage));
+        finalInterpretation =
+                PrintedCueSize.apply(
+                        finalInterpretation, expressionWords, staffs, gray, width, height);
         if (physicalPage >= 0)
             try {
                 var captured =

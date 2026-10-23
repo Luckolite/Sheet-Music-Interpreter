@@ -27,29 +27,30 @@ final class CourtesyMeasureRemap {
                         .map(
                                 n ->
                                         new ScoreNoteEvent(
-                                                map(n.measureIndex(), cut),
-                                                n.positionInMeasure(),
-                                                n.staffStep(),
-                                                n.staffIndex(),
-                                                n.staffCount(),
-                                                n.pageY(),
-                                                n.tiedFromPrevious(),
-                                                n.augmentationDots(),
-                                                n.beamCount(),
-                                                n.writtenAccidental(),
-                                                n.unbeamedDurationBeats(),
-                                                n.tupletDivisor(),
-                                                n.followingRestBeats(),
-                                                n.articulations(),
-                                                n.clefBottomDiatonic(),
-                                                n.crossStaffBeam(),
-                                                n.leadingRestBeats(),
-                                                n.compactOpening(),
-                                                n.octaveShift(),
-                                                n.boundaryTies(),
-                                                n.tupletNormalNotes(),
-                                                n.stemDirection(),
-                                                n.kind()))
+                                                        map(n.measureIndex(), cut),
+                                                        n.positionInMeasure(),
+                                                        n.staffStep(),
+                                                        n.staffIndex(),
+                                                        n.staffCount(),
+                                                        n.pageY(),
+                                                        n.tiedFromPrevious(),
+                                                        n.augmentationDots(),
+                                                        n.beamCount(),
+                                                        n.writtenAccidental(),
+                                                        n.unbeamedDurationBeats(),
+                                                        n.tupletDivisor(),
+                                                        n.followingRestBeats(),
+                                                        n.articulations(),
+                                                        n.clefBottomDiatonic(),
+                                                        n.crossStaffBeam(),
+                                                        n.leadingRestBeats(),
+                                                        n.compactOpening(),
+                                                        n.octaveShift(),
+                                                        n.boundaryTies(),
+                                                        n.tupletNormalNotes(),
+                                                        n.stemDirection(),
+                                                        n.kind())
+                                                .withVisualSize(n.visualSize()))
                         .toList();
         var keys =
                 s.keyChanges().stream()

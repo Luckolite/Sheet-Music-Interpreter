@@ -399,7 +399,8 @@ public final class ScoreNavigationProjection {
                         n.boundaryTies(),
                         n.tupletNormalNotes())
                 .withStemDirection(n.stemDirection())
-                .withKind(n.kind());
+                .withKind(n.kind())
+                .withVisualSize(n.visualSize());
     }
 
     // Source dynamics are evaluated below in musical time, not page distance or bar count.

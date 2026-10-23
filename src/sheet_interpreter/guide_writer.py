@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 108
-GUIDE_VERSION = 292
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292)
+RECOGNITION_REVISION = 109
+GUIDE_VERSION = 293
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -93,6 +93,8 @@ def encode(score, guide_version=GUIDE_VERSION):
         note_fields += (("stemDirection", "i"),)
     if guide_version >= 282:
         note_fields += (("kind", "B"),)
+    if guide_version >= 293:
+        note_fields += (("visualSize", "B"),)
     notes = score["notes"]
     if not isinstance(notes, list) or any(not isinstance(row, dict)
             or not _valid_boundary_ties(row.get("boundaryTies", 0)) for row in notes):
@@ -134,9 +136,15 @@ def encode(score, guide_version=GUIDE_VERSION):
             raise ValueError("Unpitched tab tie identity")
         if guide_version < 282 and kind != "PITCHED":
             raise ValueError("Unpitched attacks require guide282")
+        size = row.get("visualSize", "FULL")
+        if type(size) is not str or size not in ("FULL", "CUE"):
+            raise ValueError("Invalid note visual size")
+        if guide_version < 293 and size != "FULL":
+            raise ValueError("Cue visual size requires guide293")
         normalized_notes.append(dict(row, boundaryTies=row.get("boundaryTies", 0),
                                      tupletNormalNotes=normal, stemDirection=stem,
-                                     kind=0 if kind == "PITCHED" else 1))
+                                     kind=0 if kind == "PITCHED" else 1,
+                                     visualSize=0 if size == "FULL" else 1))
     _records(output, normalized_notes, note_fields, 250_000)
     _signature_records(output, score["keyChanges"], (("measureIndex", "i"), ("fifths", "i")), len(measures), guide_version)
     _records(output, score["tempoChanges"], (("measureIndex", "i"),

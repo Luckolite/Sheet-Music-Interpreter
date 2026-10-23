@@ -106,7 +106,8 @@ final class ScoreTiePitchGuard {
                                     current.boundaryTies(),
                                     current.tupletNormalNotes())
                             .withStemDirection(current.stemDirection())
-                            .withKind(current.kind()));
+                            .withKind(current.kind())
+                            .withVisualSize(current.visualSize()));
         }
         return result == null ? notes : result;
     }

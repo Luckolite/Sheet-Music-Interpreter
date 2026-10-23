@@ -128,11 +128,14 @@ public final class Pitched902HelperParityProbe {
                                     tie,
                                     false));
         String serialized = values.toString();
+        if (serialized.contains("visualSize=CUE"))
+            throw new AssertionError("legacy pitched helper changed ordinary glyph size");
+        String legacySerialized = serialized.replace(", visualSize=FULL", "");
         String digest =
                 HexFormat.of()
                         .formatHex(
                                 MessageDigest.getInstance("SHA-256")
-                                        .digest(serialized.getBytes(StandardCharsets.UTF_8)));
+                                        .digest(legacySerialized.getBytes(StandardCharsets.UTF_8)));
         System.out.println("fixtures=" + values.size() + " sha256=" + digest);
         System.out.println(serialized);
     }

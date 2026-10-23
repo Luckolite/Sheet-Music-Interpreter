@@ -12,7 +12,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
-from . import bow_export, clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
+from . import visual_size, cue_caption, bow_export, clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
 from . import guitar_export
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
@@ -252,6 +252,8 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         if paired and (grace is not None or stop or start or duration != event['end'] - event['start']):
             raise ValueError('Paired tremolo requires an unsplit original endpoint')
         note_type(node, duration * 2 if paired else duration, event)
+    if event and event.get('retainedVisualSize') == 'CUE' and node.find('type') is not None:
+        node.find('type').set('size', 'grace-cue' if grace is not None else 'cue')
     if grace is not None and node.find('type') is None:
         raise ValueError('Grace note has no exact written type')
     if event is not None and event_kind(event) == 'UNPITCHED':
@@ -414,6 +416,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                sourceIdentity=len(events), retainedClef=clef_export.retained(page, note_index),
                                retainedArticulations=articulation_export.retained(page, note_index),
                                retainedBow=bow_export.retained(page, note_index),
+                               retainedVisualSize=visual_size.retained(page, note_index),
                                retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index),
                                retainedTremolo=paired_tremolos.get(note_index), retainedArpeggio=False))
@@ -466,6 +469,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                   and r['staffCount'] == count and abs(r['positionInMeasure']-position) <= .018]
                     if len(owned_full) == 1:
                         mark['fullRestIdentity'] = owned_full[0]['restIdentity']
+            if cue_caption.owns(mark):
+                mark['start'], mark['end'], mark['scope'] = None, None, 'UNRESOLVED'
             mark['identity'] = f'page:{page_index}/'+mark['eventId']
             mark['startTick'], mark['endTick'] = absolute(mark.get('start')), absolute(mark.get('end'))
             members = _column_members(mark, page)
@@ -473,6 +478,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             owned = [events[first_event+i] for i in members]
             if owned and all(not n.get('durationFallback', False) and n['start'] == owned[0]['start'] and n['end'] == owned[0]['end'] for n in owned):
                 mark['startTick'] = owned[0]['end'] if mark['kind'] in ('BREATH', 'CAESURA') else owned[0]['start']
+                if cue_caption.owns(mark):
+                    mark['scope'] = 'PART'
                 local_starts = [0]
                 for duration in page['measureBeats']:
                     local_starts.append(local_starts[-1] + duration)

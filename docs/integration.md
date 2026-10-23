@@ -283,3 +283,21 @@ procedural controls contain no private score material.
 Source qualification does not establish a deployed pair. Build the matching
 app/Hub/page-worker/audio-worker, pass contract/drift and packaged synthetic
 smoke checks, then verify installed capabilities and live processing.
+
+
+## Cue appearance
+
+`score.notes[].visualSize` is `FULL` or `CUE`; older records default to `FULL`.
+Visual size is independent of pitched/unpitched classification, written duration,
+and grace timing. Paired instrument / `Play` instructions can identify a cue prefix
+when the printed head-size transition and staff ownership are independently proved.
+The instruction words retain their own source columns and part ownership.
+
+MusicXML exports visual cue size through the note's `type` size attribute. It does
+not add the silent `cue` element or change the existing sounding timeline.
+
+Guide293 adds one unsigned visual-size byte immediately after each note's attack-kind
+byte: `0` means `FULL`, `1` means `CUE`. The note record is 81 bytes; Guide292's is
+80 bytes. Legacy layouts retain their exact fields and read as `FULL`. A cue-sized
+record cannot be downgraded to an older guide layout that cannot carry its size.
+The app reader, desktop writer and Hub must be updated together. Audio97 is unchanged.

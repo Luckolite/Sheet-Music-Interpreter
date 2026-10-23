@@ -31,12 +31,16 @@ public final class LegacyNoteContractProbe {
                 StringBuilder value =
                         new StringBuilder("constructor=").append(constructor.getParameterCount());
                 for (RecordComponent component : ScoreNoteEvent.class.getRecordComponents()) {
-                    if (component.getName().equals("kind")) continue;
+                    if (component.getName().equals("kind")
+                            || component.getName().equals("visualSize")) continue;
                     value.append('|')
                             .append(component.getName())
                             .append('=')
                             .append(component.getAccessor().invoke(note));
                 }
+                if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                        || note.visualSize() != ScoreNoteEvent.VisualSize.FULL)
+                    throw new AssertionError("legacy constructor changed typed defaults");
                 value.append("|identity=").append(note.diatonicPitchIdentity());
                 value.append("|durationScale=").append(note.durationScale());
                 System.out.println(value);

@@ -91,7 +91,8 @@ final class ScoreBoundaryTies {
                                         current.boundaryTies(),
                                         current.tupletNormalNotes())
                                 .withStemDirection(current.stemDirection())
-                                .withKind(current.kind()));
+                                .withKind(current.kind())
+                                .withVisualSize(current.visualSize()));
                 break;
             }
         }

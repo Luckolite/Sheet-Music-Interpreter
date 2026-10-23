@@ -27,7 +27,94 @@ public record ScoreNoteEvent(
         int boundaryTies,
         int tupletNormalNotes,
         int stemDirection,
-        Kind kind) {
+        Kind kind,
+        VisualSize visualSize) {
+
+    /** Printed glyph scale is independent of pitch classification, rhythm, and performance. */
+    public enum VisualSize {
+        FULL,
+        CUE
+    }
+
+    /** Legacy callers have ordinary-size glyphs. */
+    public ScoreNoteEvent(
+            int measureIndex,
+            float positionInMeasure,
+            int staffStep,
+            int staffIndex,
+            int staffCount,
+            float pageY,
+            boolean tiedFromPrevious,
+            int augmentationDots,
+            int beamCount,
+            int writtenAccidental,
+            float unbeamedDurationBeats,
+            int tupletDivisor,
+            float followingRestBeats,
+            int articulations,
+            int clefBottomDiatonic,
+            boolean crossStaffBeam,
+            float leadingRestBeats,
+            boolean compactOpening,
+            int octaveShift,
+            int boundaryTies,
+            int tupletNormalNotes,
+            int stemDirection,
+            Kind kind) {
+        this(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                stemDirection,
+                kind,
+                VisualSize.FULL);
+    }
+
+    public ScoreNoteEvent withVisualSize(VisualSize value) {
+        return new ScoreNoteEvent(
+                measureIndex,
+                positionInMeasure,
+                staffStep,
+                staffIndex,
+                staffCount,
+                pageY,
+                tiedFromPrevious,
+                augmentationDots,
+                beamCount,
+                writtenAccidental,
+                unbeamedDurationBeats,
+                tupletDivisor,
+                followingRestBeats,
+                articulations,
+                clefBottomDiatonic,
+                crossStaffBeam,
+                leadingRestBeats,
+                compactOpening,
+                octaveShift,
+                boundaryTies,
+                tupletNormalNotes,
+                stemDirection,
+                kind,
+                value);
+    }
 
     /** Pitch classification is explicit; a cross-shaped head alone does not imply percussion. */
     public enum Kind {
@@ -110,7 +197,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                value);
+                value,
+                visualSize);
     }
 
     /** Existing callers without printed shaft evidence keep an unknown direction. */
@@ -185,7 +273,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 direction,
-                kind);
+                kind,
+                visualSize);
     }
 
     /** Legacy tuplets retain their former ratios; explicit normal counts preserve 5:3 and other ratios. */
@@ -274,7 +363,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 normal,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     /** Optical evidence only: incoming above/below, then outgoing above/below. */
@@ -347,7 +437,8 @@ public record ScoreNoteEvent(
                 evidence,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     /** Compatibility constructor: notes without an octave mark keep their written register. */
@@ -418,7 +509,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     /** Source-compatible constructor for callers without opening-measure geometry. */
@@ -485,7 +577,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     public ScoreNoteEvent(
@@ -549,7 +642,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     public ScoreNoteEvent(
@@ -611,7 +705,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     public static final int CLEF_UNKNOWN = -1;
@@ -696,7 +791,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     public int diatonicPitchIdentity() {
@@ -761,7 +857,8 @@ public record ScoreNoteEvent(
                 boundaryTies,
                 tupletNormalNotes,
                 stemDirection,
-                kind);
+                kind,
+                visualSize);
     }
 
     public ScoreNoteEvent(
@@ -960,6 +1057,7 @@ public record ScoreNoteEvent(
     }
 
     public ScoreNoteEvent {
+        if (visualSize == null) throw new IllegalArgumentException("A visual size is required");
         if (kind == null) throw new IllegalArgumentException("A note kind is required");
         if (stemDirection < -1 || stemDirection > 1)
             throw new IllegalArgumentException("Invalid printed stem direction");

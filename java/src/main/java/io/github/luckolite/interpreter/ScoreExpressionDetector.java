@@ -579,7 +579,11 @@ public final class ScoreExpressionDetector {
     private static Optional<Column> column(ScoreExpressiveEvent event) {
         if (!KINDS.contains(event.kind())
                 || event.evidence().stream()
-                        .noneMatch(e -> e.sourceId().equals(SOURCE) || e.sourceId().equals(SYMBOL))
+                                .noneMatch(
+                                        e ->
+                                                e.sourceId().equals(SOURCE)
+                                                        || e.sourceId().equals(SYMBOL))
+                        && !PrintedCueSize.owns(event)
                 || event.targetEventId().isEmpty()
                 || !(event.targetEventId().get().startsWith(TARGET)
                         || event.targetEventId().get().startsWith(REST_TARGET)))
@@ -777,6 +781,8 @@ public final class ScoreExpressionDetector {
                                                                                 == Kind.PEDAL_UP
                                                                         || PrintedRestDirection
                                                                                 .pedalCaption(event)
+                                                                        || PrintedCueSize.owns(
+                                                                                event)
                                                                         || event.kind()
                                                                                         == Kind
                                                                                                 .UNRESOLVED_DIRECTION
