@@ -54,7 +54,7 @@ public final class ExpressiveDirectionText {
                                     + "(?:(?:molto|poco|sempre)\\s+)?legato[.!]?\\s*$"
                                     // English character directions need the complete OCR line;
                                     // never a prose substring.
-                                    + "|^\\s*(?:flowing|triumphantly|ethereal|with\\s+driving\\s+intensity|like\\s+an\\s+echo)[.!]?\\s*$"
+                                    + "|^\\s*(?:sweetly|flowing|triumphantly|ethereal|with\\s+driving\\s+intensity|like\\s+an\\s+echo)[.!]?\\s*$"
                                     + "|giocoso|maestoso|appassionato|leggiero|free\\s+time|^\\s*(?:freely|gently)(?:\\s*(?:,|and)\\s*(?:freely|gently))*[.!]?\\s*$"));
 
     private ExpressiveDirectionText() {}

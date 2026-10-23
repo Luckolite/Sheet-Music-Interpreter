@@ -2877,3 +2877,8 @@ Recognition97 adds the following reviewed source changes.
 Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.
 Guide292/audio97 and model lineage remain unchanged; matched cumulative
 packaging/deployment is deferred during the active goal.
+
+Recognition98 adds the following reviewed source changes.
+Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.
+Guide292/audio97 and model lineage remain unchanged; matched cumulative
+packaging/deployment is deferred during the active goal.

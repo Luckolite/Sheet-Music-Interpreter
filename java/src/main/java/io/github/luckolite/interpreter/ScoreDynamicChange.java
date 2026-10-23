@@ -108,6 +108,36 @@ public record ScoreDynamicChange(
             throw new IllegalArgumentException("Invalid dynamic change");
     }
 
+    /** Half-open overlap in score geometry; a bar's end1 equals the next bar's start0. */
+    public boolean overlapsScoreSpan(ScoreDynamicChange other) {
+        java.util.Objects.requireNonNull(other);
+        return comparePosition(measureIndex, positionInMeasure, endMeasureIndex, endPosition) < 0
+                && comparePosition(
+                                other.measureIndex,
+                                other.positionInMeasure,
+                                other.endMeasureIndex,
+                                other.endPosition)
+                        < 0
+                && comparePosition(
+                                measureIndex,
+                                positionInMeasure,
+                                other.endMeasureIndex,
+                                other.endPosition)
+                        < 0
+                && comparePosition(
+                                other.measureIndex,
+                                other.positionInMeasure,
+                                endMeasureIndex,
+                                endPosition)
+                        < 0;
+    }
+
+    private static int comparePosition(int a, float x, int b, float y) {
+        long am = (long) a + (x == 1 ? 1 : 0), bm = (long) b + (y == 1 ? 1 : 0);
+        int bars = Long.compare(am, bm);
+        return bars != 0 ? bars : Float.compare(x == 0 || x == 1 ? 0 : x, y == 0 || y == 1 ? 0 : y);
+    }
+
     public ScoreDynamicChange offset(int measures) {
         return new ScoreDynamicChange(
                 measureIndex + measures,

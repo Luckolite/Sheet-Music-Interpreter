@@ -14,6 +14,8 @@ final class OpenHairpinPairs {
             byte[] gray, int w, int h, List<PlayingTechniqueDetector.Staff> staffs) {
         if (gray == null || gray.length != (long) w * h || w <= 0 || h <= 0) return List.of();
         var result = new ArrayList<Shape>();
+        var apertureOnly = new ArrayList<Shape>();
+        var apertureBudget = new CompleteHairpinAperture.Budget(4_000_000L);
         long[] completionBudget = {4_000_000L};
         for (var staff : staffs) {
             float gap = staff.gap();
@@ -122,25 +124,47 @@ final class OpenHairpinPairs {
                         if (ui && li) both++;
                         if (ly - uy >= gap * .35) {
                             int middle = gray[((uy + ly) / 2) * w + left + x] & 255;
-                            // Independently owned bar ink is neither paper nor unexplained wedge
-                            // ink.
-                            // Its halo and every other original sample remain subject to the old
-                            // law.
                             if (barColumns[x] && middle < 145) continue;
                             eligible++;
                             if (middle >= 225) clear++;
                         }
                     }
-                    if (both < len * .95 || eligible < len * .25 || clear < eligible * .9) continue;
+                    if (both < len * .95 || eligible < len * .25) continue;
+                    boolean apertureRecovered = clear < eligible * .9;
+                    if (apertureRecovered
+                            && CompleteHairpinAperture.prove(
+                                            gray,
+                                            w,
+                                            h,
+                                            left,
+                                            right,
+                                            up,
+                                            lo,
+                                            barColumns,
+                                            gap,
+                                            apertureBudget)
+                                    .isEmpty()) continue;
                     Shape shape = new Shape(staff, left, right, last > first ? 1 : -1);
+                    var destination = apertureRecovered ? apertureOnly : result;
                     boolean duplicate = false;
-                    for (var old : result)
+                    for (var old : destination)
                         if (old.staff().equals(staff)
                                 && Math.abs(old.left() - left) < gap
                                 && Math.abs(old.right() - right) < gap) duplicate = true;
-                    if (!duplicate) result.add(shape);
+                    if (!duplicate) destination.add(shape);
                 }
         }
+        // A refused optional proof cannot publish an earlier partial set of recovered wedges.
+        if (!apertureBudget.refused)
+            for (var shape : apertureOnly) {
+                boolean duplicate = false;
+                for (var old : result)
+                    if (old.staff().equals(shape.staff())
+                            && Math.abs(old.left() - shape.left()) < shape.staff().gap()
+                            && Math.abs(old.right() - shape.right()) < shape.staff().gap())
+                        duplicate = true;
+                if (!duplicate) result.add(shape);
+            }
         return List.copyOf(result);
     }
 

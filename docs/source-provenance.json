@@ -453,9 +453,14 @@
     },
     "ScoreDynamicChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicChange.java",
-      "source_sha256": "ef3581c38a24ee59e1dce68d760ee7dfdd248a1c4693724688f6d89a28c8343b",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "ef3581c38a24ee59e1dce68d760ee7dfdd248a1c4693724688f6d89a28c8343b"
+      "source_sha256": "bf3cadf73bfea11744600b6e5728ad0d49243d3f88d1ced507b8d8bbff4d7e6e",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "source_normalized_sha256": "34fe6e2cecbc9ea7bb032351abd3b0ca0bb4577c5142dbaaaf04815f9918ed61",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicChange.java",
+      "standalone_sha256": "8868589d7bd6865958c5dc27d385519eb3b81dfcc3e8272686b6d85f9d634162",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
@@ -1204,17 +1209,18 @@
     },
     "ExpressiveDirectionText.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExpressiveDirectionText.java",
-      "source_sha256": "f49dc3d8d10aa0aa7bf46785a1b61c800138ea3b5b520ce5f57cdd39f61c9bba",
-      "source_normalized_sha256": "2e6a026722762b5a9fed8cdc7bfc56a3a33d3c6e4f5a02b4c26104745bce24db",
+      "source_sha256": "ee9f797dcf867021f69a3f451a18317194e86a1ceb613c3c71cd14cdb8d7c8cb",
+      "source_normalized_sha256": "ee9f797dcf867021f69a3f451a18317194e86a1ceb613c3c71cd14cdb8d7c8cb",
       "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
-      "standalone_sha256": "2eacaf365fbc8a989764c702222f57e9d4fcb4610aa2fdb9cafe3d482e8b0c90",
-      "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
+      "standalone_sha256": "7d53bdbea4d611a476f0043621e6731c67eeeebb0d9146a1509a613182778114",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExpressiveDirectionText.java",
       "license": "Apache-2.0",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal.",
-      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged."
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation."
     },
     "ScorePerformanceTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePerformanceTimeline.java",
@@ -1697,15 +1703,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "96a865dde2a08fc5ad29655b14bcc95a7d65a96ec1621df775a10271071a225f",
-      "source_normalized_sha256": "3a19697f1e83b52c569d1613556cf5a5f40eea5d7d78b86061f48378be2cba32",
+      "source_sha256": "0a89705cd3b75f98a5ac4321e22ce50e7312eb43aa28ddad346baac3001fb062",
+      "source_normalized_sha256": "978509738bf1e09e078007dc5c7c18e24f92b4341c8cda06acba5e7334d9abeb",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "8b94849c0c516d98e62d028192f699cadd49859a013bde12fec198e0048501e8",
-      "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
+      "standalone_sha256": "843c4c32f9f922a401abb1cffb3724e2852e851a158a9119000813c006f9b10c",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1719,7 +1725,8 @@
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
-      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged."
+      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1776,22 +1783,23 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e6fe58f22e3f0c24071bed3f47b67ad46f0adaf0abaffe8ef713bc87b2090dba",
-      "source_normalized_sha256": "e6fe58f22e3f0c24071bed3f47b67ad46f0adaf0abaffe8ef713bc87b2090dba",
+      "source_sha256": "0f1b2291bc85706db71ba7b028c7d18820ae0abd1374fbd25cc8c1659e0c9aac",
+      "source_normalized_sha256": "0f1b2291bc85706db71ba7b028c7d18820ae0abd1374fbd25cc8c1659e0c9aac",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "6c6413a4251244e433f7c1770934829e652269084ba4d5d40dc1ce8c2badcf74",
-      "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
+      "standalone_sha256": "38ea44f09bdc793c5c77e21bd26f2d2aa1da562f06840f219dd6e8df809227e1",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition95_adapter_review": "semantic-adapter",
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
-      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged."
+      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -3284,19 +3292,20 @@
     },
     "OpenHairpinPairs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenHairpinPairs.java",
-      "source_sha256": "37c995e8712195c8cf76a22ea731919a770fb1e92a37d3e67246f0b28508288a",
-      "source_normalized_sha256": "26f3c8117e8d976ec630c2c6a0e55abeabec9da1efb12306fb8d0e16344efb0b",
-      "standalone_sha256": "a889232b506d31ee88e675f5ce3f1aff156d2899dc117e49f549a00e8c33aef4",
+      "source_sha256": "695415bef60b882b2d40bf79186e47da4949003de8e4de81dfcbafe212750fb2",
+      "source_normalized_sha256": "b459fb2dbb152960616c6baa40f0b6f24f67f2960be32f9810781986a716d0d7",
+      "standalone_sha256": "10265a6ee2ab128c57a3dce62344a8e6989f0d4214bccd5e002458b0d2a3952f",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpenHairpinPairs.java",
       "license": "Apache-2.0",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
-      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
-      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation."
     },
     "OpeningBeamPickup.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningBeamPickup.java",
@@ -4231,13 +4240,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "eb7ba17c1a0f72a798a676decc0e94bd062191cb82959d061b29db025267889a",
-      "source_normalized_sha256": "afc03b30575424f5765610e82a0be25f7eeb0e900c65fbaf6452a2a0cf1b3640",
-      "standalone_sha256": "297585690f419f3ef3cc286c0acb8f935ee7b8d9faee639610ad05e153ba88b6",
+      "source_sha256": "73b2b205cfc680c7621f820eaaae887fbd72b0aa26f1d60a3da8e683fa38e2b7",
+      "source_normalized_sha256": "e3af3aac3c3b3b911c1c429fd857a6883afedb90e20d73d8ec4b8005bb34096b",
+      "standalone_sha256": "ef0f2ac67e77928306bd7f3c7fcfa06ab58dc1ea70bca952f60d1c3fe4937cce",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
-      "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4247,7 +4256,8 @@
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
-      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged."
+      "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -4964,6 +4974,94 @@
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
       "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "CompleteHairpinAperture.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteHairpinAperture.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteHairpinAperture.java",
+      "source_sha256": "e46bf18fa7a06ecf9160dd096573329eef4728ca404d35296f34ff7fe3ebc888",
+      "source_normalized_sha256": "e46bf18fa7a06ecf9160dd096573329eef4728ca404d35296f34ff7fe3ebc888",
+      "standalone_sha256": "8451078bd66079f49b1c67d26034640bcd62ef750d3f7983d2be217e783f482d",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "FringedHairpinApertureOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FringedHairpinApertureOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FringedHairpinApertureOriginalTest.java",
+      "source_sha256": "9951a24c5fb270b03556d19655bca9f36760180c1ff1d293f5baf2b7ae593cc4",
+      "source_normalized_sha256": "9951a24c5fb270b03556d19655bca9f36760180c1ff1d293f5baf2b7ae593cc4",
+      "standalone_sha256": "bc332ed8cb9dd76eca9cda37f8bea2f5d68a4a81519a133f6b48c00ec157d30b",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "HairpinApertureJoinOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureJoinOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HairpinApertureJoinOriginalTest.java",
+      "source_sha256": "200f86a03f62a0527a1e4782877a790c81facb63272b88639e5ee1744323c59c",
+      "source_normalized_sha256": "200f86a03f62a0527a1e4782877a790c81facb63272b88639e5ee1744323c59c",
+      "standalone_sha256": "54cd245e196bfc375c404cc8ffb9fcafaf8cdec3d1a99a85bb5937a8ee2a9f4c",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "HairpinApertureOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HairpinApertureOriginalTest.java",
+      "source_sha256": "a796c0ff288b9eeeafc2695efa687c6abadc08a74eeddc2abf8914b504fce102",
+      "source_normalized_sha256": "a796c0ff288b9eeeafc2695efa687c6abadc08a74eeddc2abf8914b504fce102",
+      "standalone_sha256": "2a07834cff1c5c8a625a687e45d749a0762117e23288b7c907eb25addc170ef9",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "HairpinApertureSafetyOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureSafetyOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HairpinApertureSafetyOriginalTest.java",
+      "source_sha256": "39904341166b80a473d0f722505c9205114599bfc5ac889af87243a575c9b403",
+      "source_normalized_sha256": "39904341166b80a473d0f722505c9205114599bfc5ac889af87243a575c9b403",
+      "standalone_sha256": "8568d03f06d4adf8ad07bc72f2cc8a19f315daa2d435a44e7bd263ddd1d4cf04",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "HairpinScoreIntervalsOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinScoreIntervalsOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HairpinScoreIntervalsOriginalTest.java",
+      "source_sha256": "b6fe8d15507f9da73b04ffa641c350bd873994a4210d5ca21f2b26610cd995e2",
+      "source_normalized_sha256": "b6fe8d15507f9da73b04ffa641c350bd873994a4210d5ca21f2b26610cd995e2",
+      "standalone_sha256": "581fe738ce7ddd5b3478663e0fc8333c5f25b7c484950574c347f3243265f4f4",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "HairpinApertureBarExtentOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HairpinApertureBarExtentOriginalTest.java",
+      "source_sha256": "96eb458dfc41a03c9df95a71633481a9d855bbe2e4bc7a872698150d80b35a3a",
+      "source_normalized_sha256": "96eb458dfc41a03c9df95a71633481a9d855bbe2e4bc7a872698150d80b35a3a",
+      "standalone_sha256": "6e3c5d97deee4cefd3e5b8d7547cbe609128197d5436de7e4eb9711b844dc4a7",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "SweetlyDirectionOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/SweetlyDirectionOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/SweetlyDirectionOriginalTest.java",
+      "source_sha256": "0d3594235f7f36de90915b0e897840ede1991373cb02a6aabea59032ea547c5d",
+      "source_normalized_sha256": "0d3594235f7f36de90915b0e897840ede1991373cb02a6aabea59032ea547c5d",
+      "standalone_sha256": "32f455ad439a116e2eb3198f62a051c0c5d714f71bead90a46d870cc95557c6f",
+      "license": "Apache-2.0",
+      "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+      "reviewed_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494",
+      "reviewed_app_state": "Reviewed recognition98 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -9981,5 +10079,25 @@
     "runtimeBoundary": "Source97 pending; installed86/Guide291/audio97 unchanged. Matched cumulative packaging/deployment deferred during active goal; no APK or Hub tag.",
     "validationBoundary": "Final combined source gate required.",
     "paired_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f"
+  },
+  "recognition98_review": {
+    "newOriginalTests": 41,
+    "additionalAppOnlyOriginalTests": 4,
+    "standalonePythonOriginals": 0,
+    "scope": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
+    "expected": {
+      "newOriginalTests": 41,
+      "javaTests": 13015,
+      "javaClasses": 1706,
+      "appFocused": 698,
+      "mappedSources": 507,
+      "nativeSources": 371,
+      "publicFiles": 2954
+    },
+    "boundary": "Reviewed global source and original synthetic regressions only; no private scores, raster evidence, coordinates or signing material.",
+    "wireLayout": "Guide292 MRG1/audio97 unchanged.",
+    "runtimeBoundary": "Source98 pending; installed86/Guide291/audio97 unchanged. Matched cumulative packaging/deployment deferred during active goal; no APK or Hub tag.",
+    "validationBoundary": "Final combined source gate required.",
+    "paired_app_commit": "3a15702dfd3fac1521d3efda1ee173cbcfe46494"
   }
 }
