@@ -188,8 +188,8 @@ final class BoxedRehearsalF {
                             (glyph.right + 1) / (float) width,
                             (glyph.bottom + 1) / (float) height,
                             word.admission());
-            if (ScoreDynamicsDetector.uprightChordF(complete, printed, gray, width, height))
-                proofs++;
+            if (ScoreDynamicsDetector.uprightChordF(complete, printed, gray, width, height)
+                    || glyph.completeCapitalF(width, printed.gap())) proofs++;
         }
         return proofs == 1;
     }
@@ -242,8 +242,14 @@ final class BoxedRehearsalF {
         return result;
     }
 
-    private record Hole(int top, int bottom, int[] left, int[] right) {
+    private record Hole(
+            int top, int bottom, int[] left, int[] right, Set<Integer> cells, int sourceWidth) {
+        Hole(int top, int bottom, int[] left, int[] right) {
+            this(top, bottom, left, right, null, 0);
+        }
+
         boolean contains(int x, int y) {
+            if (cells != null) return cells.contains(y * sourceWidth + x);
             return y > top && y < bottom && x > left[y - top - 1] && x < right[y - top - 1];
         }
     }
@@ -262,6 +268,11 @@ final class BoxedRehearsalF {
         }
 
         Hole hole(int width) {
+            Hole simple = simpleHole(width);
+            return simple != null ? simple : capFringeHole(width);
+        }
+
+        Hole simpleHole(int width) {
             // Bounded digital-convex ring grammar over integer PIXEL CENTERS.
             // Not convexity of the union of unit cells; no fractional/pixel allowance.
             // Every observed component pixel remains in an explicitly checked row run.
@@ -334,6 +345,216 @@ final class BoxedRehearsalF {
                 rs[i] = edges.get(i)[1];
             }
             return new Hole(firstMiddle - 1, lastMiddle + 1, ls, rs);
+        }
+
+        /** Full observed caps may own a bounded inward raster fringe. No pixel is trimmed. */
+        private Hole capFringeHole(int width) {
+            int w = right - left + 1, h = bottom - top + 1;
+            long area = (long) w * h;
+            // Optional new proof has its own finite workspace; the old path is unchanged.
+            if (w < 3 || h < 3 || area > 65536) return null;
+            var runs = new ArrayList<List<int[]>>(h);
+            var outer = new ArrayList<int[]>(h);
+            for (int y = top; y <= bottom; y++) {
+                var row = new ArrayList<int[]>();
+                for (int x = left; x <= right; ) {
+                    if (!pixels.contains(y * width + x)) {
+                        x++;
+                        continue;
+                    }
+                    int first = x;
+                    while (x <= right && pixels.contains(y * width + x)) x++;
+                    row.add(new int[] {first, x - 1});
+                }
+                if (row.isEmpty()) return null;
+                runs.add(row);
+                outer.add(new int[] {row.get(0)[0] - left, row.get(row.size() - 1)[1] - left});
+            }
+            // The complete outer silhouette, including every cap tooth, keeps the old law.
+            if (!latticeConvex(outer)) return null;
+            int topCap = 0, bottomCap = 0;
+            while (topCap < h && runs.get(topCap).size() == 1) topCap++;
+            while (bottomCap < h && runs.get(h - 1 - bottomCap).size() == 1) bottomCap++;
+            if (topCap == 0 || bottomCap == 0 || topCap + bottomCap >= h) return null;
+            int first = topCap, last = h - 1 - bottomCap;
+            while (first <= last && runs.get(first).size() > 2) first++;
+            while (last >= first && runs.get(last).size() > 2) last--;
+            if (first > last
+                    || first - topCap > topCap
+                    || h - 1 - bottomCap - last > bottomCap
+                    || first == topCap && last == h - 1 - bottomCap) return null;
+            // Every fringe pixel has a straight observed connection to its whole cap.
+            // Depth cannot exceed that cap's independently observed complete thickness.
+            for (int row = topCap; row < first; row++)
+                for (var run : runs.get(row))
+                    for (int x = run[0]; x <= run[1]; x++)
+                        for (int y = row - 1; y >= topCap - 1; y--)
+                            if (!pixels.contains((top + y) * width + x)) return null;
+            for (int row = last + 1; row < h - bottomCap; row++)
+                for (var run : runs.get(row))
+                    for (int x = run[0]; x <= run[1]; x++)
+                        for (int y = row + 1; y <= h - bottomCap; y++)
+                            if (!pixels.contains((top + y) * width + x)) return null;
+            List<int[]> previous = null;
+            for (int row = first; row <= last; row++) {
+                var sides = runs.get(row);
+                if (sides.size() != 2 || sides.get(0)[1] + 1 >= sides.get(1)[0]) return null;
+                if (previous != null
+                        && (!touches(
+                                        previous.get(0)[0],
+                                        previous.get(0)[1],
+                                        sides.get(0)[0],
+                                        sides.get(0)[1])
+                                || !touches(
+                                        previous.get(1)[0],
+                                        previous.get(1)[1],
+                                        sides.get(1)[0],
+                                        sides.get(1)[1])
+                                || Math.max(previous.get(0)[1] + 1, sides.get(0)[1] + 1)
+                                        > Math.min(previous.get(1)[0] - 1, sides.get(1)[0] - 1)))
+                    return null;
+                previous = sides;
+            }
+            // Enumerate the COMPLETE complement of this frame. A single closed4-connected
+            // hole includes its cap-fringe bays, so extra interior ink is never hidden.
+            boolean[] seen = new boolean[(int) area];
+            int[] queue = new int[(int) area];
+            Set<Integer> inside = null;
+            for (int seed = 0; seed < seen.length; seed++) {
+                int sx = left + seed % w, sy = top + seed / w;
+                if (seen[seed] || pixels.contains(sy * width + sx)) continue;
+                int read = 0, end = 1;
+                boolean exterior = false;
+                queue[0] = seed;
+                seen[seed] = true;
+                while (read < end) {
+                    int at = queue[read++], x = at % w, y = at / w;
+                    exterior |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                    for (int direction = 0; direction < 4; direction++) {
+                        int nx = x + (direction == 0 ? -1 : direction == 1 ? 1 : 0);
+                        int ny = y + (direction == 2 ? -1 : direction == 3 ? 1 : 0);
+                        if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+                        int next = ny * w + nx;
+                        if (!seen[next] && !pixels.contains((top + ny) * width + left + nx)) {
+                            seen[next] = true;
+                            queue[end++] = next;
+                        }
+                    }
+                }
+                if (exterior) continue;
+                if (inside != null) return null;
+                inside = new HashSet<>();
+                for (int i = 0; i < end; i++)
+                    inside.add((top + queue[i] / w) * width + left + queue[i] % w);
+            }
+            return inside == null
+                    ? null
+                    : new Hole(top, bottom, new int[0], new int[0], Set.copyOf(inside), width);
+        }
+
+        /** A second whole-glyph proof only inside an independently owned closed frame.
+         * Every row is one complete run. A fixed finite backbone supports exactly two
+         * right-going arms; both close back to plain backbone before the next role.
+         * No searched crop, omitted hook, template score or unboxed rule is used.
+         */
+        private boolean completeCapitalF(int width, float gap) {
+            int w = right - left + 1, h = bottom - top + 1;
+            if (w < 5
+                    || h < 9
+                    || w < .35f * h
+                    || w > .9f * h
+                    || h < .8f * gap
+                    || h > 2.5f * gap
+                    || (long) w * h > 65536) return false;
+            int[] lo = new int[h], hi = new int[h];
+            for (int row = 0; row < h; row++) {
+                int first = -1, last = -1, count = 0;
+                for (int x = left; x <= right; x++)
+                    if (pixels.contains((top + row) * width + x)) {
+                        if (first < 0) first = x;
+                        last = x;
+                        count++;
+                    }
+                if (first < 0 || count != last - first + 1) return false;
+                lo[row] = first;
+                hi[row] = last;
+            }
+            // The backbone is the UNIQUE modal full row, not a best-fitting subcrop.
+            int best = 0, sl = 0, sr = 0;
+            boolean tied = false;
+            for (int row = 0; row < h; row++) {
+                boolean first = true;
+                for (int p = 0; p < row; p++)
+                    if (lo[p] == lo[row] && hi[p] == hi[row]) first = false;
+                if (!first) continue;
+                int count = 0;
+                for (int p = 0; p < h; p++) if (lo[p] == lo[row] && hi[p] == hi[row]) count++;
+                if (count > best) {
+                    best = count;
+                    sl = lo[row];
+                    sr = hi[row];
+                    tied = false;
+                } else if (count == best) tied = true;
+            }
+            int t = sr - sl + 1;
+            if (tied || best * 3 < h || t < 2 || t * 3 > h || sl - left >= t || sr >= right)
+                return false;
+            int[] start = new int[2], end = new int[2];
+            int arms = 0;
+            for (int row = 0; row < h; ) {
+                if (hi[row] <= sr) {
+                    row++;
+                    continue;
+                }
+                if (hi[row] < sr + t || arms == 2) return false;
+                start[arms] = row;
+                while (row < h && hi[row] > sr) {
+                    if (hi[row] < sr + t || lo[row] > sl || lo[row] < sl - t + 1) return false;
+                    row++;
+                }
+                end[arms++] = row - 1;
+            }
+            if (arms != 2
+                    || start[0] != 0
+                    || end[0] + 1 > t
+                    || end[0] < 1
+                    || start[1] < Math.ceil(.35 * h)
+                    || end[1] > Math.floor(.65 * h)
+                    || end[1] - start[1] + 1 > t
+                    || end[1] == start[1]
+                    || start[1] - end[0] - 1 < t
+                    || h - 1 - end[1] < 2 * t) return false;
+            int capLeft = sl, topRight = sr, midRight = sr;
+            for (int arm = 0; arm < 2; arm++) {
+                int min = right, max = left;
+                for (int row = start[arm]; row <= end[arm]; row++) {
+                    min = Math.min(min, hi[row]);
+                    max = Math.max(max, hi[row]);
+                    if (arm == 0) capLeft = Math.min(capLeft, lo[row]);
+                }
+                // Both complete outward arm edges are finite, with cap variation
+                // no greater than their observed backbone thickness.
+                if (max - min >= t) return false;
+                if (arm == 0) topRight = max;
+                else midRight = max;
+            }
+            if (topRight != right || midRight >= topRight) return false;
+            for (int row = 0; row < h; row++) {
+                boolean arm = row <= end[0] || row >= start[1] && row <= end[1];
+                if (arm) continue;
+                if (h - 1 - row > t) {
+                    if (lo[row] != sl || hi[row] != sr) return false;
+                } else {
+                    // The finite lower terminal cap may only reuse the observed
+                    // upper cap's left overhang; no right arm or lower hook is erased.
+                    if (lo[row] < capLeft
+                            || lo[row] > sr
+                            || hi[row] > sr
+                            || hi[row] < sl
+                            || hi[row] - lo[row] + 1 < t - (sl - capLeft)) return false;
+                }
+            }
+            return true;
         }
 
         private static boolean touches(int a0, int a1, int b0, int b1) {

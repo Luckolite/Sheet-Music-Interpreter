@@ -164,7 +164,7 @@ class UnpitchedGuideTests(unittest.TestCase):
 
     def test_current_epoch_layout_and_write_new_keep_existing_output(self):
 
-        self.assertEqual(100, wire.RECOGNITION_REVISION)
+        self.assertEqual(101, wire.RECOGNITION_REVISION)
         self.assertEqual(292, wire.GUIDE_VERSION)
 
         value = original_score()

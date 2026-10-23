@@ -2892,3 +2892,8 @@ Recognition100 adds the following reviewed source changes.
 Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.
 Guide292/audio97 and model lineage remain unchanged; cumulative matched
 packaging/deployment is deferred during the active goal.
+
+Recognition101 adds the following reviewed source changes.
+Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.
+Guide292/audio97 and model lineage remain unchanged; cumulative matched
+packaging/deployment is deferred during the active goal.

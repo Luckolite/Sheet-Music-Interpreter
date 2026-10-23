@@ -1248,15 +1248,17 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "112a76beae9a8e01c04707b28ea280ef8c6c17822eba69aaa8618f7cfe79a0dc",
-      "source_normalized_sha256": "112a76beae9a8e01c04707b28ea280ef8c6c17822eba69aaa8618f7cfe79a0dc",
-      "standalone_sha256": "fdc2f6535a09cd2e85dcffbaa82399054af922ff896e5d43fd09e6b1c697dc89",
+      "source_sha256": "f1f8325a71e49660beaf72d45c6b514d58fe958c8f857c1feb2af930a5034da7",
+      "source_normalized_sha256": "f1f8325a71e49660beaf72d45c6b514d58fe958c8f857c1feb2af930a5034da7",
+      "standalone_sha256": "99438a1dc4430da2f64982d325ab0f586af4bf4e568c7ce513f154e944694c5d",
       "license": "Apache-2.0",
-      "reviewed_source_state": "committed",
       "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
-      "reviewed_app_commit": "3dee3d0a706befde2fbabeae9cead49621cf00ab",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
-      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063"
+      "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MusicalOcr.java",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
     },
     "NativeDynamicGlyphs.java": {
       "source_path": "tools/native-worker/NativeDynamicGlyphs.java",
@@ -1704,15 +1706,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "c4aacbca890490475d3065cb560fc8b0d4fe9f44700063f1d80cef2f0d2a0ee2",
-      "source_normalized_sha256": "5a43828c822a7ada23307ec12fc15814e4b5045f555c8194bbeba5c0bfb30a7f",
+      "source_sha256": "cd94ab4dd61adab119286fd6bd27ff089c08755c9adf1636f8f70a0a2d6eae40",
+      "source_normalized_sha256": "fd6aaa20e244b06a5659f602a612635d0f20c909f9f5f23d3a92d583c5ee025c",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "026fe1128c7f70c06e60e3cf779af027543559cf70058cba82b6bf81bd171349",
-      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "standalone_sha256": "bad11f471e583e94baa56f25a161209c0ffdf9ad2679db30a38290485aa27445",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1729,7 +1731,8 @@
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
-      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1786,15 +1789,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "e876e287cbce9f059ff5ea2f50c558b242d48d673d923f605e33529359d5521f",
-      "source_normalized_sha256": "e876e287cbce9f059ff5ea2f50c558b242d48d673d923f605e33529359d5521f",
+      "source_sha256": "10514bf0f5e77e7e5d036ca2248cc02c2c0301e6f76d278c57d024bec57b5aec",
+      "source_normalized_sha256": "10514bf0f5e77e7e5d036ca2248cc02c2c0301e6f76d278c57d024bec57b5aec",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "1c0198261440988d9a295e48d9e1c0899e5d99a587386075b7fba51774743477",
-      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "standalone_sha256": "e140fe63bd8727cfe588acefe6814d13e8968b2e057b69763b136cf0d0d6c018",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -1804,7 +1807,8 @@
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
-      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2044,12 +2048,16 @@
     },
     "PrintedSystemNumberOcr.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSystemNumberOcr.java",
-      "reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "review_note": "Bounded system-number crops follow independently verified printed five-rule groups and retain caller-owned OCR. Original Apache-2.0 procedural positive/rejection controls; exact package/diagnostics-adapter token parity and existing JDK/interpreter dependencies only. No private source fixtures, model weights or record layouts are added.",
-      "source_sha256": "6c9bc16358b467d0e4bb5bc7750c307b98ad89ecffb1f7f257c257a1a3b0996b",
-      "source_normalized_sha256": "6c9bc16358b467d0e4bb5bc7750c307b98ad89ecffb1f7f257c257a1a3b0996b",
+      "source_sha256": "168578d7a5b7bb673373fa39a60970c80a0f6800edfeefc253ef183745472e38",
+      "source_normalized_sha256": "72e01b2e4439a075d7ea7d6da33a3dfcd1eae3a853db2346336c71ac4d12ad65",
       "scoped_reviewed_app_commit": "0a805317ca2c737cba57a2596680cadfabc0627f",
-      "reviewed_source_state": "Frozen recognition20 app source; reviewed standalone adaptation and original procedural controls."
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSystemNumberOcr.java",
+      "standalone_sha256": "17db0c8a6b53227a574e26eec12ce59216bb7a27789aa90222c053bd61f1101a",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
     },
     "VerifiedStaffTieRidge.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/VerifiedStaffTieRidge.java",
@@ -2867,19 +2875,20 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "d884cd542f375a6f0e346cdbe72734860979af01e3c906108a22506aa3b1f181",
-      "source_normalized_sha256": "d5fc3ac57bb6c33c1c3295807be562bd0a1e2857e966ac0ac9870bc82ec2fd09",
-      "standalone_sha256": "bc655c1e33837958f73516b524c1e9bef50ebfe58abe331a0c51568d1154ee76",
+      "source_sha256": "9923e77b1f20f3b86a0c7a67b3cbe1e53e4eb43c304b173a3a3709ab6b7f5e70",
+      "source_normalized_sha256": "7462a8495a3c49b4db5ddd3b00a205b40eb3f4656e0e9b590e6c198198cdbc16",
+      "standalone_sha256": "95b5070c2d36b21f443b1733c2d5cc3ab2ca7ebcab50badf1c9e5706c9f28030",
       "license": "Apache-2.0",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
-      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "bow291_review_note": "Standalone caller and native NativePageGuide both add raw bow acquisition through detectWithBows using unchanged actual labels, gray, staffs, measures and notes; resource/constructor/diagnostic adapters remain portable.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SheetInterpreter.java",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition95_adapter_review": "semantic-adapter",
-      "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
     },
     "MeterDigitRecognizer.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterDigitRecognizer.java",
@@ -3806,12 +3815,15 @@
     },
     "BoxedRehearsalF.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoxedRehearsalF.java",
-      "source_sha256": "475eccd4937b5aaf354d7dfe92022f91928e05e7f1301d9416edd0a2d0d4a4e3",
-      "source_normalized_sha256": "475eccd4937b5aaf354d7dfe92022f91928e05e7f1301d9416edd0a2d0d4a4e3",
-      "standalone_sha256": "d1b907b241ed28d1ae212fe4adc0208542b0fa5452b8c20d37b2993d517f81d0",
+      "source_sha256": "db7002c04af5e26f0449121cc730be57a0bbb6c55734aab566a0720db48453a3",
+      "source_normalized_sha256": "db7002c04af5e26f0449121cc730be57a0bbb6c55734aab566a0720db48453a3",
+      "standalone_sha256": "b7ddd58f78b4ed03e102a8b85207af4c801e2c9eff2f6b17eaf7661f6d417e75",
       "review_note": "Complete finite rehearsal-frame and unique printed-row ownership; recognition72 aligns derived identities without changing Guide290/audio95 layouts.",
-      "reviewed_source_state": "committed",
-      "reviewed_app_commit": "e54e02ff74b31069b975fa3f954d177e825d5f55"
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BoxedRehearsalF.java",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
     },
     "FiniteTenutoStaffCounter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteTenutoStaffCounter.java",
@@ -4255,13 +4267,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "89a0870f54bfb44f5a329e1d5d6410019c4d5749ae3d816b1a6a1b796e8eeefb",
-      "source_normalized_sha256": "b86da804054a899a2b3bf2be66d23efd2892a2659b3360ffed73638c3b5e4c98",
-      "standalone_sha256": "9756599add33bce99806ec85e14e274f04d072a89191f7f04b52295564a7ce3d",
+      "source_sha256": "ea26d31526bc8335e309958854da9ff066cdd246e5ce5c3cdb9fda9a4680fd22",
+      "source_normalized_sha256": "9ab0d839c6ba5580d5ef1d5ce43f5ff3c8a2b4fecba3b1e4570d04578d6d96ef",
+      "standalone_sha256": "6c672da3fbeb4e7a1a69da84d0a49e4eabe7caf5e8785f53e90aae75c2fe50ac",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
-      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4274,7 +4286,8 @@
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
-      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -5277,6 +5290,50 @@
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
       "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "CapFringeRehearsalFTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CapFringeRehearsalFTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CapFringeRehearsalFTest.java",
+      "source_sha256": "1316be8437f0493d88071bbe0775d15745c60e46fc5e88e9b8a6b23b7a229e56",
+      "source_normalized_sha256": "1316be8437f0493d88071bbe0775d15745c60e46fc5e88e9b8a6b23b7a229e56",
+      "standalone_sha256": "4b93490832f626381c4819f4e4e3d22864a039952fbd018580c35af2b2706f25",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "CompleteCapitalFTopologyTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteCapitalFTopologyTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteCapitalFTopologyTest.java",
+      "source_sha256": "4f22a149f473dff07ba0588d6b2084dd066a2ec6c79679af93f2616a6cf1b989",
+      "source_normalized_sha256": "4f22a149f473dff07ba0588d6b2084dd066a2ec6c79679af93f2616a6cf1b989",
+      "standalone_sha256": "b9f760b140a03562682ec15c6e8d51798d940c41f5a068dcaac2d9100ae7c4ee",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedSystemNumberOcrCropRepairTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedSystemNumberOcrCropRepairTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedSystemNumberOcrCropRepairTest.java",
+      "source_sha256": "d279d646d9a8488299e3fa66b560c4e51e877397b9b30c799b33cdf7e48eee7e",
+      "source_normalized_sha256": "d279d646d9a8488299e3fa66b560c4e51e877397b9b30c799b33cdf7e48eee7e",
+      "standalone_sha256": "0c9500c5e75b8cfd4234d840ecf7fced90cce3328cd0ef794ed9f6b62c6d1fcd",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedSystemNumberOcrAnchorSupplementTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedSystemNumberOcrAnchorSupplementTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedSystemNumberOcrAnchorSupplementTest.java",
+      "source_sha256": "80de7126e1c232e99af00a7216a85eed184010bcebb12bc0e1d6dfb93edb2978",
+      "source_normalized_sha256": "80de7126e1c232e99af00a7216a85eed184010bcebb12bc0e1d6dfb93edb2978",
+      "standalone_sha256": "b991a17c44ae91c83d5a56905711a63707c1ae7d75a6f09f09d018f62aeb574a",
+      "license": "Apache-2.0",
+      "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -10376,5 +10433,42 @@
     "runtimeBoundary": "Source100 pending; installed86/Guide291/audio97 unchanged; cumulative matched rollout deferred during active goal.",
     "validationBoundary": "Combined source gate required; private actual stages do not prove a fresh whole native/model/device run.",
     "paired_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5"
+  },
+  "recognition101_review": {
+    "newOriginalTests": 40,
+    "additionalAppOnlyOriginalTests": 0,
+    "standalonePythonOriginals": 0,
+    "scope": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
+    "expected": {
+      "newOriginalTests": 40,
+      "javaTests": 13089,
+      "javaClasses": 1718,
+      "appFocused": 794,
+      "appSelectedClasses": 102,
+      "mappedSources": 519,
+      "nativeSources": 372,
+      "publicFiles": 2975,
+      "hubTests": 58,
+      "nativePythonTests": 33,
+      "publicPythonTests": 231,
+      "newPortableJavaOriginals": 40,
+      "newStandaloneJavaOriginals": 0,
+      "newAppOnlyOriginals": 0,
+      "newPythonOriginals": 0,
+      "oldBowChecksAddedToPipeline": 7,
+      "status": "ROOT_REVIEWED_PLAN_GATE_PENDING",
+      "publicPythonUnique": 231,
+      "publicPythonExecutions": 264
+    },
+    "androidAdapter": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
+      "source_sha256": "4a07ace7c229a396616520a791238fadfee8ada54d73b64cb00175f097b1fe6d",
+      "review": "Android Bitmap callback preserves full OcrText and recycles the crop; standalone and native callbacks use the same helper before number reconciliation."
+    },
+    "wireLayout": "Guide292 MRG1/audio97 unchanged.",
+    "boundary": "Only reviewed global source and original procedural regressions; existing licensed Bravura resources reused. No private score pixels, logs, models, signing material or new dependencies.",
+    "runtimeBoundary": "Source101 pending; installed86/Guide291/audio97 unchanged. Cumulative matched packaging/deployment deferred during active goal.",
+    "validationBoundary": "Combined source gate required; saved actual stages do not prove fresh whole native/model/device/clock/export validation.",
+    "paired_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861"
   }
 }

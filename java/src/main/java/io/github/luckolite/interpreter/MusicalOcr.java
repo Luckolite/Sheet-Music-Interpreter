@@ -41,6 +41,24 @@ public final class MusicalOcr {
                 (pixels, w, h) -> reader.readGray(pixels, w, h).text());
     }
 
+    List<SheetInterpreter.NumberToken> supplementSystemMeasureNumbers(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<SheetInterpreter.NumberToken> existing)
+            throws Exception {
+        return PrintedSystemNumberOcr.supplement(
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                existing,
+                (pixels, w, h) -> reader.readGray(pixels, w, h));
+    }
+
     record MeterEvidence(List<ScoreMeterChange> changes, List<MeterChangeDetector.Crop> headers) {
         MeterEvidence {
             changes = List.copyOf(changes);

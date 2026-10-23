@@ -178,7 +178,14 @@ public final class SheetInterpreter {
         var measures = geometry.measures();
         labels = geometry.labels();
         measures = TablatureDecoder.reconcileMeasures(measures, tabs, width, height);
-        var numbers = annotations.measureNumbers.stream().map(NumberToken::internal).toList();
+        var numbers =
+                new java.util.ArrayList<>(
+                        annotations.measureNumbers.stream().map(NumberToken::internal).toList());
+        if (MeasureNumberReconciler.firstMeasureNumber(measures, numbers) == 0 && ocr != null)
+            for (var token :
+                    ocr.supplementSystemMeasureNumbers(
+                            labels, gray, width, height, measures, annotations.measureNumbers))
+                numbers.add(token.internal());
         var recognizedRests = new RecognizedMultiRestOrigins(selectedOrigins);
         var rests =
                 MultiMeasureRestDetector.detect(
