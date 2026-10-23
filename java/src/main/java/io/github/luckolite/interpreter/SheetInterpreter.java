@@ -204,6 +204,7 @@ public final class SheetInterpreter {
         measures =
                 PrintedMeasureRhythmGuard.reconcile(
                         rawMeasures, measures, labels, gray, width, height);
+        recognizedRests.reindexed(measures);
         int firstMeasureNumber = MeasureNumberReconciler.firstMeasureNumber(measures, numbers);
         if (firstMeasureNumber == 0 && ocr != null)
             firstMeasureNumber =

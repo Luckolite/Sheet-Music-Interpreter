@@ -2902,3 +2902,5 @@ Recognition102 adds the following reviewed source changes.
 Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.
 Guide292/audio97 and model lineage remain unchanged; cumulative matched
 packaging/deployment is deferred during the active goal.
+
+Recognition103 adds identity-preserving reindexing for previously accepted multi-rest origins after rhythm reconciliation. The 12 original procedural tests are mirrored in app and standalone namespaces; no private score material, model, OCR, timing, or wire change is included.

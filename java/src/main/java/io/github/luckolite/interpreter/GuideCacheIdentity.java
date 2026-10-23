@@ -3,7 +3,7 @@ package io.github.luckolite.interpreter;
 /** Recognition revisions invalidate derived results without changing their binary record layout. */
 public final class GuideCacheIdentity {
 
-    public static final int RECOGNITION_REVISION = 102;
+    public static final int RECOGNITION_REVISION = 103;
 
     private GuideCacheIdentity() {}
 

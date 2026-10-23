@@ -105,6 +105,28 @@ final class RecognizedMultiRestOrigins {
         sealed = true;
     }
 
+    /** Relocate only a previously accepted identity run after earlier bars are repaired. */
+    void reindexed(List<MeasureRegion> logical) {
+        var accepted = new IdentityHashMap<>(expandedRuns);
+        expandedRuns.clear();
+        if (incomplete || !sealed || logical == null || logical.size() > 4096) return;
+        var seen = new IdentityHashMap<MeasureRegion, Boolean>();
+        for (int first = 0; first < logical.size(); ) {
+            var parent = logical.get(first);
+            int end = first + 1;
+            while (end < logical.size() && logical.get(end) == parent) end++;
+            if (seen.put(parent, Boolean.TRUE) != null) {
+                expandedRuns.remove(parent);
+                first = end;
+                continue;
+            }
+            var previous = accepted.get(parent);
+            if (parent != null && previous != null && end - first == previous[1] - previous[0])
+                expandedRuns.put(parent, new int[] {first, end});
+            first = end;
+        }
+    }
+
     boolean expansion(MeasureRegion parent, int first, int end) {
         var run = expandedRuns.get(parent);
         return sealed && run != null && run[0] == first && run[1] == end;
