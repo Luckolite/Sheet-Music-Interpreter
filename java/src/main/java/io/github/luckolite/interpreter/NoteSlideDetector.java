@@ -213,17 +213,20 @@ final class NoteSlideDetector {
                                         staffs,
                                         heads,
                                         curveTracks);
+                        if (approach == null && part.sourceIndex() >= 0)
+                            approach = finiteConnectedStraight(part, w, heads);
                         if (approach != null
                                 && approach.noteIndex() == part.owner()
-                                && !PhraseOwnedSlideComponents.owned(
-                                        gray,
-                                        w,
-                                        h,
-                                        staffs,
-                                        heads,
-                                        approach.noteIndex(),
-                                        part.pixels(),
-                                        part.pixels().length)) accepted.add(approach);
+                                && (approach.connected()
+                                        || !PhraseOwnedSlideComponents.owned(
+                                                gray,
+                                                w,
+                                                h,
+                                                staffs,
+                                                heads,
+                                                approach.noteIndex(),
+                                                part.pixels(),
+                                                part.pixels().length))) accepted.add(approach);
                     }
                     if (accepted.size() == branches.size()) attachedApproaches.addAll(accepted);
                 }
@@ -321,6 +324,61 @@ final class NoteSlideDetector {
                 if (result.stream().noneMatch(old -> old.noteIndex() == approach.noteIndex()))
                     result.add(approach);
         return List.copyOf(result);
+    }
+
+    /** Validate complete branch-owned ink before emitting an exact previous-attack link. */
+    private static Stroke finiteConnectedStraight(
+            AttachedApproachBranches.Part part, int w, List<Head> heads) {
+        if (part.owner() < 0
+                || part.owner() >= heads.size()
+                || part.sourceIndex() < 0
+                || part.sourceIndex() >= heads.size()) return null;
+        var target = heads.get(part.owner());
+        var source = heads.get(part.sourceIndex());
+        float gap = target.gap;
+        // Equal-distance collar ink retains both independently proved roles. Fit only ink
+        // strictly nearer the free branch, while retaining the complete part for ownership.
+        int count = part.exclusivePixels().length;
+        if (count < 8) return null;
+        double sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+        for (int at : part.exclusivePixels()) {
+            double x = at % w, y = at / w;
+            sx += x;
+            sy += y;
+            sxx += x * x;
+            syy += y * y;
+            sxy += x * y;
+        }
+        double cx = sx / count,
+                cy = sy / count,
+                vx = sxx / count - cx * cx,
+                vy = syy / count - cy * cy,
+                cov = sxy / count - cx * cy;
+        if (vx <= 0 || vy <= 0) return null;
+        double slope = cov / vx, correlation = cov / Math.sqrt(vx * vy);
+        double residual =
+                Math.sqrt(
+                        Math.max(
+                                0,
+                                (vx + vy - Math.sqrt((vx - vy) * (vx - vy) + 4 * cov * cov)) / 2));
+        double leftY = cy + (part.left() - cx) * slope, rightY = cy + (part.right() - cx) * slope;
+        if (Math.abs(slope) < .15
+                || Math.abs(slope) > 2
+                || Math.abs(correlation) < .90
+                || residual > Math.max(1.3, gap * .075)
+                || part.right() - part.left() < gap * .65
+                || part.right() - part.left() > gap * 3.5
+                || source.staff != target.staff
+                || source.measure != target.measure
+                || !immediateSource(heads, target, part.left(), leftY, slope)) return null;
+        return new Stroke(
+                part.left(),
+                (float) leftY,
+                part.right(),
+                (float) rightY,
+                slope < 0 ? 1 : -1,
+                part.owner(),
+                true);
     }
 
     private record Fragment(

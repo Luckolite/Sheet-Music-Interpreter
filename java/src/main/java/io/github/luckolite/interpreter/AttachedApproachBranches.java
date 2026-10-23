@@ -4,10 +4,11 @@ package io.github.luckolite.interpreter;
 
 import java.util.*;
 
-/** Separates a free approach branch only after closing the entire attached ink tree's roles. */
+/** Separates typed slide branches only after closing the entire attached ink tree's roles. */
 final class AttachedApproachBranches {
     record Part(
             int[] pixels,
+            int[] exclusivePixels,
             int owner,
             int left,
             int right,
@@ -15,7 +16,8 @@ final class AttachedApproachBranches {
             int bottom,
             double cx,
             double cy,
-            double slope) {}
+            double slope,
+            int sourceIndex) {}
 
     static final class Budget {
         long left;
@@ -35,7 +37,7 @@ final class AttachedApproachBranches {
         }
     }
 
-    private record Trace(List<Integer> path, int owner) {}
+    private record Trace(List<Integer> path, int owner, int sourceIndex) {}
 
     private AttachedApproachBranches() {}
 
@@ -218,6 +220,14 @@ final class AttachedApproachBranches {
                             h,
                             track));
         }
+        var downShafts = new HashSet<Integer>();
+        for (int i : localHeads) {
+            var head = heads.get(i);
+            if (!budget.take((long) Math.ceil(head.gap() * head.gap() * 2 + 16))) return List.of();
+            if (evidence.get(i).contains(Math.round(head.x()), Math.round(head.y()))
+                    && PrintedStemDirection.detect(raw, w, h, head.x(), head.y(), head.gap()) == -1)
+                downShafts.add(i);
+        }
         boolean[] allSkeleton = skeleton.clone();
         // Contract only independently typed staff-rule stubs. Their pixels
         // remain OTHER seeds in raw ownership assignment; a curve never acquires a cut rule.
@@ -257,31 +267,86 @@ final class AttachedApproachBranches {
                     if (owner >= 0) return List.of();
                     owner = i;
                 }
+            if (owner < 0)
+                owner =
+                        headRuleCollarOwner(
+                                skeleton,
+                                degree,
+                                sw,
+                                leaf,
+                                cuts,
+                                raw,
+                                w,
+                                h,
+                                left,
+                                top,
+                                staff,
+                                heads,
+                                localHeads,
+                                evidence,
+                                downShafts);
             if (owner < 0
                     && staffTip(skeleton, degree, sw, leaf, cuts, raw, w, h, left, top, staff))
                 owner = -3;
+            if (owner < 0) {
+                var tipPath = trace(skeleton, degree, sw, leaf, cuts);
+                int[] originalPath = new int[tipPath.size()];
+                for (int k = 0; k < originalPath.length; k++) {
+                    int p = tipPath.get(k);
+                    originalPath[k] = (top + p / sw - 2) * w + left + p % sw - 2;
+                }
+                if (BeamEndBranchOwnership.owns(
+                        raw, w, h, originalPath, heads, localHeads, downShafts, budget)) owner = -4;
+            }
             leafOwners.put(leaf, owner);
         }
         var bare = new ArrayList<Trace>();
         for (int leaf : leaves) {
-            if (leafOwners.get(leaf) >= 0 || leafOwners.get(leaf) == -3) continue;
+            if (leafOwners.get(leaf) >= 0
+                    || leafOwners.get(leaf) == -3
+                    || leafOwners.get(leaf) == -4) continue;
             var path = trace(skeleton, degree, sw, leaf, cuts);
             int end = path.get(path.size() - 1);
             if (degree[end] != 3) return List.of();
-            int ax = leaf % sw, ay = leaf / sw, bx = end % sw, by = end / sw, owner = -1;
+            int ax = leaf % sw,
+                    ay = leaf / sw,
+                    bx = end % sw,
+                    by = end / sw,
+                    owner = -1,
+                    sourceIndex = -1;
             for (int branch : neighbors(skeleton, sw, end, cuts)) {
                 if (branch == path.get(path.size() - 2)) continue;
                 var headPath = traceFrom(skeleton, degree, sw, end, branch, cuts);
                 int terminal = headPath.get(headPath.size() - 1);
                 int candidate = leafOwners.getOrDefault(terminal, -1);
+                if (candidate < 0) {
+                    int tx = left + terminal % sw - 2, ty = top + terminal / sw - 2;
+                    for (int i : localHeads)
+                        if (headCollarContains(
+                                evidence.get(i), heads.get(i), downShafts.contains(i), tx, ty)) {
+                            if (candidate >= 0) return List.of();
+                            candidate = i;
+                        }
+                }
                 if (candidate < 0) continue;
                 var head = heads.get(candidate);
                 float gap = head.gap();
+                boolean curvedGeometry = ay - by >= gap * .6f && ay - by <= gap * 2.5f;
+                int prior =
+                        previousEndpoint(
+                                heads,
+                                localHeads,
+                                leafOwners,
+                                evidence,
+                                candidate,
+                                left + ax - 2,
+                                top + ay - 2,
+                                left + bx - 2,
+                                top + by - 2);
                 if (headPath.size() > gap * 2
                         || bx - ax < gap * .65f
                         || bx - ax > gap * 3.5f
-                        || ay - by < gap * .6f
-                        || ay - by > gap * 2.5f) continue;
+                        || (!curvedGeometry && prior < 0)) continue;
                 int jx = left + bx - 2, jy = top + by - 2;
                 // A thick collar can move the attachment node along the already proved shaft.
                 // The actual short head branch and unchanged approach sector own its extent.
@@ -297,11 +362,12 @@ final class AttachedApproachBranches {
                         foreign = true;
                 }
                 if (foreign) continue;
-                if (owner >= 0) return List.of();
+                if (owner >= 0 && owner != candidate) return List.of();
                 owner = candidate;
+                sourceIndex = prior;
             }
             if (owner < 0) return List.of();
-            bare.add(new Trace(path, owner));
+            bare.add(new Trace(path, owner, sourceIndex));
         }
         if (bare.isEmpty() || bare.size() > 4) return List.of();
         var result = new ArrayList<Part>();
@@ -363,7 +429,8 @@ final class AttachedApproachBranches {
                             if (run[2] == 0)
                                 for (int y = run[0]; y <= run[1]; y++) chosen[y * sw + x] = false;
                 }
-            int[] selected = new int[count];
+            int[] selected = new int[count], exclusive = new int[count];
+            int exclusiveN = 0;
             int n = 0, l = w, r = 0, t = h, b = 0;
             double sx = 0, sy = 0, sxx = 0, sxy = 0;
             for (int i = 0; i < count; i++) {
@@ -373,6 +440,7 @@ final class AttachedApproachBranches {
                         p = (y - top + 2) * sw + x - left + 2;
                 if (!chosen[p]) continue;
                 selected[n++] = original;
+                if (near[p] < far[p]) exclusive[exclusiveN++] = original;
                 l = Math.min(l, x);
                 r = Math.max(r, x);
                 t = Math.min(t, y);
@@ -388,6 +456,7 @@ final class AttachedApproachBranches {
             result.add(
                     new Part(
                             Arrays.copyOf(selected, n),
+                            Arrays.copyOf(exclusive, exclusiveN),
                             branch.owner,
                             l,
                             r,
@@ -395,9 +464,135 @@ final class AttachedApproachBranches {
                             b,
                             cx,
                             cy,
-                            (sxy / n - cx * cy) / vx));
+                            (sxy / n - cx * cy) / vx,
+                            branch.sourceIndex));
         }
         return List.copyOf(result);
+    }
+
+    /** A rail-touching spur has only independently proved head, shaft-collar and rule roles. */
+    private static int headRuleCollarOwner(
+            boolean[] skeleton,
+            int[] degree,
+            int sw,
+            int leaf,
+            Set<Long> cuts,
+            byte[] raw,
+            int w,
+            int h,
+            int left,
+            int top,
+            NoteSlideDetector.Staff staff,
+            List<NoteSlideDetector.Head> heads,
+            List<Integer> localHeads,
+            Map<Integer, PrintedSlurContours.HeadEvidence> evidence,
+            Set<Integer> downShafts) {
+        int x = left + leaf % sw - 2, y = top + leaf / sw - 2;
+        if (!rawRule(raw, w, h, x, y, staff)) return -1;
+        var path = trace(skeleton, degree, sw, leaf, cuts);
+        int owner = -1;
+        for (int candidate : localHeads) {
+            var head = heads.get(candidate);
+            float gap = head.gap();
+            if (path.size() > gap * .75f) continue;
+            boolean complete = true, body = false;
+            for (int p : path) {
+                int px = left + p % sw - 2, py = top + p / sw - 2;
+                if (headCollarContains(
+                        evidence.get(candidate), head, downShafts.contains(candidate), px, py))
+                    body = true;
+                else if (!rawRule(raw, w, h, px, py, staff)) {
+                    complete = false;
+                    break;
+                }
+            }
+            if (complete && body) {
+                if (owner >= 0) return -1;
+                owner = candidate;
+            }
+        }
+        return owner;
+    }
+
+    /** Raw head and continuous down-shaft proofs may share a short collar with a staff rule. */
+    private static boolean headCollarContains(
+            PrintedSlurContours.HeadEvidence evidence,
+            NoteSlideDetector.Head head,
+            boolean downShaft,
+            int x,
+            int y) {
+        if (evidence.contains(x, y)) return true;
+        float gap = head.gap();
+        return downShaft
+                && Math.abs(x - (head.x() - gap * .6f)) <= gap * .2f
+                && y >= head.y() - gap * .2f
+                && y <= head.y() + gap * .8f;
+    }
+
+    /** A whole-tree leaf may connect only the unique preceding physical attack to its destination. */
+    private static int previousEndpoint(
+            List<NoteSlideDetector.Head> heads,
+            List<Integer> localHeads,
+            Map<Integer, Integer> leafOwners,
+            Map<Integer, PrintedSlurContours.HeadEvidence> evidence,
+            int owner,
+            int left,
+            int leftY,
+            int right,
+            int rightY) {
+        var target = heads.get(owner);
+        float gap = target.gap();
+        double slope = (rightY - leftY) / (double) (right - left);
+        if (right <= left
+                || Math.abs(slope) < .15
+                || Math.abs(slope) > 2
+                || Math.abs(rightY - leftY) < gap * .25
+                || Math.abs(rightY - leftY) > gap * 2.5) return -1;
+        float latest = Float.NEGATIVE_INFINITY;
+        for (var head : heads)
+            if (head.staff() == target.staff()
+                    && head.measure() == target.measure()
+                    && head.x() < target.x() - gap * .35f) latest = Math.max(latest, head.x());
+        int previous = -1;
+        for (int i = 0; i < heads.size(); i++) {
+            var head = heads.get(i);
+            if (head.staff() == target.staff()
+                    && head.measure() == target.measure()
+                    && head.x() < target.x() - gap * .35f
+                    && latest - head.x() <= gap * .35f) {
+                if (previous >= 0) return -1;
+                previous = i;
+            }
+        }
+        if (previous < 0 || !localHeads.contains(previous) || !leafOwners.containsValue(previous))
+            return -1;
+        var source = heads.get(previous);
+        if (left - source.x() < gap * .5
+                || left - source.x() > gap * 3
+                || (target.y() - source.y()) * slope <= 0) return -1;
+        return supportedLineEndpoint(evidence.get(previous), source, left, leftY, slope, true)
+                        && supportedLineEndpoint(
+                                evidence.get(owner), target, left, leftY, slope, false)
+                ? previous
+                : -1;
+    }
+
+    private static boolean supportedLineEndpoint(
+            PrintedSlurContours.HeadEvidence evidence,
+            NoteSlideDetector.Head head,
+            double originX,
+            double originY,
+            double slope,
+            boolean rightSide) {
+        float gap = head.gap();
+        int first = Math.round(head.x() + (rightSide ? 0 : -gap * .72f));
+        int last = Math.round(head.x() + (rightSide ? gap * .72f : 0));
+        for (int x = first; x <= last; x++) {
+            int y = (int) Math.round(originY + (x - originX) * slope);
+            for (int dy = -(int) Math.ceil(gap * .15); dy <= Math.ceil(gap * .15); dy++)
+                if (evidence.contains(x, y + dy)) return true;
+        }
+        return false;
     }
 
     /** Negative work preflight only. These generous envelopes never own or erase raw pixels. */
@@ -415,7 +610,7 @@ final class AttachedApproachBranches {
                 int x = component[i] % w, y = component[i] / w;
                 if (x > target.x() - gap * .65f
                         || x < target.x() - gap * 3.5f
-                        || y < target.y() + gap * .6f
+                        || y < target.y() - gap * 2.5f
                         || y > target.y() + gap * 2.5f) continue;
                 boolean possibleHeadOrShaft = false;
                 for (int h : localHeads) {

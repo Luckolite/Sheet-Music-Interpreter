@@ -2918,3 +2918,5 @@ Recognition108 preserves complete, uniquely owned sudden-dynamic qualifiers at t
 Recognition109 and Guide293 add an explicit visual-size field for FULL versus CUE records, preserving Guide292 compatibility and existing note payloads. Includes 21 portable Java, 24 app-only Java, and 14 Python originals.
 
 Compact approach adds one short bounded upward raw-ink path only when complete component membership, one unique destination, independently supported physical-head evidence and no competing body all agree. Seventeen portable source-free originals are mirrored; no private score material, model, Guide or audio change.
+
+Recognition110 adds connected approach and beam-end ownership only when endpoint bodies and branch roles close uniquely; ambiguous branches abstain. Thirty-five portable source-free Java originals; no private score material, model, Guide, or audio change.

@@ -1015,12 +1015,12 @@
     },
     "NoteSlideDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteSlideDetector.java",
-      "source_sha256": "ec062784416df2f916107febc3b88d27febe29621bb71ef10909608ebfca1320",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "source_normalized_sha256": "3a6056b2954d81de86f80f75e9788f5d45bef73d7b0eaf3f46385bd69bd9b078",
+      "source_sha256": "05e7188f60281448c1324d9969b7573dc95e8bce58586c8ca68f0193850ab2f2",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "source_normalized_sha256": "9cbc7593fd223770cd5a443da2aa0535336025dadcf8aef3b512153a75c8b363",
       "review_note": "A complete bounded monotone curved approach nominates one unique destination. Existing measured chord-to-terminal sector may intersect actual head pixels issued by the existing raw printed-head owner; failed raw tracks and competing destinations abstain. A conservative body envelope only rejects impossible alternatives and never grants ownership. Invocation-local track cache retains the same gray/staff scope. Straight route and independent phrase guard remain unchanged; no starting pitch inferred.",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "9e7ba7281a66fb6fbd7b192ebef269cc72ec0abf679f1664c32e86e208a7302b",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
+      "standalone_sha256": "f953cecd62cb6308f90bfd807272581710904599acbb60c926d0f2c1eacfb5db",
       "reviewed_app_base_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
       "scoped_reviewed_app_commit": "ddd342a275bc764f5a2ec3f89636305f2231f439",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteSlideDetector.java",
@@ -1710,15 +1710,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "3939d318b5821eb77243d8868bf22284efd1cab31aec9972354942c53b4efd67",
-      "source_normalized_sha256": "3c5a12351654230b3a62f7b99573972a05add96acabfdd4f39c7535cc9e6376b",
+      "source_sha256": "281509b95e62615c57e9729259011f4725ac252ccaab5810b905f7f05883967c",
+      "source_normalized_sha256": "7c9d3e8bb6eb8e4c1a6cac6b5f3c90726a257a30faaee371704ad8fd29913226",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "84c3044b3fd87b8cce82b67d269daa8b785e2b0afba6f05e12fd6f634e4fd23a",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
+      "standalone_sha256": "fcc0f72170e91577a6248f70b6156b31fa49ad767c2102a70b43941f664100c2",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1795,15 +1795,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "9da7e6239cf173bca1d0c710dd4db676af9153bca30fb204b8e9f26d6028fae9",
-      "source_normalized_sha256": "ab02680e6ef2531ca589c20f4e26ee3da7e0126ad6ac8ab1e1b1a596c82a66f2",
+      "source_sha256": "d4bd77f90b379796bc4cb44a5dd31d2b6208bb10284854c1ec0fd7c5c07161d1",
+      "source_normalized_sha256": "76a742ca651b30af57eccda354fc174f6ea3ebd57ad4d63530fd6cc1720740e7",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "9ed26815c43941158575530909db7cc20a593c8bbe0d26e5537ffe435db3c89f",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
+      "standalone_sha256": "3615fc72f817dc1b489832a75b861bbb54c11a3a5e0f69d4de53cd91d82d61d2",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -4291,13 +4291,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "2eadf65c4cf4d6a2b8e163f91523558a3cc9247d72cdf2e4909c87d511efa62e",
-      "source_normalized_sha256": "ca8e1e637106a9f458254cc0ac5805e461ef90166a501b9cb38ad5b9e1d8196e",
-      "standalone_sha256": "22d7f52e97411c03e3bbbf9e50228e17b9fcf8934c85c93eb6c082fd22caa70f",
+      "source_sha256": "12691a16592d11b51a35e9fa2e6cc40ae1198bc9f5315e68075e1c1a3604333e",
+      "source_normalized_sha256": "7c5044f95d2f3b5b2af443899d440d515bf8e2de85613cb69309ab0dba3f4bb2",
+      "standalone_sha256": "d7faee8141836b7976df3814b96e6d16763a38dc7257d818d33fc8ab836f3baa",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4861,13 +4861,13 @@
     "AttachedApproachBranches.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AttachedApproachBranches.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AttachedApproachBranches.java",
-      "source_sha256": "4360739556e46e4fd3e5619f3bbc799cb871c41de3a499dd7b997851b448747c",
-      "source_normalized_sha256": "4360739556e46e4fd3e5619f3bbc799cb871c41de3a499dd7b997851b448747c",
-      "standalone_sha256": "84e1ea7e6c4dd72e24845aa56024409cf077bbd20c5b006b22252043368e58fd",
+      "source_sha256": "11259e70d6776052034df9eda8fecfb65035d74f5978f0f68509bf6518fbf486",
+      "source_normalized_sha256": "38813737ac2d5c552c7019a981bed88f695cae20f8cc6a153b09b6fc6b9b5daa",
+      "standalone_sha256": "986fd80d945787d6c1cca1a0e067ca1eab549e9c5fb95514073eadc2717dcdd3",
       "license": "Apache-2.0",
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
-      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
-      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal."
     },
     "AttachedCurvedApproachTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/AttachedCurvedApproachTest.java",
@@ -5862,30 +5862,33 @@
     },
     "tests/test_guide284_tab_ties.py": {
       "standalone_path": "tests/test_guide284_tab_ties.py",
-      "standalone_sha256": "3064e347949a60718842840853b5fe1516465074da7300a0fd97304915e3f34c",
-      "reviewed_sha256": "3064e347949a60718842840853b5fe1516465074da7300a0fd97304915e3f34c",
+      "standalone_sha256": "00e5f4802830f47649f3abb67a4d0251b9b05d3f29bd30a4050c70ea511540b7",
+      "reviewed_sha256": "00e5f4802830f47649f3abb67a4d0251b9b05d3f29bd30a4050c70ea511540b7",
       "license": "Apache-2.0",
       "recognition109_review_note": "Refresh semantic-only Python source/test hash for the reviewed Guide293/visual-cue integration.",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload."
     },
     "tests/test_printed_stem_guide.py": {
       "standalone_path": "tests/test_printed_stem_guide.py",
-      "standalone_sha256": "fc06f5d53d40a0463872962928c14dc78d807ba4776a2d820b7494aa19baebc4",
-      "reviewed_sha256": "fc06f5d53d40a0463872962928c14dc78d807ba4776a2d820b7494aa19baebc4",
+      "standalone_sha256": "b9535c992041fb8420b7dac8274849d6e911c131d39e6c16b1db47cc6ab38f26",
+      "reviewed_sha256": "b9535c992041fb8420b7dac8274849d6e911c131d39e6c16b1db47cc6ab38f26",
       "license": "Apache-2.0",
       "recognition109_review_note": "Refresh semantic-only Python source/test hash for the reviewed Guide293/visual-cue integration.",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload."
     },
     "tests/test_unpitched_guide.py": {
       "standalone_path": "tests/test_unpitched_guide.py",
-      "standalone_sha256": "bac66c77849aa1a0aa0c3cd11275ac5291a5c7729a2f493961fdf512193d88b6",
-      "reviewed_sha256": "bac66c77849aa1a0aa0c3cd11275ac5291a5c7729a2f493961fdf512193d88b6",
+      "standalone_sha256": "202f5f7f0e60172be69b10b423baf363d7d01bef5fe046b72f7f738d0071e4d2",
+      "reviewed_sha256": "202f5f7f0e60172be69b10b423baf363d7d01bef5fe046b72f7f738d0071e4d2",
       "license": "Apache-2.0",
       "recognition109_review_note": "Refresh semantic-only Python source/test hash for the reviewed Guide293/visual-cue integration.",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload."
     },
     "CompactApproachStrokes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactApproachStrokes.java",
@@ -5908,6 +5911,48 @@
       "review_note": "Seventeen portable source-free compact approach originals mirrored in app and standalone packages.",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "AttachedStraightConnectionOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/AttachedStraightConnectionOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/AttachedStraightConnectionOriginalsTest.java",
+      "license": "Apache-2.0",
+      "review_note": "Nineteen portable source-free connected straight-approach ownership originals mirrored in app and standalone packages; no score imagery or coordinates.",
+      "source_sha256": "260a54465d6c02356d9003c54c256c5341c667a768d09b813bd121533fb50f32",
+      "source_normalized_sha256": "99cd39a68f9c1b1c773f3fb79126918187a4450b795e0d7140480f75a8c8baf9",
+      "standalone_sha256": "ec4012462360bea2edb903c1805c97d609608a560cf6b5b022549ee9ba430062",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "BeamEndApproachOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BeamEndApproachOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BeamEndApproachOriginalsTest.java",
+      "license": "Apache-2.0",
+      "review_note": "Sixteen portable source-free beam-end ownership originals mirrored in app and standalone packages; no score imagery or coordinates.",
+      "source_sha256": "1f655c3fcddc5b05f6133cd8a2ae32d8e0e6580042e5189059473b16fd871939",
+      "source_normalized_sha256": "ee7749567edb584b986e54a3c0f95bc57b2f915c2162cd36fc14c702ae5913b6",
+      "standalone_sha256": "c29e57c800aaadecada787c1b2a6fd1cd4a59f3cd14f86f93a60e54b968d7852",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "BeamEndBranchOwnership.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamEndBranchOwnership.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BeamEndBranchOwnership.java",
+      "license": "Apache-2.0",
+      "review_note": "Bounded beam-end ownership helper, paired app and standalone implementation; reviewed dependencies and finite work budget.",
+      "source_sha256": "1432701bd965c5880554fac4f5e0a97a4620ce993bf204cc29458d3d356b512b",
+      "source_normalized_sha256": "281e2bec6872b742db5473f329905230bf608a31efdef0cdd65c85d52c9e6bbc",
+      "standalone_sha256": "cc1e3bce5462532375851e3fbed9871f06fdabef0ae258f6c9290c680b929413",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "tests/test_recognition_epoch_contract.py": {
+      "standalone_path": "tests/test_recognition_epoch_contract.py",
+      "standalone_sha256": "0f83ed5184705e7d3a493f4dc86e8703e34a00b74719fb68e9e0a0966e07bf87",
+      "reviewed_sha256": "0f83ed5184705e7d3a493f4dc86e8703e34a00b74719fb68e9e0a0966e07bf87",
+      "license": "Apache-2.0",
+      "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload.",
+      "reviewed_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193",
+      "reviewed_app_state": "Reviewed recognition110 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -11616,5 +11661,25 @@
     "scope": "Exact bounded compact raw-component approach. No guide/audio/recognition epoch change beyond existing109. No private score assets, OCR, model or runtime dependency.",
     "evidence_boundary": "Original synthetic public regression geometry; private source review artifacts retained locally.",
     "paired_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b"
+  },
+  "connected_branch_113_review": {
+    "packet_sha256": "1bc9d7601dc1f1715284f0ccb42b5ed519e30ea4ce780cbcf274805da622e980",
+    "integration_sha256": "1c620a9151b867f34e9e7c545517eec50a02c6298467e1ed7ae1927291362789",
+    "license": "Apache-2.0",
+    "portableJavaOriginals": 19,
+    "appOnlyJavaOriginals": 0,
+    "pythonOriginals": 0,
+    "scope": "Connected approach ownership with closed raw role ownership and unique same-part attack; ambiguous branches abstain. Source-free originals only."
+  },
+  "beam_end_approach_114_review": {
+    "packet_sha256": "2155a814eb4e87ee1e10920c428ee82864455884e43451cf36498df92b884cc0",
+    "integration_sha256": "45d8d3f3ba90581b86759766332f4e731ff092fb32051c1e0742a9fc44f9adbc",
+    "license": "Apache-2.0",
+    "portableJavaOriginals": 16,
+    "appOnlyJavaOriginals": 0,
+    "pythonOriginals": 0,
+    "nativeManifestAdded": "BeamEndBranchOwnership.java",
+    "scope": "Bounded beam-end approach ownership with complete eligible endpoints and branch closure; source-free originals only, no score-specific rule.",
+    "paired_app_commit": "00211ce92f9a73b03a84a7b47c4af1f4a20ce193"
   }
 }
