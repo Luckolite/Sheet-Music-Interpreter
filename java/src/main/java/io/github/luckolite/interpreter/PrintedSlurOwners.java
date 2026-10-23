@@ -218,10 +218,12 @@ final class PrintedSlurOwners {
             StaffPitchTrack track) {
         record Visible(Location head, float gap) {}
         var columns = new ArrayList<List<Visible>>(Collections.nCopies(width, null));
+        var independentlyVisible = new ArrayList<Visible>();
         for (var head : heads) {
             float gap = track.at(head.x())[1];
             if (!headBody(gray, width, height, head, gap)) continue;
             var visible = new Visible(head, gap);
+            independentlyVisible.add(visible);
             for (int x = Math.max(0, Math.round(head.x() - gap * .72f));
                     x < width && x <= head.x() + gap * .72f;
                     x++) {
@@ -234,6 +236,41 @@ final class PrintedSlurOwners {
                 double dx = (x - visible.head().x()) / (visible.gap() * .72);
                 double dy = (y - visible.head().y()) / (visible.gap() * .55);
                 return dx * dx + dy * dy <= 1;
+            }
+
+            public long returningOwnerCost() {
+                return independentlyVisible.size();
+            }
+
+            public boolean ownsReturningBow(PrintedSlurContours.Bow bow) {
+                Location first = null, last = null;
+                for (var visible : independentlyVisible) {
+                    var head = visible.head();
+                    for (int side = 0; side < 2; side++) {
+                        var cap = side == 0 ? bow.start() : bow.end();
+                        double dx = Math.abs(cap.x() - head.x()) / visible.gap();
+                        double clearance =
+                                (bow.above() ? head.y() - cap.y() : cap.y() - head.y())
+                                        / visible.gap();
+                        if (dx > .85
+                                || clearance < -.2
+                                || clearance > 2
+                                || (side == 0 ? cap.x() + 1 < head.x() : cap.x() - 1 > head.x()))
+                            continue;
+                        if (side == 0) {
+                            if (first != null && first.owner() != head.owner()) return false;
+                            first = head;
+                        } else {
+                            if (last != null && last.owner() != head.owner()) return false;
+                            last = head;
+                        }
+                    }
+                }
+                return first != null
+                        && last != null
+                        && first.owner() != last.owner()
+                        && first.staffIndex() == last.staffIndex()
+                        && first.staffCount() == last.staffCount();
             }
 
             public boolean contains(int x, int y) {

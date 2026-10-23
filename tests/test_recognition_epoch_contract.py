@@ -15,7 +15,7 @@ class RecognitionEpochContractTest(unittest.TestCase):
         source = (root / "java/src/main/java/io/github/luckolite/interpreter/"
                   "GuideCacheIdentity.java").read_text(encoding="utf-8")
         revision = int(re.search(r"RECOGNITION_REVISION\s*=\s*(\d+)", source)[1])
-        self.assertEqual(93, revision)
+        self.assertEqual(94, revision)
         self.assertEqual(revision, wire.RECOGNITION_REVISION)
         self.assertEqual(291, wire.GUIDE_VERSION)
 

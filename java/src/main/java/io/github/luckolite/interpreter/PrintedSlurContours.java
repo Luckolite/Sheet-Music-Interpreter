@@ -37,6 +37,14 @@ final class PrintedSlurContours {
         boolean contains(int x, int y);
 
         boolean closes(Point cap, int x, int y, boolean first);
+
+        default long returningOwnerCost() {
+            return Long.MAX_VALUE;
+        }
+
+        default boolean ownsReturningBow(Bow bow) {
+            return false;
+        }
     }
 
     record RawBand(int first, int last) {}
@@ -350,6 +358,7 @@ final class PrintedSlurContours {
         var legacy = List.copyOf(existing);
         var planned = new ArrayList<RibbonCandidate>();
         boolean incomplete = false;
+        long[] boldWork = {8_000_000};
         var previous = new ArrayList<Integer>();
         for (int x = left; x <= right; x++) {
             var current = new ArrayList<Integer>();
@@ -430,7 +439,10 @@ final class PrintedSlurContours {
                         allCells.add(FiniteSlurRibbon.pixel(run.x(), y));
             var proof = FiniteSlurRibbon.certify(allCells, normalMaximum);
             incomplete |= proof.limitReached();
-            if (!proof.complete()) continue;
+            boolean bold =
+                    !proof.complete() && boldReturning(component, heads, normalMaximum, boldWork);
+            incomplete |= boldWork[0] < 0;
+            if (!proof.complete() && !bold) continue;
             // Existing complete returning-curvature grammar independently supplies the role.
             var selected = new IdentityHashMap<Bow, List<Run>>();
             Bow bow = fit(component, null, selected);
@@ -468,6 +480,89 @@ final class PrintedSlurContours {
             i = j;
         }
         return false;
+    }
+
+    /** Complete engraved taper: both actual edges return, one coherent thickening, owned caps. */
+    private static boolean boldReturning(
+            List<Run> component, HeadEvidence heads, int thinMaximum, long[] work) {
+        if (heads == null) return false;
+        if (component.size() > 8192) {
+            work[0] = -1;
+            return false;
+        }
+        long ownerCost = heads.returningOwnerCost();
+        if (ownerCost == Long.MAX_VALUE) return false;
+        if (ownerCost < 0 || ownerCost > 4_000_000) {
+            work[0] = -1;
+            return false;
+        }
+        long cost = 64L * component.size() + 2L * ownerCost;
+        if (cost > work[0]) {
+            work[0] = -1;
+            return false;
+        }
+        work[0] -= cost;
+        int n = component.size();
+        if (n < 12) return false;
+        int[] sizes = new int[n];
+        var upper = new ArrayList<Run>(n);
+        var lower = new ArrayList<Run>(n);
+        int maximum = 0;
+        for (int i = 0; i < n; i++) {
+            Run run = component.get(i);
+            RawBand band = run.members().get(0);
+            int size = band.last() - band.first() + 1;
+            sizes[i] = size;
+            maximum = Math.max(maximum, size);
+            upper.add(
+                    new Run(
+                            run.x(),
+                            band.first(),
+                            run.upper(),
+                            run.gap(),
+                            run.upper(),
+                            run.upper(),
+                            List.of()));
+            lower.add(
+                    new Run(
+                            run.x(),
+                            band.last(),
+                            run.lower(),
+                            run.gap(),
+                            run.lower(),
+                            run.lower(),
+                            List.of()));
+        }
+        if (maximum <= thinMaximum || sizes[0] > thinMaximum || sizes[n - 1] > thinMaximum)
+            return false;
+        // A raster row at each edge has at most one-row phase uncertainty. There must be
+        // a single increase/decrease profile consistent with ALL observed widths.
+        int[] prefix = new int[n], suffix = new int[n];
+        int need = 0;
+        for (int i = 0; i < n; i++) {
+            need = Math.max(need, sizes[i] - 1);
+            prefix[i] = need <= sizes[i] + 1 ? need : Integer.MAX_VALUE;
+            if (i > 0 && prefix[i - 1] == Integer.MAX_VALUE) prefix[i] = Integer.MAX_VALUE;
+        }
+        need = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            need = Math.max(need, sizes[i] - 1);
+            suffix[i] = need <= sizes[i] + 1 ? need : Integer.MAX_VALUE;
+            if (i + 1 < n && suffix[i + 1] == Integer.MAX_VALUE) suffix[i] = Integer.MAX_VALUE;
+        }
+        boolean taper = false;
+        for (int i = n / 4; i <= n * 3 / 4; i++)
+            if (prefix[i] != Integer.MAX_VALUE && suffix[i] != Integer.MAX_VALUE) taper = true;
+        if (!taper) return false;
+        Bow center = fit(component, null, null),
+                top = fit(upper, null, null),
+                bottom = fit(lower, null, null);
+        return center != null
+                && top != null
+                && bottom != null
+                && center.above() == top.above()
+                && center.above() == bottom.above()
+                && heads.ownsReturningBow(center);
     }
 
     private record RibbonCandidate(Bow bow, List<Run> component, List<Run> selected) {}

@@ -2854,3 +2854,9 @@ Reviewed recognition93: complete same-owner accent/returning-slur partitions car
 App, Hub and both writers share recognition93; Guide291/audio97 and record
 layouts remain unchanged. Cumulative matched packaging/deployment remains
 deferred during the active goal.
+
+Recognition94 adds the following reviewed source changes.
+Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.
+App, Hub and both writers share recognition94; Guide291/audio97 and record
+layouts remain unchanged. Cumulative matched packaging/deployment remains
+deferred during the active goal.
