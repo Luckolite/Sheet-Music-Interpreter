@@ -2827,3 +2827,24 @@ App, Hub and both writers share recognition91; Guide291/audio97, model weights,
 dependencies and record layouts remain unchanged. Only original procedural
 regressions are public. Cumulative matched packaging/deployment stays deferred
 during the active goal; no APK or Hub tag is produced by this prep.
+
+Recognition92 adds wholly outside raw companion-rail proposals beneath an
+independently complete thin upper anchor, inside the inherited two-gap bound.
+The existing clipped-seed path, shared 4M weighted proposal budget, original
+pair fits, 145/225 raw boundaries, 95% arms and 90% clearance remain. Reviewed
+quantized partial-beam contour inherits sampled span <=6 gaps for quadratic
+bound-pair work; no absolute CPU cap is claimed. A verified flat-rest frame
+overrides the tracked frame using at least 60% contrasted columns, not a
+contiguous stroke, and may change retained rest geometry. These changes are
+paired with original procedural regressions. App, Hub and both writers share
+recognition92; Guide291/audio97, models, dependencies and record layouts remain
+unchanged. Cumulative matched packaging/deployment stays deferred during the
+active goal; no APK or Hub tag is produced by this prep.
+
+Recognition92 R2 retains tracked rest frames whenever any source column
+exceeds its own seed top/bottom by .15gap or scale by .05gap. Independent
+five-rule flat proof and original rest ownership remain unchanged. Four
+original guard controls supplement the unchanged eleven flat-rule cases; the
+legacy six frame tests are mirrored into the app. Recognition92, Guide291
+and audio97 identities remain unchanged. The first failed gate is preserved;
+no model, dependency, wire or manifest change is introduced by R2.

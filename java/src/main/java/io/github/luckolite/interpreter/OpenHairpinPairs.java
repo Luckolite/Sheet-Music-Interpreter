@@ -72,6 +72,7 @@ final class OpenHairpinPairs {
                 cores.add(new Core(left, right, u, l));
             }
             completeBoundaryCores(cores, gray, w, h, bottom, gap, staffs, staff, completionBudget);
+            proposeUnseededRails(cores, gray, w, h, bottom, gap, staffs, staff, completionBudget);
             for (int i = 0; i < cores.size(); i++)
                 for (int j = i; j < cores.size(); j++) {
                     Core a = cores.get(i), c = cores.get(j);
@@ -178,6 +179,112 @@ final class OpenHairpinPairs {
             for (int x = 0; x < result.length; x++) result[x] |= candidate[x];
         }
         return result;
+    }
+
+    /** A complete upper rail can also propose an independently complete raw companion wholly
+     * outside the initial band. This adds proposals only; every original pair test remains. */
+    private static void proposeUnseededRails(
+            List<Core> cores,
+            byte[] gray,
+            int w,
+            int h,
+            int bottom,
+            float gap,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            PlayingTechniqueDetector.Staff staff,
+            long[] budget) {
+        if (cores.size() > budget[0]) return;
+        budget[0] -= cores.size();
+        var anchors = List.copyOf(cores);
+        for (Core anchor : anchors) {
+            long anchorWork = anchor.upper().length * 6L + 64;
+            if (anchorWork > budget[0]) return;
+            budget[0] -= anchorWork;
+            double[] upper = fit(anchor.upper(), gap), lower = fit(anchor.lower(), gap);
+            if (upper == null || lower == null) continue;
+            boolean thin = true;
+            for (int x = 0; x < anchor.upper().length; x++)
+                if (anchor.upper()[x] != Integer.MAX_VALUE
+                        && anchor.lower()[x] - anchor.upper()[x] > 4) thin = false;
+            if (!thin) continue;
+            int end =
+                    (int)
+                            Math.ceil(
+                                    Math.max(
+                                                    upper[1],
+                                                    upper[1]
+                                                            + upper[0]
+                                                                    * (anchor.right()
+                                                                            - anchor.left()))
+                                            + gap * 2
+                                            + 2);
+            if (end <= bottom || end >= h - 1) continue;
+            if (staffs.size() > budget[0]) return;
+            budget[0] -= staffs.size();
+            boolean occupied = false;
+            for (var next : staffs)
+                if (next.top() > staff.bottom() && end >= Math.floor(next.top() - gap * .3))
+                    occupied = true;
+            if (occupied) continue;
+            int margin = Math.round(gap * .5f),
+                    left = Math.max(0, anchor.left() - margin),
+                    right = Math.min(w - 1, anchor.right() + margin),
+                    width = right - left + 1,
+                    rows = end - bottom;
+            long area = (long) width * rows;
+            // Includes payload allocation/zeroing, raw reads, eight-neighbor traversal,
+            // complete component extents, and the two proposed arrays and their fills.
+            long charge = area * 32 + width * 4L + 64;
+            if (area > Integer.MAX_VALUE || charge > budget[0]) return;
+            budget[0] -= charge;
+            boolean[] ink = new boolean[(int) area];
+            int[] queue = new int[(int) area];
+            for (int y = 0; y < rows; y++)
+                for (int x = 0; x < width; x++)
+                    ink[y * width + x] = (gray[(bottom + 1 + y) * w + left + x] & 255) < 145;
+            for (int at = 0; at < ink.length; at++) {
+                if (!ink[at]) continue;
+                ink[at] = false;
+                int count = 1, head = 0, min = at % width, max = min;
+                queue[0] = at;
+                boolean cut = false;
+                while (head < count) {
+                    int q = queue[head++], x = q % width, y = q / width;
+                    min = Math.min(min, x);
+                    max = Math.max(max, x);
+                    if (x == 0 || x == width - 1 || y == rows - 1) cut = true;
+                    if (y == 0)
+                        for (int dx = -1; dx <= 1; dx++)
+                            if (left + x + dx >= 0
+                                    && left + x + dx < w
+                                    && (gray[bottom * w + left + x + dx] & 255) < 145) cut = true;
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int xx = x + dx, yy = y + dy;
+                            if (xx < 0 || xx >= width || yy < 0 || yy >= rows) continue;
+                            int next = yy * width + xx;
+                            if (ink[next]) {
+                                ink[next] = false;
+                                queue[count++] = next;
+                            }
+                        }
+                }
+                int first = left + min, last = left + max;
+                if (cut
+                        || last - first + 1 < gap * 6
+                        || Math.abs(first - anchor.left()) > gap * .5
+                        || Math.abs(last - anchor.right()) > gap * .5) continue;
+                int[] u = new int[last - first + 1], l = new int[u.length];
+                Arrays.fill(u, Integer.MAX_VALUE);
+                Arrays.fill(l, Integer.MIN_VALUE);
+                for (int k = 0; k < count; k++) {
+                    int x = queue[k] % width - min, y = bottom + 1 + queue[k] / width;
+                    u[x] = Math.min(u[x], y);
+                    l[x] = Math.max(l[x], y);
+                }
+                cores.add(new Core(first, last, u, l));
+            }
+        }
     }
 
     /** Finish only an observed lower core that crossed the proposal band, under a complete

@@ -363,7 +363,7 @@ final class SixteenthRestDetector {
         var printed = RawStaffLineDetector.detect(gray, width, height);
         var result = new ArrayList<Staff>();
         for (var staff : staffs) {
-            if (staff.pitchTrack() != null) {
+            if (staff.pitchTrack() != null && !FlatRestRulePlane.trackFitsSeed(staff, width)) {
                 result.add(staff);
                 continue;
             }
@@ -381,6 +381,9 @@ final class SixteenthRestDetector {
                     if (ink < Math.max(24, width * .25f)) complete = false;
                 }
                 if (!complete) continue;
+                if (staff.pitchTrack() != null
+                        && !FlatRestRulePlane.proved(
+                                gray, width, height, candidate.rows(), candidate.gap())) continue;
                 if (match != null) {
                     ambiguous = true;
                     break;

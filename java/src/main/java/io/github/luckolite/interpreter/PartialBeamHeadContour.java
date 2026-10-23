@@ -363,8 +363,55 @@ final class PartialBeamHeadContour {
         return witnesses >= 3;
     }
 
-    /** Quantized shaft endpoints need not share the raw beam edge's exact slope. */
+    /** Fit one rasterized line to independent edges, allowing only inward shaft clipping. */
     private static boolean stableOutsideHead(List<Sample> samples, float gap, int left, int right) {
+        return stableOutsideHeadReleased(samples, gap, left, right)
+                || quantizedOutsideHead(samples, gap, left, right);
+    }
+
+    private static boolean quantizedOutsideHead(
+            List<Sample> samples, float gap, int left, int right) {
+        int witnesses = 0;
+        for (boolean upper : new boolean[] {true, false}) {
+            var bounds = new ArrayList<double[]>();
+            int outside = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+            for (var sample : samples)
+                if (upper ? sample.topClear : sample.bottomClear) {
+                    boolean independent = sample.x < left || sample.x > right;
+                    double y = upper ? sample.top : sample.bottom;
+                    // Pixel-center quantization is bounded by half a pixel. The mask
+                    // may clip inward at a shaft, but cannot add outward oval ink.
+                    double lower = independent || !upper ? y - .5 : Double.NEGATIVE_INFINITY;
+                    double higher = independent || upper ? y + .5 : Double.POSITIVE_INFINITY;
+                    bounds.add(new double[] {sample.x - left, lower, higher});
+                    if (independent) {
+                        outside++;
+                        min = Math.min(min, sample.x);
+                        max = Math.max(max, sample.x);
+                    } else witnesses++;
+                }
+            if (outside < 3 || max - min < gap * .25f) return false;
+            double lowSlope = -.7, highSlope = .7;
+            // Eliminate the intercept from every lower/upper pair. Feasible
+            // slope bounds certify that a single straight edge explains all
+            // independent pixels and every visible contour inside the mask.
+            for (var lower : bounds)
+                if (Double.isFinite(lower[1]))
+                    for (var higher : bounds)
+                        if (Double.isFinite(higher[2])) {
+                            double dx = lower[0] - higher[0], dy = lower[1] - higher[2];
+                            if (dx > 0) lowSlope = Math.max(lowSlope, dy / dx);
+                            else if (dx < 0) highSlope = Math.min(highSlope, dy / dx);
+                            else if (dy > 1e-8) return false;
+                            if (lowSlope > highSlope + 1e-8) return false;
+                        }
+        }
+        return witnesses >= 3;
+    }
+
+    /** Quantized shaft endpoints need not share the raw beam edge's exact slope. */
+    private static boolean stableOutsideHeadReleased(
+            List<Sample> samples, float gap, int left, int right) {
         int witnesses = 0;
         for (boolean upper : new boolean[] {true, false}) {
             int count = 0, min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;

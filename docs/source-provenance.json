@@ -538,18 +538,20 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "f411ee9135dd3e7e56f5185e24d848bb7561f24e83c7e6572ed0cd8b42248d13",
+      "source_sha256": "04a15a79383af6f709312b789cd1ecee317b3d777439b9a5c7c81a10fd3498d2",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "source_normalized_sha256": "4cde93fc8f06f49d74d9b8dbcac3b8b4ddd2ed4874063b6ec9cdb8b50a1fa020",
+      "source_normalized_sha256": "2669508f77b71fb17f87fefb227ca366561096701360f09fa5a509960c43e2cd",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal.",
-      "standalone_sha256": "da5adb3d5e571c9bd91671d1c01165e65e244c050094e1ee6d7c24f21507f767",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
+      "standalone_sha256": "2c2b1c2f7fecee29c362df5c503dc6beed6c79700e37750a79c1468c6132b84b",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SixteenthRestDetector.java",
-      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes."
+      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -1663,22 +1665,24 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "3bffa225cb57c8d79f4447e8632c09e8b2d9be53b5641fbd8fecfbdb9a2d626e",
-      "source_normalized_sha256": "fb86fe6ff749362ecbb7d107a610a5098f16a9bbc366f2279f473262d49c486f",
+      "source_sha256": "1bf953f16f6a40ae939c24dcd2235a8ecd5f8d25c380d462e9ab9632a2a335ab",
+      "source_normalized_sha256": "41e602177ec8f3bebcaa2f97f2b0e9fde4a494699d486b70f5c96ce8cde96145",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "94339efebb3580a3eec65c06adad97087e68d5f567d4f81b7261e473ceff2ea2",
-      "reviewed_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139",
+      "standalone_sha256": "dc73876165ba0344808ae3e2a28c7830083b7c105e0e396c92185e378a2e96a8",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Compatible recognition91 batch committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
-      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only."
+      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1735,15 +1739,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "25fe610a8285b7bbf398d5b76e9d9fdf2e1f9c1664ac0974935c3b435b90bcd7",
-      "source_normalized_sha256": "786b2672be2eb42a6824dab255aedb33a9cc2b48da5966abf5731b820a5e38d7",
+      "source_sha256": "a92608e266b9560b100c5186af06bac7a900766ec116ad980913f590a6b18eea",
+      "source_normalized_sha256": "0d57ffbc9280ce55b2fa4ac1975cd6a88a4b02fff222f20a5aae044acb26f652",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "411370c4160598e08356d77aabca290605187447ab826e7a57a009aeef078ead",
-      "reviewed_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139",
+      "standalone_sha256": "223215945c3ba77c32c0eb30d46dcf44310224fbd7cd04f00af88cf96c3c5452",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Compatible recognition91 batch committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py"
@@ -3204,17 +3208,19 @@
     },
     "OpenHairpinPairs.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpenHairpinPairs.java",
-      "source_sha256": "adac8325eba9255cacefae5d6326cf55875942061efac07b3546161ac5aa3915",
-      "source_normalized_sha256": "98cdcb8adee399949890a8bfffb5e0bfd206f896653cef2013691f4d44bee894",
-      "standalone_sha256": "2cc847005ac831f982f8ffeded0e6b3086cfa1ab84ca3a407989cdcb8e7e6610",
+      "source_sha256": "37c995e8712195c8cf76a22ea731919a770fb1e92a37d3e67246f0b28508288a",
+      "source_normalized_sha256": "26f3c8117e8d976ec630c2c6a0e55abeabec9da1efb12306fb8d0e16344efb0b",
+      "standalone_sha256": "a889232b506d31ee88e675f5ce3f1aff156d2899dc117e49f549a00e8c33aef4",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OpenHairpinPairs.java",
       "license": "Apache-2.0",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
-      "reviewed_app_state": "Compatible recognition91 batch committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
-      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only."
+      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
     },
     "OpeningBeamPickup.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningBeamPickup.java",
@@ -4135,28 +4141,32 @@
     "PartialBeamHeadContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PartialBeamHeadContour.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PartialBeamHeadContour.java",
-      "source_sha256": "471e22c3d1d5536a7994e1c4e98a6b7f665c68e2b8df067972aabe56c3a55ae3",
-      "source_normalized_sha256": "f58929f9cfd0b3afa309696e8e52404577b2346afd20c2814dc1cba371f874e8",
-      "standalone_sha256": "715d687a6d0e34a2a93ef48c01c0f5de5258acaaa11f115f9a1d0d02840372b8",
+      "source_sha256": "ddd091460aa4189b63fe58fb01999c0be6633bd069321d7d7294bf68069f5093",
+      "source_normalized_sha256": "89300069029237beeaf2a918a59cf7c697fe87459d154696d4d4828008a79647",
+      "standalone_sha256": "ed0e331d255de65c3e787f82b8ebe0138275955369f9efa3ce8c7853566e92c6",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "3462beda0a9bdf64c9c1e1d26986e7fbc6622cf0",
-      "reviewed_app_state": "Compatible recognition89 batch committed; cumulative paired rollout deferred during active goal.",
-      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes."
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
+      "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "e3210a25af76d6cd1a19aacb60108f28fd71fe7ec45148dbc8eaf803a8858f94",
-      "source_normalized_sha256": "7cf2d949ca6e98ba284c12eb1d12bd2f21a7379d81614d5fc2f4fdce05990baa",
-      "standalone_sha256": "df4c4d2db8235673e7c088749149cc8eae511da12e35a8d9504bc8b09900c264",
+      "source_sha256": "c626753e7ce200721f376f6c9da58a55ae4a101e9761be8e4bcf3594d0243e10",
+      "source_normalized_sha256": "df1218489db766b8b4ece5019ae0c3ffd6f891187ef8bba7b3b3b0e32d61f7d2",
+      "standalone_sha256": "4afa0146abb1833a29e1bc1564c22fa52581643b45b279d99a1dc6c7530d2006",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139",
-      "reviewed_app_state": "Compatible recognition91 batch committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
-      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only."
+      "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -4377,6 +4387,65 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139",
       "reviewed_app_state": "Compatible recognition91 batch committed; cumulative matched rollout deferred during active goal."
+    },
+    "FlatRestRulePlane.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FlatRestRulePlane.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FlatRestRulePlane.java",
+      "source_sha256": "c1818ef888a4dfee2cda6ff71cdae663b126fa10a7da851395f070b58b9dd8b1",
+      "source_normalized_sha256": "81e053110e0325b404261a2de11db99c6cf4b929785fd7b99dc250784d611753",
+      "standalone_sha256": "3164741afa05063d099654a81fc9dc3e0ca41899562072c5948dbb0bf8fca2f2",
+      "license": "Apache-2.0",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal."
+    },
+    "UnseededHairpinRailOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/UnseededHairpinRailOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/UnseededHairpinRailOriginalTest.java",
+      "source_sha256": "cfd4a2a9f43e570ab44da8613e2bb6ffbfbccd6224437437ca1b5a0359fccb42",
+      "source_normalized_sha256": "57b6ae0d7180afbffe18fb7e3414c4ab91d867f869da84601d03c3a1ebf215c8",
+      "standalone_sha256": "60321097bffbee15c1308cb4d8e90926c9f9637107eb5dc2bbf09eaa1a07c237",
+      "license": "Apache-2.0",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal."
+    },
+    "QuantizedPartialBeamTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/QuantizedPartialBeamTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/QuantizedPartialBeamTest.java",
+      "source_sha256": "14e0b27fe50f55e400d68ae8e818b7df4ad9e916d312d179025f6e64b1bf6970",
+      "source_normalized_sha256": "8f5d3a0373363264ffdf83f870504ad9ccb3ea8b0db0001d6c3aeb111be4ad1e",
+      "standalone_sha256": "9bc5bc48dfdac0fdacf74747af905be3c9e09876e5db2d345aae7f790571157b",
+      "license": "Apache-2.0",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal."
+    },
+    "TrackedFlatRestFrameTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TrackedFlatRestFrameTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TrackedFlatRestFrameTest.java",
+      "source_sha256": "cbe00f0a98a2194d91736c2c01205e006d58881038c54aeb18705191c8f6ac13",
+      "source_normalized_sha256": "21677005c0560d6baa9b30d2e801ab50b06c7bd711f36edb70191e455f8c84d1",
+      "standalone_sha256": "8395aa6ebd1f8424882837020e09e295ed855032af00d2ebec5bbdd820b1642c",
+      "license": "Apache-2.0",
+      "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal."
+    },
+    "PrintedRestFrameTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedRestFrameTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedRestFrameTest.java",
+      "source_sha256": "e21076278b5b560a787582c5da6e17a15a7434128de2e4b74d81f6825874d438",
+      "source_normalized_sha256": "4e7d0ce6a3e4fa925b6e16b26a6b18e38090e959b47bcb951881066142bff527",
+      "standalone_sha256": "926fa48ccb075428e732b3e9713c9e709a17bee385bb373b668df2ec362f22cf",
+      "license": "Apache-2.0",
+      "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+      "reviewed_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa",
+      "reviewed_app_state": "Compatible recognition92 batch committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -9275,5 +9344,31 @@
     "runtimeBoundary": "Source recognition91; installed pair86/291/97. Cumulative matched app/Hub/worker packaging deferred during active goal; no APK/Hub tag.",
     "validationBoundary": "Planned counts, not passed-check claims; final Root validation logs required.",
     "paired_app_commit": "04c8d367392c1da1d6230d25743dc76d314b5139"
+  },
+  "recognition92_review": {
+    "newOriginalTests": 41,
+    "expectedJavaTests": 12794,
+    "expectedJavaClasses": 1671,
+    "expectedAppFocused": 291,
+    "mappedSources": 463,
+    "nativeSources": 363,
+    "expectedPublicFiles": 2903,
+    "scopedEvidence": {
+      "unseededCompanion": "An independently complete thin upper anchor proposes a complete raw companion wholly outside the initial band inside the inherited 2-gap+2 bound. Old clipped-seed path, shared 4M weighted proposal budget and all original pair fits/95% arm/90% clearance rules remain.",
+      "quantizedContour": "Reviewed quantized partial-beam contour ownership; extra quadratic bound-pair work inherits sampled span <=6 gaps, without an absolute CPU cap claim. Original independent-head and full contour protections remain.",
+      "flatRestFrame": "A verified flat frame overrides the tracked frame; at least 60% of columns must be contrasted, which does not require a contiguous stroke. The override can change geometry of retained rests. Current raw/staff ownership and original competing note/rest guards remain required. R2: Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change."
+    },
+    "sourceBoundary": "Reviewed paired interpreter sources and original procedural tests only; private score images, masks, paths, probes and coordinates excluded. Existing platform adapters, models/dependencies/wire291/audio97 unchanged.",
+    "runtimeBoundary": "Source recognition92; installed pair86/291/97. Cumulative matched app/Hub/worker packaging deferred during active goal; no APK/Hub tag.",
+    "validationBoundary": "R2 planned counts; original failed gate preserved. New full Java/app/Hub/drift required; Python21+21 inherited only by exact recorded source/tool/identity/manifest hashes.",
+    "paired_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa"
+  },
+  "recognition92_r2_review": {
+    "note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
+    "priorFailedGateSHA256": "f6ef95dd833635127ec04304b43b7ecc7e0ae1ec262bbb69d398828d378174ec",
+    "newUniqueOriginalsSince91": 41,
+    "qualifiedBundleSHA256": "6f093da866751ca6807963c1423c759601316fbfb2125c6702a52dccc22a6ee7",
+    "preservedPublicRegression": "PrintedRestFrameTest.curvedTrackIsPreserved",
+    "paired_app_commit": "13554e99115728c0bfa9b405aa78f044b617aefa"
   }
 }
