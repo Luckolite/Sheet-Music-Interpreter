@@ -2910,3 +2910,5 @@ Recognition104 extends only the final incoming pixel-resolution returning-tie se
 Recognition105 adds a complete-component detached tie contour proof with R2 per-column local-paper contrast and mirrored original procedural contracts. The existing incoming low-contrast control is included; no private score material or runtime dependency is included.
 
 Recognition106 adds printed hairpin clocks from proved staff-scoped arrivals and written bar boundaries. Source-free 37 portable and five app writer originals; Python whole-hold ownership also respects staff count. No private score payloads, model, OCR, wire layout, or song-specific rules. Recognition106 also restores a complete whole-head chord only when the rounded meter glyph is independently owned by a valid aligned stack; two-head and off-grid controls remain rejected. Four portable procedural originals; no private score data or model.
+
+Recognition107 projects tempo captions from a uniquely owned written source beat while preserving numeric BPM and legacy fallback for unknown clocks. Fourteen portable Java, five app-only Java, and seventeen Python originals; no private score data or model changes.

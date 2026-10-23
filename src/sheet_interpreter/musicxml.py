@@ -346,6 +346,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         from . import multi_rest_wire
         for group in multi_rest_wire.checked_score(score):
             printed_rest_groups.append(dict(group, firstBar=first_bar+group['firstMeasureIndex']))
+        from . import source_tempo_clock
         for index, beats in enumerate(page['measureBeats']):
             length = ticks(beats)
             if length <= 0:
@@ -357,7 +358,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 if change['measureIndex'] == index:
                     current_meter = (change['numerator'], change['denominator'])
             bar = dict(start=offset+local_start, length=length, meter=current_meter, key=current_key,
-                       tempos=[c for c in score.get('tempoChanges', []) if c['measureIndex'] == index])
+                       tempos=[dict(c, _sourceTempoOnset=source_tempo_clock.onset(page, c))
+                               for c in score.get('tempoChanges', []) if c['measureIndex'] == index])
             bars.append(bar)
             local_start += length
         for row in score.get('rests', []):
@@ -645,7 +647,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 for _ in range(dots):
                     element(metronome, 'beat-unit-dot')
                 element(metronome, 'per-minute', format(Decimal(str(marked_bpm)).normalize(), 'f'))
-                element(direction, 'offset', round(bar['length']*tempo['positionInMeasure']))
+                source_onset = tempo.get('_sourceTempoOnset')
+                tempo_offset = ticks(source_onset) if source_onset is not None else round(bar['length']*tempo['positionInMeasure'])
+                element(direction, 'offset', tempo_offset, sound='yes')
                 element(direction, 'sound', tempo=str(tempo['bpm']))
             a, b = bar['start'], bar['start']+bar['length']
             for mark in marks:

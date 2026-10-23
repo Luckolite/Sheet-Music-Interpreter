@@ -340,7 +340,8 @@ def _perform_one(pages, bpm, slide_group=0):
                 if expression[field] is not None:
                     expression[field]['measureIndex'] += len(beats)
             expressions.append(expression)
-        for change in page.get('score', {}).get('tempoChanges', []):
+        from .source_tempo_clock import rhythmic_changes
+        for change in rhythmic_changes(page):
             numeric.append(dict(change, measureIndex=change['measureIndex']+len(beats)))
         for supplied in page.get('score', {}).get('playbackDirections', []):
             direction = copy.deepcopy(supplied); direction['measureBoundary'] += len(beats)
