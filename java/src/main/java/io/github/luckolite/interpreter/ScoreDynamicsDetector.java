@@ -555,6 +555,7 @@ final class ScoreDynamicsDetector {
             byte[] ownershipGray,
             boolean paperProposals) {
         List<ScoreDynamicChange> result = new ArrayList<>();
+        var arrivalLevels = new ArrayList<PrintedHairpinArrival.Level>();
         Map<ScoreDynamicChange, PlayingTechniqueDetector.Word> openWords = new HashMap<>();
         float minimumGap = Float.MAX_VALUE, maximumGap = 0;
         for (var staff : staffs)
@@ -644,6 +645,34 @@ final class ScoreDynamicsDetector {
                     width,
                     height,
                     common != null);
+            var at = slot(anchor, target, measures, notes, width, height);
+            if (at != null
+                    && ownershipGray != null
+                    && ownershipGray.length == (long) width * height
+                    && containsInk(word, ownershipGray, width, height)
+                    && result.stream()
+                            .anyMatch(
+                                    c ->
+                                            c.direction() == 0
+                                                    && c.measureIndex() == at.measure
+                                                    && c.positionInMeasure() == at.position
+                                                    && c.staffIndex() == target.index()
+                                                    && c.staffCount() == target.count()
+                                                    && c.decibels() == db)) {
+                boolean column =
+                        notes.stream()
+                                .anyMatch(
+                                        n ->
+                                                n.measureIndex() == at.measure
+                                                        && n.staffIndex() == target.index()
+                                                        && n.staffCount() == target.count()
+                                                        && n.positionInMeasure() == at.position
+                                                        && (n.articulations() & NoteOrnament.GRACE)
+                                                                == 0);
+                arrivalLevels.add(
+                        new PrintedHairpinArrival.Level(
+                                word, target, at.measure, at.position, column));
+            }
         }
         if (gray != null && gray.length == width * height) {
             boolean[] seen = new boolean[gray.length];
@@ -769,7 +798,7 @@ final class ScoreDynamicsDetector {
                 }
                 var common = GrandStaffDynamics.directionPart(shared, owner, top, bottom);
                 if (direction != 0) {
-                    add(
+                    addWithArrival(
                             result,
                             common == null ? owner : common,
                             left / (float) width,
@@ -780,7 +809,9 @@ final class ScoreDynamicsDetector {
                             notes,
                             width,
                             height,
-                            common != null);
+                            common != null,
+                            arrivalLevels,
+                            ownershipGray);
                     if (common == null) {
                         int a = Math.min(w - 1, Math.max(0, w / 20)),
                                 b = Math.max(0, w - 1 - w / 20);
@@ -797,7 +828,7 @@ final class ScoreDynamicsDetector {
                 }
             }
             for (var shape : FaintHairpinPair.recover(faintPairCores, ownershipGray, width, height))
-                add(
+                addWithArrival(
                         result,
                         shape.staff(),
                         shape.left() / (float) width,
@@ -808,10 +839,12 @@ final class ScoreDynamicsDetector {
                         notes,
                         width,
                         height,
-                        false);
+                        false,
+                        arrivalLevels,
+                        ownershipGray);
             for (var shape : OpenHairpinPairs.detect(ownershipGray, width, height, staffs)) {
                 var proposed = new ArrayList<ScoreDynamicChange>();
-                add(
+                addWithArrival(
                         proposed,
                         shape.staff(),
                         shape.left() / (float) width,
@@ -822,7 +855,9 @@ final class ScoreDynamicsDetector {
                         notes,
                         width,
                         height,
-                        false);
+                        false,
+                        arrivalLevels,
+                        ownershipGray);
                 for (var change : proposed) {
                     double a = change.measureIndex() + change.positionInMeasure();
                     double b = change.endMeasureIndex() + change.endPosition();
@@ -843,7 +878,7 @@ final class ScoreDynamicsDetector {
             }
             for (var shape :
                     ShadedHairpinFragments.recover(fragments, ownershipGray, width, height))
-                add(
+                addWithArrival(
                         result,
                         shape.staff(),
                         shape.left() / (float) width,
@@ -854,7 +889,9 @@ final class ScoreDynamicsDetector {
                         notes,
                         width,
                         height,
-                        false);
+                        false,
+                        arrivalLevels,
+                        ownershipGray);
             for (var link :
                     HairpinContinuation.links(wedges, strokes, staffs, measures, width, height)) {
                 var from =
@@ -1522,6 +1559,25 @@ final class ScoreDynamicsDetector {
             int width,
             int height,
             boolean shared) {
+        addWithArrival(
+                result, owner, left, right, db, direction, measures, notes, width, height, shared,
+                List.of(), null);
+    }
+
+    private static void addWithArrival(
+            List<ScoreDynamicChange> result,
+            PlayingTechniqueDetector.Staff owner,
+            float left,
+            float right,
+            float db,
+            int direction,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int width,
+            int height,
+            boolean shared,
+            List<PrintedHairpinArrival.Level> levels,
+            byte[] gray) {
         Slot a = slot(left, owner, measures, notes, width, height),
                 b = slot(right, owner, measures, notes, width, height);
         if (a == null
@@ -1529,6 +1585,32 @@ final class ScoreDynamicsDetector {
                 || b.measure < a.measure
                 || b.measure == a.measure && b.position < a.position) return;
         if (direction != 0 && a.measure == b.measure && b.position - a.position < .04) return;
+        if (direction != 0) {
+            var arrival =
+                    PrintedHairpinArrival.resolve(
+                            levels,
+                            owner,
+                            right * width,
+                            b.measure,
+                            b.position,
+                            measures,
+                            width,
+                            height);
+            if (arrival.column().isPresent())
+                b = new Slot(arrival.column().get().measure(), arrival.column().get().position());
+            else if (!arrival.observed()) {
+                boolean ownedColumn = false;
+                for (var note : notes)
+                    if (note.measureIndex() == b.measure
+                            && note.positionInMeasure() == b.position
+                            && note.staffIndex() == owner.index()
+                            && note.staffCount() == owner.count()) ownedColumn = true;
+                if (!ownedColumn
+                        && PrintedHairpinBoundary.proved(
+                                gray, width, height, owner, measures.get(b.measure), right * width))
+                    b = new Slot(b.measure, 1);
+            }
+        }
         var change =
                 new ScoreDynamicChange(
                         a.measure,

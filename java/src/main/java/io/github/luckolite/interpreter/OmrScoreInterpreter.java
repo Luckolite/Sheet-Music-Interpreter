@@ -4948,6 +4948,10 @@ final class OmrScoreInterpreter {
                         && head.centerY >= staff.top + gap * 2.2f
                         && head.maxY <= staff.bottom + gap * .3f;
         if (!whole && !denominator) return false;
+        // Existing raw open-head and pitch-grid checks protect independently split
+        // whole-note lobes from the whole-component rounded-meter veto.
+        if (whole && hasIntactPitchAlignedWholeStack(labels, gray, width, height, head, staff))
+            return false;
         boolean header = false;
         for (Component glyph : glyphs)
             if (glyph.maxX < head.minX
@@ -5054,6 +5058,22 @@ final class OmrScoreInterpreter {
                 }
             }
         return heads < gap * gap * .15f && ink > gap * 3 && maxY - minY > gap * 1.1f;
+    }
+
+    private static boolean hasIntactPitchAlignedWholeStack(
+            byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null || staff == null) return false;
+        List<Component> parts = splitRegularStack(labels, width, head, staff);
+        if (parts.size() < 3) return false;
+        float step = staff.pitchGap * .5f;
+        for (Component part : parts) {
+            if (!printedOpenOval(labels, gray, width, height, part, staff.pitchGap)) return false;
+            float aligned =
+                    staff.pitchBottom
+                            - Math.round((staff.pitchBottom - part.centerY) / step) * step;
+            if (Math.abs(part.centerY - aligned) > staff.gap * .15f) return false;
+        }
+        return true;
     }
 
     /** A tall, rounded lower meter digit can be painted as a hollow notehead. */

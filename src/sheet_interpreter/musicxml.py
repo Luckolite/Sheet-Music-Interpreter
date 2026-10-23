@@ -162,7 +162,10 @@ def expression_direction(measure, mark, offset):
     caption = mark.get('_neutralRestCaption', False)
     direction = element(measure, 'direction', placement='below' if caption or kind in ('PEDAL_DOWN', 'PEDAL_UP') else 'above')
     type_node = element(direction, 'direction-type')
-    if mark.get('_absoluteDynamic'):
+    if mark.get('_hairpin'):
+        direction.set('placement', 'below')
+        element(type_node, 'wedge', type=mark['_hairpin'], number=mark['_hairpinNumber'])
+    elif mark.get('_absoluteDynamic'):
         direction.set('placement', 'below')
         element(element(type_node, 'dynamics'), mark['_absoluteDynamic'])
     elif kind in ('PEDAL_DOWN', 'PEDAL_UP'):
@@ -414,6 +417,8 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
         expressions.extend(technique_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
         from . import dynamic_export
         expressions.extend(dynamic_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
+        from . import hairpin_export
+        expressions.extend(hairpin_export.plan(page, events[first_event:], bars[first_bar:], f'page:{page_index}'))
         for source, target, _ in straight_slide.bindings(page):
             # This global endpoint identity is an internal token, not a MusicXML number.
             token = first_event + target
@@ -533,6 +538,16 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 raise ValueError('Too many overlapping printed tempo extensions')
             dash_numbers[mark['identity']] = number
             occupied.append((mark['endTick'], number))
+        occupied = []
+        for mark in marks:
+            if not mark.get('_hairpin'):
+                continue
+            occupied = [(end, number) for end, number in occupied if end > mark['startTick']]
+            number = next((n for n in range(1, 17) if n not in {number for _, number in occupied}), None)
+            if number is None:
+                raise ValueError('Too many overlapping hairpins')
+            mark['_hairpinNumber'] = str(number)
+            occupied.append((mark['endTick'], number))
         rendered, rest_symbols = set(), []
         for mark in marks:
             if mark['kind'] not in ('FERMATA', 'BREATH', 'CAESURA'):
@@ -634,7 +649,9 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 element(direction, 'sound', tempo=str(tempo['bpm']))
             a, b = bar['start'], bar['start']+bar['length']
             for mark in marks:
-                if mark.get('_absoluteDynamic'):
+                if mark.get('_hairpin'):
+                    owns = mark['_hairpinStartBarStart'] == a and a <= mark['startTick'] <= b
+                elif mark.get('_absoluteDynamic'):
                     owns = mark['_absoluteDynamicBarStart'] == a and a <= mark['startTick'] <= b
                 elif mark.get('_playingInstruction'):
                     # A terminal after-grace still belongs to its original written bar.
@@ -648,6 +665,10 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                         dash = element(measure, 'direction', placement='above')
                         element(element(dash, 'direction-type'), 'dashes', type='start', number=str(dash_numbers[mark['identity']]))
                         element(dash, 'offset', mark['startTick']-a)
+                if mark.get('_hairpin') and mark['_hairpinEndBarStart'] == a and a <= mark['endTick'] <= b:
+                    stop = element(measure, 'direction', placement='below')
+                    element(element(stop, 'direction-type'), 'wedge', type='stop', number=mark['_hairpinNumber'])
+                    element(stop, 'offset', mark['endTick']-a)
                 if mark['identity'] in dash_numbers and (a <= mark['endTick'] < b or index == len(bars)-1 and mark['endTick'] == b):
                     dash = element(measure, 'direction', placement='above')
                     element(element(dash, 'direction-type'), 'dashes', type='stop', number=str(dash_numbers[mark['identity']]))
