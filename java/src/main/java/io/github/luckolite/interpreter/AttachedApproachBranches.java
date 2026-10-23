@@ -58,7 +58,7 @@ final class AttachedApproachBranches {
                 || count > 16384
                 || count > component.length
                 || staffs.isEmpty()
-                || heads.size() < 2
+                || heads.isEmpty()
                 || budget.refused) return List.of();
         int left = w, right = 0, top = h, bottom = 0;
         for (int i = 0; i < count; i++) {
@@ -91,9 +91,9 @@ final class AttachedApproachBranches {
             lane = head.staff();
             localHeads.add(i);
         }
-        if (localHeads.size() < 2
+        if (localHeads.isEmpty()
                 || localHeads.size() > 32
-                || !budget.take((long) count * localHeads.size() * 2)) return List.of();
+                || !budget.take(freeApproachWorkBound(count, localHeads.size()))) return List.of();
         if (!possibleFreeApproach(component, count, w, heads, localHeads)
                 || !budget.take(area + count)) return List.of();
         boolean[] ink = new boolean[area];
@@ -298,13 +298,24 @@ final class AttachedApproachBranches {
                 if (BeamEndBranchOwnership.owns(
                         raw, w, h, originalPath, heads, localHeads, downShafts, budget)) owner = -4;
             }
+            if (owner < 0 && owner != -3 && owner != -4) {
+                var shaftPath = trace(skeleton, degree, sw, leaf, cuts);
+                int[] originalPath = new int[shaftPath.size()];
+                for (int k = 0; k < originalPath.length; k++) {
+                    int p = shaftPath.get(k);
+                    originalPath[k] = (top + p / sw - 2) * w + left + p % sw - 2;
+                }
+                if (StemEndBranchOwnership.owns(
+                        raw, w, h, originalPath, heads, localHeads, downShafts, budget)) owner = -5;
+            }
             leafOwners.put(leaf, owner);
         }
         var bare = new ArrayList<Trace>();
         for (int leaf : leaves) {
             if (leafOwners.get(leaf) >= 0
                     || leafOwners.get(leaf) == -3
-                    || leafOwners.get(leaf) == -4) continue;
+                    || leafOwners.get(leaf) == -4
+                    || leafOwners.get(leaf) == -5) continue;
             var path = trace(skeleton, degree, sw, leaf, cuts);
             int end = path.get(path.size() - 1);
             if (degree[end] != 3) return List.of();
@@ -421,6 +432,17 @@ final class AttachedApproachBranches {
                             nonRule |= !rawRule(raw, w, h, left + x - 2, top + y - 2, staff);
                             y++;
                         }
+                        if (selected
+                                && nonRule
+                                && SeparatedRuleRunOwnership.matches(
+                                        raw,
+                                        w,
+                                        h,
+                                        left + x - 2,
+                                        top + start - 2,
+                                        top + y - 3,
+                                        track,
+                                        budget)) nonRule = false;
                         runs.add(new int[] {start, y - 1, nonRule ? 1 : 0});
                         if (selected && nonRule) meaningful++;
                     }
@@ -595,6 +617,12 @@ final class AttachedApproachBranches {
         return false;
     }
 
+    /** Upper bound in pixel visits, cached head tests and owner/pixel visits. */
+    static long freeApproachWorkBound(int pixels, int owners) {
+        if (pixels < 0 || pixels > 16384 || owners < 1 || owners > 32) return Long.MAX_VALUE;
+        return (long) owners + pixels + 2L * pixels * owners;
+    }
+
     /** Negative work preflight only. These generous envelopes never own or erase raw pixels. */
     private static boolean possibleFreeApproach(
             int[] component,
@@ -602,32 +630,35 @@ final class AttachedApproachBranches {
             int w,
             List<NoteSlideDetector.Head> heads,
             List<Integer> localHeads) {
+        // This predicate depends only on the pixel and physical heads, never on the owner.
+        boolean[] occupied = new boolean[count];
+        for (int i = 0; i < count; i++) {
+            int x = component[i] % w, y = component[i] / w;
+            for (int index : localHeads) {
+                var head = heads.get(index);
+                float gap = head.gap();
+                if (Math.abs(x - head.x()) <= gap * .85f && Math.abs(y - head.y()) <= gap * .65f
+                        || Math.abs(x - (head.x() - gap * .6f)) <= gap * .2f
+                        || Math.abs(x - (head.x() + gap * .6f)) <= gap * .2f) {
+                    occupied[i] = true;
+                    break;
+                }
+            }
+        }
         for (int owner : localHeads) {
             var target = heads.get(owner);
             float gap = target.gap();
             int free = 0, left = w, right = 0;
             for (int i = 0; i < count; i++) {
+                if (occupied[i]) continue;
                 int x = component[i] % w, y = component[i] / w;
                 if (x > target.x() - gap * .65f
                         || x < target.x() - gap * 3.5f
                         || y < target.y() - gap * 2.5f
                         || y > target.y() + gap * 2.5f) continue;
-                boolean possibleHeadOrShaft = false;
-                for (int h : localHeads) {
-                    var head = heads.get(h);
-                    float g = head.gap();
-                    if (Math.abs(x - head.x()) <= g * .85f && Math.abs(y - head.y()) <= g * .65f
-                            || Math.abs(x - (head.x() - g * .6f)) <= g * .2f
-                            || Math.abs(x - (head.x() + g * .6f)) <= g * .2f) {
-                        possibleHeadOrShaft = true;
-                        break;
-                    }
-                }
-                if (!possibleHeadOrShaft) {
-                    free++;
-                    left = Math.min(left, x);
-                    right = Math.max(right, x);
-                }
+                free++;
+                left = Math.min(left, x);
+                right = Math.max(right, x);
             }
             if (free >= Math.max(8, Math.ceil(gap * .8f)) && right - left >= gap * .65f)
                 return true;

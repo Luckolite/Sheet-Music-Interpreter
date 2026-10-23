@@ -65,7 +65,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         new = legacy_full_note_layout(new)
 
-        self.assertEqual(110, wire.RECOGNITION_REVISION)
+        self.assertEqual(111, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire, tremolo_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))

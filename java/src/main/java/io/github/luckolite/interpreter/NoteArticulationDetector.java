@@ -934,6 +934,7 @@ final class NoteArticulationDetector {
         List<Glyph> candidates = new ArrayList<>(faintAccents), claimedAccents = new ArrayList<>();
         candidates.addAll(glyphs);
         List<Glyph> printedClaims = new ArrayList<>();
+        CompoundClaims compoundClaims = new CompoundClaims(notes.size());
         // A peak-shaped first letter needs word context on its right as well.
         // Reflect positions once; semantic pixel references remain unchanged.
         List<Glyph> reflectedGlyphs =
@@ -1238,6 +1239,8 @@ final class NoteArticulationDetector {
                     continue;
                 // A small off-axis dot beside a head is a duration dot, not staccato.
                 if (candidate == NoteArticulation.STACCATO && dx > .35f) continue;
+                if (raw && !joinedOwners.containsKey(glyph))
+                    compoundClaims.eligible(glyph, n, candidate, note, gray, width, height);
                 double score = dx * 3 + dy;
                 if (score < distance) {
                     distance = score;
@@ -1253,14 +1256,18 @@ final class NoteArticulationDetector {
                 continue;
             if (faintAccents.contains(glyph)) claimedAccents.add(glyph);
             if (!paperCandidates.contains(glyph)) printedClaims.add(glyph);
+            compoundClaims.claim(glyph, best, mark);
             Anchor owner = notes.get(best);
             // One mark on a chord affects that chord, never another staff or another onset.
             for (int n = 0; n < notes.size(); n++) {
                 Anchor note = notes.get(n);
-                if (note.staff == owner.staff && Math.abs(note.x - owner.x) < owner.gap * .45f)
+                if (note.staff == owner.staff && Math.abs(note.x - owner.x) < owner.gap * .45f) {
                     result[n] |= mark;
+                    compoundClaims.assignment(n, mark);
+                }
             }
         }
+        if (raw) compoundClaims.resolve(result, notes, gray, width, height);
         if (raw)
             for (int i = 0; i < notes.size(); i++) {
                 Anchor note = notes.get(i);
@@ -2403,6 +2410,361 @@ final class NoteArticulationDetector {
                 for (int accepted : body.pixels) if (pixel == accepted) return true;
         }
         return false;
+    }
+
+    /** Joint attribution only after both complete raw members pass ALL original
+     * per-note gates. No new glyph classification, contrast or frame preference.
+     */
+    private static final class CompoundClaims {
+        private long work = 2_000_000, bytes = 8_000_000;
+        private boolean disabled;
+        private final int size;
+        private final int[] accents, tenutos;
+        private final java.util.IdentityHashMap<Glyph, java.util.BitSet[]> eligible =
+                new java.util.IdentityHashMap<>();
+        private final List<CompoundClaim> claims = new ArrayList<>();
+        // Per detect invocation, exact Glyph identity and one unchanged raw plane.
+        private Glyph[] contrastGlyphs = new Glyph[0];
+        private byte[] contrastValues = new byte[0];
+        private int contrastCount, contrastWidth, contrastHeight;
+        private byte[] contrastPlane;
+        private final java.util.IdentityHashMap<Glyph, Boolean> unresolved =
+                new java.util.IdentityHashMap<>();
+
+        private record CompoundClaim(Glyph glyph, int owner, int mark) {}
+
+        private record Proposal(CompoundClaim accent, CompoundClaim tenuto, int owner) {}
+
+        CompoundClaims(int n) {
+            size = n;
+            if (!take(2L * n, 8L * n + 256)) {
+                accents = tenutos = null;
+                return;
+            }
+            accents = new int[n];
+            tenutos = new int[n];
+        }
+
+        private boolean take(long w, long b) {
+            if (disabled || w < 0 || b < 0 || w > work || b > bytes) {
+                disabled = true;
+                return false;
+            }
+            work -= w;
+            bytes -= b;
+            return true;
+        }
+
+        void eligible(Glyph g, int n, int mark, Anchor note, byte[] gray, int width, int height) {
+            if (disabled || (mark != NoteArticulation.ACCENT && mark != NoteArticulation.TENUTO))
+                return;
+            if (!compoundContrast(g, gray, width, height)) return;
+            // Trust only the positive mark already returned by the existing
+            // caller after ALL its gates; do not replace its faint/rounded
+            // classifier with a different one. Add raw contrast and whole-CC
+            // reproof before any joint attribution.
+            // compoundContrast is exactly printedBodyContrast's 8-bit order
+            // statistics, cached only for this existing Glyph/raw invocation.
+            var bits = eligible.get(g);
+            if (bits == null) {
+                if (!take(1, 16L * ((size + 63) / 64) + 160)) return;
+                bits =
+                        new java.util.BitSet[] {
+                            new java.util.BitSet(size), new java.util.BitSet(size)
+                        };
+                eligible.put(g, bits);
+            }
+            bits[mark == NoteArticulation.ACCENT ? 0 : 1].set(n);
+        }
+
+        /** Same paper75th/minimum/upper-median and final inequalities as the
+         * unchanged printedBodyContrast; histogram order statistics avoid sort.
+         * The caller never writes gray, and this private cache cannot escape
+         * one detect invocation. Different raw identity/dimensions abstain.
+         */
+        private boolean compoundContrast(Glyph g, byte[] gray, int width, int height) {
+            if (contrastPlane != null
+                    && (contrastPlane != gray
+                            || contrastWidth != width
+                            || contrastHeight != height)) {
+                disabled = true;
+                return false;
+            }
+            if (!take(contrastCount + 1L, 0)) return false;
+            for (int i = 0; i < contrastCount; i++)
+                if (contrastGlyphs[i] == g) return contrastValues[i] == 1;
+            int padding = Math.max(3, Math.max(g.right - g.left + 1, g.bottom - g.top + 1) / 2);
+            int x0 = Math.max(0, g.left - padding), x1 = Math.min(width - 1, g.right + padding);
+            int y0 = Math.max(0, g.top - padding), y1 = Math.min(height - 1, g.bottom + padding);
+            long scope = (long) (x1 - x0 + 1) * (y1 - y0 + 1);
+            // Four debits per visited window/body pixel plus fixed histogram
+            // initialization/scans. Two 256-bin int arrays and headers prepaid.
+            if (!take(4 * scope + 4L * g.count + 2048, 2112)) return false;
+            if (contrastCount == contrastGlyphs.length) {
+                long capacity = Math.max((long) contrastCount + 1, 2L * contrastGlyphs.length + 8);
+                if (capacity > Integer.MAX_VALUE
+                        || !take(2 * capacity + 2L * contrastCount, 9 * capacity + 48)) {
+                    disabled = true;
+                    return false;
+                }
+                contrastGlyphs = java.util.Arrays.copyOf(contrastGlyphs, (int) capacity);
+                contrastValues = java.util.Arrays.copyOf(contrastValues, (int) capacity);
+            }
+            int[] background = new int[256], tones = new int[256];
+            int samples = 0;
+            for (int y = y0; y <= y1; y++)
+                for (int x = x0; x <= x1; x++) {
+                    background[gray[y * width + x] & 255]++;
+                    samples++;
+                }
+            int paper = 255, cumulative = 0;
+            for (int tone = 0; tone < 256; tone++) {
+                cumulative += background[tone];
+                if (cumulative >= Math.ceil(samples * .75)) {
+                    paper = tone;
+                    break;
+                }
+            }
+            for (int i = 0; i < g.count; i++) tones[gray[g.pixels[i]] & 255]++;
+            int minimum = 0;
+            while (tones[minimum] == 0) minimum++;
+            int median = 255;
+            cumulative = 0;
+            for (int tone = 0; tone < 256; tone++) {
+                cumulative += tones[tone];
+                if (cumulative > g.count / 2) {
+                    median = tone;
+                    break;
+                }
+            }
+            boolean proved =
+                    minimum <= paper * .5f
+                            || (median - minimum <= Math.max(8, Math.round(paper * .05f))
+                                    && paper - median >= 25);
+            contrastPlane = gray;
+            contrastWidth = width;
+            contrastHeight = height;
+            contrastGlyphs[contrastCount] = g;
+            contrastValues[contrastCount++] = (byte) (proved ? 1 : 2);
+            return proved;
+        }
+
+        void claim(Glyph g, int owner, int mark) {
+            if (disabled || (mark != NoteArticulation.ACCENT && mark != NoteArticulation.TENUTO))
+                return;
+            if (take(1, 96)) claims.add(new CompoundClaim(g, owner, mark));
+        }
+
+        void assignment(int n, int mark) {
+            if (!take(1, 0)) return;
+            if ((mark & NoteArticulation.ACCENT) != 0) accents[n]++;
+            if ((mark & NoteArticulation.TENUTO) != 0) tenutos[n]++;
+        }
+
+        void resolve(int[] result, List<Anchor> notes, byte[] gray, int width, int height) {
+            if (disabled) return;
+            var proposals = new ArrayList<Proposal>();
+            var degree = new java.util.IdentityHashMap<Glyph, Integer>();
+            for (var a : claims) {
+                if (!take(1, 0)) return;
+                if (a.mark != NoteArticulation.ACCENT) continue;
+                for (var t : claims) {
+                    if (!take(1, 0)) return;
+                    if (t.mark != NoteArticulation.TENUTO) continue;
+                    Proposal p = proposal(a, t, notes, gray, width, height);
+                    if (disabled) return;
+                    if (p != null) {
+                        if (!take(2, 192)) return;
+                        proposals.add(p);
+                        degree.merge(a.glyph, 1, Integer::sum);
+                        degree.merge(t.glyph, 1, Integer::sum);
+                    }
+                }
+            }
+            if (!take(2L * size, 8L * size + 64)) return;
+            int[] ac = accents.clone(), tc = tenutos.clone();
+            for (var p : proposals) {
+                if (!take(1, 0)) return;
+                if (unresolved.containsKey(p.accent.glyph)
+                        || unresolved.containsKey(p.tenuto.glyph)
+                        || degree.get(p.accent.glyph) != 1
+                        || degree.get(p.tenuto.glyph) != 1) continue;
+                if (!take(4L * size, 0)) return;
+                adjust(ac, notes, p.accent.owner, -1);
+                adjust(tc, notes, p.tenuto.owner, -1);
+                adjust(ac, notes, p.owner, 1);
+                adjust(tc, notes, p.owner, 1);
+            }
+            if (!take(size, 0)) return;
+            // Commit only after all work succeeds; exhausted/ambiguous metadata
+            // never changes the preexisting recognition result.
+            for (int n = 0; n < size; n++)
+                result[n] =
+                        (result[n] & ~(NoteArticulation.ACCENT | NoteArticulation.TENUTO))
+                                | (ac[n] > 0 ? NoteArticulation.ACCENT : 0)
+                                | (tc[n] > 0 ? NoteArticulation.TENUTO : 0);
+        }
+
+        private Proposal unresolved(CompoundClaim a, CompoundClaim t) {
+            if (take(2, 128)) {
+                unresolved.put(a.glyph, Boolean.TRUE);
+                unresolved.put(t.glyph, Boolean.TRUE);
+            }
+            return null;
+        }
+
+        /** Equality of the exact existing chord-assignment sets, not proximity
+         * or a selected representative. The caller prepays both full scans.
+         */
+        private boolean sameAssignment(List<Anchor> notes, int first, int second) {
+            if (first == second) return true;
+            Anchor a = notes.get(first), b = notes.get(second);
+            if (a.staff != b.staff) return false;
+            for (Anchor n : notes) {
+                boolean before = n.staff == a.staff && Math.abs(n.x - a.x) < a.gap * .45f;
+                boolean after = n.staff == b.staff && Math.abs(n.x - b.x) < b.gap * .45f;
+                if (before != after) return false;
+            }
+            return true;
+        }
+
+        private void adjust(int[] counts, List<Anchor> notes, int owner, int delta) {
+            Anchor a = notes.get(owner);
+            for (int n = 0; n < size; n++)
+                if (notes.get(n).staff == a.staff && Math.abs(notes.get(n).x - a.x) < a.gap * .45f)
+                    counts[n] += delta;
+        }
+
+        private Proposal proposal(
+                CompoundClaim a,
+                CompoundClaim t,
+                List<Anchor> notes,
+                byte[] gray,
+                int width,
+                int height) {
+            Glyph ga = a.glyph, gt = t.glyph;
+            if (ga == gt || Math.abs(ga.left - gt.left) > 1 || Math.abs(ga.right - gt.right) > 1)
+                return null;
+            int direction = gt.y() > ga.y() ? 1 : -1;
+            if (direction > 0 ? ga.bottom >= gt.top : gt.bottom >= ga.top) return null;
+            var aa = eligible.get(ga);
+            var tt = eligible.get(gt);
+            if (aa == null || tt == null) return null;
+            if (!take(size, 0)) return null;
+            int owner = -1;
+            for (int n = aa[0].nextSetBit(0); n >= 0; n = aa[0].nextSetBit(n + 1))
+                if (tt[1].get(n)) {
+                    Anchor note = notes.get(n);
+                    if (direction > 0 ? note.y <= gt.bottom : note.y >= gt.top) continue;
+                    float separation = Math.abs(gt.y() - ga.y());
+                    // Existing pairedTenuto proposal constants, unchanged.
+                    if (Math.abs(gt.x() - ga.x()) > note.gap * .2f
+                            || separation < note.gap * .35f
+                            || separation > note.gap * 1.2f) continue;
+                    if (owner >= 0
+                            && (note.staff != notes.get(owner).staff
+                                    || Math.abs(note.x - notes.get(owner).x) >= note.gap * .45f))
+                        return unresolved(a, t);
+                    owner = n;
+                }
+            if (owner < 0) return null;
+            if (!take(4L * size + 2, 0)) return null;
+            if (sameAssignment(notes, a.owner, owner) && sameAssignment(notes, t.owner, owner)) {
+                // No new attribution is needed. Do NOT claim this unproved
+                // potential pair false or remove a degree edge optimistically:
+                // both members become unresolved and cannot be borrowed by
+                // any competing new assignment. Their legacy bits stay intact.
+                return unresolved(a, t);
+            }
+            int l = Math.min(ga.left, gt.left),
+                    r = Math.max(ga.right, gt.right),
+                    top = Math.min(ga.top, gt.top),
+                    bottom = Math.max(ga.bottom, gt.bottom);
+            if (l < 0 || r >= width || top < 0 || bottom >= height) return unresolved(a, t);
+            int pad = (int) Math.ceil(notes.get(owner).gap);
+            int sl = Math.max(0, l - pad),
+                    sr = Math.min(width - 1, r + pad),
+                    st = Math.max(0, top - pad),
+                    sb = Math.min(height - 1, bottom + pad);
+            long scope = (long) (sr - sl + 1) * (sb - st + 1);
+            if (!take(80 * scope + 8L * (ga.count + gt.count), 32 * scope + 2048)) return null;
+            // This is the EXISTING raw185 faint-chevron connectivity domain,
+            // not a change to raw155 ink(), classifier limits or paper tone.
+            // Recollect COMPLETE parents; boundary contact always abstains.
+            Glyph pa = completeRaw185(ga, gray, width, height, sl, st, sr, sb);
+            Glyph pt = completeRaw185(gt, gray, width, height, sl, st, sr, sb);
+            // Incomplete parent observation is UNKNOWN for every attribution
+            // involving either member; another partner cannot certify it false.
+            if (pa == null || pt == null) return unresolved(a, t);
+            if (!OpenChevron.matches(
+                            pa.pixels, width, pa.left, pa.top, pa.right, pa.bottom, pa.count)
+                    || classify(pt, width, notes.get(owner).gap, pt.y() < notes.get(owner).y)
+                            != NoteArticulation.TENUTO) return null;
+            if (Math.abs(pa.left - pt.left) > 1 || Math.abs(pa.right - pt.right) > 1) return null;
+            l = Math.min(pa.left, pt.left);
+            r = Math.max(pa.right, pt.right);
+            top = Math.min(pa.top, pt.top);
+            bottom = Math.max(pa.bottom, pt.bottom);
+            long area = (long) (r - l + 1) * (bottom - top + 1);
+            java.util.BitSet members = new java.util.BitSet((int) area);
+            for (Glyph g : List.of(pa, pt))
+                for (int at : g.pixels) {
+                    int x = at % width, y = at / width;
+                    if (x < l || x > r || y < top || y > bottom || (gray[at] & 255) >= 185)
+                        return null;
+                    int local = (y - top) * (r - l + 1) + x - l;
+                    if (members.get(local)) return null;
+                    members.set(local);
+                }
+            // Every raw pixel in the complete two-part rectangle must belong to
+            // these exact components. No unknown flag/beam/text ink is cropped.
+            for (int y = top; y <= bottom; y++)
+                for (int x = l; x <= r; x++)
+                    if ((gray[y * width + x] & 255) < 185
+                            && !members.get((y - top) * (r - l + 1) + x - l)) return null;
+            return new Proposal(a, t, owner);
+        }
+
+        private Glyph completeRaw185(
+                Glyph original, byte[] gray, int width, int height, int l, int t, int r, int b) {
+            int sw = r - l + 1, area = sw * (b - t + 1);
+            boolean[] seen = new boolean[area];
+            int[] queue = new int[area];
+            int seed = original.pixels[0];
+            if ((gray[seed] & 255) >= 185) return null;
+            int count = 1, read = 0;
+            queue[0] = seed;
+            seen[(seed / width - t) * sw + seed % width - l] = true;
+            int left = width, right = -1, top = height, bottom = -1;
+            while (read < count) {
+                int at = queue[read++], x = at % width, y = at / width;
+                left = Math.min(left, x);
+                right = Math.max(right, x);
+                top = Math.min(top, y);
+                bottom = Math.max(bottom, y);
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0
+                                || xx >= width
+                                || yy < 0
+                                || yy >= height
+                                || (gray[yy * width + xx] & 255) >= 185) continue;
+                        if (xx < l || xx > r || yy < t || yy > b) return null;
+                        int local = (yy - t) * sw + xx - l;
+                        if (!seen[local]) {
+                            seen[local] = true;
+                            queue[count++] = yy * width + xx;
+                        }
+                    }
+            }
+            for (int at : original.pixels) {
+                int x = at % width, y = at / width;
+                if (x < l || x > r || y < t || y > b || !seen[(y - t) * sw + x - l]) return null;
+            }
+            return new Glyph(
+                    left, top, right, bottom, count, java.util.Arrays.copyOf(queue, count));
+        }
     }
 
     private static boolean ink(byte[] labels, byte[] gray, int p, boolean raw) {

@@ -2920,3 +2920,5 @@ Recognition109 and Guide293 add an explicit visual-size field for FULL versus CU
 Compact approach adds one short bounded upward raw-ink path only when complete component membership, one unique destination, independently supported physical-head evidence and no competing body all agree. Seventeen portable source-free originals are mirrored; no private score material, model, Guide or audio change.
 
 Recognition110 adds connected approach and beam-end ownership only when endpoint bodies and branch roles close uniquely; ambiguous branches abstain. Thirty-five portable source-free Java originals; no private score material, model, Guide, or audio change.
+
+Recognition111 adds paired source-free approach and compound articulation ownership originals; ambiguous compound ownership is excluded. No Guide, audio, or rendering epoch change.
