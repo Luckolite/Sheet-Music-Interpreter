@@ -3501,7 +3501,7 @@ final class TripletRhythmDetector {
                 if (hasLobePocket(gray, width, left, top + y, w)) lowerPocket++;
             }
             // Include the final pixel band even when the glyph is shorter than 17 rows.
-            if (y + 1 > h * .94f) foot = Math.max(foot, max);
+            if (y >= Math.min(h - 1, (int) Math.ceil(h * .94f))) foot = Math.max(foot, max);
         }
         return bars >= Math.max(2, h / 12)
                 && leftStem >= Math.max(1, h / 12)

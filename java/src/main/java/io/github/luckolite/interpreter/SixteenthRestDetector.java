@@ -1808,13 +1808,17 @@ final class SixteenthRestDetector {
                 // projection. A second, bulb-only band excludes that beam without clipping
                 // an eighth or sixteenth rest; it cannot classify cropped quarter rectangles.
                 for (int pass = 0;
-                        pass < (ordinary ? 3 : shallowLowered || deepVoice || farRaised ? 2 : 1);
+                        pass < (ordinary || deepVoice ? 3 : shallowLowered || farRaised ? 2 : 1);
                         pass++) {
-                    boolean quarterOnly = deepVoice && pass > 0;
+                    boolean quarterOnly = deepVoice && pass == 1;
                     int scanTop =
-                            deepVoice && pass == 0
+                            deepVoice && pass != 1
                                     ? Math.max(top, Math.round(staff.top() + gap * .75f))
-                                    : (ordinary || shallowLowered || farRaised) && pass > 0
+                                    : (ordinary
+                                                            || shallowLowered
+                                                            || farRaised
+                                                            || deepVoice && pass == 2)
+                                                    && pass > 0
                                             ? Math.max(top, Math.round(staff.top() + gap * .85f))
                                             : top;
                     int scanBottom =
@@ -1886,7 +1890,11 @@ final class SixteenthRestDetector {
                                     lowered,
                                     deepLowered,
                                     baseMask != line && baseMask != narrowLine,
-                                    (ordinary || shallowLowered || farRaised) && pass > 0,
+                                    (ordinary
+                                                    || shallowLowered
+                                                    || farRaised
+                                                    || deepVoice && pass == 2)
+                                            && pass > 0,
                                     quarterOnly,
                                     farRaised,
                                     placement.printedCenter() / height,
@@ -1927,7 +1935,11 @@ final class SixteenthRestDetector {
                                                     bodyTop - scanTop,
                                                     bodyBottom - scanTop + 1);
                                     boolean componentBulbOnly =
-                                            (ordinary || shallowLowered || farRaised) && pass > 0;
+                                            (ordinary
+                                                            || shallowLowered
+                                                            || farRaised
+                                                            || deepVoice && pass == 2)
+                                                    && pass > 0;
                                     componentReads.add(
                                             () -> {
                                                 if (SeparatedRestInk.represented(
@@ -2574,10 +2586,13 @@ final class SixteenthRestDetector {
                         && maxY - minY <= gap * 2.2f
                         && Math.abs(maxY - (staff.bottom() - gap)) <= gap * .4f;
         boolean sixteenth =
-                !deepLowered
+                (!deepLowered || bulbOnly)
                         && maxY - minY >= (faintShapes ? Math.round(gap * 2.35f) : gap * 2.35f)
                         && maxY - minY <= gap * 3.25f
                         && Math.abs(maxY - staff.bottom()) <= gap * .35f;
+        // The new full-depth bulb-only view is restricted to a complete two-bulb
+        // rest. It cannot reinterpret existing deep eighth or quarter phases.
+        if (deepLowered && bulbOnly && (!sixteenth || thirtySecond)) return;
         // Only complete two-bulb rests may exceed the ordinary contour width.
         if (wideContour && (!sixteenth || quarter || half || whole || thirtySecond)) return;
         if (sixteenth

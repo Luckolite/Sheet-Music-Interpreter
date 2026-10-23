@@ -47,6 +47,8 @@ public final class ExpressiveDirectionText {
                                     + "|^\\s*(?:[mpf]{1,3}\\s+)?faster\\s*[-.!]*\\s*$"
                                     + "|scherzando|agitato|festoso|espressivo|dolce(?:\\s+e\\s+cantabile)?"
                                     + "|cantabile|con\\s+(?:brio|fuoco|anima)|tranquillo|grazioso"
+                                    + "|^\\s*(?:(?:ppp|pp|p|mp|mf|fff|ff|f)\\s+)?"
+                                    + "(?:(?:molto|poco|sempre)\\s+)?legato[.!]?\\s*$"
                                     // English character directions need the complete OCR line;
                                     // never a prose substring.
                                     + "|^\\s*(?:flowing|triumphantly|ethereal|with\\s+driving\\s+intensity|like\\s+an\\s+echo)[.!]?\\s*$"

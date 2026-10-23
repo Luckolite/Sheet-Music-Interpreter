@@ -2848,3 +2848,9 @@ original guard controls supplement the unchanged eleven flat-rule cases; the
 legacy six frame tests are mirrored into the app. Recognition92, Guide291
 and audio97 identities remain unchanged. The first failed gate is preserved;
 no model, dependency, wire or manifest change is introduced by R2.
+
+Recognition93 adds the following reviewed source changes.
+Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.
+App, Hub and both writers share recognition93; Guide291/audio97 and record
+layouts remain unchanged. Cumulative matched packaging/deployment remains
+deferred during the active goal.

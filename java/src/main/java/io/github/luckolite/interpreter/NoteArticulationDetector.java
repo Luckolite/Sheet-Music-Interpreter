@@ -838,6 +838,9 @@ final class NoteArticulationDetector {
         int[] queue = new int[labels.length];
         List<Glyph> glyphs = new ArrayList<>();
         java.util.IdentityHashMap<Glyph, Integer> joinedOwners = new java.util.IdentityHashMap<>();
+        java.util.Set<Glyph> provedJoinedAccents =
+                java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+        SlurEndpointAccents.Work accentWork = new SlurEndpointAccents.Work();
         for (int p = 0; p < labels.length; p++) {
             if (seen[p] || !ink(labels, gray, p, raw)) continue;
             int start = 0, end = 1;
@@ -864,6 +867,27 @@ final class NoteArticulationDetector {
             if (end < 3) continue;
             if (right - left > width * .025f || bottom - top > height * .018f) {
                 if (raw && end <= SlurEndpointDots.MAX_PIXELS) {
+                    if (accentWork.use(end))
+                        for (var mark :
+                                SlurEndpointAccents.partition(
+                                        gray,
+                                        width,
+                                        height,
+                                        java.util.Arrays.copyOf(queue, end),
+                                        notes,
+                                        accentWork)) {
+                            Glyph body =
+                                    new Glyph(
+                                            mark.left(),
+                                            mark.top(),
+                                            mark.right(),
+                                            mark.bottom(),
+                                            mark.pixels().length,
+                                            mark.pixels());
+                            glyphs.add(body);
+                            joinedOwners.put(body, mark.owner());
+                            provedJoinedAccents.add(body);
+                        }
                     SlurEndpointDots.Result split =
                             SlurEndpointDots.partition(
                                     gray,
@@ -989,7 +1013,7 @@ final class NoteArticulationDetector {
                                 || glyphHeight < note.gap * .35f
                                 || glyphHeight > note.gap * (softFaint ? 1.65f : 1.25f))) continue;
                 int candidate =
-                        faint
+                        (faint || provedJoinedAccents.contains(glyph))
                                 ? NoteArticulation.ACCENT
                                 : classify(glyph, width, note.gap, glyph.y() < note.y);
                 if (candidate == 0)

@@ -759,6 +759,37 @@ final class PrintedSlurContours {
         return null;
     }
 
+    /** Reuse the released returning-slur grammar for independently complete raw column profiles.
+     * The caller owns every sample and independently verifies finite strip width/endpoints. */
+    static boolean completeReturningProfile(int[] low, int[] high, int first, int last, float gap) {
+        if (low == null
+                || high == null
+                || low.length != high.length
+                || first < 0
+                || last >= low.length
+                || last - first < 3
+                || last - first >= 1024
+                || !Float.isFinite(gap)
+                || gap < 5
+                || gap > 64) return false;
+        var runs = new ArrayList<Run>();
+        for (int x = first; x <= last; x++) {
+            if (low[x] < 0 || high[x] < low[x]) return false;
+            float middle = (low[x] + high[x]) * .5f;
+            runs.add(
+                    new Run(
+                            x,
+                            middle,
+                            middle / gap,
+                            gap,
+                            low[x],
+                            high[x],
+                            List.of(new RawBand(low[x], high[x]))));
+        }
+        Bow bow = fit(runs, null, null);
+        return bow != null && bow.above();
+    }
+
     private static Bow fit(
             List<Run> component,
             Consumer<Rejection> audit,
