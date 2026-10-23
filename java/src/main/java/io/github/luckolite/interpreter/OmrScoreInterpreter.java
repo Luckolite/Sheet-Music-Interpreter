@@ -24846,7 +24846,7 @@ final class OmrScoreInterpreter {
             return false;
         float gap = (before.staffGap + after.staffGap) * .5f;
         int left = before.head.maxX + 1, right = after.head.minX - 1;
-        if (gap < 8 || right - left < gap * 1.3f || right - left > gap * 6) return false;
+        if (gap < 8 || right - left > gap * 6) return false;
         float cy = (before.head.centerY + after.head.centerY) * .5f;
         int x0 = Math.max(0, (int) Math.floor(before.head.centerX - gap * 2));
         int x1 = Math.min(width - 1, (int) Math.ceil(after.head.centerX + gap * 2));
@@ -24874,6 +24874,26 @@ final class OmrScoreInterpreter {
                         after.head.centerX - x0,
                         after.head.centerY - y0,
                         after.event.staffStep())) return false;
+        // The complete outside contour has its own tapered, rounded component proof.
+        if (((before.event.articulations() | after.event.articulations()) & NoteOrnament.GRACE) == 0
+                && DetachedCompactTieRidge.proved(
+                        mask,
+                        raw,
+                        w,
+                        h,
+                        new DetachedCompactTieRidge.Head(
+                                before.head.minX - x0,
+                                before.head.maxX - x0,
+                                before.head.centerX - x0,
+                                before.head.centerY - y0),
+                        new DetachedCompactTieRidge.Head(
+                                after.head.minX - x0,
+                                after.head.maxX - x0,
+                                after.head.centerX - x0,
+                                after.head.centerY - y0),
+                        after.event.staffStep(),
+                        track)) return true;
+        if (right - left < gap * 1.3f) return false;
         PrintedCurveRuleInk rule = new PrintedCurveRuleInk(mask, raw, w, h, 205, track);
         byte[] view = null;
         for (int x = left - x0; x <= right - x0; x++)

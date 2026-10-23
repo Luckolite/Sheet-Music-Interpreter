@@ -148,4 +148,21 @@ public final class IncomingTieGridOriginalTest {
         for (int i = 0; i < p[0].length; i++) if (p[0][i] == 2) p[0][i] = 5;
         assertTrue(tied(p, 1, false, false));
     }
+
+    @Test
+    public void lowLocalContrastCannotCompleteTheIncomingTie() throws Exception {
+        byte[][] original = IncomingTieGridScenes.pixels(1, 35, 5);
+        assertTrue(tied(original, 1, false, false));
+        byte[] originalLabels = original[0].clone(), originalGray = original[1].clone();
+        byte[][] lowContrast = IncomingTieGridScenes.lowContrastIncoming(original, 1, 35, 5);
+        assertArrayEquals(originalLabels, lowContrast[0]);
+        assertArrayEquals(originalLabels, original[0]);
+        assertArrayEquals(originalGray, original[1]);
+        int[] evidence = IncomingTieGridScenes.incomingStrongContrastSamples(lowContrast, 1, 35, 5);
+        assertTrue("the raw arc retains at least thirty strong samples", evidence[0] >= 30);
+        assertTrue(
+                "the incoming run is locally under the twenty-level contrast requirement",
+                evidence[1] >= 30);
+        assertFalse(tied(lowContrast, 1, false, false));
+    }
 }
