@@ -208,7 +208,7 @@ public class PrintedSlurRecognitionTest {
         var heads = PrintedSlurContext.geometryHeads(f.score().notes(), f.score().measures(), W, H);
         assertEquals(2, heads.size());
         assertEquals(
-                Set.of("owner", "x", "y", "staffIndex", "staffCount"),
+                Set.of("owner", "x", "y", "staffIndex", "staffCount", "grace"),
                 Arrays.stream(PrintedSlurOwners.GeometryHead.class.getRecordComponents())
                         .map(java.lang.reflect.RecordComponent::getName)
                         .collect(java.util.stream.Collectors.toSet()));

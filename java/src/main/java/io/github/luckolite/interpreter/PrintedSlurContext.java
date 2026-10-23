@@ -104,7 +104,12 @@ final class PrintedSlurContext {
                 throw new IllegalArgumentException("Printed head lies outside its source pixels");
             result.add(
                     new PrintedSlurOwners.GeometryHead(
-                            owner, x, y, note.staffIndex(), note.staffCount()));
+                            owner,
+                            x,
+                            y,
+                            note.staffIndex(),
+                            note.staffCount(),
+                            (note.articulations() & NoteOrnament.GRACE) != 0));
         }
         return List.copyOf(result);
     }

@@ -2831,6 +2831,26 @@ final class TripletRhythmDetector {
                         || validNumeralContext(
                                 gray, width, height, normal, firstX, lastX, gap, number)))
             return normal;
+        // Photometric retries may remove a four's pale crossbar. Keep the complete
+        // original component and its unchanged physical ownership authoritative.
+        Glyph originalFour =
+                number == 3
+                        ? findPrintedNumeral(
+                                gray,
+                                width,
+                                height,
+                                firstX,
+                                lastX,
+                                firstY,
+                                lastY,
+                                gap,
+                                shortNotes,
+                                headX,
+                                headY,
+                                4,
+                                boundedSecondary,
+                                ownership)
+                        : null;
         Glyph candidate = null;
         int candidateLevel = -1;
         for (int pass = 0; pass < 2; pass++)
@@ -2882,6 +2902,8 @@ final class TripletRhythmDetector {
                                     retry.top() + local.top(),
                                     retry.right() + local.left(),
                                     retry.bottom() + local.top());
+                    if (originalFour != null
+                            && originalFourOwnsRetry(gray, width, originalFour, found)) continue;
                     if (!boundedSecondary
                             && !validNumeralContext(
                                     gray, width, height, found, firstX, lastX, gap, number))
@@ -2903,6 +2925,54 @@ final class TripletRhythmDetector {
                 }
             }
         return null;
+    }
+
+    /** The retry must be ink from this same complete raw four, not a neighboring glyph. */
+    private static boolean originalFourOwnsRetry(byte[] gray, int width, Glyph four, Glyph retry) {
+        if (retry.left() < four.left()
+                || retry.right() > four.right()
+                || retry.top() < four.top()
+                || retry.bottom() > four.bottom()) return false;
+        int w = four.right() - four.left() + 1, h = four.bottom() - four.top() + 1;
+        int seed = -1;
+        for (int y = retry.top(); y <= retry.bottom() && seed < 0; y++)
+            for (int x = retry.left(); x <= retry.right(); x++)
+                if (dark(gray, width, x, y)) {
+                    seed = (y - four.top()) * w + x - four.left();
+                    break;
+                }
+        if (seed < 0) return false;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[seen.length];
+        byte[] component = new byte[seen.length];
+        java.util.Arrays.fill(component, (byte) 255);
+        int begin = 0, end = 1, minX = w, maxX = -1, minY = h, maxY = -1;
+        queue[0] = seed;
+        seen[seed] = true;
+        while (begin < end) {
+            int p = queue[begin++], x = p % w, y = p / w;
+            component[p] = 0;
+            minX = Math.min(minX, x);
+            maxX = Math.max(maxX, x);
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
+            for (int dy = -1; dy <= 1; dy++)
+                for (int dx = -1; dx <= 1; dx++) {
+                    int nx = x + dx, ny = y + dy;
+                    if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+                    int next = ny * w + nx;
+                    if (!seen[next] && dark(gray, width, four.left() + nx, four.top() + ny)) {
+                        seen[next] = true;
+                        queue[end++] = next;
+                    }
+                }
+        }
+        if (minX != 0 || maxX != w - 1 || minY != 0 || maxY != h - 1) return false;
+        for (int y = retry.top(); y <= retry.bottom(); y++)
+            for (int x = retry.left(); x <= retry.right(); x++)
+                if (dark(gray, width, x, y) && !seen[(y - four.top()) * w + x - four.left()])
+                    return false;
+        return completeFourCrossbar(component, w, end, 0, 0, w, h);
     }
 
     private static Glyph findPrintedNumeral(

@@ -16,11 +16,19 @@ final class PrintedSlurOwners {
         int staffIndex();
 
         int staffCount();
+
+        default boolean grace() {
+            return false;
+        }
     }
 
     /** Pixel ownership only; no invented voice, attack or pitch. */
-    record GeometryHead(int owner, float x, float y, int staffIndex, int staffCount)
+    record GeometryHead(int owner, float x, float y, int staffIndex, int staffCount, boolean grace)
             implements Location {
+        GeometryHead(int owner, float x, float y, int staffIndex, int staffCount) {
+            this(owner, x, y, staffIndex, staffCount, false);
+        }
+
         GeometryHead {
             if (owner < 0
                     || !Float.isFinite(x + y)
@@ -54,6 +62,10 @@ final class PrintedSlurOwners {
                 long attack,
                 int soundingPitch) {
             this(owner, x, y, staffIndex, staffCount, voice, attack, 0, soundingPitch);
+        }
+
+        public boolean grace() {
+            return graceOrder != 0;
         }
 
         Head {
@@ -181,6 +193,17 @@ final class PrintedSlurOwners {
         var start = candidates(bow.start(), bow.above(), true, heads, gray, width, height, track);
         var end = candidates(bow.end(), bow.above(), false, heads, gray, width, height, track);
         if (start.isEmpty()) return new Binding(Status.NO_START_OWNER, Optional.empty());
+        if (end.isEmpty() && !ambiguous(start) && start.get(0).head().grace())
+            end =
+                    gracePairEndCandidates(
+                            bow.end(),
+                            bow.above(),
+                            start.get(0).head(),
+                            heads,
+                            gray,
+                            width,
+                            height,
+                            track);
         if (end.isEmpty()) return new Binding(Status.NO_END_OWNER, Optional.empty());
         if (ambiguous(start)) return new Binding(Status.AMBIGUOUS_START, Optional.empty());
         if (ambiguous(end)) return new Binding(Status.AMBIGUOUS_END, Optional.empty());
@@ -351,6 +374,45 @@ final class PrintedSlurOwners {
                     shaft || headEdge && clearance <= 1
                             ? -.35 + dx * .15 + clearance * .015
                             : dx + clearance * .03;
+            result.add(new Candidate(head, score));
+        }
+        result.sort(
+                Comparator.comparingDouble(Candidate::distance)
+                        .thenComparingInt(c -> c.head().owner()));
+        return result;
+    }
+
+    /** A proved grace-to-grace bow may finish beside the right edge of its small final head.
+     * The ordinary endpoint route and all its thresholds keep precedence unchanged. */
+    private static List<Candidate> gracePairEndCandidates(
+            PrintedSlurContours.Point cap,
+            boolean above,
+            Location start,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        float gap = track.at(cap.x())[1];
+        if (!headBody(gray, width, height, start, track.at(start.x())[1])) return List.of();
+        var result = new ArrayList<Candidate>();
+        for (var head : heads) {
+            if (!head.grace()
+                    || head.owner() == start.owner()
+                    || head.staffIndex() != start.staffIndex()
+                    || head.staffCount() != start.staffCount()
+                    || head.x() <= start.x()
+                    || cap.x() <= head.x()
+                    || head.x() >= width
+                    || head.y() >= height) continue;
+            double dx = (cap.x() - head.x()) / gap;
+            double clearance = (above ? head.y() - cap.y() : cap.y() - head.y()) / gap;
+            if (dx > .85
+                    || clearance < 0
+                    || clearance > 2
+                    || !headBody(gray, width, height, head, track.at(head.x())[1])) continue;
+            double score =
+                    clearance <= 1 ? -.35 + dx * .15 + clearance * .015 : dx + clearance * .03;
             result.add(new Candidate(head, score));
         }
         result.sort(

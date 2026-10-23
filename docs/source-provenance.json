@@ -578,17 +578,18 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "7d2f000c737e3ff678d0a93a11665032c7098b63a11d837d1b2dbe7c5b3d37fb",
-      "source_normalized_sha256": "0b8682c6085e91d6b65ce25504091c92e75a1bd7cfc3e1d54c3464797520dd12",
+      "source_sha256": "4afc2772f1be307ce7355d064324a802b6d61717d3b4bce4c29ba510bacfefc8",
+      "source_normalized_sha256": "4afc2772f1be307ce7355d064324a802b6d61717d3b4bce4c29ba510bacfefc8",
       "review_note": "A continuous middle waist is not a four crossbar if a separately observed two-sided lower bowl exists below it. Reuse existing lower-lobe/paper dimensions; preserve complete-four contradiction, positive-three rules and original Java17/21 regressions.",
-      "standalone_sha256": "45ac606567806dd15fd08419918a618c5999f65d6d2866f94e46558f794ea000",
-      "reviewed_app_commit": "e50bb69f50332fce5050e8ca8a65196e9078d1cb",
+      "standalone_sha256": "0313bd3c3fa98fe377d8a4e5b919c255ea2136ebf60cb0c21b7992ae2217d4e3",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "reviewed_app_base_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
       "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TripletRhythmDetector.java",
       "license": "Apache-2.0",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "reviewed_app_state": "Reviewed recognition93 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
@@ -1703,15 +1704,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "4706a951d8d0518f9da91486a5c2a984e9775b0606c9b8e3a8ee34896b881b5d",
-      "source_normalized_sha256": "9798572b070bd922d8264db44c28a0ec4f8a35427cc56ebbd1d132823b6b4d58",
+      "source_sha256": "c4aacbca890490475d3065cb560fc8b0d4fe9f44700063f1d80cef2f0d2a0ee2",
+      "source_normalized_sha256": "5a43828c822a7ada23307ec12fc15814e4b5045f555c8194bbeba5c0bfb30a7f",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "af9d80236f7add7d0a3c8bc835551487de634a656a9a8342cdf3f90a107d3e5e",
-      "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24",
+      "standalone_sha256": "026fe1128c7f70c06e60e3cf779af027543559cf70058cba82b6bf81bd171349",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -1727,7 +1728,8 @@
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
-      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged."
+      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
@@ -1784,15 +1786,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "25a4f4f920b815b618147474089483a37cf7851339e3d216e8c197935d343bff",
-      "source_normalized_sha256": "25a4f4f920b815b618147474089483a37cf7851339e3d216e8c197935d343bff",
+      "source_sha256": "e876e287cbce9f059ff5ea2f50c558b242d48d673d923f605e33529359d5521f",
+      "source_normalized_sha256": "e876e287cbce9f059ff5ea2f50c558b242d48d673d923f605e33529359d5521f",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
-      "standalone_sha256": "1e58be62c1a1c6acdc94931bad401c49f4acf83c5b12c110a9f9fe25af5be4a5",
-      "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24",
+      "standalone_sha256": "1c0198261440988d9a295e48d9e1c0899e5d99a587386075b7fba51774743477",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -1801,7 +1803,8 @@
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
-      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged."
+      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
@@ -2737,17 +2740,18 @@
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
-      "source_sha256": "38d7e6bebbed732ec05f73de240e145afaeaa4069a1df89691c121b0df5cb533",
-      "source_normalized_sha256": "38d7e6bebbed732ec05f73de240e145afaeaa4069a1df89691c121b0df5cb533",
+      "source_sha256": "2db208aa09da410b8d004b933afcf5af384fd6ccf97996a48c51d897dcabb3db",
+      "source_normalized_sha256": "ed42357d0665b02601fbf160cb32dd69551cb129e0beacad62eea8c4a7ce8c7b",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "e0a7202a0276f36a96a2fd305b106f1b2e5305bbe7ae80293be319a7512e719b",
-      "reviewed_app_commit": "752dd264b693113ded7519cb6e9c5358e99362d5",
+      "standalone_sha256": "2b409357c8c8aabc3d55d893a81533e82b545985e91868edb5826b32bf89b67e",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurOwners.java",
       "license": "Apache-2.0",
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
-      "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
-      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation."
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
+      "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
     },
     "PrintedSlurPageCapture.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
@@ -2762,13 +2766,17 @@
     },
     "PrintedSlurContext.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContext.java",
-      "source_sha256": "7706eee4c460f4e760fbf609de44763b9650cf24bf42b7054e9de2b6b1707ec0",
-      "source_normalized_sha256": "6b1c95a489f0bd2fc49ba62a2a44dc9fe98a1c70188edf0191965ce42983c92b",
+      "source_sha256": "1fab30b43b47329824fd3c9cca7ef6d18e11915eda5eeb1166bd0f4f80652d48",
+      "source_normalized_sha256": "21ed761f5c3833843ec5ee125ec592e35c20435e51cf8d432ef01158c3aa6fc7",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
-      "review_note": "Build geometry-only owners from retained note/measure coordinates when opening meter is absent. Timed heads retain explicit written-clock and pitch requirements. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
+      "review_note": "Build geometry-only owners from retained note/measure coordinates when opening meter is absent. Timed heads retain explicit written-clock and pitch requirements. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurContext.java",
+      "standalone_sha256": "8fe5a047e3089877516452f8fabc6785d7ecff43d5834abbab797b8e49005145",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
     },
     "LocatedCoverHeadingExpansion.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/LocatedCoverHeadingExpansion.java",
@@ -4247,13 +4255,13 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "20c30781a6b7d28939f8c23dc5c0e1dfa38edb16ce23a24e46e1f9e17254a0bc",
-      "source_normalized_sha256": "98b1a2f9bcb99726a696b816d176f4d74890c0bab294bd2898ec79f45f485a8b",
-      "standalone_sha256": "2d600a74a5f5c7d295a0f771ae4df8c69c6c59dc72a7dcaff7b9c123dcea7991",
+      "source_sha256": "89a0870f54bfb44f5a329e1d5d6410019c4d5749ae3d816b1a6a1b796e8eeefb",
+      "source_normalized_sha256": "b86da804054a899a2b3bf2be66d23efd2892a2659b3360ffed73638c3b5e4c98",
+      "standalone_sha256": "9756599add33bce99806ec85e14e274f04d072a89191f7f04b52295564a7ce3d",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24",
-      "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -4265,7 +4273,8 @@
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "recognition98_review_note": "Complete observed hairpin aperture fallback with BAR extent containment and exact half-open score-geometry overlap; app conversion policy stays app-only. Complete-line Sweetly literal joins existing neutral character grammar. No inferred sound/model/wire/audio change. The existing character lexicon also feeds text-ink admission and neutral-mode qualifiers; cached stage/export proofs do not constitute fresh end-to-end recognition evaluation.",
-      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged."
+      "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout."
     },
     "FadedUpStemNoteSupportTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedUpStemNoteSupportTest.java",
@@ -5204,6 +5213,70 @@
       "recognition99_review_note": "Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.",
       "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24",
       "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "GracePairSlurOwnerOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/GracePairSlurOwnerOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GracePairSlurOwnerOriginalTest.java",
+      "source_sha256": "7c3bebbc23f327f04585ec446bdbea9fa2f3241f6e95f2efba189442dabd5b44",
+      "source_normalized_sha256": "7c3bebbc23f327f04585ec446bdbea9fa2f3241f6e95f2efba189442dabd5b44",
+      "standalone_sha256": "ec48c7c9172380ffc11561608c275ba30cc93f41ea0e79836083ea73cee4a4cd",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "GraceSlurContextOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/GraceSlurContextOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GraceSlurContextOriginalTest.java",
+      "source_sha256": "36f4223ba4cb48f21943c665309591e7ef70c8daa027f1e80d5aa55413a1b561",
+      "source_normalized_sha256": "36f4223ba4cb48f21943c665309591e7ef70c8daa027f1e80d5aa55413a1b561",
+      "standalone_sha256": "d677d1c5220e55a395ebc32acbda75158317331d9393397c86702a1d84ce4d96",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "ContrastedFourPreservationTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ContrastedFourPreservationTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ContrastedFourPreservationTest.java",
+      "source_sha256": "0d5c8b26d8a5ba81d816abfc9660426862f89b8a83358a235f6f3e8a03bc004e",
+      "source_normalized_sha256": "0d5c8b26d8a5ba81d816abfc9660426862f89b8a83358a235f6f3e8a03bc004e",
+      "standalone_sha256": "baf370ac18e78b4eae56a320f42da9dc4ef1cea3a8b9150645b916b056d31b5a",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "TupletConsensusFont.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TupletConsensusFont.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TupletConsensusFont.java",
+      "source_sha256": "227b7058bf5adec81cc7dba9a937c01d9efa898b832a6115febe2c14f84d40b3",
+      "source_normalized_sha256": "227b7058bf5adec81cc7dba9a937c01d9efa898b832a6115febe2c14f84d40b3",
+      "standalone_sha256": "f67d8d704b8a5192c6bd09315b92c4c48d2a53eb199b8addd9890e956b36bc67",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "tests/test_grace_pair_slur_export.py": {
+      "origin": "Original standalone source-free regression; Apache-2.0.",
+      "standalone_path": "tests/test_grace_pair_slur_export.py",
+      "standalone_sha256": "b381d056938130979f1634fbc6f364484bce50030428f3da4ea7fec85fee68cb",
+      "reviewed_sha256": "b381d056938130979f1634fbc6f364484bce50030428f3da4ea7fec85fee68cb",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
+    },
+    "java/src/test/java/io/github/luckolite/interpreter/PrintedSlurRecognitionTest.java": {
+      "origin": "Original standalone source-free regression; Apache-2.0.",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedSlurRecognitionTest.java",
+      "standalone_sha256": "213bd4ec9909545ef2b27fcb449e8e2c28760dbe252c32788f6f54ddf5aba7ab",
+      "reviewed_sha256": "213bd4ec9909545ef2b27fcb449e8e2c28760dbe252c32788f6f54ddf5aba7ab",
+      "license": "Apache-2.0",
+      "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+      "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
+      "reviewed_app_state": "Reviewed recognition100 source committed; cumulative matched rollout deferred during active goal."
     }
   },
   "interpreter_speedup_review": {
@@ -10271,5 +10344,37 @@
     "runtimeBoundary": "Source99 pending; installed86/Guide291/audio97 unchanged. Matched cumulative deployment deferred until goal completion or requested push; no APK or Hub tag.",
     "validationBoundary": "Final combined source gate required.",
     "paired_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24"
+  },
+  "recognition100_review": {
+    "newOriginalTests": 18,
+    "additionalAppOnlyOriginalTests": 0,
+    "standalonePythonOriginals": 2,
+    "scope": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
+    "expected": {
+      "newOriginalTests": 18,
+      "javaTests": 13049,
+      "javaClasses": 1714,
+      "appFocused": 754,
+      "appSelectedClasses": 98,
+      "mappedSources": 515,
+      "nativeSources": 372,
+      "publicFiles": 2971,
+      "hubTests": 58,
+      "nativePythonTests": 33,
+      "publicPythonTests": 231,
+      "newPortableJavaOriginals": 18,
+      "newStandaloneJavaOriginals": 0,
+      "newAppOnlyOriginals": 0,
+      "newPythonOriginals": 2,
+      "oldBowChecksAddedToPipeline": 7,
+      "status": "PLANNED_ROOT_INTEGRATION_REQUIRED",
+      "publicPythonExecutions": 264,
+      "publicPythonUnique": 231
+    },
+    "boundary": "Only global source, procedural ink and licensed Bravura regressions are shared. No commercial-score pixels, private logs, retained score probes or signing material.",
+    "wireLayout": "Guide292 MRG1/audio97 unchanged.",
+    "runtimeBoundary": "Source100 pending; installed86/Guide291/audio97 unchanged; cumulative matched rollout deferred during active goal.",
+    "validationBoundary": "Combined source gate required; private actual stages do not prove a fresh whole native/model/device run.",
+    "paired_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5"
   }
 }
