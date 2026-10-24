@@ -75,6 +75,11 @@ def run_parallel(java, class_path, class_names, root, jobs, heap_mb):
     for result in results:
         print('Java batch %d: %d classes, exit %d; %s' %
               (result['batch'], len(result['classes']), result['exitCode'], result['log']))
+        if result['exitCode']:
+            # CI otherwise reports only the batch exit, losing the JUnit failure
+            # once its ephemeral runner is gone. Keep the diagnostic bounded.
+            tail = '\n'.join(Path(result['log']).read_text(encoding='utf-8', errors='replace').splitlines()[-80:])
+            print('Failed Java batch %d JUnit tail:\n%s' % (result['batch'], tail[-12000:]))
     return status
 
 

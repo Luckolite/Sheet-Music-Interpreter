@@ -37,8 +37,10 @@ class ParallelRunnerChecks(unittest.TestCase):
                     return types.SimpleNamespace(returncode=(exits or {}).get(index, 0))
                 finally:
                     with lock: active[0] -= 1
-            with mock.patch.object(self.runner.subprocess, 'run', side_effect=fake), contextlib.redirect_stdout(io.StringIO()):
+            captured = io.StringIO()
+            with mock.patch.object(self.runner.subprocess, 'run', side_effect=fake), contextlib.redirect_stdout(captured):
                 status = self.runner.run_parallel('not-a-real-java', 'C:/class path;C:/test.jar', names, root, 4, 512)
+            self.last_output = captured.getvalue()
             results = json.loads((root / 'build/test-parallel/results.json').read_text(encoding="utf-8"))
             manifest = json.loads((root / 'build/test-parallel/manifest.json').read_text(encoding="utf-8"))
             self.assertLessEqual(active[1], 4)
@@ -65,6 +67,8 @@ class ParallelRunnerChecks(unittest.TestCase):
     def test_failure_does_not_skip_later_batches_and_propagates(self):
         status, result = self.invoke(['Test%02d' % n for n in range(17)], {2: 3})
         self.assertEqual(1, status); self.assertEqual([0, 3, 0, 0], [b['exitCode'] for b in result['batches']])
+        self.assertIn('Simulated JUnit batch 2 complete', self.last_output)
+        self.assertNotIn('Simulated JUnit batch 1 complete', self.last_output)
 
     def test_launch_failure_is_nonzero_and_other_batches_complete(self):
         status, result = self.invoke(['Test%02d' % n for n in range(17)], launch_error=True)
