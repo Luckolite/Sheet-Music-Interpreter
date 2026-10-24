@@ -41,7 +41,7 @@
   "source_authors": [
     "Luckolite"
   ],
-  "source_commit": "3db72bffcb89760beb2f43c323241e5a6cc3a458",
+  "source_commit": "eed4d954d8e3794a431efd7681da6aea40c766ce",
   "extraction": "Explicitly selected recognition classes and own training scripts; new repository history. No app history, old model, app services or song fixtures.",
   "documentation": "source-provenance.md",
   "files": {
@@ -6622,14 +6622,15 @@
     },
     "InteriorThicknessOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InteriorThicknessOwnership.java",
-      "source_sha256": "95b68368da0a95ae68d29a660129ce1b45a2c66e1af1c313b69c344b6690c351",
-      "source_normalized_sha256": "969d57e710e81c6e821fe00b9119026821a7a5e9e1e3b65d5a68a8ff9c83e0e4",
+      "source_sha256": "3ea5ee0b3997203703a31fbdb24a8f91d99978e9f72328e5aae387580d90f386",
+      "source_normalized_sha256": "9c30e4091c7ba38e02350c7ad93da7354c3dd51327c3b686b040dfcc069c7ff5",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/InteriorThicknessOwnership.java",
-      "standalone_sha256": "54dd94c2baf2ea71c828546363e4307ffba288a4ad41feb0daf01feaaded49a4",
+      "standalone_sha256": "86319e96e9e2dd40bbb3965ab9fe787a57fbd56963d135a81867fe04dca3a1d8",
       "license": "Apache-2.0",
       "review_note": "Shared source130 helper with namespace-only executable token adaptation, explicit native decoder selection and source-free original regressions. No model, private score, device, signing or app-history data.",
-      "standalone_normalized_sha256": "54dd94c2baf2ea71c828546363e4307ffba288a4ad41feb0daf01feaaded49a4",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "86319e96e9e2dd40bbb3965ab9fe787a57fbd56963d135a81867fe04dca3a1d8",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
     },
     "JoinedDigitTemplates.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/JoinedDigitTemplates.java",
@@ -6953,10 +6954,12 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteSlurExplanation.java",
       "license": "Apache-2.0",
       "review_note": "Original exact producer/printed-route provenance and conservative complete-member slur/staff/head-preservation evidence. Reviewed package-only standalone counterpart with the established Diagnostics logger adapter. Original procedural regressions; no commercial score ink, cached witness vectors, private source identity or model change. Provenance grants no clock-policy or complete-rhythmic authority.",
-      "source_sha256": "88c66036eede84a5f4dc16ee9559680d8e4462499e295b4d645194786ff5c09b",
-      "source_normalized_sha256": "3e11639b765f1bb79dbd35291a031c17e57315b3a8dbf723b173e773806b0722",
-      "standalone_sha256": "524c7af7607d498b27ce1069e39e6bd6f9c93fd483ee2c0abde92b55e10b5026",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "source_sha256": "8b4b43807a1318cc2c1d586adae4475ca470adb38341cac7d7e1b9c3b4be7210",
+      "source_normalized_sha256": "c7e443487241a323649354225f64ed04002383da9318d5bcd3733d2c68d7d51d",
+      "standalone_sha256": "106d46ba1334ee0f6e9c92bf0dcb642897e142b0394316b4722b6042fbc275d9",
+      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
+      "standalone_normalized_sha256": "106d46ba1334ee0f6e9c92bf0dcb642897e142b0394316b4722b6042fbc275d9",
+      "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
     },
     "ExistingHeadSubsetPreserver.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ExistingHeadSubsetPreserver.java",
@@ -7025,10 +7028,12 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExactLedgerPhase.java",
       "license": "Apache-2.0",
       "review_note": "Original bounded complete raw-component ledger ownership and exact reference phase family. Complete independent five-rail profiles and required-ledger flanks/caps; candidate excluded from fitted reference constraints; every admitted bounded phase and literal sampled-area member checked. Unsupported/faint/partial/rival/foreign cases preserve the existing mark. Package-only standalone counterpart and formula-authored originals reviewed; no score pixels, private source identifiers, model change or general accuracy claim.",
-      "source_sha256": "d45bd4ab4695c6b13baa323ca4c709623d8cf1ba3eb88ae090168505ba967fc6",
-      "source_normalized_sha256": "d45bd4ab4695c6b13baa323ca4c709623d8cf1ba3eb88ae090168505ba967fc6",
-      "standalone_sha256": "4e0e3003ad702b17a11cd68ba96d16a2dad100493f94f9d18f7918390348a251",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "source_sha256": "0a2656053e48dc24b519b32e6aa0eed42db817f965c83b0c9b00bd06d244d9ae",
+      "source_normalized_sha256": "0a2656053e48dc24b519b32e6aa0eed42db817f965c83b0c9b00bd06d244d9ae",
+      "standalone_sha256": "551e424bee50765ddc2d1d8f8b5a11a763e4e6c5517f5990aaa98f06e364bf7b",
+      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
+      "standalone_normalized_sha256": "551e424bee50765ddc2d1d8f8b5a11a763e4e6c5517f5990aaa98f06e364bf7b",
+      "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
     },
     "RasterPhaseLedgerOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RasterPhaseLedgerOwnership.java",
@@ -7130,10 +7135,12 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SourceLocalAccidental.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SourceLocalAccidental.java",
       "license": "Apache-2.0",
-      "source_sha256": "3d223d87df20ac44fd67e4da2d19725ecd0c0ee7cf00949ba81c0114df3249d4",
-      "source_normalized_sha256": "e190cc9ca697d3f4ddcbb2557059a1ca13a5a4c924d53499452c7adc20c342f6",
-      "standalone_sha256": "cc9cae0e42edb0ea92a10cb28bbd0fb4ca15e040b9c5c5e25592eee710fb17e6",
-      "review_note": "Reviewed source-bound actual accidental chooser lineage and invocation-local exact membership transport. Unknown, duplicate, residual and foreign observations remain explicit; model component observations do not establish meter absence or select clock policy. Original procedural regressions only; no private actual or carried fixtures."
+      "source_sha256": "f94ee7a5a0a292df455fb6449b6a1d2f2a90b394a344907d4ce9e7bcf77e67d9",
+      "source_normalized_sha256": "aa1d08cd0f7a266effc5104bdac97c7d3e977739055ea35f5670e42a915e014f",
+      "standalone_sha256": "8d6179ca2bc45b59e8adc07a8bb1b3deaf8942dd1f8686c2731fa80be31562ec",
+      "review_note": "Reviewed source-bound actual accidental chooser lineage and invocation-local exact membership transport. Unknown, duplicate, residual and foreign observations remain explicit; model component observations do not establish meter absence or select clock policy. Original procedural regressions only; no private actual or carried fixtures.",
+      "standalone_normalized_sha256": "8d6179ca2bc45b59e8adc07a8bb1b3deaf8942dd1f8686c2731fa80be31562ec",
+      "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
     },
     "PrintedParenthesisShape.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedParenthesisShape.java",
@@ -7431,6 +7438,16 @@
       "standalone_sha256": "b909fa24a5772cb13aa2bd83f4a499bf3ccd2da2ca1c3317283ad2b909d51fab",
       "standalone_normalized_sha256": "b909fa24a5772cb13aa2bd83f4a499bf3ccd2da2ca1c3317283ad2b909d51fab",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+    },
+    "ExactLedgerPhaseRangeOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ExactLedgerPhaseRangeOriginalTest.java",
+      "source_sha256": "7dc9ca53c327c6c32ce590037dd973e66d3f4c668bd398eb98d951ed84a50f24",
+      "source_normalized_sha256": "e0b6f20ecf50657a9f0ab1e70756503bd8399e6dd1caff2a44ebd6df07b61187",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ExactLedgerPhaseRangeOriginalTest.java",
+      "standalone_sha256": "36658b9a515afa0c29888d9a39cb9a0de22309f0772aaaae0c1d6eb4a54c5f3c",
+      "standalone_normalized_sha256": "36658b9a515afa0c29888d9a39cb9a0de22309f0772aaaae0c1d6eb4a54c5f3c",
+      "license": "Apache-2.0",
+      "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
     }
   },
   "interpreter_speedup_review": {
@@ -13231,8 +13248,8 @@
     "source_boundary": "Only reviewed interpreter sources and original procedural regressions. No commercial score images, private contexts/libraries/logs, signing data or experimental model weights.",
     "verification_boundary": "Source/component regressions and bounded transport checks do not establish complete-document or device accuracy. Missing context remains explicit and clock policies are unchanged by context transport.",
     "standalone_hash_convention": "Newly reviewed standalone SHA256 values use LF-normalized source for portable Git checkouts.",
-    "reviewed_app_commit": "3db72bffcb89760beb2f43c323241e5a6cc3a458",
-    "app_native_source_fingerprint": "bb125b79eae5b3ae38a7352f257656c51a9af51957974967aef78af3283af08f"
+    "reviewed_app_commit": "eed4d954d8e3794a431efd7681da6aea40c766ce",
+    "app_native_source_fingerprint": "87757758d47788b5dec5e545f8817d2b094adad37797f320961f38ebcd71c16f"
   },
   "current_standalone_hash_review": {
     "refreshedCurrentEntries": 32,
@@ -13254,5 +13271,18 @@
     "original_regression": "java/src/test/java/io/github/luckolite/interpreter/NativeDecoderServerTest.java",
     "behavior": "Valid blank inputs preserve every supplied measure in unavailable source context, including empty multi-measure inputs. Full native server analysis equality remains asserted; invalid input retains its original early return.",
     "musical_authority": "No source facts or stronger clock policy are inferred from missing staff ink."
+  },
+  "android_api_compatibility_review": {
+    "reviewed_app_commit": "eed4d954d8e3794a431efd7681da6aea40c766ce",
+    "sources": [
+      "java/src/main/java/io/github/luckolite/interpreter/CompleteSlurExplanation.java",
+      "java/src/main/java/io/github/luckolite/interpreter/ExactLedgerPhase.java",
+      "java/src/main/java/io/github/luckolite/interpreter/SourceLocalAccidental.java",
+      "java/src/main/java/io/github/luckolite/interpreter/InteriorThicknessOwnership.java",
+      "java/src/test/java/io/github/luckolite/interpreter/ExactLedgerPhaseRangeOriginalTest.java"
+    ],
+    "scope": "Replace platform-new array comparison, BigInteger exact conversion and a bound record method reference while preserving signed ordering, overflow refusal and equality; clarify two ownership condition braces. New exact signed-range tests contain only original scalar fixtures.",
+    "models_changed": false,
+    "native_decoder_source_count": 479
   }
 }

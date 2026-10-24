@@ -216,7 +216,9 @@ final class InteriorThicknessOwnership {
     Fit winner=plausible.get(0);
     if(rejectNearbyWholeOwners(labels,gray,w,h,minX,minY,maxX,maxY,exact,bw,bh,ox,oy,gap,budget))return refuse(trace,"nearby-whole-owner-or-budget");
     if(hasForeignTypedInkInside(winner,labels,w,h,budget))return refuse(trace,"foreign-typed-interior-or-budget");
-    if(hasMultiSideContourExcess(winner,gray,w,h,members,gap,budget))return refuse(trace,"multi-side-contour-excess-or-budget");
+    if(hasMultiSideContourExcess(winner,gray,w,h,members,gap,budget)) {
+        return refuse(trace,"multi-side-contour-excess-or-budget");
+    }
         // Thickness maxima are proposals, not ownership evidence. A secondary peak only competes
         // when it independently yields a complete fitted body; that case is rejected below.
         // Any second disjoint fitted body in the same complete source component makes ownership
@@ -374,7 +376,9 @@ final class InteriorThicknessOwnership {
                     run++;
                 } else break;
             }
-      if(run<(int)Math.ceil(gap*2.3)-1)continue;
+            if (run < (int) Math.ceil(gap * 2.3) - 1) {
+                continue;
+            }
             if (!found) {
                 event(trace, "shaft-dir=" + direction + " detached-column=" + x);
                 detached = true;

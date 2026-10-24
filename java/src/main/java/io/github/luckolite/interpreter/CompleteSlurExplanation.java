@@ -325,7 +325,11 @@ final class CompleteSlurExplanation {
                 (a, b) -> {
                     int c = Integer.compare(b[0] % w, a[0] % w);
                     if (c != 0) return c;
-                    return Arrays.compare(a, b);
+                    for (int i = 0; i < Math.min(a.length, b.length); i++) {
+                        c = Integer.compare(a[i], b[i]);
+                        if (c != 0) return c;
+                    }
+                    return Integer.compare(a.length, b.length);
                 });
     }
 

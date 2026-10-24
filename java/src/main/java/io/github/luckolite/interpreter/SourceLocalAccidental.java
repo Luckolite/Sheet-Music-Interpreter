@@ -306,7 +306,7 @@ final class SourceLocalAccidental {
                 if (!note.equals(choice.originalNote())
                         || note.measureIndex() != measure
                         || note.writtenAccidental() != choice.accidental()) continue;
-                if (notes.stream().filter(choice.originalNote()::equals).count() != 1) return null;
+                if (notes.stream().filter(candidate -> choice.originalNote().equals(candidate)).count() != 1) return null;
                 matchingOwners++;
             }
             if (matchingOwners != 1) return null;

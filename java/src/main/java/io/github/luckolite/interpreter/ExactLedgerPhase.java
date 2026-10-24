@@ -79,9 +79,10 @@ final class ExactLedgerPhase {
 
         int floor() {
             BigInteger[] q = n.divideAndRemainder(d);
-            return q[0].subtract(
-                            n.signum() < 0 && q[1].signum() != 0 ? BigInteger.ONE : BigInteger.ZERO)
-                    .intValueExact();
+            BigInteger value = q[0].subtract(
+                    n.signum() < 0 && q[1].signum() != 0 ? BigInteger.ONE : BigInteger.ZERO);
+            if (value.bitLength() > 31) throw new ArithmeticException("BigInteger out of int range");
+            return value.intValue();
         }
 
         int ceil() {
