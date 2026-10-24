@@ -145,14 +145,14 @@ final class ScoreDynamicsDetector {
                                 b[2] / (float) width,
                                 b[3] / (float) height));
         }
-        // Fragmented letter bodies may touch in row extent while their actual pixels
+        // Fragmented letter bodies may touch or overlap in row extent while their actual pixels
         // stay disconnected. Retain original boxes and offer the complete body only
         // as an additional proposal; the font matcher still proves its identity.
         for (int i = 0; i < joined.size(); i++)
             for (int j = i + 1; j < joined.size(); j++) {
                 int[] a = joined.get(i), b = joined.get(j);
                 if (a[4] != b[4]
-                        || !(a[3] == b[1] || b[3] == a[1])
+                        || Math.max(a[1], b[1]) > Math.min(a[3], b[3])
                         || Math.max(a[0], b[0]) >= Math.min(a[2], b[2])) continue;
                 float gap = staffs.get(a[4]).gap();
                 int left = Math.min(a[0], b[0]), right = Math.max(a[2], b[2]);
@@ -172,8 +172,10 @@ final class ScoreDynamicsDetector {
         return result;
     }
 
-    /** Coordinate-free, complete letter bodies for supplemental bounded dynamic OCR.
-     * Original OCR and glyph decisions stay authoritative; these boxes carry no level. */
+    /**
+     * Coordinate-free, complete letter bodies for supplemental bounded dynamic OCR. Original OCR
+     * and glyph decisions stay authoritative; these boxes carry no level.
+     */
     static List<PlayingTechniqueDetector.Word> paperSymbolBoxes(
             byte[] gray,
             List<PlayingTechniqueDetector.Staff> staffs,
@@ -255,7 +257,9 @@ final class ScoreDynamicsDetector {
         return List.copyOf(result);
     }
 
-    /** Chord rows use their nearby printed staff, even if dynamic ownership chose another system. */
+    /**
+     * Chord rows use their nearby printed staff, even if dynamic ownership chose another system.
+     */
     static boolean uprightChordF(
             PlayingTechniqueDetector.Word word,
             List<PlayingTechniqueDetector.Staff> staffs,

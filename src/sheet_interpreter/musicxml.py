@@ -17,6 +17,7 @@ from . import visual_size, cue_caption, bow_export, clef_export, articulation_ex
 from . import guitar_export
 from .natural_harmonic_notation import owner_index as natural_harmonic_owner_index
 from .fall_off_notation import owner_index as fall_off_owner_index
+from . import parenthesized_note_group
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
 
@@ -277,10 +278,24 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
         if paired and (grace is not None or stop or start or duration != event['end'] - event['start']):
             raise ValueError('Paired tremolo requires an unsplit original endpoint')
         note_type(node, duration * 2 if paired else duration, event)
+        if paired and paired.get('canonicalClockPolicy'):
+            modification = node.find('time-modification')
+            if modification is None:
+                modification = element(node, 'time-modification')
+                element(modification, 'actual-notes', 2)
+                element(modification, 'normal-notes', 1)
+            else:
+                actual_node = modification.find('actual-notes')
+                actual_node.text = str(int(actual_node.text) * 2)
+
     if event and event.get('retainedVisualSize') == 'CUE' and node.find('type') is not None:
         node.find('type').set('size', 'grace-cue' if grace is not None else 'cue')
     if grace is not None and node.find('type') is None:
         raise ValueError('Grace note has no exact written type')
+    if event and (event.get('retainedTremolo') or {}).get('printedFilled'):
+        if event['retainedTremolo'].get('printedStem') in (-1, 1):
+            element(node, 'stem', 'down' if event['retainedTremolo']['printedStem'] < 0 else 'up')
+        element(node, 'notehead', 'normal', filled='yes')
     if event is not None and event_kind(event) == 'UNPITCHED':
         element(node, 'notehead', 'x')
     effect = event.get('guitarEffect') if event and attack_fragment else None
@@ -291,10 +306,25 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
     arpeggio = bool(event and event.get('retainedArpeggio') and attack_fragment and grace is None)
     natural_harmonic = bool(event and event.get('retainedNaturalHarmonic') and attack_fragment and grace is None)
     fall_off = bool(event and event.get('retainedFallOff') and fragment_end == event['end'] and grace is None)
-    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio or natural_harmonic or fall_off or bow_direction is not None:
+    parenthesis_left = event.get('retainedParenthesisStart') if event and attack_fragment and grace is None else None
+    parenthesis_right = (event.get('retainedParenthesisStop')
+                         if event and event.get('retainedParenthesisStop') and grace is None
+                         and fragment_end == event['end'] else None)
+    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio or natural_harmonic or fall_off or parenthesis_left or parenthesis_right or bow_direction is not None:
         notation = element(node, 'notations')
         if arpeggio:
             element(notation, 'arpeggiate')
+        for endpoint, left in ((parenthesis_left, True), (parenthesis_right, False)):
+            if endpoint is not None:
+                f32 = parenthesized_note_group.f32
+                decimal = lambda value: format(Decimal(str(f32(value))), 'f')
+                element(notation, 'other-notation', 'music-sheets-parenthesis-group:' + endpoint['id'],
+                        type='start' if left else 'stop', number=endpoint['number'],
+                        id=endpoint['id'] + ('-left' if left else '-right'),
+                        smufl='noteheadParenthesisLeft' if left else 'noteheadParenthesisRight',
+                        **{'relative-x': decimal(endpoint['x'] * 10),
+                           'relative-y': decimal(-endpoint['y'] * 10),
+                           'font-size': decimal(f32(endpoint['height'] / f32(1.6)) * 100) + '%'})
         if natural_harmonic:
             element(element(notation, 'technical'), 'harmonic')
             element(notation.find('technical/harmonic'), 'natural')
@@ -378,6 +408,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
     bars, events, expressions, full_rests, literal_rests = [], [], [], [], []
+    parenthesis_level_ends = [float("-inf")] * 17
     printed_rest_groups = []
     octave_owned = {}
     offset = 0
@@ -496,7 +527,19 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             owner_index = fall_off_owner_index(fall_off_mark, score.get('notes', []))
             if owner_index is not None:
                 fall_off_owner_counts[owner_index] += 1
+        for group_mark, pair, members in parenthesized_note_group.retained(page):
+            first, last = events[first_event + members[0]], events[first_event + members[-1]]
+            number = next((n for n in range(1, 17) if parenthesis_level_ends[n] <= first['start']), None)
+            if number is None:
+                continue
+            parenthesis_level_ends[number] = last['end']
+            group_id = parenthesized_note_group.group_id(group_mark, pair)
+            lx, ly, rx, ry, lh, rh = pair.geometry
+            first['retainedParenthesisStart'] = dict(id=group_id, number=number, x=lx, y=ly, height=lh)
+            last['retainedParenthesisStop'] = dict(id=group_id, number=number, x=rx, y=ry, height=rh)
         for supplied in score.get('expressiveEvents', []):
+            if supplied.get('kind') == 'PARENTHESIZED_NOTE_GROUP':
+                continue
             if supplied.get('kind') == 'NATURAL_HARMONIC':
                 if (supplied.get('scope') not in ('NOTE', 'UNRESOLVED')
                         or supplied.get('end') is not None

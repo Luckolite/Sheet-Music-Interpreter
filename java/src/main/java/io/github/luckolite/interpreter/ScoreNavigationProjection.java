@@ -330,7 +330,7 @@ public final class ScoreNavigationProjection {
                         techniques,
                         dynamics,
                         List.of(),
-                        expressions)
+                        expressions).withBeamSource(source.beamSource().edited(notes.stream().map(n -> Objects.requireNonNull(noteOwners.get(n)).sourceIndex()).toList()))
                 .withOpeningPickup(
                         source.openingPickup()
                                 && plan.measureCount() > 0

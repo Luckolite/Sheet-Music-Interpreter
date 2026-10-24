@@ -149,7 +149,47 @@ public class NavigationAnnotationApiTest {
         var with =
                 SheetInterpreter.analyze(
                         p.labels, p.gray, p.w, p.h, SheetInterpreter.Annotations.EMPTY, ocr);
-        assertEquals(without, with);
+        var unread =
+                new ScoreClockContextSource.MeterRead(
+                        0,
+                        0,
+                        "",
+                        0,
+                        0,
+                        new ScoreClockContextSource.RasterBox(32, 77, 62, 148),
+                        80,
+                        16,
+                        0,
+                        0,
+                        "",
+                        ScoreClockContextSource.MeterRoute.UNREAD_CANDIDATE,
+                        false,
+                        ScoreClockContextSource.Status.UNREAD);
+        var context = without.clockContextSource();
+        var expectedContext =
+                new ScoreClockContextSource(
+                        context.origin(),
+                        context.noteCount(),
+                        context.measureCount(),
+                        context.restCount(),
+                        context.partWords(),
+                        context.numbers(),
+                        List.of(unread),
+                        context.printedValues(),
+                        context.glyphLedgers(),
+                        context.restValues(),
+                        context.voiceGroups(),
+                        context.syncAnchors(),
+                        context.missing());
+        assertEquals(without.withClockContextSource(expectedContext), with);
+        assertTrue(with.meterChanges().isEmpty());
+        assertTrue(
+                with.clockContextSource().missing().stream()
+                        .anyMatch(
+                                missing ->
+                                        missing.requirement()
+                                                == ScoreClockContextSource.Requirement
+                                                        .METER_SCOPE));
         assertTrue(calls[0] > 0);
     }
 }

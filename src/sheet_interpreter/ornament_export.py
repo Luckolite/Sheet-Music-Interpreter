@@ -32,7 +32,10 @@ def write(notation, flags):
         articulations = notation.find('articulations')
         if articulations is None:
             articulations = ET.SubElement(notation, 'articulations')
-        ET.SubElement(articulations, 'plop' if flags & (1 << 13) else 'scoop')
+        approach = ET.SubElement(articulations, 'plop' if flags & (1 << 13) else 'scoop')
+        # Bit8 is shape only for an isolated SLIDE; TURN keeps its delayed meaning.
+        if flags & (1 << 8):
+            approach.set('line-shape', 'straight')
     if glyph is None and not beams:
         return
     ornaments = ET.SubElement(notation, 'ornaments')

@@ -59,7 +59,14 @@ public final class MusicalOcr {
                 (pixels, w, h) -> reader.readGray(pixels, w, h));
     }
 
-    record MeterEvidence(List<ScoreMeterChange> changes, List<MeterChangeDetector.Crop> headers) {
+    record MeterEvidence(
+            List<ScoreMeterChange> changes,
+            List<MeterChangeDetector.Crop> headers,
+            ScoreMeterProducerSource provenance) {
+        MeterEvidence(List<ScoreMeterChange> changes, List<MeterChangeDetector.Crop> headers) {
+            this(changes, headers, ScoreMeterProducerSource.unavailable());
+        }
+
         MeterEvidence {
             changes = List.copyOf(changes);
             headers = List.copyOf(headers);
@@ -89,6 +96,9 @@ public final class MusicalOcr {
             List<MeasureRegion> measures,
             List<ScoreNoteEvent> notes)
             throws Exception {
+        var clockMeterSource =
+                AcceptedMeterHeaderBounds.source(labels, gray, width, height, measures);
+        var clockMeterObservations = new ArrayList<ScoreMeterProducerSource.Observation>();
         var headerReadings = new ArrayList<HeaderReading>();
         var readings = new TreeMap<Integer, Map<String, Integer>>();
         var decisive = new HashSet<Integer>();
@@ -99,6 +109,15 @@ public final class MusicalOcr {
         for (var change :
                 MeterChangeDetector.rasterMeterCandidates(
                         labels, gray, width, height, measures, notes)) {
+            clockMeterObservations.add(
+                    new ScoreMeterProducerSource.Observation(
+                            clockMeterSource,
+                            clockMeterObservations.size(),
+                            change.measureIndex(),
+                            null,
+                            change.numerator() + "/" + change.denominator(),
+                            1,
+                            "RASTER_READING_WITHOUT_RETAINED_BOUNDS"));
             readings.computeIfAbsent(change.measureIndex(), ignored -> new HashMap<>())
                     .merge(change.numerator() + "/" + change.denominator(), 1, Integer::sum);
             decisive.add(change.measureIndex());
@@ -111,9 +130,33 @@ public final class MusicalOcr {
             int measure = MeterChangeDetector.followingMeasure(crop, width, height, measures);
             if (measure < 0
                     || !MeterChangeDetector.precedesNotes(
-                            crop, labels, gray, width, height, measure, measures, notes)) continue;
+                            crop, labels, gray, width, height, measure, measures, notes)) {
+                clockMeterObservations.add(
+                        new ScoreMeterProducerSource.Observation(
+                                clockMeterSource,
+                                clockMeterObservations.size(),
+                                measure,
+                                crop,
+                                "",
+                                0,
+                                "UNREAD_INELIGIBLE_CANDIDATE"));
+                var excluded =
+                        ScoreMeterProducerSource.headerExclusion(
+                                clockMeterSource, clockMeterObservations.size(), measure, crop);
+                if (excluded != null) clockMeterObservations.add(excluded);
+                continue;
+            }
             var bound = meterWithBounds(gray, width, height, crop);
             MeterReading reading = bound.reading();
+            clockMeterObservations.add(
+                    new ScoreMeterProducerSource.Observation(
+                            clockMeterSource,
+                            clockMeterObservations.size(),
+                            measure,
+                            bound.crop(),
+                            reading.text(),
+                            reading.votes(),
+                            "PORTABLE_METER_READER"));
             if (!reading.text().isBlank() && reading.votes() > 0) {
                 if (MeterChangeDetector.followingMeasure(bound.crop(), width, height, measures)
                                 != measure
@@ -225,7 +268,7 @@ public final class MusicalOcr {
                                                                                                 + m
                                                                                                         .denominator())))
                         .toList();
-        var headerSource = AcceptedMeterHeaderBounds.source(labels, gray, width, height, measures);
+        var headerSource = clockMeterSource;
         var acceptedHeaderBounds =
                 acceptedHeaderReadings.stream()
                         .map(
@@ -256,7 +299,11 @@ public final class MusicalOcr {
                 AcceptedMeterHeaderBounds.normalize(headerSource, acceptedHeaderBounds).stream()
                         .distinct()
                         .toList();
-        return new MeterEvidence(accepted, headers);
+        return new MeterEvidence(
+                accepted,
+                headers,
+                ScoreMeterProducerSource.capture(
+                        clockMeterSource, clockMeterObservations, accepted));
     }
 
     private BoundMeterReading meterWithBounds(

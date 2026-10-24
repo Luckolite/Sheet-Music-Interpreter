@@ -189,7 +189,7 @@ public final class ScoreFermataDetector {
                             onset
                                     + ScoreNoteTiming.resolvedWrittenDurationBeats(
                                             note, score.notes(), beats);
-                    for (var pair : score.tremoloSource().resolve().resolved()) {
+                    for (var pair : score.tremoloSource().performanceResolution().resolved()) {
                         if (!pair.first().contains(index) && !pair.second().contains(index))
                             continue;
                         var first = score.notes().get(pair.first().get(0));

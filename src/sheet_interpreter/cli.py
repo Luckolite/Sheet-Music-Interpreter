@@ -3,6 +3,8 @@
 """Local image/PDF to JSON, with optional MIDI, MP3 and MusicXML exports."""
 import argparse
 import json
+import hashlib
+import io
 from pathlib import Path
 import sys
 from PIL import Image
@@ -54,6 +56,9 @@ def main():
             find_ffmpeg(args.ffmpeg)  # Fail before expensive recognition if unavailable.
         engine = Interpreter(args.model, args.threads)
         results = []
+        source_bytes = args.input.read_bytes()
+        source_sha = hashlib.sha256(source_bytes).hexdigest()
+        source_pages = 1
         key = args.key_fifths
 
         def process(image, page_number, native_words=None):
@@ -65,6 +70,11 @@ def main():
             page = engine.interpret(image, meter=meter, key_fifths=key, width=args.width,
                                     page_index=page_number - 1,
                                     annotations=annotations[index] if annotations is not None else ({"tabWords": native_words} if native_words else None))
+            from .clock_context import bind_document
+            score = page["score"]
+            score["clockContextSource"] = bind_document(score.get("clockContextSource"),
+                    len(score["notes"]),len(score["measures"]),len(score.get("rests",[])),
+                    source_sha,page_number-1,source_pages)
             page["sourcePage"] = page_number
             results.append(page)
             if page["score"]["keyChanges"]:
@@ -78,7 +88,8 @@ def main():
                 import pypdfium2 as pdfium
             except ImportError as error:
                 raise ValueError("PDF input needs the pdf extra: pip install 'music-sheets-interpreter[pdf]'") from error
-            pdf = pdfium.PdfDocument(args.input)
+            pdf = pdfium.PdfDocument(source_bytes)
+            source_pages = len(pdf)
             try:
                 pages = [int(n) - 1 for n in args.pages.split(",")] if args.pages else list(range(len(pdf)))
                 if not pages or any(n < 0 or n >= len(pdf) for n in pages):
@@ -104,7 +115,7 @@ def main():
         else:
             if args.pages:
                 raise ValueError("--pages is for PDF input")
-            with Image.open(args.input) as image:
+            with Image.open(io.BytesIO(source_bytes)) as image:
                 process(image, 1)
         if annotations is not None and len(annotations) != len(results):
             raise ValueError("Annotation count must match the number of selected pages")

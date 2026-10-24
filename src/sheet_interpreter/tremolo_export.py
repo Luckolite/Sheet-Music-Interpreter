@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Written paired tremolos retain source ownership separately from performed pulses."""
 import math
+from .tremolo_wire import clock_policy, performance_pairs
 
 
 def _anchor(value):
@@ -13,7 +14,7 @@ def _anchor(value):
 def retained(page):
     score = page.get('score', {})
     source = score.get('tremoloSource') or {}
-    pairs = source.get('pairs', [])
+    pairs = performance_pairs(source)
     if not pairs:
         return {}
     notes, events, origins = score.get('notes', []), page['events'], source.get('noteOrigins', [])
@@ -29,6 +30,7 @@ def retained(page):
         lookup[anchor] = index
     result, ids = {}, set()
     for pair in pairs:
+        independent = clock_policy(pair) == 'INDEPENDENT_ENDPOINT_DURATIONS'
         identifier, strokes = pair.get('id'), pair.get('strokes')
         if not isinstance(identifier, str) or not identifier or identifier in ids or type(strokes) is not int or not 1 <= strokes <= 8:
             raise ValueError('Invalid tremolo pair identity or strokes')
@@ -65,14 +67,21 @@ def retained(page):
                 if event.get('tupletActualNotes', 1) != actual or event.get('tupletNormalNotes', 1) != normal:
                     raise ValueError('Tremolo event ratio disagrees with source')
                 written = base * (2 - 2**-dots) * normal / actual
-                if not math.isfinite(written) or abs(duration * 2 - written) > 1e-7:
+                if not math.isfinite(written) or abs(duration * (1 if independent else 2) - written) > 1e-7:
                     raise ValueError('Tremolo clock must be half its written type')
                 result[owner] = dict(type='start' if side == 'first' else 'stop', strokes=strokes, pair=identifier)
+                if independent:
+                    if actual != 1 or normal != 1:
+                        raise ValueError('Independent tremolo tuplet needs a proved outer tuplet group')
+                    if beams != 0 or abs(base - 1) > 1e-7:
+                        raise ValueError('Independent tremolo source appearance needs a supported quarter-head representation')
+                    result[owner].update(printedFilled=True, printedBase=base, printedStem=note.get('stemDirection', 0), canonicalClockPolicy='INDEPENDENT_ENDPOINT_DURATIONS')
+
                 members.append(owner)
             sides.append(members)
         a, b = (events[side[0]] for side in sides)
         lane = tuple(a.get(k) for k in ('measureIndex', 'staffIndex', 'staffCount'))
-        if abs(a['startBeat'] + a['durationBeats'] - b['startBeat']) > 1e-7 or abs(a['durationBeats'] - b['durationBeats']) > 1e-7:
+        if abs(a['startBeat'] + a['durationBeats'] - b['startBeat']) > 1e-7 or (not independent and abs(a['durationBeats'] - b['durationBeats']) > 1e-7):
             raise ValueError('Tremolo endpoints must share one adjacent duration span')
         for side, reference in zip(sides, (a, b)):
             for owner in side:

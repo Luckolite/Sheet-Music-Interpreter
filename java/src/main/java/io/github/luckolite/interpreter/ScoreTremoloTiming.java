@@ -4,15 +4,110 @@ package io.github.luckolite.interpreter;
 
 import java.util.*;
 
-/** Explicit pair time advancement; printed note values remain untouched. */
+/** Explicit pair time advancement; physical marks do not imply a clock policy. */
 public final class ScoreTremoloTiming {
     private ScoreTremoloTiming() {}
+
+    public record ClockResolution(
+            Map<ScoreNoteEvent, Double> advances,
+            List<ScoreTremoloSource.Pair> unresolvedClockPairs) {
+        public ClockResolution {
+            advances = Collections.unmodifiableMap(new IdentityHashMap<>(advances));
+            unresolvedClockPairs = List.copyOf(unresolvedClockPairs);
+        }
+    }
 
     static IdentityHashMap<ScoreNoteEvent, Double> advances(ScorePageInterpretation score) {
         return advances(score.notes(), score.tremoloSource());
     }
 
     static IdentityHashMap<ScoreNoteEvent, Double> advances(
+            List<ScoreNoteEvent> notes, ScoreTremoloSource source) {
+        return new IdentityHashMap<>(resolveClocks(notes, source).advances());
+    }
+
+    public static ClockResolution resolveClocks(
+            List<ScoreNoteEvent> notes, ScoreTremoloSource source) {
+        IdentityHashMap<ScoreNoteEvent, Double> result = new IdentityHashMap<>();
+        List<ScoreTremoloSource.Pair> unresolved = new ArrayList<>();
+        var ownership = source.resolve();
+        unresolved.addAll(ownership.unresolved());
+        for (var pair : ownership.resolved()) {
+            if (pair.source().clockPolicy()
+                    == ScoreTremoloSource.ClockPolicy.LEGACY_SHARED_DURATION) {
+                result.putAll(
+                        legacyAdvances(
+                                notes,
+                                new ScoreTremoloSource(
+                                        List.of(pair.source()), source.noteOrigins())));
+                continue;
+            }
+
+            var first = notes.get(pair.first().get(0));
+            var second = notes.get(pair.second().get(0));
+            if (pair.source().clockPolicy() == ScoreTremoloSource.ClockPolicy.UNRESOLVED) {
+                unresolved.add(pair.source());
+                continue; // caller's ordinary written advances remain in force
+            }
+            double firstDuration = ScoreNoteTiming.writtenDurationBeats(first);
+            double secondDuration = ScoreNoteTiming.writtenDurationBeats(second);
+            if (!Double.isFinite(firstDuration)
+                    || firstDuration <= 0
+                    || !Double.isFinite(secondDuration)
+                    || secondDuration <= 0
+                    || first.measureIndex() != second.measureIndex()
+                    || first.staffIndex() != second.staffIndex()
+                    || first.staffCount() != second.staffCount()
+                    || first.positionInMeasure() >= second.positionInMeasure())
+                throw new IllegalArgumentException(
+                        "Tremolo pair needs ordered same-lane duration ownership");
+            Set<Integer> members = new HashSet<>();
+            members.addAll(pair.first());
+            members.addAll(pair.second());
+            for (int index = 0; index < notes.size(); index++) {
+                var note = notes.get(index);
+                if (!members.contains(index)
+                        && note.measureIndex() == first.measureIndex()
+                        && note.staffIndex() == first.staffIndex()
+                        && note.staffCount() == first.staffCount()
+                        && note.positionInMeasure() > first.positionInMeasure() + .018f
+                        && note.positionInMeasure() < second.positionInMeasure() - .018f)
+                    throw new IllegalArgumentException("Unowned attack inside tremolo pair");
+            }
+            boolean shared =
+                    pair.source().clockPolicy()
+                                    == ScoreTremoloSource.ClockPolicy.LEGACY_SHARED_DURATION
+                            || pair.source().clockPolicy()
+                                    == ScoreTremoloSource.ClockPolicy.SHARED_DURATION;
+            for (var side : List.of(pair.first(), pair.second())) {
+                var endpoint = side == pair.first() ? first : second;
+                double sideDuration = ScoreNoteTiming.writtenDurationBeats(endpoint);
+                for (int index : side) {
+                    var note = notes.get(index);
+                    double duration = ScoreNoteTiming.writtenDurationBeats(note);
+                    if (note.kind() != ScoreNoteEvent.Kind.PITCHED
+                            || note.measureIndex() != endpoint.measureIndex()
+                            || note.staffIndex() != endpoint.staffIndex()
+                            || note.staffCount() != endpoint.staffCount()
+                            || Math.abs(note.positionInMeasure() - endpoint.positionInMeasure())
+                                    > .018
+                            || !Double.isFinite(duration)
+                            || duration <= 0
+                            || Math.abs(duration - sideDuration) > 1e-7
+                            || shared && Math.abs(duration - firstDuration) > 1e-7
+                            || (note.articulations() & 32768) != 0
+                            || side == pair.first() && note.followingRestBeats() > 0
+                            || side == pair.second() && note.leadingRestBeats() > 0)
+                        throw new IllegalArgumentException(
+                                "Unresolved tremolo endpoint duration or rest ownership");
+                    result.put(note, shared ? duration * .5 : duration);
+                }
+            }
+        }
+        return new ClockResolution(result, unresolved);
+    }
+
+    static IdentityHashMap<ScoreNoteEvent, Double> legacyAdvances(
             List<ScoreNoteEvent> notes, ScoreTremoloSource source) {
         IdentityHashMap<ScoreNoteEvent, Double> result = new IdentityHashMap<>();
         for (var pair : source.resolve().resolved()) {

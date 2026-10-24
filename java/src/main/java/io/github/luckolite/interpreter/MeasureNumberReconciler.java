@@ -211,6 +211,89 @@ final class MeasureNumberReconciler {
         return support >= 2;
     }
 
+    record ProducerRow(
+            int row, float left, float right, float top, float bottom, List<Integer> measures) {
+        ProducerRow {
+            measures = List.copyOf(measures);
+        }
+    }
+
+    record ProducerNumber(
+            int ordinal,
+            NumberToken token,
+            int headerRow,
+            boolean trusted,
+            boolean assigned,
+            int originCandidate,
+            String disposition) {}
+
+    static List<ProducerRow> producerRows(List<MeasureRegion> input) {
+        var layout = rows(input);
+        var output = new ArrayList<ProducerRow>();
+        for (int r = 0; r < layout.size(); r++) {
+            var row = layout.get(r);
+            var indices = new ArrayList<Integer>();
+            for (int i = 0; i < input.size(); i++)
+                if (row.measures.contains(input.get(i))) indices.add(i);
+            output.add(new ProducerRow(r, row.left, row.right, row.top, row.bottom, indices));
+        }
+        return List.copyOf(output);
+    }
+
+    /** Passive receipt of the unchanged number producer. Every unselected rival is retained. */
+    static List<ProducerNumber> producerNumberRoutes(
+            List<MeasureRegion> input, List<NumberToken> tokens) {
+        var layout = rows(input);
+        var anchors = trustedAnchors(tokens, layout);
+        assignAnchors(layout, anchors);
+        var single =
+                anchors.size() < 2
+                        ? singleAnchorEvidence(layout, tokens)
+                        : new SingleAnchor(0, null);
+        var output = new ArrayList<ProducerNumber>();
+        for (int i = 0; i < tokens.size(); i++) {
+            var token = tokens.get(i);
+            int header = headerRow(token, layout), assigned = -1, preceding = 0, origin = 0;
+            for (int r = 0; r < layout.size(); r++) {
+                var row = layout.get(r);
+                if (row.anchor == token) {
+                    assigned = r;
+                    origin = token.value() - preceding;
+                    break;
+                }
+                preceding += row.measures.size();
+            }
+            boolean singleReturn = assigned < 0 && single.token() == token;
+            if (singleReturn) {
+                assigned = header;
+                origin = single.value();
+            } else if (assigned < 0 && header >= 0) {
+                int count = 0;
+                for (int r = 0; r < header; r++) count += layout.get(r).measures.size();
+                origin = token.value() - count;
+            }
+            boolean trusted = anchors.stream().anyMatch(value -> value == token);
+            String disposition =
+                    singleReturn
+                            ? "ACTUAL_SINGLE_LATER_ANCHOR_MEASURE_ONE_RETURN"
+                            : assigned >= 0
+                                    ? "ACTUAL_ASSIGNED_NUMBER_ANCHOR"
+                                    : header >= 0
+                                            ? "UNASSIGNED_SYSTEM_HEADER_NUMBER_OBSERVATION_NOT_PRODUCER_ADMISSION"
+                                            : "OUTSIDE_SYSTEM_NUMBER_HEADER";
+            output.add(
+                    new ProducerNumber(
+                            i, token, header, trusted, assigned >= 0, origin, disposition));
+        }
+        return List.copyOf(output);
+    }
+
+    static int producerHeaderRow(PlayingTechniqueDetector.Word word, List<MeasureRegion> input) {
+        return headerRow(
+                new NumberToken(0, word.left(), word.top(), word.right(), word.bottom()),
+                rows(input));
+    }
+
     static int firstMeasureNumber(List<MeasureRegion> reconciled, List<NumberToken> tokens) {
         List<Row> layout = rows(reconciled == null ? List.of() : reconciled);
         List<NumberToken> anchors = trustedAnchors(tokens == null ? List.of() : tokens, layout);
@@ -256,8 +339,14 @@ final class MeasureNumberReconciler {
      * reconciled measures plus one. This is common when a PDF contains both the solo part and a
      * later full-score arrangement, as in Sands of Destiny.
      */
+    private record SingleAnchor(int value, NumberToken token) {}
+
     private static int singleAnchorProvingMeasureOne(List<Row> layout, List<NumberToken> tokens) {
-        if (layout.isEmpty() || tokens.isEmpty()) return 0;
+        return singleAnchorEvidence(layout, tokens).value();
+    }
+
+    private static SingleAnchor singleAnchorEvidence(List<Row> layout, List<NumberToken> tokens) {
+        if (layout.isEmpty() || tokens.isEmpty()) return new SingleAnchor(0, null);
         for (NumberToken token : tokens) {
             float centerX = (token.left + token.right) * .5f;
             if (token.value < 1
@@ -281,9 +370,9 @@ final class MeasureNumberReconciler {
                 if (row == closest) break;
                 preceding += row.measures.size();
             }
-            if (token.value == preceding + 1) return 1;
+            if (token.value == preceding + 1) return new SingleAnchor(1, token);
         }
-        return 0;
+        return new SingleAnchor(0, null);
     }
 
     /** Multi-measure rests are independent optical evidence and remain meaningful even when the

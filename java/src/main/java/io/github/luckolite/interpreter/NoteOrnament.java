@@ -12,6 +12,13 @@ public final class NoteOrnament {
             GLISSANDO = 7 << 5;
     public static final int TYPE_MASK = 7 << 5, DELAYED = 1 << 8;
 
+    /**
+     * Type-specific qualifier: a proved straight isolated SLIDE approach. The same wire bit means
+     * DELAYED only for TURN / INVERTED_TURN. Connected slides and other ornament types must not
+     * interpret this alias.
+     */
+    public static final int STRAIGHT_APPROACH = 1 << 8;
+
     /** Small printed grace heads borrow playback time from their principal note. */
     public static final int GRACE = 1 << 15;
 
@@ -48,6 +55,12 @@ public final class NoteOrnament {
 
     public static int type(int marks) {
         return marks & TYPE_MASK;
+    }
+
+    public static boolean straightApproach(int marks) {
+        return type(marks) == SLIDE
+                && (marks & FROM_PREVIOUS) == 0
+                && (marks & STRAIGHT_APPROACH) != 0;
     }
 
     public static int accidental(int marks, boolean upper) {

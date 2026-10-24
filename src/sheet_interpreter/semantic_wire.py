@@ -9,7 +9,7 @@ from encodings.utf_16_le import encode as utf16_encode
 KINDS = ('UNRESOLVED_DIRECTION', 'RITARDANDO', 'RALLENTANDO', 'RITENUTO',
          'ACCELERANDO', 'A_TEMPO', 'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA',
          'BREATH', 'CAESURA', 'SFORZANDO', 'SFORZATO', 'SFORZANDO_PIANO',
-         'PEDAL_DOWN', 'PEDAL_UP', 'ARPEGGIO', 'CRESCENDO', 'DIMINUENDO', 'METRIC_MODULATION', 'NATURAL_HARMONIC', 'FALL_OFF')
+         'PEDAL_DOWN', 'PEDAL_UP', 'ARPEGGIO', 'CRESCENDO', 'DIMINUENDO', 'METRIC_MODULATION', 'NATURAL_HARMONIC', 'FALL_OFF', 'PARENTHESIZED_NOTE_GROUP')
 SCOPES = ('SCORE', 'PART', 'VOICE', 'NOTE', 'REST', 'UNRESOLVED')
 STRENGTHS = ('UNSPECIFIED', 'POCO', 'MOLTO')
 POLICIES = ('DEFAULT', 'SKIP', 'PLAY', 'UNKNOWN')
@@ -152,6 +152,19 @@ def expression(row, measures):
                 or row['scope'] == 'NOTE' and start is None
                 or row['strength'] != 'UNSPECIFIED' or row['qualifierText'] != 'falloff-v1:curved'):
             raise ValueError('Falloff needs one exact note owner and printed shape')
+    if row['kind'] == 'PARENTHESIZED_NOTE_GROUP':
+        try:
+            from .parenthesized_note_group import decode as decode_parentheses
+        except ImportError:
+            from parenthesized_note_group import decode as decode_parentheses
+        pair = decode_parentheses(row['qualifierText'])
+        if (pair is None or row['scope'] not in ('NOTE', 'UNRESOLVED') or end is not None
+                or row['scope'] == 'UNRESOLVED' and start is not None
+                or row['scope'] == 'NOTE' and (start is None or start['measureIndex'] != pair.members[0].measure)
+                or row['strength'] != 'UNSPECIFIED' or target != pair.target
+                or (row['staffIndex'], row['staffCount']) != (pair.members[0].staff, pair.members[0].count)
+                or pair.members[0].measure >= measures):
+            raise ValueError('Group needs exact ordered members and one printed pair')
     evidence(row['evidence'], required=True)
     return dict(row, start=start, end=end)
 
@@ -195,6 +208,8 @@ def encode(directions, expressions, measures, guide_version=277):
         raise ValueError('Natural harmonic requires guide294')
     if guide_version < 295 and any(row['kind'] == 'FALL_OFF' for row in expressions):
         raise ValueError('Falloff requires guide295')
+    if guide_version < 296 and any(row['kind'] == 'PARENTHESIZED_NOTE_GROUP' for row in expressions):
+        raise ValueError('Parenthesized group requires guide296')
     out = Writer(); out.put('i', len(directions))
     for row in directions:
         row = direction(row, measures); d = row['details']; r = Writer()
@@ -287,6 +302,8 @@ def decode_prefix(data, measures, guide_version=277):
             raise ValueError('Natural harmonic is outside this guide format')
         if guide_version < 295 and row['kind'] == 'FALL_OFF':
             raise ValueError('Falloff is outside this guide format')
+        if guide_version < 296 and row['kind'] == 'PARENTHESIZED_NOTE_GROUP':
+            raise ValueError('Parenthesized group is outside this guide format')
         row['scope'] = r.enum(SCOPES); row['staffIndex'], row['staffCount'] = r.take('ii')
         row['targetEventId'] = r.text(256) if r.boolean() else None
         row['strength'] = r.enum(STRENGTHS); row['qualifierText'] = r.text(4096); row['evidence'] = r.evidence(); r.finish()

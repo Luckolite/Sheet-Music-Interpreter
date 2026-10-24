@@ -11,15 +11,30 @@ import java.util.*;
 public final class ScoreTremoloWire {
     private ScoreTremoloWire() {}
 
-    private static final int MAGIC = 0x54525331, MAX_BYTES = 32 * 1024 * 1024, MAX_PAIRS = 100_000;
+    private static final int MAGIC_V1 = 0x54525331,
+            MAGIC_V2 = 0x54525332,
+            MAX_BYTES = 32 * 1024 * 1024,
+            MAX_PAIRS = 100_000;
 
     public static void write(DataOutput out, ScoreTremoloSource source) throws IOException {
         out.write(encode(source));
     }
 
+    public static void write(DataOutput out, ScoreTremoloSource source, boolean allowClockPolicies)
+            throws IOException {
+        out.write(allowClockPolicies ? encode(source) : encodeTrs1(source));
+    }
+
     public static ScoreTremoloSource read(DataInput in, int expectedNotes) throws IOException {
+        return read(in, expectedNotes, true);
+    }
+
+    public static ScoreTremoloSource read(
+            DataInput in, int expectedNotes, boolean allowClockPolicies) throws IOException {
         int magic = in.readInt(), length = in.readInt();
-        if (magic != MAGIC || length < 0 || length > MAX_BYTES)
+        if (magic == MAGIC_V2 && !allowClockPolicies)
+            throw new IOException("Guide format cannot preserve tremolo clock policies");
+        if ((magic != MAGIC_V1 && magic != MAGIC_V2) || length < 0 || length > MAX_BYTES)
             throw new IOException("Invalid tremolo frame header");
         byte[] bytes = new byte[length + 8];
         ByteBuffer.wrap(bytes).putInt(magic).putInt(length);
@@ -52,6 +67,13 @@ public final class ScoreTremoloWire {
 
     public static byte[] encode(ScoreTremoloSource source) throws IOException {
         if (source.pairs().size() > MAX_PAIRS) throw new IOException("Too many tremolo pairs");
+        boolean v2 =
+                source.pairs().stream()
+                        .anyMatch(
+                                p ->
+                                        p.clockPolicy()
+                                                != ScoreTremoloSource.ClockPolicy
+                                                        .LEGACY_SHARED_DURATION);
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(bytes);
         out.writeInt(source.noteOrigins().size());
@@ -79,6 +101,7 @@ public final class ScoreTremoloWire {
             out.writeInt(id.length);
             out.write(id);
             out.writeInt(pair.strokes());
+            if (v2) out.writeByte(pair.clockPolicy().wireCode());
             anchors(out, pair.first());
             anchors(out, pair.second());
             out.writeInt(pair.evidence().size());
@@ -93,10 +116,21 @@ public final class ScoreTremoloWire {
         }
         ByteArrayOutputStream frame = new ByteArrayOutputStream();
         DataOutputStream header = new DataOutputStream(frame);
-        header.writeInt(MAGIC);
+        header.writeInt(v2 ? MAGIC_V2 : MAGIC_V1);
         header.writeInt(bytes.size());
         bytes.writeTo(header);
         return frame.toByteArray();
+    }
+
+    /** Explicit downgrade path; refuses to erase a non-legacy clock distinction. */
+    public static byte[] encodeTrs1(ScoreTremoloSource source) throws IOException {
+        if (source.pairs().stream()
+                .anyMatch(
+                        p ->
+                                p.clockPolicy()
+                                        != ScoreTremoloSource.ClockPolicy.LEGACY_SHARED_DURATION))
+            throw new IOException("Cannot downgrade tremolo clock policy to TRS1");
+        return encode(source);
     }
 
     public static ScoreTremoloSource decode(byte[] bytes, int expectedNotes) throws IOException {
@@ -107,7 +141,9 @@ public final class ScoreTremoloWire {
                 || expectedNotes > 1_000_000) throw new IOException("Invalid tremolo frame");
         try {
             DataInputStream in = new DataInputStream(new ByteArrayInputStream(bytes));
-            if (in.readInt() != MAGIC || in.readInt() != bytes.length - 8)
+            int magic = in.readInt();
+            boolean v2 = magic == MAGIC_V2;
+            if ((!v2 && magic != MAGIC_V1) || in.readInt() != bytes.length - 8)
                 throw new IOException("Invalid tremolo framing");
             int notes = count(in, 1_000_000), stored = count(in, 1_000_000);
             if (notes != expectedNotes || stored != 0 && stored != notes)
@@ -134,6 +170,10 @@ public final class ScoreTremoloWire {
                                 .decode(ByteBuffer.wrap(id))
                                 .toString();
                 int strokes = in.readInt();
+                int code = v2 ? in.readUnsignedByte() : 0;
+                ScoreTremoloSource.ClockPolicy policy =
+                        ScoreTremoloSource.ClockPolicy.fromWireCode(code);
+                if (policy == null) throw new IOException("Invalid tremolo clock policy");
                 var first = anchors(in);
                 var second = anchors(in);
                 int evidence = count(in, 64);
@@ -146,7 +186,8 @@ public final class ScoreTremoloWire {
                                     in.readFloat(),
                                     in.readFloat(),
                                     in.readFloat()));
-                result.add(new ScoreTremoloSource.Pair(name, first, second, strokes, proof));
+                result.add(
+                        new ScoreTremoloSource.Pair(name, first, second, strokes, proof, policy));
             }
             if (in.available() != 0) throw new IOException("Trailing tremolo bytes");
             return new ScoreTremoloSource(result, origins);

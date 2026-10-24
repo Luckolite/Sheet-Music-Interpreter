@@ -1,0 +1,10 @@
+head_shaft_orphan/gray.bin
+head_shaft_orphan/truth.tsv
+nearby_distinct_shafts/gray.bin
+nearby_distinct_shafts/truth.tsv
+primary_connected/gray.bin
+primary_connected/truth.tsv
+shared_shaft_chord/gray.bin
+shared_shaft_chord/truth.tsv
+unbeamed_nonshaft_head_rival/gray.bin
+unbeamed_nonshaft_head_rival/truth.tsv

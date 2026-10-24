@@ -47,6 +47,34 @@ final class PartialBeamHeadContour {
         return provedShape(gray, w, h, a, b, cx, cy, left, top, right, bottom, area, gap, true);
     }
 
+    /**
+     * Compact semantic paper pockets may contain a primary rail and a rule too. Caller must
+     * independently exclude a closed/turning oval and its own shaft. All two-owner raw-lane,
+     * outside-edge and exterior proofs remain mandatory.
+     */
+    static boolean provedMergedOrCompactPocket(
+            boolean compact,
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float cx,
+            float cy,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            int area,
+            float gap) {
+        if (!compact)
+            return provedMerged(gray, w, h, a, b, cx, cy, left, top, right, bottom, area, gap);
+        if (right - left + 1 > gap * 1.3f
+                || bottom - top + 1 > gap * 1.05f
+                || area > gap * gap * 1.2f) return false;
+        return provedShape(gray, w, h, a, b, cx, cy, left, top, right, bottom, area, gap, true);
+    }
+
     private static boolean provedShape(
             byte[] gray,
             int w,

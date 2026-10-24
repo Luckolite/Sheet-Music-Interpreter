@@ -15,11 +15,12 @@ def event(scope='UNRESOLVED'):
         evidence=[dict(sourceId='printed-fall-off',pageIndex=0,visualX=.5,staffIndex=0,staffCount=1,printedText='curved falloff')])
 
 class Guide295FallOffOriginals(unittest.TestCase):
-    def test_current_writer_emits295_with_source_kind21(self):
+    def test_historical296_writer_emits296_with_source_kind21(self):
         source=score();source['expressiveEvents']=[event()];before=copy.deepcopy(source)
-        raw=guide_writer.encode(source)
-        self.assertEqual(295,struct.unpack_from('>i',raw)[0]);self.assertEqual(before,source)
-        self.assertEqual(112,guide_writer.RECOGNITION_REVISION)
+        revision_before=guide_writer.RECOGNITION_REVISION
+        raw=guide_writer.encode(source,296)
+        self.assertEqual(296,struct.unpack_from('>i',raw)[0]);self.assertEqual(before,source)
+        self.assertEqual(revision_before,guide_writer.RECOGNITION_REVISION)
     def test_note_and_unresolved_records_roundtrip(self):
         for scope in ['NOTE','UNRESOLVED']:
             row=event(scope);raw=semantic_wire.encode([], [row],1,295)

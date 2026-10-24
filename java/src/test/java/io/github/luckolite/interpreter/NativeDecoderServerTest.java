@@ -12,6 +12,19 @@ import java.util.concurrent.*;
 /** Original synthetic request: authentication, version mismatch, concurrency and stdin lifetime. */
 public final class NativeDecoderServerTest {
     @Test
+    public void blankValidInputPreservesEverySuppliedMeasureInUnavailableContext() {
+        byte[] labels = new byte[1024], gray = new byte[1024];
+        Arrays.fill(gray, (byte) 255);
+        var measures = List.of(new MeasureRegion(0, 0.5f, 0, 1), new MeasureRegion(0.5f, 1, 0, 1));
+        var score = OmrScoreInterpreter.analyze(labels, gray, 32, 32, measures);
+        org.junit.Assert.assertTrue(score.notes().isEmpty());
+        org.junit.Assert.assertTrue(score.keyChanges().isEmpty());
+        org.junit.Assert.assertTrue(score.rests().isEmpty());
+        org.junit.Assert.assertEquals(
+                ScoreClockContextSource.unavailable(0, 2, 0), score.clockContextSource());
+    }
+
+    @Test
     public void servicePreservesParityAndStopsWithParent() throws Exception {
         int port;
         try (var reserve = new ServerSocket(0)) {

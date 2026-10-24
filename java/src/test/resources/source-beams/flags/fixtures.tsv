@@ -1,0 +1,56 @@
+carrier_root_bridge-down-1x	carrier_root_bridge-down-1x/gray.bin	carrier_root_bridge-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+carrier_root_bridge-down-2x	carrier_root_bridge-down-2x/gray.bin	carrier_root_bridge-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+carrier_root_bridge-up-1x	carrier_root_bridge-up-1x/gray.bin	carrier_root_bridge-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+carrier_root_bridge-up-2x	carrier_root_bridge-up-2x/gray.bin	carrier_root_bridge-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+cue_floating_flag-down-1x	cue_floating_flag-down-1x/gray.bin	cue_floating_flag-down-1x/carrier.bin	160	160	11.2	1	59	60	129	34.0	55.0	34.0	0	
+cue_floating_flag-down-2x	cue_floating_flag-down-2x/gray.bin	cue_floating_flag-down-2x/carrier.bin	320	320	22.4	1	118	121	259	68.5	110.5	68.5	0	
+cue_floating_flag-up-1x	cue_floating_flag-up-1x/gray.bin	cue_floating_flag-up-1x/carrier.bin	160	160	11.2	-1	59	60	30	125.0	55.0	125.0	0	
+cue_floating_flag-up-2x	cue_floating_flag-up-2x/gray.bin	cue_floating_flag-up-2x/carrier.bin	320	320	22.4	-1	118	121	60	250.5	110.5	250.5	0	
+cue_single-down-1x	cue_single-down-1x/gray.bin	cue_single-down-1x/carrier.bin	160	160	11.2	1	59	60	129	34.0	55.0	34.0	1	
+cue_single-down-2x	cue_single-down-2x/gray.bin	cue_single-down-2x/carrier.bin	320	320	22.4	1	118	121	259	68.5	110.5	68.5	1	
+cue_single-up-1x	cue_single-up-1x/gray.bin	cue_single-up-1x/carrier.bin	160	160	11.2	-1	59	60	30	125.0	55.0	125.0	1	
+cue_single-up-2x	cue_single-up-2x/gray.bin	cue_single-up-2x/carrier.bin	320	320	22.4	-1	118	121	60	250.5	110.5	250.5	1	
+double-down-1x	double-down-1x/gray.bin	double-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	2	
+double-down-2x	double-down-2x/gray.bin	double-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	2	
+double-up-1x	double-up-1x/gray.bin	double-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	2	
+double-up-2x	double-up-2x/gray.bin	double-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	2	
+floating_flag-down-1x	floating_flag-down-1x/gray.bin	floating_flag-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+floating_flag-down-2x	floating_flag-down-2x/gray.bin	floating_flag-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+floating_flag-up-1x	floating_flag-up-1x/gray.bin	floating_flag-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+floating_flag-up-2x	floating_flag-up-2x/gray.bin	floating_flag-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+foreign_left_flag-down-1x	foreign_left_flag-down-1x/gray.bin	foreign_left_flag-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	34,35,129,30.0,34.0
+foreign_left_flag-down-2x	foreign_left_flag-down-2x/gray.bin	foreign_left_flag-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	68,71,259,60.5,68.5
+foreign_left_flag-up-1x	foreign_left_flag-up-1x/gray.bin	foreign_left_flag-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	34,35,30,30.0,125.0
+foreign_left_flag-up-2x	foreign_left_flag-up-2x/gray.bin	foreign_left_flag-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	68,71,60,60.5,250.5
+full_beam_to_rival-down-1x	full_beam_to_rival-down-1x/gray.bin	full_beam_to_rival-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	111,112,129,107.0,34.0
+full_beam_to_rival-down-2x	full_beam_to_rival-down-2x/gray.bin	full_beam_to_rival-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	222,225,259,214.5,68.5
+full_beam_to_rival-up-1x	full_beam_to_rival-up-1x/gray.bin	full_beam_to_rival-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	111,112,30,107.0,125.0
+full_beam_to_rival-up-2x	full_beam_to_rival-up-2x/gray.bin	full_beam_to_rival-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	222,225,60,214.5,250.5
+outward_slur-down-1x	outward_slur-down-1x/gray.bin	outward_slur-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+outward_slur-down-2x	outward_slur-down-2x/gray.bin	outward_slur-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+outward_slur-up-1x	outward_slur-up-1x/gray.bin	outward_slur-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+outward_slur-up-2x	outward_slur-up-2x/gray.bin	outward_slur-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+single-down-1x	single-down-1x/gray.bin	single-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	1	
+single-down-2x	single-down-2x/gray.bin	single-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	1	
+single-up-1x	single-up-1x/gray.bin	single-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	1	
+single-up-2x	single-up-2x/gray.bin	single-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	1	
+sloping_beamlet-down-1x	sloping_beamlet-down-1x/gray.bin	sloping_beamlet-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+sloping_beamlet-down-2x	sloping_beamlet-down-2x/gray.bin	sloping_beamlet-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+sloping_beamlet-up-1x	sloping_beamlet-up-1x/gray.bin	sloping_beamlet-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+sloping_beamlet-up-2x	sloping_beamlet-up-2x/gray.bin	sloping_beamlet-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+staff_crossing-down-1x	staff_crossing-down-1x/gray.bin	staff_crossing-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	1	
+staff_crossing-down-2x	staff_crossing-down-2x/gray.bin	staff_crossing-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	1	
+staff_crossing-up-1x	staff_crossing-up-1x/gray.bin	staff_crossing-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	1	
+staff_crossing-up-2x	staff_crossing-up-2x/gray.bin	staff_crossing-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	1	
+staff_only-down-1x	staff_only-down-1x/gray.bin	staff_only-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+staff_only-down-2x	staff_only-down-2x/gray.bin	staff_only-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+staff_only-up-1x	staff_only-up-1x/gray.bin	staff_only-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+staff_only-up-2x	staff_only-up-2x/gray.bin	staff_only-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+straight_beamlet-down-1x	straight_beamlet-down-1x/gray.bin	straight_beamlet-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+straight_beamlet-down-2x	straight_beamlet-down-2x/gray.bin	straight_beamlet-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+straight_beamlet-up-1x	straight_beamlet-up-1x/gray.bin	straight_beamlet-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+straight_beamlet-up-2x	straight_beamlet-up-2x/gray.bin	straight_beamlet-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	
+tuplet_contact-down-1x	tuplet_contact-down-1x/gray.bin	tuplet_contact-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34.0	55.0	34.0	0	
+tuplet_contact-down-2x	tuplet_contact-down-2x/gray.bin	tuplet_contact-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68.5	110.5	68.5	0	
+tuplet_contact-up-1x	tuplet_contact-up-1x/gray.bin	tuplet_contact-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125.0	55.0	125.0	0	
+tuplet_contact-up-2x	tuplet_contact-up-2x/gray.bin	tuplet_contact-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250.5	110.5	250.5	0	

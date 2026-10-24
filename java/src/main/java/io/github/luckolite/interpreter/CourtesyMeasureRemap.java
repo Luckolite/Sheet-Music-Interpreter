@@ -169,6 +169,6 @@ final class CourtesyMeasureRemap {
                         java.util.stream.IntStream.range(0, s.measures().size())
                                 .filter(i -> i != cut)
                                 .boxed()
-                                .toList()));
+                                .toList())).withBeamSource(s.beamSource());
     }
 }

@@ -39,7 +39,8 @@ public final class ScoreSemanticWire {
                     ScoreExpressiveEvent.Kind.DIMINUENDO,
                     ScoreExpressiveEvent.Kind.METRIC_MODULATION,
                     ScoreExpressiveEvent.Kind.NATURAL_HARMONIC,
-                    ScoreExpressiveEvent.Kind.FALL_OFF);
+                    ScoreExpressiveEvent.Kind.FALL_OFF,
+                    ScoreExpressiveEvent.Kind.PARENTHESIZED_NOTE_GROUP);
     private static final List<ScoreExpressiveEvent.Scope> SCOPES =
             List.of(
                     ScoreExpressiveEvent.Scope.SCORE,
@@ -279,6 +280,23 @@ public final class ScoreSemanticWire {
                 && expressions.stream()
                         .anyMatch(e -> e.kind() == ScoreExpressiveEvent.Kind.FALL_OFF))
             throw new IOException("Falloff requires guide 295");
+        if (guideVersion < 296
+                && expressions.stream()
+                        .anyMatch(
+                                e ->
+                                        e.kind()
+                                                == ScoreExpressiveEvent.Kind
+                                                        .PARENTHESIZED_NOTE_GROUP))
+            throw new IOException("Parenthesized note group requires guide 296");
+        if (expressions.stream()
+                .anyMatch(
+                        e ->
+                                e.kind() == ScoreExpressiveEvent.Kind.PARENTHESIZED_NOTE_GROUP
+                                        && ScoreParenthesizedNoteGroup.targetMeasure(
+                                                                e.targetEventId().orElse(null))
+                                                        .orElse(-1)
+                                                >= measures))
+            throw new IOException("Group target outside page");
         if (expressions.size() > Math.min(250000, (measures + 1L) * 256))
             throw new IOException("Too many expressive records");
         out.writeInt(expressions.size());
@@ -331,6 +349,9 @@ public final class ScoreSemanticWire {
                     throw new IOException("Natural harmonic is outside this guide format");
                 if (guideVersion < 295 && kind == ScoreExpressiveEvent.Kind.FALL_OFF)
                     throw new IOException("Falloff is outside this guide format");
+                if (guideVersion < 296
+                        && kind == ScoreExpressiveEvent.Kind.PARENTHESIZED_NOTE_GROUP)
+                    throw new IOException("Parenthesized note group is outside this guide format");
                 var start = anchor(record);
                 var end = anchor(record);
                 var scope = enumValue(SCOPES, record);
@@ -352,6 +373,9 @@ public final class ScoreSemanticWire {
                                 strength,
                                 qualifier,
                                 evidence(record));
+                if (kind == ScoreExpressiveEvent.Kind.PARENTHESIZED_NOTE_GROUP
+                        && ScoreParenthesizedNoteGroup.targetMeasure(target.orElse(null)).orElse(-1)
+                                >= measures) throw new IOException("Group target outside page");
                 if (!identities.add(id)
                         || start.filter(
                                         a ->

@@ -20,6 +20,7 @@ complete upstream notices if you redistribute them as part of a larger applicati
 | Verovio 6.3.0 | Optional synthetic-score renderer | [LGPL-3.0](https://github.com/rism-digital/verovio/tree/version-6.3.0); external training tool, not a runtime dependency |
 | resvg-py 0.3.0 / resvg | Optional SVG rasterizer for training | [MIT wrapper](https://github.com/baseplate-admin/resvg-py/blob/master/LICENSE), with resvg and its dependency licenses |
 | JUnit 4.13.2 / Hamcrest 1.3 | Java tests only | [EPL-1.0](https://github.com/junit-team/junit4/blob/r4.13.2/LICENSE-junit.txt) / [BSD-3-Clause](https://github.com/hamcrest/JavaHamcrest/blob/master/LICENSE) |
+| Gson 2.11.0 | Java serialization/identity regression tests only; not bundled in the interpreter | [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) |
 
 Dependency licenses are not replaced by this project's Apache license. In particular,
 an upstream package's headline license is not a substitute for its complete binary

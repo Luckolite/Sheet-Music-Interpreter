@@ -31,17 +31,40 @@ public record ScoreTremoloSource(List<Pair> pairs, List<Optional<Anchor>> noteOr
         }
     }
 
+    public enum ClockPolicy {
+        LEGACY_SHARED_DURATION(0),
+        UNRESOLVED(1),
+        SHARED_DURATION(2),
+        INDEPENDENT_ENDPOINT_DURATIONS(3);
+        private final int wireCode;
+
+        ClockPolicy(int wireCode) {
+            this.wireCode = wireCode;
+        }
+
+        int wireCode() {
+            return wireCode;
+        }
+
+        static ClockPolicy fromWireCode(int code) {
+            for (ClockPolicy value : values()) if (value.wireCode == code) return value;
+            return null;
+        }
+    }
+
     public record Pair(
             String id,
             List<Anchor> first,
             List<Anchor> second,
             int strokes,
-            List<Evidence> evidence) {
+            List<Evidence> evidence,
+            ClockPolicy clockPolicy) {
         public Pair {
             Objects.requireNonNull(id);
             first = List.copyOf(first);
             second = List.copyOf(second);
             evidence = List.copyOf(evidence);
+            Objects.requireNonNull(clockPolicy);
             if (id.isBlank()
                     || id.length() > 256
                     || first.isEmpty()
@@ -60,6 +83,16 @@ public record ScoreTremoloSource(List<Pair> pairs, List<Optional<Anchor>> noteOr
             for (Anchor anchor : second)
                 if (!owners.add(anchor))
                     throw new IllegalArgumentException("Overlapping tremolo endpoints");
+        }
+
+        /** Source-compatible legacy constructor; preserves published pair clock behavior. */
+        public Pair(
+                String id,
+                List<Anchor> first,
+                List<Anchor> second,
+                int strokes,
+                List<Evidence> evidence) {
+            this(id, first, second, strokes, evidence, ClockPolicy.LEGACY_SHARED_DURATION);
         }
     }
 
@@ -183,6 +216,23 @@ public record ScoreTremoloSource(List<Pair> pairs, List<Optional<Anchor>> noteOr
         return new ScoreTremoloSource(pairs, origins);
     }
 
+    /** Ownership remains available through resolve even when source clock policy is unknown. */
+    public boolean hasPerformancePairs() {
+        return pairs.stream().anyMatch(pair -> pair.clockPolicy != ClockPolicy.UNRESOLVED);
+    }
+
+    /** Clock-eligible source ownership only; timing still validates all written values. */
+    public Resolution performanceResolution() {
+        Resolution ownership = resolve();
+        return new Resolution(
+                ownership.resolved.stream()
+                        .filter(pair -> pair.source.clockPolicy != ClockPolicy.UNRESOLVED)
+                        .toList(),
+                ownership.unresolved.stream()
+                        .filter(pair -> pair.clockPolicy != ClockPolicy.UNRESOLVED)
+                        .toList());
+    }
+
     public Resolution resolve() {
         Map<Anchor, Integer> indices = new HashMap<>();
         for (int i = 0; i < noteOrigins.size(); i++)
@@ -230,7 +280,8 @@ public record ScoreTremoloSource(List<Pair> pairs, List<Optional<Anchor>> noteOr
                             pair.first.stream().map(map).toList(),
                             pair.second.stream().map(map).toList(),
                             pair.strokes,
-                            proof));
+                            proof,
+                            pair.clockPolicy));
         }
         return new ScoreTremoloSource(
                 relocated, noteOrigins.stream().map(o -> o.map(map)).toList());

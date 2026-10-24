@@ -39,7 +39,8 @@ public record ScoreExpressiveEvent(
         DIMINUENDO,
         METRIC_MODULATION,
         NATURAL_HARMONIC,
-        FALL_OFF
+        FALL_OFF,
+        PARENTHESIZED_NOTE_GROUP
     }
 
     public enum Scope {
@@ -125,6 +126,26 @@ public record ScoreExpressiveEvent(
                                 .isEmpty()))
             throw new IllegalArgumentException(
                     "Falloff needs one exact note owner and printed shape");
+        if (kind == Kind.PARENTHESIZED_NOTE_GROUP) {
+            var pair =
+                    ScoreParenthesizedNoteGroup.decode(qualifierText)
+                            .orElseThrow(
+                                    () ->
+                                            new IllegalArgumentException(
+                                                    "Invalid parenthesized group"));
+            if ((scope != Scope.NOTE && scope != Scope.UNRESOLVED)
+                    || (scope == Scope.NOTE && start.isEmpty())
+                    || (scope == Scope.UNRESOLVED && start.isPresent())
+                    || end.isPresent()
+                    || strength != Strength.UNSPECIFIED
+                    || !targetEventId.orElse("").equals(pair.target())
+                    || pair.members().get(0).staff() != staffIndex
+                    || pair.members().get(0).count() != staffCount
+                    || start.filter(a -> a.measureIndex() != pair.members().get(0).measure())
+                            .isPresent())
+                throw new IllegalArgumentException(
+                        "Group needs its exact ordered members and printed pair");
+        }
     }
 
     /** Source identity/evidence survive concatenation; traversal IDs are assigned by projection. */
@@ -145,9 +166,16 @@ public record ScoreExpressiveEvent(
                                 ? targetEventId.map(
                                         target ->
                                                 ScoreFallOffNotation.offsetTarget(target, measures))
-                                : targetEventId,
+                                : kind == Kind.PARENTHESIZED_NOTE_GROUP
+                                        ? targetEventId.map(
+                                                target ->
+                                                        ScoreParenthesizedNoteGroup.offsetTarget(
+                                                                target, measures))
+                                        : targetEventId,
                 strength,
-                qualifierText,
+                kind == Kind.PARENTHESIZED_NOTE_GROUP
+                        ? ScoreParenthesizedNoteGroup.offsetQualifier(qualifierText, measures)
+                        : qualifierText,
                 evidence);
     }
 }

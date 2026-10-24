@@ -96,6 +96,9 @@ final class AttachedApproachBranches {
                 || !budget.take(freeApproachWorkBound(count, localHeads.size()))) return List.of();
         if (!possibleFreeApproach(component, count, w, heads, localHeads)
                 || !budget.take(area + count)) return List.of();
+        if (!ScoopAttachmentRoles.componentOwner(
+                raw, w, h, component, count, staffs, heads, localHeads, tracks, budget))
+            return List.of();
         boolean[] ink = new boolean[area];
         for (int i = 0; i < count; i++) {
             int p = component[i], at = (p / w - top + 2) * sw + p % w - left + 2;
@@ -224,13 +227,16 @@ final class AttachedApproachBranches {
         for (int i : localHeads) {
             var head = heads.get(i);
             if (!budget.take((long) Math.ceil(head.gap() * head.gap() * 2 + 16))) return List.of();
-            if (evidence.get(i).contains(Math.round(head.x()), Math.round(head.y()))
+            if (evidence.get(i).returningOwnerCost() == 1
                     && PrintedStemDirection.detect(raw, w, h, head.x(), head.y(), head.gap()) == -1)
                 downShafts.add(i);
         }
         boolean[] allSkeleton = skeleton.clone();
         // Contract only independently typed staff-rule stubs. Their pixels
         // remain OTHER seeds in raw ownership assignment; a curve never acquires a cut rule.
+        final int componentLeft = left, componentTop = top;
+        final int componentLane = lane;
+        var barlinePixels = new HashSet<Integer>();
         int staffStubLimit = Math.min(nodes.size(), localHeads.size() * 10 + cuts.size() * 2);
         for (int pass = 0; pass <= staffStubLimit; pass++) {
             boolean removed = false;
@@ -242,12 +248,28 @@ final class AttachedApproachBranches {
                         head = true;
                         break;
                     }
+                var typedTipPath = trace(skeleton, degree, sw, leaf, cuts);
                 if (head
-                        || !staffTip(skeleton, degree, sw, leaf, cuts, raw, w, h, left, top, staff))
-                    continue;
+                        || (!staffTip(skeleton, degree, sw, leaf, cuts, raw, w, h, left, top, staff)
+                                && !ScoopAttachmentRoles.barlinePath(
+                                        raw,
+                                        w,
+                                        h,
+                                        typedTipPath,
+                                        p ->
+                                                (componentTop + p / sw - 2) * w
+                                                        + componentLeft
+                                                        + p % sw
+                                                        - 2,
+                                        staff,
+                                        componentLane,
+                                        heads,
+                                        track,
+                                        budget,
+                                        barlinePixels))) continue;
                 if (pass == staffStubLimit || !budget.take((long) nodes.size() * 8))
                     return List.of();
-                var path = trace(skeleton, degree, sw, leaf, cuts);
+                var path = typedTipPath;
                 for (int i = 0; i < path.size() - 1; i++) skeleton[path.get(i)] = false;
                 removed = true;
                 break;
@@ -279,7 +301,8 @@ final class AttachedApproachBranches {
         for (int leaf : leaves) {
             int owner = -1, x = left + leaf % sw - 2, y = top + leaf / sw - 2;
             for (int i : localHeads)
-                if (evidence.get(i).contains(x, y)) {
+                if (ScoopAttachmentRoles.headPixel(
+                        evidence.get(i), heads.get(i), downShafts.contains(i), x, y, raw, w, h)) {
                     if (owner >= 0) return List.of();
                     owner = i;
                 }
@@ -327,6 +350,17 @@ final class AttachedApproachBranches {
                         raw, w, h, originalPath, heads, localHeads, downShafts, budget)) owner = -5;
             }
             if (owner == -1 && flagLeaves.contains(leaf)) owner = -6;
+            if (owner == -1
+                    && ScoopAttachmentRoles.shaftPath(
+                            raw,
+                            w,
+                            h,
+                            trace(skeleton, degree, sw, leaf, cuts),
+                            p -> (componentTop + p / sw - 2) * w + componentLeft + p % sw - 2,
+                            heads,
+                            localHeads,
+                            downShafts,
+                            budget)) owner = -5;
             leafOwners.put(leaf, owner);
         }
         var bare =
@@ -499,6 +533,9 @@ final class AttachedApproachBranches {
                             if (run[2] == 0)
                                 for (int y = run[0]; y <= run[1]; y++) chosen[y * sw + x] = false;
                 }
+            ScoopAttachmentRoles.withoutSeparateBarlineIslands(
+                    chosen, isBranch, sw, sh, left, top, raw, w, barlinePixels, budget);
+            if (budget.refused) return List.of();
             int[] selected = new int[count], exclusive = new int[count];
             int exclusiveN = 0;
             int n = 0, l = w, r = 0, t = h, b = 0;
@@ -558,7 +595,7 @@ final class AttachedApproachBranches {
             List<Integer> localHeads,
             Set<Integer> downShafts,
             Budget budget) {
-        var free = leaves.stream().filter(p -> roles.get(p) == -1).toList();
+        var free = new ArrayList<>(leaves.stream().filter(p -> roles.get(p) == -1).toList());
         var result = new ArrayList<Trace>();
         if (free.size() < 2) return result;
         long bound =
@@ -566,6 +603,44 @@ final class AttachedApproachBranches {
         if (!budget.take(bound)) return null;
         var paths = new HashMap<Integer, List<Integer>>();
         for (int leaf : free) paths.put(leaf, trace(skeleton, degree, sw, leaf, cuts));
+        var capMembers = new HashMap<Integer, List<Integer>>();
+        for (int leaf : free) capMembers.put(leaf, List.of(leaf));
+        float capGap = staff.gap();
+        for (int a = 0; a < free.size(); a++)
+            for (int b = a + 1; b < free.size(); b++) {
+                int fa = free.get(a), fb = free.get(b);
+                var pa = paths.get(fa);
+                var pb = paths.get(fb);
+                int joint = pa.get(pa.size() - 1);
+                if (joint != pb.get(pb.size() - 1)
+                        || degree[joint] != 3
+                        || pa.size() > capGap * .6f
+                        || pb.size() > capGap * .6f
+                        || Math.abs(fa % sw - fb % sw) > capGap * .4f
+                        || Math.abs(fa / sw - fb / sw) > capGap * .4f) continue;
+                int third = -1;
+                for (int next : neighbors(skeleton, sw, joint, cuts))
+                    if (next != pa.get(pa.size() - 2) && next != pb.get(pb.size() - 2))
+                        third = next;
+                if (third < 0) continue;
+                var tail = traceFrom(skeleton, degree, sw, joint, third, cuts);
+                int terminal = tail.get(tail.size() - 1);
+                if (degree[terminal] != 3
+                        || tail.size() > capGap * 2
+                        || !budget.take((long) (pa.size() + pb.size() + tail.size()) * 8)) continue;
+                boolean swap = fa % sw < fb % sw || fa % sw == fb % sw && fa / sw > fb / sw;
+                var first = swap ? pb : pa;
+                var second = swap ? pa : pb;
+                var complete = new ArrayList<Integer>(first);
+                for (int k = second.size() - 2; k >= 0; k--) complete.add(second.get(k));
+                for (int k = 1; k < second.size(); k++) complete.add(second.get(k));
+                complete.addAll(tail);
+                int representative = swap ? fb : fa, other = swap ? fa : fb;
+                paths.put(representative, List.copyOf(complete));
+                capMembers.put(representative, List.of(fa, fb));
+                free.set(a, representative);
+                free.remove(b--);
+            }
         var used = new HashSet<Integer>();
         for (int a = 0; a < free.size(); a++)
             for (int b = a + 1; b < free.size(); b++) {
@@ -624,7 +699,8 @@ final class AttachedApproachBranches {
                     owner = candidate;
                 }
                 if (owner < 0) continue;
-                if (!used.add(free.get(a)) || !used.add(free.get(b))) return null;
+                for (int member : capMembers.get(free.get(a))) if (!used.add(member)) return null;
+                for (int member : capMembers.get(free.get(b))) if (!used.add(member)) return null;
                 var path = new ArrayList<Integer>(lp);
                 for (int k = rp.size() - 2; k >= 0; k--) path.add(rp.get(k));
                 result.add(new Trace(List.copyOf(path), owner, -1, true));

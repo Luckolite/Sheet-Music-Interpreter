@@ -17,9 +17,100 @@ final class NoteSlideDetector {
             float rightY,
             int direction,
             int noteIndex,
-            boolean connected) {}
+            boolean connected,
+            boolean curved) {
+        /** Legacy linear-stroke constructor; shape is independent of endpoint ownership. */
+        Stroke(
+                float left,
+                float leftY,
+                float right,
+                float rightY,
+                int direction,
+                int noteIndex,
+                boolean connected) {
+            this(left, leftY, right, rightY, direction, noteIndex, connected, false);
+        }
+    }
 
     private NoteSlideDetector() {}
+
+    // Proposal only: raster thickness need not yield high Pearson correlation on a short run.
+    // Every column and every original component pixel participates; no target-specific crop.
+    private static Fragment columnLineProposal(
+            int[] pixels,
+            int count,
+            int w,
+            int l,
+            int r,
+            double sx,
+            double sy,
+            double sxx,
+            double syy,
+            double sxy) {
+        if (count < 8 || r - l < 6) return null;
+        double cx = sx / count,
+                cy = sy / count,
+                vx = sxx / count - cx * cx,
+                vy = syy / count - cy * cy,
+                cov = sxy / count - cx * cy;
+        if (vx <= 0 || vy <= 0) return null;
+        double slope = cov / vx;
+        double correlation = cov / Math.sqrt(vx * vy);
+        double residual =
+                Math.sqrt(
+                        Math.max(
+                                0,
+                                (vx + vy - Math.sqrt((vx - vy) * (vx - vy) + 4 * cov * cov)) / 2));
+        // A short raster port can have zero fitted slope even on a diagonal line.
+        // Joining retains the existing whole-line slope, correlation and physical-rule guards.
+        if (Math.abs(slope) > 1.5 || residual > 1.3) return null;
+        // Preserve every proposal admitted by the existing whole-component route.
+        int top = Integer.MAX_VALUE, bottom = Integer.MIN_VALUE;
+        for (int i = 0; i < count; i++) {
+            int y = pixels[i] / w;
+            top = Math.min(top, y);
+            bottom = Math.max(bottom, y);
+        }
+        if (bottom - top >= 5 && bottom - top <= (r - l) * 5 && Math.abs(correlation) >= .90)
+            return new Fragment(
+                    l,
+                    r,
+                    count,
+                    sx,
+                    sy,
+                    sxx,
+                    syy,
+                    sxy,
+                    slope,
+                    cy + (l - cx) * slope,
+                    cy + (r - cx) * slope);
+        int[] lo = new int[r - l + 1], hi = new int[r - l + 1], n = new int[r - l + 1];
+        Arrays.fill(lo, Integer.MAX_VALUE);
+        Arrays.fill(hi, Integer.MIN_VALUE);
+        for (int i = 0; i < count; i++) {
+            int x = pixels[i] % w - l, y = pixels[i] / w;
+            lo[x] = Math.min(lo[x], y);
+            hi[x] = Math.max(hi[x], y);
+            n[x]++;
+        }
+        for (int i = 0; i < n.length; i++)
+            if (n[i] == 0
+                    || n[i] != hi[i] - lo[i] + 1
+                    || Math.abs((lo[i] + hi[i]) * .5 - (cy + (l + i - cx) * slope)) > 1.3)
+                return null;
+        return new Fragment(
+                l,
+                r,
+                count,
+                sx,
+                sy,
+                sxx,
+                syy,
+                sxy,
+                slope,
+                cy + (l - cx) * slope,
+                cy + (r - cx) * slope);
+    }
 
     static byte[] removeStaffLines(byte[] gray, int w, int h, List<Staff> staffs) {
         byte[] clean = gray.clone();
@@ -65,6 +156,61 @@ final class NoteSlideDetector {
     /** Consumes an owned staff-cleaned raster; original gray remains read-only. */
     static List<Stroke> detectWithRemovedStaffLines(
             byte[] gray, int w, int h, List<Staff> staffs, List<Head> heads, byte[] clean) {
+        List<Stroke> original = detectCleanComponents(gray, w, h, staffs, heads, clean, null);
+        var observed = ObservedRuleSlideInk.prepare(gray, w, h, staffs, heads);
+        if (observed == null)
+            return FiniteConnectedSlidePorts.addAcrossBars(
+                    FiniteConnectedSlidePorts.add(
+                            original, gray, w, h, staffs, heads, clean, null, null),
+                    gray,
+                    w,
+                    h,
+                    staffs,
+                    heads,
+                    clean,
+                    null,
+                    null);
+        // Both are proposal rasters for the same original input. The independent staff frame,
+        // whole combined line and literal crossing checks still establish the final connection.
+        for (int at = 0; at < clean.length; at++)
+            if ((clean[at] & 255) > (observed.clean()[at] & 255)) observed.clean()[at] = clean[at];
+        List<Stroke> result = new ArrayList<>(original);
+        for (Stroke stroke :
+                detectCleanComponents(
+                        gray, w, h, staffs, heads, observed.clean(), observed.tracks()))
+            if (stroke.connected()
+                    && ObservedRuleSlideInk.completeSpan(observed.clean(), w, h, heads, stroke)
+                    && result.stream().noneMatch(old -> old.noteIndex() == stroke.noteIndex()))
+                result.add(stroke);
+        return FiniteConnectedSlidePorts.addAcrossBars(
+                FiniteConnectedSlidePorts.add(
+                        result,
+                        gray,
+                        w,
+                        h,
+                        staffs,
+                        heads,
+                        clean,
+                        observed.clean(),
+                        observed.tracks()),
+                gray,
+                w,
+                h,
+                staffs,
+                heads,
+                clean,
+                observed.clean(),
+                observed.tracks());
+    }
+
+    private static List<Stroke> detectCleanComponents(
+            byte[] gray,
+            int w,
+            int h,
+            List<Staff> staffs,
+            List<Head> heads,
+            byte[] clean,
+            StaffPitchTrack[] crossingTracks) {
         removeHeadLedgerLines(clean, gray, w, h, staffs, heads);
         boolean[] ink = new boolean[gray.length];
         for (int i = 0; i < ink.length; i++) ink[i] = (clean[i] & 255) < 150;
@@ -104,6 +250,11 @@ final class NoteSlideDetector {
                             queue[end++] = next;
                         }
                     }
+            }
+            if (crossingTracks != null) {
+                Fragment columnProposal =
+                        columnLineProposal(queue, end, w, l, r, sx, sy, sxx, syy, sxy);
+                if (columnProposal != null) fragments.add(columnProposal);
             }
             if (end < 8 || r - l < 3 || b - t < 5 || b - t > (r - l) * 5) continue;
             double cx = sx / end,
@@ -170,7 +321,8 @@ final class NoteSlideDetector {
             // A nearly vertical raster has little horizontal variance, so its
             // stroke thickness lowers Pearson correlation. Both printed heads
             // are mandatory below for these steep strokes.
-            if (Math.abs(correlation) >= .90
+            if (crossingTracks == null
+                    && Math.abs(correlation) >= .90
                     && residual <= 1.3
                     && Math.abs(slope) >= .08
                     && Math.abs(slope) <= 1.5)
@@ -338,7 +490,8 @@ final class NoteSlideDetector {
                                                 heads.get(owner),
                                                 l,
                                                 cy + (l - cx) * slope,
-                                                slope));
+                                                slope),
+                                false);
                 if (!candidate.connected()
                         && PhraseOwnedSlideComponents.owned(
                                 gray, w, h, staffs, heads, owner, queue, end)) continue;
@@ -346,7 +499,9 @@ final class NoteSlideDetector {
             }
         }
         if (!staffs.isEmpty()) {
-            byte[] joined = joinStaffCrossings(clean, gray, w, h, staffs, heads, fragments, result);
+            byte[] joined =
+                    joinStaffCrossings(
+                            clean, gray, w, h, staffs, heads, fragments, result, crossingTracks);
             if (joined != null)
                 for (var stroke : detect(joined, w, h, List.of(), heads))
                     if (result.stream().noneMatch(s -> s.noteIndex == stroke.noteIndex))
@@ -411,7 +566,8 @@ final class NoteSlideDetector {
                 (float) rightY,
                 slope < 0 ? 1 : -1,
                 part.owner(),
-                true);
+                true,
+                false);
     }
 
     private record Fragment(
@@ -436,7 +592,8 @@ final class NoteSlideDetector {
             List<Staff> staffs,
             List<Head> heads,
             List<Fragment> fragments,
-            List<Stroke> found) {
+            List<Stroke> found,
+            StaffPitchTrack[] crossingTracks) {
         byte[] joined = null;
         float maxGap = 0;
         for (var head : heads) maxGap = Math.max(maxGap, head.gap);
@@ -481,11 +638,26 @@ final class NoteSlideDetector {
                         continue;
                     var staff = staffs.get(target.staff);
                     boolean crossing = false;
+                    StaffPitchTrack observed =
+                            crossingTracks == null ? null : crossingTracks[target.staff];
+                    if (crossingTracks != null
+                            && (observed == null
+                                    || !observed.verifiedAt(a.right)
+                                    || !observed.verifiedAt(b.left))) continue;
+                    float[] rightFrame = observed == null ? null : observed.at(a.right);
+                    float[] leftFrame = observed == null ? null : observed.at(b.left);
                     for (int line = 0; line < 5; line++) {
-                        float y = staff.top + line * staff.gap;
-                        if ((a.rightY - y) * (b.leftY - y) < 0
-                                && Math.abs(a.rightY - y) < gap * .6
-                                && Math.abs(b.leftY - y) < gap * .6) crossing = true;
+                        float atRight =
+                                observed == null
+                                        ? staff.top + line * staff.gap
+                                        : rightFrame[0] - (4 - line) * rightFrame[1];
+                        float atLeft =
+                                observed == null
+                                        ? staff.top + line * staff.gap
+                                        : leftFrame[0] - (4 - line) * leftFrame[1];
+                        if ((a.rightY - atRight) * (b.leftY - atLeft) < 0
+                                && Math.abs(a.rightY - atRight) < gap * .6
+                                && Math.abs(b.leftY - atLeft) < gap * .6) crossing = true;
                     }
                     if (!crossing) continue;
                     int supported = 0, samples = 0;
@@ -512,8 +684,10 @@ final class NoteSlideDetector {
     }
 
     /** A short ledger rule can join a genuine slide to its source head and stem. */
-    /** A whole thin quarter-bow may be a printed unpitched approach even though it is not straight.
-     * The original straight classifier remains unchanged. No start pitch or envelope is inferred. */
+    /**
+     * A whole thin quarter-bow may be a printed unpitched approach even though it is not straight.
+     * The original straight classifier remains unchanged. No start pitch or envelope is inferred.
+     */
     private static Stroke finiteCurvedApproachBudgeted(
             byte[] gray,
             int w,
@@ -749,7 +923,7 @@ final class NoteSlideDetector {
                         && Math.abs(a.x - target.x) <= gap * .35f
                         && Math.abs(a.y - target.y) <= gap * .35f) return null;
             }
-        return new Stroke(left, centers[0], right, centers[columns - 1], 1, owner, false);
+        return new Stroke(left, centers[0], right, centers[columns - 1], 1, owner, false, true);
     }
 
     private static boolean curveBoxContains(
@@ -768,8 +942,10 @@ final class NoteSlideDetector {
         return dx > 0 && dy * (columns - 1) <= chord * dx && dy * terminal >= tail * dx;
     }
 
-    /** Cheap negative preflight only: every allowed issuer body lies in this envelope.
-     * An overlapping envelope never owns a pixel; the actual raw issuer is still required. */
+    /**
+     * Cheap negative preflight only: every allowed issuer body lies in this envelope. An
+     * overlapping envelope never owns a pixel; the actual raw issuer is still required.
+     */
     private static boolean possibleSupportedSector(
             double x, double y, int right, float[] centers, float gap) {
         int columns = centers.length, terminal = Math.max(1, columns / 3);

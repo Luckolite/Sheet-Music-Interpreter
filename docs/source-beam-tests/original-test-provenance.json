@@ -1,0 +1,18 @@
+{
+  "license": "Apache-2.0",
+  "copyright": "Copyright 2026 Luckolite",
+  "provenance": "Original procedural cubic curves, ellipses, lines and rectangles; no score/font/model/gold input.",
+  "geometryFixtures": 60,
+  "flagFixtures": 56,
+  "junctionFixtures": 16,
+  "intakeOwnershipFixtures": 5,
+  "originalGeneratorHashes": {
+    "flags/generate_original_flags.py": "61d8d5448abb425e265875585ed7ce4d3fe9be324d90a73367ccba7f979dde53",
+    "flags/generate_original_junctions.py": "775793f505e32b44ed5443b654bc034969e526ab5f0dc3dcc04224b500b092be",
+    "geometry/generate_controls.py": "3d8cda8c5b447f23274ef61054d8f38bc55d8c4a660ca3b2478378a3813376dd",
+    "intake/make_controls.py": "3915b8bb019b4bae52bf032b282d4d4de4f930ffe25620592e4449cba1c186df"
+  },
+  "intakeConsumedValuesPreserved": true,
+  "intakeAssertionBlockSHA256": "f88701fa6f537d3797ce97fe0926ec76e8353d1cd06757a8dba73df0ae1fc166",
+  "sourceAccuracyClaim": false
+}

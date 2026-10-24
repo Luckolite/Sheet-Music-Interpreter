@@ -4,14 +4,26 @@
 import math
 import struct
 
+CLOCK_POLICIES = ('LEGACY_SHARED_DURATION', 'UNRESOLVED', 'SHARED_DURATION', 'INDEPENDENT_ENDPOINT_DURATIONS')
 
-def decode_source(data, note_count):
+def clock_policy(pair):
+    if not isinstance(pair, dict): raise ValueError('Invalid tremolo pair')
+    value = pair.get('clockPolicy', CLOCK_POLICIES[0])
+    if value not in CLOCK_POLICIES: raise ValueError('Unknown tremolo clock policy')
+    return value
+
+def performance_pairs(source):
+    return [pair for pair in (source or {}).get('pairs', []) if clock_policy(pair) != 'UNRESOLVED']
+
+
+
+def decode_source(data, note_count, allow_clock_policies=True):
     """Read one complete TRS1 frame, validating the same ownership as the writer."""
     data = memoryview(data)
     if len(data) < 8:
         raise ValueError('Truncated tremolo frame')
     magic, length = struct.unpack_from('>ii', data)
-    if magic != 0x54525331 or not 0 <= length <= 32*1024*1024 or length != len(data)-8:
+    if magic not in (0x54525331, 0x54525332) or (magic == 0x54525332 and not allow_clock_policies) or not 0 <= length <= 32*1024*1024 or length != len(data)-8:
         raise ValueError('Invalid tremolo frame')
     offset = 8
 
@@ -44,6 +56,10 @@ def decode_source(data, note_count):
         name = bytes(data[offset:offset+size]).decode('utf-8', errors='strict')
         offset += size
         pair = dict(id=name, strokes=count(8))
+        if magic == 0x54525332:
+            code = take('B')[0]
+            if code >= len(CLOCK_POLICIES): raise ValueError('Unknown tremolo clock policy')
+            pair['clockPolicy'] = CLOCK_POLICIES[code]
         for side in ('first', 'second'):
             pair[side] = [dict(zip(('pageIndex','noteIndex'), take('ii'))) for _ in range(count(128))]
         pair['evidence'] = [dict(zip(('pageIndex','left','top','right','bottom'), take('i4f')))
@@ -70,13 +86,15 @@ def sequence(value,minimum,maximum):
         raise ValueError('Invalid tremolo sequence')
     return value
 
-def encode_source(source,note_count):
+def encode_source(source,note_count,allow_clock_policies=True):
     integer(note_count,maximum=1_000_000)
     if source is None:source={'pairs':[],'noteOrigins':[None]*note_count}
     if not isinstance(source,dict) or set(source)!={'pairs','noteOrigins'}:
         raise ValueError('Invalid tremolo source fields')
     origins=sequence(source['noteOrigins'],note_count,note_count)
     pairs=sequence(source['pairs'],0,100_000)
+    v2 = any(clock_policy(pair) != CLOCK_POLICIES[0] for pair in pairs)
+    if v2 and not allow_clock_policies: raise ValueError('TRS2 requires Guide298')
     stored=origins if any(o is not None for o in origins) else []
     data=bytearray(struct.pack('>ii',note_count,len(stored)));seen=set()
     for origin in stored:
@@ -88,7 +106,7 @@ def encode_source(source,note_count):
     data.extend(struct.pack('>i',len(pairs)));ids=set();owners=set()
     java_whitespace='\t\n\v\f\r\x1c\x1d\x1e\x1f \u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2008\u2009\u200a\u2028\u2029\u205f\u3000'
     for pair in pairs:
-        if not isinstance(pair,dict) or set(pair)!={'id','first','second','strokes','evidence'}:
+        if not isinstance(pair,dict) or set(pair) not in ({'id','first','second','strokes','evidence'}, {'id','first','second','strokes','evidence','clockPolicy'}):
             raise ValueError('Invalid tremolo pair fields')
         name=pair['id']
         if not isinstance(name,str) or all(c in java_whitespace for c in name) or name in ids:
@@ -97,6 +115,7 @@ def encode_source(source,note_count):
         ids.add(name);encoded=name.encode('utf-8')
         data.extend(struct.pack('>i',len(encoded)));data.extend(encoded)
         data.extend(struct.pack('>i',integer(pair['strokes'],1,8)))
+        if v2: data.extend(struct.pack('>B',CLOCK_POLICIES.index(clock_policy(pair))))
         for key in ('first','second'):
             points=[anchor(v) for v in sequence(pair[key],1,128)]
             data.extend(struct.pack('>i',len(points)))
@@ -116,4 +135,4 @@ def encode_source(source,note_count):
                 raise ValueError('Empty tremolo evidence')
             data.extend(struct.pack('>i4f',integer(proof['pageIndex']),*coordinates))
         if len(data)>32*1024*1024:raise ValueError('Tremolo source too large')
-    return struct.pack('>ii',0x54525331,len(data))+data
+    return struct.pack('>ii',(0x54525332 if v2 else 0x54525331),len(data))+data

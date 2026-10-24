@@ -1,0 +1,328 @@
+[
+  {
+    "name": "same-page",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 0,
+          "noteIndex": 1
+        }
+      ]
+    },
+    "expected": true,
+    "notes": 2,
+    "frame": "AAAAUwAAAAEAAAAJc2FtZS1wYWdlAAAAAgAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAEAAAABAAAAAAAAAAAAAAACAQAAAAAAAAAAAQAAAAAAAAAB"
+  },
+  {
+    "name": "mixed-page-chord",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                },
+                {
+                  "pageIndex": 1,
+                  "noteIndex": 2
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 0,
+          "noteIndex": 1
+        }
+      ]
+    },
+    "expected": false,
+    "notes": 2,
+    "frame": "AAAAWwAAAAEAAAAJc2FtZS1wYWdlAAAAAgAAAAIAAAAAAAAAAAAAAAEAAAACAAAAAQAAAAAAAAABAAAAAQAAAAEAAAAAAAAAAAAAAAIBAAAAAAAAAAABAAAAAAAAAAE="
+  },
+  {
+    "name": "mixed-page-bridge",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 1,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 0,
+          "noteIndex": 1
+        }
+      ]
+    },
+    "expected": false,
+    "notes": 2,
+    "frame": "AAAAUwAAAAEAAAAJc2FtZS1wYWdlAAAAAgAAAAEAAAAAAAAAAAAAAAEAAAABAAAAAQAAAAEAAAABAAAAAAAAAAAAAAACAQAAAAAAAAAAAQAAAAAAAAAB"
+  },
+  {
+    "name": "mixed-page-detached",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [
+        {
+          "members": [
+            {
+              "pageIndex": 0,
+              "noteIndex": 2
+            },
+            {
+              "pageIndex": 1,
+              "noteIndex": 3
+            }
+          ]
+        }
+      ],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 0,
+          "noteIndex": 1
+        }
+      ]
+    },
+    "expected": false,
+    "notes": 2,
+    "frame": "AAAAZwAAAAEAAAAJc2FtZS1wYWdlAAAAAgAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAEAAAABAAAAAAAAAAEAAAACAAAAAAAAAAIAAAABAAAAAwAAAAIBAAAAAAAAAAABAAAAAAAAAAE="
+  },
+  {
+    "name": "independent-groups-on-pages",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        },
+        {
+          "id": "other-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 1,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 1,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 0,
+          "noteIndex": 1
+        },
+        {
+          "pageIndex": 1,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 1,
+          "noteIndex": 1
+        }
+      ]
+    },
+    "expected": true,
+    "notes": 4,
+    "frame": "AAAAmwAAAAIAAAAJc2FtZS1wYWdlAAAAAgAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAEAAAABAAAAAAAAAApvdGhlci1wYWdlAAAAAgAAAAEAAAABAAAAAAAAAAEAAAABAAAAAQAAAAEAAAABAAAAAAAAAAAAAAAEAQAAAAAAAAAAAQAAAAAAAAABAQAAAAEAAAAAAQAAAAEAAAAB"
+  },
+  {
+    "name": "origins-across-pages",
+    "source": {
+      "groups": [
+        {
+          "id": "same-page",
+          "columns": [
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 0
+                }
+              ]
+            },
+            {
+              "members": [
+                {
+                  "pageIndex": 0,
+                  "noteIndex": 1
+                }
+              ]
+            }
+          ],
+          "bridges": [
+            1
+          ],
+          "hooks": []
+        }
+      ],
+      "detachedColumns": [],
+      "noteOrigins": [
+        {
+          "pageIndex": 0,
+          "noteIndex": 0
+        },
+        {
+          "pageIndex": 7,
+          "noteIndex": 9
+        }
+      ]
+    },
+    "expected": true,
+    "notes": 2,
+    "frame": "AAAAUwAAAAEAAAAJc2FtZS1wYWdlAAAAAgAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAQAAAAEAAAABAAAAAAAAAAAAAAACAQAAAAAAAAAAAQAAAAcAAAAJ"
+  }
+]

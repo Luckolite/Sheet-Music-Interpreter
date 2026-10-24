@@ -304,7 +304,7 @@ public final class MeterChangeDetector {
                         score.expressiveEvents(),
                         score.slurSource(),
                         score.openingPickup(),
-                        score.tremoloSource())
+                        score.tremoloSource()).withBeamSource(score.beamSource())
                 .carryMultiRestGroupsFrom(score);
     }
 

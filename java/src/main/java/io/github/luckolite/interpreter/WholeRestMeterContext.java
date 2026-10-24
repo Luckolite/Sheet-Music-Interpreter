@@ -154,7 +154,7 @@ final class WholeRestMeterContext {
                         s.expressiveEvents(),
                         s.slurSource(),
                         s.openingPickup(),
-                        s.tremoloSource())
+                        s.tremoloSource()).withBeamSource(s.beamSource())
                 .carryMultiRestGroupsFrom(s);
     }
 }

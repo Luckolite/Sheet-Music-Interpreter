@@ -55,7 +55,7 @@ class Guide293VisualSizeTests(unittest.TestCase):
         s=score()
         for n in s['notes']:n.pop('visualSize')
         raw=wire.encode(s)
-        self.assertEqual(295,wire.GUIDE_VERSION);self.assertIn(293,wire.SUPPORTED_GUIDE_VERSIONS)
+        self.assertEqual(wire.GUIDE_VERSION,struct.unpack_from('>i',raw)[0]);self.assertIn(293,wire.SUPPORTED_GUIDE_VERSIONS)
         self.assertEqual(0,raw[32+80]);self.assertEqual(0,raw[32+81+80])
         full=copy.deepcopy(s)
         for n in full['notes']:n['visualSize']='FULL'

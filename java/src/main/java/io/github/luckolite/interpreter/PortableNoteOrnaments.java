@@ -168,11 +168,7 @@ final class PortableNoteOrnaments {
             if (notes.get(slide.noteIndex()).kind() == ScoreNoteEvent.Kind.PITCHED
                     && (!slide.connected()
                             || pitchedPreviousAnchor(anchors, notes, slide.noteIndex()))
-                    && marks[slide.noteIndex()] == 0)
-                marks[slide.noteIndex()] =
-                        NoteOrnament.SLIDE
-                                | (slide.direction() < 0 ? NoteOrnament.FROM_ABOVE : 0)
-                                | (slide.connected() ? NoteOrnament.FROM_PREVIOUS : 0);
+                    && marks[slide.noteIndex()] == 0) marks[slide.noteIndex()] = slideMarks(slide);
         boolean[] textHeads = new boolean[notes.size()];
         for (var word : trills)
             if (word.text().equals("port") && ScoreDynamicsDetector.containsInk(word, gray, w, h)) {
@@ -247,6 +243,14 @@ final class PortableNoteOrnaments {
         return List.copyOf(result);
     }
 
+    /** Preserve the detector's proved shape; isolated and connected are ownership roles. */
+    static int slideMarks(NoteSlideDetector.Stroke slide) {
+        return NoteOrnament.SLIDE
+                | (slide.direction() < 0 ? NoteOrnament.FROM_ABOVE : 0)
+                | (slide.connected() ? NoteOrnament.FROM_PREVIOUS : 0)
+                | (!slide.connected() && !slide.curved() ? NoteOrnament.STRAIGHT_APPROACH : 0);
+    }
+
     private static boolean pitchedPreviousAnchor(
             List<Anchor> anchors, List<ScoreNoteEvent> notes, int targetIndex) {
         Anchor target = anchors.get(targetIndex);
@@ -266,7 +270,16 @@ final class PortableNoteOrnaments {
                 source = i;
             }
         }
-        return source >= 0 && notes.get(source).kind() == ScoreNoteEvent.Kind.PITCHED;
+        if (source >= 0) return notes.get(source).kind() == ScoreNoteEvent.Kind.PITCHED;
+        var heads =
+                anchors.stream()
+                        .map(a -> new NoteSlideDetector.Head(a.x, a.y, a.gap, a.staff, a.measure))
+                        .toList();
+        source = FiniteConnectedSlidePorts.previousAcrossBar(heads, targetIndex);
+        return source >= 0
+                && notes.get(source).kind() == ScoreNoteEvent.Kind.PITCHED
+                && notes.get(source).followingRestBeats() == 0
+                && notes.get(targetIndex).leadingRestBeats() == 0;
     }
 
     static List<Found> detect(

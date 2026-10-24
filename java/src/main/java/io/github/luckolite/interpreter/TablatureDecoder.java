@@ -515,7 +515,7 @@ public final class TablatureDecoder {
                             score.meterChanges(),
                             List.of(),
                             score.techniqueChanges(),
-                            score.dynamicChanges());
+                            score.dynamicChanges()).withBeamSource(score.beamSource().edited(List.of()));
         var notes = new ArrayList<>(score.notes());
         var measures = new ArrayList<>(score.measures());
         var rests = new ArrayList<>(score.rests());
@@ -780,7 +780,7 @@ public final class TablatureDecoder {
                                 && !measures.isEmpty()
                                 && !score.measures().isEmpty()
                                 && measures.get(0).equals(score.measures().get(0)),
-                        score.tremoloSource().edited(sourceOwners))
+                        score.tremoloSource().edited(sourceOwners)).withBeamSource(score.beamSource().edited(sourceOwners))
                 .carryMultiRestGroupsFrom(score);
     }
 

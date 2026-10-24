@@ -16,9 +16,9 @@ from . import semantic_wire
 
 
 # Recognition revisions 264/265/266/267/268/269/270/271/272/273/274/275 retain the complete framed 263 record layout.
-RECOGNITION_REVISION = 112
-GUIDE_VERSION = 295
-SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295)
+RECOGNITION_REVISION = 115
+GUIDE_VERSION = 299
+SUPPORTED_GUIDE_VERSIONS = (260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299)
 MAX_GUIDE_BYTES = 128 * 1024 * 1024
 
 
@@ -239,7 +239,7 @@ def encode(score, guide_version=GUIDE_VERSION):
     elif pickup:
         raise ValueError("Legacy guide format cannot preserve opening pickup proof")
     from . import tremolo_wire
-    tremolo = tremolo_wire.encode_source(score.get("tremoloSource"), len(score["notes"]))
+    tremolo = tremolo_wire.encode_source(score.get("tremoloSource"), len(score["notes"]), allow_clock_policies=guide_version >= 298)
     if guide_version >= 289:
         output.write(tremolo)
     elif tremolo != tremolo_wire.encode_source(None, len(score["notes"])):
@@ -250,6 +250,19 @@ def encode(score, guide_version=GUIDE_VERSION):
         output.write(multi_rest_wire.encode_groups(groups, len(measures)))
     elif groups:
         raise ValueError("Legacy guide format cannot preserve printed rest groups")
+    from . import beam_source
+    if guide_version >= 297:
+        output.write(beam_source.encode_source(score.get("beamSource"), len(notes)))
+    else:
+        beam_source.require_legacy_compatible(score.get("beamSource"), len(notes))
+    from . import clock_context
+    context = score.get("clockContextSource")
+    if context is None:
+        context = clock_context.unavailable(len(notes), len(measures), len(score.get("rests", [])))
+    if guide_version >= 299:
+        output.write(clock_context.encode(context, len(notes), len(measures), len(score.get("rests", []))))
+    else:
+        clock_context.require_legacy_compatible(context, len(notes), len(measures), len(score.get("rests", [])))
     if output.tell() > MAX_GUIDE_BYTES:
         raise ValueError("Guide exceeds cache limit")
     return output.getvalue()

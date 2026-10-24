@@ -20,7 +20,106 @@ public record ScorePageInterpretation(
         ScoreSlurSource slurSource,
         boolean openingPickup,
         ScoreTremoloSource tremoloSource,
-        List<ScoreMultiRestGroup> multiRestGroups) {
+        List<ScoreMultiRestGroup> multiRestGroups,
+        ScoreBeamSource beamSource,
+        ScoreClockContextSource clockContextSource) {
+    /** Pre-context records preserve explicit absence of assembly source authority. */
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            int firstMeasureNumber,
+            List<ScoreKeyChange> keyChanges,
+            List<ScoreTempoChange> tempoChanges,
+            List<ScoreMeterChange> meterChanges,
+            List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniqueChanges,
+            List<ScoreDynamicChange> dynamicChanges,
+            List<ScorePlaybackDirection> playbackDirections,
+            List<ScoreExpressiveEvent> expressiveEvents,
+            ScoreSlurSource slurSource,
+            boolean openingPickup,
+            ScoreTremoloSource tremoloSource,
+            List<ScoreMultiRestGroup> multiRestGroups,
+            ScoreBeamSource beamSource) {
+        this(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                openingPickup,
+                tremoloSource,
+                multiRestGroups,
+                beamSource,
+                ScoreClockContextSource.unavailable(
+                        notes == null ? 0 : notes.size(),
+                        measures == null ? 0 : measures.size(),
+                        rests == null ? 0 : rests.size()));
+    }
+
+    public ScorePageInterpretation withClockContextSource(ScoreClockContextSource source) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                openingPickup,
+                tremoloSource,
+                multiRestGroups,
+                beamSource,
+                source);
+    }
+
+    /** Legacy callers have unknown printed beam notation. */
+    public ScorePageInterpretation(
+            List<MeasureRegion> measures, List<ScoreNoteEvent> notes, int first,
+            List<ScoreKeyChange> keys, List<ScoreTempoChange> tempos,
+            List<ScoreMeterChange> meters, List<ScoreRestEvent> rests,
+            List<ScoreTechniqueChange> techniques, List<ScoreDynamicChange> dynamics,
+            List<ScorePlaybackDirection> directions, List<ScoreExpressiveEvent> expressions,
+            ScoreSlurSource slurs, boolean pickup, ScoreTremoloSource tremolos,
+            List<ScoreMultiRestGroup> groups) {
+        this(measures, notes, first, keys, tempos, meters, rests, techniques, dynamics,
+                directions, expressions, slurs, pickup, tremolos, groups,
+                ScoreBeamSource.empty(notes == null ? 0 : notes.size()));
+    }
+
+    public ScorePageInterpretation withBeamSource(ScoreBeamSource source) {
+        return new ScorePageInterpretation(
+                measures,
+                notes,
+                firstMeasureNumber,
+                keyChanges,
+                tempoChanges,
+                meterChanges,
+                rests,
+                techniqueChanges,
+                dynamicChanges,
+                playbackDirections,
+                expressiveEvents,
+                slurSource,
+                openingPickup,
+                tremoloSource,
+                multiRestGroups,
+                source,
+                clockContextSource);
+    }
+
     /** Ordinary score copies retain groups only with the exact ordered source geometry. */
     public ScorePageInterpretation carryMultiRestGroupsFrom(ScorePageInterpretation source) {
         if (source.measures().size() != measures.size()) return this;
@@ -81,7 +180,9 @@ public record ScorePageInterpretation(
                 slurSource,
                 openingPickup,
                 tremoloSource,
-                groups);
+                groups,
+                beamSource,
+                clockContextSource);
     }
 
     /** Legacy constructors carry no paired tremolo source. */
@@ -132,7 +233,8 @@ public record ScorePageInterpretation(
                 slurSource,
                 openingPickup,
                 source,
-                multiRestGroups);
+                multiRestGroups,
+                beamSource);
     }
 
     /** Legacy callers do not carry independent opening-number proof. */
@@ -181,7 +283,8 @@ public record ScorePageInterpretation(
                 slurSource,
                 proof,
                 tremoloSource,
-                multiRestGroups);
+                multiRestGroups,
+                beamSource);
     }
 
     public ScorePageInterpretation(
@@ -227,7 +330,8 @@ public record ScorePageInterpretation(
                 source,
                 openingPickup,
                 tremoloSource,
-                multiRestGroups);
+                multiRestGroups,
+                beamSource);
     }
 
     /** Explicit source owners preserve original printed endpoints through a note edit. */
@@ -251,7 +355,8 @@ public record ScorePageInterpretation(
                 openingPickup,
                 tremoloSource.edited(sourceOwners),
                 PrintedMultiRestGroups.retainSilent(
-                        multiRestGroups, measures.size(), edited, rests));
+                        multiRestGroups, measures.size(), edited, rests),
+                beamSource.edited(sourceOwners));
     }
 
     public ScorePageInterpretation(
@@ -308,7 +413,8 @@ public record ScorePageInterpretation(
                 slurSource,
                 openingPickup,
                 tremoloSource,
-                multiRestGroups);
+                multiRestGroups,
+                beamSource);
     }
 
     public ScorePageInterpretation withExpressiveEvents(List<ScoreExpressiveEvent> events) {
@@ -327,7 +433,8 @@ public record ScorePageInterpretation(
                 slurSource,
                 openingPickup,
                 tremoloSource,
-                multiRestGroups);
+                multiRestGroups,
+                beamSource);
     }
 
     public ScorePageInterpretation(
@@ -386,6 +493,7 @@ public record ScorePageInterpretation(
         notes = notes == null ? List.of() : List.copyOf(notes);
         java.util.Objects.requireNonNull(slurSource);
         java.util.Objects.requireNonNull(tremoloSource);
+        java.util.Objects.requireNonNull(beamSource).validateNoteCount(notes.size());
         if (tremoloSource.noteOrigins().size() != notes.size())
             throw new IllegalArgumentException(
                     "Tremolo identities do not match retained score notes");
@@ -398,6 +506,8 @@ public record ScorePageInterpretation(
         tempoChanges = tempoChanges == null ? List.of() : List.copyOf(tempoChanges);
         meterChanges = meterChanges == null ? List.of() : List.copyOf(meterChanges);
         rests = rests == null ? List.of() : List.copyOf(rests);
+        java.util.Objects.requireNonNull(clockContextSource)
+                .validateCounts(notes.size(), measures.size(), rests.size());
         multiRestGroups =
                 PrintedMultiRestGroups.validate(multiRestGroups, measures.size(), notes, rests);
         techniqueChanges = techniqueChanges == null ? List.of() : List.copyOf(techniqueChanges);
@@ -438,7 +548,7 @@ public record ScorePageInterpretation(
                                     : boundary >= firstMeasure && boundary < measureAfterLast;
                         })
                 .map(change -> change.offset(-firstMeasure))
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
     }
 
     /** Retain each expression once, preserving source identities and full cross-page endpoints. */
@@ -481,6 +591,17 @@ public record ScorePageInterpretation(
                                             && measure.getAsInt() >= firstMeasure
                                             && measure.getAsInt() < measureAfterLast;
                                 }
+                                if (event.kind()
+                                                == ScoreExpressiveEvent.Kind
+                                                        .PARENTHESIZED_NOTE_GROUP
+                                        && event.targetEventId().isPresent()) {
+                                    var measure =
+                                            ScoreParenthesizedNoteGroup.targetMeasure(
+                                                    event.targetEventId().get());
+                                    return measure.isPresent()
+                                            && measure.getAsInt() >= firstMeasure
+                                            && measure.getAsInt() < measureAfterLast;
+                                }
                                 return firstMeasure == 0;
                             }
                             return event.start().get().measureIndex() >= firstMeasure
@@ -508,6 +629,6 @@ public record ScorePageInterpretation(
                                 change.measureIndex() >= firstMeasure
                                         && change.measureIndex() < measureAfterLast)
                 .map(change -> change.offset(-firstMeasure))
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
     }
 }

@@ -1322,7 +1322,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260â€“282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260Ã¢â‚¬â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.
@@ -2895,7 +2895,7 @@ Guide292/audio97 and model lineage remain unchanged; matched cumulative
 packaging/deployment is deferred during the active goal.
 
 Recognition99 adds the following reviewed source changes.
-Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. No model/audio/Taylor counter claim. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.
+Recognition99 proves persistent technique notation clocks from existing first-activation columns and validated written ownership; attack-local bow behavior and Guide292/audio97 layouts remain unchanged. Standalone missing sourceNoteIndex metadata is additive and preserves explicit existing identity. Model weights and audio format remain unchanged. A separate original counter also preserves originating written bar ownership for a terminal after-grace instruction; ordinary next-bar labels and other expressive membership remain unchanged.
 Guide292/audio97 and model lineage remain unchanged; matched cumulative
 packaging/deployment is deferred during the active goal.
 
@@ -2935,3 +2935,10 @@ Recognition110 adds connected approach and beam-end ownership only when endpoint
 Recognition111 adds paired source-free approach and compound articulation ownership originals; ambiguous compound ownership is excluded. No Guide, audio, or rendering epoch change.
 
 Recognition112 adds complete down-flag branch and staff-joined compact-approach ownership with bounded, unique raw-component evidence. Thirty-six source-free portable originals cover the grouped paths; no private score pixels, model, Guide, or audio change is included.
+
+
+Complete bounded raw beam ribbons retain physical column ownership, observed rail levels and literal partial hooks. Raw connected shaft paths and independently observed five-rule bands support the candidate geometry; unknown carrier cells and unresolved rivals cannot fund positive evidence. Attached returning flags require literal curved-body ownership and conservative absence of competing raw primary continuations, including distant mixed-scale and overlapping cross-staff backbones. These helpers preserve existing scalar rhythm fields. Original procedural raster controls cover positive ownership, carrier/core separation, terminal gaps, mirrored scale variants, mixed endpoint families and incomplete/competing context. The controls contain no captured score ink, fonts, model outputs or private libraries and do not establish general recognition accuracy.
+
+The cumulative source update preserves complete printed parenthesis groups, source-bound cross-bar slides, raw staff/ribbon ownership, note articulation and partial-signature confidence. A partial additional sharp can refuse an unsupported key decrease while explicit cancellation retains its existing route. Guide299 appends bounded context after the complete Guide298 framing; annotation and recognition rasters keep separate identities through TAB processing. Accidental chooser lineage and an invocation-scoped batch membership snapshot preserve all original observations and unknown residuals without repeated whole-raster authentication. These model/component facts do not select a stronger tremolo clock policy or prove meter absence. Source-free regressions accompany the code; model weights and licensed assets are unchanged.
+
+Standalone MusicXML checks for a retained right-parenthesis endpoint and a nongrace fragment before reading its release clock. Unrelated arpeggio fragments therefore retain their existing export contract, while split parenthesis endpoints still emit once at their final release. Valid blank decoder pages preserve the supplied measure count in unavailable source context; the strict server parity and original multi-measure blank controls verify that no musical authority is invented. Historical writer regressions select their historical formats explicitly and verify that encoding does not mutate the current recognition revision.

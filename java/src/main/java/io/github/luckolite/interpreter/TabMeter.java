@@ -67,7 +67,7 @@ public final class TabMeter {
                                 score.expressiveEvents(),
                                 score.slurSource(),
                                 score.openingPickup(),
-                                score.tremoloSource())
+                                score.tremoloSource()).withBeamSource(score.beamSource())
                         .carryMultiRestGroupsFrom(score),
                 tabs,
                 words,

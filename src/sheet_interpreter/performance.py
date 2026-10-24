@@ -13,6 +13,7 @@ from .printed_tempo_spans import preserve_end, resolve_pages, has_open
 from .semantic_wire import encode
 from .typed_events import event_kind, validate_unpitched
 from .rest_kinds import rest_kind, full_measure_span
+from .tremolo_wire import performance_pairs
 from .tremolo_performance import source_spans, pulse_windows
 
 SUPPORTED = {'RITARDANDO', 'RALLENTANDO', 'RITENUTO', 'ACCELERANDO', 'A_TEMPO',
@@ -444,7 +445,7 @@ def perform_expressions(document, bpm):
             if rest_kind(row) == 'FULL_MEASURE':
                 full_measure_span(page, row)
     if not (any(e['kind'] in SUPPORTED or has_open(e) for page in pages for e in page.get('score', {}).get('expressiveEvents', []))
-            or any((page.get('score', {}).get('tremoloSource') or {}).get('pairs') for page in pages)):
+            or any(performance_pairs(page.get('score', {}).get('tremoloSource')) for page in pages)):
         return None
     # Use the same arrangement boundaries as ordinary navigation export.
     from .navigation import _bridge as navigation_bridge

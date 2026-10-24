@@ -212,10 +212,14 @@ final class CompactApproachStrokes {
                 (float) endY,
                 1,
                 owner,
+                false,
                 false);
     }
 
-    /** A staff-isolated miniature uses its complete contiguous row profile, including every ink pixel. */
+    /**
+     * A staff-isolated miniature uses its complete contiguous row profile, including every ink
+     * pixel.
+     */
     static NoteSlideDetector.Stroke profileSupportedStroke(
             byte[] raw,
             int w,
@@ -287,6 +291,13 @@ final class CompactApproachStrokes {
         return result == null
                 ? null
                 : new NoteSlideDetector.Stroke(
-                        (float) startX, bottom, (float) endX, top, 1, result.noteIndex(), false);
+                        (float) startX,
+                        bottom,
+                        (float) endX,
+                        top,
+                        1,
+                        result.noteIndex(),
+                        false,
+                        false);
     }
 }

@@ -5,6 +5,7 @@ import copy
 import struct
 import unittest
 from sheet_interpreter import semantic_wire as wire
+from sheet_interpreter import parenthesized_note_group as group
 
 
 def fixture():
@@ -27,6 +28,13 @@ def fixture():
                        targetEventId=prefix + ':0:0:1:3f000000:3:3e800000',
                        strength='UNSPECIFIED',
                        qualifierText='' if row['kind'] == 'NATURAL_HARMONIC' else 'falloff-v1:curved')
+    pair = group.Pair(tuple(group.Member(0, 0, 1, group.bits(x), step, group.bits(.25))
+                            for x, step in ((.1, 0), (.4, 2), (.7, 4))),
+                      (-1.2, 0, 1.1, 0, 1.75, 1.75))
+    for row in expressions:
+        if row['kind'] == 'PARENTHESIZED_NOTE_GROUP':
+            row.update(start=None, end=None, targetEventId=pair.target,
+                       strength='UNSPECIFIED', qualifierText=pair.qualifier)
     expressions[5]['targetEventId'] = 'kind-RITARDANDO'
     return directions, expressions
 
@@ -34,7 +42,7 @@ def fixture():
 class SemanticWireTest(unittest.TestCase):
     def test_metric_records_require277_while_legacy_bytes_remain_identical(self):
         directions, expressions = fixture()
-        expressions = [e for e in expressions if e['kind'] not in ('NATURAL_HARMONIC', 'FALL_OFF')]
+        expressions = [e for e in expressions if e['kind'] not in ('NATURAL_HARMONIC', 'FALL_OFF', 'PARENTHESIZED_NOTE_GROUP')]
         data = wire.encode(directions, expressions, 1, 277)
         for version in (263, 275, 276):
             with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, version)
@@ -57,37 +65,37 @@ class SemanticWireTest(unittest.TestCase):
     def test_all_kinds_unicode_targets_and_cross_page_end_roundtrip(self):
         directions, expressions = fixture()
         before = copy.deepcopy((directions, expressions))
-        data = wire.encode(directions, expressions, 1, 295)
-        self.assertEqual((directions, expressions), wire.decode(data, 1, 295))
+        data = wire.encode(directions, expressions, 1, 296)
+        self.assertEqual((directions, expressions), wire.decode(data, 1, 296))
         self.assertEqual(before, (directions, expressions))
-        self.assertEqual(data, wire.encode(*wire.decode(data, 1, 295), 1, 295))
+        self.assertEqual(data, wire.encode(*wire.decode(data, 1, 296), 1, 296))
 
     def test_every_truncated_prefix_and_trailing_byte_is_rejected(self):
-        data = wire.encode(*fixture(), 1, 295)
+        data = wire.encode(*fixture(), 1, 296)
         for end in range(len(data)):
-            with self.assertRaises(ValueError, msg=str(end)): wire.decode(data[:end], 1, 295)
-        with self.assertRaises(ValueError): wire.decode(data+b'\x00', 1, 295)
+            with self.assertRaises(ValueError, msg=str(end)): wire.decode(data[:end], 1, 296)
+        with self.assertRaises(ValueError): wire.decode(data+b'\x00', 1, 296)
 
     def test_unknown_kind_counts_frame_length_and_utf8_are_rejected(self):
-        encoded = wire.encode(*fixture(), 1, 295)
+        encoded = wire.encode(*fixture(), 1, 296)
         for offset, value in ((12, 14), (4, 2**31-1), (0, -1)):
             data = bytearray(encoded); struct.pack_into('>i', data, offset, value)
-            with self.assertRaises(ValueError): wire.decode(data, 1, 295)
+            with self.assertRaises(ValueError): wire.decode(data, 1, 296)
         data = bytearray(encoded); data[28] = 0xff
-        with self.assertRaises(ValueError): wire.decode(data, 1, 295)
+        with self.assertRaises(ValueError): wire.decode(data, 1, 296)
 
     def test_duplicate_expression_identity_is_not_silently_merged(self):
         directions, expressions = fixture()
         expressions.append(copy.deepcopy(expressions[0]))
-        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 295)
+        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 296)
 
     def test_anonymous_rich_navigation_and_unpaired_surrogates_are_rejected(self):
         directions, expressions = fixture()
         directions[0]['details']['eventId'] = ''
-        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 295)
+        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 296)
         directions, expressions = fixture()
         expressions[0]['eventId'] = 'bad-\ud800'
-        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 295)
+        with self.assertRaises(ValueError): wire.encode(directions, expressions, 1, 296)
 
     def test_invalid_optional_boolean_is_rejected(self):
         # Legacy-default direction frame: four empty identity strings, total count,

@@ -1,0 +1,109 @@
+{
+  "test_classes": [
+    "PrintedSourceBeamOriginalsTest",
+    "PrintedSourceBeamIntakeOwnershipTest",
+    "PrintedBeamIntakeTest"
+  ],
+  "support_classes": [
+    "FlagPrimaryJunctionOriginals",
+    "GeometryUnknownCarrierOriginals",
+    "IndependentV3Probe",
+    "OverlappingRivalOriginals",
+    "PairFamilyContainmentOriginals",
+    "PrimaryAbsenceBoundaryProbe",
+    "PrimaryAbsenceIndependentProbe",
+    "PrintedBeamGeometryOriginals",
+    "PrintedBeamIntakeOwnershipOriginals",
+    "PrintedBeamOriginalResources",
+    "PrintedBeamRuleWitnessOriginals",
+    "PrintedBeamShaftsOriginals",
+    "PrintedIsolatedFlagsOriginals",
+    "PrintedIsolatedFlagsRoleOriginals",
+    "RawPrimaryBeamAbsenceOriginals"
+  ],
+  "app_java_root": "app/src/test/java/com/musicsheets/app/pdf",
+  "public_java_root": "java/src/test/java/io/github/luckolite/interpreter",
+  "app_resource_root": "app/src/test/resources",
+  "public_resource_root": "java/src/test/resources",
+  "resource_subtree": "source-beams",
+  "runner_changes_required": false,
+  "production_helpers": [
+    "FiniteRawBeamStrip",
+    "PrintedBeamGeometry",
+    "PrintedBeamShafts",
+    "PrintedBeamRuleWitness",
+    "PrintedBeamLocalRuleInk",
+    "PrintedBeamSource",
+    "PrintedIsolatedFlags",
+    "RawPrimaryBeamAbsence"
+  ],
+  "provenance_entries_status": "REVIEWED_SOURCE_HASHES_REGISTERED",
+  "resource_source": "java/src/test/resources/source-beams",
+  "test_dependencies": "Existing JUnit/Hamcrest only; no org.json or general JSON parser",
+  "production_helper_entries": {
+    "FiniteRawBeamStrip.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteRawBeamStrip.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FiniteRawBeamStrip.java",
+      "license": "Apache-2.0",
+      "source_sha256": "7e1acb8ca2bbf22f0f67de4077881ee419ea7690310f4af241bf01e5df66d7ca",
+      "source_normalized_sha256": "65b70136df4be0a683eaa3613ed6989364ff2aadf94dbf8b97c75bc2c1e210d9",
+      "standalone_sha256": "2e56ab4297385c44b5dfa726c3fcabad4bd1a45e185686a3a517ad17ade315a6"
+    },
+    "PrintedBeamGeometry.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamGeometry.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamGeometry.java",
+      "license": "Apache-2.0",
+      "source_sha256": "274855b51f32d4e3ceeaf1bce01e73d006b66ad55c8df0f3b5327053324548cc",
+      "source_normalized_sha256": "befa9ae40bbba1958b3ef68001d9ed3b4f64c87f1088a1864ddf92aced9709e4",
+      "standalone_sha256": "cb07cea97568cc6f93f84cc4d6e04bbc52070ce47a25236d05256967278c5b1c"
+    },
+    "PrintedBeamShafts.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamShafts.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
+      "license": "Apache-2.0",
+      "source_sha256": "316c310666e50b8cd2bb084226e5171d72c240e05f943c9ff13858ac7578d9dd",
+      "source_normalized_sha256": "316c310666e50b8cd2bb084226e5171d72c240e05f943c9ff13858ac7578d9dd",
+      "standalone_sha256": "c2aed0a042aecf49726d2aaa39300b1e9696a3fec0fd22bc9011c36fd1d20d4e"
+    },
+    "PrintedBeamRuleWitness.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleWitness.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRuleWitness.java",
+      "license": "Apache-2.0",
+      "source_sha256": "3536fb0351a5e41b4d859ac2814a6a13b39299bdce99f1d95a870591027602b6",
+      "source_normalized_sha256": "3536fb0351a5e41b4d859ac2814a6a13b39299bdce99f1d95a870591027602b6",
+      "standalone_sha256": "7e0c0d521e4a0316acd9ef7453abbb1991ed79a2035d84905dbe57f795eb275d"
+    },
+    "PrintedBeamLocalRuleInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamLocalRuleInk.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalRuleInk.java",
+      "license": "Apache-2.0",
+      "source_sha256": "ac74b75160e337a10ba35ab96e13d2155bf1ba78d09c4bfc4acd0684d672ce56",
+      "source_normalized_sha256": "ac74b75160e337a10ba35ab96e13d2155bf1ba78d09c4bfc4acd0684d672ce56",
+      "standalone_sha256": "347e07f9d79ff2e14fe49d9504557441e5fcdc443160f78b7016db1f18838cda"
+    },
+    "PrintedBeamSource.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
+      "license": "Apache-2.0",
+      "source_sha256": "881358c7922b09a75ebba1e83be63af4b7378259121e65459c199a74d590a0a6",
+      "source_normalized_sha256": "8fd48aceda74ceed4a0703c6195fcee6ad57c5bc4248191881f4c6da21836c8e",
+      "standalone_sha256": "0aaea2d9dca865dbc04f5a49e2188aa24dec04967222f199c2e1db7b326fb75e"
+    },
+    "PrintedIsolatedFlags.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedIsolatedFlags.java",
+      "license": "Apache-2.0",
+      "source_sha256": "eeb02fccd267b9cc7d20d46e82e7e0d1b632fd784f4833a9548c91069f644f4c",
+      "source_normalized_sha256": "37eeb35d64259b2323417d858f77ffea99e70822aa80ca21453a9a0f15840ddf",
+      "standalone_sha256": "d7465fa3d2321ea93c126e9fa6aa55f26b87f9f25e7c5744021a57592e20c7f7"
+    },
+    "RawPrimaryBeamAbsence.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawPrimaryBeamAbsence.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawPrimaryBeamAbsence.java",
+      "license": "Apache-2.0",
+      "source_sha256": "255d0ed6c37a30c549a7b1cb36467fbd961ed7db356e47eb8c318971d7f3004c",
+      "source_normalized_sha256": "335c2b88e696fc76e01c0dbefca6644404aef2419ffd466aef46e82ade2fcc54",
+      "standalone_sha256": "43237d00222da81c3db9b1b29d8a8826d164772b5dac76c52c771a773f0e6db0"
+    }
+  }
+}

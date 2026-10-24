@@ -86,14 +86,16 @@ class PrintedStemGuideTests(unittest.TestCase):
 
 
 
-    def test_current286_keeps_kind_source_and_pickup_after_legacy281(self):
+    def test_historical295_keeps_kind_source_and_pickup_after_legacy281(self):
 
-        self.assertEqual(112, wire.RECOGNITION_REVISION)
-        self.assertEqual(295,wire.GUIDE_VERSION)
+        revision_before = wire.RECOGNITION_REVISION
+        self.assertIn(295,wire.SUPPORTED_GUIDE_VERSIONS)
 
         score=original_score();score['notes'][0]['stemDirection']=1
 
-        legacy=wire.encode(score,281);encoded=wire.encode(score)
+        legacy=wire.encode(score,281);encoded=wire.encode(score,295)
+
+        self.assertEqual(revision_before,wire.RECOGNITION_REVISION)
 
         self.assertEqual(295,struct.unpack('>i',encoded[:4])[0])
 

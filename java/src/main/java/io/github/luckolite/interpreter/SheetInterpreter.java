@@ -165,6 +165,22 @@ public final class SheetInterpreter {
                 throw new IllegalArgumentException("Labels must be in 0..5");
         Objects.requireNonNull(annotations);
         byte[] tabSourceGray = gray;
+        var sourceAnnotations =
+                ScorePageAnnotationSource.fromReader(
+                        gray,
+                        width,
+                        height,
+                        annotations.words.stream()
+                                .map(
+                                        w ->
+                                                new TablatureDecoder.Word(
+                                                        w.text(),
+                                                        w.left(),
+                                                        w.top(),
+                                                        w.right(),
+                                                        w.bottom()))
+                                .toList(),
+                        annotations.measureNumbers.stream().map(NumberToken::internal).toList());
         var tabWords =
                 java.util.stream.Stream.concat(
                                 annotations.words.stream(), annotations.tabWords.stream())
@@ -215,7 +231,11 @@ public final class SheetInterpreter {
         if (firstMeasureNumber == 0 && ocr != null)
             firstMeasureNumber =
                     ocr.firstSystemMeasureNumber(labels, gray, width, height, measures);
+        var clockPartSource =
+                ScorePartProducerSource.capture(
+                        sourceAnnotations, tabSourceGray, width, height, measures);
         var score = OmrScoreInterpreter.analyze(labels, gray, width, height, measures);
+        var clockAnalysis = score;
         score =
                 RecognizedMultiRestProjection.apply(
                         score, measures, labels, gray, width, height, recognizedRests);
@@ -517,8 +537,40 @@ public final class SheetInterpreter {
                             techniqueWords,
                             physicalPage,
                             Float.NaN);
-        if (physicalPage >= 0) finalInterpretation = PrintedFallOffDetector.apply(
-                finalInterpretation,gray,width,height,staffs,techniqueWords,physicalPage);
-        return finalInterpretation;
+        if (physicalPage >= 0)
+            finalInterpretation =
+                    PrintedFallOffDetector.apply(
+                            finalInterpretation,
+                            gray,
+                            width,
+                            height,
+                            staffs,
+                            techniqueWords,
+                            physicalPage);
+        if (physicalPage >= 0)
+            finalInterpretation =
+                    PrintedParenthesisDetector.apply(
+                            finalInterpretation,
+                            gray,
+                            width,
+                            height,
+                            staffs,
+                            techniqueWords,
+                            physicalPage);
+        if (physicalPage >= 0)
+            finalInterpretation =
+                    PrintedBeamSource.apply(
+                            finalInterpretation, labels, gray, width, height, staffs, physicalPage);
+        return finalInterpretation.withClockContextSource(
+                ScoreClockContextCapture.capture(
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        finalInterpretation,
+                        clockAnalysis,
+                        clockPartSource,
+                        meterEvidence.provenance(),
+                        tabSourceGray));
     }
 }

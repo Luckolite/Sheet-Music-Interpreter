@@ -84,6 +84,6 @@ final class VerifiedCourtesyBoundary {
                 s.tremoloSource(),
                 PrintedMultiRestGroups.remap(
                         s.multiRestGroups(),
-                        java.util.stream.IntStream.range(0, last).boxed().toList()));
+                        java.util.stream.IntStream.range(0, last).boxed().toList())).withBeamSource(s.beamSource());
     }
 }

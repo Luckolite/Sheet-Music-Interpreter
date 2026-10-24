@@ -27,10 +27,11 @@ def score():
 
 
 class Guide294NaturalHarmonicOriginal(unittest.TestCase):
-    def test_current_writer_emits295_without_changing_public_revision(self):
-        raw=guide_writer.encode(score())
-        self.assertEqual(295,struct.unpack_from('>i',raw)[0])
-        self.assertEqual(112,guide_writer.RECOGNITION_REVISION)
+    def test_historical296_writer_emits296_without_changing_public_revision(self):
+        revision_before=guide_writer.RECOGNITION_REVISION
+        raw=guide_writer.encode(score(),296)
+        self.assertEqual(296,struct.unpack_from('>i',raw)[0])
+        self.assertEqual(revision_before,guide_writer.RECOGNITION_REVISION)
 
     def test_note_and_unresolved_owner_roundtrip(self):
         for row in (event(),event('UNRESOLVED')):

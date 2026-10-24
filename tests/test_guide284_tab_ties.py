@@ -53,21 +53,24 @@ def score():
 
 class TypedTabTieWriterTests(unittest.TestCase):
 
-    def test_current_format_preserves_the_existing_physical_note_layout(self):
+    def test_historical295_preserves_the_existing_physical_note_layout(self):
 
         original = score()
 
         old = wire.encode(original, 283)
 
-        new = wire.encode(original)
+        revision_before = wire.RECOGNITION_REVISION
+
+        new = wire.encode(original, 295)
 
         self.assertEqual(295, struct.unpack_from('>i', new)[0])
 
         legacy = wire.encode(original, 293)
+        # Guide295 and293 retain the same note fields and empty source sections.
         self.assertEqual(new[4:], legacy[4:])
         new = legacy_full_note_layout(legacy)
 
-        self.assertEqual(112, wire.RECOGNITION_REVISION)
+        self.assertEqual(revision_before, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire, tremolo_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))

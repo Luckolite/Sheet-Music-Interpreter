@@ -1204,6 +1204,9 @@ final class NoteArticulationDetector {
                                 || compactLedgerStaff(glyph, note, gray, width, height))) continue;
                 if (raw
                         && candidate == NoteArticulation.TENUTO
+                        && completeRasterLedger(glyph, note, notes, gray, width, height)) continue;
+                if (raw
+                        && candidate == NoteArticulation.TENUTO
                         && glyph.bottom - glyph.top + 1 <= Math.max(2, Math.round(note.gap * .23f))
                         && horizontalRuleInk(
                                 gray,
@@ -3474,6 +3477,27 @@ final class NoteArticulationDetector {
             if (complete) return true;
         }
         return false;
+    }
+
+    /** Exact emitted glyph and every required ledger in a complete raw five-rule
+     * raster frame. Unsupported/faint/partial marks and rival owners keep TENUTO. */
+    private static boolean completeRasterLedger(
+            Glyph glyph, Anchor note, List<Anchor> notes, byte[] gray, int width, int height) {
+        for (Anchor other : notes) {
+            if (other == note
+                    || Math.abs(other.x - note.x) < .1f * note.gap
+                            && Math.abs(other.y - note.y) < .1f * note.gap) continue;
+            if (!Float.isFinite(other.x + other.y + other.gap) || other.gap < 6) return false;
+            float distance = Math.abs(glyph.y() - other.y) / other.gap;
+            if (Math.abs(glyph.x() - other.x) <= other.gap * .7f
+                    && distance >= .7f
+                    && distance <= 3.2f) return false;
+        }
+        var proof =
+                RasterPhaseLedgerOwnership.prove(
+                        gray, width, height, glyph.pixels, note.x, note.y, note.gap);
+        return proof != null
+                && proof.matches(gray, width, height, glyph.pixels, note.x, note.y, note.gap);
     }
 
     private static boolean completeStaffRail(

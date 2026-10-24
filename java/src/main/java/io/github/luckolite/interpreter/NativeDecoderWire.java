@@ -30,8 +30,12 @@ public final class NativeDecoderWire {
     // Ordinary old-clef scores retain byte-identical -26 encoding; legacy32 fails closed.
     static final int ANALYSIS_INTRINSIC_CLEF_FORMAT = -27;
 
+    static final int ANALYSIS_CONTEXT_FORMAT = -28;
+
     private static boolean pairedFormat(int marker) {
-        return marker == ANALYSIS_TREMOLO_FORMAT || marker == ANALYSIS_INTRINSIC_CLEF_FORMAT;
+        return marker == ANALYSIS_TREMOLO_FORMAT
+                || marker == ANALYSIS_INTRINSIC_CLEF_FORMAT
+                || marker == ANALYSIS_CONTEXT_FORMAT;
     }
 
     public record Request(
@@ -239,17 +243,27 @@ public final class NativeDecoderWire {
         writeAnalysis(
                 out,
                 score,
-                score.notes().stream()
-                                .anyMatch(
-                                        n ->
-                                                n.clefBottomDiatonic()
-                                                        == ScoreNoteEvent.CLEF_BASS_QUINDICESIMA)
-                        ? ANALYSIS_INTRINSIC_CLEF_FORMAT
-                        : ANALYSIS_TREMOLO_FORMAT);
+                !score.clockContextSource()
+                                .equals(
+                                        ScoreClockContextSource.unavailable(
+                                                score.clockContextSource().noteCount(),
+                                                score.clockContextSource().measureCount(),
+                                                score.clockContextSource().restCount()))
+                        ? ANALYSIS_CONTEXT_FORMAT
+                        : score.notes().stream()
+                                        .anyMatch(
+                                                n ->
+                                                        n.clefBottomDiatonic()
+                                                                == ScoreNoteEvent
+                                                                        .CLEF_BASS_QUINDICESIMA)
+                                ? ANALYSIS_INTRINSIC_CLEF_FORMAT
+                                : ANALYSIS_TREMOLO_FORMAT);
     }
 
     static void writeAnalysis(DataOutputStream out, OmrScoreInterpreter.Analysis score, int marker)
             throws IOException {
+        if (marker != ANALYSIS_CONTEXT_FORMAT)
+            ScoreClockContextWire.requireLegacyCompatible(score.clockContextSource());
         if (!pairedFormat(marker)
                 && marker != ANALYSIS_TAB_TIE_FORMAT
                 && marker != ANALYSIS_REST_KIND_FORMAT
@@ -268,6 +282,7 @@ public final class NativeDecoderWire {
                         .anyMatch(n -> n.clefBottomDiatonic() == ScoreNoteEvent.CLEF_BASS_OTTAVA))
             throw new IOException("Legacy analysis would lose octave-bass clef");
         if (marker != ANALYSIS_INTRINSIC_CLEF_FORMAT
+                && marker != ANALYSIS_CONTEXT_FORMAT
                 && score.notes().stream()
                         .anyMatch(
                                 n ->
@@ -331,6 +346,8 @@ public final class NativeDecoderWire {
                     || pairedFormat(marker)) out.writeByte(restKindId(r.kind()));
         }
         if (pairedFormat(marker)) ScoreTremoloWire.write(out, score.tremoloSource());
+        if (marker == ANALYSIS_CONTEXT_FORMAT)
+            ScoreClockContextWire.write(out, score.clockContextSource());
     }
 
     private static int boundaryTies(DataInputStream in, boolean tabTyped) throws IOException {
@@ -378,6 +395,7 @@ public final class NativeDecoderWire {
                             stems ? stemDirection(in) : 0,
                             typed ? noteKind(in) : ScoreNoteEvent.Kind.PITCHED));
         if (marker != ANALYSIS_INTRINSIC_CLEF_FORMAT
+                && marker != ANALYSIS_CONTEXT_FORMAT
                 && notes.stream()
                         .anyMatch(
                                 n ->
@@ -418,8 +436,18 @@ public final class NativeDecoderWire {
                 paired
                         ? ScoreTremoloWire.read(in, notes.size())
                         : ScoreTremoloSource.empty(notes.size());
+        var context =
+                marker == ANALYSIS_CONTEXT_FORMAT
+                        ? ScoreClockContextWire.read(in, notes.size(), measures, rests.size())
+                        : ScoreClockContextSource.unavailable(notes.size(), measures, rests.size());
         if (in.read() != -1) throw new IOException("Trailing decoder result");
-        return new OmrScoreInterpreter.Analysis(notes, keys, rests, tremoloSource);
+        return new OmrScoreInterpreter.Analysis(
+                notes,
+                keys,
+                rests,
+                tremoloSource,
+                ScoreClockProducerSource.unavailable(notes.size()),
+                context);
     }
 
     private static int index(DataInputStream in, int measures) throws IOException {

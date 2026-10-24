@@ -17,6 +17,11 @@ final class AcceptedMeterHeaderBounds {
         final byte[] labels, gray;
         final int width, height;
         final List<MeasureRegion> measures;
+        final String rawSha, labelSha;
+
+        boolean sameSnapshot() {
+            return rawSha.equals(hash(gray)) && labelSha.equals(hash(labels));
+        }
 
         private Source(byte[] l, byte[] g, int w, int h, List<MeasureRegion> m) {
             labels = l;
@@ -24,6 +29,8 @@ final class AcceptedMeterHeaderBounds {
             width = w;
             height = h;
             measures = List.copyOf(m);
+            rawSha = hash(g);
+            labelSha = hash(l);
         }
     }
 
@@ -33,6 +40,21 @@ final class AcceptedMeterHeaderBounds {
             ScoreMeterChange value,
             MeterChangeDetector.Crop crop,
             Producer producer) {}
+
+    private static String hash(byte[] data) {
+        try {
+            return RasterEvidenceIdentity.hex(
+                    java.security.MessageDigest.getInstance("SHA-256").digest(data));
+        } catch (java.security.NoSuchAlgorithmException impossible) {
+            throw new AssertionError(impossible);
+        }
+    }
+
+    static int[] sampledMembers(Source source, MeterChangeDetector.Crop crop) {
+        Support sampled = support(source, crop);
+        if (sampled == null) return null;
+        return sampled.pixels().stream().toArray();
+    }
 
     private record Support(BitSet pixels) {}
 
