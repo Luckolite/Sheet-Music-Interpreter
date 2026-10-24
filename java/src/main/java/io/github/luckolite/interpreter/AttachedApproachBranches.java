@@ -37,7 +37,7 @@ final class AttachedApproachBranches {
         }
     }
 
-    private record Trace(List<Integer> path, int owner, int sourceIndex) {}
+    private record Trace(List<Integer> path, int owner, int sourceIndex, boolean includeTerminal) {}
 
     private AttachedApproachBranches() {}
 
@@ -259,6 +259,22 @@ final class AttachedApproachBranches {
                 if (degree[p] == 1) leaves.add(p);
             }
         }
+        int graphLeft = left, graphTop = top;
+        if (!budget.take((long) nodes.size() * 16)) return List.of();
+        var flagLeaves =
+                DownFlagBranchOwnership.leaves(
+                        raw,
+                        w,
+                        h,
+                        heads,
+                        localHeads,
+                        downShafts,
+                        evidence,
+                        nodes.stream().filter(p -> skeleton[p]).toList(),
+                        leaves,
+                        p -> neighbors(skeleton, sw, p, cuts),
+                        p -> (graphTop + p / sw - 2) * w + graphLeft + p % sw - 2,
+                        budget);
         var leafOwners = new HashMap<Integer, Integer>();
         for (int leaf : leaves) {
             int owner = -1, x = left + leaf % sw - 2, y = top + leaf / sw - 2;
@@ -284,7 +300,9 @@ final class AttachedApproachBranches {
                                 heads,
                                 localHeads,
                                 evidence,
-                                downShafts);
+                                downShafts,
+                                track,
+                                budget);
             if (owner < 0
                     && staffTip(skeleton, degree, sw, leaf, cuts, raw, w, h, left, top, staff))
                 owner = -3;
@@ -308,14 +326,35 @@ final class AttachedApproachBranches {
                 if (StemEndBranchOwnership.owns(
                         raw, w, h, originalPath, heads, localHeads, downShafts, budget)) owner = -5;
             }
+            if (owner == -1 && flagLeaves.contains(leaf)) owner = -6;
             leafOwners.put(leaf, owner);
         }
-        var bare = new ArrayList<Trace>();
+        var bare =
+                ruleJoinedCurves(
+                        leaves,
+                        leafOwners,
+                        skeleton,
+                        degree,
+                        sw,
+                        cuts,
+                        left,
+                        top,
+                        raw,
+                        w,
+                        h,
+                        staff,
+                        heads,
+                        localHeads,
+                        downShafts,
+                        budget);
+        if (bare == null || budget.refused) return List.of();
         for (int leaf : leaves) {
             if (leafOwners.get(leaf) >= 0
                     || leafOwners.get(leaf) == -3
                     || leafOwners.get(leaf) == -4
-                    || leafOwners.get(leaf) == -5) continue;
+                    || leafOwners.get(leaf) == -5
+                    || leafOwners.get(leaf) == -6
+                    || leafOwners.get(leaf) == -7) continue;
             var path = trace(skeleton, degree, sw, leaf, cuts);
             int end = path.get(path.size() - 1);
             if (degree[end] != 3) return List.of();
@@ -378,14 +417,15 @@ final class AttachedApproachBranches {
                 sourceIndex = prior;
             }
             if (owner < 0) return List.of();
-            bare.add(new Trace(path, owner, sourceIndex));
+            bare.add(new Trace(path, owner, sourceIndex, false));
         }
         if (bare.isEmpty() || bare.size() > 4) return List.of();
         var result = new ArrayList<Part>();
         for (var branch : bare) {
             if (!budget.take((long) count * 36 + area * 4L)) return List.of();
             boolean[] isBranch = new boolean[area];
-            for (int i = 0; i < branch.path.size() - 1; i++) isBranch[branch.path.get(i)] = true;
+            for (int i = 0; i < branch.path.size() - (branch.includeTerminal ? 0 : 1); i++)
+                isBranch[branch.path.get(i)] = true;
             int[] near = distance(ink, sw, allSkeleton, isBranch, true),
                     far = distance(ink, sw, allSkeleton, isBranch, false);
             boolean[] chosen = new boolean[area];
@@ -434,15 +474,23 @@ final class AttachedApproachBranches {
                         }
                         if (selected
                                 && nonRule
-                                && SeparatedRuleRunOwnership.matches(
-                                        raw,
-                                        w,
-                                        h,
-                                        left + x - 2,
-                                        top + start - 2,
-                                        top + y - 3,
-                                        track,
-                                        budget)) nonRule = false;
+                                && (SeparatedRuleRunOwnership.matches(
+                                                raw,
+                                                w,
+                                                h,
+                                                left + x - 2,
+                                                top + start - 2,
+                                                top + y - 3,
+                                                track,
+                                                budget)
+                                        || verifiedRulePixel(
+                                                raw,
+                                                w,
+                                                h,
+                                                left + x - 2,
+                                                top + start - 2,
+                                                track,
+                                                budget))) nonRule = false;
                         runs.add(new int[] {start, y - 1, nonRule ? 1 : 0});
                         if (selected && nonRule) meaningful++;
                     }
@@ -492,6 +540,99 @@ final class AttachedApproachBranches {
         return List.copyOf(result);
     }
 
+    /** Keep both physical ends of a curve when a proved staff bridge joins its middle to a shaft. */
+    private static List<Trace> ruleJoinedCurves(
+            List<Integer> leaves,
+            Map<Integer, Integer> roles,
+            boolean[] skeleton,
+            int[] degree,
+            int sw,
+            Set<Long> cuts,
+            int left,
+            int top,
+            byte[] raw,
+            int w,
+            int h,
+            NoteSlideDetector.Staff staff,
+            List<NoteSlideDetector.Head> heads,
+            List<Integer> localHeads,
+            Set<Integer> downShafts,
+            Budget budget) {
+        var free = leaves.stream().filter(p -> roles.get(p) == -1).toList();
+        var result = new ArrayList<Trace>();
+        if (free.size() < 2) return result;
+        long bound =
+                (long) free.size() * skeleton.length * 8 + (long) free.size() * free.size() * 16;
+        if (!budget.take(bound)) return null;
+        var paths = new HashMap<Integer, List<Integer>>();
+        for (int leaf : free) paths.put(leaf, trace(skeleton, degree, sw, leaf, cuts));
+        var used = new HashSet<Integer>();
+        for (int a = 0; a < free.size(); a++)
+            for (int b = a + 1; b < free.size(); b++) {
+                var pa = paths.get(free.get(a));
+                var pb = paths.get(free.get(b));
+                int joint = pa.get(pa.size() - 1);
+                if (joint != pb.get(pb.size() - 1) || degree[joint] != 3) continue;
+                int third = -1;
+                for (int next : neighbors(skeleton, sw, joint, cuts))
+                    if (next != pa.get(pa.size() - 2) && next != pb.get(pb.size() - 2))
+                        third = next;
+                if (third < 0) continue;
+                if (!budget.take((long) skeleton.length * 8)) return null;
+                var bridge = traceFrom(skeleton, degree, sw, joint, third, cuts);
+                int terminal = bridge.get(bridge.size() - 1),
+                        tx = left + terminal % sw - 2,
+                        ty = top + terminal / sw - 2;
+                if (!budget.take(
+                        (long) bridge.size() * (long) Math.ceil(staff.gap() * 8 + 64)
+                                + localHeads.size() * 32L)) return null;
+                boolean rule = true;
+                for (int p : bridge)
+                    if (!rawRule(raw, w, h, left + p % sw - 2, top + p / sw - 2, staff)) {
+                        rule = false;
+                        break;
+                    }
+                if (!rule) continue;
+                var lp = pa;
+                var rp = pb;
+                if (lp.get(0) % sw > rp.get(0) % sw) {
+                    lp = pb;
+                    rp = pa;
+                }
+                int lx = left + lp.get(0) % sw - 2, ly = top + lp.get(0) / sw - 2;
+                int rx = left + rp.get(0) % sw - 2, ry = top + rp.get(0) / sw - 2, owner = -1;
+                for (int candidate : localHeads) {
+                    if (!downShafts.contains(candidate)) continue;
+                    var head = heads.get(candidate);
+                    float gap = head.gap();
+                    if (rx - lx < gap * .65f
+                            || rx - lx > gap * 3.5f
+                            || ly - ry < gap * .6f
+                            || ly - ry > gap * 2.5f
+                            || head.x() - rx < gap * .5f
+                            || head.x() - rx > gap * 3
+                            || head.y() >= ry
+                            || bridge.size() > gap
+                            || ty < head.y() + gap * .2f
+                            || ty > head.y() + gap * 1.5f) continue;
+                    if (!budget.take((long) Math.ceil(gap * gap * 6))) return null;
+                    int[] shaft = DownFlagBranchOwnership.shaft(raw, w, h, head);
+                    if (shaft == null
+                            || Math.abs(tx - shaft[0]) > Math.max(1, gap * .2f)
+                            || ty > shaft[1]) continue;
+                    if (owner >= 0) return null;
+                    owner = candidate;
+                }
+                if (owner < 0) continue;
+                if (!used.add(free.get(a)) || !used.add(free.get(b))) return null;
+                var path = new ArrayList<Integer>(lp);
+                for (int k = rp.size() - 2; k >= 0; k--) path.add(rp.get(k));
+                result.add(new Trace(List.copyOf(path), owner, -1, true));
+            }
+        for (int leaf : used) roles.put(leaf, -7);
+        return result;
+    }
+
     /** A rail-touching spur has only independently proved head, shaft-collar and rule roles. */
     private static int headRuleCollarOwner(
             boolean[] skeleton,
@@ -508,9 +649,12 @@ final class AttachedApproachBranches {
             List<NoteSlideDetector.Head> heads,
             List<Integer> localHeads,
             Map<Integer, PrintedSlurContours.HeadEvidence> evidence,
-            Set<Integer> downShafts) {
+            Set<Integer> downShafts,
+            StaffPitchTrack track,
+            Budget budget) {
         int x = left + leaf % sw - 2, y = top + leaf / sw - 2;
-        if (!rawRule(raw, w, h, x, y, staff)) return -1;
+        if (!rawRule(raw, w, h, x, y, staff) && !verifiedRulePixel(raw, w, h, x, y, track, budget))
+            return -1;
         var path = trace(skeleton, degree, sw, leaf, cuts);
         int owner = -1;
         for (int candidate : localHeads) {
@@ -523,7 +667,8 @@ final class AttachedApproachBranches {
                 if (headCollarContains(
                         evidence.get(candidate), head, downShafts.contains(candidate), px, py))
                     body = true;
-                else if (!rawRule(raw, w, h, px, py, staff)) {
+                else if (!rawRule(raw, w, h, px, py, staff)
+                        && !verifiedRulePixel(raw, w, h, px, py, track, budget)) {
                     complete = false;
                     break;
                 }
@@ -534,6 +679,16 @@ final class AttachedApproachBranches {
             }
         }
         return owner;
+    }
+
+    private static boolean verifiedRulePixel(
+            byte[] raw, int w, int h, int x, int y, StaffPitchTrack track, Budget budget) {
+        if (x < 0 || x >= w || y < 0 || y >= h || (raw[y * w + x] & 255) >= 150) return false;
+        int first = y, last = y, limit = Math.max(3, (int) Math.ceil(track.at(x)[1] * .24));
+        if (!budget.take(limit * 2L + 4)) return false;
+        while (first > 0 && y - first < limit && (raw[(first - 1) * w + x] & 255) < 150) first--;
+        while (last < h - 1 && last - y < limit && (raw[(last + 1) * w + x] & 255) < 150) last++;
+        return SeparatedRuleRunOwnership.matches(raw, w, h, x, first, last, track, budget);
     }
 
     /** Raw head and continuous down-shaft proofs may share a short collar with a staff rule. */

@@ -274,6 +274,45 @@ final class TripletRhythmDetector {
                 Integer.MAX_VALUE);
     }
 
+    /** Cheap candidate filter only: two horizontal arms separated by original paper.
+     * Full exact printed-group/curve/glyph proof is still required before any ratio changes. */
+    static boolean hasJoinedBracketCandidate(
+            byte[] gray, int width, int height, float x1, float x3, float headTop, float gap) {
+        if (gray == null
+                || width < 1
+                || height < 1
+                || gray.length != (long) width * height
+                || !Float.isFinite(gap)
+                || gap < 4
+                || !Float.isFinite(x1)
+                || !Float.isFinite(x3)
+                || !Float.isFinite(headTop)
+                || x1 >= x3) return false;
+        float middle = (x1 + x3) * .5f;
+        int l = Math.max(0, Math.round(x1 - gap * .3f)),
+                lr = Math.min(width - 1, Math.round(middle - gap * .65f));
+        int rl = Math.max(0, Math.round(middle + gap * .65f)),
+                r = Math.min(width - 1, Math.round(x3 + gap * .3f));
+        int top = Math.max(0, Math.round(headTop - gap * 7)),
+                bottom = Math.min(height - 1, Math.round(headTop - gap));
+        if (lr - l < gap || r - rl < gap) return false;
+        for (int y = top; y <= bottom; y++) {
+            int left = 0, right = 0;
+            boolean gapPaper = false;
+            for (int x = l; x <= lr; x++) if ((gray[y * width + x] & 255) <= 165) left++;
+            if (left < (lr - l + 1) * .60f) continue;
+            for (int x = rl; x <= r; x++) if ((gray[y * width + x] & 255) <= 165) right++;
+            if (right < (r - rl + 1) * .60f) continue;
+            for (int x = lr + 1; x < rl; x++)
+                if ((gray[y * width + x] & 255) == 255) {
+                    gapPaper = true;
+                    break;
+                }
+            if (gapPaper) return true;
+        }
+        return false;
+    }
+
     /** Resolve a connected printed voice before interleaved opposing attacks. */
     private static List<ScoreNoteEvent> isolatedPrintedLanes(
             List<ScoreNoteEvent> notes,
@@ -519,6 +558,7 @@ final class TripletRhythmDetector {
                 final List<ScoreNoteEvent> ownershipNotes =
                         result.subList(0, Math.min(virtualStart, result.size()));
                 boolean recoveredJoined = false;
+                boolean recoveredCurveJoined = false;
                 boolean sharedJoinedDirection = true;
                 for (Onset onset : group)
                     for (int index : onset.indices())
@@ -570,6 +610,41 @@ final class TripletRhythmDetector {
                             recoveredJoined = true;
                             break;
                         }
+                    }
+                }
+                if (numeral == null
+                        && first.beamCount() > 0
+                        && first.stemDirection() != 0
+                        && sharedJoinedDirection
+                        && a.indices().size() == 1
+                        && b.indices().size() == 1
+                        && c.indices().size() == 1
+                        && hasJoinedBracketCandidate(gray, width, height, x1, x3, y1, gap)) {
+                    int ia = a.indices().get(0), ib = b.indices().get(0), ic = c.indices().get(0);
+                    var joined =
+                            JoinedTupletNumeral.inspect(
+                                    gray,
+                                    width,
+                                    height,
+                                    ownershipNotes,
+                                    measures,
+                                    ia,
+                                    ib,
+                                    ic,
+                                    8_000_000L);
+                    if (joined.status() == JoinedTupletNumeral.Status.SUPPORTED) {
+                        var printed = joined.glyph();
+                        numeral =
+                                new Glyph(
+                                        printed.left(),
+                                        printed.top(),
+                                        printed.right(),
+                                        printed.bottom());
+                        // This is a joined glyph, not a detached template for unrelated groups.
+                        // Existing system/fingering/beam-break and rhythmic-group guards below
+                        // remain authoritative; the helper changes no note or raw pixel.
+                        recoveredJoined = true;
+                        recoveredCurveJoined = true;
                     }
                 }
                 if (numeral == null || insideOtherSystem(numeral, region, measures, width, height))
@@ -833,7 +908,7 @@ final class TripletRhythmDetector {
                                         .withKind(n.kind())
                                         .withVisualSize(n.visualSize()));
                     }
-                if (recoveredJoined) {
+                if (recoveredJoined && !recoveredCurveJoined) {
                     var last = result.get(c.indices().get(0));
                     float ownedDistance =
                             PrintedTupletBeamOwner.joinedDistance(

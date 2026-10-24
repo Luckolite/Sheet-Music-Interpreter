@@ -88,7 +88,7 @@ final class PrintedCurveRuleInk {
                 }
                 if (ink) {
                     last = y;
-                    int label = labels[y * width + x] & 255;
+                    int label = labels == null ? 0 : labels[y * width + x] & 255;
                     if (label != 0 && label != OmrMeasurePostProcessor.STAFF) semantic = false;
                 }
                 previous = ink;

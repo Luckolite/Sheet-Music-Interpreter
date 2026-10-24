@@ -5,7 +5,9 @@ package io.github.luckolite.interpreter;
 import java.util.List;
 import java.util.Objects;
 
-/** Stateless, platform-independent decoder for six-class masks and their source grayscale pixels. */
+/**
+ * Stateless, platform-independent decoder for six-class masks and their source grayscale pixels.
+ */
 public final class SheetInterpreter {
     private SheetInterpreter() {}
 
@@ -59,8 +61,10 @@ public final class SheetInterpreter {
         }
     }
 
-    /** Optional output from the caller's OCR engine, with normalized 0..1 page boxes.
-     * Meter changes are explicit, validated readings at zero-based logical measure indices. */
+    /**
+     * Optional output from the caller's OCR engine, with normalized 0..1 page boxes. Meter changes
+     * are explicit, validated readings at zero-based logical measure indices.
+     */
     public record Annotations(
             List<NumberToken> measureNumbers,
             List<NumberToken> tempoNumbers,
@@ -121,7 +125,9 @@ public final class SheetInterpreter {
         }
     }
 
-    /** Optional caller-owned OCR inference; the default overload has no ONNX or model dependency. */
+    /**
+     * Optional caller-owned OCR inference; the default overload has no ONNX or model dependency.
+     */
     public static ScorePageInterpretation analyze(
             byte[] labels,
             byte[] gray,
@@ -495,10 +501,24 @@ public final class SheetInterpreter {
                                 width,
                                 height,
                                 staffs);
-                if (captured.isPresent()) return captured.get().score();
+                if (captured.isPresent()) finalInterpretation = captured.get().score();
             } catch (RuntimeException unavailable) {
                 Diagnostics.log("Printed phrase capture unavailable: " + unavailable.getMessage());
             }
+        if (physicalPage >= 0)
+            finalInterpretation =
+                    PrintedNaturalHarmonicDetector.apply(
+                            finalInterpretation,
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            staffs,
+                            techniqueWords,
+                            physicalPage,
+                            Float.NaN);
+        if (physicalPage >= 0) finalInterpretation = PrintedFallOffDetector.apply(
+                finalInterpretation,gray,width,height,staffs,techniqueWords,physicalPage);
         return finalInterpretation;
     }
 }

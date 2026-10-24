@@ -12,6 +12,17 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+The accepted source130 extraction includes complete finite beam/curve ownership,
+joined-tuplet evidence, printed harmonic circles and outgoing falloff ownership.
+The 37 shared helpers retain namespace-only executable adaptation and explicit
+native decoder selection; 35 receive new mappings. Platform wrappers retain
+reviewed diagnostics, collection, annotation and resource adaptations. Guide295
+adds falloff records after the existing harmonic layout, with recognition112 and
+audio97 retained. Source-free procedural regressions and existing Apache-2.0/OFL
+notices accompany the changes; model weights, dependencies and private score
+material are outside this extraction. Exact mappings and adapter boundaries are
+recorded in `source-provenance.json`.
+
 Labelled tab arrows retain half-semitone pitch amounts, bar direction and return
 strokes; complete strum arrows order attacks by string. `TabGestureMarks` and
 `TabEffect` are shared Java sources with package-only adaptations. `TabGuitarXml`
@@ -1311,7 +1322,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260–282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260â€“282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.
@@ -2922,3 +2933,5 @@ Compact approach adds one short bounded upward raw-ink path only when complete c
 Recognition110 adds connected approach and beam-end ownership only when endpoint bodies and branch roles close uniquely; ambiguous branches abstain. Thirty-five portable source-free Java originals; no private score material, model, Guide, or audio change.
 
 Recognition111 adds paired source-free approach and compound articulation ownership originals; ambiguous compound ownership is excluded. No Guide, audio, or rendering epoch change.
+
+Recognition112 adds complete down-flag branch and staff-joined compact-approach ownership with bounded, unique raw-component evidence. Thirty-six source-free portable originals cover the grouped paths; no private score pixels, model, Guide, or audio change is included.

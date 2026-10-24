@@ -27,7 +27,13 @@ final class NoteSlideDetector {
         for (var s : staffs)
             for (int line = 0; line < 5; line++) {
                 int center = Math.round(s.top + line * s.gap), top = h, bottom = -1;
-                for (int y = Math.max(2, center - 3); y <= Math.min(h - 3, center + 3); y++) {
+                int radius =
+                        Float.isFinite(s.gap) && s.gap >= 3 && s.gap <= 64
+                                ? Math.max(3, Math.min(16, (int) Math.ceil(s.gap * .24f)))
+                                : 3;
+                for (int y = Math.max(2, center - radius);
+                        y <= Math.min(h - 3, center + radius);
+                        y++) {
                     int count = 0;
                     for (int x = 0; x < w; x++) if ((gray[y * w + x] & 255) < 150) count++;
                     if (count > w * .45) {
@@ -66,6 +72,8 @@ final class NoteSlideDetector {
         List<Stroke> result = new ArrayList<>();
         List<Stroke> attachedApproaches = new ArrayList<>();
         var attachedBudget = new AttachedApproachBranches.Budget(64_000_000);
+        var staffJoinedBudget = new AttachedApproachBranches.Budget(12_000_000);
+        var compactGlyphInk = new HashSet<Integer>();
         List<Fragment> fragments = new ArrayList<>();
         Map<Integer, StaffPitchTrack> curveTracks = new HashMap<>();
         for (int pixel = 0; pixel < ink.length; pixel++) {
@@ -132,8 +140,31 @@ final class NoteSlideDetector {
                             heads,
                             curveTracks);
             if (compact != null) {
-                result.add(compact);
+                boolean overlap = false;
+                for (int i = 0; i < end; i++) overlap |= !compactGlyphInk.add(queue[i]);
+                if (!overlap) result.add(compact);
                 continue;
+            }
+            var joined =
+                    StaffJoinedCompactApproach.find(
+                            gray,
+                            w,
+                            h,
+                            queue,
+                            end,
+                            l,
+                            r,
+                            t,
+                            b,
+                            staffs,
+                            heads,
+                            curveTracks,
+                            staffJoinedBudget);
+            if (joined != null) {
+                boolean overlap = false;
+                for (int joinedPixel : joined.pixels())
+                    overlap |= !compactGlyphInk.add(joinedPixel);
+                if (!overlap) result.add(joined.stroke());
             }
             if (r - l < 6) continue;
             // A nearly vertical raster has little horizontal variance, so its
@@ -162,7 +193,7 @@ final class NoteSlideDetector {
                     || Math.abs(slope) < .08
                     || Math.abs(slope) > 5) {
                 Stroke curved =
-                        finiteCurvedApproach(
+                        finiteCurvedApproachBudgeted(
                                 gray,
                                 w,
                                 h,
@@ -177,7 +208,8 @@ final class NoteSlideDetector {
                                 slope,
                                 staffs,
                                 heads,
-                                curveTracks);
+                                curveTracks,
+                                attachedBudget);
                 if (curved != null
                         && !PhraseOwnedSlideComponents.owned(
                                 gray, w, h, staffs, heads, curved.noteIndex(), queue, end))
@@ -197,7 +229,7 @@ final class NoteSlideDetector {
                     var accepted = new ArrayList<Stroke>();
                     for (var part : branches) {
                         var approach =
-                                finiteCurvedApproach(
+                                finiteCurvedApproachBudgeted(
                                         gray,
                                         w,
                                         h,
@@ -212,7 +244,8 @@ final class NoteSlideDetector {
                                         part.slope(),
                                         staffs,
                                         heads,
-                                        curveTracks);
+                                        curveTracks,
+                                        attachedBudget);
                         if (approach == null && part.sourceIndex() >= 0)
                             approach = finiteConnectedStraight(part, w, heads);
                         if (approach != null
@@ -481,6 +514,128 @@ final class NoteSlideDetector {
     /** A short ledger rule can join a genuine slide to its source head and stem. */
     /** A whole thin quarter-bow may be a printed unpitched approach even though it is not straight.
      * The original straight classifier remains unchanged. No start pitch or envelope is inferred. */
+    private static Stroke finiteCurvedApproachBudgeted(
+            byte[] gray,
+            int w,
+            int h,
+            int[] pixels,
+            int count,
+            int left,
+            int right,
+            int top,
+            int bottom,
+            double cx,
+            double cy,
+            double slope,
+            List<Staff> staffs,
+            List<Head> heads,
+            Map<Integer, StaffPitchTrack> tracks,
+            AttachedApproachBranches.Budget budget) {
+        var found =
+                finiteCurvedApproach(
+                        gray, w, h, pixels, count, left, right, top, bottom, cx, cy, slope, staffs,
+                        heads, tracks);
+        if (found != null) return found;
+        if (budget.refused) return null;
+        if (count < 8 || count > 4096 || right - left > 127 || bottom - top > 127) return null;
+        // Staff frames are nominated by the full component bounds, before any destination is
+        // chosen.
+        int lane = -1;
+        if (!budget.take(staffs.size() * 16L)) return null;
+        for (int i = 0; i < staffs.size(); i++) {
+            var staff = staffs.get(i);
+            float gap = staff.gap();
+            if (!Float.isFinite(staff.top() + staff.bottom() + gap) || gap < 6 || gap > 64)
+                continue;
+            if (top >= staff.top() - gap && bottom <= staff.bottom() + gap) {
+                if (lane >= 0) return null;
+                lane = i;
+            }
+        }
+        if (lane < 0) return null;
+        var track = curveTrack(gray, w, h, staffs, lane, tracks);
+
+        int[] selected =
+                SeparatedRuleRunOwnership.withoutSeparateRuleIslands(
+                        gray, w, h, pixels, count, left, right, top, bottom, track, budget);
+        if (selected == null || budget.refused || selected.length < 8 || selected.length >= count)
+            return null;
+        if (!budget.take(selected.length * 16L + heads.size() * 32L)) return null;
+        int l = w, r = 0, t = h, b = 0;
+        double sx = 0, sy = 0, sxx = 0, sxy = 0;
+        for (int p : selected) {
+            int x = p % w, y = p / w;
+            l = Math.min(l, x);
+            r = Math.max(r, x);
+            t = Math.min(t, y);
+            b = Math.max(b, y);
+            sx += x;
+            sy += y;
+            sxx += (double) x * x;
+            sxy += (double) x * y;
+        }
+        double ax = sx / selected.length,
+                ay = sy / selected.length,
+                vx = sxx / selected.length - ax * ax;
+        if (vx <= 0) return null;
+        int candidates = 0, foreign = 0;
+        for (var possible : heads) {
+            if (possible.staff() >= 0
+                    && Float.isFinite(possible.x() + possible.y() + possible.gap())
+                    && possible.gap() >= 3
+                    && possible.gap() <= 64
+                    && possible.x() >= r - 1
+                    && possible.x() <= r + 193
+                    && possible.y() <= t + 1) candidates++;
+            // The classifier's largest permitted gap is64; include one extra pixel for rounding.
+            if (curveBoxContains(possible, l, r, t, b, 64 * .6f + 1)) foreign++;
+        }
+        if (!budget.take(
+                (long) (r - l + 1) * (b - t + 1) * 8L
+                        + candidates * (r - l + 1) * 32L
+                        + 4L * foreign * selected.length)) return null;
+        var normalized =
+                finiteCurvedApproach(
+                        gray,
+                        w,
+                        h,
+                        selected,
+                        selected.length,
+                        l,
+                        r,
+                        t,
+                        b,
+                        ax,
+                        ay,
+                        (sxy / selected.length - ax * ay) / vx,
+                        staffs,
+                        heads,
+                        tracks);
+        if (normalized == null) return null;
+        var owner = heads.get(normalized.noteIndex());
+        if (owner.staff() != lane
+                || !budget.take(
+                        (long) Math.ceil(owner.gap() * owner.gap() * 38 + owner.gap() * 16)))
+            return null;
+        var body =
+                PrintedSlurOwners.headEvidence(
+                        List.of(
+                                new PrintedSlurOwners.GeometryHead(
+                                        normalized.noteIndex(),
+                                        owner.x(),
+                                        owner.y(),
+                                        lane,
+                                        staffs.size())),
+                        gray,
+                        w,
+                        h,
+                        track);
+        if (!body.contains(Math.round(owner.x()), Math.round(owner.y()))
+                || PrintedStemDirection.detect(gray, w, h, owner.x(), owner.y(), owner.gap()) != -1
+                || DownFlagBranchOwnership.shaft(gray, w, h, owner) == null) return null;
+        return normalized;
+    }
+
     private static Stroke finiteCurvedApproach(
             byte[] gray,
             int w,
@@ -583,15 +738,26 @@ final class NoteSlideDetector {
         for (int other = 0; other < heads.size(); other++)
             if (other != owner) {
                 Head a = heads.get(other);
-                for (int i = 0; i < count; i++)
-                    if (Math.abs(a.x - pixels[i] % w) < gap * .6f
-                            && Math.abs(a.y - pixels[i] / w) < gap * .6f) return null;
+                // This negative box test cannot own or remove ink; exact pixel checks still
+                // decide every physically overlapping head. Duplicate-destination checks follow.
+                if (curveBoxContains(a, left, right, top, bottom, gap * .6f + 1))
+                    for (int i = 0; i < count; i++)
+                        if (Math.abs(a.x - pixels[i] % w) < gap * .6f
+                                && Math.abs(a.y - pixels[i] / w) < gap * .6f) return null;
                 if (a.staff == target.staff
                         && a.measure == target.measure
                         && Math.abs(a.x - target.x) <= gap * .35f
                         && Math.abs(a.y - target.y) <= gap * .35f) return null;
             }
         return new Stroke(left, centers[0], right, centers[columns - 1], 1, owner, false);
+    }
+
+    private static boolean curveBoxContains(
+            Head head, int left, int right, int top, int bottom, float radius) {
+        return !(head.x() < left - radius
+                || head.x() > right + radius
+                || head.y() < top - radius
+                || head.y() > bottom + radius);
     }
 
     private static boolean approachSector(double x, double y, int right, float[] centers) {

@@ -265,7 +265,25 @@ final class FiniteSlurRibbon {
                 tie = false;
             } else if (d == best) tie = true;
         }
-        return tie ? null : result;
+        if (!tie) return result;
+        // An even number of complete end-column cells has a unique geometric
+        // midpoint at a boundary vertex, between the two old unit-edge midpoints.
+        // Keep every previously unique cap exactly as before.
+        if ((max - min + 1L) % 2 != 0 || max - min + 1L > cells.size()) return null;
+        for (int y = min; y <= max; y++) if (!cells.contains(pixel(x, y))) return null;
+        Cap vertex = null;
+        for (int i = 0; i < loop.size(); i++) {
+            P a = loop.get(i), b = loop.get((i + 1) % loop.size());
+            if (a.x() != 4 * x + direction || b.x() != a.x() || Math.abs(a.y() - b.y()) != 4)
+                continue;
+            // Half-open segments assign the shared vertex exactly once. The point
+            // lies on the original complete pixel-cell boundary; no pixel is clipped.
+            if (Math.min(a.y(), b.y()) <= mid && mid < Math.max(a.y(), b.y())) {
+                if (vertex != null) return null;
+                vertex = new Cap(i, new P(a.x(), (int) mid));
+            }
+        }
+        return vertex;
     }
 
     private static ArrayList<P> chain(List<P> loop, Cap a, Cap b) {

@@ -8,14 +8,39 @@ from math import gcd
 from fractions import Fraction
 from decimal import Decimal
 import math
+import struct
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from .typed_events import event_kind, validate_unpitched, notation_order, display_position
 from .rest_kinds import rest_kind, full_measure_span
 from . import visual_size, cue_caption, bow_export, clef_export, articulation_export, ornament_export, grace_export, spelling_export, tremolo_export
 from . import guitar_export
+from .natural_harmonic_notation import owner_index as natural_harmonic_owner_index
+from .fall_off_notation import owner_index as fall_off_owner_index
 
 DIVISIONS = 10080  # Exact common binary values and triplet/quintuplet/septuplet subdivisions.
+
+
+def _natural_harmonic_target(note):
+    """Mirror ScoreNaturalHarmonicNotation.target using the wire's float32 values."""
+    try:
+        measure, staff, count = note['measureIndex'], note['staffIndex'], note['staffCount']
+        step = note['staffStep']
+        position, page_y = float(note['positionInMeasure']), float(note['pageY'])
+    except (KeyError, TypeError, ValueError):
+        return None
+    if (event_kind(note) != 'PITCHED' or type(measure) is not int or measure < 0
+            or type(staff) is not int or type(count) is not int or count < 1 or not 0 <= staff < count
+            or type(step) is not int or not math.isfinite(position) or not 0 <= position <= 1
+            or not math.isfinite(page_y) or not 0 <= page_y <= 1):
+        return None
+    try:
+        pbits = struct.unpack('>I', struct.pack('>f', position))[0]
+        ybits = struct.unpack('>I', struct.pack('>f', page_y))[0]
+    except (OverflowError, struct.error):
+        return None
+    return (f'natural-harmonic-note-v1:{measure}:{staff}:{count}:'
+            f'{pbits:08x}:{step}:{ybits:08x}')
 
 
 def element(parent, tag, value=None, **attributes):
@@ -264,10 +289,20 @@ def emit_note(measure, duration, voice, event=None, chord=False, stop=False, sta
                if mark['release'] == fragment_end]
     paired = event.get('retainedTremolo') if event else None
     arpeggio = bool(event and event.get('retainedArpeggio') and attack_fragment and grace is None)
-    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio or bow_direction is not None:
+    natural_harmonic = bool(event and event.get('retainedNaturalHarmonic') and attack_fragment and grace is None)
+    fall_off = bool(event and event.get('retainedFallOff') and fragment_end == event['end'] and grace is None)
+    if stop or start or effect or symbols or gliss_start or gliss_stop or slide_start or slide_stop or articulation_flags or ornament_flags or paired or arpeggio or natural_harmonic or fall_off or bow_direction is not None:
         notation = element(node, 'notations')
         if arpeggio:
             element(notation, 'arpeggiate')
+        if natural_harmonic:
+            element(element(notation, 'technical'), 'harmonic')
+            element(notation.find('technical/harmonic'), 'natural')
+        if fall_off:
+            articulations = notation.find('articulations')
+            if articulations is None:
+                articulations = element(notation, 'articulations')
+            element(articulations, 'falloff', **{'line-shape': 'curved', 'line-type': 'solid'})
         if paired and not chord:
             element(element(notation, 'ornaments'), 'tremolo', paired['strokes'], type=paired['type'])
         for active, kind in ((stop, 'stop'), (start, 'start')):
@@ -419,7 +454,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                                retainedVisualSize=visual_size.retained(page, note_index),
                                retainedSpelling=spelling_export.retained(page, note_index, spelling_key),
                                retainedOrnamentFlags=ornament_export.retained(page, note_index),
-                               retainedTremolo=paired_tremolos.get(note_index), retainedArpeggio=False))
+                               retainedTremolo=paired_tremolos.get(note_index), retainedArpeggio=False, retainedNaturalHarmonic=False))
             if is_grace:
                 events[-1].update(grace=True, graceOrdinal=placement['ordinal'], afterGrace=placement['after'],
                                   stealPercent=placement['steal'], graceWrittenDuration=duration,
@@ -447,7 +482,97 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
             return offset+ticks(sum(page['measureBeats'][:m])+q)
         from .arpeggio_notation import plan as arpeggio_plan
         from .neutral_rest_caption import is_caption, start as caption_start
+        harmonic_marks = [m for m in score.get('expressiveEvents', [])
+                          if m.get('kind') == 'NATURAL_HARMONIC']
+        harmonic_owner_counts = defaultdict(int)
+        for harmonic_mark in harmonic_marks:
+            owner_index = natural_harmonic_owner_index(harmonic_mark, score.get('notes', []))
+            if owner_index is not None:
+                harmonic_owner_counts[owner_index] += 1
+        fall_off_marks = [m for m in score.get('expressiveEvents', [])
+                          if m.get('kind') == 'FALL_OFF']
+        fall_off_owner_counts = defaultdict(int)
+        for fall_off_mark in fall_off_marks:
+            owner_index = fall_off_owner_index(fall_off_mark, score.get('notes', []))
+            if owner_index is not None:
+                fall_off_owner_counts[owner_index] += 1
         for supplied in score.get('expressiveEvents', []):
+            if supplied.get('kind') == 'NATURAL_HARMONIC':
+                if (supplied.get('scope') not in ('NOTE', 'UNRESOLVED')
+                        or supplied.get('end') is not None
+                        or not isinstance(supplied.get('targetEventId'), str)):
+                    continue
+                owner_index = natural_harmonic_owner_index(supplied, score.get('notes', []))
+                if owner_index is None or harmonic_owner_counts.get(owner_index) != 1:
+                    continue
+                matching = [owner_index]
+                source = first_event + owner_index
+                owner = events[source]
+                evidence = supplied.get('evidence', [])
+                note_identity = score['notes'][matching[0]]
+                if (owner.get('measureIndex') != note_identity.get('measureIndex')
+                        or owner.get('staffIndex') != supplied.get('staffIndex')
+                        or owner.get('staffCount') != supplied.get('staffCount')
+                        or owner.get('sourceNoteIndex') != matching[0]
+                        or owner.get('durationFallback', False)
+                        or not any(e.get('sourceId') == 'printed-natural-harmonic'
+                                   and e.get('staffIndex') == owner.get('staffIndex')
+                                   and e.get('staffCount') == owner.get('staffCount')
+                                   for e in evidence)):
+                    continue
+                if supplied.get('scope') == 'NOTE':
+                    start_anchor = supplied['start']
+                    measure = owner['measureIndex']
+                    quarter_beat = start_anchor['quarterBeatOffset']
+                    if (measure >= len(page['measureBeats'])
+                            or not 0 <= quarter_beat < page['measureBeats'][measure]):
+                        continue
+                    measure_start = sum(page['measureBeats'][:measure])
+                    expected = offset + ticks(measure_start + quarter_beat)
+                    if (expected != owner['start']
+                            or not offset + ticks(measure_start) <= owner['start']
+                            < offset + ticks(measure_start + page['measureBeats'][measure])):
+                        continue
+                owner['retainedNaturalHarmonic'] = True
+                continue
+            if supplied.get('kind') == 'FALL_OFF':
+                if (supplied.get('scope') not in ('NOTE', 'UNRESOLVED')
+                        or supplied.get('end') is not None
+                        or not isinstance(supplied.get('targetEventId'), str)):
+                    continue
+                owner_index = fall_off_owner_index(supplied, score.get('notes', []))
+                if owner_index is None or fall_off_owner_counts.get(owner_index) != 1:
+                    continue
+                matching = [owner_index]
+                source = first_event + owner_index
+                owner = events[source]
+                evidence = supplied.get('evidence', [])
+                note_identity = score['notes'][matching[0]]
+                if (owner.get('measureIndex') != note_identity.get('measureIndex')
+                        or owner.get('staffIndex') != supplied.get('staffIndex')
+                        or owner.get('staffCount') != supplied.get('staffCount')
+                        or owner.get('sourceNoteIndex') != matching[0]
+                        or owner.get('durationFallback', False)
+                        or not any(e.get('sourceId') == 'printed-fall-off'
+                                   and e.get('staffIndex') == owner.get('staffIndex')
+                                   and e.get('staffCount') == owner.get('staffCount')
+                                   for e in evidence)):
+                    continue
+                if supplied.get('scope') == 'NOTE':
+                    start_anchor = supplied['start']
+                    measure = owner['measureIndex']
+                    quarter_beat = start_anchor['quarterBeatOffset']
+                    if (measure >= len(page['measureBeats'])
+                            or not 0 <= quarter_beat < page['measureBeats'][measure]):
+                        continue
+                    measure_start = sum(page['measureBeats'][:measure])
+                    expected = offset + ticks(measure_start + quarter_beat)
+                    if (expected != owner['start']
+                            or not offset + ticks(measure_start) <= owner['start']
+                            < offset + ticks(measure_start + page['measureBeats'][measure])):
+                        continue
+                owner['retainedFallOff'] = True
+                continue
             if supplied.get('kind') == 'ARPEGGIO':
                 for source_index in arpeggio_plan(supplied, page):
                     events[first_event+source_index]['retainedArpeggio'] = True
@@ -756,3 +881,4 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     slide_numbering.assign(root)
     ET.indent(root)
     ET.ElementTree(root).write(Path(path), encoding='utf-8', xml_declaration=True)
+

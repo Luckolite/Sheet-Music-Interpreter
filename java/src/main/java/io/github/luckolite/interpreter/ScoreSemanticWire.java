@@ -8,8 +8,10 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-/** Length-framed semantic extension for guide263. Starts belong to this page; span endpoints
- * may reach later pages and are validated against the complete score after page joining. */
+/**
+ * Length-framed semantic extension for guide263. Starts belong to this page; span endpoints may
+ * reach later pages and are validated against the complete score after page joining.
+ */
 public final class ScoreSemanticWire {
     private ScoreSemanticWire() {}
 
@@ -35,7 +37,9 @@ public final class ScoreSemanticWire {
                     ScoreExpressiveEvent.Kind.ARPEGGIO,
                     ScoreExpressiveEvent.Kind.CRESCENDO,
                     ScoreExpressiveEvent.Kind.DIMINUENDO,
-                    ScoreExpressiveEvent.Kind.METRIC_MODULATION);
+                    ScoreExpressiveEvent.Kind.METRIC_MODULATION,
+                    ScoreExpressiveEvent.Kind.NATURAL_HARMONIC,
+                    ScoreExpressiveEvent.Kind.FALL_OFF);
     private static final List<ScoreExpressiveEvent.Scope> SCOPES =
             List.of(
                     ScoreExpressiveEvent.Scope.SCORE,
@@ -267,6 +271,14 @@ public final class ScoreSemanticWire {
                 && expressions.stream()
                         .anyMatch(e -> e.kind() == ScoreExpressiveEvent.Kind.METRIC_MODULATION))
             throw new IOException("Metric modulation requires guide 277");
+        if (guideVersion < 294
+                && expressions.stream()
+                        .anyMatch(e -> e.kind() == ScoreExpressiveEvent.Kind.NATURAL_HARMONIC))
+            throw new IOException("Natural harmonic requires guide 294");
+        if (guideVersion < 295
+                && expressions.stream()
+                        .anyMatch(e -> e.kind() == ScoreExpressiveEvent.Kind.FALL_OFF))
+            throw new IOException("Falloff requires guide 295");
         if (expressions.size() > Math.min(250000, (measures + 1L) * 256))
             throw new IOException("Too many expressive records");
         out.writeInt(expressions.size());
@@ -315,6 +327,10 @@ public final class ScoreSemanticWire {
                 var kind = enumValue(EXPRESSION_KINDS, record);
                 if (guideVersion < 277 && kind == ScoreExpressiveEvent.Kind.METRIC_MODULATION)
                     throw new IOException("Metric modulation is outside this guide format");
+                if (guideVersion < 294 && kind == ScoreExpressiveEvent.Kind.NATURAL_HARMONIC)
+                    throw new IOException("Natural harmonic is outside this guide format");
+                if (guideVersion < 295 && kind == ScoreExpressiveEvent.Kind.FALL_OFF)
+                    throw new IOException("Falloff is outside this guide format");
                 var start = anchor(record);
                 var end = anchor(record);
                 var scope = enumValue(SCOPES, record);

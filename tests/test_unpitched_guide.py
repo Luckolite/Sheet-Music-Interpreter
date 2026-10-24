@@ -158,14 +158,14 @@ class UnpitchedGuideTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
 
-            wire.encode(original_score(), 294)
+            wire.encode(original_score(), wire.GUIDE_VERSION + 1)
 
 
 
     def test_current_epoch_layout_and_write_new_keep_existing_output(self):
 
-        self.assertEqual(111, wire.RECOGNITION_REVISION)
-        self.assertEqual(293, wire.GUIDE_VERSION)
+        self.assertEqual(112, wire.RECOGNITION_REVISION)
+        self.assertEqual(295, wire.GUIDE_VERSION)
 
         value = original_score()
 
@@ -177,7 +177,7 @@ class UnpitchedGuideTests(unittest.TestCase):
 
             wire.write_new(path, value)
 
-            expected = wire.encode(value, 293)
+            expected = wire.encode(value, wire.GUIDE_VERSION)
 
             self.assertEqual(expected, path.read_bytes())
 

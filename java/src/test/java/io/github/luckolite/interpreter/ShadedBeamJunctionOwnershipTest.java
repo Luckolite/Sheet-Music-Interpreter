@@ -69,6 +69,7 @@ public class ShadedBeamJunctionOwnershipTest {
                 OmrScoreInterpreter.class.getDeclaredMethod(
                         "beamJunctionHeads",
                         byte[].class,
+                        byte[].class,
                         int.class,
                         int.class,
                         List.class,
@@ -78,6 +79,7 @@ public class ShadedBeamJunctionOwnershipTest {
                         m.invoke(
                                 null,
                                 g,
+                                null,
                                 W,
                                 H,
                                 owner ? List.of(main, tiny) : List.of(tiny),

@@ -61,11 +61,13 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         new = wire.encode(original)
 
-        self.assertEqual(293, struct.unpack_from('>i', new)[0])
+        self.assertEqual(295, struct.unpack_from('>i', new)[0])
 
-        new = legacy_full_note_layout(new)
+        legacy = wire.encode(original, 293)
+        self.assertEqual(new[4:], legacy[4:])
+        new = legacy_full_note_layout(legacy)
 
-        self.assertEqual(111, wire.RECOGNITION_REVISION)
+        self.assertEqual(112, wire.RECOGNITION_REVISION)
         from sheet_interpreter import slur_wire, tremolo_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))
@@ -79,7 +81,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         original['notes'][0]['boundaryTies'] = identity()
 
-        typed = legacy_full_note_layout(wire.encode(original))
+        typed = legacy_full_note_layout(wire.encode(original, 293))
 
         self.assertEqual(len(new), len(typed))
 
@@ -173,4 +175,4 @@ class TypedTabTieWriterTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
 
-            wire.encode(score(), 294)
+            wire.encode(score(), wire.GUIDE_VERSION + 1)

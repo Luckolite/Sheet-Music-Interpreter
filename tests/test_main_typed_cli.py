@@ -151,7 +151,7 @@ class MainTypedCliTests(unittest.TestCase):
         self.assertEqual(['UNPITCHED']*2,[e['kind'] for e in events[1:]])
         self.assertEqual(['E']*2,[e['displayStep'] for e in events[1:]])
         self.assertEqual([4]*2,[e['displayOctave'] for e in events[1:]])
-        self.assertIn('midi',events[0]);self.assertNotIn('sourceNoteIndex',events[0])
+        self.assertIn('midi',events[0]);self.assertEqual(0,events[0]['sourceNoteIndex'])
         for e in events[1:]:
             for key in ('midi','boundaryPitch','boundaryAccidental','octaveShift'):self.assertNotIn(key,e)
         self.assertEqual('UNPITCHED',value['score']['notes'][1]['kind'])

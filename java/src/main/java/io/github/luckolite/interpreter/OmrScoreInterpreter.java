@@ -838,7 +838,7 @@ final class OmrScoreInterpreter {
                                                         head.minY, head.maxX, head.maxY));
                     });
         }
-        List<Component> rejectedBeamHeads = beamJunctionHeads(gray, width, height, heads, staffs);
+        List<Component> rejectedBeamHeads = beamJunctionHeads(gray, labels, width, height, heads, staffs);
         rejectedBeamHeads.addAll(recoveredGraceCaps);
         rejectedBeamHeads.addAll(wideSingleBeamTipHeads(gray, width, height, heads, staffs));
         rejectedBeamHeads.addAll(partialBeamContourHeads(gray, width, height, heads, staffs));
@@ -11476,8 +11476,9 @@ final class OmrScoreInterpreter {
     /** Small semantic islands at a beam endpoint can borrow the actual note's stem.
      * Reject only a thin beam tip on a stem already attached to a larger head. */
     private static List<Component> beamJunctionHeads(
-            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs) {
+            byte[] gray, byte[] labels, int width, int height, List<Component> heads, List<Staff> staffs) {
         List<Component> rejected = new ArrayList<>();
+        long literalBeamWorkRemaining = 64_000_000L;
         if (gray == null) return rejected;
         for (Component head : heads) {
             Staff staff = nearestHeadStaff(staffs, head.centerY);
@@ -11620,6 +11621,35 @@ final class OmrScoreInterpreter {
                                     gap)) {
                         owned = true;
                         break;
+                    }
+                    if (originalMainSize && thinCorner && partner != null && partner[2] == stem[2]
+                            && literalBeamWorkRemaining > 0) {
+                        long memberBoxPixels = ((long) head.maxX-head.minX+1)
+                                * ((long) head.maxY-head.minY+1);
+                        if (memberBoxPixels < 1 || memberBoxPixels > 65536) continue;
+                        // Bound the exact semantic flood before its arrays or traversal.
+                        // Peak local arrays are <=9*65536 bytes plus array headers;
+                        // no component data is retained across attempts.
+                        long memberWork = 64L*memberBoxPixels+4096;
+                        if (memberWork > literalBeamWorkRemaining) {
+                            literalBeamWorkRemaining = 0;
+                            continue;
+                        }
+                        literalBeamWorkRemaining -= memberWork;
+                        int[] members = completeHeadMembers(labels, width, height, head);
+                        if (members != null) {
+                            int[] left = stem[0] < partner[0] ? stem : partner;
+                            int[] right = stem[0] < partner[0] ? partner : stem;
+                            long allowance = Math.min(32_000_000L, literalBeamWorkRemaining);
+                            var result = LiteralStaffCompleteBeamJoint.observe(
+                                    gray, width, height, left[0], right[0], staff.top, gap,
+                                    head.centerX, head.centerY, head.minX, head.minY, head.maxX, head.maxY,
+                                    (right[1]-left[1])/(float)(right[0]-left[0]),
+                                    new LiteralStaffCompleteBeamJoint.Budget(allowance),
+                                    new LiteralStaffCompleteBeamJoint.Ownership(labels, members, left[1], right[1], left[2]));
+                            literalBeamWorkRemaining -= allowance-result.workRemaining();
+                            if (result.complete()) { owned = true; break; }
+                        }
                     }
                 }
                 if (owned
@@ -14562,6 +14592,17 @@ final class OmrScoreInterpreter {
                                 head.centerX,
                                 head.centerY,
                                 gap))) open = false;
+        if (open && gray != null && beamCount == 0) {
+            int[] completeMembers = completeHeadMembers(labels, width, height, head);
+            if (completeMembers != null) {
+                ProposedFilledBodyCaller.Result body = ProposedFilledBodyCaller.inspect(
+                        labels, gray, width, height, completeMembers, gap);
+                if (ProposedFilledBodyCaller.retainedComponentExactly(completeMembers, body)
+                        && !ProposedFilledBodyCaller.retainPriorOpenEvidence(true, body)) {
+                    open = false;
+                }
+            }
+        }
         boolean stem = hasAttachedStem(labels, width, height, head, gap);
         // A horizontal whole oval can sit immediately below a separate melody
         // head. Nearby semantic stem pixels do not establish physical attachment.
@@ -14642,6 +14683,66 @@ final class OmrScoreInterpreter {
                 return false;
         }
         return true;
+    }
+
+    /** Returns exact 8-connected class-2 head members, or refuses incomplete ownership. */
+    private static int[] completeHeadMembers(byte[] labels, int width, int height, Component head) {
+        if (labels == null || head == null || width < 1 || height < 1
+                || (long) width * height != labels.length
+                || head.minX < 0 || head.minY < 0 || head.maxX >= width || head.maxY >= height
+                || head.maxX < head.minX || head.maxY < head.minY || head.area < 1) return null;
+        long boxPixels = (long) (head.maxX - head.minX + 1) * (head.maxY - head.minY + 1);
+        if (boxPixels < head.area || boxPixels > 65536 || head.area > boxPixels) return null;
+        int w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        boolean[] seen = new boolean[(int) boxPixels];
+        int[] queue = new int[(int) boxPixels];
+        int seed = -1, total = 0, allMinX = width, allMinY = height, allMaxX = -1, allMaxY = -1;
+        long sumX = 0, sumY = 0;
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int i = y * w + x;
+                if ((labels[(head.minY + y) * width + head.minX + x] & 255) != 2) continue;
+                if (seed < 0) seed = i;
+                total++;
+                int ax = head.minX + x, ay = head.minY + y;
+                allMinX = Math.min(allMinX, ax); allMaxX = Math.max(allMaxX, ax);
+                allMinY = Math.min(allMinY, ay); allMaxY = Math.max(allMaxY, ay);
+                sumX += ax; sumY += ay;
+            }
+        }
+        if (seed < 0 || total != head.area || allMinX != head.minX || allMaxX != head.maxX
+                || allMinY != head.minY || allMaxY != head.maxY
+                || Float.floatToIntBits(sumX / (float) total) != Float.floatToIntBits(head.centerX)
+                || Float.floatToIntBits(sumY / (float) total) != Float.floatToIntBits(head.centerY)) return null;
+        int read = 0, end = 1;
+        queue[0] = seed;
+        seen[seed] = true;
+        while (read < end) {
+            int p = queue[read++], x = p % w, y = p / w;
+            for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++) {
+                if (dx == 0 && dy == 0) continue;
+                int xx = x + dx, yy = y + dy;
+                if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                int n = yy * w + xx;
+                if (seen[n] || (labels[(head.minY + yy) * width + head.minX + xx] & 255) != 2) continue;
+                seen[n] = true;
+                queue[end++] = n;
+            }
+        }
+        if (end != head.area) return null;
+        // A class-2 neighbor just outside the reported bounds means the captured component was incomplete.
+        for (int y = -1; y <= h; y++) for (int x = -1; x <= w; x++) {
+            if (x >= 0 && x < w && y >= 0 && y < h) continue;
+            int ax = head.minX + x, ay = head.minY + y;
+            if (ax >= 0 && ax < width && ay >= 0 && ay < height
+                    && (labels[ay * width + ax] & 255) == 2) return null;
+        }
+        int[] members = new int[end];
+        for (int i = 0; i < end; i++) {
+            int p = queue[i];
+            members[i] = (head.minY + p / w) * width + head.minX + p % w;
+        }
+        return members;
     }
 
     private static boolean hasOpenCenter(

@@ -25,9 +25,24 @@ final class PrintedSlurContours {
         }
     }
 
-    record Result(List<Bow> bows, boolean limitReached) {
+    record Result(
+            List<Bow> bows, boolean limitReached, Set<Bow> shortRailBows, Set<Bow> jointBows) {
+        Result(List<Bow> bows, boolean limitReached, Set<Bow> shortRailBows) {
+            this(bows, limitReached, shortRailBows, Set.of());
+        }
+
+        Result(List<Bow> bows, boolean limitReached) {
+            this(bows, limitReached, Set.of());
+        }
+
         Result {
             bows = List.copyOf(bows);
+            var identities = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
+            identities.addAll(shortRailBows);
+            shortRailBows = Collections.unmodifiableSet(identities);
+            var joints = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
+            joints.addAll(jointBows);
+            jointBows = Collections.unmodifiableSet(joints);
         }
     }
 
@@ -44,6 +59,30 @@ final class PrintedSlurContours {
 
         default boolean ownsReturningBow(Bow bow) {
             return false;
+        }
+
+        default List<JointRibbon> jointRibbons(Map<Integer, List<RawBand>> unowned) {
+            return List.of();
+        }
+
+        default boolean admitRivalOwnership(long work) {
+            return false;
+        }
+
+        default boolean ownsCentralRivals(Bow bow, List<ForeignRun> rivals) {
+            return false;
+        }
+    }
+
+    record JointRibbon(List<ForeignRun> columns) {
+        JointRibbon {
+            columns = List.copyOf(columns);
+        }
+    }
+
+    record ForeignRun(int x, List<RawBand> members) {
+        ForeignRun {
+            members = List.copyOf(members);
         }
     }
 
@@ -124,7 +163,19 @@ final class PrintedSlurContours {
             Consumer<Rejection> audit,
             HeadEvidence heads) {
         return findRaw(
-                gray, labels, width, height, left, top, right, bottom, track, audit, heads, null);
+                gray,
+                labels,
+                width,
+                height,
+                left,
+                top,
+                right,
+                bottom,
+                track,
+                audit,
+                heads,
+                null,
+                8_000_000L);
     }
 
     static RawResult findWithRawEvidence(
@@ -157,7 +208,8 @@ final class PrintedSlurContours {
                         (bow, members, selected) -> {
                             witnesses.put(bow, rawColumns(gray, width, members));
                             selectedWitnesses.put(bow, rawColumns(gray, width, selected));
-                        });
+                        },
+                        8_000_000L);
         return new RawResult(result, witnesses, selectedWitnesses);
     }
 
@@ -173,7 +225,8 @@ final class PrintedSlurContours {
             StaffPitchTrack track,
             Consumer<Rejection> audit,
             HeadEvidence heads,
-            RawSink rawSink) {
+            RawSink rawSink,
+            long shortRailAllowance) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -195,6 +248,9 @@ final class PrintedSlurContours {
             gaps[x] = at[1];
         }
         var frames = new Frames(bottoms, gaps);
+        var unowned = new HashMap<Integer, List<RawBand>>();
+        int unownedCount = 0;
+        boolean unownedLimited = false;
         int[] parents = new int[8192];
         List<Integer> previous = List.of(),
                 beforePrevious = List.of(),
@@ -220,8 +276,20 @@ final class PrintedSlurContours {
                 if (last - first + 1 > maxThickness
                         && (last - first + 1 > gap * 1.4f
                                 || !thinAcross(
-                                        gray, width, height, x, (first + last) / 2, maxThickness)))
+                                        gray,
+                                        width,
+                                        height,
+                                        x,
+                                        (first + last) / 2,
+                                        maxThickness))) {
+                    if (unownedCount == MAX_RUNS) unownedLimited = true;
+                    else {
+                        unowned.computeIfAbsent(x, k -> new ArrayList<>())
+                                .add(new RawBand(first, last));
+                        unownedCount++;
+                    }
                     continue;
+                }
                 if (runs.size() == MAX_RUNS) return new Result(List.of(), true);
                 if (runs.size() == parents.length)
                     parents = Arrays.copyOf(parents, Math.min(MAX_RUNS, parents.length * 2));
@@ -336,7 +404,130 @@ final class PrintedSlurContours {
                 orientedFallback(
                         gray, labels, width, height, left, top, right, bottom, track, heads, frames,
                         bows, rawSink);
-        return new Result(bows, fallbackLimit);
+        var shortRailBows = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
+        if (!unownedLimited)
+            literalConnectivityFallback(
+                    runs,
+                    gray,
+                    labels,
+                    width,
+                    height,
+                    track,
+                    frames,
+                    heads,
+                    bows,
+                    rawSink,
+                    unowned,
+                    parents,
+                    8_000_000L,
+                    shortRailBows,
+                    shortRailAllowance);
+        var jointBows = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
+        if (!unownedLimited && heads != null)
+            appendJointRibbons(
+                    heads.jointRibbons(unowned),
+                    gray,
+                    labels,
+                    width,
+                    height,
+                    track,
+                    frames,
+                    heads,
+                    bows,
+                    rawSink,
+                    jointBows);
+        return new Result(bows, fallbackLimit, shortRailBows, jointBows);
+    }
+
+    private static void appendJointRibbons(
+            List<JointRibbon> ribbons,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads,
+            List<Bow> existing,
+            RawSink sink,
+            Set<Bow> jointBows) {
+        if (ribbons == null || ribbons.size() > 128) return;
+        long[] work = {8_000_000L};
+        for (var ribbon : ribbons) {
+            if (ribbon.columns().size() < 12 || ribbon.columns().size() > 1024) continue;
+            var runs = new ArrayList<Run>();
+            int last = -1;
+            boolean valid = true;
+            for (var col : ribbon.columns()) {
+                if (col.x() < 0
+                        || col.x() >= width
+                        || col.x() <= last
+                        || col.members().size() != 1) {
+                    valid = false;
+                    break;
+                }
+                last = col.x();
+                var band = col.members().get(0);
+                float gap = frames.gaps()[col.x()], base = frames.bottoms()[col.x()];
+                if (band.first() < 0
+                        || band.last() >= height
+                        || band.last() < band.first()
+                        || band.last() - band.first() + 1 > Math.max(2, Math.round(.42f * gap))) {
+                    valid = false;
+                    break;
+                }
+                for (int y = band.first(); y <= band.last(); y++)
+                    if ((gray[y * width + col.x()] & 255) > 205) valid = false;
+                if (!valid) break;
+                float y = (band.first() + band.last()) * .5f;
+                runs.add(
+                        new Run(
+                                col.x(),
+                                y,
+                                (y - base) / gap,
+                                gap,
+                                (band.first() - base) / gap,
+                                (band.last() - base) / gap,
+                                List.of(band)));
+            }
+            if (!valid) continue;
+            var selections = sink == null ? null : new IdentityHashMap<Bow, List<Run>>();
+            Bow bow = fit(runs, null, selections);
+            if (bow == null
+                    || !capped(gray, labels, width, height, bow, track, true, heads, frames)
+                    || !capped(gray, labels, width, height, bow, track, false, heads, frames))
+                continue;
+            if (!jointExtension(bow, existing, heads, work)) continue;
+            existing.add(bow);
+            jointBows.add(bow);
+            if (sink != null) sink.accept(bow, runs, selections.get(bow));
+        }
+    }
+
+    /** Complete joint-role proof permits a raw free cap; musical ownership is still
+     * established later by the unchanged owners/system assembler. */
+    private static boolean jointExtension(
+            Bow whole, List<Bow> prior, HeadEvidence heads, long[] work) {
+        long cost = heads.returningOwnerCost(), points = whole.points().size();
+        for (Bow old : prior) points += old.points().size();
+        if (work[0] < 0
+                || cost < 0
+                || cost > 4_000_000L
+                || (work[0] -= points * 48L + (prior.size() + 1L) * (cost * 4L + 128L)) < 0)
+            return false;
+        var rows = new HashMap<Integer, Float>();
+        for (Point p : whole.points()) rows.put(p.x(), p.y());
+        for (Bow old : prior) {
+            boolean touch = false, subset = old.points().size() < whole.points().size();
+            for (Point p : old.points()) {
+                Float y = rows.get(p.x());
+                if (y != null && Math.abs(y - p.y()) <= 1) touch = true;
+                if (y == null || Float.compare(y, p.y()) != 0) subset = false;
+            }
+            if (touch && (!subset || old.above() != whole.above() || heads.ownsReturningBow(old)))
+                return false;
+        }
+        return true;
     }
 
     /** Additive complete-ribbon route. Legacy axis tests and every old bow stay unchanged. */
@@ -483,6 +674,345 @@ final class PrintedSlurContours {
         return false;
     }
 
+    /** Adjacent observed foreground may stay separate even inside the legacy proximity band. */
+    private static void literalConnectivityFallback(
+            List<Run> runs,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads,
+            List<Bow> existing,
+            RawSink sink,
+            Map<Integer, List<RawBand>> unowned,
+            int[] proximityParents,
+            long budget,
+            Set<Bow> shortRailBows,
+            long shortRailAllowance) {
+        int n = runs.size();
+        int logarithm = n == 0 ? 0 : 32 - Integer.numberOfLeadingZeros(n);
+        long points = 0;
+        for (Bow bow : existing) points += bow.points().size();
+        // Prepay grouping, weighted unions, full fits/sorts and overlap queries. A refused
+        // optional route cannot disturb already complete legacy interpretations.
+        long discarded = 0;
+        for (var column : unowned.values()) discarded += column.size();
+        long bound = n * (192L + 64L * logarithm) + points * 32L + width * 16L + discarded * 32L;
+        if (n < 12 || budget < bound) return;
+        int[] parents = new int[n], sizes = new int[n];
+        for (int i = 0; i < n; i++) {
+            parents[i] = i;
+            sizes[i] = 1;
+        }
+        int previousFirst = 0, previousLast = 0, previousX = -2;
+        for (int first = 0; first < n; ) {
+            int x = runs.get(first).x(), last = first + 1;
+            while (last < n && runs.get(last).x() == x) last++;
+            if (x == previousX + 1) {
+                int cursor = previousFirst;
+                for (int current = first; current < last; current++) {
+                    Run a = runs.get(current);
+                    int top = Math.round(frames.bottoms()[x] + a.upper() * a.gap());
+                    int bottom = Math.round(frames.bottoms()[x] + a.lower() * a.gap());
+                    while (cursor < previousLast) {
+                        Run b = runs.get(cursor);
+                        int end = Math.round(frames.bottoms()[b.x()] + b.lower() * b.gap());
+                        if (end + 1 >= top) break;
+                        cursor++;
+                    }
+                    for (int p = cursor; p < previousLast; p++) {
+                        Run b = runs.get(p);
+                        int start = Math.round(frames.bottoms()[b.x()] + b.upper() * b.gap());
+                        if (start > bottom + 1) break;
+                        int ra = root(current, parents), rb = root(p, parents);
+                        if (ra == rb) continue;
+                        if (sizes[ra] > sizes[rb]) {
+                            int swap = ra;
+                            ra = rb;
+                            rb = swap;
+                        }
+                        parents[ra] = rb;
+                        sizes[rb] += sizes[ra];
+                    }
+                }
+            }
+            previousFirst = first;
+            previousLast = last;
+            previousX = x;
+            first = last;
+        }
+        // The only non-contact edges are the existing independently proved complete raw
+        // staff crossings; keep all their rival/branch/coverage/cap rules unchanged.
+        completeRuleGaps(runs, parents, gray, labels, width, height, track, frames, heads);
+        emitLiteralGroups(
+                runs,
+                parents,
+                gray,
+                labels,
+                width,
+                height,
+                track,
+                frames,
+                heads,
+                existing,
+                sink,
+                unowned,
+                proximityParents,
+                null);
+        // Additional bounded search is additive: neither its rival graph nor a refused
+        // budget may remove a previously accepted complete interpretation.
+        if (shortRailAllowance < bound) return;
+        int[] shortParents = parents.clone();
+        completeRuleGaps(
+                runs,
+                shortParents,
+                gray,
+                labels,
+                width,
+                height,
+                track,
+                frames,
+                heads,
+                2,
+                6,
+                Math.min(8_000_000L, shortRailAllowance));
+        int before = existing.size();
+        emitLiteralGroups(
+                runs,
+                shortParents,
+                gray,
+                labels,
+                width,
+                height,
+                track,
+                frames,
+                heads,
+                existing,
+                sink,
+                unowned,
+                proximityParents,
+                parents);
+        shortRailBows.addAll(existing.subList(before, existing.size()));
+    }
+
+    private static void emitLiteralGroups(
+            List<Run> runs,
+            int[] parents,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads,
+            List<Bow> existing,
+            RawSink sink,
+            Map<Integer, List<RawBand>> unowned,
+            int[] proximityParents,
+            int[] originalParents) {
+        int n = runs.size();
+        var groups = new LinkedHashMap<Integer, List<Run>>();
+        var indices = new IdentityHashMap<Run, Integer>();
+        var proximityGroups = new HashMap<Integer, List<Integer>>();
+        int[] literalOwners = new int[n], proximityOwners = new int[n];
+        for (int i = 0; i < n; i++)
+            groups.computeIfAbsent(root(i, parents), k -> new ArrayList<>()).add(runs.get(i));
+        for (int i = 0; i < n; i++) {
+            indices.put(runs.get(i), i);
+            literalOwners[i] = root(i, parents);
+            proximityOwners[i] = root(i, proximityParents);
+            proximityGroups.computeIfAbsent(proximityOwners[i], k -> new ArrayList<>()).add(i);
+        }
+        var constantEnds = new HashMap<Integer, int[]>();
+        for (var entry : proximityGroups.entrySet()) {
+            var ids = entry.getValue();
+            int[] ends = new int[ids.size()];
+            for (int i = ids.size() - 1; i >= 0; i--)
+                ends[i] =
+                        i + 1 < ids.size()
+                                        && literalOwners[ids.get(i)]
+                                                == literalOwners[ids.get(i + 1)]
+                                ? ends[i + 1]
+                                : i + 1;
+            constantEnds.put(entry.getKey(), ends);
+        }
+        var used = new HashMap<Integer, List<Float>>();
+        for (Bow bow : existing)
+            for (Point p : bow.points())
+                used.computeIfAbsent(p.x(), k -> new ArrayList<>()).add(p.y());
+        for (var column : used.values()) column.sort(Float::compare);
+        var admitted = new ArrayList<RibbonCandidate>();
+        long[] extensionWork = {8_000_000L};
+        for (var component : groups.values()) {
+            if (originalParents != null) {
+                int firstOwner = root(indices.get(component.get(0)), originalParents);
+                boolean joined = false;
+                for (Run run : component)
+                    if (root(indices.get(run), originalParents) != firstOwner) {
+                        joined = true;
+                        break;
+                    }
+                if (!joined) continue;
+            }
+            boolean simple = true;
+            int lastX = -1;
+            for (Run run : component) {
+                if (run.x() <= lastX) {
+                    simple = false;
+                    break;
+                }
+                lastX = run.x();
+                int top = Math.round(frames.bottoms()[run.x()] + run.upper() * run.gap());
+                int bottom = Math.round(frames.bottoms()[run.x()] + run.lower() * run.gap());
+                for (int x = Math.max(0, run.x() - 1); x < width && x <= run.x() + 1; x++) {
+                    var bands = unowned.get(x);
+                    if (bands == null) continue;
+                    int lo = 0, hi = bands.size();
+                    while (lo < hi) {
+                        int mid = (lo + hi) >>> 1;
+                        if (bands.get(mid).first() <= bottom + 1) lo = mid + 1;
+                        else hi = mid;
+                    }
+                    if (lo > 0 && bands.get(lo - 1).last() >= top - 1) {
+                        simple = false;
+                        break;
+                    }
+                }
+                if (!simple) break;
+            }
+            // No terminal branch may be dropped by this route. An over-thick discarded
+            // neighbour remains an unowned contact, not a manufactured boundary.
+            if (!simple) continue;
+            int firstX = component.get(0).x(), finalX = component.get(component.size() - 1).x();
+            double centralLeft = firstX + (finalX - firstX) * .2,
+                    centralRight = finalX - (finalX - firstX) * .2;
+            int owner = literalOwners[indices.get(component.get(0))];
+            var ancestry = new HashSet<Integer>();
+            for (Run run : component) ancestry.add(proximityOwners[indices.get(run)]);
+            boolean rival = false;
+            for (int prior : ancestry) {
+                var ids = proximityGroups.get(prior);
+                int lo = 0, hi = ids.size();
+                while (lo < hi) {
+                    int mid = (lo + hi) >>> 1;
+                    if (runs.get(ids.get(mid)).x() <= centralLeft) lo = mid + 1;
+                    else hi = mid;
+                }
+                int start = lo;
+                lo = 0;
+                hi = ids.size();
+                while (lo < hi) {
+                    int mid = (lo + hi) >>> 1;
+                    if (runs.get(ids.get(mid)).x() < centralRight) lo = mid + 1;
+                    else hi = mid;
+                }
+                if (start < lo
+                        && (literalOwners[ids.get(start)] != owner
+                                || constantEnds.get(prior)[start] < lo)) {
+                    rival = true;
+                    break;
+                }
+            }
+            // An unclassified central rival remains a veto. The optional caller may prove
+            // complete, independently attack-owned marks without discarding their ink.
+            if (rival) {
+                long ancestorRuns = 0;
+                for (int prior : ancestry) ancestorRuns += proximityGroups.get(prior).size();
+                if (heads == null
+                        || ancestorRuns > 4096
+                        || !heads.admitRivalOwnership(ancestorRuns * 128 + component.size() * 256L))
+                    continue;
+            }
+            var selected = sink == null ? null : new IdentityHashMap<Bow, List<Run>>();
+            Bow bow = fit(component, null, selected);
+            if (bow == null) continue;
+            if (rival) {
+                var foreignOwners = new LinkedHashSet<Integer>();
+                for (int prior : ancestry)
+                    for (int id : proximityGroups.get(prior))
+                        if (literalOwners[id] != owner) foreignOwners.add(literalOwners[id]);
+                long count = 0;
+                for (int other : foreignOwners) count += groups.get(other).size();
+                if (count > 4096 || !heads.admitRivalOwnership(count * 1024)) continue;
+                var foreign = new ArrayList<ForeignRun>();
+                for (int other : foreignOwners)
+                    for (Run run : groups.get(other)) {
+                        // Production scanning need not allocate diagnostic RawBand lists.
+                        // Reconstitute its literal bounded run identically in both modes;
+                        // the role proof must account for every raw pixel in this interval.
+                        int top = Math.round(frames.bottoms()[run.x()] + run.upper() * run.gap());
+                        int bottom =
+                                Math.round(frames.bottoms()[run.x()] + run.lower() * run.gap());
+                        foreign.add(new ForeignRun(run.x(), List.of(new RawBand(top, bottom))));
+                    }
+                if (!heads.ownsCentralRivals(bow, foreign)) continue;
+            }
+            boolean overlap = false;
+            for (Point p : bow.points()) {
+                var column = used.get(p.x());
+                if (column == null) continue;
+                int at = Collections.binarySearch(column, p.y());
+                if (at >= 0) {
+                    overlap = true;
+                    break;
+                }
+                at = -at - 1;
+                if (at < column.size() && Math.abs(column.get(at) - p.y()) <= 1
+                        || at > 0 && Math.abs(column.get(at - 1) - p.y()) <= 1) {
+                    overlap = true;
+                    break;
+                }
+            }
+            if (overlap
+                    && originalParents != null
+                    && ownedExtension(bow, existing, heads, extensionWork)) overlap = false;
+            if (overlap
+                    || !capped(gray, labels, width, height, bow, track, true, heads, frames)
+                    || !capped(gray, labels, width, height, bow, track, false, heads, frames))
+                continue;
+            admitted.add(
+                    new RibbonCandidate(
+                            bow, component, selected == null ? null : selected.get(bow)));
+        }
+        for (var c : admitted) {
+            existing.add(c.bow());
+            if (sink != null) sink.accept(c.bow(), c.component(), c.selected());
+        }
+    }
+
+    /** Reusing an old unowned fragment is allowed only as an exact, strict subset
+     * of a complete bow with independently unique attack owners at both ends. */
+    private static boolean ownedExtension(
+            Bow whole, List<Bow> prior, HeadEvidence heads, long[] work) {
+        if (heads == null || work[0] < 0) return false;
+        long ownerCost = heads.returningOwnerCost();
+        long points = whole.points().size();
+        for (Bow old : prior) points += old.points().size();
+        if (ownerCost < 0
+                || ownerCost > 4_000_000L
+                || (work[0] -= points * 48L + (prior.size() + 1L) * (ownerCost * 4L + 128L)) < 0)
+            return false;
+        if (!heads.ownsReturningBow(whole)) return false;
+        var rows = new HashMap<Integer, Float>();
+        for (Point p : whole.points()) rows.put(p.x(), p.y());
+        boolean reused = false;
+        for (Bow old : prior) {
+            boolean touches = false, subset = old.points().size() < whole.points().size();
+            for (Point p : old.points()) {
+                Float y = rows.get(p.x());
+                if (y != null && Math.abs(y - p.y()) <= 1) touches = true;
+                if (y == null || Float.compare(y, p.y()) != 0) subset = false;
+            }
+            if (!touches) continue;
+            if (!subset || old.above() != whole.above() || heads.ownsReturningBow(old))
+                return false;
+            reused = true;
+        }
+        return reused;
+    }
+
     /** Complete engraved taper: both actual edges return, one coherent thickening, owned caps. */
     private static boolean boldReturning(
             List<Run> component, HeadEvidence heads, int thinMaximum, long[] work) {
@@ -604,10 +1134,22 @@ final class PrintedSlurContours {
                         && (labels[at] == OmrMeasurePostProcessor.NOTEHEAD
                                 || labels[at] == OmrMeasurePostProcessor.CLEF_OR_KEY)) return false;
         if (heads != null && heads.contains(x, y)) return false;
-        // A staff's curvature is not a second printed contour. All five rails are excluded.
+        // Core rail pixels keep the established one-sided witness. In the outer band,
+        // require both sides: a shallow bow must not erase its own shoulder by
+        // supplying horizontal samples only toward its apex.
         for (int rule = 0; rule < 5; rule++)
             if (Math.abs(y - (base - rule * gap)) <= Math.max(2, gap * .3f)
-                    && followsRail(gray, width, height, x, y, base, gap, rule, frames))
+                    && followsRail(
+                            gray,
+                            width,
+                            height,
+                            x,
+                            y,
+                            base,
+                            gap,
+                            rule,
+                            frames,
+                            Math.abs(y - (base - rule * gap)) <= Math.max(2, gap * .13f + .5f)))
                 return false;
         int distance = Math.max(2, Math.round(gap * .65f));
         int paper =
@@ -627,6 +1169,20 @@ final class PrintedSlurContours {
             float gap,
             int rule,
             Frames frames) {
+        return followsRail(gray, width, height, x, y, base, gap, rule, frames, true);
+    }
+
+    private static boolean followsRail(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int y,
+            float base,
+            float gap,
+            int rule,
+            Frames frames,
+            boolean allowOneSide) {
         float residual = y - (base - rule * gap);
         int left = 0, right = 0;
         for (int side = -1; side <= 1; side += 2)
@@ -647,7 +1203,7 @@ final class PrintedSlurContours {
                     else right++;
                 }
             }
-        return left == 3 || right == 3 || left >= 2 && right >= 2;
+        return allowOneSide && (left == 3 || right == 3) || left >= 2 && right >= 2;
     }
 
     /** A steep thin stroke has a long vertical projection but a short transverse width. */
@@ -807,7 +1363,35 @@ final class PrintedSlurContours {
             StaffPitchTrack track,
             Frames frames,
             HeadEvidence heads) {
-        long work = 8_000_000L - (long) runs.size() * 16;
+        completeRuleGaps(
+                runs,
+                parents,
+                gray,
+                labels,
+                width,
+                height,
+                track,
+                frames,
+                heads,
+                7,
+                100,
+                8_000_000L);
+    }
+
+    private static void completeRuleGaps(
+            List<Run> runs,
+            int[] parents,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            Frames frames,
+            HeadEvidence heads,
+            int minimum,
+            int maximum,
+            long allowance) {
+        long work = allowance - (long) runs.size() * 16;
         if (work < 0) return;
         var groups = new LinkedHashMap<Integer, List<Run>>();
         for (int i = 0; i < runs.size(); i++)
@@ -832,8 +1416,8 @@ final class PrintedSlurContours {
         for (var a : ends) {
             // One staff space bounds the unresolved rail footprint. Longer occlusion abstains.
             int span = (int) Math.ceil(a.last().gap());
-            if (span < 7 || span > 100) continue;
-            for (int distance = 7; distance <= span; distance++) {
+            if (span < minimum || span > 100) continue;
+            for (int distance = minimum; distance <= Math.min(span, maximum); distance++) {
                 var choices = starts.get(a.last().x() + distance);
                 if (choices == null) continue;
                 for (var b : choices) {
@@ -852,7 +1436,7 @@ final class PrintedSlurContours {
                                     distance <= Math.ceil(Math.min(tail.gap(), tip.gap()))
                                             && rawRuleGap(
                                                     tail, tip, gray, labels, width, height, track,
-                                                    frames, heads);
+                                                    frames, heads, minimum);
                         }
                     if (!supported) continue;
                     if (proposed.size() >= 4096) return;
@@ -901,6 +1485,13 @@ final class PrintedSlurContours {
             }
             if ((work -= (long) joined.size() * 128 + 2048) < 0) return;
             Bow whole = fit(joined, null, null);
+            if (minimum == 2) {
+                if (heads == null) continue;
+                long ownerCost = heads.returningOwnerCost();
+                if (ownerCost < 0 || ownerCost > 4_000_000L || (work -= ownerCost * 4L + 128L) < 0)
+                    return;
+                if (whole == null || !heads.ownsReturningBow(whole)) continue;
+            }
             if (whole != null
                     && capped(gray, labels, width, height, whole, track, true, heads, frames)
                     && capped(gray, labels, width, height, whole, track, false, heads, frames))
@@ -920,9 +1511,14 @@ final class PrintedSlurContours {
             int height,
             StaffPitchTrack track,
             Frames frames,
-            HeadEvidence heads) {
+            HeadEvidence heads,
+            int minimum) {
         int distance = b.x() - a.x();
-        if (distance < 7 || Math.abs(b.rectified() - a.rectified()) > .25f * distance) return false;
+        // The additional short route measures closed pixel cells, not infinitely
+        // precise sample centres. The old long-crossing predicate stays exact.
+        float separation = Math.abs(b.rectified() - a.rectified());
+        if (minimum == 2) separation = Math.max(0, separation - .5f / a.gap() - .5f / b.gap());
+        if (distance < minimum || separation > .25f * distance) return false;
         for (int rule = 0; rule < 5; rule++) {
             if ((a.rectified() + rule) * (b.rectified() + rule) >= 0) continue;
             boolean supported = true;
@@ -1063,10 +1659,53 @@ final class PrintedSlurContours {
         return bow != null && bow.above();
     }
 
+    /** Complete calibrated feature bands, not a raw-pixel or background-ownership proof.
+     * Caller must verify the reference field and original endpoint/head ownership. */
+    static Bow fitPixelCells(List<ForeignRun> columns, StaffPitchTrack track) {
+        if (columns == null
+                || columns.size() < 12
+                || columns.size() > 1024
+                || track == null
+                || !track.verified()) return null;
+        var runs = new ArrayList<Run>();
+        int last = -1;
+        for (var col : columns) {
+            if (col.x() < 0 || col.x() <= last || col.members().size() != 1) return null;
+            last = col.x();
+            var b = col.members().get(0);
+            float[] at = track.at(col.x());
+            float gap = at[1], base = at[0];
+            if (!Float.isFinite(gap + base)
+                    || gap < 5
+                    || gap > 100
+                    || b.first() < 0
+                    || b.last() < b.first()) return null;
+            float center = (b.first() + b.last()) * .5f;
+            runs.add(
+                    new Run(
+                            col.x(),
+                            center,
+                            (center - base) / gap,
+                            gap,
+                            (b.first() - base) / gap,
+                            (b.last() - base) / gap,
+                            List.of(b)));
+        }
+        return fit(runs, null, null, true);
+    }
+
     private static Bow fit(
             List<Run> component,
             Consumer<Rejection> audit,
             IdentityHashMap<Bow, List<Run>> fittedSelections) {
+        return fit(component, audit, fittedSelections, false);
+    }
+
+    private static Bow fit(
+            List<Run> component,
+            Consumer<Rejection> audit,
+            IdentityHashMap<Bow, List<Run>> fittedSelections,
+            boolean pixelCells) {
         if (component.size() < 12) return null;
         var columns = new LinkedHashMap<Integer, List<Run>>();
         float gap = 0;
@@ -1077,7 +1716,9 @@ final class PrintedSlurContours {
         gap /= component.size();
         int left = component.get(0).x(), right = component.get(component.size() - 1).x();
         int span = right - left;
-        if (span < gap * 1.6f || columns.size() < (span + 1) * .8f)
+        double physicalLeft = pixelCells ? left - .5 : left,
+                physicalSpan = pixelCells ? span + 1. : span;
+        if ((pixelCells ? span + 1 : span) < gap * 1.6f || columns.size() < (span + 1) * .8f)
             return reject(component, "short-or-gapped", audit);
         // Closed glyphs and joined branches carry two separate contours in the same columns.
         long branched = columns.values().stream().filter(column -> column.size() > 1).count();
@@ -1108,7 +1749,7 @@ final class PrintedSlurContours {
                 elliptical = new double[3][4],
                 hinge = new double[3][4];
         for (var run : chosen) {
-            double t = 2.0 * (run.x() - left) / span - 1;
+            double t = 2.0 * (run.x() - physicalLeft) / physicalSpan - 1;
             accumulate(quadratic, new double[] {1, t, t * t}, run.rectified());
             accumulate(
                     elliptical,
@@ -1119,8 +1760,8 @@ final class PrintedSlurContours {
         double[] q = solve(quadratic), e = solve(elliptical), h = solve(hinge);
         if (q == null || e == null || h == null) return reject(component, "singular-fit", audit);
         boolean ellipse =
-                squaredError(chosen, left, span, e, true)
-                        < squaredError(chosen, left, span, q, false);
+                squaredError(chosen, physicalLeft, physicalSpan, e, true)
+                        < squaredError(chosen, physicalLeft, physicalSpan, q, false);
         double[] shape = ellipse ? e : q;
         double bend = ellipse ? -shape[2] : shape[2];
         if (Math.abs(bend) < .24 || Math.abs(bend) > 12)
@@ -1128,7 +1769,7 @@ final class PrintedSlurContours {
         double squared = 0, hinged = 0;
         var errors = new ArrayList<Double>();
         for (var run : chosen) {
-            double t = 2.0 * (run.x() - left) / span - 1;
+            double t = 2.0 * (run.x() - physicalLeft) / physicalSpan - 1;
             double error = run.rectified() - value(shape, t, ellipse);
             double other = run.rectified() - (h[0] + h[1] * t + h[2] * Math.abs(t));
             squared += error * error;
@@ -1141,8 +1782,8 @@ final class PrintedSlurContours {
                 || errors.get((int) ((errors.size() - 1) * .95)) > .27
                 || hinged < squared * .45) return reject(component, "fit-or-sharp-hinge", audit);
         // Require the returning curvature over both outer quarters, not just a hooked tail.
-        double leftSlope = localSlope(chosen, left, span, true);
-        double rightSlope = localSlope(chosen, left, span, false);
+        double leftSlope = localSlope(chosen, physicalLeft, physicalSpan, true);
+        double rightSlope = localSlope(chosen, physicalLeft, physicalSpan, false);
         if (!Double.isFinite(leftSlope + rightSlope)
                 || Math.signum(rightSlope - leftSlope) != Math.signum(bend)
                 || Math.abs(rightSlope - leftSlope) < Math.abs(bend) * 1.6)
@@ -1160,7 +1801,7 @@ final class PrintedSlurContours {
     }
 
     private static double squaredError(
-            List<Run> runs, int left, int span, double[] shape, boolean ellipse) {
+            List<Run> runs, double left, double span, double[] shape, boolean ellipse) {
         double result = 0;
         for (var run : runs) {
             double t = 2.0 * (run.x() - left) / span - 1;
@@ -1170,7 +1811,7 @@ final class PrintedSlurContours {
         return result;
     }
 
-    private static double localSlope(List<Run> runs, int left, int span, boolean first) {
+    private static double localSlope(List<Run> runs, double left, double span, boolean first) {
         double n = 0, x = 0, y = 0, xx = 0, xy = 0;
         for (var run : runs) {
             double t = 2.0 * (run.x() - left) / span - 1;

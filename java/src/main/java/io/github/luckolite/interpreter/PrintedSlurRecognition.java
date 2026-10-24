@@ -56,7 +56,8 @@ final class PrintedSlurRecognition {
                             labels,
                             width,
                             height,
-                            prepared.frames());
+                            prepared.frames(),
+                            score.notes());
             var result =
                     captured.limitReached() || captured.source().candidates().isEmpty()
                             ? score
@@ -139,7 +140,8 @@ final class PrintedSlurRecognition {
                         width,
                         height,
                         prepared.frames(),
-                        ties);
+                        ties,
+                        score.notes());
         // The bounded scanner discards all partial spans if its admission/run cap is reached.
         if (captured.limitReached())
             return new Result(

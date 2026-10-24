@@ -143,7 +143,25 @@ final class PrintedSlurOwners {
             int height,
             StaffPitchTrack track) {
         Objects.requireNonNull(ties);
-        var binding = bind(id, page, bow, heads, gray, width, height, track);
+        return resolveBinding(bind(id, page, bow, heads, gray, width, height, track), heads, ties);
+    }
+
+    static Result resolvePixelCells(
+            String id,
+            int page,
+            PrintedSlurContours.Bow bow,
+            List<Head> heads,
+            Set<Tie> ties,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        Objects.requireNonNull(ties);
+        return resolveBinding(
+                bindPixelCells(id, page, bow, heads, gray, width, height, track), heads, ties);
+    }
+
+    private static Result resolveBinding(Binding binding, List<Head> heads, Set<Tie> ties) {
         if (binding.span().isEmpty()) return absent(binding.status());
         var arc = binding.span().orElseThrow();
         var byOwner = new HashMap<Integer, Head>();
@@ -174,6 +192,31 @@ final class PrintedSlurOwners {
             int width,
             int height,
             StaffPitchTrack track) {
+        return binding(id, page, bow, heads, gray, width, height, track, 0);
+    }
+
+    static Binding bindPixelCells(
+            String id,
+            int page,
+            PrintedSlurContours.Bow bow,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        return binding(id, page, bow, heads, gray, width, height, track, .5f);
+    }
+
+    private static Binding binding(
+            String id,
+            int page,
+            PrintedSlurContours.Bow bow,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            float horizontalCellRadius) {
         Objects.requireNonNull(id);
         Objects.requireNonNull(bow);
         if (id.isBlank() || page < 0)
@@ -190,8 +233,28 @@ final class PrintedSlurOwners {
         for (var head : heads)
             if (!ids.add(head.owner()))
                 throw new IllegalArgumentException("Duplicate printed head identity");
-        var start = candidates(bow.start(), bow.above(), true, heads, gray, width, height, track);
-        var end = candidates(bow.end(), bow.above(), false, heads, gray, width, height, track);
+        var start =
+                candidates(
+                        bow.start(),
+                        bow.above(),
+                        true,
+                        heads,
+                        gray,
+                        width,
+                        height,
+                        track,
+                        horizontalCellRadius);
+        var end =
+                candidates(
+                        bow.end(),
+                        bow.above(),
+                        false,
+                        heads,
+                        gray,
+                        width,
+                        height,
+                        track,
+                        horizontalCellRadius);
         if (start.isEmpty()) return new Binding(Status.NO_START_OWNER, Optional.empty());
         if (end.isEmpty() && !ambiguous(start) && start.get(0).head().grace())
             end =
@@ -330,8 +393,15 @@ final class PrintedSlurOwners {
                                     && (gray[(y + dy) * width + x + dx] & 255) < 165) body = true;
                     if (!body
                             || Math.abs(cap.x() - head.x()) > visible.gap() * .85f
-                            || Math.abs(cap.y() - head.y()) > visible.gap() * 2
-                            || (first ? cap.x() + 1 < head.x() : cap.x() - 1 > head.x())) continue;
+                            || Math.abs(cap.y() - head.y()) > visible.gap() * 2) continue;
+                    if (first ? cap.x() + 1 < head.x() : cap.x() - 1 > head.x()) {
+                        // A returning tip can overlap the facing rim before the head's
+                        // centroid. Its actual outward continuation must touch strict
+                        // ink inside this independently proved head body.
+                        if (!inside(visible, x, y)
+                                || (gray[y * width + x] & 255) >= 165
+                                || (first ? x >= cap.x() : x <= cap.x())) continue;
+                    }
                     return true;
                 }
                 return false;
@@ -343,6 +413,22 @@ final class PrintedSlurOwners {
         return values.size() > 1 && values.get(1).distance() - values.get(0).distance() < .2;
     }
 
+    /** Reuse the unchanged endpoint rule for one observed half of a system continuation. */
+    static Optional<Location> capOwner(
+            PrintedSlurContours.Point cap,
+            boolean above,
+            boolean start,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        var values = candidates(cap, above, start, heads, gray, width, height, track);
+        return values.isEmpty() || ambiguous(values)
+                ? Optional.empty()
+                : Optional.of(values.get(0).head());
+    }
+
     private static List<Candidate> candidates(
             PrintedSlurContours.Point cap,
             boolean above,
@@ -352,19 +438,34 @@ final class PrintedSlurOwners {
             int width,
             int height,
             StaffPitchTrack track) {
+        return candidates(cap, above, start, heads, gray, width, height, track, 0);
+    }
+
+    private static List<Candidate> candidates(
+            PrintedSlurContours.Point cap,
+            boolean above,
+            boolean start,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track,
+            float horizontalCellRadius) {
         float gap = track.at(cap.x())[1];
         var result = new ArrayList<Candidate>();
         for (var head : heads) {
             if (head.x() >= width || head.y() >= height) continue;
-            double dx = Math.abs(head.x() - cap.x()) / gap;
+            double dx = Math.max(0, Math.abs(head.x() - cap.x()) - horizontalCellRadius) / gap;
             double clearance = (above ? head.y() - cap.y() : cap.y() - head.y()) / gap;
             if (dx > 1.1 || clearance < -.6 || clearance > 8.5) continue;
             boolean shaft = shaftSupports(cap, head, above, gray, width, height, gap, heads);
             boolean headEdge =
                     dx <= .85
-                            && clearance <= 2
                             && (start ? cap.x() >= head.x() : cap.x() <= head.x())
-                            && headBody(gray, width, height, head, gap);
+                            && headBody(gray, width, height, head, gap)
+                            && (clearance <= 2
+                                    || headFacingEdgeSupports(
+                                            cap, head, above, gray, width, height, gap));
             // A slanted notehead rim can meet a returning bow above its center.
             // Permit that overlap only with a proved adjacent head body.
             if (clearance < -.2 && !headEdge) continue;
@@ -421,7 +522,7 @@ final class PrintedSlurOwners {
         return result;
     }
 
-    private static boolean headBody(byte[] gray, int width, int height, Location head, float gap) {
+    static boolean headBody(byte[] gray, int width, int height, Location head, float gap) {
         int rows = 0, minimum = Math.max(3, (int) Math.ceil(gap * .25f));
         for (int y = Math.max(0, Math.round(head.y() - gap * .4f));
                 y < height && y <= head.y() + gap * .4f;
@@ -433,6 +534,36 @@ final class PrintedSlurOwners {
             if (columns >= minimum) rows++;
         }
         return rows >= minimum;
+    }
+
+    /** The two-gap side clearance is from observed head ink, not its centre. */
+    private static boolean headFacingEdgeSupports(
+            PrintedSlurContours.Point cap,
+            Location head,
+            boolean above,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        int minimum = Math.max(3, (int) Math.ceil(gap * .25f));
+        int first = Math.max(0, Math.round(head.y() - gap * .4f));
+        int last = Math.min(height - 1, (int) Math.floor(head.y() + gap * .4f));
+        int center = Math.round(head.y());
+        if (center < first || center > last) return false;
+        int edge = center, rows = 0;
+        for (int y = center; y >= first && y <= last; y += above ? -1 : 1) {
+            int hits = 0;
+            for (int x = Math.max(0, Math.round(head.x() - gap * .65f));
+                    x < width && x <= head.x() + gap * .65f;
+                    x++) if ((gray[y * width + x] & 255) < 165) hits++;
+            // The facing edge belongs to the wide row run through the head centre.
+            // A detached rail or one-pixel stem cannot move this body boundary.
+            if (hits < minimum) break;
+            edge = y;
+            rows++;
+        }
+        double clearance = (above ? edge - cap.y() : cap.y() - edge) / gap;
+        return rows >= Math.max(2, (minimum + 1) / 2) && clearance >= 0 && clearance <= 2;
     }
 
     private static boolean shaftSupports(

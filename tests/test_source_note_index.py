@@ -156,15 +156,15 @@ class SourceNoteIndexTests(unittest.TestCase):
 
     def test_distinct_equal_boundary_records_keep_actual_occurrence_indices(self):
         value = self.bridge(1)
-        self.assertEqual([1, 2], [event['sourceNoteIndex'] for event in value['events'] if 'sourceNoteIndex' in event])
+        self.assertEqual([0, 1, 2], [event['sourceNoteIndex'] for event in value['events']])
         self.assertEqual(value['score']['notes'][1], value['score']['notes'][2])
         self.assertEqual([5, 5], [event['boundaryTies'] for event in value['events'][1:]])
 
     def test_same_note_object_twice_keeps_actual_occurrence_indices(self):
         value = self.bridge(2)
-        self.assertEqual([1, 2], [event['sourceNoteIndex'] for event in value['events'] if 'sourceNoteIndex' in event])
+        self.assertEqual([0, 1, 2], [event['sourceNoteIndex'] for event in value['events']])
         self.assertEqual(3, len(value['events']))
-        self.assertNotIn('sourceNoteIndex', value['events'][0])
+        self.assertEqual(0, value['events'][0]['sourceNoteIndex'])
 
     def test_ordinary_distinct_records_keep_all_boundary_flags(self):
         value = self.bridge(3)
@@ -174,20 +174,21 @@ class SourceNoteIndexTests(unittest.TestCase):
         self.assertEqual([note['clefBottomDiatonic'] + note['staffStep'] + note['octaveShift'] * 7 for note in value['score']['notes']],
                          [event['boundaryPitch'] for event in value['events']])
 
-    def test_no_boundary_or_guessed_clef_keeps_index_and_boundary_fields_absent(self):
+    def test_every_head_has_index_while_unproved_boundary_fields_stay_absent(self):
         events = self.bridge(4)['events']
         for event in events[:3]:
-            for field in ('sourceNoteIndex', 'boundaryTies', 'boundaryPitch', 'boundaryAccidental'):
+            for field in ('boundaryTies', 'boundaryPitch', 'boundaryAccidental'):
                 self.assertNotIn(field, event)
+        self.assertEqual(list(range(4)), [e['sourceNoteIndex'] for e in events])
         self.assertEqual([False, True, True, False], [event['clefInferred'] for event in events])
         self.assertEqual(3, events[3]['sourceNoteIndex'])
         self.assertEqual(10, events[3]['boundaryTies'])
         self.assertEqual(-1, events[3]['octaveShift'])
 
-    def test_duplicate_notes_without_boundary_do_not_gain_source_indices(self):
+    def test_duplicate_notes_without_boundary_keep_distinct_source_indices(self):
         events = self.bridge(5)['events']
         self.assertEqual(2, len(events))
-        self.assertTrue(all('sourceNoteIndex' not in event for event in events))
+        self.assertEqual([0, 1], [e['sourceNoteIndex'] for e in events])
         # A fresh child without the fixture prefix still runs real analysis.
         # Its original blank page has no notes, unlike the two-note fake result.
         page = self.folder / 'real-backend.page.gz'
@@ -200,11 +201,12 @@ class SourceNoteIndexTests(unittest.TestCase):
         self.assertEqual([], actual['score']['notes'])
         self.assertEqual([], actual['events'])
 
-    def test_duplicate_guessed_clef_boundary_notes_keep_fields_absent(self):
+    def test_duplicate_guessed_clef_notes_keep_indices_without_boundary_claims(self):
         events = self.bridge(6)['events']
         self.assertEqual(2, len(events))
         self.assertTrue(all(event['clefInferred'] for event in events))
-        self.assertTrue(all('sourceNoteIndex' not in event and 'boundaryTies' not in event for event in events))
+        self.assertEqual([0, 1], [e['sourceNoteIndex'] for e in events])
+        self.assertTrue(all('boundaryTies' not in event for event in events))
 
 
 if __name__ == '__main__':

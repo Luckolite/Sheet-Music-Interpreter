@@ -9,7 +9,7 @@ from encodings.utf_16_le import encode as utf16_encode
 KINDS = ('UNRESOLVED_DIRECTION', 'RITARDANDO', 'RALLENTANDO', 'RITENUTO',
          'ACCELERANDO', 'A_TEMPO', 'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA',
          'BREATH', 'CAESURA', 'SFORZANDO', 'SFORZATO', 'SFORZANDO_PIANO',
-         'PEDAL_DOWN', 'PEDAL_UP', 'ARPEGGIO', 'CRESCENDO', 'DIMINUENDO', 'METRIC_MODULATION')
+         'PEDAL_DOWN', 'PEDAL_UP', 'ARPEGGIO', 'CRESCENDO', 'DIMINUENDO', 'METRIC_MODULATION', 'NATURAL_HARMONIC', 'FALL_OFF')
 SCOPES = ('SCORE', 'PART', 'VOICE', 'NOTE', 'REST', 'UNRESOLVED')
 STRENGTHS = ('UNSPECIFIED', 'POCO', 'MOLTO')
 POLICIES = ('DEFAULT', 'SKIP', 'PLAY', 'UNKNOWN')
@@ -129,7 +129,29 @@ def expression(row, measures):
             valid = False
         if not valid:
             raise ValueError('Metric modulation needs a validated pulse pair')
+    if row['kind'] == 'NATURAL_HARMONIC' and (
+            row['scope'] not in ('NOTE', 'UNRESOLVED') or target is None or end is not None
+            or row['scope'] == 'UNRESOLVED' and start is not None
+            or row['scope'] == 'NOTE' and start is None):
+        raise ValueError('Natural harmonic needs one exact note owner')
 
+    if row['kind'] == 'FALL_OFF':
+        try:
+            fields = target.split(':')
+            nums = [int(fields[i]) for i in (1, 2, 3, 5)]
+            floats = [struct.unpack('>f', bytes.fromhex(fields[i]))[0] for i in (4, 6)]
+            valid = (len(fields) == 7 and fields[0] == 'fall-off-note-v1'
+                     and all(-2147483648 <= n <= 2147483647 for n in nums)
+                     and nums[0] >= 0 and 0 <= nums[1] < nums[2]
+                     and all(len(fields[i]) == 8 and all(c in '0123456789abcdef' for c in fields[i]) for i in (4, 6))
+                     and all(math.isfinite(f) and 0 <= f <= 1 for f in floats))
+        except (ValueError, TypeError, AttributeError, IndexError, struct.error):
+            valid = False
+        if (not valid or row['scope'] not in ('NOTE', 'UNRESOLVED') or end is not None
+                or row['scope'] == 'UNRESOLVED' and start is not None
+                or row['scope'] == 'NOTE' and start is None
+                or row['strength'] != 'UNSPECIFIED' or row['qualifierText'] != 'falloff-v1:curved'):
+            raise ValueError('Falloff needs one exact note owner and printed shape')
     evidence(row['evidence'], required=True)
     return dict(row, start=start, end=end)
 
@@ -169,6 +191,10 @@ def encode(directions, expressions, measures, guide_version=277):
         raise ValueError('Too many expressions')
     if guide_version < 277 and any(row['kind'] == 'METRIC_MODULATION' for row in expressions):
         raise ValueError('Metric modulation requires guide277')
+    if guide_version < 294 and any(row['kind'] == 'NATURAL_HARMONIC' for row in expressions):
+        raise ValueError('Natural harmonic requires guide294')
+    if guide_version < 295 and any(row['kind'] == 'FALL_OFF' for row in expressions):
+        raise ValueError('Falloff requires guide295')
     out = Writer(); out.put('i', len(directions))
     for row in directions:
         row = direction(row, measures); d = row['details']; r = Writer()
@@ -257,6 +283,10 @@ def decode_prefix(data, measures, guide_version=277):
         r = source.frame(); row = dict(eventId=r.text(256), kind=r.enum(KINDS), start=r.anchor(), end=r.anchor())
         if guide_version < 277 and row['kind'] == 'METRIC_MODULATION':
             raise ValueError('Metric modulation is outside this guide format')
+        if guide_version < 294 and row['kind'] == 'NATURAL_HARMONIC':
+            raise ValueError('Natural harmonic is outside this guide format')
+        if guide_version < 295 and row['kind'] == 'FALL_OFF':
+            raise ValueError('Falloff is outside this guide format')
         row['scope'] = r.enum(SCOPES); row['staffIndex'], row['staffCount'] = r.take('ii')
         row['targetEventId'] = r.text(256) if r.boolean() else None
         row['strength'] = r.enum(STRENGTHS); row['qualifierText'] = r.text(4096); row['evidence'] = r.evidence(); r.finish()

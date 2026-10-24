@@ -458,24 +458,42 @@ public record ScorePageInterpretation(
         if (events == null || events.isEmpty() || firstMeasure == measureAfterLast)
             return List.of();
         // Anchorless evidence remains unresolved and is retained once on the first
-        // output page. Its original physical-page evidence is never reinterpreted.
+        // output page. Exact physical-note marks follow their source-note identity.
         return events.stream()
                 .filter(
-                        event ->
-                                event.start().isEmpty()
-                                        ? firstMeasure == 0
-                                        : event.start().get().measureIndex() >= firstMeasure
-                                                && (event.start().get().measureIndex()
-                                                                < measureAfterLast
-                                                        || finalPage
-                                                                && event.start()
-                                                                        .get()
-                                                                        .equals(
-                                                                                new ScoreAnchor(
-                                                                                        measureAfterLast,
-                                                                                        0))))
+                        event -> {
+                            if (event.start().isEmpty()) {
+                                if (event.kind() == ScoreExpressiveEvent.Kind.NATURAL_HARMONIC
+                                        && event.targetEventId().isPresent()) {
+                                    var measure =
+                                            ScoreNaturalHarmonicNotation.targetMeasure(
+                                                    event.targetEventId().get());
+                                    return measure.isPresent()
+                                            && measure.getAsInt() >= firstMeasure
+                                            && measure.getAsInt() < measureAfterLast;
+                                }
+                                if (event.kind() == ScoreExpressiveEvent.Kind.FALL_OFF
+                                        && event.targetEventId().isPresent()) {
+                                    var measure =
+                                            ScoreFallOffNotation.targetMeasure(
+                                                    event.targetEventId().get());
+                                    return measure.isPresent()
+                                            && measure.getAsInt() >= firstMeasure
+                                            && measure.getAsInt() < measureAfterLast;
+                                }
+                                return firstMeasure == 0;
+                            }
+                            return event.start().get().measureIndex() >= firstMeasure
+                                    && (event.start().get().measureIndex() < measureAfterLast
+                                            || finalPage
+                                                    && event.start()
+                                                            .get()
+                                                            .equals(
+                                                                    new ScoreAnchor(
+                                                                            measureAfterLast, 0)));
+                        })
                 .map(event -> event.offset(-firstMeasure))
-                .toList();
+                .collect(java.util.stream.Collectors.toList());
     }
 
     /** Keep a cross-page hairpin once, with its full endpoint relative to its starting page. */

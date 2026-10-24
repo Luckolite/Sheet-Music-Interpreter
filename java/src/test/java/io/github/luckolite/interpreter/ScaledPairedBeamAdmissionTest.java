@@ -40,6 +40,7 @@ public final class ScaledPairedBeamAdmissionTest {
                     OmrScoreInterpreter.class.getDeclaredMethod(
                             "beamJunctionHeads",
                             byte[].class,
+                            byte[].class,
                             int.class,
                             int.class,
                             List.class,
@@ -102,7 +103,9 @@ public final class ScaledPairedBeamAdmissionTest {
 
     @SuppressWarnings("unchecked")
     private static List<Object> rejected(Draw d) throws Exception {
-        return (List<Object>) filter.invoke(null, d.gray, W, H, d.heads, d.staffs);
+        // These authored geometry-only inputs exercise the retained legacy path.
+        // A null semantic plane cannot supply authority to the added complete-member path.
+        return (List<Object>) filter.invoke(null, d.gray, null, W, H, d.heads, d.staffs);
     }
 
     private static void owned(boolean down, int paper) throws Exception {

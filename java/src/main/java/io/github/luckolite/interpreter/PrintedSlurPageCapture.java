@@ -42,7 +42,16 @@ final class PrintedSlurPageCapture {
             List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
             Set<PrintedSlurOwners.Tie> retainedTies) {
         return captureInternal(
-                physicalPage, noteCount, gray, labels, width, height, frames, retainedTies, false);
+                physicalPage,
+                noteCount,
+                gray,
+                labels,
+                width,
+                height,
+                frames,
+                retainedTies,
+                false,
+                null);
     }
 
     static Result captureGeometry(
@@ -54,7 +63,52 @@ final class PrintedSlurPageCapture {
             int height,
             List<? extends Frame<? extends PrintedSlurOwners.Location>> frames) {
         return captureInternal(
-                physicalPage, noteCount, gray, labels, width, height, frames, Set.of(), true);
+                physicalPage, noteCount, gray, labels, width, height, frames, Set.of(), true, null);
+    }
+
+    static Result capture(
+            int physicalPage,
+            int noteCount,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            Set<PrintedSlurOwners.Tie> retainedTies,
+            List<ScoreNoteEvent> sourceNotes) {
+        return captureInternal(
+                physicalPage,
+                noteCount,
+                gray,
+                labels,
+                width,
+                height,
+                frames,
+                retainedTies,
+                false,
+                sourceNotes);
+    }
+
+    static Result captureGeometry(
+            int physicalPage,
+            int noteCount,
+            byte[] gray,
+            byte[] labels,
+            int width,
+            int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            List<ScoreNoteEvent> sourceNotes) {
+        return captureInternal(
+                physicalPage,
+                noteCount,
+                gray,
+                labels,
+                width,
+                height,
+                frames,
+                Set.of(),
+                true,
+                sourceNotes);
     }
 
     private static Result captureInternal(
@@ -66,7 +120,8 @@ final class PrintedSlurPageCapture {
             int height,
             List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
             Set<PrintedSlurOwners.Tie> retainedTies,
-            boolean geometryOnly) {
+            boolean geometryOnly,
+            List<ScoreNoteEvent> sourceNotes) {
         if (physicalPage < 0
                 || noteCount < 0
                 || noteCount > ScoreSlurSource.MAX_NOTES
@@ -107,15 +162,34 @@ final class PrintedSlurPageCapture {
         if (frames.size() > MAX_FRAMES || pixels > MAX_SCAN_PIXELS)
             return new Result(ScoreSlurSource.empty(noteCount), Map.of(), true);
 
+        if (sourceNotes != null && sourceNotes.size() != noteCount)
+            throw new IllegalArgumentException("Beam ownership source count disagrees");
+        var beam =
+                sourceNotes == null ? null : new ObservedStemBeam(sourceNotes, gray, width, height);
+        var marks =
+                sourceNotes == null
+                        ? null
+                        : new PrintedCurveMarkRoles(sourceNotes, gray, width, height);
+        var joints =
+                sourceNotes == null
+                        ? null
+                        : new PrintedCurveJointRoles(sourceNotes, gray, width, height);
         var spans = new ArrayList<ScoreSlurPages.Span>();
         var candidates = new ArrayList<ScoreSlurPages.Span>();
         var statuses =
                 new EnumMap<PrintedSlurOwners.Status, Integer>(PrintedSlurOwners.Status.class);
         int ordinal = 0;
+        int markOrdinal = 0;
+        int shortRailOrdinal = 0;
+        int jointOrdinal = 0;
+        var pieces = new ArrayList<PrintedSystemSlurJoins.Observed>();
+        boolean admitJoins = sourceNotes != null;
         for (var frame : frames) {
             var hints =
                     PrintedSlurOwners.headEvidence(
                             frame.heads(), gray, width, height, frame.track());
+            if (marks != null) hints = marks.wrap(hints, frame.heads(), frame.track());
+            if (joints != null) hints = joints.wrap(hints, frame.heads(), frame.track());
             var raw =
                     PrintedSlurContours.find(
                             gray,
@@ -132,7 +206,29 @@ final class PrintedSlurPageCapture {
             if (raw.limitReached())
                 return new Result(ScoreSlurSource.empty(noteCount), statuses, true);
             for (var bow : raw.bows()) {
-                String id = "printed-page-" + physicalPage + "-arc-" + ordinal++;
+                if (admitJoins) {
+                    if (pieces.size() == 4096) {
+                        pieces.clear();
+                        admitJoins = false;
+                    } else pieces.add(new PrintedSystemSlurJoins.Observed(frame, bow));
+                }
+                String id =
+                        raw.jointBows().contains(bow)
+                                ? "printed-page-" + physicalPage + "-joint-arc-" + jointOrdinal++
+                                : raw.shortRailBows().contains(bow)
+                                        ? "printed-page-"
+                                                + physicalPage
+                                                + "-short-rail-arc-"
+                                                + shortRailOrdinal++
+                                        : marks != null && marks.ownsRivalCurve(bow)
+                                                ? "printed-page-"
+                                                        + physicalPage
+                                                        + "-mark-arc-"
+                                                        + markOrdinal++
+                                                : "printed-page-"
+                                                        + physicalPage
+                                                        + "-arc-"
+                                                        + ordinal++;
                 if (geometryOnly) {
                     var bound =
                             PrintedSlurOwners.bind(
@@ -144,6 +240,11 @@ final class PrintedSlurPageCapture {
                                     width,
                                     height,
                                     frame.track());
+                    if (beam != null
+                            && bound.span().isPresent()
+                            && beam.owns(
+                                    bow, bound.span().orElseThrow(), frame.heads(), frame.track()))
+                        continue;
                     statuses.merge(bound.status(), 1, Integer::sum);
                     bound.span().ifPresent(candidates::add);
                     continue;
@@ -161,6 +262,10 @@ final class PrintedSlurPageCapture {
                                 width,
                                 height,
                                 frame.track());
+                if (beam != null
+                        && owned.span().isPresent()
+                        && beam.owns(bow, owned.span().orElseThrow(), frame.heads(), frame.track()))
+                    continue;
                 statuses.merge(owned.status(), 1, Integer::sum);
                 owned.span().ifPresent(spans::add);
                 if (owned.status() == PrintedSlurOwners.Status.UNPITCHED_UNRESOLVED
@@ -177,7 +282,109 @@ final class PrintedSlurPageCapture {
                                     height,
                                     frame.track())
                             .span()
+                            .filter(
+                                    span ->
+                                            beam == null
+                                                    || !beam.owns(
+                                                            bow,
+                                                            span,
+                                                            frame.heads(),
+                                                            frame.track()))
                             .ifPresent(candidates::add);
+                }
+            }
+        }
+        if (admitJoins) {
+            var joined =
+                    PrintedSystemSlurJoins.join(
+                            physicalPage, pieces, frames, sourceNotes, gray, width, height);
+            candidates.addAll(joined);
+            if (!joined.isEmpty())
+                statuses.merge(
+                        PrintedSlurOwners.Status.GEOMETRY_OWNED, joined.size(), Integer::sum);
+        }
+        if (sourceNotes != null) {
+            var graceRoles = new CalibratedGraceSlurs(sourceNotes, gray, width, height);
+            for (var observed : graceRoles.discover(frames)) {
+                var frame = observed.frame();
+                var bow = observed.bow();
+                String id =
+                        "printed-page-"
+                                + physicalPage
+                                + "-grace-cell-"
+                                + observed.graceOwner()
+                                + ":"
+                                + observed.principalOwner();
+                boolean duplicate = false;
+                for (var old : spans)
+                    if (old.start().noteIndex() == observed.graceOwner()
+                            && old.end().noteIndex() == observed.principalOwner()
+                            && old.placement()
+                                    == (bow.above()
+                                            ? ScoreSlurSpan.Placement.ABOVE
+                                            : ScoreSlurSpan.Placement.BELOW)) duplicate = true;
+                for (var old : candidates)
+                    if (old.start().noteIndex() == observed.graceOwner()
+                            && old.end().noteIndex() == observed.principalOwner()
+                            && old.placement()
+                                    == (bow.above()
+                                            ? ScoreSlurSpan.Placement.ABOVE
+                                            : ScoreSlurSpan.Placement.BELOW)) duplicate = true;
+                if (duplicate) continue;
+                if (geometryOnly) {
+                    var bound =
+                            PrintedSlurOwners.bindPixelCells(
+                                    id,
+                                    physicalPage,
+                                    bow,
+                                    frame.heads(),
+                                    gray,
+                                    width,
+                                    height,
+                                    frame.track());
+                    if (beam != null
+                            && bound.span().isPresent()
+                            && beam.owns(
+                                    bow, bound.span().orElseThrow(), frame.heads(), frame.track()))
+                        continue;
+                    statuses.merge(bound.status(), 1, Integer::sum);
+                    bound.span().ifPresent(candidates::add);
+                } else {
+                    var owned =
+                            PrintedSlurOwners.resolvePixelCells(
+                                    id,
+                                    physicalPage,
+                                    bow,
+                                    frame.heads().stream()
+                                            .map(h -> (PrintedSlurOwners.Head) h)
+                                            .toList(),
+                                    retainedTies,
+                                    gray,
+                                    width,
+                                    height,
+                                    frame.track());
+                    if (beam != null
+                            && owned.span().isPresent()
+                            && beam.owns(
+                                    bow, owned.span().orElseThrow(), frame.heads(), frame.track()))
+                        continue;
+                    statuses.merge(owned.status(), 1, Integer::sum);
+                    owned.span().ifPresent(spans::add);
+                    if (owned.status() == PrintedSlurOwners.Status.UNPITCHED_UNRESOLVED
+                            || owned.status() == PrintedSlurOwners.Status.SAME_PITCH_UNRESOLVED
+                            || owned.status() == PrintedSlurOwners.Status.TIE_PITCH_CONFLICT
+                            || owned.status() == PrintedSlurOwners.Status.REVERSED_CLOCK)
+                        PrintedSlurOwners.bindPixelCells(
+                                        id,
+                                        physicalPage,
+                                        bow,
+                                        frame.heads(),
+                                        gray,
+                                        width,
+                                        height,
+                                        frame.track())
+                                .span()
+                                .ifPresent(candidates::add);
                 }
             }
         }

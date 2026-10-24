@@ -119,6 +119,15 @@ final class FiniteParallelBeamBand {
                 && Q.of(end).compareTo(edge(maxX, true).add(Q.of(1))) <= 0;
     }
 
+    boolean parallelTo(FiniteParallelBeamBand other) {
+        return lowSlope.compareTo(other.highSlope) <= 0 && other.lowSlope.compareTo(highSlope) <= 0;
+    }
+
+    int terminalFloor(int exteriorX) {
+        // Universal contact floor: include the largest feasible exterior edge, as supportsEnd does.
+        return edge(exteriorX, false).sub(Q.of(1)).floor();
+    }
+
     int terminalCeiling(int exteriorX) {
         return edge(exteriorX, true).add(Q.of(1)).floor();
     }

@@ -37,7 +37,9 @@ public record ScoreExpressiveEvent(
         ARPEGGIO,
         CRESCENDO,
         DIMINUENDO,
-        METRIC_MODULATION
+        METRIC_MODULATION,
+        NATURAL_HARMONIC,
+        FALL_OFF
     }
 
     public enum Scope {
@@ -100,10 +102,29 @@ public record ScoreExpressiveEvent(
             throw new IllegalArgumentException("Resolved scope needs a musical anchor");
         if (kind == Kind.METRIC_MODULATION && MetricModulationText.decode(qualifierText).isEmpty())
             throw new IllegalArgumentException("Metric modulation needs a validated pulse pair");
+        if (kind == Kind.NATURAL_HARMONIC
+                && ((scope != Scope.NOTE && scope != Scope.UNRESOLVED)
+                        || (scope == Scope.NOTE && start.isEmpty())
+                        || (scope == Scope.UNRESOLVED && start.isPresent())
+                        || targetEventId.isEmpty()
+                        || end.isPresent()))
+            throw new IllegalArgumentException("Natural harmonic needs one exact note owner");
         if (kind == Kind.FERMATA
                 && scope != Scope.UNRESOLVED
                 && (!end.isPresent() || !targetEventId.isPresent()))
             throw new IllegalArgumentException("Resolved fermata needs its held event and release");
+        if (kind == Kind.FALL_OFF
+                && ((scope != Scope.NOTE && scope != Scope.UNRESOLVED)
+                        || (scope == Scope.NOTE && start.isEmpty())
+                        || (scope == Scope.UNRESOLVED && start.isPresent())
+                        || targetEventId.isEmpty()
+                        || end.isPresent()
+                        || strength != Strength.UNSPECIFIED
+                        || !ScoreFallOffNotation.CURVED.equals(qualifierText)
+                        || ScoreFallOffNotation.targetMeasure(targetEventId.orElse(null))
+                                .isEmpty()))
+            throw new IllegalArgumentException(
+                    "Falloff needs one exact note owner and printed shape");
     }
 
     /** Source identity/evidence survive concatenation; traversal IDs are assigned by projection. */
@@ -116,7 +137,15 @@ public record ScoreExpressiveEvent(
                 scope,
                 staffIndex,
                 staffCount,
-                targetEventId,
+                kind == Kind.NATURAL_HARMONIC
+                        ? targetEventId.map(
+                                target ->
+                                        ScoreNaturalHarmonicNotation.offsetTarget(target, measures))
+                        : kind == Kind.FALL_OFF
+                                ? targetEventId.map(
+                                        target ->
+                                                ScoreFallOffNotation.offsetTarget(target, measures))
+                                : targetEventId,
                 strength,
                 qualifierText,
                 evidence);
