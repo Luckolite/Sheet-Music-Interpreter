@@ -1,16 +1,16 @@
-flat_beam_through_flag-up-1x	flat_beam_through_flag-up-1x\gray.bin	flat_beam_through_flag-up-1x\carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	91,92,30,87.2,125.0
-sloped_beam_through_flag-up-1x	sloped_beam_through_flag-up-1x\gray.bin	sloped_beam_through_flag-up-1x\carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	91,92,39,87.2,125.0
-numeral_extra_core_staff-up-1x	numeral_extra_core_staff-up-1x\gray.bin	numeral_extra_core_staff-up-1x\carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	
-slur_extra_core_staff-up-1x	slur_extra_core_staff-up-1x\gray.bin	slur_extra_core_staff-up-1x\carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	
-flat_beam_through_flag-up-2x	flat_beam_through_flag-up-2x\gray.bin	flat_beam_through_flag-up-2x\carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	184,185,60,175.4,250.5
-sloped_beam_through_flag-up-2x	sloped_beam_through_flag-up-2x\gray.bin	sloped_beam_through_flag-up-2x\carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	184,185,78,175.4,250.5
-numeral_extra_core_staff-up-2x	numeral_extra_core_staff-up-2x\gray.bin	numeral_extra_core_staff-up-2x\carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	
-slur_extra_core_staff-up-2x	slur_extra_core_staff-up-2x\gray.bin	slur_extra_core_staff-up-2x\carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	
-flat_beam_through_flag-down-1x	flat_beam_through_flag-down-1x\gray.bin	flat_beam_through_flag-down-1x\carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	91,92,129,87.2,34.0
-sloped_beam_through_flag-down-1x	sloped_beam_through_flag-down-1x\gray.bin	sloped_beam_through_flag-down-1x\carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	91,92,120,87.2,34.0
-numeral_extra_core_staff-down-1x	numeral_extra_core_staff-down-1x\gray.bin	numeral_extra_core_staff-down-1x\carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	
-slur_extra_core_staff-down-1x	slur_extra_core_staff-down-1x\gray.bin	slur_extra_core_staff-down-1x\carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	
-flat_beam_through_flag-down-2x	flat_beam_through_flag-down-2x\gray.bin	flat_beam_through_flag-down-2x\carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	184,185,259,175.4,68.5
-sloped_beam_through_flag-down-2x	sloped_beam_through_flag-down-2x\gray.bin	sloped_beam_through_flag-down-2x\carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	184,185,241,175.4,68.5
-numeral_extra_core_staff-down-2x	numeral_extra_core_staff-down-2x\gray.bin	numeral_extra_core_staff-down-2x\carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	
-slur_extra_core_staff-down-2x	slur_extra_core_staff-down-2x\gray.bin	slur_extra_core_staff-down-2x\carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	
+flat_beam_through_flag-up-1x	flat_beam_through_flag-up-1x/gray.bin	flat_beam_through_flag-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	91,92,30,87.2,125.0
+sloped_beam_through_flag-up-1x	sloped_beam_through_flag-up-1x/gray.bin	sloped_beam_through_flag-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	91,92,39,87.2,125.0
+numeral_extra_core_staff-up-1x	numeral_extra_core_staff-up-1x/gray.bin	numeral_extra_core_staff-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	
+slur_extra_core_staff-up-1x	slur_extra_core_staff-up-1x/gray.bin	slur_extra_core_staff-up-1x/carrier.bin	160	160	16.0	-1	59	60	30	125	55.0	125.0	0	
+flat_beam_through_flag-up-2x	flat_beam_through_flag-up-2x/gray.bin	flat_beam_through_flag-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	184,185,60,175.4,250.5
+sloped_beam_through_flag-up-2x	sloped_beam_through_flag-up-2x/gray.bin	sloped_beam_through_flag-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	184,185,78,175.4,250.5
+numeral_extra_core_staff-up-2x	numeral_extra_core_staff-up-2x/gray.bin	numeral_extra_core_staff-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	
+slur_extra_core_staff-up-2x	slur_extra_core_staff-up-2x/gray.bin	slur_extra_core_staff-up-2x/carrier.bin	320	320	32.0	-1	118	121	60	250	110.5	250.5	0	
+flat_beam_through_flag-down-1x	flat_beam_through_flag-down-1x/gray.bin	flat_beam_through_flag-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	91,92,129,87.2,34.0
+sloped_beam_through_flag-down-1x	sloped_beam_through_flag-down-1x/gray.bin	sloped_beam_through_flag-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	91,92,120,87.2,34.0
+numeral_extra_core_staff-down-1x	numeral_extra_core_staff-down-1x/gray.bin	numeral_extra_core_staff-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	
+slur_extra_core_staff-down-1x	slur_extra_core_staff-down-1x/gray.bin	slur_extra_core_staff-down-1x/carrier.bin	160	160	16.0	1	59	60	129	34	55.0	34.0	0	
+flat_beam_through_flag-down-2x	flat_beam_through_flag-down-2x/gray.bin	flat_beam_through_flag-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	184,185,259,175.4,68.5
+sloped_beam_through_flag-down-2x	sloped_beam_through_flag-down-2x/gray.bin	sloped_beam_through_flag-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	184,185,241,175.4,68.5
+numeral_extra_core_staff-down-2x	numeral_extra_core_staff-down-2x/gray.bin	numeral_extra_core_staff-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	
+slur_extra_core_staff-down-2x	slur_extra_core_staff-down-2x/gray.bin	slur_extra_core_staff-down-2x/carrier.bin	320	320	32.0	1	118	121	259	68	110.5	68.5	0	

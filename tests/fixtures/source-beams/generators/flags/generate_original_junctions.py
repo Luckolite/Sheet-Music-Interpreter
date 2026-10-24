@@ -28,5 +28,5 @@ for down in(False,True):
    raw=np.array(im)
    dest=OUT/f'{case}-{tag}';dest.mkdir(exist_ok=True);(dest/'gray.bin').write_bytes(raw.tobytes());(dest/'carrier.bin').write_bytes(c.astype(np.uint8).tobytes());im.save(dest/'source.png')
    text=';'.join(','.join(str(r[k])for k in['left','right','cap'])+','+str(heads[1][1])+','+str(heads[1][2])for r in rivals)
-   manifest.append('\t'.join(map(str,[f'{case}-{tag}',str(dest.relative_to(OUT)/'gray.bin'),str(dest.relative_to(OUT)/'carrier.bin'),t['width'],t['height'],g,n['direction'],n['left'],n['right'],cap,n['start'],heads[0][1],heads[0][2],0,text])))
+   manifest.append('\t'.join(map(str,[f'{case}-{tag}',(dest.relative_to(OUT)/'gray.bin').as_posix(),(dest.relative_to(OUT)/'carrier.bin').as_posix(),t['width'],t['height'],g,n['direction'],n['left'],n['right'],cap,n['start'],heads[0][1],heads[0][2],0,text])))
 (OUT/'fixtures.tsv').write_text('\n'.join(manifest)+'\n')

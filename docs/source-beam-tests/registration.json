@@ -105,5 +105,7 @@
       "source_normalized_sha256": "335c2b88e696fc76e01c0dbefca6644404aef2419ffd466aef46e82ade2fcc54",
       "standalone_sha256": "43237d00222da81c3db9b1b29d8a8826d164772b5dac76c52c771a773f0e6db0"
     }
-  }
+  },
+  "fixture_path_format": "POSIX relative binary paths on every platform; junction manifest generator uses Path.as_posix. Original bytes, coordinates and expected recognition outcomes remain unchanged.",
+  "fixture_path_regression": "tests/test_source_beam_manifest_paths.py"
 }
