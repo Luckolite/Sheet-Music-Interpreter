@@ -7471,6 +7471,50 @@
       "reviewed_source_state": "Committed source fix; APK and matching Hub worker deployment deferred to the requested release boundary.",
       "review_note": "Merge identical shared tremolo facts across retained page projections in stable order; reject conflicting full payloads and preserve strict endpoint and note ownership validation. Original synthetic page projections only; no private score data.",
       "current_source_review": "Package-only equivalent source and original regression reviewed. No recognition model, clock policy, serialization layout, native API or decoder source selection changes."
+    },
+    "OwnedBitmapTask.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/OwnedBitmapTask.java",
+      "source_sha256": "05f3a83b3b64b69cdde0dc0d47d695c55f9fc542f651391973f191770ae1a022",
+      "source_normalized_sha256": "05f3a83b3b64b69cdde0dc0d47d695c55f9fc542f651391973f191770ae1a022",
+      "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/OwnedBitmapTask.java",
+      "standalone_sha256": "e9b397fd068ea9104a12089b25fb382470e35f5e5b1d24d68c51ce57bdff9538",
+      "standalone_normalized_sha256": "e9b397fd068ea9104a12089b25fb382470e35f5e5b1d24d68c51ce57bdff9538",
+      "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
+      "reviewed_source_state": "Android-only adapter and original instrumentation test; outside standalone Java core source set.",
+      "review_note": "Package-only Apache-2.0 port. Resource ownership changes only; no model, text inference, cache identity, clock or native record layout changes."
+    },
+    "DeferredTextRecognizer.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/importer/DeferredTextRecognizer.java",
+      "source_sha256": "261c63e70ec9e7f724f4f32945599c55a0216b72216873ff8c71f61f98cc63e9",
+      "source_normalized_sha256": "261c63e70ec9e7f724f4f32945599c55a0216b72216873ff8c71f61f98cc63e9",
+      "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/DeferredTextRecognizer.java",
+      "standalone_sha256": "b9eb966280e0b01794ae3406fa8fc8dca0e1043358f480edce1fd7b7810c6d17",
+      "standalone_normalized_sha256": "b9eb966280e0b01794ae3406fa8fc8dca0e1043358f480edce1fd7b7810c6d17",
+      "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
+      "reviewed_source_state": "Android-only adapter and original instrumentation test; outside standalone Java core source set.",
+      "review_note": "Package-only Apache-2.0 port. Resource ownership changes only; no model, text inference, cache identity, clock or native record layout changes."
+    },
+    "OwnedBitmapTaskInstrumentedTest.java": {
+      "source_path": "app/src/androidTest/java/com/musicsheets/app/importer/OwnedBitmapTaskInstrumentedTest.java",
+      "source_sha256": "489884f928f99d08eec31ec3e8d3414271082cb0443c61f06b6a816c60bba78a",
+      "source_normalized_sha256": "489884f928f99d08eec31ec3e8d3414271082cb0443c61f06b6a816c60bba78a",
+      "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/OwnedBitmapTaskInstrumentedTest.java",
+      "standalone_sha256": "9c65e61f0fe8d74600e4f2930cabd3f9d6885ed60330205c6d59c51f5e7886c7",
+      "standalone_normalized_sha256": "9c65e61f0fe8d74600e4f2930cabd3f9d6885ed60330205c6d59c51f5e7886c7",
+      "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
+      "reviewed_source_state": "Android-only adapter and original instrumentation test; outside standalone Java core source set.",
+      "review_note": "Package-only Apache-2.0 port. Resource ownership changes only; no model, text inference, cache identity, clock or native record layout changes."
+    },
+    "DeferredTextRecognizerInstrumentedTest.java": {
+      "source_path": "app/src/androidTest/java/com/musicsheets/app/importer/DeferredTextRecognizerInstrumentedTest.java",
+      "source_sha256": "3bcaed264ab332d5a45331a40be6a179c9cea66125c19480423116f7f5856ea4",
+      "source_normalized_sha256": "3bcaed264ab332d5a45331a40be6a179c9cea66125c19480423116f7f5856ea4",
+      "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/DeferredTextRecognizerInstrumentedTest.java",
+      "standalone_sha256": "de3cffb1f2f90b186ae721b15fa352427a52b65ae5763995b7553c5b9b88a1e0",
+      "standalone_normalized_sha256": "de3cffb1f2f90b186ae721b15fa352427a52b65ae5763995b7553c5b9b88a1e0",
+      "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
+      "reviewed_source_state": "Android-only adapter and original instrumentation test; outside standalone Java core source set.",
+      "review_note": "Package-only Apache-2.0 port. Resource ownership changes only; no model, text inference, cache identity, clock or native record layout changes."
     }
   },
   "interpreter_speedup_review": {
@@ -13314,5 +13358,49 @@
     "regression": "TremoloPageJoinOriginalTest: six original source-free tests plus existing clock-policy, identity-wire and rhythm controls; 29 tests per namespace.",
     "privacy": "No phone logs, captured sheet metadata, commercial score assets, library database or signing material included.",
     "deployment_boundary": "Source only; matched app and Hub worker packages remain pending the authorized cumulative release."
+  },
+  "android_ocr_resource_lifetime_review": {
+    "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
+    "documentation_path": "android-adapters/README.md",
+    "license": "Apache-2.0",
+    "scope": "Private pixels remain owned until process-task completion; recognizer close is deferred until all admitted tasks complete naturally. Timeout/interruption stop the waiter, not resource ownership.",
+    "app_only_consumers": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/LocalTextRecognizer.java",
+        "source_sha256": "73295f156b73cf3f92f2cb747c5bda03283135e2d9f48e9f9d968f8d04c74b1a",
+        "source_normalized_sha256": "c4268a5665b89207c02875f08662e633a11af2a953296dd7165bbd81e954a01d"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/PageTextRecognition.java",
+        "source_sha256": "4b1bcdee56041da8c051fa93a3f3e8630ca9ac953218fb1e71b22b33927d0f3c",
+        "source_normalized_sha256": "671c86b83ebcac2b497542ac774a28f0edf299539db70e4598eeae46f4b1206d"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetCreditsScanner.java",
+        "source_sha256": "0aae6fc4efb2f7614f7b0db8613dcf0a16691e14946ef8229720153614f08b4c",
+        "source_normalized_sha256": "6d957303abf4987c95741f7917ca12064cdb44279555855529cf3bee4424b189"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/importer/SheetTitleOcr.java",
+        "source_sha256": "d2a4c098d16a887e76b5654b13376c6b0df752d4312dea22ac731d9064a3dea3",
+        "source_normalized_sha256": "9f73dd89dcf0174e44d6cd5e996acaf0c2bff3eee7b6250a2a031150b7067ce4"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabDocumentTuning.java",
+        "source_sha256": "efa44d4b74bde31fc58a27c532213cf83a065ac801528d08b2e0a2dc6ba970db",
+        "source_normalized_sha256": "865ec5fe875e07d441ec934064e226c6f61cdb4f46f307a6752485107a60e853"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetView.java",
+        "source_sha256": "f98dbc7467c4842b4d6f9365c37609e701b83f90c7a5c84f97ca2a314dc6dac3",
+        "source_normalized_sha256": "f98dbc7467c4842b4d6f9365c37609e701b83f90c7a5c84f97ca2a314dc6dac3"
+      }
+    ],
+    "consumer_boundary": "App cache, PDF rendering, OCR factories, distribution guards and UI remain Android-side. Only SDK-facing helpers and independent original regressions are ported; no private app or score assets.",
+    "play_boundary": "The existing family-protections early return stays before ML Kit client creation.",
+    "standalone_boundary": "No Android/Google dependency added to standalone java/src or its build scripts. Adapters compile separately against the pinned Android SDK and existing ML Kit API.",
+    "tests": "Twelve model-free Android emulator tests pass: five pixel ownership, four deferred-recognizer ownership/API forwarding, one independent UI theme monitor/pixel control, and two existing local/managed cache cancellation controls. The nine OCR ownership controls are shared here as source.",
+    "limits": "Synthetic resource lifetime and API behavior, not a real-phone OCR or recognition-accuracy claim; no production APK, Hub worker or Library deployment.",
+    "non_interpreter_ui_changes": "Separate app-only boolean playback-preparation feedback, repeated UI failure notices and immutable-settings theme compositing monitor scope. No musical inference or wire format change."
   }
 }
