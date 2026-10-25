@@ -64,7 +64,11 @@ public final class PrintedBeamSource {
     private record Binding(Lane lane, float bottom, float gap) {}
 
     private record Candidate(
-            int owner, Binding binding, PrintedBeamShafts.Shaft shaft, float glyphGap) {}
+            int owner,
+            Binding binding,
+            PrintedBeamShafts.Shaft shaft,
+            float glyphGap,
+            PrintedBeamShaftPixels.Certificate pixels) {}
 
     private static final class Node {
         final int id, measure;
@@ -166,6 +170,8 @@ public final class PrintedBeamSource {
                 throw new IllegalArgumentException("Invalid beam intake");
             var work = new Work(128_000_000);
             var shaftBudget = new PrintedBeamShafts.Budget(shaftAllowance);
+            var pixelFrame =
+                    new PrintedBeamShaftPixels.Frame(score, gray, width, height, page, work::take);
             var heads =
                     PrintedSlurContext.geometryHeads(
                             score.notes(), score.measures(), width, height);
@@ -234,13 +240,42 @@ public final class PrintedBeamSource {
                 bodies++;
                 var shafts =
                         PrintedBeamShafts.at(
-                                gray, width, height, head.x(), head.y(), glyphGap, shaftBudget);
+                                gray,
+                                width,
+                                height,
+                                head.x(),
+                                head.y(),
+                                glyphGap,
+                                shaftBudget,
+                                pixelFrame);
                 if (shaftBudget.refused()) throw new Limit();
-                for (var shaft : shafts)
-                    if (headContact(gray, width, height, head, shaft, glyphGap, work, binding)) {
-                        candidates.add(new Candidate(owner, binding, shaft, glyphGap));
+                for (var shaft : shafts) {
+                    work.take(18);
+                    int[] contactPoint = new int[2];
+                    if (headContact(
+                            gray,
+                            width,
+                            height,
+                            head,
+                            shaft,
+                            glyphGap,
+                            work,
+                            binding,
+                            contactPoint)) {
+                        var token = new Object();
+                        var pixels =
+                                PrintedBeamShaftPixels.certify(
+                                        pixelFrame,
+                                        token,
+                                        binding,
+                                        owner,
+                                        shaft,
+                                        contactPoint[0],
+                                        contactPoint[1]);
+                        candidates.add(new Candidate(owner, binding, shaft, glyphGap, pixels));
                         choices[owner]++;
                     }
+                }
                 row.put("shafts", choices[owner]);
                 row.put(
                         "status",
@@ -348,6 +383,7 @@ public final class PrintedBeamSource {
                         ends.entrySet().stream()
                                 .map(e -> new PrintedBeamGeometry.End(e.getKey(), e.getValue()))
                                 .toList();
+                work.take(node.candidates.size() + 32L);
                 var column =
                         new PrintedBeamGeometry.Column(
                                 node.id,
@@ -361,7 +397,11 @@ public final class PrintedBeamSource {
                                 gap,
                                 maximum,
                                 physical,
-                                start);
+                                start,
+                                new PrintedBeamShaftPixels.Targets(
+                                        pixelFrame,
+                                        node.id,
+                                        node.candidates.stream().map(Candidate::pixels).toList()));
                 columns.add(column);
                 byId.put(node.id, node);
             }
@@ -417,7 +457,7 @@ public final class PrintedBeamSource {
             for (var column : columns) {
                 var node = byId.get(column.id());
                 var row = new LinkedHashMap<String, Object>();
-                row.put("column", column);
+                row.put("column", diagnosticColumn(column, work));
                 row.put("owners", List.copyOf(node.owners));
                 row.put("unlinked", unlinkedIds.contains(column.id()));
                 row.put("rival", node.rival);
@@ -655,6 +695,26 @@ public final class PrintedBeamSource {
         }
     }
 
+    /** Diagnostic copies never retain page-owned certificate/frame/raw authority. */
+    static PrintedBeamGeometry.Column diagnosticColumn(
+            PrintedBeamGeometry.Column column, Work work) {
+        // Bound the clone/list/constructor metadata before allocating it.
+        work.take(column.shaftColumns().size() + 32L);
+        return new PrintedBeamGeometry.Column(
+                column.id(),
+                column.measure(),
+                column.staff(),
+                column.staffCount(),
+                column.direction(),
+                column.left(),
+                column.right(),
+                column.cap(),
+                column.gap(),
+                column.maximumRails(),
+                column.shaftColumns(),
+                column.shaftStart());
+    }
+
     private static float glyphScale(ScoreNoteEvent note) {
         return (note.articulations() & NoteOrnament.GRACE) != 0
                 ? .65f
@@ -732,6 +792,19 @@ public final class PrintedBeamSource {
             float gap,
             Work budget,
             Binding context) {
+        return headContact(raw, w, h, head, shaft, gap, budget, context, null);
+    }
+
+    private static boolean headContact(
+            byte[] raw,
+            int w,
+            int h,
+            PrintedSlurOwners.Location head,
+            PrintedBeamShafts.Shaft shaft,
+            float gap,
+            Work budget,
+            Binding context,
+            int[] point) {
         int l = Math.max(0, (int) Math.floor(Math.min(head.x() - gap * .8f, shaft.left()))),
                 r = Math.min(w - 1, (int) Math.ceil(Math.max(head.x() + gap * .8f, shaft.right())));
         int t = Math.max(0, (int) Math.floor(head.y() - gap * .65f)),
@@ -800,7 +873,13 @@ public final class PrintedBeamSource {
                 if (x == col.x()
                         && (shaft.direction() > 0
                                 ? y >= shaft.startY() && y <= col.endY()
-                                : y <= shaft.startY() && y >= col.endY())) return true;
+                                : y <= shaft.startY() && y >= col.endY())) {
+                    if (point != null) {
+                        point[0] = x;
+                        point[1] = y;
+                    }
+                    return true;
+                }
             for (int dy = -1; dy <= 1; dy++)
                 for (int dx = -1; dx <= 1; dx++) {
                     int nx = x + dx, ny = y + dy;

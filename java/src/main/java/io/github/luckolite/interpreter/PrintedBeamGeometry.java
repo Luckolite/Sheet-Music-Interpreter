@@ -22,7 +22,37 @@ final class PrintedBeamGeometry {
             double gap,
             int maximumRails,
             List<End> shaftColumns,
-            int shaftStart) {
+            int shaftStart,
+            PrintedBeamShaftPixels.Targets targets) {
+        Column(
+                int id,
+                int measure,
+                int staff,
+                int staffCount,
+                int direction,
+                int left,
+                int right,
+                int cap,
+                double gap,
+                int maximumRails,
+                List<End> shaftColumns,
+                int shaftStart) {
+            this(
+                    id,
+                    measure,
+                    staff,
+                    staffCount,
+                    direction,
+                    left,
+                    right,
+                    cap,
+                    gap,
+                    maximumRails,
+                    shaftColumns,
+                    shaftStart,
+                    null);
+        }
+
         Column(
                 int id,
                 int measure,
@@ -309,8 +339,8 @@ final class PrintedBeamGeometry {
                     if (y >= low
                             && y <= high
                             && (raw[y * width + boundary] & 255) < 165
-                            && !c.at(boundary, y)
-                            && !c.unknown(boundary, y)) {
+                            && ((!c.at(boundary, y) && !c.unknown(boundary, y))
+                                    || certifiedTerminal(shaft, boundary, y))) {
                         int slot = (y - low) * cw + boundary - left;
                         visited[slot] = true;
                         queue[tail++] = slot;
@@ -335,13 +365,22 @@ final class PrintedBeamGeometry {
                             visited[next] = true;
                             budget.spend(1);
                             if ((raw[ny * width + nx] & 255) < 165
-                                    && !c.at(nx, ny)
-                                    && !c.unknown(nx, ny)) queue[tail++] = next;
+                                    && ((!c.at(nx, ny) && !c.unknown(nx, ny))
+                                            || certifiedTerminal(shaft, nx, ny)))
+                                queue[tail++] = next;
                         }
                 }
                 if (!reached) return false;
             }
             return true;
+        }
+
+        // Only a rejected raw owned endpoint may use its original head-connected certificate.
+        // No-certificate columns retain the exact old plane-query path.
+        boolean certifiedTerminal(Column shaft, int x, int y) {
+            return shaft.owns(x, y)
+                    && shaft.targets() != null
+                    && shaft.targets().has(raw, width, height, shaft.id(), x, y);
         }
 
         List<Run> runs(int x, int low, int high) {

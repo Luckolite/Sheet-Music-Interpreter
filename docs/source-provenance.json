@@ -6873,21 +6873,21 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamGeometry.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamGeometry.java",
       "license": "Apache-2.0",
-      "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "274855b51f32d4e3ceeaf1bce01e73d006b66ad55c8df0f3b5327053324548cc",
-      "source_normalized_sha256": "befa9ae40bbba1958b3ef68001d9ed3b4f64c87f1088a1864ddf92aced9709e4",
-      "standalone_sha256": "cb07cea97568cc6f93f84cc4d6e04bbc52070ce47a25236d05256967278c5b1c",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
+      "source_sha256": "744973d913919a1fecdb455a1c21a896837805c31844107de9714455995fa52d",
+      "source_normalized_sha256": "fe1582123b8e7580492d441d1bb72209b7e9c51597287e6be4b10b72804d47b0",
+      "standalone_sha256": "9b51683852c4631c1083d4cc82a6aca06df7d3fa3d1b085b734e932c06cbcdeb",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
     },
     "PrintedBeamShafts.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamShafts.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
-      "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "316c310666e50b8cd2bb084226e5171d72c240e05f943c9ff13858ac7578d9dd",
-      "source_normalized_sha256": "316c310666e50b8cd2bb084226e5171d72c240e05f943c9ff13858ac7578d9dd",
-      "standalone_sha256": "c2aed0a042aecf49726d2aaa39300b1e9696a3fec0fd22bc9011c36fd1d20d4e",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
+      "source_sha256": "a5cb1aa51fad437a507e44a21536b7bb9700ae47850d0d9c8225cc02dc43ee48",
+      "source_normalized_sha256": "96e087c94db831a07e034d5966064d7deb92f6914665c3f4527e5394aa01bd2c",
+      "standalone_sha256": "639d2fb72505b3ef775ba1f09f74529e01c981d6f05ec5c9bb1e36c44ddf3742",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
     },
     "PrintedBeamRuleWitness.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleWitness.java",
@@ -6913,11 +6913,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
-      "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "881358c7922b09a75ebba1e83be63af4b7378259121e65459c199a74d590a0a6",
-      "source_normalized_sha256": "8fd48aceda74ceed4a0703c6195fcee6ad57c5bc4248191881f4c6da21836c8e",
-      "standalone_sha256": "0aaea2d9dca865dbc04f5a49e2188aa24dec04967222f199c2e1db7b326fb75e",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
+      "source_sha256": "9cf7b76bcba6e595c487912d6f84015f1f4150ca60046a3bc589b9988397d6ea",
+      "source_normalized_sha256": "bb6f2058a7bf81789e8f9212a8cc527ddd259ea6fc1fceefdead006f50411300",
+      "standalone_sha256": "0a4b10b4949697c3702b137397c1d15a9a9cb21b70579ee9f6335190c69e26e6",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
     },
     "PrintedIsolatedFlags.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
@@ -7449,6 +7449,16 @@
       "standalone_normalized_sha256": "36658b9a515afa0c29888d9a39cb9a0de22309f0772aaaae0c1d6eb4a54c5f3c",
       "license": "Apache-2.0",
       "android_api_compatibility_review": "Exact signed lexicographic order, signed-range checked rational floor and original record equality semantics are preserved without APIs introduced above the app minimum. Original signed endpoint, negative fraction and overflow regressions accompany the change; ownership braces retain their previous control flow."
+    },
+    "PrintedBeamShaftPixels.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamShaftPixels.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShaftPixels.java",
+      "license": "Apache-2.0",
+      "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
+      "source_sha256": "db5684b86e9dda5e7f4dbff2e0a99f4c8bdc3666439661667a52d864a67d300b",
+      "source_normalized_sha256": "2fe534aff2356ebe1004b99ea660f73b0816e38bdb36a0a475c7a31854e9c335",
+      "standalone_sha256": "7ef688ea3919f86ce0f468f2ad3cbe6f8c02823822432f7b68191f83ca77b209",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
     }
   },
   "interpreter_speedup_review": {

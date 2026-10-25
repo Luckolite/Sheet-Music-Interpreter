@@ -33,7 +33,18 @@ final class PrintedBeamShafts {
 
     record Column(int x, int endY) {}
 
-    record Shaft(int left, int right, int startY, int endY, int direction, List<Column> columns) {
+    record Shaft(
+            int left,
+            int right,
+            int startY,
+            int endY,
+            int direction,
+            List<Column> columns,
+            PrintedBeamShaftPixels.Scan pixels) {
+        Shaft(int left, int right, int startY, int endY, int direction, List<Column> columns) {
+            this(left, right, startY, endY, direction, columns, null);
+        }
+
         Shaft {
             columns = List.copyOf(columns);
         }
@@ -43,6 +54,19 @@ final class PrintedBeamShafts {
 
     static List<Shaft> at(
             byte[] raw, int width, int height, float headX, float headY, float gap, Budget budget) {
+        return at(raw, width, height, headX, headY, gap, budget, null);
+    }
+
+    static List<Shaft> at(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame) {
+        if (frame != null) frame.check(raw, width, height);
         if (raw == null
                 || width < 3
                 || height < 3
@@ -96,13 +120,26 @@ final class PrintedBeamShafts {
             // At least one literal 8-connected path survives every row from
             // the authenticated head's edge to the most remote observed cap.
             // A shorter adjacent column never supplies a fictitious blank pixel.
+            int[] savedRows = null;
+            if (frame != null) {
+                frame.take(remote - start + 1L + 48);
+                savedRows = new int[remote - start + 1];
+            }
             boolean[] previous = new boolean[right - left + 1];
             boolean connected = true;
             for (int y = start; y <= remote; y++) {
                 boolean[] next = new boolean[previous.length];
                 boolean any = false;
-                for (int i = 0; i < next.length; i++)
-                    if (dark(raw, width, height, left + i, y, direction)) {
+                for (int i = 0; i < next.length; i++) {
+                    boolean actualDark = dark(raw, width, height, left + i, y, direction);
+                    if (savedRows != null
+                            && actualDark
+                            && y
+                                    <= (direction > 0
+                                            ? cols.get(i).endY()
+                                            : height - 1 - cols.get(i).endY()))
+                        savedRows[y - start] |= 1 << i;
+                    if (actualDark) {
                         next[i] =
                                 y == start
                                         || previous[i]
@@ -110,6 +147,7 @@ final class PrintedBeamShafts {
                                         || i + 1 < previous.length && previous[i + 1];
                         any |= next[i];
                     }
+                }
                 if (!any) {
                     connected = false;
                     break;
@@ -124,7 +162,18 @@ final class PrintedBeamShafts {
                                 direction > 0 ? start : height - 1 - start,
                                 direction > 0 ? remote : height - 1 - remote,
                                 direction,
-                                cols));
+                                cols,
+                                savedRows == null
+                                        ? null
+                                        : new PrintedBeamShaftPixels.Scan(
+                                                frame,
+                                                left,
+                                                right,
+                                                direction > 0 ? start : height - 1 - start,
+                                                direction > 0 ? remote : height - 1 - remote,
+                                                direction,
+                                                cols,
+                                                savedRows)));
         }
         return List.copyOf(result);
     }
