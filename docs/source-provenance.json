@@ -3820,15 +3820,15 @@
     },
     "ScoreTremoloSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSource.java",
-      "source_sha256": "028cdd871a43324748d997a0f2ff759027c2b47ddba8c975bc4a3f0f55e6b665",
-      "source_normalized_sha256": "be7bb7efab7b7e78ef4bc83460db934372e684d74a9ef768db8f43a23ecb38f9",
-      "standalone_sha256": "7b505af3fc9cf0e209c670a80691751ec7dc6dd837b437d630797a5e14fc01d9",
-      "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
+      "source_sha256": "88ebd4c53f9f267807d907f9ab86260d5e93d988773006767eb878764232c30d",
+      "source_normalized_sha256": "69bed77a55dbad20e93a249cec283f4fd471dbd17d6a7d82eefe38867a9508f3",
+      "standalone_sha256": "c5429b3422ad74c598ff9ee648b4005ad8963f33a0d0ce4d8e9e99fda91433f8",
+      "reviewed_source_state": "Committed source fix; APK and matching Hub worker deployment deferred to the requested release boundary.",
+      "review_note": "Merge identical shared tremolo facts across retained page projections in stable order; reject conflicting full payloads and preserve strict endpoint and note ownership validation. Original synthetic page projections only; no private score data.",
+      "reviewed_app_commit": "8830e124d8b7c8a01281c3068967446822ca0e15",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreTremoloSource.java",
-      "standalone_normalized_sha256": "7b505af3fc9cf0e209c670a80691751ec7dc6dd837b437d630797a5e14fc01d9",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "c5429b3422ad74c598ff9ee648b4005ad8963f33a0d0ce4d8e9e99fda91433f8",
+      "current_source_review": "Package-only equivalent source and original regression reviewed. No recognition model, clock policy, serialization layout, native API or decoder source selection changes."
     },
     "ScoreTremoloTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloTiming.java",
@@ -7459,6 +7459,18 @@
       "source_normalized_sha256": "2fe534aff2356ebe1004b99ea660f73b0816e38bdb36a0a475c7a31854e9c335",
       "standalone_sha256": "7ef688ea3919f86ce0f468f2ad3cbe6f8c02823822432f7b68191f83ca77b209",
       "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
+    },
+    "TremoloPageJoinOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TremoloPageJoinOriginalTest.java",
+      "source_sha256": "263b371b4d42fb8c3a5c21338b7ac8e3bd0715f92e7dccb4bbe7ad6b278463b1",
+      "source_normalized_sha256": "263b371b4d42fb8c3a5c21338b7ac8e3bd0715f92e7dccb4bbe7ad6b278463b1",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TremoloPageJoinOriginalTest.java",
+      "standalone_sha256": "0776198ab2ac895ea4936698020fd18bb2c63c8d9869fa3d5f3ba1ac9d1d11fd",
+      "standalone_normalized_sha256": "ffc1d207dda865314f956d07269db72870e65a73c581daffeeb40c32087a5cff",
+      "reviewed_app_commit": "8830e124d8b7c8a01281c3068967446822ca0e15",
+      "reviewed_source_state": "Committed source fix; APK and matching Hub worker deployment deferred to the requested release boundary.",
+      "review_note": "Merge identical shared tremolo facts across retained page projections in stable order; reject conflicting full payloads and preserve strict endpoint and note ownership validation. Original synthetic page projections only; no private score data.",
+      "current_source_review": "Package-only equivalent source and original regression reviewed. No recognition model, clock policy, serialization layout, native API or decoder source selection changes."
     }
   },
   "interpreter_speedup_review": {
@@ -13295,5 +13307,12 @@
     "scope": "Replace platform-new array comparison, BigInteger exact conversion and a bound record method reference while preserving signed ordering, overflow refusal and equality; clarify two ownership condition braces. New exact signed-range tests contain only original scalar fixtures.",
     "models_changed": false,
     "native_decoder_source_count": 479
+  },
+  "tremolo_page_join_review": {
+    "reviewed_app_commit": "8830e124d8b7c8a01281c3068967446822ca0e15",
+    "scope": "Retained converted pages share immutable tremolo facts but hold different note-owner slices. Join identical complete facts once; never rename or discard conflicting identities.",
+    "regression": "TremoloPageJoinOriginalTest: six original source-free tests plus existing clock-policy, identity-wire and rhythm controls; 29 tests per namespace.",
+    "privacy": "No phone logs, captured sheet metadata, commercial score assets, library database or signing material included.",
+    "deployment_boundary": "Source only; matched app and Hub worker packages remain pending the authorized cumulative release."
   }
 }

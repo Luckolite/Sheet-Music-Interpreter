@@ -207,13 +207,22 @@ public record ScoreTremoloSource(List<Pair> pairs, List<Optional<Anchor>> noteOr
     }
 
     public static ScoreTremoloSource join(List<ScoreTremoloSource> pages) {
-        List<Pair> pairs = new ArrayList<>();
+        Map<String, Pair> pairs = new LinkedHashMap<>();
         List<Optional<Anchor>> origins = new ArrayList<>();
+        long total = 0;
         for (ScoreTremoloSource page : pages) {
-            pairs.addAll(page.pairs);
+            total += page.noteOrigins.size();
+            if (total > 1_000_000)
+                throw new IllegalArgumentException("Too many tremolo note owners");
+            // Rendered pages retain the same source facts with different note-owner slices.
+            for (Pair pair : page.pairs) {
+                Pair previous = pairs.putIfAbsent(pair.id, pair);
+                if (previous != null && !previous.equals(pair))
+                    throw new IllegalArgumentException("Conflicting tremolo identity");
+            }
             origins.addAll(page.noteOrigins);
         }
-        return new ScoreTremoloSource(pairs, origins);
+        return new ScoreTremoloSource(List.copyOf(pairs.values()), origins);
     }
 
     /** Ownership remains available through resolve even when source clock policy is unknown. */
