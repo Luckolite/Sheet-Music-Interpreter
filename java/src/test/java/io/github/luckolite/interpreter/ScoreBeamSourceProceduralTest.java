@@ -68,7 +68,16 @@ public final class ScoreBeamSourceProceduralTest {
         rejects(() -> source.edited(List.of(6)));
         rejects(() -> source.edited(List.of(-2)));
         rejects(() -> source.onPage(4).onPage(5));
-        rejects(() -> join(List.of(source,source)));
+        // Shared source facts coalesce; repeated current origins remain ambiguous.
+        var repeatedViews = join(List.of(source, source));
+        check(repeatedViews.groups().equals(source.groups()));
+        check(repeatedViews.detachedColumns().equals(source.detachedColumns()));
+        check(repeatedViews.noteOrigins().size() == source.noteOrigins().size() * 2);
+        var repeatedGroup = repeatedViews.resolve().groups().get(0);
+        check(repeatedGroup.columns().stream().allMatch(c -> c.ambiguous() && !c.usable()));
+        for (int bridge = 0; bridge < repeatedGroup.source().bridges().size(); bridge++)
+            check(repeatedGroup.bridgeMask(bridge) == 0);
+        check(repeatedGroup.engravingHooks().isEmpty());
         var mutable = new ArrayList<Anchor>(List.of(a(0,9)));
         var immutable = new Column(mutable); mutable.clear();
         check(immutable.members().size()==1);

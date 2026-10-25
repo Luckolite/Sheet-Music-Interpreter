@@ -143,20 +143,24 @@ public record ScoreBeamSource(
         return new ScoreBeamSource(groups, detachedColumns, origins);
     }
 
-    /** Joins disjoint physical ownership without replacing original page IDs. */
+    /** Joins retained page views, coalescing identical shared facts without rewriting ownership. */
     public static ScoreBeamSource join(List<ScoreBeamSource> sources) {
-        List<Group> groups = new ArrayList<>();
-        List<Column> detached = new ArrayList<>();
+        Map<String, Group> groups = new LinkedHashMap<>();
+        Set<Column> detached = new LinkedHashSet<>();
         List<Optional<Anchor>> origins = new ArrayList<>();
         long total = 0;
         for (ScoreBeamSource source : sources) {
             total += source.noteOrigins.size();
             if (total > MAX_NOTES) throw new IllegalArgumentException("Too many joined beam notes");
-            groups.addAll(source.groups);
+            for (Group group : source.groups) {
+                Group previous = groups.putIfAbsent(group.id, group);
+                if (previous != null && !previous.equals(group))
+                    throw new IllegalArgumentException("Conflicting beam group identity");
+            }
             detached.addAll(source.detachedColumns);
             origins.addAll(source.noteOrigins);
         }
-        return new ScoreBeamSource(groups, detached, origins);
+        return new ScoreBeamSource(List.copyOf(groups.values()), List.copyOf(detached), origins);
     }
 
     /** Assign page-zero local recognition to its physical page; normalize group IDs without prefix growth. */

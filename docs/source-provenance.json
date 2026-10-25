@@ -7389,11 +7389,12 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Reviewed global source-bound interpretation helper with namespace-equivalent standalone code and original procedural regressions. Unknown or conflicting evidence is retained; no score-specific rules, private fixtures or model changes.",
-      "source_sha256": "c56dd083a9743d4c107db5386d35e782476ac29dbb51f6a5a6e72fbfe56bb46d",
-      "source_normalized_sha256": "3ec27e87f666df135dba1bda1b5bc8b11ff8bb4f51ef91947b757ddf28d90053",
-      "standalone_sha256": "ba2560b77267b8977faa03e0c04dbd2a4143f3e53d5587406192a831c325edab",
-      "standalone_normalized_sha256": "ba2560b77267b8977faa03e0c04dbd2a4143f3e53d5587406192a831c325edab",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "source_sha256": "d90b3acfdb085e6971e4c32da15af4472e988e83ff06c1d34a28521c38972f37",
+      "source_normalized_sha256": "394a126e5a543420b76f4fef53d0f89efe193a261a47eb2faa7c155951c3c4df",
+      "standalone_sha256": "3dc3f3e2455e809a54f7b81480cd6c9355be36914bdc5aeb9e87b8d8ca2d582a",
+      "standalone_normalized_sha256": "b033c2b68dbf93fcf051b7b450bda7f47e1c3ec13af2a7d7e175bd66d35dbd97",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "shared_page_join_review": "Namespace-equivalent join repair coalesces only identical shared beam groups and detached columns across retained page views. Physical origins, ordering, unknown ownership and conflicting-evidence guards remain intact. Original synthetic page-view and ambiguity regressions; no private score data, model or wire-format change."
     },
     "ScoreBeamSourceWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBeamSourceWire.java",
