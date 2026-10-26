@@ -659,6 +659,20 @@ public final class ScoreExpressionDetector {
     /** Called again after page concatenation, so continuation pages can use the inherited meter. */
     public static ScorePageInterpretation resolve(
             ScorePageInterpretation score, float openingBeats) {
+        return resolveInternal(score, openingBeats, null);
+    }
+
+    static ScorePageInterpretation resolveWithCurrentRestClocks(
+            ScorePageInterpretation score,
+            float openingBeats,
+            Set<Integer> currentRestOccurrences) {
+        return resolveInternal(score, openingBeats, currentRestOccurrences);
+    }
+
+    private static ScorePageInterpretation resolveInternal(
+            ScorePageInterpretation score,
+            float openingBeats,
+            Set<Integer> currentRestOccurrences) {
         if (!Float.isFinite(openingBeats)) {
             var first =
                     score.meterChanges().stream().filter(m -> m.measureIndex() == 0).findFirst();
@@ -679,6 +693,11 @@ public final class ScoreExpressionDetector {
                         parsedAhead == null || parsedAhead.isEmpty()
                                 ? column(event)
                                 : parsedAhead.removeFirst();
+                if (currentRestOccurrences != null
+                        && currentRestOccurrences.contains(nextEventIndex - 1)) {
+                    events.add(event);
+                    continue;
+                }
                 if (c.isEmpty()) {
                     events.add(event);
                     continue;
@@ -877,5 +896,35 @@ public final class ScoreExpressionDetector {
                     && Math.abs(note.positionInMeasure() - a.position()) <= .018f) result.add(i);
         }
         return List.copyOf(result);
+    }
+
+    record CurrentRestTarget(int owner, boolean release, Scope scope) {}
+
+    /** Existing legacy Current grammar/evidence and the unchanged .018 candidate policy. */
+    static Optional<CurrentRestTarget> currentRestTarget(
+            ScorePageInterpretation fullCurrent, ScoreExpressiveEvent event) {
+        var c = column(event);
+        if (c.isEmpty() || !c.get().rest()) return Optional.empty();
+        boolean release =
+                (event.kind() == Kind.BREATH || event.kind() == Kind.CAESURA)
+                        && event.evidence().stream().anyMatch(e -> e.sourceId().equals(SYMBOL));
+        if (!PrintedRestDirection.allows(event.kind()) && !release)
+            throw new IllegalArgumentException("Unsupported dependent Current rest direction role");
+        var owners =
+                PrintedRestDirection.currentTargetIndices(
+                        fullCurrent,
+                        c.get().measure(),
+                        c.get().staff(),
+                        c.get().count(),
+                        c.get().position());
+        if (owners.size() != 1)
+            throw new IllegalArgumentException(
+                    "Ambiguous or unresolved Current rest direction target");
+        int owner = owners.get(0);
+        if (fullCurrent.rests().get(owner).isFullMeasure())
+            throw new IllegalArgumentException(
+                    "Full-measure Current rest role needs a separate clock contract");
+        return Optional.of(
+                new CurrentRestTarget(owner, release, release ? Scope.PART : Scope.SCORE));
     }
 }

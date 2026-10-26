@@ -16,7 +16,7 @@ public record ScoreAnchor(int measureIndex, double quarterBeatOffset)
     /** Normalizes arithmetic roundoff past a bar end; genuine overruns remain unchanged. */
     public static double computedOffset(int measureIndex, double offset, ScoreMeterMap meter) {
         if (!Double.isFinite(offset) || offset < 0 || measureIndex < 0) return offset;
-        double length = meter.beatsInMeasure(measureIndex);
+        double length = meter.anchorQuarterBeatsInMeasure(measureIndex);
         double scale = Math.max(length, Math.abs(meter.startBeat(measureIndex) + length));
         double rounding = 4 * Math.ulp(scale);
         return offset > length && offset - length <= rounding ? length : offset;
@@ -36,14 +36,14 @@ public record ScoreAnchor(int measureIndex, double quarterBeatOffset)
                 || measureIndex == measureCount && quarterBeatOffset != 0)
             throw new IllegalArgumentException("Anchor outside score");
         if (measureIndex == measureCount) return this;
-        double length = meter.beatsInMeasure(measureIndex);
+        double length = meter.anchorQuarterBeatsInMeasure(measureIndex);
         if (quarterBeatOffset > length)
             throw new IllegalArgumentException("Anchor beyond bar duration");
         return quarterBeatOffset == length ? new ScoreAnchor(measureIndex + 1, 0) : this;
     }
 
     public double absoluteBeat(ScoreMeterMap meter) {
-        if (quarterBeatOffset > meter.beatsInMeasure(measureIndex))
+        if (quarterBeatOffset > meter.anchorQuarterBeatsInMeasure(measureIndex))
             throw new IllegalArgumentException("Anchor beyond bar duration");
         return meter.startBeat(measureIndex) + quarterBeatOffset;
     }

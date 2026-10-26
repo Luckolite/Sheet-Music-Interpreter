@@ -11,6 +11,8 @@ public final class ScoreMeterMap {
     private final float opening;
     private final List<ScoreMeterChange> changes;
     private final double[] performedStarts;
+    private final boolean exactAnchorMode;
+    private final double[] exactSpans;
 
     public ScoreMeterMap(float opening, List<ScoreMeterChange> changes) {
         this.opening = Float.isFinite(opening) ? Math.max(.125f, Math.min(128, opening)) : 4;
@@ -20,12 +22,20 @@ public final class ScoreMeterMap {
         ordered.sort(Comparator.comparingInt(ScoreMeterChange::measureIndex));
         this.changes = List.copyOf(ordered);
         this.performedStarts = null;
+        this.exactAnchorMode = false;
+        this.exactSpans = null;
     }
 
     private ScoreMeterMap(double[] starts) {
+        this(starts, null);
+    }
+
+    private ScoreMeterMap(double[] starts, double[] exactSpans) {
         this.opening = starts.length > 1 ? (float) (starts[1] - starts[0]) : 4;
         this.changes = List.of();
         this.performedStarts = starts;
+        this.exactAnchorMode = exactSpans != null;
+        this.exactSpans = exactSpans;
     }
 
     /** Exact performed segment lengths, not newly recognized printed time signatures. */
@@ -91,7 +101,9 @@ public final class ScoreMeterMap {
         if (performedStarts == null) return beatsInMeasure(measure);
         if (performedStarts.length == 1) return 4;
         int index = Math.max(0, Math.min(performedStarts.length - 2, measure));
-        return performedStarts[index + 1] - performedStarts[index];
+        return exactSpans != null
+                ? exactSpans[index]
+                : performedStarts[index + 1] - performedStarts[index];
     }
 
     public float beatsInMeasure(int measure) {
@@ -152,5 +164,34 @@ public final class ScoreMeterMap {
             beats = change.quarterBeats();
         }
         return previous + (target - total) / beats;
+    }
+
+    /** Explicit audio frame only; legacy factories and float note inference stay unchanged. */
+    public ScoreMeterMap withExactBoundaryQuarterBeats(double opening, double closing, int count) {
+        var frame = withBoundaryQuarterBeats(opening, closing, count);
+        var spans = new double[count];
+        for (int i = 0; i < count; i++) {
+            double span = quarterBeatsInMeasure(i);
+            if (i == 0 && opening > 0) span = opening;
+            if (i == count - 1 && closing > 0) span = closing;
+            spans[i] = span;
+        }
+        return new ScoreMeterMap(frame.performedStarts, spans);
+    }
+
+    public static ScoreMeterMap fromExactPerformedDurations(List<Double> durations) {
+        var snapshot = List.copyOf(durations);
+        var frame = fromPerformedDurations(snapshot);
+        var spans = new double[snapshot.size()];
+        for (int i = 0; i < spans.length; i++) spans[i] = snapshot.get(i);
+        return new ScoreMeterMap(frame.performedStarts, spans);
+    }
+
+    public double anchorQuarterBeatsInMeasure(int measure) {
+        return exactAnchorMode ? quarterBeatsInMeasure(measure) : beatsInMeasure(measure);
+    }
+
+    public boolean exactAnchorMode() {
+        return exactAnchorMode;
     }
 }

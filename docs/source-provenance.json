@@ -1351,12 +1351,14 @@
     },
     "ScoreAnchor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreAnchor.java",
-      "source_sha256": "9458507dbb75bb397e75f93e0d77786c3cfe9d4290f99f12ffeeba2f7d400647",
-      "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
-      "source_normalized_sha256": "9458507dbb75bb397e75f93e0d77786c3cfe9d4290f99f12ffeeba2f7d400647",
+      "source_sha256": "913475036584dfc07989723631f9c9bedc24865ba335eb829ca399ea8c57cffc",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "source_normalized_sha256": "855d69bb2cab2f3189036607a209b9c5fac6717bbbe6d12e5252efefd7bea0b0",
       "reviewed_source_state": "Reviewed recognition13 scoped working-tree delta; app commit records preserved base, not the uncommitted delta.",
-      "review_note": "Computed endpoint roundoff only, bounded to four ULPs at the bar/absolute arithmetic scale. Stored musical anchors, score bounds, true overruns and sound-release ownership remain strict. Original contradictory optical-clock controls and invalid-anchor rejection tests; no private notation, dependencies or weights.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreAnchor.java"
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreAnchor.java",
+      "license": "Apache-2.0",
+      "standalone_sha256": "f064744902494d55e2d0a1efba0ed85c57f886712810931f57c5190e2e4575f9"
     },
     "ScoreExpressiveEvent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressiveEvent.java",
@@ -1407,11 +1409,13 @@
     },
     "ScoreMeterMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreMeterMap.java",
-      "source_sha256": "fc70b038c6b05df1c2c26f4ce06bcd0c581b49eae9cf88f81d5a46b6ee761030",
-      "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "fc70b038c6b05df1c2c26f4ce06bcd0c581b49eae9cf88f81d5a46b6ee761030",
-      "review_note": "Package-only code/literal parity. Exact proved boundary duration grid leaves printed meter caller-owned; zero means unproved and conflicting single-bar spans are rejected. Original generated regression coverage.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreMeterMap.java"
+      "source_sha256": "61494885d6ee414d7af3592e620112dd4d745f30b697f0ca17342e3dca74d5b5",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "source_normalized_sha256": "1eb0d6bec6635d3618b95008ad4a93a5b13c1914a4beba5ceeeda2d10b4fb282",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreMeterMap.java",
+      "license": "Apache-2.0",
+      "standalone_sha256": "ed41a585a44c685d95d3ac2ebd29d0ec06269a50b34de167632aaf7c91b65970"
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
@@ -1538,15 +1542,16 @@
     },
     "ScoreFermataDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataDetector.java",
-      "source_sha256": "702e16f7f0d9e3bf292eddf206be9a47539d4814ee5663658f804dd7af8a0874",
-      "source_normalized_sha256": "702e16f7f0d9e3bf292eddf206be9a47539d4814ee5663658f804dd7af8a0874",
-      "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
+      "source_sha256": "6a65518e924f078801cf5ae2c3637fddf140d01bb75967c3040a48bf298f2f34",
+      "source_normalized_sha256": "6e98cedb62c68c30eb8915f8c63abf9baa08280f58debd2deda77e05935f95d6",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "07b55e6b503f1be532b31fadeff23d63fb68dcb010e26bf89bc7f6665e16ff04",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
+      "standalone_sha256": "442c0bd9ee08adaecabf54bdb08c604c45eb033083ae6c7f181821c0400979f1",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreFermataDetector.java",
       "standalone_normalized_sha256": "07b55e6b503f1be532b31fadeff23d63fb68dcb010e26bf89bc7f6665e16ff04",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "license": "Apache-2.0"
     },
     "ScoreFermataNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreFermataNotation.java",
@@ -1800,11 +1805,11 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "b1e9fc35892583f4991cccd29c34e54ed0d5a797ca48f9368692010b7315dcd6",
-      "source_normalized_sha256": "c8c17fb08eb4e682e348d8a64d650b7d28885de3303ed50c69dc1249b85f50c8",
-      "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes. Naturally recognized release signs may use the unique containing measure terminal pitched column; complete lane ordering and rest/metadata ambiguity guards preserve legacy timing. New original licensed-font controls only. Naturally recognized release signs may be owned by a unique terminal literal rest. Existing exact silent-slot onset plus literal rest duration resolves the release; unknown timing remains unresolved. Full-measure rests, competing notes/rests and off-staff owners abstain. Original licensed-font controls only.",
-      "standalone_sha256": "52bd5c18ed351aa40aacdfbc6221540ea1f1bd7900f7002f2a40f27a8aabc7cc",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
+      "source_sha256": "99d1f011d3a283c2bf2e9e9a78ea41b1b22997b741fa008a219e6ca0d13cd76b",
+      "source_normalized_sha256": "c8ffbd4dc3b2f82af733d1ac94bb7a386cc5e23a10f62a2f5d38a5470b71aeb6",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
+      "standalone_sha256": "faf7397efde589eced44bc7615f4b7be27463a31d76df2e976565ab90d26ab6c",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreExpressionDetector.java",
       "license": "Apache-2.0",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
@@ -3123,12 +3128,12 @@
     },
     "PrintedRestDirection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedRestDirection.java",
-      "source_sha256": "dda88a8a4148a0ce9230c219ccbcf7814c03fad3630ccec3daedaa0a2a9534b4",
-      "source_normalized_sha256": "0acefffc939aab3865d904c7fea6f14e3da5ce917a8d8fcc609cd7a85f61fae6",
-      "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
+      "source_sha256": "c5c85160667c46b0030d016b5b15a243dda4bec98bcc2b59aa6cb5518f615ea6",
+      "source_normalized_sha256": "8a93cffaa4845c8da04289e08e82718afc09d75f1813e7c154c1c6c3c943ab22",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
       "scoped_reviewed_app_commit": "ca9b73b219aa35b41b1b70b49b82f2e60c8aec5d",
-      "review_note": "Retain leading directions beside a sole centered whole rest while preserving printed rails and unresolved timing until meter proof.",
-      "standalone_sha256": "5928812a8a852032c6e4dcbf207e177fa3e60abbe75ade1b1c56a1fb2577bbff",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
+      "standalone_sha256": "2e7438b7c6f2690600669cc5781f6bf22d5b8dbedf560a01198a2a95289dff90",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedRestDirection.java",
       "license": "Apache-2.0",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
@@ -7580,6 +7585,46 @@
       "standalone_sha256": "2f7f7ad5d425f0d68a80860e46fcc4de46b06be6c41e432796b19be161b28317",
       "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520",
       "review_note": "Package-only standalone counterpart. Bilateral exact five-band spacing constraints replace the unsupported rounded-gap assumption in local beam fallback. Same source witnesses, scan limits, slope and note-frame checks;128work units prepaid for bounded fitting. Original band/binding regression only, no supplied score material or model change."
+    },
+    "CurrentRestAudioContext.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurrentRestAudioContext.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurrentRestAudioContext.java",
+      "license": "Apache-2.0",
+      "source_sha256": "e58b0be442f52e82b0ba591233fe26e269cce128d649fffed7a64e08f6a40eb5",
+      "source_normalized_sha256": "036823ac38d664332bfbfff5f1a51758a018b0aafbd2542f263ec5fef4dfb9d4",
+      "standalone_sha256": "66abf41e20f37a61a7c18770a94ef1406115fb841acd1b23d9fe0916ef8fc6c8",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material."
+    },
+    "CurrentRestWritten.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurrentRestWritten.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurrentRestWritten.java",
+      "license": "Apache-2.0",
+      "source_sha256": "44d0216a0a82745ff9f52c780c8ed3041d5f790af3cb418d6ae8d2251162423d",
+      "source_normalized_sha256": "036e5b12ba0ebbfa84406ba29cb145a18259fcd67d13fb075d041a45f17f1b56",
+      "standalone_sha256": "17764b0ed05edadb46acaaa1d2dc5688445c19a0df8374279e9aad022c0e91bd",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material."
+    },
+    "CurrentRestWrittenFields.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurrentRestWrittenFields.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurrentRestWrittenFields.java",
+      "license": "Apache-2.0",
+      "source_sha256": "ce1eaec7a198961c189b0cda0a1c41de6ca5044cf62dad268604b42887405e5d",
+      "source_normalized_sha256": "ce1eaec7a198961c189b0cda0a1c41de6ca5044cf62dad268604b42887405e5d",
+      "standalone_sha256": "4973ab726efbef4b3132160e6d4fefa3a511c56474f44b43de0513e20a7b50e2",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material."
+    },
+    "CurrentRestStateVersion.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CurrentRestStateVersion.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CurrentRestStateVersion.java",
+      "license": "Apache-2.0",
+      "source_sha256": "3b16a8f1e196fe72f83a12ae694a2e8048d4761233fd963b6480f516b0f70ac8",
+      "source_normalized_sha256": "2d0fc77d433e6b86d801933e3c4a3d2bc073ea920f872231517d185a84c2f46d",
+      "standalone_sha256": "b0fa1eb5f2c7fb70681c2f489c5ca2122dc1c44fa7042e415582b0d794ebfdfb",
+      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material."
     }
   },
   "interpreter_speedup_review": {
@@ -13509,5 +13554,75 @@
     "right_tail_policy": "Explicit new short-tail preservation: at most4 selected gaps, selected complete run at least1gap and existing column-count floor. This is measured staff-extent retention, not a new closing-bar assertion.",
     "resources": "ROI area checked in long against admitted label length before boolean[A]/int[A] allocation; each pixel enqueued once, bounded nine-neighbor walk; head/stem and key guards stay gap-bounded. No quota increase.",
     "boundaries": "41 original procedural controls cover3scales/up-downstems and negative roles; helper fixtures alone do not certify producer authority. Private saved-plane geometry+Omr replay is distinct from full native interpretation, export and packaged deployment."
+  },
+  "current_rest_audio_context_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+    "documentation_path": "docs/current-rest-audio-context.md",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/CurrentRestAudioContextTest.java",
+    "shared_sources": [
+      "CurrentRestAudioContext.java",
+      "CurrentRestWritten.java",
+      "CurrentRestWrittenFields.java",
+      "CurrentRestStateVersion.java",
+      "PrintedRestDirection.java",
+      "ScoreAnchor.java",
+      "ScoreExpressionDetector.java",
+      "ScoreFermataDetector.java",
+      "ScoreMeterMap.java"
+    ],
+    "algorithm_scope": "Prepare exact full-Current literal declarations, effective binary64 frame and existing target evidence before real selection; consume explicit caller-produced rest and expressive owner ordinals. Equality validates supplied ports, never discovers identity. Preserve genuine SCORE tempo policy and drop local marks with omitted rests.",
+    "retained_layout": "current-rest-own-v1 under State3; exact string/hex row grammar. Shared scalar helpers are not a full State loader.",
+    "app_only_reviewed_adapters": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConversionEngravingPolicy.java",
+        "source_sha256": "448110b55594e151604be9388990f221501ea0282ad2ad90d64c1fb8706bc173"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConversionPlan.java",
+        "source_sha256": "2e7d3aae048595a725ee9be75e2d464e991ad1b295ed2dc4be16276a2504d8ee"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetConversionPlayback.java",
+        "source_sha256": "5c3e0c422dfd13fa022bf045b04427582381fb608a468ba5c97d10139c14b63b"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java",
+        "source_sha256": "20adee81891d7d50a1e45ce2cb2800ab8a429ea9466a74ec0f2229b3587ce8a5"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java",
+        "source_sha256": "5ac47c577aa7c971306721534a991966bf40a935c14405a88e0698bba2730e3e"
+      },
+      {
+        "source_path": "tools/native-worker/NativeAudioTrack.java",
+        "source_sha256": "2dd8e2f558eca79b635b3b2855e6c43154667d2662ef60152895f78a9aea5210"
+      },
+      {
+        "source_path": "tools/native-worker/NativeCurrentRestAudio.java",
+        "source_sha256": "7ac3ee1ed567f71544e313a918e091aea0a9dab83201e0dcca32e8028a21623d"
+      },
+      {
+        "source_path": "tools/native-worker/NativeCurrentRestWrittenJson.java",
+        "source_sha256": "31834509b97056d3d62024765ae0549d10e1d19abe4be59d2a880dc96b991667"
+      },
+      {
+        "source_path": "tools/native-worker/NativeRetainedState.java",
+        "source_sha256": "b2106c27aa9bb96806c83ce89413888301705fb8f45db1a8177722bc58f3ff5c"
+      },
+      {
+        "source_path": "tools/native-worker/build_audio.py",
+        "source_sha256": "58501756d6fca71c6f852485d385b83c955eaf971725a86c201ac2c83ef28ba5"
+      }
+    ],
+    "adapter_boundary": "Actual selection modes, strict owned file snapshots, native retained layout, RenderSpec exact frame and cache identity are app-only caller/persistence adapters; their source/test packet remains in private app repository. All applicable generic frame/target/row logic is shared above. No whole app/history copied.",
+    "qualification": "279 app source controls including60 closed-old legacy comparisons reused with exact source and fixture bytes; actual active Android Java compile passed. Parent freshly compiled all standalone sources with9 overlays and17 original procedural tests, no Android/SDK/Gson.",
+    "limits": "262144expressive records, exact overflow-safe16777216dependent-rest target scan ceiling; unsupported ambiguous dependent roles refuse.",
+    "not_claimed": [
+      "New EXP1/CLI input layout",
+      "Packaged worker deployment or capability",
+      "Completed separate typed visible/audio kernel",
+      "Recording engine or device execution"
+    ]
   }
 }

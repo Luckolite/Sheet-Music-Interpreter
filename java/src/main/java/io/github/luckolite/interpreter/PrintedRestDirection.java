@@ -221,4 +221,18 @@ final class PrintedRestDirection {
         }
         return ScoreRestFermataDetector.provedOnset(target, score.rests(), score.notes(), beats);
     }
+
+    static List<Integer> currentTargetIndices(
+            ScorePageInterpretation score, int measure, int staff, int count, float position) {
+        if (measure < 0 || measure >= score.measures().size()) return List.of();
+        var indices = new ArrayList<Integer>();
+        for (int i = 0; i < score.rests().size(); i++) {
+            var r = score.rests().get(i);
+            if (r.measureIndex() == measure
+                    && r.staffIndex() == staff
+                    && r.staffCount() == count
+                    && Math.abs(r.positionInMeasure() - position) <= .018f) indices.add(i);
+        }
+        return List.copyOf(indices);
+    }
 }

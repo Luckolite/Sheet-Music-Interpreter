@@ -161,6 +161,20 @@ public final class ScoreFermataDetector {
     /** A continuation page does not independently prove its inherited meter. */
     public static ScorePageInterpretation resolve(
             ScorePageInterpretation score, float openingBeats) {
+        return resolveInternal(score, openingBeats, null);
+    }
+
+    static ScorePageInterpretation resolveWithCurrentRestClocks(
+            ScorePageInterpretation score,
+            float openingBeats,
+            Set<Integer> currentRestOccurrences) {
+        return resolveInternal(score, openingBeats, currentRestOccurrences);
+    }
+
+    private static ScorePageInterpretation resolveInternal(
+            ScorePageInterpretation score,
+            float openingBeats,
+            Set<Integer> currentRestOccurrences) {
         if (!Float.isFinite(openingBeats)) {
             var first =
                     score.meterChanges().stream().filter(m -> m.measureIndex() == 0).findFirst();
@@ -171,7 +185,13 @@ public final class ScoreFermataDetector {
         var meter = new ScoreMeterMap(openingBeats, score.meterChanges());
         var events = new ArrayList<ScoreExpressiveEvent>();
         try (var session = ScoreNoteTiming.beginTimingSession(score)) {
+            int currentOrdinal = 0;
             for (var event : score.expressiveEvents()) {
+                if (currentRestOccurrences != null
+                        && currentRestOccurrences.contains(currentOrdinal++)) {
+                    events.add(event);
+                    continue;
+                }
                 var attack = attack(event);
                 if (attack.isEmpty()) {
                     events.add(event);
@@ -238,7 +258,10 @@ public final class ScoreFermataDetector {
                                 event.evidence()));
             }
         }
-        return ScoreRestFermataDetector.resolve(score.withExpressiveEvents(events), openingBeats);
+        var resolved = score.withExpressiveEvents(events);
+        return currentRestOccurrences == null
+                ? ScoreRestFermataDetector.resolve(resolved, openingBeats)
+                : resolved;
     }
 
     /** Written members of one detector-owned column, before renderer tie/unison aliases. */
