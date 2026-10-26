@@ -940,27 +940,16 @@ public final class PrintedBeamSource {
                     }
                 }
                 if (left == null || right == null) continue;
-                // Witness pixels bound phase for the supplied quantized gap; no verified track is
-                // fabricated.
-                double loL = Double.NEGATIVE_INFINITY,
-                        hiL = Double.POSITIVE_INFINITY,
-                        loR = loL,
-                        hiR = hiL;
-                for (int line = 0; line < 5; line++) {
-                    var a = left.rules().get(line);
-                    var b = right.rules().get(line);
-                    double offset = (4 - line) * s.gap();
-                    loL = Math.max(loL, a.top() - .5 + offset);
-                    hiL = Math.min(hiL, a.bottom() + .5 + offset);
-                    loR = Math.max(loR, b.top() - .5 + offset);
-                    hiR = Math.min(hiR, b.bottom() + .5 + offset);
-                }
-                if (loL > hiL
-                        || loR > hiR
-                        || Math.abs((loL + hiL - loR - hiR) * .5) > (rx - lx) * .2) continue;
+                // Keep the original local two-column model, but fit its spacing to
+                // all ten observed rule bands rather than forcing the rounded seed.
+                budget.take(128);
+                var frame = PrintedBeamRuleFrame.fit(left, right, s.gap());
+                if (frame == null
+                        || Math.abs(frame.leftBottom() - frame.rightBottom()) > (rx - lx) * .2)
+                    continue;
                 double f = (head.x() - lx) / (rx - lx);
-                bottom = (float) (((loL + hiL) * .5) * (1 - f) + ((loR + hiR) * .5) * f);
-                gap = s.gap();
+                bottom = (float) (frame.leftBottom() * (1 - f) + frame.rightBottom() * f);
+                gap = (float) frame.gap();
             }
             if (Math.abs(head.y() - (bottom - note.staffStep() * gap * .5f)) > gap * .45f) continue;
             if (found != null) return null;

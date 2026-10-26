@@ -6913,11 +6913,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
-      "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "9cf7b76bcba6e595c487912d6f84015f1f4150ca60046a3bc589b9988397d6ea",
-      "source_normalized_sha256": "bb6f2058a7bf81789e8f9212a8cc527ddd259ea6fc1fceefdead006f50411300",
-      "standalone_sha256": "0a4b10b4949697c3702b137397c1d15a9a9cb21b70579ee9f6335190c69e26e6",
-      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
+      "review_note": "Package-only standalone counterpart. Bilateral exact five-band spacing constraints replace the unsupported rounded-gap assumption in local beam fallback. Same source witnesses, scan limits, slope and note-frame checks;128work units prepaid for bounded fitting. Original band/binding regression only, no supplied score material or model change.",
+      "source_sha256": "35f0fdbe9b425835a3747f01b7e4b29ccd10b3b9350466e5cc63e8bf60dc43f3",
+      "source_normalized_sha256": "3d39f45265151463b5b877ecb2b2fe97366e8c01c8a009343397697a75fccf29",
+      "standalone_sha256": "52c7478b2010c5a4a9bbe36fe3013af65e28cd88e2c1fa5b0de0abfa236df436",
+      "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520"
     },
     "PrintedIsolatedFlags.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
@@ -7570,6 +7570,16 @@
       "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
       "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
       "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
+    },
+    "PrintedBeamRuleFrame.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleFrame.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRuleFrame.java",
+      "license": "Apache-2.0",
+      "source_sha256": "775d0490b00ed2786595ea2b46955716c60c3784d0a2feaee74fce84abe497e4",
+      "source_normalized_sha256": "01d504f033631e7859fef29ebff51f01ef7726b14265a9cf315f73f8afe8baac",
+      "standalone_sha256": "2f7f7ad5d425f0d68a80860e46fcc4de46b06be6c41e432796b19be161b28317",
+      "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520",
+      "review_note": "Package-only standalone counterpart. Bilateral exact five-band spacing constraints replace the unsupported rounded-gap assumption in local beam fallback. Same source witnesses, scan limits, slope and note-frame checks;128work units prepaid for bounded fitting. Original band/binding regression only, no supplied score material or model change."
     }
   },
   "interpreter_speedup_review": {
@@ -13476,5 +13486,18 @@
     "private_integration_boundary": "A separate reconstructed-source, exact-installed-engine desktop chain passed identity/repair/style/reflow/export and raw note/TPC/tie/shift preservation. Private inputs and outputs are excluded. No Android/audio/PDF/raster/original-transient or deployment claim.",
     "model_native_and_format_changes": false,
     "deployment_boundary": "App/public source publication only; coupled cumulative app/Hub/page-worker rollout remains deferred while related components are unfinished. Existing historical Hub source packets and published assets are not replaced."
+  },
+  "beam_rule_frame_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520",
+    "documentation_path": "docs/beam-rule-frame.md",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/PrintedBeamRuleFrameTest.java",
+    "scope": "A rounded staff-spacing seed can contradict actual complete five-rule witnesses. Fit one common gap and independent phases inside all ten observed pixel bands; retain the old nominal frame whenever supported. No alternative witnesses or pixel ownership are invented.",
+    "limits": "Existing16-step bilateral witness search, raw thresholds, phase slope, unique lane and head residual checks remain; fixed128work prepay added. No quota increases.",
+    "not_claimed": [
+      "Faint-rule recovery",
+      "Complete beam topology or note accuracy",
+      "Native/app packaged runtime or device deployment"
+    ]
   }
 }
