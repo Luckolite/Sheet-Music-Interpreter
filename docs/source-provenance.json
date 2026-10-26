@@ -370,7 +370,7 @@
   "audited_text_and_source_owner_repairs": {
     "documentation_path": "docs/audited-ownership-repairs.md",
     "license": "Apache-2.0",
-    "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+    "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
     "shared_java_sources": [
       "ScorePageTimeline.java",
       "ScoreDynamicContinuation.java",
@@ -409,8 +409,8 @@
       },
       {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java",
-        "source_sha256": "160a89bdbdf081cfb304fab2c74fc3c0f43f6b096a4c7a35a029a639bcec6a7a",
-        "source_normalized_sha256": "d6211325258c31df6fe93b3820c8f417351d8682950d99fe5d7ad999c9e90195"
+        "source_sha256": "e1c9ee47b5883d15c5dae775f685fc4130702e7f0583268c42ad7c7bc975667a",
+        "source_normalized_sha256": "7f9fb5e983113a7871e8c16a7e089a95f4381dece6fcbd8163475a81def10e12"
       },
       {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteScoreEdits.java",
@@ -3063,7 +3063,7 @@
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "reviewed_app_base_commit": "51fcc1c40fdaee203d09be6ac848665267f8cec9",
       "standalone_sha256": "51d0e07f7568f7a35b8485bef6082f7df1445aa34a6a6fc728e4edb2a4d19ece",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ExpressiveDirectionText.java",
       "license": "Apache-2.0",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
@@ -3689,7 +3689,7 @@
       "source_normalized_sha256": "1af1bf2873e531295657044897d7afe661621ac74d2ca0cfb325473a768c72c5",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
       "standalone_sha256": "cce2ab2f8c507d74fe0bc169adc78981308a35c7bf26120a715eea81eda50e5b",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
@@ -3739,7 +3739,7 @@
       "standalone_sha256": "7d17c1ba9aa0a8d190a3cf26df70d1239f86efd7919164190b1cb862a4ac5aae",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
@@ -5035,7 +5035,7 @@
       "source_normalized_sha256": "b3b4b115b24f56881c3cd9f5121c8faf7d4905b3e4ff0f2a95a5b9ba361d2844",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "standalone_sha256": "1c28b36747c49cccb8891bcbc7f1cf0ec69038af3650d6a89cef0e2c7ba1ecab",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
@@ -7237,13 +7237,13 @@
     "ScoreArpeggioNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreArpeggioNotation.java",
       "license": "Apache-2.0",
-      "source_sha256": "88df38a8a5dcea6dcd90c916f4f34133897c54c09d124f6a0650ec0413fb89f0",
-      "source_normalized_sha256": "95203472f87e9ef9babb06faf799962b2c300fbc1b94724b02cf2bcea7a9f3f3",
-      "standalone_sha256": "d91499a6945a7d054117d952bac4e031c19341913e561c5612731bff9574053b",
+      "source_sha256": "84e66b0849c69f26923ef0d29ce741570247624a94034f56a694ac21ea0618eb",
+      "source_normalized_sha256": "3254e7f28e05e1bedef874eb8f46fbdda4655703eb98ba43d96e90f4fb0735f9",
+      "standalone_sha256": "565cf5e29c23008a505e103259c556211d4204be707a3068f5296040588ac22f",
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreArpeggioNotation.java",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e"
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24"
     },
     "ScoreBeamSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBeamSource.java",
@@ -7390,7 +7390,7 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicContinuation.java",
       "source_sha256": "698977d4eee6e6a86a5b0e32fdbfc994f05dd7be8455761491a6872d06f063a9",
       "source_normalized_sha256": "9f27305430f65bd0c60cf70d39c1d8c8a24378cd67c160a42a63f178daae9e1e",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "standalone_sha256": "1159fefe35ca021ae431d1cada1f37bc1a8ccf062cfec6943449c47fdd67c699",
@@ -7453,7 +7453,7 @@
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "standalone_sha256": "f3313d971ada6bb3431a7b4b2f0bbd0eab0da587f2b5531a714c32a2003f1b4e",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreExpressivePerformance.java",
       "license": "Apache-2.0"
     },
@@ -7536,7 +7536,7 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreKeyTextHints.java",
       "source_sha256": "96f9c1274b4a096c6a05169e2014f0cee35faf0ec63be33aab886cc494ffbd14",
       "source_normalized_sha256": "1f826ca408c11b15a0e583424de1235d0d37a968f0c35dd571eedf8295023b98",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreKeyTextHints.java",
       "standalone_sha256": "7ca01b391914c5373c47139ae4df30ff2ea6be128e6882496d9f5a414f95e956",
@@ -7756,7 +7756,7 @@
     "ScorePageTimeline.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePageTimeline.java",
       "source_sha256": "36f6d9f4b32163a6300880a342580477a17109ce6076193733d0ce4aca4823ee",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "source_normalized_sha256": "1a4702a98403f57534ff875f43d6dab815ca6ead08547d84be5e6fa9109d9eeb",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScorePageTimeline.java",
@@ -7804,14 +7804,14 @@
     },
     "ScorePlacementMap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlacementMap.java",
-      "source_sha256": "1cf8e78930dee1c95741fd2bd7025e2092b513f5d6c83a24537166f003eb17fa",
-      "source_normalized_sha256": "e063eec18cb662bf13f1b66432f06d85c4761459c772bc55b61c565728009e2c",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "source_sha256": "b2972e07f6f295fdbcc2d3d16f939ec5e5cb9248dd427ba90fb6504f11373726",
+      "source_normalized_sha256": "9b534268694317c23dfa8db31b1e6f45143f5b3193e0aec666bdcb842646afa5",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScorePlacementMap.java",
       "license": "Apache-2.0",
-      "standalone_sha256": "0e26f9791aa82dbcc10530465ac37a9381fea61e93d651ebda179bdebaf75c4f"
+      "standalone_sha256": "53aa88460611d2c59f6d3ae83cef5c145e2f43e03d5b08f2f50b564589806691"
     },
     "ScorePlaybackDirection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScorePlaybackDirection.java",
@@ -8348,7 +8348,7 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetWrittenTieLinks.java",
       "source_sha256": "b5b45aaccb8b976f53d13584068014aad58b174ad541f3ae3ad6cbb458562d41",
       "source_normalized_sha256": "088012709a7e909280bac57391d2179edbc7b213d7d6732d11447e7fb1abde77",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/WrittenTieOwners.java",
       "standalone_sha256": "5343100c70f21ab99d057c8dedca63d809f90f25bfc158c9cfb3a42004d05c46",
@@ -8727,7 +8727,7 @@
     "TabFretRaster.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabFretRaster.java",
       "source_sha256": "5a9a27de94981c2e750c9582b75b67c0a7ac016fa58704f698278d0d1d44a51a",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "source_normalized_sha256": "48b5f85075795e87dae19a5c913efef9c63faf10dc2763b6aaa7db41856d943d",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TabFretRaster.java",
       "license": "Apache-2.0",
@@ -8813,7 +8813,7 @@
     "TabTextSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabTextSource.java",
       "source_sha256": "305e1243609d3834555e5e882e6373b104b2cc359c52ef6ce422b9f12f50c63e",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "source_normalized_sha256": "a1d1bed6be56bf7424b8cd4e30094fbf0cf10d25eb3242483aa6b8291c6ec7fd",
       "standalone_sha256": "f65fe3b7eae7538790af31ed6db78f1e660753e59bf06713c3e4d972a987811d",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
@@ -9328,7 +9328,7 @@
       "license": "Apache-2.0",
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "standalone_sha256": "c44022b4fd2369691ca3a02293cbdc03e35f4ebf1cb32dfa8c05d53a8a04dcd9"
     },
     "guide_writer.py": {
@@ -9337,7 +9337,7 @@
       "source_normalized_sha256": "0716b117ca7fef9de6045bb06485319f1d4f3249080cf7c19500620e220706ef",
       "review_note": "Reviewed labelled bend/bar arrow ownership, fractional pitch encoding, explicit strum ranks and recognition86; original synthetic regressions. Java helpers differ only by package where applicable. Existing guide291 physical layout and legacy integer effect semantics preserved. No private score, weights or third-party dependency changes.",
       "standalone_sha256": "d3151013c9b83beae6e31d6ac9a7c117a834088d47cb5751f034196d559de04d",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
@@ -9932,7 +9932,7 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreUnisonOwnership.java",
       "source_sha256": "5389a18b171ced611e138f526a390bf831346dee2a456d2a333780da2413c177",
       "source_normalized_sha256": "25bce91559807175ecc67c2b87ddc0ad65af64f68f69fa96e6f4f5390266d157",
-      "reviewed_app_commit": "6876ea36754ecfee686e2d121f91c34fb9b43d7e",
+      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreUnisonOwnership.java",
       "standalone_sha256": "b769b891b8ef8f2b507c5183eefa7a41187ff478c1ebb3b1395ba968526a40f3",
