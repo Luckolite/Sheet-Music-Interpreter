@@ -1,0 +1,7 @@
+# Recognition116 and audio99 cache invalidation
+
+Recognition116 invalidates local and portable derived guide identities from recognition115 and all earlier revisions. The Guide299 record layout remains unchanged; this is a cache epoch update for the reviewed cumulative recognition repairs. Original Java epoch controls check both key forms against every prior revision, and the Python writer regression checks the same current revision.
+
+The matching app and desktop release uses audio99. Current-rest timing, fermatas, expression holds and projected gain anchors are resolved before constructing the performance fingerprint, so changed realized performances receive different WAV keys. The desktop Hub also has a persistent completion check before that preparation. Its completion fingerprint covers request inputs and artifact availability, but does not directly hash renderer code. Audio99 explicitly invalidates those older completion records and WAV identities even when the document and retained metadata are unchanged. Recognition116 independently changes guide dependencies.
+
+Audio cache versioning and the native recording renderer are app/Hub concerns, not a newly introduced standalone recording API. No NativeAudioTrack source, private retained metadata, score capture, recordings, model weights or dependencies are added here. The original Current-rest standalone regressions and licensing remain unchanged. Source checks establish compatibility and epoch behavior; they do not establish installed app/Hub/worker or Library deployment.
