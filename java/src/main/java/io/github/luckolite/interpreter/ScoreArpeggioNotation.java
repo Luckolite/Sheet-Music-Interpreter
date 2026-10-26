@@ -242,41 +242,65 @@ public final class ScoreArpeggioNotation {
     /** Only a complete available chord receives arpeggiate; no order, direction, or spread is invented. */
     public static List<Member> plan(
             ScorePageInterpretation score, Collection<Integer> available, float openingBeats) {
+        return plan(score, available, openingBeats, Map.of());
+    }
+
+    /** Retained clocks are keyed by the unchanged full source score, not selected note slots. */
+    public static List<Member> plan(
+            ScorePageInterpretation score,
+            Collection<Integer> available,
+            float openingBeats,
+            Map<Integer, ScoreNoteTiming.WrittenPlacement> writtenPlacements) {
         var allowed = new HashSet<>(available);
         for (int i : allowed)
             if (i < 0 || i >= score.notes().size())
                 throw new IllegalArgumentException("Source index outside score");
         if (!Float.isFinite(openingBeats) || openingBeats <= 0) return List.of();
         var meter = new ScoreMeterMap(openingBeats, score.meterChanges());
-        var result = new ArrayList<Member>();
+        var retained = ScorePlacementMap.validatedWritten(writtenPlacements, score.notes());
+        if (!retained.isEmpty()) return planWithClock(score, allowed, meter, retained);
         try (var session = ScoreNoteTiming.beginTimingSession(score)) {
-            for (var event : score.expressiveEvents()) {
-                var indices = targetIndices(score, event);
-                if (indices.isEmpty() || !allowed.containsAll(indices)) continue;
-                double onset = Double.NaN;
-                boolean proved = true;
-                for (int index : indices) {
-                    var n = score.notes().get(index);
-                    float beats = meter.beatsInMeasure(n.measureIndex());
-                    double start = ScoreNoteTiming.beatInMeasure(n, score.notes(), beats);
-                    double end =
-                            ScoreAnchor.computedOffset(
-                                    n.measureIndex(),
-                                    start
-                                            + ScoreNoteTiming.resolvedWrittenDurationBeats(
-                                                    n, score.notes(), beats),
-                                    meter);
-                    if (!compatibleMember(start, end, beats, onset)) proved = false;
-                    onset = start;
-                }
-                if (!proved) continue;
-                var attack =
-                        new ScoreAnchor(score.notes().get(indices.get(0)).measureIndex(), onset)
-                                .canonical(meter, score.measures().size());
-                for (int index : indices)
-                    if (allowed.contains(index))
-                        result.add(new Member(event.eventId(), index, attack));
+            return planWithClock(score, allowed, meter, Map.of());
+        }
+    }
+
+    private static List<Member> planWithClock(
+            ScorePageInterpretation score,
+            Set<Integer> allowed,
+            ScoreMeterMap meter,
+            Map<Integer, ScoreNoteTiming.WrittenPlacement> retained) {
+        var result = new ArrayList<Member>();
+        for (var event : score.expressiveEvents()) {
+            var indices = targetIndices(score, event);
+            if (indices.isEmpty() || !allowed.containsAll(indices)) continue;
+            double onset = Double.NaN;
+            boolean proved = true;
+            for (int index : indices) {
+                var n = score.notes().get(index);
+                float beats = meter.beatsInMeasure(n.measureIndex());
+                var placement = retained.get(index);
+                if (!retained.isEmpty() && placement == null)
+                    throw new IllegalArgumentException(
+                            "A retained arpeggio needs every source member clock");
+                double start =
+                        placement == null
+                                ? ScoreNoteTiming.beatInMeasure(n, score.notes(), beats)
+                                : placement.onsetBeats();
+                double duration =
+                        placement == null
+                                ? ScoreNoteTiming.resolvedWrittenDurationBeats(
+                                        n, score.notes(), beats)
+                                : placement.durationBeats();
+                double end = ScoreAnchor.computedOffset(n.measureIndex(), start + duration, meter);
+                if (!compatibleMember(start, end, beats, onset)) proved = false;
+                onset = start;
             }
+            if (!proved) continue;
+            var attack =
+                    new ScoreAnchor(score.notes().get(indices.get(0)).measureIndex(), onset)
+                            .canonical(meter, score.measures().size());
+            for (int index : indices)
+                if (allowed.contains(index)) result.add(new Member(event.eventId(), index, attack));
         }
         return List.copyOf(result);
     }
