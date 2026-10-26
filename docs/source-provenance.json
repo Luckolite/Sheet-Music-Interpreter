@@ -7309,9 +7309,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "988f776c87f6b6e527786f512e8cd227552ac50e36d9d9cd8b4dc4c7ac7228b8",
-      "source_normalized_sha256": "988f776c87f6b6e527786f512e8cd227552ac50e36d9d9cd8b4dc4c7ac7228b8",
-      "standalone_sha256": "2c6648a13f4a5d7f99dd428fa76b6831208676e9f0c5b28a932c38a290c2dd4a",
+      "source_sha256": "abcfc4f3411eb45da200a9a8741e620fdac84a51e27771cd886fe3ca2c521db9",
+      "source_normalized_sha256": "ff5339487b4e2a2e1f8f8db9ecaf9f442a7e861b8c94709e97bb7e87e8071776",
+      "standalone_sha256": "a37fe3ea56d8cf5c14b5bf6d2cdb24cfbdf426a71cd1c788b394073559fc1619",
       "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7348,7 +7348,9 @@
         "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
         "rollout": "Source only; cumulative paired packaging deferred during active goal.",
         "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
-      }
+      },
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
     },
     "PrintedIsolatedFlags.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
@@ -8172,9 +8174,9 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamLocalFrame.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalFrame.java",
       "license": "Apache-2.0",
-      "source_sha256": "ad7dd1e12ed0052316f4318d14af60dc59bd8b864118e3dc4b7db4cdff0e0d2d",
-      "source_normalized_sha256": "ad7dd1e12ed0052316f4318d14af60dc59bd8b864118e3dc4b7db4cdff0e0d2d",
-      "standalone_sha256": "28e59bb659b7d101348a47167295413a91d80a82359f1eb0c161c305b5524b40",
+      "source_sha256": "6b03bd087cae15559f09a26aaf5dcc60deddb0bd2de97767c2fc49bcf12e50a5",
+      "source_normalized_sha256": "135583f03d5f8f4756d5afe042734ee76e1b02409182bb19ad90d72995fa4b0c",
+      "standalone_sha256": "604c4b1d58358bc3a4dabf7a9538fbba63e23bab631b4d258eb57a173f71a8d1",
       "anchored_local_beam_review": {
         "documentation": "docs/anchored-local-beam-frame.md",
         "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
@@ -8191,7 +8193,9 @@
         "complete_group_gain": 0,
         "rollout": "Next cumulative matched recognition revision must advance beyond117",
         "app_commit": "d4e7be78516806a0e35f855177d16b1818048c0f"
-      }
+      },
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
     },
     "FaintEighthRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintEighthRestInk.java",
@@ -8343,6 +8347,76 @@
       "license": "Apache-2.0",
       "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
       "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
+    },
+    "PrintedBeamRuleCandidates.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleCandidates.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRuleCandidates.java",
+      "source_sha256": "36759713a9e26fa782a7682a808dfebf32126e68fd42c9fbc910f5f0b098b9cd",
+      "source_normalized_sha256": "374324254e0f30d237ae266882da70726e034f0c8e645ab201df72af451aae9b",
+      "standalone_sha256": "309ae3e99cebb36cf029a4cacc3840f43d7d7848b653d8f479d966008592d944",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "LocalFramePhaseOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFramePhaseOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFramePhaseOriginals.java",
+      "source_sha256": "e744c8a4cb6decf467524b1b785179d829023ebbb7af609db39e92a0ce231ba7",
+      "source_normalized_sha256": "c0d3908183d4c94e464e35e1dc7e2b5bb2bac445610c80f8077c04e7bc997973",
+      "standalone_sha256": "46ae88596c5b2c237f317cb3f46b28ab00d520766cdfdeeb2f172a9310f15ab1",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "LocalFramePhaseOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFramePhaseOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFramePhaseOriginalsTest.java",
+      "source_sha256": "5879c7c51a4ebef2c93399c9679aa224de9b7ffc8ad0cea79cd36c8026e56a7f",
+      "source_normalized_sha256": "30f0b46444067fb0696d4e6e38f388a99ed147e6d33f9ccc4f5ad66533a57a26",
+      "standalone_sha256": "27639dd20dee891d471e735ffd345eea51544f7693d75f09b2e091086e07bbd8",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "LocalFrameRuleUniquenessOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFrameRuleUniquenessOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFrameRuleUniquenessOriginals.java",
+      "source_sha256": "c183be9ac02de37f0afe4cf2b38a4d273476922688a878e7bfc66ce708c9b006",
+      "source_normalized_sha256": "a13ab93b49c8a36e07a64c1a4db7b2e62fd3d41c7986b0e55796a63c99d77ec3",
+      "standalone_sha256": "e4324f500d1ec215d2fcf3569ad2fb4c90622934d75f9a117d478b6026a8d88b",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "LocalFrameRuleUniquenessOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFrameRuleUniquenessOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFrameRuleUniquenessOriginalsTest.java",
+      "source_sha256": "c7f95919bf4119a3153c5ea0bfd95561e0a9f81865b08436d22b9323ee45f9c4",
+      "source_normalized_sha256": "bfb3ddeea72305de028f1aa6b6827fbd34f93aab978998e1999d9cc230dc49c5",
+      "standalone_sha256": "0d1990ba7c7ba417d6772b96819d11bc277b8be5fb2a37f30d0b63a7d22bede6",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "UnboundPhaseVetoOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/UnboundPhaseVetoOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/UnboundPhaseVetoOriginals.java",
+      "source_sha256": "8b1cd500fce1444b45f75f48328aff6ea56a860c89812722c9b7b8c733df2998",
+      "source_normalized_sha256": "309cdbf021f127845b23f6ac4f9bfbe26eaa516016680b2a68d11e1e9bea0666",
+      "standalone_sha256": "7b01fb18e2a43d02b2b1216c1cb876bf6b951a1908ff2080a5994d7c85724ac0",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
+    },
+    "UnboundPhaseVetoOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/UnboundPhaseVetoOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/UnboundPhaseVetoOriginalsTest.java",
+      "source_sha256": "5ddcc8984df5ed8dead2ad36e9ca7559fe58a39663c1422ef3f1de2078b57fba",
+      "source_normalized_sha256": "9019e6d64d8b43740285997f9e9ae152dfae840ea3468fe3085809682eb72e2e",
+      "standalone_sha256": "fa927ddf58ef65e4f0b6da6ebf06295134fa036aa3ba34b4485cae4366cf40b6",
+      "license": "Apache-2.0",
+      "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
+      "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924"
     }
   },
   "interpreter_speedup_review": {

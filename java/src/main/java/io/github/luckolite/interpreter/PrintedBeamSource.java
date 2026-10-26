@@ -508,6 +508,8 @@ public final class PrintedBeamSource {
                                         }
                                         // A necessary lane range only vetoes; it never binds this
                                         // head.
+                                        // Include every phase allowed by the complete local
+                                        // five-rule proof.
                                         var note = score.notes().get(owner);
                                         var staff = first.binding.lane().staff();
                                         work.take(64);
@@ -518,7 +520,7 @@ public final class PrintedBeamSource {
                                                         note.staffStep(),
                                                         staff.bottom(),
                                                         staff.gap(),
-                                                        staff.gap() * .4f,
+                                                        staff.gap() * .8f,
                                                         staff.gap() * .12f,
                                                         .45f)) continue;
                                         float gap = first.binding.gap();
@@ -1201,7 +1203,7 @@ public final class PrintedBeamSource {
                     note.staffStep(),
                     staff.bottom(),
                     staff.gap(),
-                    staff.gap() * .4f,
+                    staff.gap() * .8f,
                     staff.gap() * .12f,
                     .45f)) continue;
 

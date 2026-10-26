@@ -116,8 +116,9 @@ final class PrintedBeamLocalFrame {
         int left = (int) Math.floor(head.x() - gap * .8f),
                 right = (int) Math.ceil(head.x() + gap * .8f);
         float[] result = frame(raw, width, height, left, right, staff, budget);
+        // Match the observed five-rule search envelope; phase alone proves no ownership.
         if (result == null
-                || Math.abs(result[0] - staff.bottom()) > gap * .4f
+                || Math.abs(result[0] - staff.bottom()) > gap * .8f
                 || Math.abs(result[1] - gap) > gap * .12f
                 || Math.abs(head.y() - (result[0] - note.staffStep() * result[1] * .5f))
                         > result[1] * .45f) return null;
@@ -237,48 +238,20 @@ final class PrintedBeamLocalFrame {
             }
         }
 
-        int[] found = null;
-        {
-            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
-            for (var lines :
-                    RawStaffLineDetector.detectFromStrength(
-                            strength,
-                            Math.max(4, Math.round((right - left) * .5f)),
-                            last - first,
-                            quarterBudget)) {
-                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-
-                if (lines.gap() < staff.gap() * .88f
-                        || lines.gap() > staff.gap() * 1.12f
-                        || Math.abs(lines.bottom() + first - staff.bottom()) > staff.gap() * .8f)
-                    continue;
-                int[] rows =
-                        (quarterBudget == null
-                                        || quarterBudget.allocate(
-                                                1L + (lines.rows()).length,
-                                                32L + 8L * (lines.rows()).length)
-                                ? lines.rows().clone()
-                                : null);
-                {
-                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                    for (int i = 0; i < rows.length; i++) {
-                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                        rows[i] += first;
-                    }
-                }
-
-                if (found != null
-                        && !((quarterBudget == null
-                                        || quarterBudget.allocate(
-                                                1L
-                                                        + (found == null ? 0 : found.length)
-                                                        + (rows == null ? 0 : rows.length),
-                                                0))
-                                && java.util.Arrays.equals(found, rows))) return null;
-                found = rows;
-            }
+        int[] found =
+                PrintedBeamRuleCandidates.unique(
+                        strength,
+                        Math.max(4, Math.round((right - left) * .5f)),
+                        last - first,
+                        first,
+                        staff.bottom(),
+                        staff.gap(),
+                        quarterBudget);
+        if (found == null) return null;
+        for (int i = 0; i < found.length; i++) {
+            FaintQuarterRestInk.charge(quarterBudget, 2, 0);
+            found[i] += first;
         }
-
         return found;
     }
 
