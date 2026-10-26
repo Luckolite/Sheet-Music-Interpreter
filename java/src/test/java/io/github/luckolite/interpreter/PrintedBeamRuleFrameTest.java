@@ -8,6 +8,72 @@ import java.lang.reflect.*;
 /** Original observed-band geometry; no score/image/model material. */
 public final class PrintedBeamRuleFrameTest {
     @org.junit.Test
+    public void supportedFloatSeedKeepsItsAcceptanceBoundaryAndWork() throws Exception {
+        float gap = 26.920299530029297f, y = 341.7663269042969f;
+        int width = 300, height = 500;
+        byte[] raw = new byte[width * height];
+        Arrays.fill(raw, (byte) 255);
+        for (int[] band : new int[][] {{246, 247}, {273, 273}, {300, 300}, {327, 327}, {354, 354}})
+            for (int row = band[0]; row <= band[1]; row++)
+                Arrays.fill(raw, row * width, (row + 1) * width, (byte) 20);
+        org.junit.Assert.assertNotNull(
+                PrintedBeamRuleWitness.at(raw, width, height, 128, 354, gap));
+        var laneType = Class.forName(PrintedBeamSource.class.getName() + "$Lane");
+        var constructor = laneType.getDeclaredConstructors()[0];
+        constructor.setAccessible(true);
+        var staff = new PlayingTechniqueDetector.Staff(354 - 4 * gap, 354, gap, 0, 1);
+        Object lane =
+                constructor.newInstance(0, staff, null, null, new HashMap<>(), new HashMap<>());
+        var head =
+                new PrintedSlurOwners.Location() {
+                    public int owner() {
+                        return 0;
+                    }
+
+                    public float x() {
+                        return 150;
+                    }
+
+                    public float y() {
+                        return y;
+                    }
+
+                    public int staffIndex() {
+                        return 0;
+                    }
+
+                    public int staffCount() {
+                        return 1;
+                    }
+                };
+        var note = new ScoreNoteEvent(0, .5f, 0, 0, 1, y / height, false, 0, 1);
+        var method =
+                PrintedBeamSource.class.getDeclaredMethod(
+                        "bind",
+                        PrintedSlurOwners.Location.class,
+                        ScoreNoteEvent.class,
+                        List.class,
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        PrintedBeamSource.Work.class);
+        method.setAccessible(true);
+        var work = new PrintedBeamSource.Work(1_000_000);
+        Object binding = method.invoke(null, head, note, List.of(lane), raw, width, height, work);
+        org.junit.Assert.assertNotNull(
+                "Supported float seed must retain old boundary acceptance", binding);
+        var bottom = binding.getClass().getDeclaredMethod("bottom");
+        bottom.setAccessible(true);
+        org.junit.Assert.assertEquals(
+                Float.floatToRawIntBits(353.88043212890625f),
+                Float.floatToRawIntBits((float) bottom.invoke(binding)));
+        org.junit.Assert.assertEquals(
+                "No fallback fitting charge on the supported path",
+                1_000_000 - (long) Math.ceil(gap * 12),
+                work.remaining);
+    }
+
+    @org.junit.Test
     public void originalBandAndBindingControls() throws Exception {
         main(new String[0]);
     }

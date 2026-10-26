@@ -6913,11 +6913,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
-      "review_note": "Package-only standalone counterpart. Bilateral exact five-band spacing constraints replace the unsupported rounded-gap assumption in local beam fallback. Same source witnesses, scan limits, slope and note-frame checks;128work units prepaid for bounded fitting. Original band/binding regression only, no supplied score material or model change.",
-      "source_sha256": "35f0fdbe9b425835a3747f01b7e4b29ccd10b3b9350466e5cc63e8bf60dc43f3",
-      "source_normalized_sha256": "3d39f45265151463b5b877ecb2b2fe97366e8c01c8a009343397697a75fccf29",
-      "standalone_sha256": "52c7478b2010c5a4a9bbe36fe3013af65e28cd88e2c1fa5b0de0abfa236df436",
-      "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520"
+      "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
+      "source_sha256": "61ef0240aa3c0d3c7226cc4e6e45b3b7207441a9ca2d1573d28e542a22d82e4c",
+      "source_normalized_sha256": "813614a2db4e631248481761df6afc3a7f19b72e60f3ea1a4a628ada5abe25c6",
+      "standalone_sha256": "c183d1a8223f98c85a83b84fe40bc6425eca519dab0890435c7918ace858ee59",
+      "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65"
     },
     "PrintedIsolatedFlags.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
@@ -13489,15 +13489,16 @@
   },
   "beam_rule_frame_review": {
     "license": "Apache-2.0",
-    "reviewed_app_commit": "e6aa4889f43b5f28d5170b208d85dad1afd1d520",
+    "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
     "documentation_path": "docs/beam-rule-frame.md",
     "original_regression": "java/src/test/java/io/github/luckolite/interpreter/PrintedBeamRuleFrameTest.java",
     "scope": "A rounded staff-spacing seed can contradict actual complete five-rule witnesses. Fit one common gap and independent phases inside all ten observed pixel bands; retain the old nominal frame whenever supported. No alternative witnesses or pixel ownership are invented.",
-    "limits": "Existing16-step bilateral witness search, raw thresholds, phase slope, unique lane and head residual checks remain; fixed128work prepay added. No quota increases.",
+    "limits": "Existing16-step witness search, raw thresholds, slope, unique-lane and head residual checks remain.128work prepay only when legacy phase intervals are unsupported.",
     "not_claimed": [
       "Faint-rule recovery",
       "Complete beam topology or note accuracy",
       "Native/app packaged runtime or device deployment"
-    ]
+    ],
+    "supported_seed_float_compatibility": "Original float offset multiplication precedes widening; preserve exact old bottom bits and supported-path work. New test catches the float-to-double boundary regression in the initial common-frame integration."
   }
 }
