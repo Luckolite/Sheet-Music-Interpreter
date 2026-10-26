@@ -164,7 +164,11 @@ final class PrintedBeamLocalFrame {
             for (int i = 0; i < 5; i++) {
                 if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
 
-                if (Math.abs(leftRules[i] - rightRules[i]) > gap * .2f) return null;
+                // Compare rise to the actual horizontal baseline, as the legacy binding does.
+                // Vertical staff spacing is independent of the distance between these flank
+                // samples.
+                if (Math.abs(leftRules[i] - rightRules[i]) > ((c + d - a - b) * .5f) * .2f)
+                    return null;
                 rows[i] = leftRules[i] + (rightRules[i] - leftRules[i]) * fraction;
                 mean += rows[i] / 5;
             }

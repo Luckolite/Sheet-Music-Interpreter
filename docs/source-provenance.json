@@ -8146,9 +8146,9 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamLocalFrame.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalFrame.java",
       "license": "Apache-2.0",
-      "source_sha256": "427c36342aeb735c40f8283af61dadfb7cfb6b93ab0b750f0e5890f4aba97434",
-      "source_normalized_sha256": "427c36342aeb735c40f8283af61dadfb7cfb6b93ab0b750f0e5890f4aba97434",
-      "standalone_sha256": "3db9bbb2d85dbceedf8501644a036d490cc5534190c4300ed15d167916c448ed",
+      "source_sha256": "ad7dd1e12ed0052316f4318d14af60dc59bd8b864118e3dc4b7db4cdff0e0d2d",
+      "source_normalized_sha256": "ad7dd1e12ed0052316f4318d14af60dc59bd8b864118e3dc4b7db4cdff0e0d2d",
+      "standalone_sha256": "28e59bb659b7d101348a47167295413a91d80a82359f1eb0c161c305b5524b40",
       "anchored_local_beam_review": {
         "documentation": "docs/anchored-local-beam-frame.md",
         "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
@@ -8156,6 +8156,15 @@
         "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
         "rollout": "Source only; cumulative paired packaging deferred during active goal.",
         "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
+      },
+      "physical_slope_review": {
+        "documentation": "docs/local-frame-slope.md",
+        "reviewed_app_base_commit": "e31bbf47668cb585a81571f3be21d648baa27b5b",
+        "source_geometry": "Observed flank rise / actual horizontal separation; existing legacy slope maximum",
+        "new_original_assertions": 72,
+        "complete_group_gain": 0,
+        "rollout": "Next cumulative matched recognition revision must advance beyond117",
+        "app_commit": "d4e7be78516806a0e35f855177d16b1818048c0f"
       }
     },
     "FaintEighthRestInk.java": {
@@ -8192,6 +8201,24 @@
       "standalone_sha256": "395c93fab0291e3d17420310f9bbbd4f1bb5a425641fda5a47273fd0372b8552",
       "license": "Apache-2.0",
       "review_note": "Six original source/sound-domain cases cover repeated/filtered counts, actual aliases, legacy absence and original bounds. Optional platform integration tests are supplied in the reviewed patch without adding Android/playback dependencies to the standalone library."
+    },
+    "LocalFrameSlopeOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFrameSlopeOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFrameSlopeOriginals.java",
+      "source_sha256": "3ed154c569dff60bbd87d2d01bca5077189008b3adf77f892eb6d55d6d0236ac",
+      "source_normalized_sha256": "3ed154c569dff60bbd87d2d01bca5077189008b3adf77f892eb6d55d6d0236ac",
+      "standalone_sha256": "83623fa3cc47f123921fc903e5e22ad5ae3ca703b91a6f7caa8555fc506e0e1b",
+      "license": "Apache-2.0",
+      "review_note": "Original continuous affine five-rule raster regression; no commercial score assets"
+    },
+    "LocalFrameSlopeOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LocalFrameSlopeOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LocalFrameSlopeOriginalsTest.java",
+      "source_sha256": "a509490a2ea8654d8cc3c746649beed0d71e281cac6655a32dcb5a5ef9c46730",
+      "source_normalized_sha256": "a509490a2ea8654d8cc3c746649beed0d71e281cac6655a32dcb5a5ef9c46730",
+      "standalone_sha256": "f633eb03ce7216b9eb88462c65da62580cf5bcecb6216192abb2c1786dfd2387",
+      "license": "Apache-2.0",
+      "review_note": "Original continuous affine five-rule raster regression; no commercial score assets"
     }
   },
   "interpreter_speedup_review": {
