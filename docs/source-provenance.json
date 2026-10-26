@@ -793,13 +793,13 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "288025919746f54f13005c8ca104e2eba943df982dbe244aa7d812c782744334",
-      "source_normalized_sha256": "a934fed9c8f9e8c1b08a38f1aee9a725b93fe5583631d0ca7e7c730eed67d763",
+      "source_sha256": "9cd26beb29f6c7e2f11afe4275cfc5f5316ebb4ae942c6aa5f32ee44efe2d22e",
+      "source_normalized_sha256": "eee530d8cb054c51dc348449ed49039c7b8a74d3aa5d836edc1530b29a269906",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
       "reviewed_source_state": "committed",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "standalone_sha256": "22a3d8919d7797f558537bff92a2d0e88fb82271aff5c6cfacff699aba4b019e",
+      "standalone_sha256": "f104b754697a9509ac7887ac24ff00395318817b4b8abb9698c214aa1a411248",
       "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
       "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/StaffPitchTrack.java",
@@ -811,6 +811,15 @@
         "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
         "rollout": "Source only; matched cumulative packaging deferred during active goal.",
         "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      },
+      "full_width_window_review": {
+        "documentation": "docs/full-width-staff-window-work.md",
+        "reviewed_app_base_commit": "48f3650c8d9b30b6528fe261eb8aa863adb2b398",
+        "new_original_junit_tests": 2,
+        "differential_requests": 188,
+        "scope": "Necessary zero-span early null on valid full-width strips; all35 other original methods and quarter at() unchanged.",
+        "rollout": "Source only; cumulative matched packaging deferred during active goal.",
+        "app_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb"
       }
     },
     "OpeningMeasureLayout.java": {

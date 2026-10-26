@@ -142,6 +142,18 @@ final class StaffPitchTrack {
         if (!subtle && straightRules(gray, width, height, bottom, gap, true)) return null;
         boolean broadlyStraight = straightRules(gray, width, height, bottom, gap);
         int stripWidth = Math.min(width, Math.max(80, Math.round(gap * 10)));
+        // Full-width windows all have the same sample x; their span cannot reach
+        // the positive coverage required below. Keep invalid inputs on their old path.
+        if (stripWidth == width
+                && width > 0
+                && height > 0
+                && gray.length == (long) width * height
+                && Float.isFinite(top)
+                && Float.isFinite(bottom)
+                && Float.isFinite(gap)
+                && top >= 0
+                && bottom < height
+                && bottom > top) return null;
         int first = Math.max(0, Math.round(top - gap * 6)),
                 last = Math.min(height, Math.round(bottom + gap * 6));
         if (last <= first) return null;
