@@ -7515,6 +7515,61 @@
       "reviewed_app_commit": "0606484c2d94118bbca34b801e36bc51e9ef67d1",
       "reviewed_source_state": "Android-only adapter and original instrumentation test; outside standalone Java core source set.",
       "review_note": "Package-only Apache-2.0 port. Resource ownership changes only; no model, text inference, cache identity, clock or native record layout changes."
+    },
+    "hairpin-source.js": {
+      "source_path": "app/src/youtube/assets/musescore/hairpin-source.js",
+      "source_sha256": "cf15883f146d667c6cb2e069f9abaae074bdaeaa9c6a14bd50c63971589cb2fd",
+      "source_normalized_sha256": "6b6f02ccb6ece3b177d8c3e54db59a7ce0503bce64c61dfb717fbb0d14d47248",
+      "standalone_path": "browser/engraving/hairpin-source.js",
+      "standalone_sha256": "cf15883f146d667c6cb2e069f9abaae074bdaeaa9c6a14bd50c63971589cb2fd",
+      "standalone_normalized_sha256": "6b6f02ccb6ece3b177d8c3e54db59a7ce0503bce64c61dfb717fbb0d14d47248",
+      "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+      "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
+      "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
+    },
+    "hairpin-identity.js": {
+      "source_path": "app/src/youtube/assets/musescore/hairpin-identity.js",
+      "source_sha256": "b2d37cfd8ad3632677a54dce11f09948067a4fa59fe7aa9c859e239b73de263e",
+      "source_normalized_sha256": "e4c2fb05432d660e6c2d0fab86294e2f3389bc86ee787e93a07c0bd915a9c1de",
+      "standalone_path": "browser/engraving/hairpin-identity.js",
+      "standalone_sha256": "b2d37cfd8ad3632677a54dce11f09948067a4fa59fe7aa9c859e239b73de263e",
+      "standalone_normalized_sha256": "e4c2fb05432d660e6c2d0fab86294e2f3389bc86ee787e93a07c0bd915a9c1de",
+      "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+      "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
+      "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
+    },
+    "hairpin-native.js": {
+      "source_path": "app/src/youtube/assets/musescore/hairpin-native.js",
+      "source_sha256": "6a5b45bf0fc5bc33c4d4e5a37c7a4b6c8db65eeccb76fa19dc7f4ad142240395",
+      "source_normalized_sha256": "6a5b45bf0fc5bc33c4d4e5a37c7a4b6c8db65eeccb76fa19dc7f4ad142240395",
+      "standalone_path": "browser/engraving/hairpin-native.js",
+      "standalone_sha256": "6a5b45bf0fc5bc33c4d4e5a37c7a4b6c8db65eeccb76fa19dc7f4ad142240395",
+      "standalone_normalized_sha256": "6a5b45bf0fc5bc33c4d4e5a37c7a4b6c8db65eeccb76fa19dc7f4ad142240395",
+      "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+      "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
+      "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
+    },
+    "hairpin-layout.js": {
+      "source_path": "app/src/youtube/assets/musescore/hairpin-layout.js",
+      "source_sha256": "287a428d2eea0987377f4ea7a26f9a9e285cb8c56bbc51f041c9bbc0ce3d594e",
+      "source_normalized_sha256": "c5dbb86ffa72195573e34ed9ba99e5729525471a8030cf34dd22c320051213a3",
+      "standalone_path": "browser/engraving/hairpin-layout.js",
+      "standalone_sha256": "287a428d2eea0987377f4ea7a26f9a9e285cb8c56bbc51f041c9bbc0ce3d594e",
+      "standalone_normalized_sha256": "c5dbb86ffa72195573e34ed9ba99e5729525471a8030cf34dd22c320051213a3",
+      "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+      "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
+      "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
+    },
+    "hairpin-export.js": {
+      "source_path": "app/src/youtube/assets/musescore/hairpin-export.js",
+      "source_sha256": "e901e50a2253f0e4a77efe14612cbb5619aa901524152fc33d07d16634b85cf4",
+      "source_normalized_sha256": "e901e50a2253f0e4a77efe14612cbb5619aa901524152fc33d07d16634b85cf4",
+      "standalone_path": "browser/engraving/hairpin-export.js",
+      "standalone_sha256": "e901e50a2253f0e4a77efe14612cbb5619aa901524152fc33d07d16634b85cf4",
+      "standalone_normalized_sha256": "e901e50a2253f0e4a77efe14612cbb5619aa901524152fc33d07d16634b85cf4",
+      "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+      "reviewed_source_state": "Original Apache browser adapter; unchanged Java core and native binary/API layouts. Source-only cumulative release boundary.",
+      "review_note": "Reviewed exact dependency closure. Identity normalizes only after matched reciprocal staff octave-shift spans. Prior validated logical multi-rest helper and its native/export consumers are included coherently, with synthetic repair/export controls. No GPL implementation or private score data copied."
     }
   },
   "interpreter_speedup_review": {
@@ -10689,31 +10744,36 @@
         "license": "Apache-2.0",
         "path": "browser/engraving/hairpin-source.js",
         "sha256": "cf15883f146d667c6cb2e069f9abaae074bdaeaa9c6a14bd50c63971589cb2fd",
-        "source_path": "app/src/youtube/assets/musescore/hairpin-source.js"
+        "source_path": "app/src/youtube/assets/musescore/hairpin-source.js",
+        "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece"
       },
       {
         "license": "Apache-2.0",
         "path": "browser/engraving/hairpin-identity.js",
-        "sha256": "2bce18ffc4dd462f30ce3f52583a7c3178ec710e5c7ef99eebc063f1d22d94c4",
-        "source_path": "app/src/youtube/assets/musescore/hairpin-identity.js"
+        "sha256": "b2d37cfd8ad3632677a54dce11f09948067a4fa59fe7aa9c859e239b73de263e",
+        "source_path": "app/src/youtube/assets/musescore/hairpin-identity.js",
+        "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece"
       },
       {
         "license": "Apache-2.0",
         "path": "browser/engraving/hairpin-native.js",
-        "sha256": "9b54e3847072fef61f9c81075feb4391857901141aadb803ffc7e9f1bb1cf0ec",
-        "source_path": "app/src/youtube/assets/musescore/hairpin-native.js"
+        "sha256": "6a5b45bf0fc5bc33c4d4e5a37c7a4b6c8db65eeccb76fa19dc7f4ad142240395",
+        "source_path": "app/src/youtube/assets/musescore/hairpin-native.js",
+        "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece"
       },
       {
         "license": "Apache-2.0",
         "path": "browser/engraving/hairpin-layout.js",
         "sha256": "287a428d2eea0987377f4ea7a26f9a9e285cb8c56bbc51f041c9bbc0ce3d594e",
-        "source_path": "app/src/youtube/assets/musescore/hairpin-layout.js"
+        "source_path": "app/src/youtube/assets/musescore/hairpin-layout.js",
+        "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece"
       },
       {
         "license": "Apache-2.0",
         "path": "browser/engraving/hairpin-export.js",
-        "sha256": "40a263173968e0a7e96630dfcd6133e72f7144bcd6e410d668778e5582876b5d",
-        "source_path": "app/src/youtube/assets/musescore/hairpin-export.js"
+        "sha256": "e901e50a2253f0e4a77efe14612cbb5619aa901524152fc33d07d16634b85cf4",
+        "source_path": "app/src/youtube/assets/musescore/hairpin-export.js",
+        "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece"
       }
     ],
     "gplImplementationCopied": false,
@@ -13402,5 +13462,19 @@
     "tests": "Twelve model-free Android emulator tests pass: five pixel ownership, four deferred-recognizer ownership/API forwarding, one independent UI theme monitor/pixel control, and two existing local/managed cache cancellation controls. The nine OCR ownership controls are shared here as source.",
     "limits": "Synthetic resource lifetime and API behavior, not a real-phone OCR or recognition-accuracy claim; no production APK, Hub worker or Library deployment.",
     "non_interpreter_ui_changes": "Separate app-only boolean playback-preparation feedback, repeated UI failure notices and immutable-settings theme compositing monitor scope. No musical inference or wire format change."
+  },
+  "engraving_ottava_identity_review": {
+    "reviewed_app_commit": "1db8e31c89a9eb945ba431d74ef8cb7a66634ece",
+    "documentation_path": "browser/engraving/README.md",
+    "license": "Apache-2.0",
+    "gpl_implementation_copied": false,
+    "private_score_or_device_data_included": false,
+    "scope": "Comparison-domain normalization only, after exact staff/rational source/native octave-shift matching and reciprocal endpoint validation. Raw and projected pitch ranges are strict; source/native pitches, ties, transposition and event multiplicity are not rewritten.",
+    "compatibility": "No new production asset or dependency. No-shift comparison behavior is preserved. Unknown, unmatched, overlapping, combined capo/drum and ambiguous grace cases remain refusals.",
+    "dependency_review": "The prior public adapter lacked the app logicalMeasures validator and two repair/export consumers. All five source/layout/identity/native/export adapters were reviewed; the three differing counterparts are ported together, with three original multi-rest repair/export controls.",
+    "source_tests": "134 unique Node synthetic controls: 35 compatibility plus 99 octave-shift (47 accepted, 52 refused). Same 99 browser cases overlap these. Real browser harness: 262 controls passed, including three new logical multi-rest cases; do not sum overlapping suites as independent cases.",
+    "private_integration_boundary": "A separate reconstructed-source, exact-installed-engine desktop chain passed identity/repair/style/reflow/export and raw note/TPC/tie/shift preservation. Private inputs and outputs are excluded. No Android/audio/PDF/raster/original-transient or deployment claim.",
+    "model_native_and_format_changes": false,
+    "deployment_boundary": "App/public source publication only; coupled cumulative app/Hub/page-worker rollout remains deferred while related components are unfinished. Existing historical Hub source packets and published assets are not replaced."
   }
 }

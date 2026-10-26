@@ -1,0 +1,7 @@
+// Copyright 2026 Luckolite
+// SPDX-License-Identifier: Apache-2.0
+// Test-only read-only XML DOM contract, not a native importer/browser qualification.
+const xml=require(process.env.MUSIC_SHEETS_XML_JS || 'xml-js');
+class Element{constructor(x){this.localName=x.name.split(':').pop();this.tagName=x.name;this.attributeValues=x.attributes||{};this.attributes=Object.entries(this.attributeValues).map(([name,value])=>({name,value}));this.children=(x.elements||[]).filter(n=>n.type==='element').map(n=>new Element(n));this.parts=x.elements||[];}getAttribute(k){return Object.hasOwn(this.attributeValues,k)?this.attributeValues[k]:null;}get textContent(){return this.parts.map(p=>p.type==='text'?p.text:p.type==='cdata'?p.cdata:p.type==='element'?new Element(p).textContent:'').join('');}getElementsByTagName(k){return this.children.flatMap(c=>[...(c.tagName===k||k==='*'?[c]:[]),...c.getElementsByTagName(k)]);}querySelectorAll(q){const p=q.split('>').map(s=>s.trim());if(p.length===2)return this.getElementsByTagName(p[0]).flatMap(n=>n.children.filter(c=>c.localName===p[1]));throw Error('Unsupported audit selector '+q);}}
+function parse(text){const x=xml.xml2js(text,{compact:false}),roots=x.elements.filter(n=>n.type==='element');if(roots.length!==1)throw Error('One root required');const r=new Element(roots[0]);return{documentElement:r,getElementsByTagName:k=>[...(r.tagName===k||k==='*'?[r]:[]),...r.getElementsByTagName(k)],querySelectorAll:q=>r.querySelectorAll(q)};}
+module.exports={parse};

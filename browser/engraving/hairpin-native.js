@@ -120,7 +120,7 @@
    need(JSON.stringify(expected)===JSON.stringify(observed),'Native/source hairpin ownership differs');
    need(spanners.length===2*spans.length,'Native hairpin connector count differs');
    if(!spans.length)continue;
-   const measures=children(staff,'Measure'),first=Math.min(...spans.map(s=>s.startMeasure)),last=Math.max(...spans.map(s=>s.endMeasure));
+   const measures=HairpinIdentity.logicalMeasures(staff,identity.plan.lengths[sid]),first=Math.min(...spans.map(s=>s.startMeasure)),last=Math.max(...spans.map(s=>s.endMeasure));
    const voiceIndex=Math.max(...measures.slice(first,last+1).map(m=>children(m,'voice').length));
    const anchored=[];let directNative=false;
    if(voiceIndex>=4){

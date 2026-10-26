@@ -8,7 +8,7 @@
  const children=(node,name)=>Array.from(node.children).filter(n=>n.localName===name);
  const field=(node,name,fallback)=>{const found=children(node,name);need(found.length<=1,'Duplicate layout '+name);return found.length?found[0].textContent.trim():fallback;};
  const xml=node=>new XMLSerializer().serializeToString(node);
- function removeCarriers(layout,originalNative,owners){
+ function removeCarriers(layout,originalNative,owners,lengths=null){
   need(Array.isArray(owners),'Missing carrier voice ownership');
   if(!owners.length)return {document:layout,proof:{removedCarrierRests:0,removedBackups:0,originalNotesPreserved:true}};
   const candidate=new DOMParser().parseFromString(xml(layout),'application/xml');need(!candidate.querySelector('parsererror'),'Invalid layout XML');
@@ -22,7 +22,12 @@
    need(Number.isSafeInteger(voiceIndex)&&voiceIndex>=0&&voiceIndex<4&&Number.isSafeInteger(firstMeasure)&&Number.isSafeInteger(lastMeasure)&&firstMeasure>=0&&lastMeasure>=firstMeasure,'Invalid carrier voice range');
    const locations=[];nativeParts.forEach((part,pi)=>children(part,'Staff').forEach((s,si)=>{if(s.getAttribute('id')===staff)locations.push({pi,si,count:children(part,'Staff').length});}));
    need(locations.length===1 && nativeStaffs.has(staff),'Unknown carrier staff');
-   const {pi,si,count}=locations[0],measures=children(parts[pi],'measure'),original=children(nativeStaffs.get(staff),'Measure');
+   const {pi,si,count}=locations[0],measures=children(parts[pi],'measure');
+   let original=children(nativeStaffs.get(staff),'Measure');
+   if(lengths!==null){
+    need(Object.hasOwn(lengths,staff)&&Array.isArray(lengths[staff]),'Missing logical native measure lengths');
+    original=HairpinIdentity.logicalMeasures(nativeStaffs.get(staff),lengths[staff]);
+   }else need(!original.some(m=>children(m,'multiMeasureRest').length),'Multi-rest carriers require logical ownership');
    need(measures.length===original.length && lastMeasure<measures.length,'Layout carrier measure range differs');
    const declared=parts[pi].querySelector('attributes > staves');need(Number(declared?declared.textContent:1)===count,'Layout staff topology differs');
    // The bundled exporter labels voices by their native track within the part.

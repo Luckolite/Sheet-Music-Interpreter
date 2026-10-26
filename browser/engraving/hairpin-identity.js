@@ -31,12 +31,40 @@
     }
     return owners;
   }
+  // MuseScore serializes the collapsed multi-rest graphic after its first real bar.
+  // Its underlying silent bars are retained and visited; the graphic owns no timeline.
+  function logicalMeasures(staff,lens) {
+    lens=lens.map(F.from);
+    const measures=[],graphics=[];
+    for(const measure of nodes(staff,'Measure')) {
+      const markers=nodes(measure,'multiMeasureRest');
+      if(!markers.length){measures.push(measure);continue;}
+      need(markers.length===1,'Duplicate multi-rest graphic marker');
+      const count=number(markers[0].textContent.trim());need(count>=2&&count<=lens.length,'Invalid multi-rest graphic span');
+      const start=measures.length-1;need(start>=0&&start+count<=lens.length,'Orphan multi-rest graphic');
+      need(Array.from(measure.children).every(n=>['multiMeasureRest','voice'].includes(n.localName)),'Multi-rest graphic contains independent data');
+      const voices=nodes(measure,'voice');need(voices.length===1,'Multi-rest graphic needs one display voice');
+      need(Array.from(voices[0].children).every(n=>['Rest','BarLine'].includes(n.localName)),'Multi-rest graphic contains musical events');
+      const rests=nodes(voices[0],'Rest');need(rests.length===1&&only(rests[0],'durationType')==='measure','Multi-rest graphic needs one display rest');
+      need(Array.from(rests[0].children).every(n=>['durationType','duration'].includes(n.localName)),'Unsupported multi-rest display rest');
+      const total=lens.slice(start,start+count).reduce((a,b)=>a.add(b),z);
+      need(F.from(measure.getAttribute('len')||'0').compare(total)===0&&F.from(only(rests[0],'duration','0')).compare(total)===0,'Multi-rest graphic duration mismatch');
+      need(!graphics.some(g=>start<g.start+g.count&&g.start<start+count),'Overlapping multi-rest graphics');
+      graphics.push({start,count});
+    }
+    need(measures.length===lens.length,'Native measure count changed');
+    for(const graphic of graphics)for(const measure of measures.slice(graphic.start,graphic.start+graphic.count)) {
+      need(!measure.getElementsByTagName('Chord').length,'Multi-rest graphic covers sounding notes');
+      need(nodes(measure,'voice').length>0&&Array.from(measure.getElementsByTagName('Rest')).length>0,'Multi-rest graphic lacks underlying silence');
+    }
+    return measures;
+  }
   function walkNative(native,lengths,visit) {
     const scores=nodes(native.documentElement,'Score');need(scores.length===1,'Expected one native score');
     const seen=new Set();
     for(const staff of nodes(scores[0],'Staff')){
       const sid=staff.getAttribute('id');need(Object.hasOwn(lengths,sid) && !seen.has(sid),'Unknown native staff');seen.add(sid);
-      const measures=nodes(staff,'Measure'),lens=lengths[sid].map(F.from);
+      const lens=lengths[sid].map(F.from),measures=logicalMeasures(staff,lens);
       need(measures.length===lens.length,'Native measure count changed');
       measures.forEach((measure,mi)=>{
         const explicit=measure.getAttribute('len');if(explicit)need(F.from(explicit).compare(lens[mi])===0,'Native measure length changed');
@@ -65,6 +93,114 @@
       });
     }
     need(seen.size===Object.keys(lengths).length,'Missing native staff');
+  }
+  // Native4.00 stores a pitch before its staff Ottava playback offset.
+  // Keep that stored/display value intact; project only this identity comparison.
+  function nativeOttavaTimeline(source,native,lengths,mapping) {
+    const all=Array.from(native.getElementsByTagName('Spanner')).filter(n=>n.getAttribute('type')==='Ottava');
+    const allHeads=Array.from(native.getElementsByTagName('Ottava'));
+    const sourceMarks=Array.from(source.getElementsByTagName('octave-shift'));
+    if(!all.length&&!allHeads.length&&!sourceMarks.length)return {active:false,offset:()=>0};
+    need(native.documentElement.getAttribute('version')==='4.00','Unqualified native Ottava format');
+    need(!['Capo','capo','capoFret','Drumset'].some(n=>native.getElementsByTagName(n).length)
+      && !Array.from(native.getElementsByTagName('useDrumset')).some(n=>number(n.textContent.trim())!==0),
+      'Native Ottava with capo/percussion needs separate pitch identity');
+    const named=['8va','8vb','15ma','15mb','22ma','22mb'],shifts=[12,-12,24,-24,36,-36];
+    const style=new Set(['subtype','numbersOnly','placement','color','visible','autoplace','offset','minDistance',
+      'lineWidth','lineStyle','lineVisible','beginText','continueText','endText','beginHookType','endHookType',
+      'beginHookHeight','endHookHeight','beginFontFace','continueFontFace','endFontFace','beginFontSize',
+      'continueFontSize','endFontSize','beginFontStyle','continueFontStyle','endFontStyle','beginTextAlign',
+      'continueTextAlign','endTextAlign','beginTextPlace','continueTextPlace','endTextPlace','beginTextOffset',
+      'continueTextOffset','endTextOffset','dashLineLen','dashGapLen','Segment']);
+    const attrs=(n,allowed)=>need(Array.from(n.attributes).every(a=>allowed.includes(a.name)),'Unknown native Ottava attribute');
+    const starts={},lens={};
+    for(const [sid,values]of Object.entries(lengths)){lens[sid]=values.map(F.from);let at=z;starts[sid]=[at];for(const v of lens[sid]){at=at.add(v);starts[sid].push(at);}}
+    const absolute=(sid,mi,point)=>{need(Object.hasOwn(lens,sid)&&Number.isSafeInteger(mi)&&mi>=0&&mi<=lens[sid].length,'Native Ottava measure outside score');const p=F.from(point);need(p.compare(z)>=0&&(mi===lens[sid].length?p.compare(z)===0:p.compare(lens[sid][mi])<=0),'Native Ottava endpoint outside measure');return starts[sid][mi].add(p);};
+    const sourceStaffs=new Map(mapping.map(m=>[JSON.stringify([m.partId,m.sourceStaff]),m.nativeStaff]));
+    const sourceSpans=[],sourceVisited=new Set();
+    for(const part of nodes(source.documentElement,'part')){
+      let divisions=null;const active=new Map();
+      nodes(part,'measure').forEach((measure,mi)=>{
+        let cursor=z;
+        for(const node of Array.from(measure.children)){
+          if(node.localName==='attributes'){const d=only(node,'divisions');if(d!==null){divisions=number(d);need(divisions>0,'Invalid Ottava source divisions');}}
+          else if(['note','backup','forward'].includes(node.localName)){
+            need(divisions!==null,'Ottava source clock lacks divisions');if(node.localName==='note'&&(nodes(node,'chord').length||nodes(node,'grace').length))continue;
+            const duration=new F(only(node,'duration',''),4*divisions);need(duration.compare(z)>0,'Invalid Ottava source duration');cursor=node.localName==='backup'?cursor.subtract(duration):cursor.add(duration);need(cursor.compare(z)>=0,'Ottava source backup underflow');
+          }else if(node.localName==='direction')for(const dt of nodes(node,'direction-type'))for(const mark of nodes(dt,'octave-shift')){
+            sourceVisited.add(mark);attrs(mark,['type','size','number','id','color','dash-length','space-length','default-x','default-y','relative-x','relative-y','font-family','font-size','font-style','font-weight']);
+            need(mark.children.length===0&&divisions!==null,'Unknown Ottava source content');
+            const sid=sourceStaffs.get(JSON.stringify([part.getAttribute('id'),only(node,'staff','1')]));need(sid!==undefined,'Unmapped Ottava source staff');
+            const point=cursor.add(new F(only(node,'offset','0'),4*divisions)),at=absolute(sid,mi,point);
+            const nr=number(mark.getAttribute('number')||'1');need(nr>=1&&nr<=16,'Ottava source number outside range');
+            const type=mark.getAttribute('type'),prior=active.get(nr),sizeText=mark.getAttribute('size');
+            const size=sizeText===null?(prior?prior.size:8):number(sizeText);need([8,15,22].includes(size),'Unknown Ottava source size');
+            if(type==='up'||type==='down'){need(!prior,'Duplicate/overlapping Ottava source number');active.set(nr,{sid,start:at,size,shift:(type==='up'?-1:1)*12*((size-1)/7),continuations:[]});}
+            else if(type==='continue'){need(prior&&prior.sid===sid&&prior.size===size&&at.compare(prior.start)>=0,'Contradictory Ottava source continuation');prior.continuations.push(at);}
+            else if(type==='stop'){need(prior&&prior.sid===sid&&prior.size===size&&at.compare(prior.start)>0&&prior.continuations.every(p=>p.compare(at)<=0),'Unmatched/nonpositive Ottava source stop');sourceSpans.push({...prior,end:at});active.delete(nr);}
+            else throw Error('Unknown Ottava source type');
+          }
+        }
+      });need(active.size===0,'Unclosed Ottava source span');
+    }
+    need(sourceVisited.size===sourceMarks.length&&sourceMarks.every(n=>sourceVisited.has(n)),'Unvisited Ottava source representation');
+    const endpoint=(link,sid,mi,vi,cursor)=>{
+      attrs(link,[]);need(link.children.length===1&&link.children[0].localName==='location','Native Ottava needs one location');
+      const l=link.children[0];attrs(l,[]);need(Array.from(l.children).every(n=>['measures','fractions','staves','voices','notes'].includes(n.localName)),'Unknown native Ottava location');
+      need(number(only(l,'staves','0'))===0&&number(only(l,'notes','0'))===0,'Cross-staff/note native Ottava endpoint');
+      const voice=vi+number(only(l,'voices','0'));need(voice>=0&&voice<4,'Native Ottava voice outside staff');
+      return {voice,at:absolute(sid,mi+number(only(l,'measures','0')),cursor.add(F.from(only(l,'fractions','0'))))};
+    };
+    const key=(sid,a,at,b,bt)=>JSON.stringify([sid,a,at.toString(),b,bt.toString()]);
+    const heads=new Map(),tails=new Map(),visited=new Set(),seenHeads=new Set(),events=new Map();
+    walkNative(native,lengths,({sid,mi,vi,node,cursor,duration,grace})=>{
+      if(node.localName==='Chord'||node.localName==='Rest'){
+        const k=JSON.stringify([sid,mi,vi]);if(!events.has(k))events.set(k,[]);events.get(k).push({sid,mi,vi,node,at:absolute(sid,mi,cursor),duration,grace});
+      }
+      if(node.localName!=='Spanner'||node.getAttribute('type')!=='Ottava')return;
+      visited.add(node);attrs(node,['type']);need(Array.from(node.children).every(n=>['Ottava','next','prev'].includes(n.localName)),'Unknown native Ottava connector');
+      const h=nodes(node,'Ottava'),next=nodes(node,'next'),prev=nodes(node,'prev'),at=absolute(sid,mi,cursor);
+      if(h.length){
+        need(h.length===1&&next.length===1&&prev.length===0,'Ambiguous native Ottava head');attrs(h[0],[]);
+        need(Array.from(h[0].children).every(n=>style.has(n.localName)),'Unknown native Ottava property');
+        const value=only(h[0],'subtype','');const index=named.includes(value)?named.indexOf(value):/^[0-5]$/.test(value)?Number(value):-1;need(index>=0,'Unknown native Ottava subtype');
+        const end=endpoint(next[0],sid,mi,vi,cursor);need(end.at.compare(at)>0,'Nonpositive native Ottava span');
+        const k=key(sid,vi,at,end.voice,end.at);need(!heads.has(k),'Duplicate native Ottava head');heads.set(k,{sid,start:at,end:end.at,shift:shifts[index]});seenHeads.add(h[0]);
+      }else{
+        need(next.length===0&&prev.length===1,'Ambiguous native Ottava tail');const begin=endpoint(prev[0],sid,mi,vi,cursor);
+        const k=key(sid,begin.voice,begin.at,vi,at);need(!tails.has(k),'Duplicate native Ottava tail');tails.set(k,true);
+      }
+    });
+    need(visited.size===all.length&&all.every(n=>visited.has(n))&&seenHeads.size===allHeads.length&&allHeads.every(n=>seenHeads.has(n)),'Unvisited native Ottava representation');
+    need(heads.size===tails.size&&Array.from(heads.keys()).every(k=>tails.has(k)),'Native Ottava reciprocal endpoints differ');
+    const spanKey=s=>JSON.stringify([s.sid,s.start.toString(),s.end.toString(),s.shift]);
+    const expectedSpans=sourceSpans.map(spanKey).sort(),actualSpans=Array.from(heads.values()).map(spanKey).sort();
+    need(JSON.stringify(expectedSpans)===JSON.stringify(actualSpans),'Source/native Ottava span identity differs');
+    const intervals=new Map();for(const s of heads.values()){if(!intervals.has(s.sid))intervals.set(s.sid,[]);intervals.get(s.sid).push(s);}
+    for(const rows of intervals.values()){rows.sort((a,b)=>a.start.compare(b.start));for(let i=1;i<rows.length;i++)need(rows[i-1].end.compare(rows[i].start)<=0,'Overlapping native Ottava spans');}
+    const at=(sid,p)=>{const rows=intervals.get(sid)||[];let lo=0,hi=rows.length;while(lo<hi){const m=(lo+hi)>>1;if(rows[m].start.compare(p)<=0)lo=m+1;else hi=m;}return lo>0&&rows[lo-1].end.compare(p)>0?rows[lo-1].shift:0;};
+    const offsets=new Map();
+    for(const rows of events.values()){
+      const previousMetric=[],nextMetric=[];let previous=-1,next=rows.length;
+      for(let i=0;i<rows.length;i++){previousMetric[i]=previous;if(!rows[i].grace)previous=i;}
+      for(let i=rows.length-1;i>=0;i--){nextMetric[i]=next;if(!rows[i].grace)next=i;}
+      for(let i=0;i<rows.length;i++){
+      const e=rows[i];if(e.node.localName!=='Chord')continue;const shift=at(e.sid,e.at);
+      const tags=Array.from(e.node.children).filter(n=>/^(?:grace|appoggiatura|acciaccatura)/.test(n.localName));
+      need(tags.every(n=>graceTags.includes(n.localName)),'Unknown native grace/Ottava role');
+      if(e.grace){
+        need(tags.length===1,'Ambiguous native grace/Ottava role');const after=tags[0].localName.endsWith('after');
+        const previous=previousMetric[i],next=nextMetric[i];
+        const principal=after?(previous>=0?rows[previous]:null):(next<rows.length?rows[next]:null);
+        need(principal&&principal.node.localName==='Chord','Native grace/Ottava principal is unavailable');
+        // Accept only when cursor and both possible adjacent metric anchors agree.
+        // At an ambiguous boundary retain refusal instead of guessing attachment.
+        for(const k of [previous,next])if(k>=0&&k<rows.length)need(at(e.sid,rows[k].at)===shift,'Native grace crosses an ambiguous Ottava boundary');
+      }
+      offsets.set(e.node,shift);
+      }
+    }
+    return {active:true,offset:node=>{need(offsets.has(node),'Unvisited native Ottava chord');return offsets.get(node);}};
   }
   function identify(source,native,options={}) {
     need(source.documentElement?.localName==='score-partwise' && native.documentElement?.localName==='museScore','Expected MusicXML and native score');
@@ -166,12 +302,19 @@
       if(!display && transpose.chromatic)transposingNotes++;
     }
     need(unpitchedNotes===carriers.size,'Source/native display-carrier count differs');
+    const ottava=nativeOttavaTimeline(source,native,plan.lengths,mapping);
     walkNative(native,plan.lengths,({sid,mi,node,cursor,duration,grace})=>{
       need(node.localName!=='InstrumentChange','Native instrument changes need timeline identity');
       if(node.localName!=='Chord')return;
       const ids=groups.get(sid),target=ids.indexOf(sid)+number(only(node,'staffMove','0'));need(target>=0 && target<ids.length,'Cross-part staff move');
       for(const note of nodes(node,'Note')){
-        const carrier=carriers.get(note),pitch=carrier?['unpitched-display',carrier.position,carrier.voice,carrier.staff,carrier.type,carrier.chord]:number(only(note,'pitch'));
+        const carrier=carriers.get(note),shift=ottava.offset(node);
+        need(!carrier||shift===0,'Unpitched display carrier needs an unshifted native Ottava timeline');
+        const nativeStoredPitch=carrier?null:number(only(note,'pitch'));
+        need(!ottava.active||carrier||nativeStoredPitch>=0&&nativeStoredPitch<=127,'Native stored pitch outside MIDI range');
+        const nativeIdentityPitch=carrier?null:nativeStoredPitch+shift;
+        need(!ottava.active||carrier||nativeIdentityPitch>=0&&nativeIdentityPitch<=127,'Native Ottava identity pitch outside MIDI range');
+        const pitch=carrier?['unpitched-display',carrier.position,carrier.voice,carrier.staff,carrier.type,carrier.chord]:nativeIdentityPitch;
         nativeEvents.get(ids[target]).push(signature(mi,cursor,duration,pitch,grace));
       }
     });
@@ -184,5 +327,5 @@
     need(noteCount>0,'No note evidence for mapping');
     return {mapping,plan,noteCount,transposingNotes,unpitchedNotes,staffs:nativeById.size,parts:parts.length};
   }
-  globalThis.HairpinIdentity=Object.freeze({identify,walkNative});
+  globalThis.HairpinIdentity=Object.freeze({identify,walkNative,logicalMeasures});
 })();
