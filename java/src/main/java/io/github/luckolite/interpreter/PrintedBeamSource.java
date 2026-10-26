@@ -171,6 +171,16 @@ public final class PrintedBeamSource {
                     || score.measures().isEmpty())
                 throw new IllegalArgumentException("Invalid beam intake");
             var work = new Work(128_000_000);
+            work.take(64);
+            var contextBudget =
+                    new FaintQuarterRestInk.Budget(
+                            128_000_000,
+                            64_000_000,
+                            (addedWork, addedBytes) ->
+                                    work.take(
+                                            Math.addExact(
+                                                    addedWork, Math.addExact(addedBytes, 7) / 8)));
+
             var shaftBudget = new PrintedBeamShafts.Budget(shaftAllowance);
             var pixelFrame =
                     new PrintedBeamShaftPixels.Frame(
@@ -211,7 +221,19 @@ public final class PrintedBeamSource {
             for (var head : heads) {
                 int owner = head.owner();
                 var note = score.notes().get(owner);
-                Binding binding = bind(head, note, lanes, gray, width, height, work);
+                Binding binding =
+                        bind(
+                                head,
+                                note,
+                                lanes,
+                                gray,
+                                width,
+                                height,
+                                work,
+                                contextBudget,
+                                score,
+                                pixelFrame,
+                                page);
                 bindings[owner] = binding;
                 var row = new LinkedHashMap<String, Object>();
                 row.put("owner", owner);
@@ -470,15 +492,41 @@ public final class PrintedBeamSource {
                                     for (var head : heads) {
                                         int owner = head.owner();
                                         var binding = bindings[owner];
-                                        if (!body[owner]
-                                                || choices[owner] == 1
-                                                || binding == null
+                                        if (choices[owner] == 1
                                                 || first.binding.lane().id()
                                                         != last.binding.lane().id()
-                                                || binding.lane().id() != first.binding.lane().id()
                                                 || score.notes().get(owner).measureIndex()
-                                                        != a.measure()) continue;
-                                        if (head.x() > a.right() && head.x() < b.left())
+                                                        != a.measure()
+                                                || !(head.x() > a.right() && head.x() < b.left()))
+                                            continue;
+                                        if (binding != null) {
+                                            if (body[owner]
+                                                    && binding.lane().id()
+                                                            == first.binding.lane().id())
+                                                return false;
+                                            continue;
+                                        }
+                                        // A necessary lane range only vetoes; it never binds this
+                                        // head.
+                                        var note = score.notes().get(owner);
+                                        var staff = first.binding.lane().staff();
+                                        work.take(64);
+                                        if (note.staffIndex() != staff.index()
+                                                || note.staffCount() != staff.count()
+                                                || !PrintedBeamBindingRange.possible(
+                                                        head.y(),
+                                                        note.staffStep(),
+                                                        staff.bottom(),
+                                                        staff.gap(),
+                                                        staff.gap() * .4f,
+                                                        staff.gap() * .12f,
+                                                        .45f)) continue;
+                                        float gap = first.binding.gap();
+                                        float glyphGap = gap * glyphScale(note);
+                                        work.take((long) Math.ceil(gap * gap * 3));
+                                        if (PrintedSlurOwners.headBody(
+                                                        gray, width, height, head, glyphGap)
+                                                && wideBody(gray, width, height, head, glyphGap))
                                             return false;
                                     }
                                     return true;
@@ -778,7 +826,7 @@ public final class PrintedBeamSource {
                             flagRefused),
                     List.copyOf(diagnostics),
                     List.copyOf(columnDiagnostics));
-        } catch (Limit exhausted) {
+        } catch (Limit | FaintQuarterRestInk.Refusal exhausted) {
             return failed(
                     count,
                     bound,
@@ -1122,6 +1170,71 @@ public final class PrintedBeamSource {
         return false;
     }
 
+    private static final class BindingAttempt {
+        boolean ambiguous;
+    }
+
+    private static Binding bind(
+            PrintedSlurOwners.GeometryHead head,
+            ScoreNoteEvent note,
+            List<Lane> lanes,
+            byte[] raw,
+            int w,
+            int h,
+            Work budget,
+            FaintQuarterRestInk.Budget contextBudget,
+            ScorePageInterpretation score,
+            PrintedBeamShaftPixels.Frame pixelFrame,
+            int page) {
+        // Covers the additive attempt result and constant wrapper work, before allocation.
+        FaintQuarterRestInk.charge(contextBudget, 64, 64);
+        var ambiguity = new BindingAttempt();
+        Binding old = bindLegacy(head, note, lanes, raw, w, h, budget, ambiguity);
+        if (old != null || ambiguity.ambiguous) return old;
+        Binding found = null;
+        for (var lane : lanes) {
+            var staff = lane.staff();
+            if (staff.index() != note.staffIndex() || staff.count() != note.staffCount()) continue;
+            FaintQuarterRestInk.charge(contextBudget, 64, 0);
+            if (!PrintedBeamBindingRange.possible(
+                    head.y(),
+                    note.staffStep(),
+                    staff.bottom(),
+                    staff.gap(),
+                    staff.gap() * .4f,
+                    staff.gap() * .12f,
+                    .45f)) continue;
+
+            PrintedBeamLocalFrame.Witness frame;
+            try {
+                frame =
+                        PrintedBeamLocalFrame.at(
+                                pixelFrame,
+                                score,
+                                raw,
+                                w,
+                                h,
+                                page,
+                                head,
+                                note,
+                                staff,
+                                contextBudget);
+            } catch (FaintQuarterRestInk.Refusal refused) {
+                throw new Limit();
+            }
+            if (frame == null) continue;
+            if (!frame.matches(
+                    pixelFrame, score, raw, w, h, page, head, note, staff, contextBudget))
+                throw new PrintedBeamShaftPixels.IdentityFault();
+            if (found != null) return null;
+            FaintQuarterRestInk.charge(contextBudget, 16, 64);
+            found = new Binding(lane, frame.bottom(), frame.gap());
+        }
+
+        return found;
+    }
+
+    // Retained default entry: identical float arithmetic, acceptance and work prices.
     private static Binding bind(
             PrintedSlurOwners.Location head,
             ScoreNoteEvent note,
@@ -1130,6 +1243,18 @@ public final class PrintedBeamSource {
             int w,
             int h,
             Work budget) {
+        return bindLegacy(head, note, lanes, raw, w, h, budget, null);
+    }
+
+    private static Binding bindLegacy(
+            PrintedSlurOwners.Location head,
+            ScoreNoteEvent note,
+            List<Lane> lanes,
+            byte[] raw,
+            int w,
+            int h,
+            Work budget,
+            BindingAttempt ambiguity) {
         Binding found = null;
         for (var lane : lanes) {
             var s = lane.staff();
@@ -1191,7 +1316,10 @@ public final class PrintedBeamSource {
                 }
             }
             if (Math.abs(head.y() - (bottom - note.staffStep() * gap * .5f)) > gap * .45f) continue;
-            if (found != null) return null;
+            if (found != null) {
+                if (ambiguity != null) ambiguity.ambiguous = true;
+                return null;
+            }
             found = new Binding(lane, bottom, gap);
         }
         return found;

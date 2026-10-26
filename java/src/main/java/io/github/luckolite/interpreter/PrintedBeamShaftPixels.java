@@ -54,6 +54,12 @@ final class PrintedBeamShaftPixels {
                 throw new IdentityFault();
         }
 
+        /** Same actual invocation/source frame; no value or identifier substitution. */
+        void check(Object source, byte[] raw, int width, int height, int page) {
+            check(raw, width, height);
+            if (this.source != source || this.page != page) throw new IdentityFault();
+        }
+
         void take(long units) {
             charge.take(units);
         }

@@ -7213,9 +7213,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "113e984ee8385f7941d38829f3214e5e9f7ca8fde064e287b995c17a6cd41242",
-      "source_normalized_sha256": "113e984ee8385f7941d38829f3214e5e9f7ca8fde064e287b995c17a6cd41242",
-      "standalone_sha256": "c49d0cc6490152ada2921920d8b984196ec3c1af7bb719d3abf1ac98eb8b78f2",
+      "source_sha256": "988f776c87f6b6e527786f512e8cd227552ac50e36d9d9cd8b4dc4c7ac7228b8",
+      "source_normalized_sha256": "988f776c87f6b6e527786f512e8cd227552ac50e36d9d9cd8b4dc4c7ac7228b8",
+      "standalone_sha256": "2c6648a13f4a5d7f99dd428fa76b6831208676e9f0c5b28a932c38a290c2dd4a",
       "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7244,6 +7244,14 @@
         "scope": "Actual same-lane authenticated but unowned interior heads veto pair admission in both physical geometry passes; full roster scan prepaid to existing Source cap. No new model/layout/authority.",
         "rollout": "Source only; cumulative pair deferred during active goal.",
         "app_commit": "48f3650c8d9b30b6528fe261eb8aa863adb2b398"
+      },
+      "anchored_local_beam_review": {
+        "documentation": "docs/anchored-local-beam-frame.md",
+        "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
+        "new_original_junit_tests": 3,
+        "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
+        "rollout": "Source only; cumulative paired packaging deferred during active goal.",
+        "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
       }
     },
     "PrintedIsolatedFlags.java": {
@@ -7792,9 +7800,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShaftPixels.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "6e6de1a2362586d09afbb27000801810e2cc85b46c9d2578b173a7fea1f86bd5",
-      "source_normalized_sha256": "88cc9ee35cd5cee7b6b22e6a8b191ba8eec6609f3874492ea4e5b3f5236510bb",
-      "standalone_sha256": "297492cf769ea5c254b49f6d3ed1d6786f34bdec4c791d840e0f2450a13d8724",
+      "source_sha256": "0a2ed7cfe161c9dd8919f7073edcc1635242af99149216b8472dd6a3a2cc236a",
+      "source_normalized_sha256": "0a2ed7cfe161c9dd8919f7073edcc1635242af99149216b8472dd6a3a2cc236a",
+      "standalone_sha256": "a0929384aefbf5764acb4ed1187fcf87b7e8eabcecafd221309ca200c124e02e",
       "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7805,6 +7813,14 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      },
+      "anchored_local_beam_review": {
+        "documentation": "docs/anchored-local-beam-frame.md",
+        "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
+        "new_original_junit_tests": 3,
+        "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
+        "rollout": "Source only; cumulative paired packaging deferred during active goal.",
+        "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
       }
     },
     "TremoloPageJoinOriginalTest.java": {
@@ -8008,9 +8024,9 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintQuarterRestInk.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintQuarterRestInk.java",
       "license": "Apache-2.0",
-      "source_sha256": "da71257393fd21e962d925fc3171be7c46f3108d4f3674d023e56347bd113efa",
-      "source_normalized_sha256": "a16bf366d6c77155810329f127852e62e116d2c1204d3534b90151e06cf28051",
-      "standalone_sha256": "66fe3223569db131e1c7e3fea24bcd749f9906afcaa8df99f2b5d42ec096cf8e",
+      "source_sha256": "c23e4e155f93f831ea621ababb0eccfee53b67a55c841cd84bc6d74f2dfa0ed0",
+      "source_normalized_sha256": "c23e4e155f93f831ea621ababb0eccfee53b67a55c841cd84bc6d74f2dfa0ed0",
+      "standalone_sha256": "f015debbca03b8d3cf7450daea7ff07bb216a415ffb60577c7c194bfcd8f3321",
       "literal_faint_quarter_review": {
         "documentation": "docs/literal-faint-quarter-recovery.md",
         "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
@@ -8019,6 +8035,46 @@
         "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
         "rollout": "Source only; matched cumulative packaging deferred during active goal.",
         "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      },
+      "anchored_local_beam_review": {
+        "documentation": "docs/anchored-local-beam-frame.md",
+        "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
+        "new_original_junit_tests": 3,
+        "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
+        "rollout": "Source only; cumulative paired packaging deferred during active goal.",
+        "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
+      }
+    },
+    "PrintedBeamBindingRange.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamBindingRange.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamBindingRange.java",
+      "license": "Apache-2.0",
+      "source_sha256": "463ac2286e4b8d5963925ca69c15b7f7bc12972678197a54ae324c355c747fee",
+      "source_normalized_sha256": "463ac2286e4b8d5963925ca69c15b7f7bc12972678197a54ae324c355c747fee",
+      "standalone_sha256": "06d08c57f3b15607d13a641a3825ec50c3145b06ec0e0761aa6321fdea937e0e",
+      "anchored_local_beam_review": {
+        "documentation": "docs/anchored-local-beam-frame.md",
+        "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
+        "new_original_junit_tests": 3,
+        "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
+        "rollout": "Source only; cumulative paired packaging deferred during active goal.",
+        "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
+      }
+    },
+    "PrintedBeamLocalFrame.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamLocalFrame.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalFrame.java",
+      "license": "Apache-2.0",
+      "source_sha256": "427c36342aeb735c40f8283af61dadfb7cfb6b93ab0b750f0e5890f4aba97434",
+      "source_normalized_sha256": "427c36342aeb735c40f8283af61dadfb7cfb6b93ab0b750f0e5890f4aba97434",
+      "standalone_sha256": "3db9bbb2d85dbceedf8501644a036d490cc5534190c4300ed15d167916c448ed",
+      "anchored_local_beam_review": {
+        "documentation": "docs/anchored-local-beam-frame.md",
+        "reviewed_app_base_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb",
+        "new_original_junit_tests": 3,
+        "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
+        "rollout": "Source only; cumulative paired packaging deferred during active goal.",
+        "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
       }
     }
   },

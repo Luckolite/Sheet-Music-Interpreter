@@ -116,7 +116,12 @@ final class FaintQuarterRestInk {
     }
 
     /** Charged helper work/storage, distinct from the caller's remaining detector work. */
+    interface ParentCharge {
+        void take(long work, long bytes);
+    }
+
     static final class Budget {
+        private final ParentCharge parent;
         final long workLimit, byteLimit;
         long workUsed, bytesUsed;
         boolean exhausted;
@@ -125,6 +130,16 @@ final class FaintQuarterRestInk {
             if (workLimit < 0 || byteLimit < 0) throw new IllegalArgumentException();
             this.workLimit = workLimit;
             this.byteLimit = byteLimit;
+            this.parent = null;
+        }
+
+        /** Resource readiness only; a parent charge supplies no musical evidence. */
+        Budget(long workLimit, long byteLimit, ParentCharge parent) {
+            if (workLimit < 0 || byteLimit < 0 || parent == null)
+                throw new IllegalArgumentException();
+            this.workLimit = workLimit;
+            this.byteLimit = byteLimit;
+            this.parent = parent;
         }
 
         boolean prepay(long work, long bytes) {
@@ -132,6 +147,14 @@ final class FaintQuarterRestInk {
             if (exhausted || work > workLimit - workUsed || bytes > byteLimit - bytesUsed) {
                 exhausted = true;
                 return false;
+            }
+            if (parent != null) {
+                try {
+                    parent.take(work, bytes);
+                } catch (RuntimeException | Error failure) {
+                    exhausted = true;
+                    throw failure;
+                }
             }
             workUsed += work;
             bytesUsed += bytes;
