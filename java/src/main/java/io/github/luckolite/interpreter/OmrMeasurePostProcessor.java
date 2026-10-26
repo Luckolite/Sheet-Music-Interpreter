@@ -693,6 +693,24 @@ final class OmrMeasurePostProcessor {
                             }
                             proved = closingProved;
                         }
+                        if (!proved
+                                && extentComplete[side][1] >= Math.max(24, Math.round(span * .08f))
+                                && exteriorStaffHead(
+                                        labels, gray, width, height, prior, recovered, side)) {
+                            if (side == 0
+                                    && extentLongest[side][1]
+                                            >= Math.max(8, Math.round(recovered.gap * 3))) {
+                                keepLeft = prior.left;
+                            } else if (side == 1
+                                    && span <= recovered.gap * 4
+                                    && extentLongest[side][1]
+                                            >= Math.max(8, Math.round(recovered.gap))) {
+                                // Preserve an existing head-bearing staff extent, not a new bar.
+                                // A short final tail cannot contain the full three-gap run used
+                                // by the general unowned extension path above.
+                                keepRight = prior.right;
+                            }
+                        }
                         if (proved) {
                             if (side == 0) keepLeft = prior.left;
                             else keepRight = prior.right;
@@ -3646,5 +3664,128 @@ final class OmrMeasurePostProcessor {
         }
         return ink >= (last - first + 1) * .95f
                 && longestBlank <= Math.max(1, Math.round(gap * .15f));
+    }
+
+    /** A stronger local row fit must not silently amputate a prior head-bearing endpoint.
+     * This preserves a measured staff extent; ordinary header/bar/note producers still run. */
+    private static boolean exteriorStaffHead(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            StaffRun prior,
+            StaffRun chosen,
+            int side) {
+        int
+                first =
+                        side == 0
+                                ? prior.left
+                                : Math.max(prior.left, Math.round(chosen.right - chosen.gap * 2)),
+                last =
+                        side == 0
+                                ? Math.min(prior.right, Math.round(chosen.left + chosen.gap * 2))
+                                : prior.right;
+        if (first < 0 || last >= width || first > last || chosen.track == null) return false;
+        int top = Math.max(0, Math.round(chosen.top - chosen.gap)),
+                bottom = Math.min(height - 1, Math.round(chosen.bottom + chosen.gap));
+        int rw = last - first + 1, rh = bottom - top + 1;
+        if (rw < 1 || rh < 1 || (long) rw * rh > labels.length) return false;
+        var seen = new boolean[rw * rh];
+        var queue = new int[rw * rh];
+        for (int seed = 0; seed < seen.length; seed++) {
+            if (seen[seed] || labels[(top + seed / rw) * width + first + seed % rw] != NOTEHEAD)
+                continue;
+            int read = 0, size = 1, minX = rw, maxX = 0, minY = rh, maxY = 0;
+            long sx = 0, sy = 0;
+            int dark = 0;
+            seen[seed] = true;
+            queue[0] = seed;
+            while (read < size) {
+                int at = queue[read++], x = at % rw, y = at / rw;
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minY = Math.min(minY, y);
+                maxY = Math.max(maxY, y);
+                sx += x;
+                sy += y;
+                if ((gray[(top + y) * width + first + x] & 255) <= RAW_BARLINE_DARK) dark++;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int nx = x + dx, ny = y + dy;
+                        if (nx < 0 || nx >= rw || ny < 0 || ny >= rh) continue;
+                        int next = ny * rw + nx;
+                        if (!seen[next] && labels[(top + ny) * width + first + nx] == NOTEHEAD) {
+                            seen[next] = true;
+                            queue[size++] = next;
+                        }
+                    }
+            }
+            float cx = first + sx / (float) size, cy = top + sy / (float) size;
+            float[] local = chosen.track.at(Math.round(cx));
+            if (local == null
+                    || local.length != 2
+                    || !Float.isFinite(local[0] + local[1])
+                    || local[1] < 6) continue;
+            float gap = local[1];
+            int bw = maxX - minX + 1, bh = maxY - minY + 1;
+            if (size < gap * gap * .14f
+                    || bw < gap * .35f
+                    || bw > gap * 2.5f
+                    || bh < gap * .25f
+                    || bh > gap * 1.6f
+                    || dark < size * .60f
+                    || cy < local[0] - 4 * gap
+                    || cy > local[0]) continue;
+            int x0 = first + minX, x1 = first + maxX, y0 = top + minY, y1 = top + maxY;
+            int inset = Math.max(2, Math.round(gap * .55f));
+            if (minX == 0
+                    || maxX == rw - 1
+                    || (side == 0 ? x0 >= chosen.left + inset : x1 <= chosen.right - inset))
+                continue;
+            // A key/clef body cannot become endpoint authority merely through a head-label patch.
+            if (countLabel(
+                            labels,
+                            width,
+                            height,
+                            CLEF_OR_KEY,
+                            Math.round(x0 - gap * .5f),
+                            Math.round(x1 + gap * .5f),
+                            Math.round(y0 - gap),
+                            Math.round(y1 + gap))
+                    > 0) continue;
+            int length = Math.max(2, Math.round(gap * 2.5f));
+            boolean stem = false;
+            for (int axis = Math.max(0, x0 - 2);
+                    axis <= Math.min(width - 1, x1 + 2) && !stem;
+                    axis++) {
+                boolean attached = false;
+                for (int y = y0; y <= y1 && !attached; y++)
+                    for (int x = Math.max(x0, axis - 1); x <= Math.min(x1, axis + 1); x++)
+                        attached |= labels[y * width + x] == NOTEHEAD;
+                if (!attached) continue;
+                for (int sign = -1; sign <= 1; sign += 2) {
+                    int supported = 0, semantic = 0;
+                    for (int d = 0; d < length; d++) {
+                        int y = Math.round(cy) + sign * d;
+                        if (y < 0 || y >= height) break;
+                        boolean ink = false, shaft = false;
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int x = axis + dx;
+                            if (x < 0 || x >= width) continue;
+                            ink |= (gray[y * width + x] & 255) <= RAW_BARLINE_DARK;
+                            shaft |= labels[y * width + x] == STEM_OR_REST;
+                        }
+                        if (ink) supported++;
+                        if (shaft) semantic++;
+                    }
+                    if (supported >= length * .90f && semantic >= gap) {
+                        stem = true;
+                        break;
+                    }
+                }
+            }
+            if (stem) return true;
+        }
+        return false;
     }
 }

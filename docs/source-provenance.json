@@ -446,11 +446,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "a4427604e44ce44dd4d46031a15aeca23fbb3539d2f4917f6b4e9fd6f6efc569",
-      "source_normalized_sha256": "3122b9a101a9254963e0cfc1ec1dd30968242271bbf74cbda1e186ef0c4fe5c0",
-      "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts. Preserve the seven-argument legacy raw-staff helper overload by delegating with null origins; metadata-aware production calls and their body remain unchanged.",
-      "standalone_sha256": "20cf054ea1c76a329ebb3bbf1c0926a0dcbb2a9d8109c8f54a37063326f5b558",
-      "reviewed_app_commit": "75008a026ef8857d7e649a8b64a00f7de672b63b",
+      "source_sha256": "abc1b9a067397bca7d0d29c3664acb4f5d4cd2f4f223ee1d9de1a7ce44fc0a41",
+      "source_normalized_sha256": "209a12c8f4d0ae42268501a20fbb3411735ddd5d059f8aa1b259e204406bf1b1",
+      "review_note": "Package-only counterpart. Preserve an existing measured staff endpoint when selected regional rows prove complete exterior rules and actual raw/model head+attached stem. Existing general retention, bar/header guards and all80othermethods remain unchanged. Original generated controls only, no captured score material or model changes.",
+      "standalone_sha256": "ffb790dafebfaa18cd63f69337fcee3e3ca4385a8ee1a6e4c365b03aa7913f1d",
+      "reviewed_app_commit": "11932a2d19038dae95b1489bdbd07874f89be2d4",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
@@ -13500,5 +13500,14 @@
       "Native/app packaged runtime or device deployment"
     ],
     "supported_seed_float_compatibility": "Original float offset multiplication precedes widening; preserve exact old bottom bits and supported-path work. New test catches the float-to-double boundary regression in the initial common-frame integration."
+  },
+  "geometry_endpoint_admission_review": {
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "11932a2d19038dae95b1489bdbd07874f89be2d4",
+    "original_regression": "java/src/test/java/io/github/luckolite/interpreter/GeometryEndpointAdmissionTest.java",
+    "scope": "A stronger local staff frame can shorten a prior measured extent and clip real noteheads. Retain head-bearing prior endpoints only under complete selected-frame exterior rule support and actual filled in-staff head with attached raw/semantic shaft; reject key/clef bodies.",
+    "right_tail_policy": "Explicit new short-tail preservation: at most4 selected gaps, selected complete run at least1gap and existing column-count floor. This is measured staff-extent retention, not a new closing-bar assertion.",
+    "resources": "ROI area checked in long against admitted label length before boolean[A]/int[A] allocation; each pixel enqueued once, bounded nine-neighbor walk; head/stem and key guards stay gap-bounded. No quota increase.",
+    "boundaries": "41 original procedural controls cover3scales/up-downstems and negative roles; helper fixtures alone do not certify producer authority. Private saved-plane geometry+Omr replay is distinct from full native interpretation, export and packaged deployment."
   }
 }
