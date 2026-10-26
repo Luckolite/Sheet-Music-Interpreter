@@ -158,7 +158,9 @@ final class SixteenthRestDetector {
                         current, gray, width, height, measures, originalFrames, staffs, notes);
         Detection complete =
                 RawBeamedTwoBulbRests.add(current, gray, width, height, measures, staffs, notes);
-        return recovery == null ? complete : recovery.finish(complete);
+        return recovery == null
+                ? complete
+                : recovery.finishEighth(recovery.finish(complete), staffs);
     }
 
     /** A supported original frame remains a valid glyph view after quantized rule snapping. */
@@ -2702,7 +2704,18 @@ final class SixteenthRestDetector {
                         || deepLowered
                         || edgeFallback
                         || bulbOnly
-                        || !quarterOnly
+                        || (!quarterOnly
+                                && !(result instanceof EighthContours e
+                                        && e.notes == notes
+                                        && e.regions == measures
+                                        && e.proof.binds(
+                                                ownershipGray,
+                                                width,
+                                                height,
+                                                staff,
+                                                left,
+                                                right,
+                                                quarterBudget)))
                         || farRaised
                         || supportedCoreBounds != null)) throw new FaintQuarterRestInk.Refusal();
 
@@ -2790,11 +2803,20 @@ final class SixteenthRestDetector {
                 !bulbOnly
                         && !quarterOnly
                         && ordinary
-                        && halfRest(staff, top, line, ink, left, right, minY, maxY);
+                        && halfRest(staff, top, line, ink, left, right, minY, maxY, quarterBudget);
         if (!bulbOnly && !quarterOnly && !half) {
             int[] bounds =
                     HalfRestRuleBody.find(
-                            gray, width, height, staff.top(), gap, left, right, top, ink);
+                            gray,
+                            width,
+                            height,
+                            staff.top(),
+                            gap,
+                            left,
+                            right,
+                            top,
+                            ink,
+                            quarterBudget);
             if (bounds == null && supportedCoreBounds != null) bounds = supportedCoreBounds;
             if (bounds != null) {
                 half = true;
@@ -2804,12 +2826,21 @@ final class SixteenthRestDetector {
         }
         int[] wholeBounds =
                 !bulbOnly && !quarterOnly && ordinary
-                        ? wholeRest(gray, width, staff, top, ink, left, right)
+                        ? wholeRest(gray, width, staff, top, ink, left, right, quarterBudget)
                         : null;
         if (!bulbOnly && !quarterOnly && wholeBounds == null)
             wholeBounds =
                     HalfRestRuleBody.hanging(
-                            gray, width, height, staff.top(), gap, left, right, top, ink);
+                            gray,
+                            width,
+                            height,
+                            staff.top(),
+                            gap,
+                            left,
+                            right,
+                            top,
+                            ink,
+                            quarterBudget);
         boolean whole = wholeBounds != null;
         if (whole) {
             minY = wholeBounds[0];
@@ -2824,7 +2855,9 @@ final class SixteenthRestDetector {
                         && maxY - minY >= gap * 2.9f
                         && maxY - minY <= gap * 4.25f
                         && Math.abs(maxY - staff.bottom()) <= gap * .55f
-                        && restBulbs(ink, line, top, minY, maxY, gap, faintShapes).size() == 3;
+                        && restBulbs(ink, line, top, minY, maxY, gap, faintShapes, quarterBudget)
+                                        .size()
+                                == 3;
         boolean quarter =
                 !thirtySecond
                         && !bulbOnly
@@ -2843,9 +2876,11 @@ final class SixteenthRestDetector {
                                 quarterBudget);
         if (quarterOnly && !quarter) return;
         if (!bulbOnly && !quarter && !half && !whole && !thirtySecond && ordinary) {
-            int tail = quarterTailWithoutSpeck(ink, top, minY, maxY, gap);
+            int tail = quarterTailWithoutSpeck(ink, top, minY, maxY, gap, quarterBudget);
             if (tail == maxY)
-                tail = quarterTailWithoutRuleEdge(ink, line, top, minY, maxY, gap, staff.bottom());
+                tail =
+                        quarterTailWithoutRuleEdge(
+                                ink, line, top, minY, maxY, gap, staff.bottom(), quarterBudget);
             if (tail < maxY
                     && quarterRest(
                             gray,
@@ -2918,7 +2953,8 @@ final class SixteenthRestDetector {
             return;
         if (!quarter && !half && !whole) {
             if (eighth
-                    && PrintedFlatGlyph.matches(gray, width, height, left, minY, right, maxY, gap))
+                    && PrintedFlatGlyph.matches(
+                            gray, width, height, left, minY, right, maxY, gap, quarterBudget))
                 return;
             if (eighth
                     && straightShafts(
@@ -2941,7 +2977,8 @@ final class SixteenthRestDetector {
             // complete bulb count, spacing and diagonal foot below adjudicate
             // those glyphs; a wave silhouette alone must not erase them.
             if (!thirtySecond
-                    && RestVerticalWave.crosses(gray, width, height, left, right, minY, maxY, gap))
+                    && RestVerticalWave.crosses(
+                            gray, width, height, left, right, minY, maxY, gap, quarterBudget))
                 return;
             if ((!eighth && !sixteenth && !thirtySecond)
                     || minY
@@ -2952,7 +2989,8 @@ final class SixteenthRestDetector {
                                                             ? .15f
                                                             : deepLowered ? .8f : .85f))
                     || minY > staff.top() + gap * 1.55f) return;
-            List<Integer> lobes = restBulbs(ink, line, top, minY, maxY, gap, faintShapes);
+            List<Integer> lobes =
+                    restBulbs(ink, line, top, minY, maxY, gap, faintShapes, quarterBudget);
             if (thirtySecond
                     ? lobes.size() != 3
                             || lobes.get(1) - lobes.get(0) < gap * .7f
@@ -3010,7 +3048,8 @@ final class SixteenthRestDetector {
             }
 
             if (footRight < 0 || right - footRight < gap * .15f) return;
-            if (RestDiagonalContinuation.crosses(gray, width, left, right, minY, maxY, gap)) return;
+            if (RestDiagonalContinuation.crosses(
+                    gray, width, left, right, minY, maxY, gap, quarterBudget)) return;
             if (eighth
                     && deepLowered
                     && continuedRestTail(gray, width, height, left, right, maxY, gap)) return;
@@ -3359,6 +3398,13 @@ final class SixteenthRestDetector {
                                                     32L * 1 + 8L * (Math.max(0L, (long) (4))))
                                     ? new int[] {left, right, minY, maxY}
                                     : null));
+                if (quarterBudget != null
+                        && rest.durationBeats() == .5
+                        && result instanceof EighthContours e) {
+                    FaintQuarterRestInk.charge(quarterBudget, 5, 64);
+                    FaintQuarterRestInk.putAbsent(
+                            quarterBudget, e.bounds, rest, new int[] {left, right, minY, maxY});
+                }
                 FaintQuarterRestInk.add(quarterBudget, result, rest);
                 {
                     if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
@@ -3449,36 +3495,97 @@ final class SixteenthRestDetector {
             int maxY,
             float gap,
             boolean faintShapes) {
-        int[] ink = source.clone();
-        for (int y = minY; y <= maxY; y++)
-            if (line[y - top]) {
-                int before = y - 1, after = y + 1;
-                while (before >= minY && line[before - top]) before--;
-                while (after <= maxY && line[after - top]) after++;
-                if (before >= minY && after <= maxY)
-                    ink[y - top] = Math.round((ink[before - top] + ink[after - top]) * .5f);
+        return restBulbs(source, line, top, minY, maxY, gap, faintShapes, null);
+    }
+
+    private static List<Integer> restBulbs(
+            int[] source,
+            boolean[] line,
+            int top,
+            int minY,
+            int maxY,
+            float gap,
+            boolean faintShapes,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        int[] ink =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        1L + (source == null ? 0 : (source).length),
+                                        32L + 8L * (source == null ? 0 : (source).length))
+                        ? source.clone()
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = minY; y <= maxY; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (line[y - top]) {
+                    int before = y - 1, after = y + 1;
+                    {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        while (before >= minY && line[before - top]) {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            before--;
+                        }
+                    }
+
+                    {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        while (after <= maxY && line[after - top]) {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            after++;
+                        }
+                    }
+
+                    if (before >= minY && after <= maxY)
+                        ink[y - top] = Math.round((ink[before - top] + ink[after - top]) * .5f);
+                }
             }
-        var lobes = new ArrayList<Integer>();
+        }
+
+        var lobes =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<Integer>()
+                        : null);
         int run = 0, start = 0;
         int bulbWidth = Math.max(2, Math.round(gap * (faintShapes ? .50f : .58f)));
         int bulbRows = Math.max(2, Math.round(gap * .22f));
-        for (int y = minY; y <= maxY + 1; y++) {
-            boolean bulb =
-                    y <= maxY
-                            && (ink[y - top] >= bulbWidth
-                                    || y > minY
-                                            && y < maxY
-                                            && ink[y - top] == bulbWidth - 1
-                                            && ink[y - 1 - top] >= bulbWidth
-                                            && ink[y + 1 - top] >= bulbWidth);
-            if (bulb) {
-                if (run++ == 0) start = y;
-            } else {
-                if (run >= bulbRows)
-                    appendRestBulbs(lobes, ink, line, top, start, y - 1, gap, bulbRows, false);
-                run = 0;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = minY; y <= maxY + 1; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                boolean bulb =
+                        y <= maxY
+                                && (ink[y - top] >= bulbWidth
+                                        || y > minY
+                                                && y < maxY
+                                                && ink[y - top] == bulbWidth - 1
+                                                && ink[y - 1 - top] >= bulbWidth
+                                                && ink[y + 1 - top] >= bulbWidth);
+                if (bulb) {
+                    if (run++ == 0) start = y;
+                } else {
+                    if (run >= bulbRows)
+                        appendRestBulbs(
+                                lobes,
+                                ink,
+                                line,
+                                top,
+                                start,
+                                y - 1,
+                                gap,
+                                bulbRows,
+                                false,
+                                quarterBudget);
+                    run = 0;
+                }
             }
         }
+
         return lobes;
     }
 
@@ -3496,36 +3603,96 @@ final class SixteenthRestDetector {
             float gap,
             int bulbRows,
             boolean refined) {
+        appendRestBulbs(lobes, ink, line, top, start, end, gap, bulbRows, refined, null);
+    }
+
+    private static void appendRestBulbs(
+            List<Integer> lobes,
+            int[] ink,
+            boolean[] line,
+            int top,
+            int start,
+            int end,
+            float gap,
+            int bulbRows,
+            boolean refined,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         int reach = Math.max(2, Math.round(gap * 1.25f));
         int prominence = Math.max(2, (int) Math.ceil(gap * .18f));
         int support = Math.max(1, Math.round(gap * .22f));
-        for (int valley = start + bulbRows; valley <= end - bulbRows; valley++) {
-            int left = -1, right = -1;
-            for (int y = Math.max(start, valley - reach); y < valley; y++)
-                if (left < 0 || ink[y - top] >= ink[left - top]) left = y;
-            for (int y = valley + 1; y <= Math.min(end, valley + reach); y++)
-                if (right < 0 || ink[y - top] > ink[right - top]) right = y;
-            if (left < 0
-                    || right < 0
-                    || right - left < gap * .7f
-                    || right - left > gap * 1.3f
-                    || Math.min(ink[left - top], ink[right - top]) - ink[valley - top] < prominence)
-                continue;
-            int visibleLeft = 0, visibleRight = 0;
-            for (int y = Math.max(start, left - support);
-                    y <= Math.min(valley - 1, left + support);
-                    y++) if (!line[y - top] && ink[y - top] >= ink[left - top] - 2) visibleLeft++;
-            for (int y = Math.max(valley + 1, right - support);
-                    y <= Math.min(end, right + support);
-                    y++) if (!line[y - top] && ink[y - top] >= ink[right - top] - 2) visibleRight++;
-            if (visibleLeft < bulbRows || visibleRight < bulbRows) continue;
-            appendRestBulbs(lobes, ink, line, top, start, valley, gap, bulbRows, true);
-            appendRestBulbs(lobes, ink, line, top, valley + 1, end, gap, bulbRows, true);
-            return;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int valley = start + bulbRows; valley <= end - bulbRows; valley++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int left = -1, right = -1;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = Math.max(start, valley - reach); y < valley; y++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (left < 0 || ink[y - top] >= ink[left - top]) left = y;
+                    }
+                }
+
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = valley + 1; y <= Math.min(end, valley + reach); y++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (right < 0 || ink[y - top] > ink[right - top]) right = y;
+                    }
+                }
+
+                if (left < 0
+                        || right < 0
+                        || right - left < gap * .7f
+                        || right - left > gap * 1.3f
+                        || Math.min(ink[left - top], ink[right - top]) - ink[valley - top]
+                                < prominence) continue;
+                int visibleLeft = 0, visibleRight = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = Math.max(start, left - support);
+                            y <= Math.min(valley - 1, left + support);
+                            y++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (!line[y - top] && ink[y - top] >= ink[left - top] - 2) visibleLeft++;
+                    }
+                }
+
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = Math.max(valley + 1, right - support);
+                            y <= Math.min(end, right + support);
+                            y++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (!line[y - top] && ink[y - top] >= ink[right - top] - 2) visibleRight++;
+                    }
+                }
+
+                if (visibleLeft < bulbRows || visibleRight < bulbRows) continue;
+                appendRestBulbs(
+                        lobes, ink, line, top, start, valley, gap, bulbRows, true, quarterBudget);
+                appendRestBulbs(
+                        lobes, ink, line, top, valley + 1, end, gap, bulbRows, true, quarterBudget);
+                return;
+            }
         }
+
         int peak = start;
-        for (int y = start + 1; y <= end; y++) if (ink[y - top] > ink[peak - top]) peak = y;
-        lobes.add(refined ? peak : (start + end) / 2);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = start + 1; y <= end; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (ink[y - top] > ink[peak - top]) peak = y;
+            }
+        }
+
+        FaintQuarterRestInk.add(
+                quarterBudget,
+                lobes,
+                FaintQuarterRestInk.boxInt(quarterBudget, refined ? peak : (start + end) / 2));
     }
 
     /**
@@ -4493,6 +4660,21 @@ final class SixteenthRestDetector {
             int right,
             int minY,
             int maxY) {
+        return halfRest(staff, top, line, ink, left, right, minY, maxY, null);
+    }
+
+    private static boolean halfRest(
+            Staff staff,
+            int top,
+            boolean[] line,
+            int[] ink,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         float gap = staff.gap(), middle = staff.top() + 2 * gap;
         int h = maxY - minY + 1, w = right - left + 1;
         // The last retained row lies on an integer raster after line-edge removal.
@@ -4504,11 +4686,17 @@ final class SixteenthRestDetector {
                 || maxY > middle
                 || middle - maxY > Math.ceil(gap * .25f)) return false;
         int rows = 0;
-        for (int y = minY; y <= maxY; y++)
-            if (!line[y - top]) {
-                if (ink[y - top] < w * .80f) return false;
-                rows++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = minY; y <= maxY; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (!line[y - top]) {
+                    if (ink[y - top] < w * .80f) return false;
+                    rows++;
+                }
             }
+        }
+
         return rows >= Math.max(3, Math.round(gap * .25f));
     }
 
@@ -4518,18 +4706,44 @@ final class SixteenthRestDetector {
      */
     private static int[] wholeRest(
             byte[] gray, int width, Staff staff, int top, int[] ink, int left, int right) {
+        return wholeRest(gray, width, staff, top, ink, left, right, null);
+    }
+
+    private static int[] wholeRest(
+            byte[] gray,
+            int width,
+            Staff staff,
+            int top,
+            int[] ink,
+            int left,
+            int right,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         float gap = staff.gap(), rule = staff.top() + gap;
         int w = right - left + 1, first = ink.length + top, last = -1, outside = 0;
-        for (int i = 0; i < ink.length; i++) {
-            int y = top + i;
-            if (y >= rule && y <= rule + gap * .7f && ink[i] >= w * .45f) {
-                first = Math.min(first, y);
-                last = y;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i < ink.length; i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int y = top + i;
+                if (y >= rule && y <= rule + gap * .7f && ink[i] >= w * .45f) {
+                    first = Math.min(first, y);
+                    last = y;
+                }
             }
         }
+
         if (last < first) return null;
-        for (int i = 0; i < ink.length; i++)
-            if (top + i < first || top + i > last) outside += ink[i];
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i < ink.length; i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (top + i < first || top + i > last) outside += ink[i];
+            }
+        }
+
         // An isolated scan speck is not part of the hanging rectangle; a stem,
         // hook, oval edge or any substantial disconnected ink still rejects it.
         if (outside > Math.max(1, Math.round(gap * .12f))) return null;
@@ -4542,24 +4756,69 @@ final class SixteenthRestDetector {
         // A detached rectangle between the rules is not a hanging rest. The
         // broad rule mask may hide the join, so inspect the original pixels.
         int blankRows = 0;
-        for (int y = Math.max(0, Math.round(rule) + 1); y < minY; y++) {
-            int dark = 0;
-            for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) < 170) dark++;
-            if (dark < w * .8f && ++blankRows > 1) return null;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = Math.max(0, Math.round(rule) + 1); y < minY; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int dark = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int x = left; x <= right; x++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if ((gray[y * width + x] & 255) < 170) dark++;
+                    }
+                }
+
+                if (dark < w * .8f && ++blankRows > 1) return null;
+            }
         }
+
         int rows = 0;
-        for (int y = Math.max(0, Math.round(rule) + 1); y <= maxY; y++) {
-            int dark = 0;
-            for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) < 170) dark++;
-            if (dark < w * .80f) {
-                if (y >= minY && (y != maxY || dark < w * .45f)) return null;
-            } else rows++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = Math.max(0, Math.round(rule) + 1); y <= maxY; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int dark = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int x = left; x <= right; x++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if ((gray[y * width + x] & 255) < 170) dark++;
+                    }
+                }
+
+                if (dark < w * .80f) {
+                    if (y >= minY && (y != maxY || dark < w * .45f)) return null;
+                } else rows++;
+            }
         }
-        return rows >= Math.max(3, Math.round(gap * .25f)) ? new int[] {minY, maxY} : null;
+
+        return rows >= Math.max(3, Math.round(gap * .25f))
+                ? (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        (Math.max(0L, (long) (2))) + 1,
+                                        32L * 1 + 8L * (Math.max(0L, (long) (2))))
+                        ? new int[] {minY, maxY}
+                        : null)
+                : null;
     }
 
     /** One isolated retained pixel cannot extend an otherwise provable quarter-rest contour. */
     static int quarterTailWithoutSpeck(int[] ink, int top, int minY, int maxY, float gap) {
+        return quarterTailWithoutSpeck(ink, top, minY, maxY, gap, null);
+    }
+
+    static int quarterTailWithoutSpeck(
+            int[] ink,
+            int top,
+            int minY,
+            int maxY,
+            float gap,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         if (ink == null
                 || !Float.isFinite(gap)
                 || gap < 4
@@ -4568,13 +4827,34 @@ final class SixteenthRestDetector {
                 || maxY < minY
                 || ink[maxY - top] != 1) return maxY;
         int tail = maxY - 1;
-        while (tail >= minY && ink[tail - top] == 0) tail--;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            while (tail >= minY && ink[tail - top] == 0) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                tail--;
+            }
+        }
+
         return tail - minY + 1 >= gap * 2.1f && maxY - tail >= Math.ceil(gap * .25f) ? tail : maxY;
     }
 
     /** A detached narrow remnant immediately below a proved bottom rule is not a rest tail. */
     static int quarterTailWithoutRuleEdge(
             int[] ink, boolean[] line, int top, int minY, int maxY, float gap, float staffBottom) {
+        return quarterTailWithoutRuleEdge(ink, line, top, minY, maxY, gap, staffBottom, null);
+    }
+
+    static int quarterTailWithoutRuleEdge(
+            int[] ink,
+            boolean[] line,
+            int top,
+            int minY,
+            int maxY,
+            float gap,
+            float staffBottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         if (ink == null
                 || line == null
                 || ink.length != line.length
@@ -4590,7 +4870,14 @@ final class SixteenthRestDetector {
                 || !line[maxY - top - 1]
                 || Math.abs(maxY - staffBottom) > gap * .35f) return maxY;
         int tail = maxY - 1;
-        while (tail >= minY && ink[tail - top] == 0) tail--;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            while (tail >= minY && ink[tail - top] == 0) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                tail--;
+            }
+        }
+
         return maxY - tail >= Math.ceil(gap * .5f)
                         && tail - minY + 1 >= gap * 2.1f
                         && tail < staffBottom - gap * .35f
@@ -5722,6 +6009,370 @@ final class SixteenthRestDetector {
             }
         }
 
+        /** Optional eighth pass spends only the same invocation's post-quarter remainder. */
+        Detection finishEighth(Detection prior, List<Staff> staffs) {
+            if (aborted || budget.exhausted) return prior;
+            try {
+                pay(16, 512);
+                if (staffs == null || staffs.size() > 64 || prior.rests().size() > 4096)
+                    return prior;
+                pay(1, 0);
+                for (int ri = 0; ri < prior.rests().size(); ri++) {
+                    pay(1, 0);
+                    var old = prior.rests().get(ri);
+                    if (old == null
+                            || old.measureIndex() < 0
+                            || old.measureIndex() >= measures.size()
+                            || old.staffCount() <= 0
+                            || old.staffIndex() < 0
+                            || old.staffIndex() >= old.staffCount()
+                            || !Float.isFinite(old.positionInMeasure())
+                            || !Float.isFinite(old.pageY())
+                            || !Float.isFinite(old.pageHeight())
+                            || !Double.isFinite(old.durationBeats())
+                            || old.durationBeats() <= 0) return prior;
+                }
+                var accepted = new ArrayList<ScoreRestEvent>();
+                var completed = new ArrayList<FaintEighthRestInk.Proof>();
+                pay(1, 0);
+                for (int si = 0; si < staffs.size(); si++) {
+                    pay(1, 0);
+                    Staff source = staffs.get(si);
+                    FaintView view = null;
+                    if (source == null) throw new FaintQuarterRestInk.Refusal();
+                    pay(1, 0);
+                    for (int vi = 0; vi < views.size(); vi++) {
+                        pay(1, 0);
+                        var candidate = views.get(vi);
+                        if (source.pitchTrack() != null
+                                ? candidate.source == source
+                                : candidate.raw == raw && candidate.frame == source) {
+                            view = candidate;
+                            break;
+                        }
+                    }
+                    if (view == null) {
+                        if (source.pitchTrack() != null) throw new FaintQuarterRestInk.Refusal();
+                        view = straight(raw, height, measures, notes, source);
+                    }
+                    if (view == null
+                            || view.notes.size() != notes.size()
+                            || view.measures.size() != measures.size())
+                        throw new FaintQuarterRestInk.Refusal();
+                    if (!view.opened) {
+                        view.opened = true;
+                        view.scan =
+                                FaintQuarterRestInk.open(
+                                        view.raw,
+                                        width,
+                                        view.height,
+                                        view.frame.top(),
+                                        view.frame.bottom(),
+                                        view.frame.gap(),
+                                        budget);
+                    }
+                    if (budget.exhausted) throw new FaintQuarterRestInk.Refusal();
+                    if (view.scan == null) continue;
+                    FaintQuarterRestInk.Seed seed = null;
+                    pay(1, 0);
+                    for (int pi = 0; pi < pending.size(); pi++) {
+                        pay(1, 0);
+                        var proposal = pending.get(pi);
+                        if (proposal.view == view && proposal.seed.belongsTo(view.scan, budget)) {
+                            seed = proposal.seed;
+                            break;
+                        }
+                    }
+                    final int top;
+                    final boolean[] narrow;
+                    if (seed != null) {
+                        top = seed.bandTop(budget);
+                        narrow = seed.narrowRows(budget);
+                    } else {
+                        float gap = view.frame.gap();
+                        boolean highVoice = false;
+                        // A rectified legacy invocation has a singleton ordinary staff roster.
+                        if (view.source == null) {
+                            pay(1, 0);
+                            for (int sj = 0; sj < staffs.size(); sj++) {
+                                pay(1, 0);
+                                var other = staffs.get(sj);
+                                if (other == null) throw new FaintQuarterRestInk.Refusal();
+                                if (other.pitchTrack() == null
+                                        && other.index() == view.frame.index()
+                                        && other.count() == view.frame.count()
+                                        && Math.abs(other.top() - view.frame.top() - gap * 2)
+                                                < gap * .1f) highVoice = true;
+                            }
+                        }
+                        top = Math.max(0, Math.round(view.frame.top() + gap * .25f));
+                        int bottom =
+                                Math.min(
+                                        view.height - 1,
+                                        Math.round(
+                                                view.frame.bottom() + (highVoice ? 0 : gap * .3f)));
+                        if (bottom < top) continue;
+                        pay(1L + bottom - top + 1, 32L + 8L * (bottom - top + 1));
+                        narrow = new boolean[bottom - top + 1];
+                        pay(1, 0);
+                        for (int y = top; y <= bottom; y++) {
+                            pay(1, 0);
+                            int dark = 0, longest = 0, run = 0;
+                            pay(1, 0);
+                            for (int x = 0; x < width; x++) {
+                                pay(1, 0);
+                                if ((view.raw[y * width + x] & 255) < 170) {
+                                    dark++;
+                                    longest = Math.max(longest, ++run);
+                                } else run = 0;
+                            }
+                            float nearest =
+                                    view.frame.top()
+                                            + Math.round((y - view.frame.top()) / gap) * gap;
+                            narrow[y - top] =
+                                    Math.abs(y - nearest) <= gap * .2f
+                                            && (dark > width * .25f || longest >= gap * 5);
+                        }
+                    }
+                    if (top < 0 || top + narrow.length > view.height)
+                        throw new FaintQuarterRestInk.Refusal();
+                    boolean[] rules = view.scan.rawRuleRows(budget);
+                    pay(1L + width, 32L + 8L * width);
+                    int[] columns = new int[width];
+                    pay(1, 0);
+                    for (int y = top; y < top + narrow.length; y++) {
+                        pay(1, 0);
+                        if (narrow[y - top]) continue;
+                        pay(1, 0);
+                        for (int x = 0; x < width; x++) {
+                            pay(1, 0);
+                            if ((view.raw[y * width + x] & 255) < 170) columns[x]++;
+                        }
+                    }
+                    byte[] scratch = null;
+                    pay(1, 0);
+                    for (int cursor = 0; cursor < width; cursor++) {
+                        pay(1, 0);
+                        if (columns[cursor] < 2) continue;
+                        int left = cursor;
+                        pay(1, 0);
+                        while (cursor + 1 < width && columns[cursor + 1] >= 2) {
+                            pay(1, 0);
+                            cursor++;
+                        }
+                        int right = cursor;
+                        if (right - left + 1 < view.frame.gap() * .35f
+                                || right - left + 1 > view.frame.gap() * 2) continue;
+                        if (!eighthDarkMotif(view, left, right, top, narrow)) continue;
+                        var proof =
+                                FaintEighthRestInk.prove(
+                                        view.raw,
+                                        width,
+                                        view.height,
+                                        view.frame,
+                                        left,
+                                        right,
+                                        top,
+                                        narrow,
+                                        rules,
+                                        budget);
+                        if (proof == null) continue;
+                        var physical =
+                                QuarterRestLocalBody.frame(
+                                        view.raw,
+                                        width,
+                                        view.height,
+                                        proof.l,
+                                        proof.r,
+                                        view.frame,
+                                        budget);
+                        if (physical == null
+                                || Math.abs(physical[0] - view.frame.bottom())
+                                        > view.frame.gap() * .2f
+                                || Math.abs(physical[1] - view.frame.gap())
+                                        > view.frame.gap() * .12f) continue;
+                        if (eighthHeadRival(view, proof)) continue;
+                        if (scratch == null) {
+                            pay(1L + view.raw.length, 32L + 8L * view.raw.length);
+                            scratch = view.raw.clone();
+                        }
+                        int area = proof.w * proof.h;
+                        pay(3L + 2L * area + proof.h, 96L + 16L * area + 8L * proof.h);
+                        int[] indices = new int[area];
+                        byte[] oldValues = new byte[area];
+                        boolean[] line = new boolean[proof.h];
+                        int changed =
+                                FaintEighthRestInk.classify(
+                                        proof, scratch, indices, oldValues, line, budget);
+                        pay(16, 1024);
+                        var bounds = new java.util.HashMap<ScoreRestEvent, int[]>();
+                        var rests = new EighthContours(proof, view.notes, view.measures, bounds);
+                        var dots = new ArrayList<RestDot>();
+                        inspectOwnedMode(
+                                scratch,
+                                view.raw,
+                                width,
+                                view.height,
+                                view.measures,
+                                view.notes,
+                                view.frame,
+                                proof.first,
+                                proof.first + proof.h - 1,
+                                line,
+                                proof.l,
+                                proof.r,
+                                rests,
+                                dots,
+                                true,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                (view.frame.top() + view.frame.bottom()) * .5f / view.height,
+                                false,
+                                null,
+                                budget);
+                        FaintEighthRestInk.restore(scratch, indices, oldValues, changed, budget);
+                        if (rests.size() != 1 || !dots.isEmpty()) continue;
+                        var rest = rests.get(0);
+                        var contour = bounds.get(rest);
+                        if (rest.durationBeats() != .5
+                                || rest.kind() != ScoreRestEvent.Kind.LITERAL
+                                || contour == null
+                                || contour[0] != proof.l
+                                || contour[1] != proof.r
+                                || contour[2] != proof.t
+                                || contour[3] != proof.b
+                                || rest.measureIndex() < 0
+                                || rest.measureIndex() >= measures.size()) continue;
+                        ScoreRestEvent mapped = rest;
+                        float originalTop = contour[2], originalBottom = contour[3];
+                        if (view.source != null) {
+                            mapped =
+                                    sourceRest(
+                                            rest,
+                                            view.source,
+                                            measures,
+                                            width,
+                                            height,
+                                            view.first,
+                                            view.height,
+                                            budget);
+                            originalTop = Float.POSITIVE_INFINITY;
+                            originalBottom = Float.NEGATIVE_INFINITY;
+                            pay(1, 0);
+                            for (int x = contour[0]; x <= contour[1]; x++) {
+                                pay(1, 0);
+                                originalTop =
+                                        Math.min(
+                                                originalTop,
+                                                sourceY(
+                                                        view.source,
+                                                        x,
+                                                        view.first + contour[2],
+                                                        budget));
+                                originalBottom =
+                                        Math.max(
+                                                originalBottom,
+                                                sourceY(
+                                                        view.source,
+                                                        x,
+                                                        view.first + contour[3],
+                                                        budget));
+                            }
+                        }
+                        if (PrintedBoundaryRestInk.owns(
+                                raw,
+                                width,
+                                height,
+                                measures.get(mapped.measureIndex()),
+                                mapped,
+                                view.frame.gap(),
+                                contour[0],
+                                contour[1],
+                                (int) Math.floor(originalTop),
+                                (int) Math.ceil(originalBottom),
+                                budget)) continue;
+                        if (overlaps(mapped, prior.rests(), view.frame.gap())) continue;
+                        boolean duplicate = false;
+                        pay(1, 0);
+                        for (int ci = 0; ci < completed.size(); ci++) {
+                            pay(1, 0);
+                            if (proof.same(completed.get(ci), budget)) {
+                                duplicate = true;
+                                break;
+                            }
+                        }
+                        if (duplicate) continue;
+                        if (overlaps(mapped, accepted, view.frame.gap())) return prior;
+                        if (accepted.size() >= 4096) throw new FaintQuarterRestInk.Refusal();
+                        FaintQuarterRestInk.add(budget, accepted, mapped);
+                        FaintQuarterRestInk.add(budget, completed, proof);
+                    }
+                }
+                if (accepted.isEmpty()) return prior;
+                pay(
+                        16L + 4L * prior.rests().size() + accepted.size(),
+                        256L + 32L * (prior.rests().size() + accepted.size()));
+                var merged = new ArrayList<ScoreRestEvent>(prior.rests());
+                pay(1, 0);
+                for (int i = 0; i < accepted.size(); i++) {
+                    pay(1, 0);
+                    FaintQuarterRestInk.add(budget, merged, accepted.get(i));
+                }
+                pay(1, 128);
+                return new Detection(merged, prior.dots());
+            } catch (FaintQuarterRestInk.Refusal refusal) {
+                abort();
+                return prior;
+            }
+        }
+
+        boolean eighthDarkMotif(FaintView view, int left, int right, int top, boolean[] narrow) {
+            // Necessary literal motif already required by prove; this is not a shape owner.
+            pay(2, 0); // Method entry and first loop header.
+            for (int y = top; y + 1 < top + narrow.length; y++) {
+                pay(1, 0);
+                if (narrow[y - top] || narrow[y + 1 - top]) continue;
+                pay(1, 0);
+                for (int x = left; x < right; x++) {
+                    pay(1, 0);
+                    int at = y * width + x;
+                    if ((view.raw[at] & 255) < 155
+                            && (view.raw[at + 1] & 255) < 155
+                            && (view.raw[at + width] & 255) < 155
+                            && (view.raw[at + width + 1] & 255) < 155) return true;
+                }
+            }
+            return false;
+        }
+
+        boolean eighthHeadRival(FaintView view, FaintEighthRestInk.Proof proof) {
+            pay(2, 0); // Method entry and first loop header.
+            for (int n = 0; n < view.notes.size(); n++) {
+                pay(1, 0);
+                var head = view.notes.get(n);
+                if (head == null
+                        || head.measureIndex() < 0
+                        || head.measureIndex() >= view.measures.size()) return true;
+                var region = view.measures.get(head.measureIndex());
+                float x =
+                        (region.left()
+                                        + head.positionInMeasure()
+                                                * (region.right() - region.left()))
+                                * width;
+                float y = head.pageY() * view.height;
+                if (!Float.isFinite(x) || !Float.isFinite(y)) return true;
+                if (x >= proof.l - view.frame.gap() * .3f
+                        && x <= proof.r + view.frame.gap() * .3f
+                        && y >= proof.t - view.frame.gap() * .5f
+                        && y <= proof.b + view.frame.gap() * .5f) return true;
+            }
+            return false;
+        }
+
         boolean overlaps(ScoreRestEvent rest, List<ScoreRestEvent> roster, float gap) {
             var region = measures.get(rest.measureIndex());
             for (int i = 0; i < roster.size(); i++) {
@@ -5778,4 +6429,22 @@ final class SixteenthRestDetector {
     }
 
     private record FaintPending(FaintView view, FaintQuarterRestInk.Seed seed) {}
+
+    private static final class EighthContours extends ArrayList<ScoreRestEvent> {
+        final FaintEighthRestInk.Proof proof;
+        final List<ScoreNoteEvent> notes;
+        final List<MeasureRegion> regions;
+        final java.util.Map<ScoreRestEvent, int[]> bounds;
+
+        EighthContours(
+                FaintEighthRestInk.Proof proof,
+                List<ScoreNoteEvent> notes,
+                List<MeasureRegion> regions,
+                java.util.Map<ScoreRestEvent, int[]> bounds) {
+            this.proof = proof;
+            this.notes = notes;
+            this.regions = regions;
+            this.bounds = bounds;
+        }
+    }
 }

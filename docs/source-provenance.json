@@ -122,16 +122,25 @@
     },
     "HalfRestRuleBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/HalfRestRuleBody.java",
-      "source_sha256": "320a779f34b03e757980696faad7443c71f1188e9cecd58c1ff4a5fe7e40b9fc",
+      "source_sha256": "e128ea4f725c5015841ca66d04af6f4801ee371e2f9d7609c5194f491fcefcca",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "9d320eec8ce7b8c987071544474ec63bec4e96458fe0f0dc77aebe03f2443190",
-      "standalone_sha256": "eb1d5382529839ef10873927ec386f6316640a05525ad3577f6096dcee6aa3d5",
+      "source_normalized_sha256": "32fdc86ed6b481c9a0c4e83fcbf1831a8278a6714a1f8a10de06a2a8fb3ea71e",
+      "standalone_sha256": "138f3e13537944e7f366f413d9de0ec2f7be4659a9e80e7e0736cfbf8889595e",
       "reviewed_source_state": "Recognition84 source committed; source and packaged checks passed, live rollout pending",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
       "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "reviewed_app_state": "Recognition84 reviewed and committed; APK deferred during active goal.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HalfRestRuleBody.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HalfRestRuleBody.java",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
+      }
     },
     "TupletSixGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TupletSixGlyph.java",
@@ -697,12 +706,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "b68acb770aefcbfcb759c1dc9c0d98faf904566d35337e5630dede7cf52f30e3",
+      "source_sha256": "418f78419d5c5436c709814232648aae95adb73af562b74feef7ac7ea1ba5a36",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "source_normalized_sha256": "1e9554cb33c8ebf856d77dfca8607c551f59afb57d83819479c6b3cb163b013a",
+      "source_normalized_sha256": "0ea97c0e7763448a0b2c897777a54bbefb265d981567e732e5e1db4daf2c2a3c",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "a1a707f8afbccbd8002605d997eab87fb1bc4ac6d9d07682ffaf5911d10a8301",
+      "standalone_sha256": "ca5e7900004b53e59750158868f0990a8848a6c6500b9f1f76c7bf7a30f482e2",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
@@ -721,6 +730,15 @@
         "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
         "rollout": "Source only; matched cumulative packaging deferred during active goal.",
         "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      },
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
       }
     },
     "TempoChangeDetector.java": {
@@ -964,13 +982,22 @@
     },
     "PrintedFlatGlyph.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedFlatGlyph.java",
-      "source_sha256": "589eda38033981a9b8fcefb7f36922459050bf27e9e9ed178a2b4e6e7da59449",
-      "source_normalized_sha256": "96276ab5c9627715be390bf0631f62a418cb88afd48da7ab92fbd6f2e386e615",
+      "source_sha256": "e86d13f0731a31a004540a02434063eb2a1e45ba39e00863de223cbbe34637e0",
+      "source_normalized_sha256": "d4f6443b93634d34d909cfe9a09920b952df07b2940af78a23fbbe8c1115fc78",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "761f9feb7aaea6e79cf0105366ea68326b317717b94024439ce08934b93f2535",
+      "standalone_sha256": "8da2368ee5e5ff99dd8c132def5855c765d151059d9f0ec275ba7d8e173fae9c",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedFlatGlyph.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedFlatGlyph.java",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
+      }
     },
     "SeparateBeamGroups.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SeparateBeamGroups.java",
@@ -1385,10 +1412,20 @@
     },
     "RestDiagonalContinuation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestDiagonalContinuation.java",
-      "source_sha256": "438eafbae880b0e91677b4f8d2d5a50a9b12f349fd9eabf7f4bbb0b3c8a8f98f",
+      "source_sha256": "92051e741408eed24f66c138c839fbbe0647f4e828169e87a477041f4c941d5e",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "438eafbae880b0e91677b4f8d2d5a50a9b12f349fd9eabf7f4bbb0b3c8a8f98f",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestDiagonalContinuation.java"
+      "source_normalized_sha256": "4d6f05564e7aa711e40add16f24901cb16ab85052799f0252391cfdfcdaeb35a",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestDiagonalContinuation.java",
+      "standalone_sha256": "8a5765e31d7aafce38439286bcaf830e42f99185113fa34c69fcb87e765876dc",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
+      }
     },
     "ScoreNavigationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNavigationDetector.java",
@@ -1608,14 +1645,23 @@
     },
     "RestVerticalWave.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestVerticalWave.java",
-      "source_sha256": "66afd668365f89d15fab7ebccc640325990f399034fc475536f9763415904e28",
+      "source_sha256": "82e4c409dc0871badbad05638efd6ccac02c03eafe46ced183ec50480cd26a9c",
       "reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44",
-      "source_normalized_sha256": "d6edb6eb289931281147ffe0a69b84c6acd36c4411b90ffa23823afb1b41e3dc",
-      "standalone_sha256": "7421a7f40fc40215251d302baabcbb00311d01067e6bf267a2b07278626c59de",
+      "source_normalized_sha256": "b2c960c1a1efa809098b8e547d75cd266890db78d8b5f01e744d03e5afbf07e4",
+      "standalone_sha256": "632a9de790cfe159c9d9f38bfa761ef220d0472aac7970adb877ff08ea1f346d",
       "reviewed_source_state": "Committed paired rounded raster bounds repair; recognition59/audio92, guide287 unchanged. Original synthetic controls and full source suite passed; packaged deployment pending.",
       "review_note": "Original synthetic edge tests reproduce the prior bounds exception; preserve float-domain guards and validate rounded columns before pixel reads. No private source material or model changes.",
       "scoped_reviewed_app_commit": "b9357cea9498a072237e541be9db117594979a44",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestVerticalWave.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestVerticalWave.java",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
+      }
     },
     "ScoreBoundaryTies.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreBoundaryTies.java",
@@ -2403,12 +2449,22 @@
     },
     "ShadedInkWindow.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedInkWindow.java",
-      "source_sha256": "691842b8043ca0510eacf788a18688768300037a2ad002d595761295cb2c69cc",
-      "source_normalized_sha256": "691842b8043ca0510eacf788a18688768300037a2ad002d595761295cb2c69cc",
+      "source_sha256": "1c15cc01b7230d22631be7329aacb88b4601e4a15361dc25120752f611def07a",
+      "source_normalized_sha256": "e9ebd708e58adf18faa2d4154563a8fb5b733d1347c21ee288c4ae4e6d44ac91",
       "reviewed_app_commit": "f4fca934fee0c72545a3761a485a87cb0f32af1d",
       "reviewed_source_state": "Reviewed recognition11 working-tree port; app commit identifies the preserved base, not a committed working-tree delta.",
       "review_note": "Reviewed global raw-ink/staff/shaft/beam/head/rest/accidental/tie/octave/articulation ownership with original generated positive and rejection controls. Complete native/standalone executable-token parity accounts for existing package/diagnostic/stream adapters. New helpers use only existing interpreter APIs and JDK arrays/collections. No private score samples, platform adapter, dependency, model or physical guide282 layout change.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ShadedInkWindow.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ShadedInkWindow.java",
+      "standalone_sha256": "e23f5d308afa48d68b33f8cb9219e494309da39a5e873c2e6b5bc9a7232b890e",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
+      }
     },
     "ShadedItalicFCap.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShadedItalicFCap.java",
@@ -8033,9 +8089,9 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintQuarterRestInk.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintQuarterRestInk.java",
       "license": "Apache-2.0",
-      "source_sha256": "c23e4e155f93f831ea621ababb0eccfee53b67a55c841cd84bc6d74f2dfa0ed0",
-      "source_normalized_sha256": "c23e4e155f93f831ea621ababb0eccfee53b67a55c841cd84bc6d74f2dfa0ed0",
-      "standalone_sha256": "f015debbca03b8d3cf7450daea7ff07bb216a415ffb60577c7c194bfcd8f3321",
+      "source_sha256": "7666ce9ec3ec190ed9c84ec03e6631fb83a7e8fc1be9db2c32b1c6adbe18fa5f",
+      "source_normalized_sha256": "7666ce9ec3ec190ed9c84ec03e6631fb83a7e8fc1be9db2c32b1c6adbe18fa5f",
+      "standalone_sha256": "01d872c36860292647533060ce8bcbfe696974dd9a549041cddbc760eb27732e",
       "literal_faint_quarter_review": {
         "documentation": "docs/literal-faint-quarter-recovery.md",
         "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
@@ -8052,6 +8108,15 @@
         "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
         "rollout": "Source only; cumulative paired packaging deferred during active goal.",
         "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
+      },
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
       }
     },
     "PrintedBeamBindingRange.java": {
@@ -8084,6 +8149,23 @@
         "scope": "Complete anchored bilateral thin-rule binding, exact query/frame identity, float-safe veto-only range and raw unbound-head negative context, funded by actual unchanged Source parent. Additive quarter budget default inverse exact.",
         "rollout": "Source only; cumulative paired packaging deferred during active goal.",
         "app_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e"
+      }
+    },
+    "FaintEighthRestInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintEighthRestInk.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintEighthRestInk.java",
+      "license": "Apache-2.0",
+      "source_sha256": "5527b39d41cfffc147e931073debe5985cb3f342d2ddd315a2b795b388246fb5",
+      "source_normalized_sha256": "0e093852cf9991246596125c01c0bdcd6822c005cad5a90915a5a75aaba9412a",
+      "standalone_sha256": "0082e53a45ea0b5370d62d647690d4224c46729cb363abe3d54746c0106776b3",
+      "literal_faint_eighth_review": {
+        "documentation": "docs/literal-faint-eighth-recovery.md",
+        "reviewed_app_base_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 3912,
+        "scope": "Complete literal late eighth proof in genuine retained view/full mapped-source context; actual original64M/64M invocation pool, completed-prior atomic fallback, exact final secondary bounds, same source/frame/raw/meter, all rival/old-priority controls. Parent hook preserved. No native/assembled-clock authority.",
+        "rollout": "Source only; matching cumulative packaging deferred during active goal.",
+        "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
       }
     }
   },

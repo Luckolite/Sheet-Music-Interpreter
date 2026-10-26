@@ -38,6 +38,25 @@ public class RecoveryOriginalControls {
         return constructor.newInstance(raw, 280, 210, regions, List.of(), budget);
     }
 
+    /** Measure the completed quarter boundary, before the separately optional eighth stage.
+     * The real parent refuses that stage's first reservation; the real caller returns its
+     * exact completed prior Detection. Quarter requests, prices and quota assertions stay real. */
+    static FaintQuarterRestInk.Budget quarterBoundaryMeter() {
+        return new FaintQuarterRestInk.Budget(
+                64_000_000,
+                64_000_000,
+                (work, bytes) -> {
+                    if (work != 16 || bytes != 512) return;
+                    for (var frame : Thread.currentThread().getStackTrace())
+                        if (frame.getClassName()
+                                        .equals(
+                                                SixteenthRestDetector.class.getName()
+                                                        + "$FaintRecovery")
+                                && frame.getMethodName().equals("finishEighth"))
+                            throw new FaintQuarterRestInk.Refusal();
+                });
+    }
+
     public static void main(String[] args) throws Exception {
         context =
                 Class.forName(
@@ -86,7 +105,7 @@ public class RecoveryOriginalControls {
                     byte[] raw = (byte[]) glyph.invoke(null, symbol, height, 223, rows, .5);
                     byte[] saved = raw.clone();
                     var old = run(raw, null);
-                    var meter = new FaintQuarterRestInk.Budget(64_000_000, 64_000_000);
+                    var meter = quarterBoundaryMeter();
                     var ctx = context(raw, meter);
                     var actual = run(raw, ctx);
                     check(

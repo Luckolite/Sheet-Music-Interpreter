@@ -8,8 +8,23 @@ final class PrintedFlatGlyph {
 
     static boolean matches(
             byte[] gray, int w, int h, int left, int top, int right, int bottom, float gap) {
-        return matchesAt(gray, w, h, left, top, right, bottom, gap, 165, false)
-                || matchesAt(gray, w, h, left, top, right, bottom, gap, 225, true);
+        return matches(gray, w, h, left, top, right, bottom, gap, null);
+    }
+
+    static boolean matches(
+            byte[] gray,
+            int w,
+            int h,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        return matchesAt(gray, w, h, left, top, right, bottom, gap, 165, false, quarterBudget)
+                || matchesAt(gray, w, h, left, top, right, bottom, gap, 225, true, quarterBudget);
     }
 
     /** Pale spines still require a dark bowl and every original shape constraint. */
@@ -24,6 +39,23 @@ final class PrintedFlatGlyph {
             float gap,
             int normal,
             boolean faded) {
+        return matchesAt(gray, w, h, left, top, right, bottom, gap, normal, faded, null);
+    }
+
+    private static boolean matchesAt(
+            byte[] gray,
+            int w,
+            int h,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float gap,
+            int normal,
+            boolean faded,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         if (gray == null
                 || right < left
                 || bottom < top
@@ -43,19 +75,32 @@ final class PrintedFlatGlyph {
                         top - Math.round(gap),
                         right + Math.round(gap),
                         bottom + Math.round(gap),
-                        normal);
+                        normal,
+                        quarterBudget);
         int extended = top;
-        for (int x = left; x <= left + (right - left) * .4f; x++) {
-            if (!dark(gray, w, x, top, inkLimit)) continue;
-            int blank = 0, end = top;
-            for (int y = top; y >= Math.max(0, top - Math.round(gap * 1.5f)); y--) {
-                if (dark(gray, w, x, y, inkLimit)) {
-                    end = y;
-                    blank = 0;
-                } else if (++blank > 1) break;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int x = left; x <= left + (right - left) * .4f; x++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (!dark(gray, w, x, top, inkLimit, quarterBudget)) continue;
+                int blank = 0, end = top;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = top; y >= Math.max(0, top - Math.round(gap * 1.5f)); y--) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        if (dark(gray, w, x, y, inkLimit, quarterBudget)) {
+                            end = y;
+                            blank = 0;
+                        } else if (++blank > 1) break;
+                    }
+                }
+
+                extended = Math.min(extended, end);
             }
-            extended = Math.min(extended, end);
         }
+
         top = extended;
         int ww = right - left + 1, hh = bottom - top + 1;
         if (gray == null
@@ -68,14 +113,27 @@ final class PrintedFlatGlyph {
                 || ww < gap * .4f
                 || ww > gap * 1.6f) return false;
         int spine = left, best = 0;
-        for (int x = left; x <= left + ww * .4f; x++) {
-            int count = 0;
-            for (int y = top; y <= bottom; y++) if (dark(gray, w, x, y, inkLimit)) count++;
-            if (count > best) {
-                best = count;
-                spine = x;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int x = left; x <= left + ww * .4f; x++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int count = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int y = top; y <= bottom; y++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (dark(gray, w, x, y, inkLimit, quarterBudget)) count++;
+                    }
+                }
+
+                if (count > best) {
+                    best = count;
+                    spine = x;
+                }
             }
         }
+
         if (best < hh * .78f) return false;
         int start = Math.max(spine + Math.round(gap * .3f), left + Math.round(ww * .6f));
         if (start > right) return false;
@@ -86,34 +144,56 @@ final class PrintedFlatGlyph {
         float upperEnd = top + hh * .4f, tailStart = top + hh * .9f;
         float clearStart = top + hh * .5f, clearEnd = top + hh * .8f;
         int clearColumn = spine + Math.round(gap * .2f);
-        for (int y = top; y <= bottom; y++) {
-            boolean rule =
-                    ruleWithinSource
-                            && dark(gray, w, leftRuleX, y, inkLimit)
-                            && dark(gray, w, rightRuleX, y, inkLimit);
-            if (rule) continue;
-            boolean ink = false;
-            for (int x = start; x <= right; x++)
-                if (dark(gray, w, x, y, inkLimit)) {
-                    ink = true;
-                    break;
-                }
-            if (faded && y >= upperEnd && y <= tailStart) {
-                for (int x = start; x <= right; x++)
-                    if (dark(gray, w, x, y, Math.min(165, inkLimit))) {
-                        darkBowl++;
-                        break;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = top; y <= bottom; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                boolean rule =
+                        ruleWithinSource
+                                && dark(gray, w, leftRuleX, y, inkLimit, quarterBudget)
+                                && dark(gray, w, rightRuleX, y, inkLimit, quarterBudget);
+                if (rule) continue;
+                boolean ink = false;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int x = start; x <= right; x++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (dark(gray, w, x, y, inkLimit, quarterBudget)) {
+                            ink = true;
+                            break;
+                        }
                     }
+                }
+
+                if (faded && y >= upperEnd && y <= tailStart) {
+                    {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        for (int x = start; x <= right; x++) {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            if (dark(gray, w, x, y, Math.min(165, inkLimit), quarterBudget)) {
+                                darkBowl++;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (ink) {
+                    if (y < upperEnd) upper++;
+                    else if (y > tailStart) tail++;
+                    else bowl++;
+                }
+                if (y > clearStart && y < clearEnd) {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int x = clearColumn; x < start; x++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (!dark(gray, w, x, y, inkLimit, quarterBudget)) clear++;
+                    }
+                }
             }
-            if (ink) {
-                if (y < upperEnd) upper++;
-                else if (y > tailStart) tail++;
-                else bowl++;
-            }
-            if (y > clearStart && y < clearEnd)
-                for (int x = clearColumn; x < start; x++)
-                    if (!dark(gray, w, x, y, inkLimit)) clear++;
         }
+
         return upper <= hh * .08f
                 && tail <= 1
                 && bowl >= hh * .18f
@@ -122,6 +202,18 @@ final class PrintedFlatGlyph {
     }
 
     private static boolean dark(byte[] gray, int w, int x, int y, int inkLimit) {
+        return dark(gray, w, x, y, inkLimit, null);
+    }
+
+    private static boolean dark(
+            byte[] gray,
+            int w,
+            int x,
+            int y,
+            int inkLimit,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         return (gray[y * w + x] & 255) < inkLimit;
     }
 }

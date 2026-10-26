@@ -16,7 +16,19 @@ public final class BassCancellationAuthorityTest {
     }
 
     static Object make(String name, Object... args) throws Exception {
-        var c = nested(name).getDeclaredConstructors()[0];
+        Class<?>[] signature =
+                switch (name) {
+                    case "Staff" -> new Class<?>[] {float.class, float.class, float.class};
+                    case "AccidentalCandidate" -> new Class<?>[] {nested("Component"), byte.class};
+                    case "SignatureGlyph" ->
+                            new Class<?>[] {
+                                float.class, int.class, float.class, nested("Component")
+                            };
+                    default ->
+                            throw new IllegalArgumentException(
+                                    "Unreviewed original fixture constructor " + name);
+                };
+        var c = nested(name).getDeclaredConstructor(signature);
         c.setAccessible(true);
         return c.newInstance(args);
     }

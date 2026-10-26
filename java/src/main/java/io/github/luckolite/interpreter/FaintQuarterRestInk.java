@@ -196,6 +196,12 @@ final class FaintQuarterRestInk {
             radius = Math.max(3, Math.round(gap * .6f));
         }
 
+        boolean[] rawRuleRows(Budget expected) {
+            if (expected != budget) throw new Refusal();
+            charge(budget, 1L + rules.length, 32L + 8L * rules.length);
+            return rules.clone();
+        }
+
         private boolean foreground(int x, int y) {
             int value = raw[y * width + x] & 255;
             if (value < 170) return true;
@@ -413,6 +419,30 @@ final class FaintQuarterRestInk {
         private final Scan scan;
         private final int left, right, top, bottom;
         private final boolean[] mask;
+
+        boolean belongsTo(Scan expected, Budget meter) {
+            charge(meter, 1, 0);
+            return scan == expected && scan.budget == meter;
+        }
+
+        int bandTop(Budget meter) {
+            charge(meter, 1, 0);
+            if (scan.budget != meter) throw new Refusal();
+            return top;
+        }
+
+        boolean[] narrowRows(Budget meter) {
+            if (scan.budget != meter) throw new Refusal();
+            charge(meter, 1L + mask.length, 32L + 8L * mask.length);
+            boolean[] rows = mask.clone();
+            charge(meter, 1, 0);
+            for (int i = 0; i < rows.length; i++) {
+                charge(meter, 1, 0);
+                float nearest = scan.top + Math.round((top + i - scan.top) / scan.gap) * scan.gap;
+                rows[i] &= Math.abs(top + i - nearest) <= scan.gap * .2f;
+            }
+            return rows;
+        }
 
         private Seed(Scan scan, int left, int right, int top, int bottom, boolean[] mask) {
             this.scan = scan;
