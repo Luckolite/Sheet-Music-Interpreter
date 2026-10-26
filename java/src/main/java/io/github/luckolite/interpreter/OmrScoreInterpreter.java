@@ -7572,8 +7572,7 @@ final class OmrScoreInterpreter {
         // Same conservative per-part bounds as before; debit only when an
         // actual eligible part is about to be retained/classified/edge-checked.
         return budget.prepay(
-                192 * n + 4L * w * (Math.max(2, Math.round(gap * .16f)) + 1),
-                6 * n + 4L * w + 192);
+                192 * n + 4L * w * (Math.max(2, Math.round(gap * .16f)) + 1), 6 * n + 4L * w + 192);
     }
 
     /** Necessary existing voter/bar predicates run before optional raw reconstruction. */
@@ -20957,6 +20956,7 @@ final class OmrScoreInterpreter {
             visited[localOrigin] = true;
             int area = 0, minX = right, maxX = left, minY = bottom, maxY = top;
             long sumX = 0, sumY = 0;
+            double momentX = 0, momentY = 0, momentXX = 0, momentYY = 0, momentXY = 0;
             while (stackSize > 0) {
                 int current = stack[--stackSize];
                 int lx = current % localWidth, ly = current / localWidth;
@@ -20964,6 +20964,12 @@ final class OmrScoreInterpreter {
                 area++;
                 sumX += x;
                 sumY += y;
+                double localX = x - left, localY = y - top;
+                momentX += localX;
+                momentY += localY;
+                momentXX += localX * localX;
+                momentYY += localY * localY;
+                momentXY += localX * localY;
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
                 minY = Math.min(minY, y);
@@ -20985,6 +20991,17 @@ final class OmrScoreInterpreter {
                         }
                     }
             }
+            // Square bounds can hide a diagonal stroke. Require a round complete
+            // ink body at this actual cutoff, using the existing dark-core law.
+            // Scale covariance by population before comparing: division can round a
+            // genuine three-pixel L-shaped dot past the exact ratio-three boundary.
+            double xx = area * momentXX - momentX * momentX;
+            double yy = area * momentYY - momentY * momentY;
+            double xy = area * momentXY - momentX * momentY;
+            double spread = xx + yy;
+            if (area >= 3
+                    && spread > 0
+                    && 4 * ((xx - yy) * (xx - yy) + 4 * xy * xy) > spread * spread) continue;
             // Removing a rule can expose the tiny end of a curved flag. A newly
             // separated mark needs a substantial round core to count as a dot.
             boolean ruleCut =
