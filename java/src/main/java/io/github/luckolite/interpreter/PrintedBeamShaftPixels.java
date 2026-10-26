@@ -17,8 +17,20 @@ final class PrintedBeamShaftPixels {
         private final byte[] raw;
         private final int width, height, page;
         final Charge charge;
+        final boolean contrast;
 
         Frame(Object source, byte[] raw, int width, int height, int page, Charge charge) {
+            this(source, raw, width, height, page, charge, false);
+        }
+
+        Frame(
+                Object source,
+                byte[] raw,
+                int width,
+                int height,
+                int page,
+                Charge charge,
+                boolean contrast) {
             if (source == null
                     || raw == null
                     || width < 3
@@ -34,6 +46,7 @@ final class PrintedBeamShaftPixels {
             this.height = height;
             this.page = page;
             this.charge = charge;
+            this.contrast = contrast;
         }
 
         void check(byte[] raw, int width, int height) {
@@ -46,8 +59,32 @@ final class PrintedBeamShaftPixels {
         }
     }
 
+    /** Literal support containment only; it never establishes note ownership. */
+    static boolean covers(PrintedBeamShafts.Shaft envelope, PrintedBeamShafts.Shaft core) {
+        var outer = envelope.pixels();
+        var inner = core.pixels();
+        if (outer == null
+                || inner == null
+                || !outer.matches(envelope)
+                || !inner.matches(core)
+                || outer.frame != inner.frame
+                || envelope.direction() != core.direction()) return false;
+        int top = Math.min(core.startY(), core.endY()),
+                bottom = Math.max(core.startY(), core.endY());
+        outer.frame.take((long) (bottom - top + 1) * (core.right() - core.left() + 1) + 32);
+        boolean any = false;
+        for (int y = top; y <= bottom; y++)
+            for (int x = core.left(); x <= core.right(); x++)
+                if (inner.has(x, y)) {
+                    any = true;
+                    if (!outer.has(x, y)) return false;
+                }
+        return any;
+    }
+
     static final class Scan {
         final Frame frame;
+        final boolean contrast;
         private final int left, right, start, end, direction;
         private final List<PrintedBeamShafts.Column> columns;
         private final int[] rows;
@@ -61,7 +98,30 @@ final class PrintedBeamShaftPixels {
                 int direction,
                 List<PrintedBeamShafts.Column> columns,
                 int[] rows) {
+            this(
+                    frame,
+                    left,
+                    right,
+                    start,
+                    end,
+                    direction,
+                    columns,
+                    rows,
+                    frame != null && frame.contrast);
+        }
+
+        Scan(
+                Frame frame,
+                int left,
+                int right,
+                int start,
+                int end,
+                int direction,
+                List<PrintedBeamShafts.Column> columns,
+                int[] rows,
+                boolean contrast) {
             this.frame = frame;
+            this.contrast = contrast;
             this.left = left;
             this.right = right;
             this.start = start;

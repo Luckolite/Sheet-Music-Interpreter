@@ -14,6 +14,12 @@ final class FiniteRawBeamStrip {
     static final int PHASE = 1024;
 
     interface Carrier {
+        default boolean contrastEnabled() {
+            return false;
+        }
+
+        default void chargeContrast(long units) {}
+
         boolean at(int x, int y);
 
         default boolean unknown(int x, int y) {
@@ -116,6 +122,11 @@ final class FiniteRawBeamStrip {
                 || (direction != -1 && direction != 1)
                 || minimumThickness < 0
                 || minimumThickness > 64) return null;
+        java.util.function.LongConsumer contrastCharge = null;
+        if (carrier.contrastEnabled()) {
+            carrier.chargeContrast(32);
+            contrastCharge = carrier::chargeContrast;
+        }
         int coreMinimum = Math.max(2, (int) Math.ceil(gap * .18));
         int minimum = Math.max(coreMinimum, minimumThickness), maximum = (int) Math.floor(gap);
         var runs = new ArrayList<List<Run>>();
@@ -129,7 +140,19 @@ final class FiniteRawBeamStrip {
             var column = new ArrayList<Run>();
             int start = -1;
             for (int y = low; y <= high + 1; y++) {
-                boolean ink = y <= high && (gray[y * width + x] & 255) < 165;
+                boolean ink =
+                        y <= high
+                                && ((gray[y * width + x] & 255) < 165
+                                        || contrastCharge != null
+                                                && PrintedBeamRawContrast.faint(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        x,
+                                                        y,
+                                                        gap,
+                                                        false,
+                                                        contrastCharge));
                 if (ink) {
                     if (start < 0) start = y;
                 } else if (start >= 0) {

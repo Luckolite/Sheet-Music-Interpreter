@@ -129,6 +129,24 @@ final class PrintedBeamGeometry {
     }
 
     interface CarrierPlane {
+        default boolean contrastEnabled() {
+            return false;
+        }
+
+        default boolean faintPossibilityEnabled() {
+            return contrastEnabled();
+        }
+
+        default void chargeContrast(long units) {}
+
+        default boolean strictAt(Column a, Column b, int x, int y) {
+            return at(a, b, x, y);
+        }
+
+        default boolean strictUnknown(Column a, Column b, int x, int y) {
+            return unknown(a, b, x, y);
+        }
+
         boolean at(Column a, Column b, int x, int y);
 
         default boolean unknown(Column a, Column b, int x, int y) {
@@ -217,11 +235,110 @@ final class PrintedBeamGeometry {
             if (c == null || !seen.add(c.id()) || c.right() >= width || c.cap() >= height)
                 throw new IllegalArgumentException();
         try {
-            return new Detector(raw, width, height, columns, plane, budget).run();
+            if (!plane.contrastEnabled())
+                return new Detector(raw, width, height, columns, plane, budget).run();
+            long setup = columns.size() * 2L + 96;
+            budget.spend(setup);
+            plane.chargeContrast(setup);
+            var strictPlane =
+                    new CarrierPlane() {
+                        public boolean at(Column a, Column b, int x, int y) {
+                            return plane.strictAt(a, b, x, y);
+                        }
+
+                        public boolean unknown(Column a, Column b, int x, int y) {
+                            return plane.strictUnknown(a, b, x, y);
+                        }
+
+                        public boolean faintPossibilityEnabled() {
+                            return true;
+                        }
+
+                        public void chargeContrast(long units) {
+                            plane.chargeContrast(units);
+                        }
+                    };
+            var strict = new Detector(raw, width, height, columns, strictPlane, budget).run();
+            var extended = new Detector(raw, width, height, columns, plane, budget).run();
+            return preserveStrictProfiles(strict, extended, columns, plane, budget);
         } catch (Exhausted exhausted) {
             return new Result(
                     List.of(), columns.stream().map(Column::id).toList(), true, budget.used());
         }
+    }
+
+    /** Select complete proved profiles, never splice masks from separate fits. */
+    private static Result preserveStrictProfiles(
+            Result strict,
+            Result extended,
+            List<Column> columns,
+            CarrierPlane plane,
+            Budget budget) {
+        long setup =
+                (strict.groups().size() + extended.groups().size()) * 2L + columns.size() * 4L + 96;
+        budget.spend(setup);
+        plane.chargeContrast(setup);
+        boolean[] useExtended = new boolean[extended.groups().size()];
+        boolean[] replaced = new boolean[strict.groups().size()];
+        for (int j = 0; j < extended.groups().size(); j++) {
+            var next = extended.groups().get(j);
+            boolean allowed = true;
+            for (var old : strict.groups()) {
+                long charge =
+                        64L
+                                + old.columns().size() * (long) next.columns().size() * 8
+                                + old.hooks().size() * (long) next.columns().size() * 8;
+                budget.spend(charge);
+                plane.chargeContrast(charge);
+                if (overlaps(old, next) && !preserves(next, old)) {
+                    allowed = false;
+                    break;
+                }
+            }
+            useExtended[j] = allowed;
+        }
+        var groups = new ArrayList<Group>();
+        for (int j = 0; j < extended.groups().size(); j++)
+            if (useExtended[j]) {
+                var next = extended.groups().get(j);
+                groups.add(next);
+                for (int i = 0; i < strict.groups().size(); i++) {
+                    long charge =
+                            strict.groups().get(i).columns().size() * (long) next.columns().size()
+                                    + 8;
+                    budget.spend(charge);
+                    plane.chargeContrast(charge);
+                    if (overlaps(strict.groups().get(i), next)) replaced[i] = true;
+                }
+            }
+        for (int i = 0; i < strict.groups().size(); i++)
+            if (!replaced[i]) groups.add(strict.groups().get(i));
+        var linked = new HashSet<Integer>();
+        for (var group : groups)
+            for (int id : group.columns())
+                if (!linked.add(id))
+                    throw new IllegalArgumentException("Overlapping proved profiles");
+        var unlinked = new ArrayList<Integer>();
+        for (var c : columns) if (!linked.contains(c.id())) unlinked.add(c.id());
+        return new Result(groups, unlinked, false, budget.used());
+    }
+
+    private static boolean overlaps(Group a, Group b) {
+        for (int id : a.columns()) if (b.columns().contains(id)) return true;
+        return false;
+    }
+
+    private static boolean preserves(Group next, Group old) {
+        for (int id : old.columns()) if (!next.columns().contains(id)) return false;
+        for (int j = 0; j + 1 < old.columns().size(); j++) {
+            int at = next.columns().indexOf(old.columns().get(j));
+            if (at + 1 >= next.columns().size()
+                    || !next.columns().get(at + 1).equals(old.columns().get(j + 1))
+                    || (next.bridges().get(at) & old.bridges().get(j)) != old.bridges().get(j))
+                return false;
+        }
+        for (var hook : old.hooks()) if (!next.hooks().contains(hook)) return false;
+        return true;
     }
 
     private static final class Detector {
@@ -230,6 +347,8 @@ final class PrintedBeamGeometry {
         final List<Column> nodes;
         final CarrierPlane plane;
         final Budget budget;
+        final java.util.function.LongConsumer contrastCharge;
+        final java.util.function.LongConsumer possibilityCharge;
         final ArrayList<Edge> edges = new ArrayList<>();
         final ArrayList<FiniteRawBeamStrip.Proof> primary = new ArrayList<>();
         final int[] parent;
@@ -241,6 +360,19 @@ final class PrintedBeamGeometry {
             nodes = List.copyOf(n);
             plane = p;
             budget = b;
+            if (p.contrastEnabled() || p.faintPossibilityEnabled()) {
+                b.spend(32);
+                p.chargeContrast(32);
+                possibilityCharge =
+                        units -> {
+                            b.spend(units);
+                            p.chargeContrast(units);
+                        };
+                contrastCharge = p.contrastEnabled() ? possibilityCharge : null;
+            } else {
+                contrastCharge = null;
+                possibilityCharge = null;
+            }
             parent = new int[n.size()];
             for (int i = 0; i < n.size(); i++) parent[i] = i;
         }
@@ -257,6 +389,14 @@ final class PrintedBeamGeometry {
             var a = nodes.get(e.a());
             var b = nodes.get(e.b());
             return new FiniteRawBeamStrip.Carrier() {
+                public boolean contrastEnabled() {
+                    return contrastCharge != null;
+                }
+
+                public void chargeContrast(long units) {
+                    contrastCharge.accept(units);
+                }
+
                 public boolean at(int x, int y) {
                     budget.spend(1);
                     return plane.at(a, b, x, y);
@@ -267,6 +407,16 @@ final class PrintedBeamGeometry {
                     return plane.unknown(a, b, x, y);
                 }
             };
+        }
+
+        boolean faintAt(int x, int y, double gap) {
+            return contrastCharge != null
+                    && PrintedBeamRawContrast.faint(
+                            raw, width, height, x, y, gap, false, contrastCharge);
+        }
+
+        boolean foreground(int x, int y, double gap) {
+            return (raw[y * width + x] & 255) < 165 || faintAt(x, y, gap);
         }
 
         double gap(Edge e) {
@@ -338,7 +488,7 @@ final class PrintedBeamGeometry {
                 for (int y = top; y < top + proof.thickness(); y++)
                     if (y >= low
                             && y <= high
-                            && (raw[y * width + boundary] & 255) < 165
+                            && foreground(boundary, y, gap(e))
                             && ((!c.at(boundary, y) && !c.unknown(boundary, y))
                                     || certifiedTerminal(shaft, boundary, y))) {
                         int slot = (y - low) * cw + boundary - left;
@@ -364,7 +514,7 @@ final class PrintedBeamGeometry {
                             if (visited[next]) continue;
                             visited[next] = true;
                             budget.spend(1);
-                            if ((raw[ny * width + nx] & 255) < 165
+                            if (foreground(nx, ny, gap(e))
                                     && ((!c.at(nx, ny) && !c.unknown(nx, ny))
                                             || certifiedTerminal(shaft, nx, ny)))
                                 queue[tail++] = next;
@@ -383,14 +533,14 @@ final class PrintedBeamGeometry {
                     && shaft.targets().has(raw, width, height, shaft.id(), x, y);
         }
 
-        List<Run> runs(int x, int low, int high) {
+        List<Run> runs(int x, int low, int high, double gap) {
             low = Math.max(0, low);
             high = Math.min(height - 1, high);
             var out = new ArrayList<Run>();
             int start = -1;
             for (int y = low; y <= high + 1; y++) {
                 budget.spend(1);
-                boolean ink = y <= high && (raw[y * width + x] & 255) < 165;
+                boolean ink = y <= high && foreground(x, y, gap);
                 if (ink) {
                     if (start < 0) start = y;
                 } else if (start >= 0) {
@@ -439,6 +589,34 @@ final class PrintedBeamGeometry {
             return lo <= hi;
         }
 
+        /** Unproved faint ink is a possibility veto, never positive strip evidence.
+         * Open runs also veto: an unproved boundary cannot establish white space. */
+        boolean faintPossibility(int x, double base, int k, double gap, int direction) {
+            int low = Math.max(0, (int) Math.floor(base - gap * 1.5)),
+                    high = Math.min(height - 1, (int) Math.ceil(base + gap * 1.5)),
+                    shift = direction > 0 ? k - 1 : 0;
+            possibilityCharge.accept(high - low + 3L);
+            int start = -1;
+            for (int y = low; y <= high + 1; y++) {
+                boolean possible = y <= high && (raw[y * width + x] & 255) <= 229;
+                if (possible) {
+                    if (start < 0) start = y;
+                } else if (start >= 0) {
+                    int lo =
+                            Math.max(
+                                    1024 * start - 512,
+                                    (int) Math.ceil(1024 * (base - gap * .3 - shift)));
+                    int hi =
+                            Math.min(
+                                    1024 * (y - k) + 511,
+                                    (int) Math.floor(1024 * (base + gap * .3 - shift)));
+                    if (lo <= hi) return true;
+                    start = -1;
+                }
+            }
+            return false;
+        }
+
         List<Stub> stubs(int edgeIndex, double offset) {
             Edge e = edges.get(edgeIndex);
             int first = first(e), last = last(e), n = last - first + 1;
@@ -465,11 +643,14 @@ final class PrintedBeamGeometry {
                         runs(
                                 x,
                                 (int) Math.floor(base - gap * 1.5),
-                                (int) Math.ceil(base + gap * 1.5)))
+                                (int) Math.ceil(base + gap * 1.5),
+                                gap))
                     if (rawEligible(e, r, base, kmin)) {
                         rawPresent[x - first] = true;
                         if (coreEligible(e, x, r, base, kmin)) present[x - first] = true;
                     }
+                if (possibilityCharge != null && !rawPresent[x - first])
+                    rawPresent[x - first] = faintPossibility(x, base, kmin, gap, direction);
             }
             int prefix = 0, suffix = 0;
             while (prefix < n && present[prefix]) prefix++;
@@ -552,7 +733,8 @@ final class PrintedBeamGeometry {
                             runs(
                                     x,
                                     (int) Math.floor(base - gap * (maximum + 1)),
-                                    (int) Math.ceil(base + gap * (maximum + 1)))) {
+                                    (int) Math.ceil(base + gap * (maximum + 1)),
+                                    gap)) {
                         int size = r.bottom() - r.top() + 1;
                         if (size < minimum
                                 || size > gap
@@ -606,7 +788,7 @@ final class PrintedBeamGeometry {
                         var right = observations(index, k, full, partial);
                         for (var a : left)
                             for (var b : right)
-                                if (sameComponent(a, b))
+                                if (sameComponent(a, b, gap(edges.get(index))))
                                     aliases[find(aliases, k)] = find(aliases, j);
                     }
             var merged = new LinkedHashMap<Integer, ArrayList<Double>>();
@@ -692,7 +874,7 @@ final class PrintedBeamGeometry {
             return out;
         }
 
-        boolean sameComponent(Observation a, Observation b) {
+        boolean sameComponent(Observation a, Observation b, double gap) {
             int ae = a.first() + a.proof().rasterTops().size() - 1,
                     be = b.first() + b.proof().rasterTops().size() - 1;
             if (!(a.first() <= b.first() && be <= ae || b.first() <= a.first() && ae <= be))
@@ -708,7 +890,7 @@ final class PrintedBeamGeometry {
                                         bp.high() + b.proof().thickness() - 1);
                 for (int y = top; y <= bottom; y++) {
                     budget.spend(1);
-                    if ((raw[y * width + x] & 255) >= 165) return false;
+                    if (!foreground(x, y, gap)) return false;
                 }
             }
             return true;

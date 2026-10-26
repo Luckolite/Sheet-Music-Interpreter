@@ -459,7 +459,7 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OmrMeasurePostProcessor.java",
       "dense_interrupted_barline_review": {
         "documentation": "docs/dense-interrupted-barlines.md",
-      "reviewed_app_commit": "995ab74687f37c8cc860c08559aa4215a47a8db0",
+        "reviewed_app_commit": "995ab74687f37c8cc860c08559aa4215a47a8db0",
         "reviewed_app_base_commit": "f1e84d2fbbcd151fd05ac9dcff588fe6e1f9c542",
         "scope": "Both endpoints and90percent aggregate ink can reach existing fixed-axis90percent/every-space/counter/branch/oscillation/head/rest proofs without an original long run. No raw thresholds, model, wire layout, arrays or caps change. Original successful branch work and returns remain exact; newly eligible work is bounded but not identical to prior total work.",
         "original_regression": "DenseInterruptedBarlineTest.java",
@@ -6900,30 +6900,60 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FiniteRawBeamStrip.java",
       "license": "Apache-2.0",
       "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "7e1acb8ca2bbf22f0f67de4077881ee419ea7690310f4af241bf01e5df66d7ca",
-      "source_normalized_sha256": "65b70136df4be0a683eaa3613ed6989364ff2aadf94dbf8b97c75bc2c1e210d9",
-      "standalone_sha256": "2e56ab4297385c44b5dfa726c3fcabad4bd1a45e185686a3a517ad17ade315a6",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "source_sha256": "a3a60d5eea024996fadbd68662c04f83dee242360ff291bf5b1cb880b1ce10ea",
+      "source_normalized_sha256": "2d7fc0b4b3f04e652fc1edb410ad604122f66184f9603472028096db77997d89",
+      "standalone_sha256": "364ea3851f9cd0fcaa88b9b5cc3f278720ecb6aac4c4447641a73f735736e782",
+      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "PrintedBeamGeometry.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamGeometry.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamGeometry.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "744973d913919a1fecdb455a1c21a896837805c31844107de9714455995fa52d",
-      "source_normalized_sha256": "fe1582123b8e7580492d441d1bb72209b7e9c51597287e6be4b10b72804d47b0",
-      "standalone_sha256": "9b51683852c4631c1083d4cc82a6aca06df7d3fa3d1b085b734e932c06cbcdeb",
-      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
+      "source_sha256": "d871b8698ef68bddec4f932a50f78a83d83b2483e1c962ab39bd2e1aaa69f4af",
+      "source_normalized_sha256": "ec383c02321276018b576c549c99cb25eb96a8ec154837e61e53c6c16631f065",
+      "standalone_sha256": "4058ced0acdf1e70557665af7f9d5b37e3b6061de473ebca06edab994f23c468",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "PrintedBeamShafts.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamShafts.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "a5cb1aa51fad437a507e44a21536b7bb9700ae47850d0d9c8225cc02dc43ee48",
-      "source_normalized_sha256": "96e087c94db831a07e034d5966064d7deb92f6914665c3f4527e5394aa01bd2c",
-      "standalone_sha256": "639d2fb72505b3ef775ba1f09f74529e01c981d6f05ec5c9bb1e36c44ddf3742",
-      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
+      "source_sha256": "9d59a71c90d1d6270d85c4c70fb9da428cd6145994b2f35513e5588ce857a6da",
+      "source_normalized_sha256": "914833c408fd7cd916f8393d779cc26fafdc9a206f8be8750491773fe0c1b2e9",
+      "standalone_sha256": "c68446d49aefe60aad1adc11de81e3c2342da0f7292c51828a3f3384fc63db1a",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "PrintedBeamRuleWitness.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleWitness.java",
@@ -6950,10 +6980,20 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "61ef0240aa3c0d3c7226cc4e6e45b3b7207441a9ca2d1573d28e542a22d82e4c",
-      "source_normalized_sha256": "813614a2db4e631248481761df6afc3a7f19b72e60f3ea1a4a628ada5abe25c6",
-      "standalone_sha256": "c183d1a8223f98c85a83b84fe40bc6425eca519dab0890435c7918ace858ee59",
-      "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65"
+      "source_sha256": "d3bd30b8669dfe2df585b16b51ec8bf2403cbee5bfd1993b62549cb2b2aceada",
+      "source_normalized_sha256": "c2fb1fa29acaded817ecd140651baf30535d1358120a11b602b28b352c247b78",
+      "standalone_sha256": "8503aa8aecce066c745d469e692d621ca1f0e5bccdf3b26423c61db4279a2f7e",
+      "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "PrintedIsolatedFlags.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedIsolatedFlags.java",
@@ -6970,10 +7010,20 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawPrimaryBeamAbsence.java",
       "license": "Apache-2.0",
       "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "255d0ed6c37a30c549a7b1cb36467fbd961ed7db356e47eb8c318971d7f3004c",
-      "source_normalized_sha256": "335c2b88e696fc76e01c0dbefca6644404aef2419ffd466aef46e82ade2fcc54",
-      "standalone_sha256": "43237d00222da81c3db9b1b29d8a8826d164772b5dac76c52c771a773f0e6db0",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "source_sha256": "c2fbf9879cb17d8d873920a147fa57972138b269d4bcd7e8817aed4aee5d01ac",
+      "source_normalized_sha256": "92563d12798e0bdee5d0bcf947a76db0d0d9a8a63c9ebc3e70da7211a0d0f198",
+      "standalone_sha256": "f5cafdb088ef7bbc70bbb61b03291b105e280c126f246a25e24d1ba1d1532e93",
+      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "FiniteBarlineSlideInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FiniteBarlineSlideInk.java",
@@ -7491,10 +7541,20 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShaftPixels.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "db5684b86e9dda5e7f4dbff2e0a99f4c8bdc3666439661667a52d864a67d300b",
-      "source_normalized_sha256": "2fe534aff2356ebe1004b99ea660f73b0816e38bdb36a0a475c7a31854e9c335",
-      "standalone_sha256": "7ef688ea3919f86ce0f468f2ad3cbe6f8c02823822432f7b68191f83ca77b209",
-      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591"
+      "source_sha256": "6e6de1a2362586d09afbb27000801810e2cc85b46c9d2578b173a7fea1f86bd5",
+      "source_normalized_sha256": "88cc9ee35cd5cee7b6b22e6a8b191ba8eec6609f3874492ea4e5b3f5236510bb",
+      "standalone_sha256": "297492cf769ea5c254b49f6d3ed1d6786f34bdec4c791d840e0f2450a13d8724",
+      "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     },
     "TremoloPageJoinOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/TremoloPageJoinOriginalTest.java",
@@ -7656,6 +7716,42 @@
       "standalone_sha256": "b0fa1eb5f2c7fb70681c2f489c5ca2122dc1c44fa7042e415582b0d794ebfdfb",
       "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
       "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material."
+    },
+    "PrintedBeamContrastWitness.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamContrastWitness.java",
+      "source_sha256": "f9396f33caac01c6cca6878db33a1a8e76ebd769a624387820c56c06db039605",
+      "source_normalized_sha256": "fd4f2ff0fe452da4ade629971badaed1d0502f1a80d1866fe7a107c3b6e96e21",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamContrastWitness.java",
+      "standalone_sha256": "4a9529eaf5f4548383e3b2550752c9f5a36912e4bd2d758d96df52a296469364",
+      "license": "Apache-2.0",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
+    },
+    "PrintedBeamRawContrast.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRawContrast.java",
+      "source_sha256": "e5c47c0dbf3c17f2bf60c2dfab57f47e4c971b29db3fdc8c6951cb266bb87c47",
+      "source_normalized_sha256": "eb4a337f00f8f29bfbcbef3dfdd0191fd64f9d8612afdcadb034668846671a99",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRawContrast.java",
+      "standalone_sha256": "b0079f5c249d8ca47297a8238fe9df7cb7749dd89e0c6a8aa0a8cfadd332a322",
+      "license": "Apache-2.0",
+      "faint_literal_pixel_review": {
+        "documentation": "docs/faint-beam-pixel-evidence.md",
+        "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
+        "scope": "Literal bounded contrast throughout witnesses/shafts/head contact/saved pixels/finite strips; strict same-frame supports and complete profile preservation; UNKNOWN possibility only vetoes absence. No model, timing, layout or cap change.",
+        "new_original_junit_tests": 5,
+        "new_original_assertions": 134,
+        "parent_fresh_public_packet_tests_pass": true,
+        "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
+        "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
     }
   },
   "interpreter_speedup_review": {

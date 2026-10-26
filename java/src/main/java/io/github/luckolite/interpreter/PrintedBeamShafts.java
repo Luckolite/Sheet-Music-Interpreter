@@ -66,6 +66,66 @@ final class PrintedBeamShafts {
             float gap,
             Budget budget,
             PrintedBeamShaftPixels.Frame frame) {
+        try {
+            return scan(
+                    raw,
+                    width,
+                    height,
+                    headX,
+                    headY,
+                    gap,
+                    budget,
+                    frame,
+                    false,
+                    frame != null && frame.contrast);
+        } catch (ContrastRefused refused) {
+            return List.of();
+        }
+    }
+
+    static List<Shaft> atAll(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame) {
+        if (frame == null) throw new IllegalArgumentException("Missing source frame");
+        try {
+            return scan(raw, width, height, headX, headY, gap, budget, frame, true, frame.contrast);
+        } catch (ContrastRefused refused) {
+            return List.of();
+        }
+    }
+
+    static List<Shaft> atStrict(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame) {
+        if (frame == null) throw new IllegalArgumentException("Missing source frame");
+        return scan(raw, width, height, headX, headY, gap, budget, frame, false, false);
+    }
+
+    private static final class ContrastRefused extends RuntimeException {}
+
+    private static List<Shaft> scan(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            boolean all,
+            boolean contrast) {
         if (frame != null) frame.check(raw, width, height);
         if (raw == null
                 || width < 3
@@ -99,7 +159,9 @@ final class PrintedBeamShafts {
             for (int x = first; x <= last; x++) {
                 int hits = 0, total = 0, blank = 0, end = start;
                 for (int y = start; y <= limit; y++) {
-                    if (dark(raw, width, height, x, y, direction)) {
+                    if (dark(
+                            raw, width, height, x, y, direction, gap, budget, frame, headY,
+                            contrast)) {
                         hits++;
                         blank = 0;
                         end = y;
@@ -107,7 +169,7 @@ final class PrintedBeamShafts {
                     total++;
                 }
                 if (end - cy < gap * 1.7f || hits < total * .9f || end >= limit - 1) continue;
-                if (!cols.isEmpty() && x != prior + 1) {
+                if (!all && !cols.isEmpty() && x != prior + 1) {
                     ambiguous = true;
                     break;
                 }
@@ -115,71 +177,152 @@ final class PrintedBeamShafts {
                 prior = x;
                 remote = Math.max(remote, end);
             }
-            if (ambiguous || cols.isEmpty() || cols.size() > Math.max(3, gap * .35f)) continue;
-            int left = cols.get(0).x(), right = cols.get(cols.size() - 1).x();
-            // At least one literal 8-connected path survives every row from
-            // the authenticated head's edge to the most remote observed cap.
-            // A shorter adjacent column never supplies a fictitious blank pixel.
-            int[] savedRows = null;
-            if (frame != null) {
-                frame.take(remote - start + 1L + 48);
-                savedRows = new int[remote - start + 1];
-            }
-            boolean[] previous = new boolean[right - left + 1];
-            boolean connected = true;
-            for (int y = start; y <= remote; y++) {
-                boolean[] next = new boolean[previous.length];
-                boolean any = false;
-                for (int i = 0; i < next.length; i++) {
-                    boolean actualDark = dark(raw, width, height, left + i, y, direction);
-                    if (savedRows != null
-                            && actualDark
-                            && y
-                                    <= (direction > 0
-                                            ? cols.get(i).endY()
-                                            : height - 1 - cols.get(i).endY()))
-                        savedRows[y - start] |= 1 << i;
-                    if (actualDark) {
-                        next[i] =
-                                y == start
-                                        || previous[i]
-                                        || i > 0 && previous[i - 1]
-                                        || i + 1 < previous.length && previous[i + 1];
-                        any |= next[i];
+            if (ambiguous || cols.isEmpty()) continue;
+            if (!all) {
+                if (cols.size() > Math.max(3, gap * .35f)) continue;
+                var shaft =
+                        materialize(
+                                raw, width, height, headY, gap, budget, frame, direction, start,
+                                remote, cols, contrast);
+                if (shaft != null) result.add(shaft);
+            } else {
+                for (int from = 0; from < cols.size(); ) {
+                    int to = from + 1;
+                    while (to < cols.size() && cols.get(to).x() == cols.get(to - 1).x() + 1) to++;
+                    if (to - from <= Math.max(3, gap * .35f)) {
+                        frame.take(to - from + 64L);
+                        var run = new ArrayList<>(cols.subList(from, to));
+                        int end = -1;
+                        for (var col : run)
+                            end =
+                                    Math.max(
+                                            end,
+                                            direction > 0 ? col.endY() : height - 1 - col.endY());
+                        var shaft =
+                                materialize(
+                                        raw, width, height, headY, gap, budget, frame, direction,
+                                        start, end, run, contrast);
+                        if (shaft != null) result.add(shaft);
                     }
+                    from = to;
                 }
-                if (!any) {
-                    connected = false;
-                    break;
-                }
-                previous = next;
             }
-            if (connected)
-                result.add(
-                        new Shaft(
-                                left,
-                                right,
-                                direction > 0 ? start : height - 1 - start,
-                                direction > 0 ? remote : height - 1 - remote,
-                                direction,
-                                cols,
-                                savedRows == null
-                                        ? null
-                                        : new PrintedBeamShaftPixels.Scan(
-                                                frame,
-                                                left,
-                                                right,
-                                                direction > 0 ? start : height - 1 - start,
-                                                direction > 0 ? remote : height - 1 - remote,
-                                                direction,
-                                                cols,
-                                                savedRows)));
         }
         return List.copyOf(result);
     }
 
-    private static boolean dark(byte[] raw, int width, int height, int x, int y, int direction) {
+    private static Shaft materialize(
+            byte[] raw,
+            int width,
+            int height,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            int direction,
+            int start,
+            int remote,
+            List<Column> cols,
+            boolean contrast) {
+        int left = cols.get(0).x(), right = cols.get(cols.size() - 1).x();
+        // At least one literal 8-connected path survives every row from
+        // the authenticated head's edge to the most remote observed cap.
+        // A shorter adjacent column never supplies a fictitious blank pixel.
+        int[] savedRows = null;
+        if (frame != null) {
+            frame.take(remote - start + 1L + 48);
+            savedRows = new int[remote - start + 1];
+        }
+        boolean[] previous = new boolean[right - left + 1];
+        boolean connected = true;
+        for (int y = start; y <= remote; y++) {
+            boolean[] next = new boolean[previous.length];
+            boolean any = false;
+            for (int i = 0; i < next.length; i++) {
+                boolean actualDark =
+                        dark(
+                                raw, width, height, left + i, y, direction, gap, budget, frame,
+                                headY, contrast);
+                if (savedRows != null
+                        && actualDark
+                        && y
+                                <= (direction > 0
+                                        ? cols.get(i).endY()
+                                        : height - 1 - cols.get(i).endY()))
+                    savedRows[y - start] |= 1 << i;
+                if (actualDark) {
+                    next[i] =
+                            y == start
+                                    || previous[i]
+                                    || i > 0 && previous[i - 1]
+                                    || i + 1 < previous.length && previous[i + 1];
+                    any |= next[i];
+                }
+            }
+            if (!any) {
+                connected = false;
+                break;
+            }
+            previous = next;
+        }
+        if (connected)
+            return new Shaft(
+                    left,
+                    right,
+                    direction > 0 ? start : height - 1 - start,
+                    direction > 0 ? remote : height - 1 - remote,
+                    direction,
+                    cols,
+                    savedRows == null
+                            ? null
+                            : new PrintedBeamShaftPixels.Scan(
+                                    frame,
+                                    left,
+                                    right,
+                                    direction > 0 ? start : height - 1 - start,
+                                    direction > 0 ? remote : height - 1 - remote,
+                                    direction,
+                                    cols,
+                                    savedRows,
+                                    contrast));
+        return null;
+    }
+
+    private static boolean dark(
+            byte[] raw,
+            int width,
+            int height,
+            int x,
+            int y,
+            int direction,
+            double gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            float headY,
+            boolean contrast) {
         int actual = direction > 0 ? y : height - 1 - y;
-        return (raw[actual * width + x] & 255) < 165;
+        if ((raw[actual * width + x] & 255) < 165) return true;
+        if (frame == null || !contrast) return false;
+        frame.take(32); // callback allocation before construction
+        if (Math.abs(actual - headY) <= gap * .65
+                && PrintedBeamRawContrast.neck(
+                        raw,
+                        width,
+                        height,
+                        x,
+                        actual,
+                        gap,
+                        n -> {
+                            if (!budget.take(n)) throw new ContrastRefused();
+                            frame.take(n);
+                        })) return true;
+        frame.take(32);
+        java.util.function.LongConsumer charge =
+                n -> {
+                    if (!budget.take(n)) throw new ContrastRefused();
+                    frame.take(n);
+                };
+        return PrintedBeamRawContrast.faint(raw, width, height, x, actual, gap, true, charge)
+                || PrintedBeamRawContrast.crossing(raw, width, height, x, actual, gap, charge);
     }
 }

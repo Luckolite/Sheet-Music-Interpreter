@@ -26,6 +26,7 @@ final class RawPrimaryBeamAbsence {
     private final int w, h;
     private final FiniteRawBeamStrip.Carrier carrier;
     private final PrintedIsolatedFlags.Budget budget;
+    private final int possibleInkLimit;
 
     RawPrimaryBeamAbsence(
             byte[] raw,
@@ -38,6 +39,8 @@ final class RawPrimaryBeamAbsence {
         this.h = h;
         this.carrier = carrier;
         this.budget = budget;
+        // A widened possibility set can only withhold absence, never admit ink.
+        possibleInkLimit = carrier != null && carrier.contrastEnabled() ? 230 : 165;
     }
 
     Optional<List<Certificate>> prove(
@@ -133,7 +136,11 @@ final class RawPrimaryBeamAbsence {
                 var found = new ArrayList<Interval>();
                 for (int y = low; y <= high + 1; y++) {
                     budget.take(1);
-                    boolean dark = y <= high && (y < 0 || y >= h || (raw[y * w + x] & 255) < 165);
+                    boolean dark =
+                            y <= high
+                                    && (y < 0
+                                            || y >= h
+                                            || (raw[y * w + x] & 255) < possibleInkLimit);
                     if (dark) {
                         if (start == Integer.MIN_VALUE) start = y;
                     } else if (start != Integer.MIN_VALUE) {
@@ -216,7 +223,10 @@ final class RawPrimaryBeamAbsence {
                     for (int y = low; y <= high + 1; y++) {
                         budget.take(1);
                         boolean dark =
-                                y <= high && (y < 0 || y >= h || (raw[y * w + x] & 255) < 165);
+                                y <= high
+                                        && (y < 0
+                                                || y >= h
+                                                || (raw[y * w + x] & 255) < possibleInkLimit);
                         if (dark) {
                             if (start == Integer.MIN_VALUE) start = y;
                         } else if (start != Integer.MIN_VALUE) {
@@ -286,7 +296,7 @@ final class RawPrimaryBeamAbsence {
                     y <= Math.max(end.endY(), a.shaftStart());
                     y++) {
                 budget.take(1);
-                if ((raw[y * w + end.x()] & 255) < 165) {
+                if ((raw[y * w + end.x()] & 255) < possibleInkLimit) {
                     long key = (long) y * stride + end.x() - left;
                     if (visited.add(key)) queue.add(key);
                 }
@@ -302,7 +312,8 @@ final class RawPrimaryBeamAbsence {
                         continue;
                     budget.take(1);
                     long next = (long) yy * stride + xx - left;
-                    if (visited.add(next) && (raw[yy * w + xx] & 255) < 165) queue.add(next);
+                    if (visited.add(next) && (raw[yy * w + xx] & 255) < possibleInkLimit)
+                        queue.add(next);
                 }
         }
         return State.IMPOSSIBLE;
