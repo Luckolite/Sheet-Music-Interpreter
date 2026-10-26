@@ -7249,9 +7249,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "9d59a71c90d1d6270d85c4c70fb9da428cd6145994b2f35513e5588ce857a6da",
-      "source_normalized_sha256": "914833c408fd7cd916f8393d779cc26fafdc9a206f8be8750491773fe0c1b2e9",
-      "standalone_sha256": "c68446d49aefe60aad1adc11de81e3c2342da0f7292c51828a3f3384fc63db1a",
+      "source_sha256": "54bbd5386fe1b88c0da08863d570088635aa73aea514441c76521bc8c1fe5ad6",
+      "source_normalized_sha256": "54bbd5386fe1b88c0da08863d570088635aa73aea514441c76521bc8c1fe5ad6",
+      "standalone_sha256": "6350b600a538713e2a3368a3f9db57550974a53139e2a8a28f208068075727ea",
       "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7262,7 +7262,9 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
-      }
+      },
+      "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
     },
     "PrintedBeamRuleWitness.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleWitness.java",
@@ -8098,10 +8100,10 @@
     },
     "PrintedBeamRawContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRawContrast.java",
-      "source_sha256": "e5c47c0dbf3c17f2bf60c2dfab57f47e4c971b29db3fdc8c6951cb266bb87c47",
-      "source_normalized_sha256": "eb4a337f00f8f29bfbcbef3dfdd0191fd64f9d8612afdcadb034668846671a99",
+      "source_sha256": "9c4f17f96ac1f1f83694cb2b5db601307eb87233fda6516e8e2a0692b0ffc4a4",
+      "source_normalized_sha256": "9c4f17f96ac1f1f83694cb2b5db601307eb87233fda6516e8e2a0692b0ffc4a4",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRawContrast.java",
-      "standalone_sha256": "b0079f5c249d8ca47297a8238fe9df7cb7749dd89e0c6a8aa0a8cfadd332a322",
+      "standalone_sha256": "eb20475c6fcd63633ce1ff278edfdc1563b4cd0853276a0bd224b555805a45e9",
       "license": "Apache-2.0",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -8112,7 +8114,9 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
-      }
+      },
+      "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
     },
     "FaintQuarterRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintQuarterRestInk.java",
@@ -8309,6 +8313,36 @@
       },
       "reviewed_app_commit": "c2049935aa12073e6f898cb347b524023506aecf",
       "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal."
+    },
+    "EnclosingPaperOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/EnclosingPaperOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/EnclosingPaperOriginals.java",
+      "source_sha256": "8922412ff624fed21a76683d1485e5d4816adbd517c1c370ba0faa115453376a",
+      "source_normalized_sha256": "8922412ff624fed21a76683d1485e5d4816adbd517c1c370ba0faa115453376a",
+      "standalone_sha256": "fa02c8b64f31a64df8fc56b9b7438a69ea2224cbbdb170cb71fadc94df034650",
+      "license": "Apache-2.0",
+      "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
+    },
+    "EnclosingPaperOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/EnclosingPaperOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/EnclosingPaperOriginalsTest.java",
+      "source_sha256": "3cbec7ae896dc455b4a1997552dd27ca3a1036340ddd7a72d44af6e653a43f0d",
+      "source_normalized_sha256": "3cbec7ae896dc455b4a1997552dd27ca3a1036340ddd7a72d44af6e653a43f0d",
+      "standalone_sha256": "3709adcac841f5d34907e80327927493939a4aa0df9668e69d4dac57ad2f0657",
+      "license": "Apache-2.0",
+      "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
+    },
+    "EnclosingPaperPipelineOriginals.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/EnclosingPaperPipelineOriginals.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/EnclosingPaperPipelineOriginals.java",
+      "source_sha256": "eeb0bc3402ec4288da210de0335b384ca7481fb9eafdf381afcc29f1ddce915d",
+      "source_normalized_sha256": "eeb0bc3402ec4288da210de0335b384ca7481fb9eafdf381afcc29f1ddce915d",
+      "standalone_sha256": "23a3f6b3f4c72637c11e4ad2e176c404ea3fa2302dd49f43de5317e5c7528caf",
+      "license": "Apache-2.0",
+      "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
     }
   },
   "interpreter_speedup_review": {
