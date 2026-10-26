@@ -20439,6 +20439,10 @@ final class OmrScoreInterpreter {
                     combined.add(dot);
         if (gray != null && gray.length == width * height)
             combined.addAll(tieTouchingDotCores(gray, width, height, head, gap, neighboringHeads));
+        // Keep the full original roster first. A pale rounded body may exist only
+        // between the four original cutoffs; all ordinary owner checks still apply.
+        if (gray != null && gray.length == width * height)
+            combined.addAll(fadedAugmentationDots(gray, width, height, head, gap, true));
         List<Component> aligned = new ArrayList<>();
         for (Component dot : combined) {
             if (excluded.stream()
@@ -20663,8 +20667,27 @@ final class OmrScoreInterpreter {
      */
     private static List<Component> fadedAugmentationDots(
             byte[] gray, int width, int height, Component head, float gap) {
+        return fadedAugmentationDots(gray, width, height, head, gap, false);
+    }
+
+    private static List<Component> fadedAugmentationDots(
+            byte[] gray, int width, int height, Component head, float gap, boolean intermediate) {
         List<Component> result = new ArrayList<>();
-        for (int bodyThreshold : new int[] {175, 180, 195, 205}) {
+        for (int level = 0; level < (intermediate ? 31 : 4); level++) {
+            int bodyThreshold =
+                    intermediate
+                            ? 175 + level
+                            : switch (level) {
+                                case 0 -> 175;
+                                case 1 -> 180;
+                                case 2 -> 195;
+                                default -> 205;
+                            };
+            if (intermediate
+                    && (bodyThreshold == 175
+                            || bodyThreshold == 180
+                            || bodyThreshold == 195
+                            || bodyThreshold == 205)) continue;
             List<Component> cores =
                     findDarkDotComponents(gray, width, height, head, gap, bodyThreshold - 25);
             for (Component body :

@@ -493,11 +493,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "4516b68c32446c855d8365048d88234aaa0dcd5177dde8550538243f0901e3bd",
+      "source_sha256": "c42cf4734c48275f3b2427c5b11eda217a19f418d71b2ab6416cb8f2b5eaa8a4",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "4516b68c32446c855d8365048d88234aaa0dcd5177dde8550538243f0901e3bd",
+      "source_normalized_sha256": "c42cf4734c48275f3b2427c5b11eda217a19f418d71b2ab6416cb8f2b5eaa8a4",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "2e3550a48b298206000cb064f84e3fed87bea053ed701dc43ee92b0698ceb97e",
+      "standalone_sha256": "3279e9c51f4103a137052db18b8b4f7dfd30672c5b09d59be17d7edd8360dac2",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
@@ -539,6 +539,15 @@
         "scope": "Complete actual flooded-body principal variance, same existing ratio law; no thresholds, dependencies, models or layouts changed.",
         "rollout": "Source only; cumulative paired packaging deferred during active goal.",
         "app_commit": "82350ea0b42bf2300531c71c290b793db3fa97ec"
+      },
+      "intermediate_pale_augmentation_review": {
+        "documentation": "docs/intermediate-pale-augmentation.md",
+        "reviewed_app_base_commit": "82350ea0b42bf2300531c71c290b793db3fa97ec",
+        "new_original_tests": 13,
+        "focused_tests_passed": 288,
+        "scope": "Complete omitted integer thresholds within unchanged175..205 interval, after full old roster; all existing25-level body/core and owner predicates retained.",
+        "rollout": "Source only; paired cumulative packaging deferred during active goal.",
+        "app_commit": "106af89348d2e89b0768cccf1b7900174bead69c"
       }
     },
     "PlayingTechniqueDetector.java": {
