@@ -446,17 +446,28 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "abc1b9a067397bca7d0d29c3664acb4f5d4cd2f4f223ee1d9de1a7ce44fc0a41",
-      "source_normalized_sha256": "209a12c8f4d0ae42268501a20fbb3411735ddd5d059f8aa1b259e204406bf1b1",
+      "source_sha256": "6cd64822b196297e3d0603a2856b938a85af2f7925d829d155e18685be59e0ae",
+      "source_normalized_sha256": "ef9076b43683be37f8b21aa0eb82da4b621e5ef441873999086757352a7ea0bc",
       "review_note": "Package-only counterpart. Preserve an existing measured staff endpoint when selected regional rows prove complete exterior rules and actual raw/model head+attached stem. Existing general retention, bar/header guards and all80othermethods remain unchanged. Original generated controls only, no captured score material or model changes.",
-      "standalone_sha256": "ffb790dafebfaa18cd63f69337fcee3e3ca4385a8ee1a6e4c365b03aa7913f1d",
+      "standalone_sha256": "d483ca65dc8d38254288440e3107af488c313f392995bc453b6c1c9efe1a2738",
       "reviewed_app_commit": "11932a2d19038dae95b1489bdbd07874f89be2d4",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
       "reviewed_app_state": "Recognition81 reviewed and committed; cumulative APK and matching worker deployment deferred during active goal.",
       "rounded_rule_separation_review_note": "Keep legacy floor-phase head contact veto. A rounded complete five-rule frame can separate a full-height bar from an off-axis, independently filled complete head with own opposite shaft and observed exterior paper before the bar. Partial, faint, on-axis, missing-rule and thick-rule evidence retains the existing veto. Six original procedural methods; no captured score pixels/model changes. No unused guard/helper candidate ported.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OmrMeasurePostProcessor.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OmrMeasurePostProcessor.java",
+      "dense_interrupted_barline_review": {
+        "documentation": "docs/dense-interrupted-barlines.md",
+      "reviewed_app_commit": "995ab74687f37c8cc860c08559aa4215a47a8db0",
+        "reviewed_app_base_commit": "f1e84d2fbbcd151fd05ac9dcff588fe6e1f9c542",
+        "scope": "Both endpoints and90percent aggregate ink can reach existing fixed-axis90percent/every-space/counter/branch/oscillation/head/rest proofs without an original long run. No raw thresholds, model, wire layout, arrays or caps change. Original successful branch work and returns remain exact; newly eligible work is bounded but not identical to prior total work.",
+        "original_regression": "DenseInterruptedBarlineTest.java",
+        "focused_tests": 1270,
+        "commercial_data_included": false,
+        "new_production_dependencies": 0,
+        "rollout": "Cumulative matched rollout deferred during active goal; released recognition116 predates repair."
+      }
     },
     "ShortFinalStaff.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortFinalStaff.java",
@@ -672,7 +683,7 @@
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
       "owned_triplet_context_review": {
         "documentation": "docs/owned-triplet-context.md",
-      "reviewed_app_commit": "f1e84d2fbbcd151fd05ac9dcff588fe6e1f9c542",
+        "reviewed_app_commit": "f1e84d2fbbcd151fd05ac9dcff588fe6e1f9c542",
         "reviewed_app_base_commit": "09661162ce10ee87a4abeeae1041253eac336cf2",
         "scope": "Complete real single-beam three-head ownership can qualify in-staff numeral context. Existing twelve photometric observations support deferred distinct-threshold consensus only after the entire legacy search would fail. Original successful returns retain priority. No model, raster probe count, thresholds, resource caps, audio or wire layouts change.",
         "original_regressions": [

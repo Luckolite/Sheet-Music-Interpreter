@@ -2268,8 +2268,13 @@ final class OmrMeasurePostProcessor {
             } else current = 0;
         }
         int span = bottom - top + 1;
-        if (!(touchesTop && touchesBottom && darkRows >= span * .68f && longest >= span * .48f))
-            return Integer.MIN_VALUE;
+        // Sparse scan-row breaks can divide a nearly complete bar into two runs.
+        // Only dense endpoint-to-endpoint ink may reach the unchanged fixed-axis,
+        // every-space, branch, counter and oscillation proofs without one long run.
+        if (!(touchesTop
+                && touchesBottom
+                && darkRows >= span * .68f
+                && (longest >= span * .48f || darkRows >= span * .90f))) return Integer.MIN_VALUE;
         if ((RoundedMeterCounters.matches(gray, width, height, centerX, top, bottom, gap)
                         && !completeCounterRulePair(
                                 gray, width, height, centerX, top, bottom, gap, physicalRows))
