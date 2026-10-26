@@ -51,10 +51,10 @@ public final class CourtesyKeySignatureTest {
     }
 
     @Test
-    public void courtesyCancellationIsExplicitNaturalKey() {
+    public void courtesyNaturalWithoutPriorRemainsUnqualified() {
         var f = page(true, true);
         natural(f, 518, 132);
-        assertEquals(List.of(0), f.keys());
+        assertEquals(List.of(), f.keys());
     }
 
     @Test

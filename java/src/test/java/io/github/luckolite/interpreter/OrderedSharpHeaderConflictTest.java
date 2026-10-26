@@ -109,7 +109,11 @@ public class OrderedSharpHeaderConflictTest {
     static Method method(String name) {
         Method m =
                 Arrays.stream(OmrScoreInterpreter.class.getDeclaredMethods())
-                        .filter(x -> x.getName().equals(name))
+                        .filter(
+                                x ->
+                                        x.getName().equals(name)
+                                                && (!name.equals("detectKeyChangesWithHeaders")
+                                                        || x.getParameterCount() == 9))
                         .findFirst()
                         .orElseThrow();
         m.setAccessible(true);
@@ -172,11 +176,11 @@ public class OrderedSharpHeaderConflictTest {
     }
 
     @Test
-    public void explicitNaturalHeaderRemainsNatural() throws Exception {
+    public void naturalHeaderWithoutPriorRemainsUnqualified() throws Exception {
         Page p = new Page(121, false, true, false);
         p.clearSymbols();
         p.natural();
-        assertEquals(List.of(new ScoreKeyChange(0, 0)), p.keys(false));
+        assertEquals(List.of(), p.keys(false));
     }
 
     @Test

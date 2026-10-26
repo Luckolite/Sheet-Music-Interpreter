@@ -9,8 +9,15 @@ import static org.junit.Assert.*;
 /** Original raster controls; no score-derived pixels. */
 public class SingleBarCancellationTest {
     private JoinedSignatureSharpTest page(boolean phantom) {
+        return page(phantom, -1);
+    }
+
+    private JoinedSignatureSharpTest page(boolean phantom, int prior) {
         var f = new JoinedSignatureSharpTest();
         f.row(100, 0, 0, false);
+        // Treble y132 is B; the second natural at y108 is E.
+        // Prove matching earlier B-flat / B-and-E-flat signatures explicitly.
+        for (int i = 0; i < -prior; i++) flat(f, 80 + i * 21, i == 0 ? 132 : 108);
         var m = f.measures.get(0);
         f.measures.set(0, new MeasureRegion(m.left(), 500f / f.W, m.top(), m.bottom()));
         if (phantom) f.measures.add(new MeasureRegion(501f / f.W, 560f / f.W, m.top(), m.bottom()));
@@ -18,6 +25,16 @@ public class SingleBarCancellationTest {
         natural(f);
         f.row(310, 0, 0, false);
         return f;
+    }
+
+    private void flat(JoinedSignatureSharpTest f, int x, int y) {
+        for (int yy = y - 28; yy <= y + 7; yy++)
+            for (int xx = x; xx <= x + 2; xx++) f.ink(xx, yy, 3);
+        for (int yy = y - 7; yy <= y + 7; yy++)
+            for (int xx = x + 2; xx <= x + 12; xx++) {
+                double r = Math.pow((xx - x - 3) / 9d, 2) + Math.pow((yy - y) / 7d, 2);
+                if (r <= 1 && r >= .35) f.ink(xx, yy, 3);
+            }
     }
 
     private void bar(JoinedSignatureSharpTest f, int x) {
@@ -33,33 +50,33 @@ public class SingleBarCancellationTest {
 
     @Test
     public void singleEndingBarAllowsCompleteNatural() {
-        assertEquals(List.of(0), page(false).keys());
+        assertEquals(List.of(-1, 0), page(false).keys());
     }
 
     @Test
     public void courtesyOnlyRegionCannotHideNatural() {
-        assertEquals(List.of(0), page(true).keys());
+        assertEquals(List.of(-1, 0), page(true).keys());
     }
 
     @Test
     public void followingPlayedNotePreservesLocalAccidental() {
         var f = page(false);
         for (int y = 129; y <= 137; y++) for (int x = 545; x <= 557; x++) f.ink(x, y, 2);
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
     public void closedFollowingMeasureIsNotCourtesy() {
         var f = page(false);
         bar(f, 600);
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
     public void followingRestIsNotCourtesy() {
         var f = page(false);
         for (int y = 131; y <= 137; y++) for (int x = 548; x <= 564; x++) f.ink(x, y, 1);
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
@@ -70,14 +87,14 @@ public class SingleBarCancellationTest {
                 f.labels[y * f.W + x] = 0;
                 f.gray[y * f.W + x] = (byte) 255;
             }
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
     public void pageEndCannotInventNextMeasure() {
         var f = page(false);
         f.measures.remove(1);
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
@@ -85,7 +102,7 @@ public class SingleBarCancellationTest {
         var f = page(false);
         for (int y = 108; y <= 156; y++)
             for (int x = 512; x <= 524; x++) f.gray[y * f.W + x] = (byte) 255;
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
@@ -93,23 +110,23 @@ public class SingleBarCancellationTest {
         var f = page(false);
         bar(f, 600);
         for (int y = 100; y <= 164; y++) for (int x = 600; x <= 601; x++) f.labels[y * f.W + x] = 0;
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
     public void unlabelledFollowingRestIsNotCourtesy() {
         var f = page(false);
         for (int y = 131; y <= 137; y++) for (int x = 548; x <= 564; x++) f.gray[y * f.W + x] = 0;
-        assertEquals(List.of(), f.keys());
+        assertEquals(List.of(-1), f.keys());
     }
 
     @Test
     public void multipleNaturalsCancelTogether() {
-        var f = page(false);
+        var f = page(false, -2);
         for (int y = 110; y <= 154; y++)
             for (int x = 513; x <= 523; x++)
                 if (f.labels[y * f.W + x] == 3) f.ink(x + 21, y - 24, 3);
-        assertEquals(List.of(0), f.keys());
+        assertEquals(List.of(-2, 0), f.keys());
     }
 
     @Test
@@ -129,8 +146,27 @@ public class SingleBarCancellationTest {
             var keys = OmrScoreInterpreter.analyze(l, g, w, h, f.measures).keyChanges();
             assertEquals(
                     "scale=" + scale,
-                    List.of(0),
+                    List.of(-1, 0),
                     keys.stream().map(ScoreKeyChange::fifths).toList());
         }
+    }
+
+    @Test
+    public void unknownPriorSingleNaturalRemainsUnqualified() {
+        assertEquals(List.of(), page(false, 0).keys());
+    }
+
+    @Test
+    public void unknownPriorCourtesyOnlyRegionRemainsUnqualified() {
+        assertEquals(List.of(), page(true, 0).keys());
+    }
+
+    @Test
+    public void unknownPriorMultipleNaturalsRemainUnqualified() {
+        var f = page(false, 0);
+        for (int y = 110; y <= 154; y++)
+            for (int x = 513; x <= 523; x++)
+                if (f.labels[y * f.W + x] == 3) f.ink(x + 21, y - 24, 3);
+        assertEquals(List.of(), f.keys());
     }
 }

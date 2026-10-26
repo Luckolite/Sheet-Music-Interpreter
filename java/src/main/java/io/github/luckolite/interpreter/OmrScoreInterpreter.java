@@ -46,6 +46,22 @@ final class OmrScoreInterpreter {
 
     static Analysis analyze(
             byte[] labels, byte[] gray, int width, int height, List<MeasureRegion> measures) {
+        return analyze(
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                new RawCourtesyBudget(64_000_000L, 16L * 1024 * 1024));
+    }
+
+    private static Analysis analyze(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            RawCourtesyBudget rawCourtesy) {
         if (labels == null
                 || labels.length != width * height
                 || width <= 0
@@ -1291,7 +1307,8 @@ final class OmrScoreInterpreter {
                 staffs,
                 accidentalCandidates,
                 heads,
-                headerAccidentals);
+                headerAccidentals,
+                rawCourtesy);
         List<AccidentalCandidate> localAccidentals =
                 new ArrayList<>(
                         joinLocalAccidentalFragments(
@@ -2452,7 +2469,8 @@ final class OmrScoreInterpreter {
                         accidentalCandidates,
                         joined.stream()
                                 .map(n -> n.head)
-                                .collect(java.util.stream.Collectors.toList()));
+                                .collect(java.util.stream.Collectors.toList()),
+                        rawCourtesy);
         List<Component> resolvedHeads =
                 joined.stream().map(n -> n.head).collect(java.util.stream.Collectors.toList());
         List<ScoreNoteEvent> withRests = new ArrayList<>();
@@ -6731,8 +6749,39 @@ final class OmrScoreInterpreter {
             List<Staff> staffs,
             List<AccidentalCandidate> candidates,
             List<Component> heads) {
+        return detectKeyChanges(
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                candidates,
+                heads,
+                RawCourtesyBudget.unavailable());
+    }
+
+    private static List<ScoreKeyChange> detectKeyChanges(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<AccidentalCandidate> candidates,
+            List<Component> heads,
+            RawCourtesyBudget rawCourtesy) {
         return detectKeyChangesWithHeaders(
-                labels, gray, width, height, measures, staffs, candidates, heads, null);
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                candidates,
+                heads,
+                null,
+                rawCourtesy);
     }
 
     private static List<ScoreKeyChange> detectKeyChangesWithHeaders(
@@ -6745,16 +6794,52 @@ final class OmrScoreInterpreter {
             List<AccidentalCandidate> candidates,
             List<Component> heads,
             List<Component> headerAccidentals) {
+        return detectKeyChangesWithHeaders(
+                labels,
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                candidates,
+                heads,
+                headerAccidentals,
+                RawCourtesyBudget.unavailable());
+    }
+
+    private static List<ScoreKeyChange> detectKeyChangesWithHeaders(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<AccidentalCandidate> candidates,
+            List<Component> heads,
+            List<Component> headerAccidentals,
+            RawCourtesyBudget rawCourtesy) {
         List<ScoreKeyChange> result = new ArrayList<>();
         candidates = joinSignatureFragments(labels, width, candidates, staffs);
         candidates = splitSignatureSharps(labels, width, height, candidates, staffs);
-        Map<Integer, Integer> courtesyKeys =
-                courtesyKeyChanges(labels, gray, width, height, measures, staffs, candidates);
+        List<CourtesyEnding> courtesyEnds = courtesyEndings(measures, staffs, height);
         for (int measureIndex = 0; measureIndex < measures.size(); measureIndex++) {
             MeasureRegion measure = measures.get(measureIndex);
             Map<Integer, Integer> votes = new HashMap<>();
-            if (courtesyKeys.containsKey(measureIndex))
-                votes.put(courtesyKeys.get(measureIndex), staffs.size() + 1);
+            Integer prior = result.isEmpty() ? null : result.get(result.size() - 1).fifths();
+            Integer courtesy =
+                    resolveCourtesy(
+                            courtesyVotesAt(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    courtesyEnds,
+                                    candidates,
+                                    measureIndex,
+                                    prior,
+                                    rawCourtesy),
+                            prior);
+            if (courtesy != null) votes.put(courtesy, staffs.size() + 1);
             for (Staff staff : staffs) {
                 float staffCenter = (staff.top + staff.bottom) * .5f / height;
                 float tolerance = staff.gap * .75f / height;
@@ -6927,7 +7012,16 @@ final class OmrScoreInterpreter {
                                 != null) continue;
                     }
                     if (accidental != ScoreNoteEvent.ACCIDENTAL_FROM_KEY) {
-                        glyphs.add(new SignatureGlyph(signatureX, accidental));
+                        glyphs.add(
+                                accidental == ScoreNoteEvent.ACCIDENTAL_NATURAL
+                                        ? new SignatureGlyph(
+                                                signatureX,
+                                                accidental,
+                                                naturalGlyphPitch(
+                                                        labels, width, height, candidate,
+                                                        staff.gap),
+                                                glyph)
+                                        : new SignatureGlyph(signatureX, accidental));
                         recognized.put(candidate, signatureX);
                     }
                 }
@@ -7093,7 +7187,21 @@ final class OmrScoreInterpreter {
                         && sharps > 1
                         && stackedSignatureSharpColumn(
                                 labels, width, height, run, recognized, staff)) continue;
-                int fifths = naturals > 0 ? 0 : flats > 0 ? -flats : sharps;
+                Integer resolved =
+                        naturals > 0
+                                ? KeyVote.cancellation(
+                                                cancellationEvidence(
+                                                        labels,
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        run,
+                                                        staff,
+                                                        candidates))
+                                        .resolve(prior)
+                                : Integer.valueOf(flats > 0 ? -flats : sharps);
+                if (resolved == null) continue;
+                int fifths = resolved;
                 if (clef != null
                         && !result.isEmpty()
                         && fifths > 0
@@ -7104,9 +7212,15 @@ final class OmrScoreInterpreter {
                         && fifths > 0
                         && result.get(result.size() - 1).fifths() > fifths
                         && unfinishedSharpTail(
-                                labels, gray, width, height, candidates, run, staff, firstHead,
-                                !cancelledSignature))
-                    continue;
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                candidates,
+                                run,
+                                staff,
+                                firstHead,
+                                !cancelledSignature)) continue;
                 if (headerAccidentals != null
                         && (cancelledSignature
                                 || signatureHeader
@@ -7142,16 +7256,12 @@ final class OmrScoreInterpreter {
     }
 
     /** Complete end-of-system courtesy signatures apply at the next row. */
-    private static Map<Integer, Integer> courtesyKeyChanges(
-            byte[] labels,
-            byte[] gray,
-            int width,
-            int height,
-            List<MeasureRegion> measures,
-            List<Staff> staffs,
-            List<AccidentalCandidate> candidates) {
-        var result = new HashMap<Integer, Integer>();
-        var conflicted = new java.util.HashSet<Integer>();
+    private record CourtesyEnding(Staff staff, int lastMeasure, float boundary) {}
+
+    /** Same original ending selection, prepared once without querying raw ink. */
+    private static List<CourtesyEnding> courtesyEndings(
+            List<MeasureRegion> measures, List<Staff> staffs, int height) {
+        var endings = new ArrayList<CourtesyEnding>();
         for (Staff staff : staffs) {
             float center = (staff.top + staff.bottom) * .5f / height, gap = staff.gap;
             int last = -1;
@@ -7164,16 +7274,48 @@ final class OmrScoreInterpreter {
             var measure = measures.get(last);
             var next = measures.get(last + 1);
             if (next.top() <= measure.top() + gap * 3 / height) continue;
-            float boundary = measure.right() * width;
+            endings.add(new CourtesyEnding(staff, last, measure.right()));
+        }
+        return List.copyOf(endings);
+    }
+
+    /** Evaluate once at the actual onset; unknown/zero prior never spends NEW raw work. */
+    private static List<KeyVote> courtesyVotesAt(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<CourtesyEnding> endings,
+            List<AccidentalCandidate> candidates,
+            int onset,
+            Integer prior,
+            RawCourtesyBudget rawCourtesy) {
+        var result = new ArrayList<KeyVote>();
+        if (prior == null || prior == 0) rawCourtesy = null;
+        for (CourtesyEnding ending : endings) {
+            if (ending.lastMeasure + 1 != onset) continue;
+            Staff staff = ending.staff;
+            float gap = staff.gap, boundary = ending.boundary * width;
             if (!hasDoubleBar(labels, gray, width, height, boundary, staff)) {
                 boundary =
                         provedNaturalCourtesyBoundary(
-                                labels, gray, width, height, boundary, staff, candidates);
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                boundary,
+                                staff,
+                                candidates,
+                                rawCourtesy);
                 if (!Float.isFinite(boundary)) continue;
             }
             var glyphs = new ArrayList<SignatureGlyph>();
+            var naturalSeeds = new java.util.IdentityHashMap<SignatureGlyph, AccidentalCandidate>();
+            var naturalBodies =
+                    new java.util.IdentityHashMap<SignatureGlyph, CourtesyNaturalBody>();
             for (var candidate : candidates) {
                 var c = candidate.component;
+                CourtesyNaturalBody naturalBody = null;
                 if (c.centerX < boundary + gap * .1f
                         || c.centerX > boundary + gap * 8
                         || c.centerY < staff.top - gap * 2
@@ -7205,11 +7347,55 @@ final class OmrScoreInterpreter {
                             accidental = ScoreNoteEvent.ACCIDENTAL_NATURAL;
                     }
                 }
+                if (accidental == ScoreNoteEvent.ACCIDENTAL_NATURAL) {
+                    y = naturalGlyphPitch(labels, width, height, candidate, gap);
+                    if (!Float.isFinite(y)) {
+                        CourtesyNaturalBody body =
+                                rawCourtesyNaturalBody(gray, width, height, c, gap, rawCourtesy);
+                        if (body != null) {
+                            y = body.pitchY;
+                            naturalBody = body;
+                        }
+                    }
+                }
                 if (accidental == ScoreNoteEvent.ACCIDENTAL_FROM_KEY) continue;
-                boolean duplicate = false;
-                for (var existing : glyphs)
-                    if (Math.abs(existing.x - sx) < gap * .5f) duplicate = true;
-                if (!duplicate) glyphs.add(new SignatureGlyph(sx, accidental, y));
+                if (accidental == ScoreNoteEvent.ACCIDENTAL_NATURAL) {
+                    boolean owned = false;
+                    for (var existing : glyphs) {
+                        CourtesyNaturalBody priorBody = naturalBodies.get(existing);
+                        if (priorBody != null
+                                && priorBody.ownsSeed(candidate, labels, width, rawCourtesy)) {
+                            owned = true;
+                            break;
+                        }
+                    }
+                    if (owned) continue;
+                    if (naturalBody != null)
+                        for (var iterator = glyphs.iterator(); iterator.hasNext(); ) {
+                            SignatureGlyph previous = iterator.next();
+                            AccidentalCandidate seed = naturalSeeds.get(previous);
+                            if (seed != null
+                                    && naturalBody.ownsSeed(seed, labels, width, rawCourtesy)) {
+                                iterator.remove();
+                                naturalSeeds.remove(previous);
+                                naturalBodies.remove(previous);
+                            }
+                        }
+                    SignatureGlyph natural =
+                            new SignatureGlyph(
+                                    sx,
+                                    accidental,
+                                    y,
+                                    naturalBody == null ? null : naturalBody.component);
+                    glyphs.add(natural);
+                    naturalSeeds.put(natural, candidate);
+                    if (naturalBody != null) naturalBodies.put(natural, naturalBody);
+                } else {
+                    boolean duplicate = false;
+                    for (var existing : glyphs)
+                        if (Math.abs(existing.x - sx) < gap * .5f) duplicate = true;
+                    if (!duplicate) glyphs.add(new SignatureGlyph(sx, accidental, y));
+                }
             }
             glyphs.sort(Comparator.comparingDouble(SignatureGlyph::x));
             if (glyphs.isEmpty() || glyphs.size() > 7 || glyphs.get(0).x - boundary > gap * 2)
@@ -7232,13 +7418,211 @@ final class OmrScoreInterpreter {
                                                         : 4))) valid = false;
             }
             if (!valid) continue;
-            int fifths = family == ScoreNoteEvent.ACCIDENTAL_NATURAL ? 0 : family * glyphs.size();
-            if (result.containsKey(last + 1) && result.get(last + 1) != fifths) {
-                result.remove(last + 1);
-                conflicted.add(last + 1);
-            } else if (!conflicted.contains(last + 1)) result.put(last + 1, fifths);
+            KeyVote vote =
+                    family == ScoreNoteEvent.ACCIDENTAL_NATURAL
+                            ? KeyVote.cancellation(
+                                    cancellationEvidence(
+                                            labels, gray, width, height, glyphs, staff, candidates))
+                            : KeyVote.signature(family * glyphs.size());
+            result.add(vote);
         }
         return result;
+    }
+
+    /** Deferred until the sequential accepted prior key is available. */
+    private record NaturalCancellation(
+            List<Integer> pitchClasses, int staffIndex, int staffCount, boolean qualified) {
+        NaturalCancellation {
+            pitchClasses = List.copyOf(pitchClasses);
+        }
+
+        boolean cancels(Integer prior) {
+            if (!qualified
+                    || prior == null
+                    || prior == 0
+                    || Math.abs(prior) > 7
+                    || pitchClasses.size() != Math.abs(prior)) return false;
+            int seen = 0, expected = 0;
+            int[] order = prior > 0 ? TieKeyOrder.SHARPS : TieKeyOrder.FLATS;
+            for (int i = 0; i < Math.abs(prior); i++) expected |= 1 << order[i];
+            for (int pitch : pitchClasses) {
+                if (pitch < 0 || pitch > 6 || (seen & (1 << pitch)) != 0) return false;
+                seen |= 1 << pitch;
+            }
+            return seen == expected;
+        }
+    }
+
+    private record KeyVote(int fifths, NaturalCancellation cancellation) {
+        static KeyVote signature(int fifths) {
+            return new KeyVote(fifths, null);
+        }
+
+        static KeyVote cancellation(NaturalCancellation evidence) {
+            return new KeyVote(0, evidence);
+        }
+
+        Integer resolve(Integer prior) {
+            return cancellation == null
+                    ? Integer.valueOf(fifths)
+                    : cancellation.cancels(prior) ? Integer.valueOf(0) : null;
+        }
+    }
+
+    private static Integer resolveCourtesy(List<KeyVote> evidence, Integer prior) {
+        if (evidence == null || evidence.isEmpty()) return null;
+        Integer resolved = null;
+        for (KeyVote vote : evidence) {
+            Integer value = vote.resolve(prior);
+            if (value == null || resolved != null && !resolved.equals(value)) return null;
+            resolved = value;
+        }
+        return resolved;
+    }
+
+    /** Actual complete clef and actual staff frame bind each cancellation's musical lane. */
+    private static NaturalCancellation cancellationEvidence(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<SignatureGlyph> naturals,
+            Staff staff,
+            List<AccidentalCandidate> candidates) {
+        var classes = new ArrayList<Integer>();
+        if (naturals.isEmpty() || naturals.size() > 7)
+            return new NaturalCancellation(classes, staff.index, staff.count, false);
+        float first = naturals.get(0).x;
+        int clef = ScoreNoteEvent.CLEF_UNKNOWN;
+        float lastClef = Float.NEGATIVE_INFINITY;
+        for (AccidentalCandidate candidate : candidates) {
+            Component c = candidate.component;
+            if (c.maxX >= first
+                    || c.centerY < staff.top - staff.gap * 2
+                    || c.centerY > staff.bottom + staff.gap * 2) continue;
+            boolean treble = completeHeaderTreble(c, staff);
+            boolean bass = !treble && rawBassClef(c, labels, gray, width, height, staff);
+            if ((!treble && !bass) || c.maxX < lastClef) continue;
+            int found = treble ? ScoreNoteEvent.CLEF_TREBLE : ScoreNoteEvent.CLEF_BASS;
+            if (c.maxX == lastClef && clef != found)
+                return new NaturalCancellation(classes, staff.index, staff.count, false);
+            clef = found;
+            lastClef = c.maxX;
+        }
+        if (clef == ScoreNoteEvent.CLEF_UNKNOWN)
+            return new NaturalCancellation(classes, staff.index, staff.count, false);
+        for (SignatureGlyph glyph : naturals) {
+            Staff frame = courtesyPrintedFrame(staff, glyph.x, width);
+            if (glyph.accidental != ScoreNoteEvent.ACCIDENTAL_NATURAL
+                    || !Float.isFinite(glyph.pitchY)
+                    || frame == null
+                    || !Float.isFinite(frame.gap)
+                    || frame.gap < 3
+                    || frame.gap > 64)
+                return new NaturalCancellation(classes, staff.index, staff.count, false);
+            float steps = (frame.bottom - glyph.pitchY) * 2 / frame.gap;
+            int step = Math.round(steps);
+            if (!Float.isFinite(steps) || Math.abs(steps - step) > .35f)
+                return new NaturalCancellation(classes, staff.index, staff.count, false);
+            classes.add(Math.floorMod(clef + step, 7));
+        }
+        return new NaturalCancellation(classes, staff.index, staff.count, true);
+    }
+
+    /** Charged upper work/allocation accounting for ONLY the new optional raw path. */
+    private static final class RawCourtesyBudget {
+        final long workLimit, byteLimit;
+        long workUsed, bytesUsed;
+        boolean exhausted;
+
+        RawCourtesyBudget(long workLimit, long byteLimit) {
+            if (workLimit < 0 || byteLimit < 0)
+                throw new IllegalArgumentException("Negative budget");
+            this.workLimit = workLimit;
+            this.byteLimit = byteLimit;
+        }
+
+        static RawCourtesyBudget unavailable() {
+            return new RawCourtesyBudget(0, 0);
+        }
+
+        boolean prepay(long work, long bytes) {
+            if (work < 0 || bytes < 0) throw new IllegalArgumentException("Negative charge");
+            if (exhausted || work > workLimit - workUsed || bytes > byteLimit - bytesUsed) {
+                exhausted = true;
+                return false;
+            }
+            workUsed += work;
+            bytesUsed += bytes;
+            return true;
+        }
+    }
+
+    private static boolean prepayRawNaturalAttempt(
+            RawCourtesyBudget budget, int w, int h, int seedArea, float gap) {
+        long n = (long) w * h;
+        long eligible =
+                n / Math.max(1L, (long) Math.ceil(Math.max(gap * gap * .3f, seedArea * .5f)));
+        long reach = Math.max(3, Math.round(gap * .6f));
+        // Crop, run-flood, every possible eligible exact retention and shape/crop-end check.
+        long work =
+                h * (2 * reach + 2)
+                        + 72 * n
+                        + eligible * (192 * n + 4L * w * (Math.max(2, Math.round(gap * .16f)) + 1));
+        long bytes = 96 * n + 4096 + eligible * (6 * n + 4L * w + 192);
+        return budget.prepay(work, bytes);
+    }
+
+    /** Necessary existing voter/bar predicates run before optional raw reconstruction. */
+    private static boolean rawCourtesyBarPossible(
+            byte[] gray,
+            int width,
+            int height,
+            Component seed,
+            float gap,
+            Staff staff,
+            RawCourtesyBudget budget) {
+        if (budget == null) return false;
+        int margin = Math.max(1, Math.round(gap * .16f));
+        int left = Math.max(0, (int) Math.floor(seed.minX - margin - gap * 1.5f) - 1);
+        int right = Math.min(width - 1, (int) Math.ceil(seed.maxX - gap * .25f) + 1);
+        float maxGap =
+                staff.pitchTrack != null
+                        ? 64
+                        : staff.printedPhase || staff.printedSlope ? staff.pitchGap : staff.gap;
+        if (!Float.isFinite(maxGap) || maxGap < 3 || maxGap > 64 || right < left) return false;
+        long columns = right - left + 1L;
+        // Only verified tracks are interpolated; their frozen producers admit<=13 samples.
+        if (!budget.prepay(columns * ((long) Math.ceil(32 * maxGap) + 512), columns * 128 + 128))
+            return false;
+        for (int x = right; x >= left; x--) {
+            Staff frame = courtesyPrintedFrame(staff, x, width);
+            if (frame != null && fullStaffRule(gray, width, height, x, frame)) return true;
+        }
+        return false;
+    }
+
+    private static boolean prepayCourtesyGuards(
+            RawCourtesyBudget budget,
+            CourtesyNaturalBody body,
+            int width,
+            int height,
+            float gap,
+            Staff staff) {
+        long w = body.component.maxX - body.component.minX + 3L;
+        long h = body.component.maxY - body.component.minY + 3L;
+        long n = w * h;
+        long columns = 2L * (long) Math.ceil(gap) + 4;
+        long from = Math.max(0, (long) Math.floor(body.component.minX - gap * 1.5f));
+        float maxGap =
+                staff.pitchTrack != null
+                        ? 64
+                        : staff.printedPhase || staff.printedSlope ? staff.pitchGap : staff.gap;
+        if (!Float.isFinite(maxGap) || maxGap < 3 || maxGap > 64) return false;
+        long rows = Math.min(height, (long) Math.ceil(8 * maxGap) + 4);
+        long work = 32 * n + columns * (1024 + 32 * rows * (width - from));
+        long bytes = 5 * n + body.ink.length + 128 * columns + 512;
+        return budget.prepay(work, bytes);
     }
 
     // A complete natural beyond an unplayed physical staff ending cancels the key.
@@ -7250,40 +7634,77 @@ final class OmrScoreInterpreter {
             float regionRight,
             Staff staff,
             List<AccidentalCandidate> candidates) {
+        return provedNaturalCourtesyBoundary(
+                labels,
+                gray,
+                width,
+                height,
+                regionRight,
+                staff,
+                candidates,
+                RawCourtesyBudget.unavailable());
+    }
+
+    private static float provedNaturalCourtesyBoundary(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            float regionRight,
+            Staff staff,
+            List<AccidentalCandidate> candidates,
+            RawCourtesyBudget rawCourtesy) {
         if (gray == null) return Float.NaN;
         float gap = staff.gap;
         for (var candidate : candidates) {
             var c = candidate.component;
+            CourtesyNaturalBody rawOwned = null;
             if (c.centerX < regionRight - gap * 4
                     || c.centerX > regionRight + gap * 2
                     || c.centerY < staff.top - gap * 2
-                    || c.centerY > staff.bottom + gap * 2
-                    || !isNaturalGlyph(labels, width, height, candidate, gap)) continue;
-            int cx = Math.round(c.maxX + gap), cy = Math.round(c.centerY);
-            Component crop = new Component(1, cx, cx, cy, cy, cx, c.centerY);
-            if (!rawNaturalAtSeed(gray, width, height, c, crop, gap)) continue;
+                    || c.centerY > staff.bottom + gap * 2) continue;
+            if (isNaturalGlyph(labels, width, height, candidate, gap)) {
+                int cx = Math.round(c.maxX + gap), cy = Math.round(c.centerY);
+                Component crop = new Component(1, cx, cx, cy, cy, cx, c.centerY);
+                if (!rawNaturalAtSeed(gray, width, height, c, crop, gap)) continue;
+            } else {
+                // A semantic connector is only a seed. All later ownership checks
+                // use the complete independently proved raw body, never its fragment box.
+                if (!rawCourtesyBarPossible(gray, width, height, c, gap, staff, rawCourtesy))
+                    continue;
+                CourtesyNaturalBody body =
+                        rawCourtesyNaturalBody(gray, width, height, c, gap, rawCourtesy);
+                if (body == null) continue;
+                if (!prepayCourtesyGuards(rawCourtesy, body, width, height, gap, staff)) continue;
+                c = body.component;
+                rawOwned = body.withHeadOwnership(labels, width, height);
+            }
             int right = Math.min(width - 1, Math.round(c.minX - gap * .25f));
             int left = Math.max(0, Math.round(c.minX - gap * 1.5f));
             for (int x = right; x >= left; x--) {
-                if (!fullStaffRule(gray, width, height, x, staff)) continue;
+                Staff physical = rawOwned != null ? courtesyPrintedFrame(staff, x, width) : staff;
+                if (physical == null || !fullStaffRule(gray, width, height, x, physical)) continue;
                 int barLeft = x;
-                while (barLeft > left && fullStaffRule(gray, width, height, barLeft - 1, staff))
+                while (barLeft > left && fullStaffRule(gray, width, height, barLeft - 1, physical))
                     barLeft--;
                 if (x - barLeft + 1 > gap * .35f) {
                     x = barLeft;
                     continue;
                 }
                 boolean played = false;
-                int top = Math.max(0, Math.round(staff.top - gap * 2));
-                int bottom = Math.min(height - 1, Math.round(staff.bottom + gap * 2));
+                int top = Math.max(0, Math.round(physical.top - physical.gap * 2));
+                int bottom = Math.min(height - 1, Math.round(physical.bottom + physical.gap * 2));
                 for (int y = top; y <= bottom && !played; y++)
                     for (int xx = x + 1; xx < width; xx++)
                         if (labels[y * width + xx] == OmrMeasurePostProcessor.NOTEHEAD
+                                        && (rawOwned == null || !rawOwned.ownsHead(xx, y))
                                 || xx > x + gap * .25f
-                                        && !(xx >= c.minX
-                                                && xx <= c.maxX
-                                                && y >= c.minY
-                                                && y <= c.maxY)
+                                        && !(rawOwned != null
+                                                ? rawOwned.owns(xx, y)
+                                                : xx >= c.minX
+                                                        && xx <= c.maxX
+                                                        && y >= c.minY
+                                                        && y <= c.maxY)
                                         && labels[y * width + xx]
                                                 == OmrMeasurePostProcessor.STEM_OR_REST) {
                             played = true;
@@ -7291,14 +7712,20 @@ final class OmrScoreInterpreter {
                         }
                 int unownedInk = 0;
                 for (int y = top; y <= bottom && !played; y++) {
-                    float line = (y - staff.top) / gap;
+                    float line = (y - physical.top) / physical.gap;
                     if (line >= -.18f && line <= 4.18f && Math.abs(line - Math.round(line)) < .18f)
                         continue;
                     for (int xx = Math.min(width - 1, Math.round(x + gap * .25f));
                             xx < width;
                             xx++) {
                         if ((gray[y * width + xx] & 255) >= 180) continue;
-                        boolean owned = xx >= c.minX && xx <= c.maxX && y >= c.minY && y <= c.maxY;
+                        boolean owned =
+                                rawOwned != null
+                                        ? rawOwned.owns(xx, y)
+                                        : xx >= c.minX
+                                                && xx <= c.maxX
+                                                && y >= c.minY
+                                                && y <= c.maxY;
                         for (int yy = Math.max(0, y - 1);
                                 yy <= Math.min(height - 1, y + 1) && !owned;
                                 yy++)
@@ -7322,6 +7749,208 @@ final class OmrScoreInterpreter {
             }
         }
         return Float.NaN;
+    }
+
+    /** Use only the existing printed phase/slope or bounded verified track at this column. */
+    private static Staff courtesyPrintedFrame(Staff staff, float x, int width) {
+        if (staff.pitchTrack != null && staff.pitchTrack.verifiedAt(x)) {
+            Staff frame = headerPrintedFrame(staff, x);
+            return frame.gap >= 3 && frame.gap <= 64 ? frame : null;
+        }
+        if ((staff.printedPhase || staff.printedSlope)
+                && Float.isFinite(staff.pitchBottom)
+                && Float.isFinite(staff.pitchGap)
+                && Float.isFinite(staff.pitchSlope)
+                && staff.pitchGap >= 3
+                && staff.pitchGap <= 64) {
+            float bottom = staff.pitchBottom + staff.pitchSlope * (x - width * .5f);
+            return new Staff(bottom - 4 * staff.pitchGap, bottom, staff.pitchGap);
+        }
+        return staff.printedPhase || staff.printedSlope ? null : staff;
+    }
+
+    /** The private mask is produced once by exact-component retention and never escapes. */
+    private record CourtesyNaturalBody(
+            Component component,
+            byte[] ink,
+            int width,
+            int left,
+            int top,
+            byte[] heads,
+            float pitchY) {
+        // A model island belongs to the complete raw glyph only if the WHOLE
+        // island is contained by that body and intersects its retained literal ink.
+        // The one-pixel exterior proves the island was not clipped by this crop.
+        CourtesyNaturalBody withHeadOwnership(byte[] labels, int pageWidth, int pageHeight) {
+            int x0 = Math.max(0, component.minX - 1), y0 = Math.max(0, component.minY - 1);
+            int x1 = Math.min(pageWidth - 1, component.maxX + 1);
+            int y1 = Math.min(pageHeight - 1, component.maxY + 1);
+            int w = x1 - x0 + 1, h = y1 - y0 + 1;
+            boolean[] seen = new boolean[w * h];
+            int[] queue = new int[w * h];
+            byte[] owned = new byte[ink.length];
+            for (int at = 0; at < seen.length; at++) {
+                if (seen[at]
+                        || labels[(y0 + at / w) * pageWidth + x0 + at % w]
+                                != OmrMeasurePostProcessor.NOTEHEAD) continue;
+                int count = 1;
+                queue[0] = at;
+                seen[at] = true;
+                boolean contained = true, overlap = false;
+                for (int i = 0; i < count; i++) {
+                    int local = queue[i], x = local % w, y = local / w;
+                    int gx = x0 + x, gy = y0 + y;
+                    if (gx < component.minX
+                            || gx > component.maxX
+                            || gy < component.minY
+                            || gy > component.maxY) contained = false;
+                    if (owns(gx, gy)) overlap = true;
+                    for (int yy = Math.max(0, y - 1); yy <= Math.min(h - 1, y + 1); yy++)
+                        for (int xx = Math.max(0, x - 1); xx <= Math.min(w - 1, x + 1); xx++) {
+                            int next = yy * w + xx;
+                            if (!seen[next]
+                                    && labels[(y0 + yy) * pageWidth + x0 + xx]
+                                            == OmrMeasurePostProcessor.NOTEHEAD) {
+                                seen[next] = true;
+                                queue[count++] = next;
+                            }
+                        }
+                }
+                if (contained && overlap)
+                    for (int i = 0; i < count; i++) {
+                        int local = queue[i], gx = x0 + local % w, gy = y0 + local / w;
+                        owned[(gy - top) * width + gx - left] = 1;
+                    }
+            }
+            return new CourtesyNaturalBody(component, ink, width, left, top, owned, pitchY);
+        }
+
+        boolean ownsSeed(
+                AccidentalCandidate seed, byte[] labels, int pageWidth, RawCourtesyBudget budget) {
+            Component c = seed.component;
+            if (c.minX < component.minX
+                    || c.maxX > component.maxX
+                    || c.minY < component.minY
+                    || c.maxY > component.maxY) return false;
+            long area = (long) (c.maxX - c.minX + 1) * (c.maxY - c.minY + 1);
+            if (budget == null || !budget.prepay(8 * area + 32, 0)) return false;
+            for (int y = c.minY; y <= c.maxY; y++)
+                for (int x = c.minX; x <= c.maxX; x++)
+                    if (seed.matches(labels[y * pageWidth + x]) && owns(x, y)) return true;
+            return false;
+        }
+
+        boolean ownsHead(int x, int y) {
+            int xx = x - left, yy = y - top;
+            return xx >= 0
+                    && xx < width
+                    && yy >= 0
+                    && yy < ink.length / width
+                    && heads != null
+                    && heads[yy * width + xx] != 0;
+        }
+
+        boolean owns(int x, int y) {
+            int xx = x - left, yy = y - top;
+            return xx >= 0
+                    && xx < width
+                    && yy >= 0
+                    && yy < ink.length / width
+                    && ink[yy * width + xx] != 0;
+        }
+    }
+
+    /** Complete literal natural body for an unplayed line-ending cancellation. */
+    private static CourtesyNaturalBody rawCourtesyNaturalBody(
+            byte[] gray,
+            int width,
+            int height,
+            Component seed,
+            float gap,
+            RawCourtesyBudget rawCourtesy) {
+        if (rawCourtesy == null
+                || gray == null
+                || !Float.isFinite(gap)
+                || gap < 3
+                || gap > 64
+                || seed.minX < 0
+                || seed.minY < 0
+                || seed.maxX >= width
+                || seed.maxY >= height
+                || seed.maxX < seed.minX
+                || seed.maxY < seed.minY
+                || seed.maxX - seed.minX + 1 > gap * 1.80f
+                || seed.maxY - seed.minY + 1 > gap * 3.70f) return null;
+        if (!rawCourtesy.prepay(64, 128)) return null;
+        for (int margin : new int[] {0, Math.max(1, Math.round(gap * .16f))})
+            for (int threshold : new int[] {225, 180}) {
+                int left = Math.max(0, seed.minX - margin);
+                int right = Math.min(width - 1, seed.maxX + margin);
+                int top = Math.max(0, Math.round(seed.centerY - gap * 1.8f));
+                int bottom = Math.min(height - 1, Math.round(seed.centerY + gap * 1.8f));
+                int w = right - left + 1, h = bottom - top + 1;
+                if (!prepayRawNaturalAttempt(rawCourtesy, w, h, seed.area, gap)) return null;
+                byte[] ink = new byte[w * h];
+                int reach = Math.max(3, Math.round(gap * .6f));
+                int probe = Math.max(2, Math.round(gap * .2f));
+                for (int y = top; y <= bottom; y++) {
+                    int outside = 0, dark = 0;
+                    for (int x = Math.max(0, left - reach);
+                            x <= Math.min(width - 1, right + reach);
+                            x++)
+                        if (x < left || x > right) {
+                            outside++;
+                            if ((gray[y * width + x] & 255) <= threshold) dark++;
+                        }
+                    boolean rule = outside > 0 && dark >= outside * .8f;
+                    for (int x = left; x <= right; x++) {
+                        if ((gray[y * width + x] & 255) > threshold) continue;
+                        if (rule
+                                && (y < probe
+                                        || y + probe >= height
+                                        || (gray[(y - probe) * width + x] & 255) > threshold
+                                        || (gray[(y + probe) * width + x] & 255) > threshold))
+                            continue;
+                        ink[(y - top) * w + x - left] = OmrMeasurePostProcessor.SYMBOL;
+                    }
+                }
+                for (Component part : findComponents(ink, w, h, OmrMeasurePostProcessor.SYMBOL)) {
+                    if (part.area < Math.max(gap * gap * .3f, seed.area * .5f)
+                            || Math.abs(top + (part.minY + part.maxY) * .5f - seed.centerY)
+                                    > gap * .45f
+                            || left + part.maxX < seed.minX
+                            || left + part.minX > seed.maxX) continue;
+                    byte[] separate =
+                            retainExactComponent(ink, w, h, part, OmrMeasurePostProcessor.SYMBOL);
+                    if (rawStrokeLeavesCrop(gray, width, height, separate, w, h, left, top, gap))
+                        continue;
+                    float pitch =
+                            naturalGlyphPitchCore(
+                                    separate,
+                                    w,
+                                    h,
+                                    new AccidentalCandidate(part, OmrMeasurePostProcessor.SYMBOL),
+                                    gap,
+                                    true);
+                    if (Float.isFinite(pitch))
+                        return new CourtesyNaturalBody(
+                                new Component(
+                                        part.area,
+                                        left + part.minX,
+                                        left + part.maxX,
+                                        top + part.minY,
+                                        top + part.maxY,
+                                        left + part.centerX,
+                                        top + part.centerY),
+                                separate,
+                                w,
+                                left,
+                                top,
+                                null,
+                                top + pitch);
+                }
+            }
+        return null;
     }
 
     private static List<Component> sharpCrossbarHeads(
@@ -18216,6 +18845,32 @@ final class OmrScoreInterpreter {
 
     private static boolean isNaturalGlyphCore(
             byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
+        return Float.isFinite(naturalGlyphPitchCore(labels, width, height, candidate, gap, false));
+    }
+
+    private static float naturalGlyphPitch(
+            byte[] labels, int width, int height, AccidentalCandidate candidate, float gap) {
+        AccidentalInk isolated = isolatedAccidentalInk(labels, width, height, candidate, gap);
+        if (isolated == null)
+            return naturalGlyphPitchCore(labels, width, height, candidate, gap, true);
+        float local =
+                naturalGlyphPitchCore(
+                        isolated.labels,
+                        isolated.width,
+                        isolated.height,
+                        isolated.candidate,
+                        gap,
+                        true);
+        return Float.isFinite(local) ? candidate.component.minY + local : Float.NaN;
+    }
+
+    private static float naturalGlyphPitchCore(
+            byte[] labels,
+            int width,
+            int height,
+            AccidentalCandidate candidate,
+            float gap,
+            boolean computePitch) {
         Component glyph = candidate.component;
         int glyphWidth = glyph.maxX - glyph.minX + 1;
         int glyphHeight = glyph.maxY - glyph.minY + 1;
@@ -18226,7 +18881,7 @@ final class OmrScoreInterpreter {
                 || glyphHeight < glyphWidth * 1.45f
                 || glyphHeight > glyphWidth * 4.50f
                 || glyph.area < gap * gap * .30f
-                || glyph.area > gap * gap * 2.30f) return false;
+                || glyph.area > gap * gap * 2.30f) return Float.NaN;
 
         int[] columns = new int[glyphWidth];
         for (int y = Math.max(0, glyph.minY); y <= Math.min(height - 1, glyph.maxY); y++)
@@ -18244,7 +18899,7 @@ final class OmrScoreInterpreter {
             if (columns[column] > columns[rightSpine]) rightSpine = column;
         if (rightSpine - leftSpine < glyphWidth * .28f
                 || columns[leftSpine] < glyphHeight * .38f
-                || columns[rightSpine] < glyphHeight * .38f) return false;
+                || columns[rightSpine] < glyphHeight * .38f) return Float.NaN;
 
         int radius = Math.max(0, Math.round(glyphWidth * .09f));
         // Natural connectors stay between the spines. A glyph whose ink
@@ -18277,7 +18932,7 @@ final class OmrScoreInterpreter {
         // Separate fragments cannot lengthen a spine across mostly empty space.
         // Allow short scan breaks while requiring ink along each offset stem.
         if (leftRows < (leftBottom - leftTop + 1) * .65f
-                || rightRows < (rightBottom - rightTop + 1) * .65f) return false;
+                || rightRows < (rightBottom - rightTop + 1) * .65f) return Float.NaN;
         if (overhangs
                 && ((leftSpine > radius + 1 || glyphWidth - 1 - rightSpine > radius + 1)
                                 && !compactNaturalFringe(
@@ -18289,15 +18944,15 @@ final class OmrScoreInterpreter {
                                         rightSpine,
                                         radius)
                         || Math.min(rightTop - leftTop, rightBottom - leftBottom) < gap * .45f))
-            return false;
+            return Float.NaN;
         int endpointOffset = Math.max(1, Math.round(glyphHeight * .05f));
         if (rightTop - leftTop < endpointOffset || rightBottom - leftBottom < endpointOffset)
-            return false;
+            return Float.NaN;
 
         // A flag can have two offset sides, but only one diagonal connector.
         // Require two actual ink bridges separated by an open counter.
         int innerLeft = leftSpine + radius + 1, innerRight = rightSpine - radius - 1;
-        if (innerLeft > innerRight) return false;
+        if (innerLeft > innerRight) return Float.NaN;
         int span = innerRight - innerLeft + 1;
         for (float slope : new float[] {0, -.3f, -.6f, .3f, .6f}) {
             int firstConnector = -1, openRows = 0;
@@ -18322,19 +18977,71 @@ final class OmrScoreInterpreter {
                         int upperAtRight =
                                 firstConnector + Math.round((rightSpine - leftSpine) * slope);
                         if (upperAtRight - rightTop <= junctionTolerance
-                                || leftBottom - row <= junctionTolerance) return true;
+                                || leftBottom - row <= junctionTolerance) {
+                            if (!computePitch) return 0;
+                            int upperEnd =
+                                    naturalConnectorBandEnd(
+                                            labels,
+                                            width,
+                                            candidate,
+                                            innerLeft,
+                                            innerRight,
+                                            leftSpine,
+                                            slope,
+                                            firstConnector);
+                            int lowerEnd =
+                                    naturalConnectorBandEnd(
+                                            labels,
+                                            width,
+                                            candidate,
+                                            innerLeft,
+                                            innerRight,
+                                            leftSpine,
+                                            slope,
+                                            row);
+                            return glyph.minY
+                                    + (firstConnector + upperEnd + row + lowerEnd) * .25f
+                                    + (rightSpine - leftSpine) * slope * .5f;
+                        }
                     }
                     openRows = 0;
                 } else if (firstConnector >= 0) openRows++;
             }
         }
-        return false;
+        return Float.NaN;
     }
 
     /**
      * A small scan bulge is confined to one short band on each outer edge. Two separated sharp
      * crossbars or a long side stroke are not fringe.
      */
+    /** Center the two proved connector bands, not the first row that triggered acceptance. */
+    private static int naturalConnectorBandEnd(
+            byte[] labels,
+            int width,
+            AccidentalCandidate candidate,
+            int innerLeft,
+            int innerRight,
+            int leftSpine,
+            float slope,
+            int first) {
+        Component glyph = candidate.component;
+        int last = first, span = innerRight - innerLeft + 1;
+        for (int row = first + 1; row <= glyph.maxY - glyph.minY; row++) {
+            int bridge = 0;
+            for (int col = innerLeft; col <= innerRight; col++) {
+                int y = row + Math.round((col - leftSpine) * slope);
+                if (y >= 0
+                        && y <= glyph.maxY - glyph.minY
+                        && candidate.matches(labels[(glyph.minY + y) * width + glyph.minX + col]))
+                    bridge++;
+            }
+            if (bridge < Math.max(1, (int) Math.ceil(span * .75f))) break;
+            last = row;
+        }
+        return last;
+    }
+
     private static boolean compactNaturalFringe(
             byte[] labels,
             int width,
