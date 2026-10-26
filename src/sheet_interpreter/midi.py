@@ -164,7 +164,8 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
         offset += page["totalBeats"]
     links = releasing_links(source_rows, lambda row: sound_lanes(row, ppq // 8, round(ppq * .04)),
             lambda old, row: row['gliss'] is None and old['gliss'] is None
-            and row['continuous'] is None and old['continuous'] is None and row['effect'] == old['effect'])
+            # A new marked slide is an attack; an unmarked tail may extend an existing slide.
+            and row['continuous'] is None and row['effect'] == old['effect'])
     owners = {}
     for index in sorted(range(len(source_rows)), key=lambda i: (source_rows[i]['start'], i)):
         row = source_rows[index]

@@ -94,12 +94,82 @@ public final class ScorePlacementMap {
             Map<Integer, ScoreNoteTiming.WrittenPlacement> placements,
             List<ScoreNoteEvent> source,
             List<Integer> owners) {
+        return writtenByOwners(placements, source, owners, List.of());
+    }
+
+    /** Only producer-proved unison aliases may retain a principal omitted as a representative. */
+    public static Map<Integer, ScoreNoteTiming.WrittenPlacement> writtenByOwners(
+            Map<Integer, ScoreNoteTiming.WrittenPlacement> placements,
+            List<ScoreNoteEvent> source,
+            List<Integer> owners,
+            List<List<Integer>> aliases) {
         var checked = validatedWritten(placements, source);
         var indices = new HashMap<Integer, Integer>();
         for (int i = 0; i < owners.size(); i++) {
             int owner = owners.get(i);
             if (owner < 0 || owner >= source.size() || indices.put(owner, i) != null)
                 throw new IllegalArgumentException("Invalid selected written note owner");
+        }
+        if (!aliases.isEmpty()) {
+            if (aliases.size() != owners.size())
+                throw new IllegalArgumentException("Incomplete selected written aliases");
+            var seen = new HashSet<Integer>();
+            for (int i = 0; i < aliases.size(); i++) {
+                var group = aliases.get(i);
+                if (group.isEmpty() || !group.contains(owners.get(i)))
+                    throw new IllegalArgumentException(
+                            "A selected representative lost its producer aliases");
+                for (int owner : group) {
+                    if (owner < 0 || owner >= source.size() || !seen.add(owner))
+                        throw new IllegalArgumentException("Ambiguous selected written aliases");
+                    if (group.size() > 1
+                            && (source.get(owner).kind() != ScoreNoteEvent.Kind.PITCHED
+                                    || ((source.get(owner).articulations()
+                                                            ^ source.get(owners.get(i))
+                                                                    .articulations())
+                                                    & NoteOrnament.GRACE)
+                                            != 0
+                                    || source.get(owner).measureIndex()
+                                            != source.get(owners.get(i)).measureIndex()))
+                        throw new IllegalArgumentException(
+                                "Only proved simultaneous same-kind unisons may share aliases");
+                    indices.put(owner, i);
+                }
+            }
+            for (int i = 0; i < aliases.size(); i++)
+                if (aliases.get(i).size() > 1) {
+                    var representative = checked.get(owners.get(i));
+                    for (int owner : aliases.get(i)) {
+                        var clock = checked.get(owner);
+                        if ((source.get(owner).articulations() & NoteOrnament.GRACE) != 0
+                                && (clock == null || representative == null))
+                            throw new IllegalArgumentException(
+                                    "Merged grace aliases need complete retained written clocks");
+                        if (clock == null || representative == null) continue;
+                        if (clock.grace() != representative.grace()
+                                || Double.compare(clock.onsetBeats(), representative.onsetBeats())
+                                        != 0
+                                || Double.compare(
+                                                clock.durationBeats(),
+                                                representative.durationBeats())
+                                        != 0
+                                || clock.grace()
+                                        && (clock.ordinal() != representative.ordinal()
+                                                || clock.afterGrace() != representative.afterGrace()
+                                                || Double.compare(
+                                                                clock.stealPercent(),
+                                                                representative.stealPercent())
+                                                        != 0
+                                                || indices.get(clock.principalIndex()) == null
+                                                || !indices.get(clock.principalIndex())
+                                                        .equals(
+                                                                indices.get(
+                                                                        representative
+                                                                                .principalIndex()))))
+                            throw new IllegalArgumentException(
+                                    "Merged aliases have conflicting written ownership or clocks");
+                    }
+                }
         }
         var result = new LinkedHashMap<Integer, ScoreNoteTiming.WrittenPlacement>();
         for (int i = 0; i < owners.size(); i++) {
@@ -111,6 +181,20 @@ public final class ScorePlacementMap {
                 if (selectedPrincipal == null)
                     throw new IllegalArgumentException(
                             "A selected grace note lost its written principal");
+                int representative = owners.get(selectedPrincipal);
+                if (representative != p.principalIndex()) {
+                    var original = checked.get(p.principalIndex());
+                    var retained = checked.get(representative);
+                    if (original == null
+                            || retained == null
+                            || original.grace()
+                            || retained.grace()
+                            || Double.compare(original.onsetBeats(), retained.onsetBeats()) != 0
+                            || Double.compare(original.durationBeats(), retained.durationBeats())
+                                    != 0)
+                        throw new IllegalArgumentException(
+                                "A merged grace principal has conflicting written clocks");
+                }
                 principal = selectedPrincipal;
             }
             result.put(
@@ -123,7 +207,7 @@ public final class ScorePlacementMap {
                             p.afterGrace(),
                             p.stealPercent()));
         }
-        return Map.copyOf(result);
+        return validatedWritten(result, owners.stream().map(source::get).toList());
     }
 
     public static Map<Integer, ScoreNoteTiming.WrittenPlacement> resolveWritten(
@@ -264,9 +348,11 @@ public final class ScorePlacementMap {
             ScoreNoteEvent note = selected.get(i);
             ScoreRhythmProjection.Placement found = null;
             boolean owned = false;
+
             int matches = 0;
             for (int j = 0; j < source.size(); j++)
                 if (source.get(j).equals(note)) {
+
                     if (note.kind() == ScoreNoteEvent.Kind.UNPITCHED && ++matches > 1)
                         throw new IllegalArgumentException(
                                 "Selected unpitched note needs its stable source index");
