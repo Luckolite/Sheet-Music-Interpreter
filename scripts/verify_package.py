@@ -30,6 +30,25 @@ def is_assistant_artifact(relative):
     )
 
 
+def is_optional_android_adapter(relative):
+    """Only the separately built, tracked Android adapter source tree is optional."""
+    parts = relative.replace("\\", "/").split("/")
+    return (
+        len(parts) >= 10
+        and parts[:2] == ["android-adapters", "src"]
+        and parts[2] in {"main", "androidTest"}
+        and parts[3:9] == ["java", "io", "github", "luckolite", "interpreter", "android"]
+        and all(re.fullmatch(r"[A-Za-z_$][A-Za-z0-9_$]*", part)
+                for part in parts[9:-1])
+        and re.fullmatch(r"[A-Za-z_$][A-Za-z0-9_$]*\.java", parts[-1]) is not None
+    )
+
+
+def require_java_dependency_boundary(relative, text):
+    if "android." in text and not is_optional_android_adapter(relative):
+        raise SystemExit("Android dependency in standalone Java: " + relative)
+
+
 def main():
     tracked = (
         subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
@@ -60,8 +79,8 @@ def main():
                 raise SystemExit(
                     "Credential or personal machine path found: " + relative
                 )
-            if path.suffix == ".java" and "android." in text:
-                raise SystemExit("Android dependency in standalone Java: " + relative)
+            if path.suffix == ".java":
+                require_java_dependency_boundary(relative, text)
     artifacts = json.loads((ROOT / "models/artifacts.json").read_text())
     for name, expected in artifacts.items():
         path = ROOT / "models" / name
