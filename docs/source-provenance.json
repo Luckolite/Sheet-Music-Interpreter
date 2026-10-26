@@ -398,11 +398,6 @@
         "source_normalized_sha256": "5a142f2f5b8d9dcebb4b1c9d3944e29c6c1aafcfdad2ebdfb41cc51316c6dfce"
       },
       {
-        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPdfWords.java",
-        "source_sha256": "59d1e7195f222305e7419c5db68ea28baf6bddcb3965c2159bdc3eb5864bde3c",
-        "source_normalized_sha256": "22325abb0844a253887fd02d6846624b9c75b8e88a0cb835bb18163c916ccdad"
-      },
-      {
         "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java",
         "source_sha256": "b9b333dcab29e7e4d84616fa29e8dad9603773e988b9b4da3fe7c9bcb0451cd1",
         "source_normalized_sha256": "69fd34adcb3ccf20640cab9616750508ca06540aaff5a6ba2725365db8f5a233"
@@ -9938,6 +9933,50 @@
       "standalone_sha256": "b769b891b8ef8f2b507c5183eefa7a41187ff478c1ebb3b1395ba968526a40f3",
       "reviewed_source_state": "committed-app-source",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged."
+    },
+    "PdfSourceWord.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PdfSourceWord.java",
+      "source_sha256": "165c5cdf846155601e6342164aeaa3a6f839dcfef4eb9f09a40fa15926fd341d",
+      "source_normalized_sha256": "165c5cdf846155601e6342164aeaa3a6f839dcfef4eb9f09a40fa15926fd341d",
+      "reviewed_app_commit": "821031cfd96284fa9698f2fb2386f8da4a783221",
+      "license": "Apache-2.0",
+      "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/PdfSourceWord.java",
+      "standalone_sha256": "183a87aa6928a26cda9686b183e782c759d4ba1616286b805d56e4ed3573d39b",
+      "reviewed_source_state": "committed-app-source",
+      "review_note": "Optional Android API35 adapter and original generated-PDF regression. Namespace/core imports and reader API visibility only; no app UI, private scores, models, clocks or record layouts copied."
+    },
+    "TabPdfWords.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPdfWords.java",
+      "source_sha256": "6b1202b549e972d20bd27c152d8b990a340ac5ad78498416a2366ef92e7236f8",
+      "source_normalized_sha256": "047bd753bd4a143c13214ff974e12a5e814353885af2c0536d7b04356b79dea1",
+      "reviewed_app_commit": "821031cfd96284fa9698f2fb2386f8da4a783221",
+      "license": "Apache-2.0",
+      "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/TabPdfWords.java",
+      "standalone_sha256": "864bfda7ca19b11fef97eb7d09d9d5ee1684db07716e68b14cbc7b91397383d3",
+      "reviewed_source_state": "committed-app-source",
+      "review_note": "Optional Android API35 adapter and original generated-PDF regression. Namespace/core imports and reader API visibility only; no app UI, private scores, models, clocks or record layouts copied."
+    },
+    "PdfSourceWordInstrumentedTest.java": {
+      "source_path": "app/src/androidTest/java/com/musicsheets/app/pdf/PdfSourceWordInstrumentedTest.java",
+      "source_sha256": "b5dc80f3b3eaa4d1d0d45142408d74581b5e50b2ae1686e648aee3ec62ce801d",
+      "source_normalized_sha256": "b5dc80f3b3eaa4d1d0d45142408d74581b5e50b2ae1686e648aee3ec62ce801d",
+      "reviewed_app_commit": "821031cfd96284fa9698f2fb2386f8da4a783221",
+      "license": "Apache-2.0",
+      "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/PdfSourceWordInstrumentedTest.java",
+      "standalone_sha256": "b9bc909d5e42dcfdaf7512af1e33902a0bef90d444965e122996998dfbd8efcc",
+      "reviewed_source_state": "committed-app-source",
+      "review_note": "Optional Android API35 adapter and original generated-PDF regression. Namespace/core imports and reader API visibility only; no app UI, private scores, models, clocks or record layouts copied."
+    },
+    "TabPdfWordsInstrumentedTest.java": {
+      "source_path": "app/src/androidTest/java/com/musicsheets/app/pdf/TabPdfWordsInstrumentedTest.java",
+      "source_sha256": "c467ca9a986dcedaf11b197e203dff3607de2c7134ff9436e69c817efda49d8c",
+      "source_normalized_sha256": "c467ca9a986dcedaf11b197e203dff3607de2c7134ff9436e69c817efda49d8c",
+      "reviewed_app_commit": "821031cfd96284fa9698f2fb2386f8da4a783221",
+      "license": "Apache-2.0",
+      "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/TabPdfWordsInstrumentedTest.java",
+      "standalone_sha256": "a3ae8805198cd20dc66d83dbf501d66ca07b2eaa069041975af0206ac4132a81",
+      "reviewed_source_state": "committed-app-source",
+      "review_note": "Optional Android API35 adapter and original generated-PDF regression. Namespace/core imports and reader API visibility only; no app UI, private scores, models, clocks or record layouts copied."
     }
   },
   "finite_curved_approach_review": {
@@ -14611,5 +14650,35 @@
     "license": "Original Apache-2.0 geometric fixtures.",
     "layout": "Guide290 and native layouts unchanged; no helper or manifest additions.",
     "deployment": "Cumulative APK and paired-worker rollout deferred by user."
+  },
+  "android_pdf_source_words": {
+    "reviewed_app_commit": "821031cfd96284fa9698f2fb2386f8da4a783221",
+    "license": "Apache-2.0",
+    "source_pairs": [
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/PdfSourceWord.java",
+        "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/PdfSourceWord.java"
+      },
+      {
+        "source_path": "app/src/main/java/com/musicsheets/app/pdf/TabPdfWords.java",
+        "standalone_path": "android-adapters/src/main/java/io/github/luckolite/interpreter/android/TabPdfWords.java"
+      },
+      {
+        "source_path": "app/src/androidTest/java/com/musicsheets/app/pdf/PdfSourceWordInstrumentedTest.java",
+        "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/PdfSourceWordInstrumentedTest.java"
+      },
+      {
+        "source_path": "app/src/androidTest/java/com/musicsheets/app/pdf/TabPdfWordsInstrumentedTest.java",
+        "standalone_path": "android-adapters/src/androidTest/java/io/github/luckolite/interpreter/android/TabPdfWordsInstrumentedTest.java"
+      }
+    ],
+    "minimum_api": 35,
+    "description": "Exact native glyph indices and bounds prove physical tokens, including periods split by framework line breaks. Case, adjoining word characters, unknown geometry and extra attached periods remain guarded.",
+    "dependencies": [
+      "Android API35 PDF renderer",
+      "standalone TabTextSource",
+      "standalone TablatureDecoder"
+    ],
+    "validation": "Eight original generated-PDF methods passed on API35 in the app namespace; optional namespace/import/API-visibility port compiles independently. Core algorithms, weights, cache epochs and guide layouts unchanged."
   }
 }
