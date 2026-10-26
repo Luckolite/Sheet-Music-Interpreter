@@ -7194,9 +7194,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalRuleInk.java",
       "license": "Apache-2.0",
       "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "2dfa375985bb58bd1cebef260f8a30cfad30dba6b0d8a53d9f09d98a1b9008b9",
-      "source_normalized_sha256": "2dfa375985bb58bd1cebef260f8a30cfad30dba6b0d8a53d9f09d98a1b9008b9",
-      "standalone_sha256": "d8fc21b7e5f6181cf5b4d9ad81a6ce2223e8a3322e57949c84c660e9f4536767",
+      "source_sha256": "5218fbc2635ce3fd2ddc65ccb435140eda4a0958c1e41d7c574efa1f8fdf1384",
+      "source_normalized_sha256": "5218fbc2635ce3fd2ddc65ccb435140eda4a0958c1e41d7c574efa1f8fdf1384",
+      "standalone_sha256": "62be0f9113e62fbed84e41ee6c9b1eb6bcfe6adac8a2bc1a0f205c517fad0e8f",
       "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
       "single_row_rule_review": {
         "documentation": "docs/single-row-beam-rule-references.md",
@@ -7206,6 +7206,15 @@
         "scope": "Paid actual bilateral closed thin raw runs for single-row references; existing3-reference fits and Source work cap. No new model/layout/authority.",
         "rollout": "Source only; cumulative pair deferred during active goal.",
         "app_commit": "42df1b459562d78487409a9a7337e7b98fa089f7"
+      },
+      "separated_flank_ink_review": {
+        "documentation": "docs/separated-rule-flank-ink.md",
+        "reviewed_app_base_commit": "82f9f4808a0149942eefb460e48510d0a87fe71e",
+        "new_original_junit_tests": 1,
+        "new_original_assertions": 296,
+        "scope": "Eligible closed thin flank rivals retain priority; separated open/thick foreign ink cannot erase the actual reference. Default unpaid behavior and original Source cap/loop prices retained.",
+        "rollout": "Source only; matching cumulative packaging deferred.",
+        "app_commit": "15cc63b2cac8eeb2c95dd01986367301caa09049"
       }
     },
     "PrintedBeamSource.java": {

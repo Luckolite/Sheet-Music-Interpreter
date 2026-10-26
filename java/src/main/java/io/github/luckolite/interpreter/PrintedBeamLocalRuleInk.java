@@ -155,12 +155,13 @@ final class PrintedBeamLocalRuleInk {
                     if (start < 0) start = y;
                 } else if (start >= 0) {
                     int last = y - 1;
-                    if (start <= low
-                            || last >= high
-                            || last - start + 1 > Math.ceil(gap * .3f)
-                            || foundFirst >= 0) return false;
-                    foundFirst = start;
-                    foundLast = last;
+                    // A separated open/thick component is not an eligible thin-rule rival.
+                    // Keep scanning every closed thin run; a second eligible run still refuses.
+                    if (start > low && last < high && last - start + 1 <= Math.ceil(gap * .3f)) {
+                        if (foundFirst >= 0) return false;
+                        foundFirst = start;
+                        foundLast = last;
+                    }
                     start = -1;
                 }
             }
