@@ -1,0 +1,1148 @@
+diff --git a/app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java b/app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java
+index 0f7f1d35..52efadd7 100644
+--- a/app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java
++++ b/app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java
+@@ -96,28 +96,15 @@ public final class CustomInstrumentPlayback {
+         }
+         return new SheetInterpreterAudio.RenderSpec(
+                         notes,
+-                        spec.measureCount(),
+-                        spec.bpm(),
+-                        spec.quarterBeatsPerMeasure(),
+-                        spec.instrument(),
+-                        spec.musicalKey(),
+-                        spec.keyChanges(),
+-                        spec.tempoChanges(),
+-                        spec.meterChanges(),
+-                        spec.voice(),
+-                        spec.techniqueChanges(),
+-                        spec.dynamicChanges(),
+-                        spec.soloDisabled(),
+-                        spec.soloVoice(),
+-                        spec.soloGain(),
+-                        spec.secondSoloDisabled(),
+-                        spec.secondSoloVoice(),
+-                        spec.secondSoloGain(),
+-                        spec.recordingIdentity(),
+-                        spec.rows())
+-                .withBoundaryQuarterBeats(spec.openingQuarterBeats(), spec.closingQuarterBeats())
+-                .withPerformanceTiming(spec.performanceTiming())
+-                .withSourcePlacements(spec.sourcePlacements());
++                        spec.measureCount(), spec.bpm(), spec.quarterBeatsPerMeasure(),
++                        spec.instrument(), spec.musicalKey(), spec.keyChanges(),
++                        spec.tempoChanges(), spec.meterChanges(), spec.voice(),
++                        spec.techniqueChanges(), spec.dynamicChanges(), spec.soloDisabled(),
++                        spec.soloVoice(), spec.soloGain(), spec.secondSoloDisabled(),
++                        spec.secondSoloVoice(), spec.secondSoloGain(), spec.recordingIdentity(), spec.rows(),
++                        spec.performanceTiming(), spec.openingQuarterBeats(), spec.closingQuarterBeats(),
++                        spec.sourcePlacements(), spec.tremoloSource(), spec.exactSourceBoundary(),
++                        spec.performedTremoloSource());
+     }
+ 
+     private static SheetInterpreterAudio.RenderSpec applyPerformed(
+@@ -128,6 +115,8 @@ public final class CustomInstrumentPlayback {
+         var inputSlideBindings = ConnectedSlideExplicitProof.resolveAll(timing, true);
+         var meter = SheetInterpreterAudio.clock(spec).meter();
+         var notes = new ArrayList<ScoreNoteEvent>();
++        var placements = new java.util.HashMap<Integer, com.musicsheets.app.pdf.ScoreRhythmProjection.Placement>();
++        var originalTremolo = com.musicsheets.app.pdf.ScoreTremoloSoundOwnership.forPerformedNotes(spec.tremoloSource(), spec.performedTremoloSource());
+         var intervals =
+                 new ArrayList<
+                         com.musicsheets.app.pdf.ScoreNavigationNoteProjection.PerformedNote>();
+@@ -174,6 +163,8 @@ public final class CustomInstrumentPlayback {
+                             ? 0
+                             : root == 43 ? selected[1] : root == 64 ? selected[0] : 0;
+             int index = notes.size();
++            var placement = spec.sourcePlacements().get(interval.sourceIndex());
++            if (placement != null) placements.put(index, placement);
+             notes.add(
+                     new ScoreNoteEvent(
+                                     note.measureIndex(),
+@@ -245,28 +236,6 @@ public final class CustomInstrumentPlayback {
+                                         ? null
+                                         : sound.connectedSlideSourceId()));
+         }
+-        var shifted =
+-                new SheetInterpreterAudio.RenderSpec(
+-                        notes,
+-                        spec.measureCount(),
+-                        spec.bpm(),
+-                        spec.quarterBeatsPerMeasure(),
+-                        spec.instrument(),
+-                        spec.musicalKey(),
+-                        spec.keyChanges(),
+-                        spec.tempoChanges(),
+-                        spec.meterChanges(),
+-                        spec.voice(),
+-                        spec.techniqueChanges(),
+-                        spec.dynamicChanges(),
+-                        spec.soloDisabled(),
+-                        spec.soloVoice(),
+-                        spec.soloGain(),
+-                        spec.secondSoloDisabled(),
+-                        spec.secondSoloVoice(),
+-                        spec.secondSoloGain(),
+-                        spec.recordingIdentity(),
+-                        spec.rows());
+         var projected =
+                 new SheetInterpreterAudio.PerformanceTiming(
+                         timing.openingBpm(),
+@@ -320,9 +289,17 @@ public final class CustomInstrumentPlayback {
+                         timing.performedMeasureBeats(),
+                         timing.attacks(),
+                         timing.pedalSpans());
+-        return shifted.withBoundaryQuarterBeats(
+-                        spec.openingQuarterBeats(), spec.closingQuarterBeats())
+-                .withPerformanceTiming(projected);
++        return new SheetInterpreterAudio.RenderSpec(
++                        notes,
++                        spec.measureCount(), spec.bpm(), spec.quarterBeatsPerMeasure(),
++                        spec.instrument(), spec.musicalKey(), spec.keyChanges(),
++                        spec.tempoChanges(), spec.meterChanges(), spec.voice(),
++                        spec.techniqueChanges(), spec.dynamicChanges(), spec.soloDisabled(),
++                        spec.soloVoice(), spec.soloGain(), spec.secondSoloDisabled(),
++                        spec.secondSoloVoice(), spec.secondSoloGain(), spec.recordingIdentity(), spec.rows(),
++                        projected, spec.openingQuarterBeats(), spec.closingQuarterBeats(), placements,
++                        com.musicsheets.app.pdf.ScoreTremoloSource.empty(notes.size()),
++                        spec.exactSourceBoundary(), originalTremolo.pairs().isEmpty() ? null : originalTremolo);
+     }
+ 
+     private static int transpose(int midi, int octaves) {
+diff --git a/app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java b/app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java
+index d293a075..a0534b40 100644
+--- a/app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java
++++ b/app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java
+@@ -20,6 +20,10 @@ public final class InterpreterAudioIdentity {
+             field(out,"paired-tremolo-clock-v2");
+             field(out,spec.tremoloSource());
+         }
++        if (spec.performedTremoloSource() != null) {
++            field(out,"performed-original-tremolo-domain-v1");
++            field(out,spec.performedTremoloSource());
++        }
+         var timing=spec.performanceTiming();
+         field(out,timing!=null);
+         if(timing!=null) {
+diff --git a/app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java b/app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java
+index 9f9afd57..26d69ff6 100644
+--- a/app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java
++++ b/app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java
+@@ -706,6 +706,35 @@ public final class SheetInterpreterAudio {
+     /** Every input that can change a generated performance. Deep note equality prevents stale
+      * session audio from surviving a BPM, meter, key, instrument, or score-analysis change. */
+     public record RenderSpec(
++            List<ScoreNoteEvent> notes,
++            int measureCount,
++            double bpm,
++            float quarterBeatsPerMeasure,
++            String instrument,
++            String musicalKey,
++            List<ScoreKeyChange> keyChanges,
++            List<ScoreTempoChange> tempoChanges,
++            List<ScoreMeterChange> meterChanges,
++            InterpreterVoice voice,
++            List<ScoreTechniqueChange> techniqueChanges,
++            List<ScoreDynamicChange> dynamicChanges,
++            boolean soloDisabled,
++            InterpreterVoice soloVoice,
++            double soloGain,
++            boolean secondSoloDisabled,
++            InterpreterVoice secondSoloVoice,
++            double secondSoloGain,
++            String recordingIdentity,
++            RowPlayback.Config rows,
++            PerformanceTiming performanceTiming,
++            float openingQuarterBeats,
++            float closingQuarterBeats,
++            Map<Integer, ScoreRhythmProjection.Placement> sourcePlacements,
++            com.musicsheets.app.pdf.ScoreTremoloSource tremoloSource,
++            com.musicsheets.app.pdf.ScoreBoundaryClock exactSourceBoundary,
++            com.musicsheets.app.pdf.ScoreTremoloSource performedTremoloSource) {
++        /** Original constructor: performed sound ownership is an additive separate domain. */
++        public RenderSpec(
+             List<ScoreNoteEvent> notes,
+             int measureCount,
+             double bpm,
+@@ -732,6 +761,8 @@ public final class SheetInterpreterAudio {
+             Map<Integer, ScoreRhythmProjection.Placement> sourcePlacements,
+             com.musicsheets.app.pdf.ScoreTremoloSource tremoloSource,
+             com.musicsheets.app.pdf.ScoreBoundaryClock exactSourceBoundary) {
++            this(notes, measureCount, bpm, quarterBeatsPerMeasure, instrument, musicalKey, keyChanges, tempoChanges, meterChanges, voice, techniqueChanges, dynamicChanges, soloDisabled, soloVoice, soloGain, secondSoloDisabled, secondSoloVoice, secondSoloGain, recordingIdentity, rows, performanceTiming, openingQuarterBeats, closingQuarterBeats, sourcePlacements, tremoloSource, exactSourceBoundary, null);
++        }
+         /** Full legacy constructor signature: the explicit binary64 frame is opt-in. */
+         public RenderSpec(
+             List<ScoreNoteEvent> notes,
+@@ -764,7 +795,7 @@ public final class SheetInterpreterAudio {
+         public RenderSpec withExactSourceBoundary(com.musicsheets.app.pdf.ScoreBoundaryClock boundary) {
+             java.util.Objects.requireNonNull(boundary);
+             if(!boundary.retained())throw new IllegalArgumentException("Exact source boundary must be effective");
+-            return new RenderSpec(notes, measureCount, bpm, quarterBeatsPerMeasure, instrument, musicalKey, keyChanges, tempoChanges, meterChanges, voice, techniqueChanges, dynamicChanges, soloDisabled, soloVoice, soloGain, secondSoloDisabled, secondSoloVoice, secondSoloGain, recordingIdentity, rows, performanceTiming, openingQuarterBeats, closingQuarterBeats, sourcePlacements, tremoloSource, boundary);
++            return new RenderSpec(notes, measureCount, bpm, quarterBeatsPerMeasure, instrument, musicalKey, keyChanges, tempoChanges, meterChanges, voice, techniqueChanges, dynamicChanges, soloDisabled, soloVoice, soloGain, secondSoloDisabled, secondSoloVoice, secondSoloGain, recordingIdentity, rows, performanceTiming, openingQuarterBeats, closingQuarterBeats, sourcePlacements, tremoloSource, boundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -892,7 +923,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -964,7 +995,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1034,7 +1065,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1097,7 +1128,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec withSoloGain(double gain) {
+@@ -1126,7 +1157,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec withSecondSolo(boolean disabled, InterpreterVoice choice, double gain) {
+@@ -1155,7 +1186,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1233,7 +1264,7 @@ public final class SheetInterpreterAudio {
+                     Double.isFinite(duration) ? (float) duration : 0,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, null);
++                    tremoloSource, null, performedTremoloSource);
+         }
+ 
+         public RenderSpec withBoundaryQuarterBeats(double opening, double closing) {
+@@ -1261,7 +1292,7 @@ public final class SheetInterpreterAudio {
+                     performanceTiming,
+                     Double.isFinite(opening) ? (float) opening : 0,
+                     Double.isFinite(closing) ? (float) closing : 0,
+-                    sourcePlacements, com.musicsheets.app.pdf.ScoreTremoloSource.empty(notes == null ? 0 : notes.size()), null);
++                    sourcePlacements, tremoloSource, null, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1342,7 +1373,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     placements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec withTremoloSource(com.musicsheets.app.pdf.ScoreTremoloSource source) {
+@@ -1371,7 +1402,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    source, exactSourceBoundary);
++                    source, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec {
+@@ -1381,6 +1412,17 @@ public final class SheetInterpreterAudio {
+                         exactSourceBoundary.openingQuarterBeats(),exactSourceBoundary.closingQuarterBeats(),measureCount);
+             }
+             java.util.Objects.requireNonNull(tremoloSource);
++            if (performedTremoloSource != null) {
++                if (performanceTiming == null || performanceTiming.performedNotes() == null)
++                    throw new IllegalArgumentException("Performed tremolo needs explicit intervals");
++                if (!tremoloSource.pairs().isEmpty() && !tremoloSource.equals(performedTremoloSource))
++                    throw new IllegalArgumentException("Conflicting tremolo ownership domains");
++                for (var sound : performanceTiming.sourceSounds().values())
++                    for (int originalIndex : sound.sourceIndices())
++                        com.musicsheets.app.pdf.ScoreTremoloSoundOwnership.requireAlias(performedTremoloSource, originalIndex);
++                if (performedTremoloSource.hasPerformancePairs() && performanceTiming.sourceSounds().isEmpty())
++                    throw new IllegalArgumentException("Performed tremolo needs retained sound aliases");
++            }
+             if (tremoloSource.noteOrigins().size() != (notes == null ? 0 : notes.size()))
+                 throw new IllegalArgumentException("Audio tremolo ownership mismatch");
+             sourcePlacements = sourcePlacements == null ? Map.of() : Map.copyOf(sourcePlacements);
+@@ -1491,7 +1533,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1534,7 +1576,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -1576,7 +1618,7 @@ public final class SheetInterpreterAudio {
+                     openingQuarterBeats,
+                     closingQuarterBeats,
+                     sourcePlacements,
+-                    tremoloSource, exactSourceBoundary);
++                    tremoloSource, exactSourceBoundary, performedTremoloSource);
+         }
+ 
+         public RenderSpec(
+@@ -2322,7 +2364,7 @@ public final class SheetInterpreterAudio {
+                 spec.openingQuarterBeats(),
+                 spec.closingQuarterBeats(),
+                 spec.sourcePlacements(),
+-                spec.tremoloSource(), spec.exactSourceBoundary());
++                spec.tremoloSource(), spec.exactSourceBoundary(), spec.performedTremoloSource());
+     }
+ 
+     /** Consumes proved source payload references and exact performed intervals. No onset or
+@@ -2445,11 +2487,16 @@ public final class SheetInterpreterAudio {
+         for (var hold : clock.timeline().holds())
+             if (!realized.containsAll(hold.sustainedTargets()))
+                 throw new IllegalArgumentException("Sustained target was not scheduled");
+-        return !spec.tremoloSource().hasPerformancePairs()
++        return !performedTremolo(spec).hasPerformancePairs()
+                 ? performedTones(drafts, clock)
+                 : projectedPairTones(spec, drafts, intervals, clock, frames);
+     }
+ 
++    /** Sound aliases keep their source domain when performed rows are duplicated or filtered. */
++    private static com.musicsheets.app.pdf.ScoreTremoloSource performedTremolo(RenderSpec spec) {
++        return com.musicsheets.app.pdf.ScoreTremoloSoundOwnership.forPerformedNotes(spec.tremoloSource(), spec.performedTremoloSource());
++    }
++
+     private static List<Tone> projectedPairTones(
+             RenderSpec spec,
+             List<ToneDraft> drafts,
+@@ -2458,7 +2505,7 @@ public final class SheetInterpreterAudio {
+             long frames) {
+         var owned = new java.util.HashSet<ToneDraft>();
+         var output = new ArrayList<Tone>();
+-        var resolution = spec.tremoloSource().performanceResolution();
++        var resolution = performedTremolo(spec).performanceResolution();
+         if (!resolution.unresolved().isEmpty())
+             throw new IllegalArgumentException("Unresolved projected tremolo");
+         for (var pair : resolution.resolved()) {
+@@ -2493,7 +2540,7 @@ public final class SheetInterpreterAudio {
+                             throw new IllegalArgumentException("Ambiguous projected tremolo");
+                         (side == pair.first() ? first : second).add(draft);
+                     }
+-                var payload = spec.performanceTiming().sourceSounds().get(anchor);
++                var payload = spec.performanceTiming().sourceSounds().get(interval.sourceIndex());
+                 if (payload == null)
+                     throw new IllegalArgumentException("Missing tremolo source span");
+                 double origin =
+@@ -2563,8 +2610,7 @@ public final class SheetInterpreterAudio {
+                     }
+             }
+             for (var draft : drafts)
+-                if ((pair.first().contains(draft.sourceIndex)
+-                                || pair.second().contains(draft.sourceIndex))
++                if (com.musicsheets.app.pdf.ScoreTremoloSoundOwnership.containsEndpoint(pair, draft.sourceIndices)
+                         && !owned.contains(draft))
+                     throw new IllegalArgumentException("Orphan projected tremolo endpoint");
+         }
+diff --git a/app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java b/app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java
+index a66859f7..82b29696 100644
+--- a/app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java
++++ b/app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java
+@@ -10,7 +10,7 @@ import java.util.*;
+ 
+ /** Content-addressed derived data; never a library track or source document. */
+ public final class ProcessedCache {
+-    public static final int AUDIO_VERSION = 99;
++    public static final int AUDIO_VERSION = 100;
+     public static final long MAX_ARTIFACT_BYTES = 128L * 1024 * 1024;
+     private static final char[] HEX = "0123456789abcdef".toCharArray();
+     private static final java.util.regex.Pattern HASH_NAME =
+diff --git a/tools/native-worker/NativeAudioTrack.java b/tools/native-worker/NativeAudioTrack.java
+index 2bee7479..8e61fce5 100644
+--- a/tools/native-worker/NativeAudioTrack.java
++++ b/tools/native-worker/NativeAudioTrack.java
+@@ -11,7 +11,7 @@ import java.util.*;
+ 
+ /** Desktop playback only. Uses already interpreted guides, never re-runs recognition. */
+ public final class NativeAudioTrack {
+-    public static final int AUDIO_VERSION = 99;
++    public static final int AUDIO_VERSION = 100;
+     private static Map<Integer, ScoreRhythmProjection.Placement> retainedPlacements = Map.of();
+     private static ScoreBoundaryClock retainedBoundaries = ScoreBoundaryClock.legacy();
+     private static float retainedOpeningNominal;
+@@ -629,6 +629,12 @@ public final class NativeAudioTrack {
+                         .withRows(
+                                 new RowPlayback.Config(
+                                         flag(rowKey + "_enabled", true), range.firstPage(), rules));
++        // Keep the exact page/note owner order used above; tie repairs retain note slots.
++        var tremolo = retained == null
++                ? ScoreTremoloSource.join(pages.subList(range.firstPage(), range.pageAfterLast())
++                        .stream().map(ScorePageInterpretation::tremoloSource).toList())
++                : retained.tremoloSource();
++        source = source.withTremoloSource(tremolo);
+         if (retained != null) source = source.withSourcePlacements(retainedPlacements);
+         if(retainedExactBoundary!=null)source=source.withExactSourceBoundary(retainedExactBoundary);
+         var nav =
+diff --git a/tools/native-worker/build_audio.py b/tools/native-worker/build_audio.py
+index 3305787a..b333784c 100644
+--- a/tools/native-worker/build_audio.py
++++ b/tools/native-worker/build_audio.py
+@@ -79,7 +79,7 @@ def main():
+                 ['ScorePageTimeline', 'ScoreGainProjection', 'ScoreNavigationProjection',
+                  'ScoreRhythmProjection', 'SheetConversionPlayback', 'SheetConversionPlan', 'SheetConversionEngravingPolicy', 'SheetOrnamentEngraving',
+                  'ScorePlacementMap', 'ScoreBoundaryClock', 'ScoreTechniqueSelection', 'ScoreTabPitchFitting', 'SheetRestClockRegistry',
+-                 'CurrentRestWritten', 'CurrentRestWrittenFields', 'CurrentRestStateVersion', 'CurrentRestAudioContext',
++                 'CurrentRestWritten', 'CurrentRestWrittenFields', 'CurrentRestStateVersion', 'CurrentRestAudioContext', 'ScoreTremoloSoundOwnership',
+                  'ScoreMeterMap', 'ScoreAnchor', 'ScoreFermataDetector', 'ScoreExpressionDetector', 'PrintedRestDirection']]
+     sources += [JAVA / 'instruments/InstrumentTake.java', TOOLS / 'NativeAudioTrack.java', TOOLS / 'NativeRecordedInstrument.java', TOOLS / 'NativeRetainedClockJson.java', TOOLS / 'NativeRetainedState.java', TOOLS / 'NativeCurrentRestWrittenJson.java', TOOLS / 'NativeCurrentRestAudio.java']
+     reader = extract_guide_reader((JAVA / 'pdf/PdfPageRenderCache.java').read_text())
+diff --git a/windows-sync-hub/NativeAudioTests.cs b/windows-sync-hub/NativeAudioTests.cs
+index 1f33a1c3..e2ff5ef3 100644
+--- a/windows-sync-hub/NativeAudioTests.cs
++++ b/windows-sync-hub/NativeAudioTests.cs
+@@ -38,8 +38,8 @@ internal static class NativeAudioTests
+             Check(File.ReadAllBytes(path).Take(4).SequenceEqual("RIFF"u8.ToArray()) && audio[0].Long("interpreted_notes") > 0, "Missing WAV or performed note count");
+             var stamp = File.GetLastWriteTimeUtc(path);
+             var priorTimingAudio = (JsonObject)audio[0].DeepClone();
+-            priorTimingAudio["audio"] = 98;
+-            Check(NativeAudioWorker.AudioVersion == 99 && store.ProcessedCache.Find(priorTimingAudio) is null,
++            priorTimingAudio["audio"] = 99;
++            Check(NativeAudioWorker.AudioVersion == 100 && store.ProcessedCache.Find(priorTimingAudio) is null,
+                 "Prior timing audio accepted with unchanged performance inputs");
+             store.ProcessedCache.Observe(new JsonObject { ["protocol"] = 1, ["version_epoch"] = 2,
+                 ["guide"] = NativeGuidePlan.GuideVersion, ["audio"] = 79,
+diff --git a/windows-sync-hub/NativeAudioWorker.cs b/windows-sync-hub/NativeAudioWorker.cs
+index 0a6c9a79..88f0bec8 100644
+--- a/windows-sync-hub/NativeAudioWorker.cs
++++ b/windows-sync-hub/NativeAudioWorker.cs
+@@ -10,7 +10,7 @@ namespace MusicSheetsSyncHub;
+ /// <summary>One low-priority renderer; completed guides are reused without recognition.</summary>
+ internal sealed class NativeAudioWorker(SyncStore store, Action changed, Action<string> log)
+ {
+-    internal const int AudioVersion=99;
++    internal const int AudioVersion=100;
+     private Task? _active;
+     private readonly NativeAudioCompletionStore _finished = new(() => Path.Combine(store.Root, "native-audio-completion-v1.json"));
+     private readonly Dictionary<string, DateTime> _retry = new(StringComparer.Ordinal);
+diff --git a/app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnership.java b/app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnership.java
+new file mode 100644
+--- /dev/null
++++ b/app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnership.java
+@@ -0,0 +1,35 @@
++// Copyright 2026 Luckolite
++// SPDX-License-Identifier: Apache-2.0
++package com.musicsheets.app.pdf;
++
++import java.util.Collection;
++import java.util.Objects;
++
++/** Original sound-alias indices are independent of a filtered or repeated performed row list. */
++public final class ScoreTremoloSoundOwnership {
++    private ScoreTremoloSoundOwnership() {}
++
++    /** Select retained original-domain data; this does not certify a new performance. */
++    public static ScoreTremoloSource forPerformedNotes(
++            ScoreTremoloSource currentRows, ScoreTremoloSource originalSounds) {
++        Objects.requireNonNull(currentRows);
++        return originalSounds == null ? currentRows : originalSounds;
++    }
++
++    public static void requireAlias(ScoreTremoloSource originalSounds, int originalIndex) {
++        Objects.requireNonNull(originalSounds);
++        if (originalIndex < 0 || originalIndex >= originalSounds.noteOrigins().size())
++            throw new IllegalArgumentException("Performed sound outside tremolo source domain");
++    }
++
++    /** Membership only: the scheduler must still prove complete independent endpoint sounds. */
++    public static boolean containsEndpoint(
++            ScoreTremoloSource.Resolved pair, Collection<Integer> originalAliases) {
++        Objects.requireNonNull(pair);
++        Objects.requireNonNull(originalAliases);
++        for (int originalIndex : originalAliases)
++            if (pair.first().contains(originalIndex) || pair.second().contains(originalIndex))
++                return true;
++        return false;
++    }
++}
+diff --git a/app/src/test/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnershipTest.java b/app/src/test/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnershipTest.java
+new file mode 100644
+--- /dev/null
++++ b/app/src/test/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnershipTest.java
+@@ -0,0 +1,77 @@
++// Copyright 2026 Luckolite
++// SPDX-License-Identifier: Apache-2.0
++package com.musicsheets.app.pdf;
++
++import java.util.*;
++import org.junit.Test;
++import static org.junit.Assert.*;
++
++public class ScoreTremoloSoundOwnershipTest {
++    private ScoreTremoloSource original() {
++        return ScoreTremoloSource.capture(
++                0,
++                8,
++                List.of(
++                        new ScoreTremoloSource.Pair(
++                                "original-index-domain",
++                                List.of(new ScoreTremoloSource.Anchor(0, 4)),
++                                List.of(new ScoreTremoloSource.Anchor(0, 5)),
++                                3,
++                                List.of(new ScoreTremoloSource.Evidence(0, .2f, .3f, .6f, .4f)))));
++    }
++
++    @Test
++    public void filteringAndRepeatsCannotReplaceTheOriginalDomain() {
++        var source = original();
++        for (int selected : List.of(5, 16))
++            assertSame(
++                    source,
++                    ScoreTremoloSoundOwnership.forPerformedNotes(
++                            ScoreTremoloSource.empty(selected), source));
++    }
++
++    @Test
++    public void absentOriginalDomainPreservesLegacySelection() {
++        var current = original();
++        assertSame(current, ScoreTremoloSoundOwnership.forPerformedNotes(current, null));
++    }
++
++    @Test
++    public void anOrdinaryPerformedRowNumberIsNotASourceEndpoint() {
++        var pair = original().performanceResolution().resolved().get(0);
++        assertFalse(ScoreTremoloSoundOwnership.containsEndpoint(pair, List.of(7)));
++        assertTrue(ScoreTremoloSoundOwnership.containsEndpoint(pair, List.of(4)));
++        assertTrue(ScoreTremoloSoundOwnership.containsEndpoint(pair, List.of(5)));
++    }
++
++    @Test
++    public void membershipExaminesAllActualSoundAliases() {
++        var pair = original().performanceResolution().resolved().get(0);
++        assertTrue(ScoreTremoloSoundOwnership.containsEndpoint(pair, List.of(2, 4)));
++        assertFalse(ScoreTremoloSoundOwnership.containsEndpoint(pair, List.of(2, 7)));
++    }
++
++    @Test
++    public void aliasBoundsUseTheOriginalRoster() {
++        var source = original();
++        ScoreTremoloSoundOwnership.requireAlias(source, 7);
++        for (int bad : List.of(-1, 8)) {
++            try {
++                ScoreTremoloSoundOwnership.requireAlias(source, bad);
++                fail("Invalid original alias");
++            } catch (IllegalArgumentException expected) {
++            }
++        }
++    }
++
++    @Test
++    public void selectionNeverRewritesTheRetainedOriginVector() {
++        var source = original();
++        var before = source.noteOrigins();
++        var selected =
++                ScoreTremoloSoundOwnership.forPerformedNotes(ScoreTremoloSource.empty(5), source);
++        assertSame(before, selected.noteOrigins());
++        assertEquals(8, selected.noteOrigins().size());
++        assertEquals(List.of(4), selected.performanceResolution().resolved().get(0).first());
++    }
++}
+diff --git a/app/src/test/java/com/musicsheets/app/playback/CustomInstrumentTremoloRetentionTest.java b/app/src/test/java/com/musicsheets/app/playback/CustomInstrumentTremoloRetentionTest.java
+new file mode 100644
+--- /dev/null
++++ b/app/src/test/java/com/musicsheets/app/playback/CustomInstrumentTremoloRetentionTest.java
+@@ -0,0 +1,249 @@
++package com.musicsheets.app.playback;
++
++import com.musicsheets.app.pdf.*;
++import java.util.*;
++import org.junit.Test;
++import static org.junit.Assert.*;
++
++/** Original source records and actual scheduler/navigation/custom-instrument entry points. */
++public class CustomInstrumentTremoloRetentionTest {
++    private SheetInterpreterAudio.RenderSpec source() {
++        var notes = List.of(note(.15f, 0, false, 2), note(.65f, 4, false, 2));
++        return new SheetInterpreterAudio.RenderSpec(notes, 1, 120, 4, "Piano", "C Major")
++                .withTremoloSource(pair(notes.size(), 0, 1));
++    }
++
++    private ScoreNoteEvent note(float x, int pitch, boolean tied, float duration) {
++        return new ScoreNoteEvent(0, x, pitch, 0, 1, .4f, tied, 0, 0, 0, duration)
++                .withClef(ScoreNoteEvent.CLEF_TREBLE);
++    }
++
++    private ScoreTremoloSource pair(int count, int first, int second) {
++        var pair =
++                new ScoreTremoloSource.Pair(
++                        "original-pair",
++                        List.of(new ScoreTremoloSource.Anchor(0, first)),
++                        List.of(new ScoreTremoloSource.Anchor(0, second)),
++                        3,
++                        List.of(new ScoreTremoloSource.Evidence(0, .2f, .3f, .6f, .4f)));
++        return ScoreTremoloSource.capture(0, count, List.of(pair));
++    }
++
++    private SheetInterpreterAudio.RenderSpec projected(
++            SheetInterpreterAudio.RenderSpec spec, boolean repeat) {
++        var directions =
++                repeat
++                        ? List.of(
++                                new ScorePlaybackDirection(
++                                        0, ScorePlaybackDirection.Kind.REPEAT_START),
++                                new ScorePlaybackDirection(
++                                        1, ScorePlaybackDirection.Kind.REPEAT_END))
++                        : List.<ScorePlaybackDirection>of();
++        return SheetInterpreterNavigation.prepare(
++                        spec,
++                        ScoreNavigationPlan.create(1, directions),
++                        (s, p, t) -> new SheetInterpreterNavigation.Gains(List.of(), Map.of()),
++                        ScoreNavigationNoteProjection.EntryPolicy.REATTACK)
++                .spec();
++    }
++
++    private List<SheetInterpreterAudio.Tone> tones(SheetInterpreterAudio.RenderSpec spec) {
++        return SheetInterpreterAudio.scheduledTones(spec, SheetInterpreterAudio.SAMPLE_RATE * 8L);
++    }
++
++    private void sameSchedule(
++            List<SheetInterpreterAudio.Tone> before,
++            List<SheetInterpreterAudio.Tone> after,
++            double multiplier) {
++        assertEquals(before.size(), after.size());
++        for (int i = 0; i < before.size(); i++) {
++            assertEquals(before.get(i).startFrame(), after.get(i).startFrame());
++            assertEquals(before.get(i).endFrame(), after.get(i).endFrame());
++            assertEquals(before.get(i).frequency() * multiplier, after.get(i).frequency(), 1e-9);
++        }
++    }
++
++    @Test
++    public void defaultUnprojectedSelectionRetainsAlternatingAttacks() {
++        var input = source();
++        assertEquals(12, tones(input).size());
++        sameSchedule(tones(input), tones(CustomInstrumentPlayback.apply(input, new int[3][2])), 1);
++    }
++
++    @Test
++    public void shiftedUnprojectedSelectionRetainsPairAndTiming() {
++        var input = source();
++        sameSchedule(
++                tones(input),
++                tones(CustomInstrumentPlayback.apply(input, new int[][] {{1, 0}, {0, 0}, {0, 0}})),
++                2);
++    }
++
++    @Test
++    public void defaultProjectedSelectionRetainsAlternatingAttacks() {
++        var input = projected(source(), false);
++        assertEquals(12, tones(input).size());
++        sameSchedule(tones(input), tones(CustomInstrumentPlayback.apply(input, new int[3][2])), 1);
++    }
++
++    @Test
++    public void repeatedProjectedSelectionRetainsEveryOccurrence() {
++        var input = projected(source(), true);
++        assertEquals(24, tones(input).size());
++        sameSchedule(tones(input), tones(CustomInstrumentPlayback.apply(input, new int[3][2])), 1);
++    }
++
++    @Test
++    public void transpositionMayDifferBetweenRepeatedOccurrences() {
++        var input =
++                projected(source(), true)
++                        .withRows(
++                                new RowPlayback.Config(
++                                        true,
++                                        0,
++                                        List.of(
++                                                new RowPlayback.Rule(
++                                                        0, 1, 2, -1, InterpreterVoice.PIANO, 1))));
++        var before = tones(input);
++        var after =
++                tones(CustomInstrumentPlayback.apply(input, new int[][] {{1, 0}, {0, 0}, {0, 0}}));
++        assertEquals(24, before.size());
++        assertEquals(before.size(), after.size());
++        for (int i = 0; i < before.size(); i++) {
++            assertEquals(before.get(i).startFrame(), after.get(i).startFrame());
++            assertEquals(before.get(i).endFrame(), after.get(i).endFrame());
++            assertEquals(
++                    before.get(i).frequency() * (i < 12 ? 2 : 1), after.get(i).frequency(), 1e-9);
++        }
++    }
++
++    @Test
++    public void tiedOrdinarySoundCanReduceSelectedCountWithoutReassigningPairOrigins() {
++        var notes =
++                List.of(
++                        note(.05f, 0, false, 1),
++                        note(.3f, 0, true, 1),
++                        note(.55f, 2, false, 2),
++                        note(.8f, 5, false, 2));
++        var input =
++                projected(
++                        new SheetInterpreterAudio.RenderSpec(notes, 1, 120, 4, "Piano", "C Major")
++                                .withTremoloSource(pair(4, 2, 3)),
++                        false);
++        assertTrue(input.performanceTiming().performedNotes().size() < input.notes().size());
++        assertTrue(tones(input).size() > 3);
++        sameSchedule(tones(input), tones(CustomInstrumentPlayback.apply(input, new int[3][2])), 1);
++    }
++
++    @Test
++    public void boundaryCopyDoesNotErasePrintedPairIdentity() {
++        var input = source();
++        var copy = input.withBoundaryQuarterBeats(4, 4);
++        assertEquals(input.tremoloSource(), copy.tremoloSource());
++        sameSchedule(tones(input), tones(copy), 1);
++    }
++
++    @Test
++    public void ordinaryNoPairScheduleRemainsExact() {
++        var input =
++                projected(
++                        new SheetInterpreterAudio.RenderSpec(
++                                source().notes(), 1, 120, 4, "Piano", "C Major"),
++                        true);
++        assertEquals(tones(input), tones(CustomInstrumentPlayback.apply(input, new int[3][2])));
++    }
++
++    @Test
++    public void exportAndPlaybackOptionCopiesRetainTheOriginalSoundDomain() throws Exception {
++        var selected = CustomInstrumentPlayback.apply(projected(source(), true), new int[3][2]);
++        assertNotNull(selected.performedTremoloSource());
++        var copies =
++                List.of(
++                        selected.withExactSourceBoundary(new ScoreBoundaryClock(4, 4)),
++                        selected.withPerformanceTiming(selected.performanceTiming()),
++                        selected.withRows(selected.rows()),
++                        selected.withRecordingIdentity("export-copy"),
++                        selected.withSolo(false, selected.soloVoice()),
++                        selected.withSoloGain(selected.soloGain()),
++                        selected.withSecondSolo(
++                                false, selected.secondSoloVoice(), selected.secondSoloGain()),
++                        selected.withOpeningQuarterBeats(selected.openingQuarterBeats()),
++                        selected.withBoundaryQuarterBeats(
++                                selected.openingQuarterBeats(), selected.closingQuarterBeats()),
++                        selected.withSourcePlacements(selected.sourcePlacements()),
++                        selected.withTremoloSource(selected.tremoloSource()),
++                        selected.withDynamics(selected.dynamicChanges()),
++                        selected.withTechniques(selected.techniqueChanges()),
++                        selected.withVoice(selected.voice()));
++        assertEquals(14, copies.size());
++        for (var copy : copies) {
++            assertSame(selected.performedTremoloSource(), copy.performedTremoloSource());
++            assertEquals(24, tones(copy).size());
++        }
++        var method =
++                SheetInterpreterAudio.class.getDeclaredMethod(
++                        "validatedForWrite", SheetInterpreterAudio.RenderSpec.class);
++        method.setAccessible(true);
++        var prepared = (SheetInterpreterAudio.RenderSpec) method.invoke(null, selected);
++        assertSame(selected.performedTremoloSource(), prepared.performedTremoloSource());
++        sameSchedule(tones(selected), tones(prepared), 1);
++    }
++
++    @Test
++    public void originalFullConstructorRemainsCompatible() throws Exception {
++        var input = source();
++        var components = SheetInterpreterAudio.RenderSpec.class.getRecordComponents();
++        Class<?>[] types = new Class<?>[26];
++        Object[] values = new Object[26];
++        for (int i = 0; i < 26; i++) {
++            types[i] = components[i].getType();
++            values[i] = components[i].getAccessor().invoke(input);
++        }
++        var copy =
++                SheetInterpreterAudio.RenderSpec.class
++                        .getDeclaredConstructor(types)
++                        .newInstance(values);
++        assertEquals(input, copy);
++        sameSchedule(tones(input), tones(copy), 1);
++    }
++
++    @Test
++    public void sourceDomainParticipatesInCacheIdentity() throws Exception {
++        var selected = CustomInstrumentPlayback.apply(projected(source(), true), new int[3][2]);
++        var components = SheetInterpreterAudio.RenderSpec.class.getRecordComponents();
++        Class<?>[] types = new Class<?>[26];
++        Object[] values = new Object[26];
++        for (int i = 0; i < 26; i++) {
++            types[i] = components[i].getType();
++            values[i] = components[i].getAccessor().invoke(selected);
++        }
++        var without =
++                SheetInterpreterAudio.RenderSpec.class
++                        .getDeclaredConstructor(types)
++                        .newInstance(values);
++        assertNotEquals(
++                InterpreterAudioIdentity.variant(without),
++                InterpreterAudioIdentity.variant(selected));
++    }
++
++    @Test
++    public void writeNormalizesWithoutDroppingThePerformedPair() throws Exception {
++        var input = projected(source(), true);
++        var selected = CustomInstrumentPlayback.apply(input, new int[3][2]);
++        var directory = java.nio.file.Files.createTempDirectory("tremolo-pcm-");
++        try {
++            var original = directory.resolve("original.wav");
++            var custom = directory.resolve("custom.wav");
++            SheetInterpreterAudio.write(original.toFile(), input);
++            SheetInterpreterAudio.write(custom.toFile(), selected);
++            assertArrayEquals(
++                    java.nio.file.Files.readAllBytes(original),
++                    java.nio.file.Files.readAllBytes(custom));
++        } finally {
++            try (var files = java.nio.file.Files.list(directory)) {
++                for (var file : files.toList()) java.nio.file.Files.delete(file);
++            }
++            java.nio.file.Files.delete(directory);
++        }
++    }
++}
+diff --git a/app/src/test/java/com/musicsheets/app/playback/PerformedTremoloNamespaceReviewTest.java b/app/src/test/java/com/musicsheets/app/playback/PerformedTremoloNamespaceReviewTest.java
+new file mode 100644
+--- /dev/null
++++ b/app/src/test/java/com/musicsheets/app/playback/PerformedTremoloNamespaceReviewTest.java
+@@ -0,0 +1,63 @@
++package com.musicsheets.app.playback;
++
++import com.musicsheets.app.pdf.*;
++import java.util.*;
++import org.junit.Test;
++import static org.junit.Assert.*;
++
++/** Independent generated tie compression with ordinary rows after the pair. */
++public final class PerformedTremoloNamespaceReviewTest {
++    static ScoreNoteEvent n(int measure, float x, int pitch, boolean tie, float duration) {
++        return new ScoreNoteEvent(measure, x, pitch, 0, 1, .4f, tie, 0, 0, 0, duration)
++                .withClef(ScoreNoteEvent.CLEF_TREBLE);
++    }
++
++    static SheetInterpreterAudio.RenderSpec input() {
++        var notes =
++                List.of(
++                        n(0, .1f, 0, false, 1),
++                        n(0, .3f, 0, true, 1),
++                        n(0, .5f, 0, true, 1),
++                        n(0, .7f, 0, true, 1),
++                        n(1, .15f, 2, false, 2),
++                        n(1, .65f, 5, false, 2),
++                        n(2, .15f, 7, false, 2),
++                        n(2, .65f, 9, false, 2));
++        var pair =
++                new ScoreTremoloSource.Pair(
++                        "review-pair",
++                        List.of(new ScoreTremoloSource.Anchor(0, 4)),
++                        List.of(new ScoreTremoloSource.Anchor(0, 5)),
++                        3,
++                        List.of(new ScoreTremoloSource.Evidence(0, .2f, .3f, .6f, .4f)));
++        var source =
++                new SheetInterpreterAudio.RenderSpec(notes, 3, 120, 4, "Piano", "C Major")
++                        .withTremoloSource(
++                                ScoreTremoloSource.capture(0, notes.size(), List.of(pair)));
++        return SheetInterpreterNavigation.prepare(
++                        source,
++                        ScoreNavigationPlan.create(3, List.of()),
++                        (s, p, t) -> new SheetInterpreterNavigation.Gains(List.of(), Map.of()),
++                        ScoreNavigationNoteProjection.EntryPolicy.REATTACK)
++                .spec();
++    }
++
++    @Test
++    public void compressedOrdinaryPerformedIndexCannotBecomeAnOriginalPairAnchor() {
++        var source = input();
++        assertEquals(8, source.notes().size());
++        assertEquals(5, source.performanceTiming().performedNotes().size());
++        var before =
++                SheetInterpreterAudio.scheduledTones(
++                        source, SheetInterpreterAudio.SAMPLE_RATE * 12L);
++        assertEquals(15, before.size());
++        var changed = CustomInstrumentPlayback.apply(source, new int[3][2]);
++        assertEquals(5, changed.notes().size());
++        var ordinary = changed.performanceTiming().sourceSounds().get(4);
++        assertEquals(List.of(7), ordinary.sourceIndices());
++        var after =
++                SheetInterpreterAudio.scheduledTones(
++                        changed, SheetInterpreterAudio.SAMPLE_RATE * 12L);
++        assertEquals(before, after);
++    }
++}
+diff --git a/tools/native-worker/tests/java/NativeTremoloFactoryTest.java b/tools/native-worker/tests/java/NativeTremoloFactoryTest.java
+new file mode 100644
+--- /dev/null
++++ b/tools/native-worker/tests/java/NativeTremoloFactoryTest.java
+@@ -0,0 +1,98 @@
++package com.musicsheets.app.pdf;
++
++import com.musicsheets.app.playback.*;
++import com.musicsheets.app.data.SheetEffectsPreferences;
++import com.google.gson.JsonObject;
++import java.lang.reflect.*;
++import java.util.*;
++import org.junit.Test;
++import static org.junit.Assert.*;
++
++/** Actual desktop preparation factory with original page DTOs, without media/model/device execution. */
++public class NativeTremoloFactoryTest {
++    private static void set(String name, Object value) throws Exception {
++        var field = NativeAudioTrack.class.getDeclaredField(name);
++        field.setAccessible(true);
++        field.set(null, value);
++    }
++
++    private ScorePageInterpretation page() {
++        var notes =
++                List.of(
++                        new ScoreNoteEvent(0, .15f, 0, 0, 1, .4f, false, 0, 0, 0, 2)
++                                .withClef(ScoreNoteEvent.CLEF_TREBLE),
++                        new ScoreNoteEvent(0, .65f, 4, 0, 1, .4f, false, 0, 0, 0, 2)
++                                .withClef(ScoreNoteEvent.CLEF_TREBLE));
++        var pair =
++                new ScoreTremoloSource.Pair(
++                        "native-original-pair",
++                        List.of(new ScoreTremoloSource.Anchor(0, 0)),
++                        List.of(new ScoreTremoloSource.Anchor(0, 1)),
++                        3,
++                        List.of(new ScoreTremoloSource.Evidence(0, .2f, .3f, .6f, .4f)));
++        return new ScorePageInterpretation(List.of(new MeasureRegion(0, 1, 0, 1)), notes)
++                .withTremoloSource(ScoreTremoloSource.capture(0, 2, List.of(pair)));
++    }
++
++    private SheetInterpreterAudio.RenderSpec prepare(boolean retained) throws Exception {
++        var song = new JsonObject();
++        song.addProperty("bpm", 120);
++        song.addProperty("time_signature", "4/4");
++        song.addProperty("instrument", "Piano");
++        song.addProperty("key", "C Major");
++        set("song", song);
++        set("settings", new JsonObject());
++        set("id", "original-test");
++        set("retained", retained ? page() : null);
++        set("retainedPlacements", Map.of());
++        set("retainedBoundaries", ScoreBoundaryClock.legacy());
++        set("retainedOpeningNominal", 4f);
++        set("retainedExactBoundary", null);
++        set("retainedRestOccurrences", Set.of());
++        var method =
++                NativeAudioTrack.class.getDeclaredMethod(
++                        "prepare",
++                        List.class,
++                        int[].class,
++                        int[].class,
++                        ScorePageTimeline.PageRange.class,
++                        SheetEffectsPreferences.Settings.class);
++        method.setAccessible(true);
++        try {
++            return (SheetInterpreterAudio.RenderSpec)
++                    method.invoke(
++                            null,
++                            List.of(page()),
++                            new int[] {1},
++                            new int[] {1},
++                            new ScorePageTimeline.PageRange(0, 1),
++                            SheetEffectsPreferences.Settings.defaults());
++        } catch (InvocationTargetException error) {
++            throw (Exception) error.getCause();
++        }
++    }
++
++    private int attacks(SheetInterpreterAudio.RenderSpec spec) throws Exception {
++        var method =
++                SheetInterpreterAudio.class.getDeclaredMethod(
++                        "scheduledTones", SheetInterpreterAudio.RenderSpec.class, long.class);
++        method.setAccessible(true);
++        var rate = SheetInterpreterAudio.class.getDeclaredField("SAMPLE_RATE");
++        rate.setAccessible(true);
++        return ((List<?>) method.invoke(null, spec, rate.getInt(null) * 4L)).size();
++    }
++
++    @Test
++    public void rawPageFactoryRetainsItsSourcePair() throws Exception {
++        var result = prepare(false);
++        assertEquals(1, result.tremoloSource().pairs().size());
++        assertEquals(12, attacks(result));
++    }
++
++    @Test
++    public void retainedFactoryRetainsItsSourcePair() throws Exception {
++        var result = prepare(true);
++        assertEquals(1, result.tremoloSource().pairs().size());
++        assertEquals(12, attacks(result));
++    }
++}
+diff --git a/tools/native-worker/tests/java/NativeTremoloRangeReviewTest.java b/tools/native-worker/tests/java/NativeTremoloRangeReviewTest.java
+new file mode 100644
+--- /dev/null
++++ b/tools/native-worker/tests/java/NativeTremoloRangeReviewTest.java
+@@ -0,0 +1,143 @@
++package com.musicsheets.app.pdf;
++
++import com.musicsheets.app.playback.*;
++import com.musicsheets.app.data.SheetEffectsPreferences;
++import com.google.gson.JsonObject;
++import java.lang.reflect.*;
++import java.util.*;
++import org.junit.Test;
++import static org.junit.Assert.*;
++
++/** Real desktop factory with two selected physical pages and an unselected prefix. */
++public final class NativeTremoloRangeReviewTest {
++    static ScorePageInterpretation page(int physical) {
++        var notes =
++                List.of(
++                        new ScoreNoteEvent(0, .15f, 0, 0, 1, .4f, false, 0, 0, 0, 2)
++                                .withClef(ScoreNoteEvent.CLEF_TREBLE),
++                        new ScoreNoteEvent(0, .65f, 4, 0, 1, .4f, false, 0, 0, 0, 2)
++                                .withClef(ScoreNoteEvent.CLEF_TREBLE));
++        var pair =
++                new ScoreTremoloSource.Pair(
++                        "review-native-page-" + physical,
++                        List.of(new ScoreTremoloSource.Anchor(physical, 0)),
++                        List.of(new ScoreTremoloSource.Anchor(physical, 1)),
++                        3,
++                        List.of(new ScoreTremoloSource.Evidence(physical, .2f, .3f, .6f, .4f)));
++        return new ScorePageInterpretation(
++                        List.of(new MeasureRegion(0, 1, 0, 1)), notes, physical + 1)
++                .withTremoloSource(
++                        ScoreTremoloSource.capture(physical, notes.size(), List.of(pair)));
++    }
++
++    static void set(String name, Object value) throws Exception {
++        var field = NativeAudioTrack.class.getDeclaredField(name);
++        field.setAccessible(true);
++        field.set(null, value);
++    }
++
++    static SheetInterpreterAudio.RenderSpec prepare(boolean retained) throws Exception {
++        var pages = List.of(page(0), page(1), page(2));
++        var song = new JsonObject();
++        song.addProperty("bpm", 120);
++        song.addProperty("time_signature", "4/4");
++        song.addProperty("instrument", "Piano");
++        song.addProperty("key", "C Major");
++        set("song", song);
++        set("settings", new JsonObject());
++        set("id", "independent-range-review");
++        ScorePageInterpretation current = null;
++        if (retained) {
++            var notes = new ArrayList<ScoreNoteEvent>(pages.get(1).notes());
++            for (var n : pages.get(2).notes())
++                notes.add(
++                        new ScoreNoteEvent(
++                                        1,
++                                        n.positionInMeasure(),
++                                        n.staffStep(),
++                                        n.staffIndex(),
++                                        n.staffCount(),
++                                        n.pageY(),
++                                        n.tiedFromPrevious(),
++                                        n.augmentationDots(),
++                                        n.beamCount(),
++                                        n.writtenAccidental(),
++                                        n.unbeamedDurationBeats())
++                                .withClef(n.clefBottomDiatonic()));
++            current =
++                    new ScorePageInterpretation(
++                                    List.of(
++                                            new MeasureRegion(0, 1, 0, 1),
++                                            new MeasureRegion(0, 1, 0, 1)),
++                                    notes)
++                            .withTremoloSource(
++                                    ScoreTremoloSource.join(
++                                            List.of(
++                                                    pages.get(1).tremoloSource(),
++                                                    pages.get(2).tremoloSource())));
++        }
++        set("retained", current);
++        set("retainedPlacements", Map.of());
++        set("retainedBoundaries", ScoreBoundaryClock.legacy());
++        set("retainedOpeningNominal", 4f);
++        set("retainedExactBoundary", null);
++        set("retainedRestOccurrences", Set.of());
++        Method method =
++                NativeAudioTrack.class.getDeclaredMethod(
++                        "prepare",
++                        List.class,
++                        int[].class,
++                        int[].class,
++                        ScorePageTimeline.PageRange.class,
++                        SheetEffectsPreferences.Settings.class);
++        method.setAccessible(true);
++        try {
++            return (SheetInterpreterAudio.RenderSpec)
++                    method.invoke(
++                            null,
++                            pages,
++                            new int[] {1, 1, 1},
++                            new int[] {1, 2, 3},
++                            new ScorePageTimeline.PageRange(1, 3),
++                            SheetEffectsPreferences.Settings.defaults());
++        } catch (InvocationTargetException error) {
++            if (error.getCause() instanceof Exception e) throw e;
++            throw error;
++        }
++    }
++
++    static int attacks(SheetInterpreterAudio.RenderSpec spec) throws Exception {
++        Method method =
++                SheetInterpreterAudio.class.getDeclaredMethod(
++                        "scheduledTones", SheetInterpreterAudio.RenderSpec.class, long.class);
++        method.setAccessible(true);
++        Field rate = SheetInterpreterAudio.class.getDeclaredField("SAMPLE_RATE");
++        rate.setAccessible(true);
++        return ((List<?>) method.invoke(null, spec, rate.getInt(null) * 8L)).size();
++    }
++
++    static void check(boolean retained) throws Exception {
++        var result = prepare(retained);
++        assertEquals(4, result.notes().size());
++        assertEquals(2, result.tremoloSource().pairs().size());
++        assertEquals(24, attacks(result));
++        assertEquals(
++                List.of(1, 1, 2, 2),
++                result.tremoloSource().noteOrigins().stream()
++                        .map(o -> o.orElseThrow().pageIndex())
++                        .toList());
++        assertTrue(
++                result.tremoloSource().pairs().stream()
++                        .noneMatch(p -> p.id().equals("review-native-page-0")));
++    }
++
++    @Test
++    public void rawSelectedRangeJoinsOnlyItsActualPageOrder() throws Exception {
++        check(false);
++    }
++
++    @Test
++    public void retainedSelectedRangeKeepsItsActualJoinedDomain() throws Exception {
++        check(true);
++    }
++}

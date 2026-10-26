@@ -8174,6 +8174,24 @@
         "rollout": "Source only; matching cumulative packaging deferred during active goal.",
         "app_commit": "b55d17a49272925c65fddbf5c41c14a49b75535a"
       }
+    },
+    "ScoreTremoloSoundOwnership.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnership.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreTremoloSoundOwnership.java",
+      "source_sha256": "247aeb4c5561e254128cfdee09569d047d02eb5184388ed1699a4f8befdbd9f2",
+      "source_normalized_sha256": "247aeb4c5561e254128cfdee09569d047d02eb5184388ed1699a4f8befdbd9f2",
+      "standalone_sha256": "358e8be7435ec03a32866b723557f0688b0b55f2a20183ec1a079b351796782e",
+      "license": "Apache-2.0",
+      "review_note": "Original sound-domain membership and alias bounds retained across actual performed note duplication/filtering; platform integration patch and original regressions are separate from standalone runtime dependencies."
+    },
+    "ScoreTremoloSoundOwnershipTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnershipTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ScoreTremoloSoundOwnershipTest.java",
+      "source_sha256": "6df6ddf1d2cf11834446d9641df73cd909a6427f8ed96f9218b59dfc067dfc50",
+      "source_normalized_sha256": "6df6ddf1d2cf11834446d9641df73cd909a6427f8ed96f9218b59dfc067dfc50",
+      "standalone_sha256": "395c93fab0291e3d17420310f9bbbd4f1bb5a425641fda5a47273fd0372b8552",
+      "license": "Apache-2.0",
+      "review_note": "Six original source/sound-domain cases cover repeated/filtered counts, actual aliases, legacy absence and original bounds. Optional platform integration tests are supplied in the reviewed patch without adding Android/playback dependencies to the standalone library."
     }
   },
   "interpreter_speedup_review": {
@@ -14212,5 +14230,41 @@
     "models_or_layouts_changed": false,
     "native_packaged_runtime_qualified": false,
     "reviewed_app_commit": "da1fd953b71cf1b539052c0d16f3b26eb615ac53"
+  },
+  "custom_tremolo_playback_review": {
+    "documentation": "docs/custom-tremolo-playback.md",
+    "integrationPatch": "integrations/music-sheets/custom-tremolo-playback.patch",
+    "appBaseCommit": "ce8fc69fdb30934f462c08fb09071fa73f57027b",
+    "portableHelper": "ScoreTremoloSoundOwnership.java",
+    "appSpecificWrappersOutsideStandalone": true,
+    "reviewedAppSourceHashes": {
+      "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java": "fd4a5523212b367d7f3c071a53d59b00dfdf30255bfffc5fb000328cc07d4008",
+      "app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java": "8ede1ba384880d1b903b40f66ff2414522b7710860038e04694c86ec8890bf06",
+      "app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java": "da653a8af58994a944141ebb98f84e7ec1995c778bdaab284fc4e102f024f43a",
+      "tools/native-worker/NativeAudioTrack.java": "f9d1ee704e19ef9ae64cbfb8748c17bf207df94b18643a02262a80b01b805d23"
+    },
+    "audioVersion": 100,
+    "recognitionRevision": 117,
+    "guideVersion": 299,
+    "modelChanges": false,
+    "packagedDeploymentPending": true,
+    "integrationPatchSHA256": "7d687d9c9eee421dfb7c47782ff8b1b2c4994cfea85ed7054539c9426b63537e",
+    "integrationPatchReverseApplyVerified": true,
+    "reviewedSourcePaths": [
+      "app/src/main/java/com/musicsheets/app/playback/SheetInterpreterAudio.java",
+      "app/src/main/java/com/musicsheets/app/playback/CustomInstrumentPlayback.java",
+      "app/src/main/java/com/musicsheets/app/playback/InterpreterAudioIdentity.java",
+      "tools/native-worker/NativeAudioTrack.java",
+      "tools/native-worker/build_audio.py",
+      "app/src/main/java/com/musicsheets/app/sync/ProcessedCache.java",
+      "windows-sync-hub/NativeAudioWorker.cs",
+      "windows-sync-hub/NativeAudioTests.cs",
+      "app/src/main/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnership.java",
+      "app/src/test/java/com/musicsheets/app/pdf/ScoreTremoloSoundOwnershipTest.java",
+      "app/src/test/java/com/musicsheets/app/playback/CustomInstrumentTremoloRetentionTest.java",
+      "app/src/test/java/com/musicsheets/app/playback/PerformedTremoloNamespaceReviewTest.java",
+      "tools/native-worker/tests/java/NativeTremoloFactoryTest.java",
+      "tools/native-worker/tests/java/NativeTremoloRangeReviewTest.java"
+    ]
   }
 }
