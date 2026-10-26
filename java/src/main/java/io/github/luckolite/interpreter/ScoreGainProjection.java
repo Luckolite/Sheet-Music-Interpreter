@@ -85,8 +85,7 @@ public final class ScoreGainProjection {
             ScoreMeterMap meter,
             ScorePerformanceTimeline sourceClock) {
         Objects.requireNonNull(sourceClock);
-        if (!plan.traversal().complete())
-            throw new IllegalArgumentException("Incomplete gain route");
+        plan.traversal().requirePerformanceQualified();
         var lanes = new TreeMap<Integer, List<Curve>>();
         var ids = new HashSet<String>();
         var clockRanges = new HashMap<String, ClockRange>();

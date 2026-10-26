@@ -114,7 +114,7 @@ def _project_one(document, bpm=120, source_page_offset=0):
     if not route['complete']:
         raise ValueError('Navigation traversal is incomplete: '+str(route['diagnostics']))
     if route['diagnostics']:
-        warnings.warn('Navigation diagnostics: '+str(route['diagnostics']), RuntimeWarning)
+        raise ValueError('Navigation performance is unresolved: '+str(route['diagnostics']))
     tempos.sort(key=lambda item: item[0])
     output_notes, output_tempos, spans = [], [], []
     prior_end = None

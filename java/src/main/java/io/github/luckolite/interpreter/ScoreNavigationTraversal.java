@@ -38,6 +38,18 @@ public final class ScoreNavigationTraversal {
             diagnostics = List.copyOf(diagnostics);
         }
 
+        /** Termination alone can retain a diagnostic partial route. Execution needs this stricter contract. */
+        public boolean performanceQualified() {
+            return complete && diagnostics.isEmpty();
+        }
+
+        /** No diagnostic emitted by the current engine certifies the full intended performance. */
+        public void requirePerformanceQualified() {
+            if (!performanceQualified())
+                throw new IllegalArgumentException(
+                        "Navigation performance is unresolved; inspect traversal diagnostics");
+        }
+
         public List<Integer> sourceMeasures() {
             return occurrences.stream().map(o -> o.start().measureIndex()).toList();
         }

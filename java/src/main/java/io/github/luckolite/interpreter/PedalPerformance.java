@@ -125,8 +125,7 @@ public final class PedalPerformance {
         Objects.requireNonNull(source);
         Objects.requireNonNull(plan);
         Objects.requireNonNull(meter);
-        if (!plan.traversal().complete())
-            throw new IllegalArgumentException("Incomplete navigation traversal");
+        plan.traversal().requirePerformanceQualified();
         var result = new ArrayList<Span>();
         var occurrences = plan.traversal().occurrences();
         double extent = meter.startBeat(plan.sourceMeasureCount());

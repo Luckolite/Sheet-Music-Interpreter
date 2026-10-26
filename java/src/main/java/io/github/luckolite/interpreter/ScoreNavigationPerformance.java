@@ -129,8 +129,7 @@ public final class ScoreNavigationPerformance {
         Objects.requireNonNull(meter);
         Objects.requireNonNull(targets);
         var ownership = Map.copyOf(holdOwnership);
-        if (!plan.traversal().complete())
-            throw new IllegalArgumentException("Incomplete navigation route");
+        plan.traversal().requirePerformanceQualified();
         double sourceEnd = meter.startBeat(plan.sourceMeasureCount());
         var knownHolds = new HashSet<String>();
         for (var hold : source.holds()) {

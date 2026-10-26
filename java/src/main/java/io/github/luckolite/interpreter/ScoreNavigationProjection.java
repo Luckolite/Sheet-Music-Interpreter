@@ -65,8 +65,7 @@ public final class ScoreNavigationProjection {
         Objects.requireNonNull(source);
         Objects.requireNonNull(plan);
         Objects.requireNonNull(defaults);
-        if (!plan.traversal().complete())
-            throw new IllegalArgumentException("Navigation traversal is incomplete");
+        plan.traversal().requirePerformanceQualified();
         if (plan.sourceMeasureCount() != source.measures().size())
             throw new IllegalArgumentException("Plan does not describe this source score");
         if (!plan.navigationApplied()) {
@@ -330,7 +329,17 @@ public final class ScoreNavigationProjection {
                         techniques,
                         dynamics,
                         List.of(),
-                        expressions).withBeamSource(source.beamSource().edited(notes.stream().map(n -> Objects.requireNonNull(noteOwners.get(n)).sourceIndex()).toList()))
+                        expressions)
+                .withBeamSource(
+                        source.beamSource()
+                                .edited(
+                                        notes.stream()
+                                                .map(
+                                                        n ->
+                                                                Objects.requireNonNull(
+                                                                                noteOwners.get(n))
+                                                                        .sourceIndex())
+                                                .toList()))
                 .withOpeningPickup(
                         source.openingPickup()
                                 && plan.measureCount() > 0

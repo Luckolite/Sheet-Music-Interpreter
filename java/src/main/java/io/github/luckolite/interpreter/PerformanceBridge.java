@@ -82,6 +82,7 @@ public final class PerformanceBridge {
                             bindings,
                             ScoreExpressivePerformance.Policy.preview());
             var plan = ScoreNavigationPlan.create(measures, directions, meter);
+            plan.traversal().requirePerformanceQualified();
             var source = new ArrayList<ScoreNavigationNoteProjection.SourceNote>();
             for (int i = 0; i < sounds.size(); i++) {
                 var sound = sounds.get(i);

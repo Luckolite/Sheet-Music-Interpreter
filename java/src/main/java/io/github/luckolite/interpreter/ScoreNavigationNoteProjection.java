@@ -107,7 +107,7 @@ public final class ScoreNavigationNoteProjection {
             EntryPolicy entryPolicy) {
         Objects.requireNonNull(entryPolicy);
         source = List.copyOf(source);
-        if (!plan.traversal().complete()) throw new IllegalArgumentException("Incomplete route");
+        plan.traversal().requirePerformanceQualified();
         double sourceEnd = meter.startBeat(plan.sourceMeasureCount());
         var identities = new HashSet<String>();
         var indices = new HashSet<Integer>();

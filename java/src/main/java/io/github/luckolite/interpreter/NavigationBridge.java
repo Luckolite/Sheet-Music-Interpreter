@@ -74,7 +74,9 @@ public final class NavigationBridge {
                 }
             } else {
                 try (var routeInput = new DataInputStream(Files.newInputStream(path))) {
-                    result = read(routeInput).traversal();
+                    var route = read(routeInput).traversal();
+                    route.requirePerformanceQualified();
+                    result = route;
                 }
             }
         }
