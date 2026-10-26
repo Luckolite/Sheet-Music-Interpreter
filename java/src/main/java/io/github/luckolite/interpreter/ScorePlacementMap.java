@@ -94,7 +94,8 @@ public final class ScorePlacementMap {
             Map<Integer, ScoreNoteTiming.WrittenPlacement> placements,
             List<ScoreNoteEvent> source,
             List<Integer> owners) {
-        return writtenByOwners(placements, source, owners, List.of());
+        // Edits may temporarily retain ordinal gaps; editedClocks renumbers after deletion.
+        return projectWrittenByOwners(placements, source, owners, List.of(), false);
     }
 
     /** Only producer-proved unison aliases may retain a principal omitted as a representative. */
@@ -103,6 +104,15 @@ public final class ScorePlacementMap {
             List<ScoreNoteEvent> source,
             List<Integer> owners,
             List<List<Integer>> aliases) {
+        return projectWrittenByOwners(placements, source, owners, aliases, true);
+    }
+
+    private static Map<Integer, ScoreNoteTiming.WrittenPlacement> projectWrittenByOwners(
+            Map<Integer, ScoreNoteTiming.WrittenPlacement> placements,
+            List<ScoreNoteEvent> source,
+            List<Integer> owners,
+            List<List<Integer>> aliases,
+            boolean requireCompleteGroups) {
         var checked = validatedWritten(placements, source);
         var indices = new HashMap<Integer, Integer>();
         for (int i = 0; i < owners.size(); i++) {
@@ -207,7 +217,9 @@ public final class ScorePlacementMap {
                             p.afterGrace(),
                             p.stealPercent()));
         }
-        return validatedWritten(result, owners.stream().map(source::get).toList());
+        return requireCompleteGroups
+                ? validatedWritten(result, owners.stream().map(source::get).toList())
+                : Map.copyOf(result);
     }
 
     public static Map<Integer, ScoreNoteTiming.WrittenPlacement> resolveWritten(
