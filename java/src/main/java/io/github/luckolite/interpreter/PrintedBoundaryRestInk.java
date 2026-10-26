@@ -20,6 +20,24 @@ final class PrintedBoundaryRestInk {
             int claimRight,
             int top,
             int bottom) {
+        return owns(
+                gray, width, height, region, rest, gap, claimLeft, claimRight, top, bottom, null);
+    }
+
+    static boolean owns(
+            byte[] gray,
+            int width,
+            int height,
+            MeasureRegion region,
+            ScoreRestEvent rest,
+            float gap,
+            int claimLeft,
+            int claimRight,
+            int top,
+            int bottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -83,99 +101,225 @@ final class PrintedBoundaryRestInk {
                 || xr >= width
                 || claimLeft < 0
                 || claimRight >= width) return false;
-        List<int[]> bands = new ArrayList<>();
+        List<int[]> bands =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
         int start = -1;
-        for (int y = y0; y <= y1 + 1; y++) {
-            boolean rule =
-                    y <= y1
-                            && supported(gray, width, y, al, ar, 170)
-                            && supported(gray, width, y, bl, br, 170);
-            if (rule && start < 0) start = y;
-            if (!rule && start >= 0) {
-                bands.add(new int[] {start, y - 1});
-                start = -1;
-            }
-        }
-        int[] owned = null;
-        for (int i = 0; i + 4 < bands.size(); i++) {
-            boolean complete = true;
-            for (int r = 0; r < 5; r++) {
-                int[] band = bands.get(i + r);
-                if (band[1] - band[0] + 1 > gap * .4f) complete = false;
-                if (r > 0) {
-                    int[] prior = bands.get(i + r - 1);
-                    float distance = (band[0] + band[1] - prior[0] - prior[1]) * .5f;
-                    if (Math.abs(distance - gap) > gap * .12f) complete = false;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = y0; y <= y1 + 1; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                boolean rule =
+                        y <= y1
+                                && supported(gray, width, y, al, ar, 170, quarterBudget)
+                                && supported(gray, width, y, bl, br, 170, quarterBudget);
+                if (rule && start < 0) start = y;
+                if (!rule && start >= 0) {
+                    FaintQuarterRestInk.add(
+                            quarterBudget,
+                            bands,
+                            (quarterBudget == null
+                                            || quarterBudget.allocate(
+                                                    (Math.max(0L, (long) (2))) + 1,
+                                                    32L * 1 + 8L * (Math.max(0L, (long) (2))))
+                                    ? new int[] {start, y - 1}
+                                    : null));
+                    start = -1;
                 }
             }
-            if (!complete
-                    || cy - half < bands.get(i)[0] - gap * .25f
-                    || cy + half > bands.get(i + 4)[1] + gap * .25f) continue;
-            if (owned != null) return false;
-            owned = new int[] {i, bands.get(i)[0], bands.get(i + 4)[1]};
         }
+
+        int[] owned = null;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i + 4 < bands.size(); i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                boolean complete = true;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int r = 0; r < 5; r++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        int[] band = bands.get(i + r);
+                        if (band[1] - band[0] + 1 > gap * .4f) complete = false;
+                        if (r > 0) {
+                            int[] prior = bands.get(i + r - 1);
+                            float distance = (band[0] + band[1] - prior[0] - prior[1]) * .5f;
+                            if (Math.abs(distance - gap) > gap * .12f) complete = false;
+                        }
+                    }
+                }
+
+                if (!complete
+                        || cy - half < bands.get(i)[0] - gap * .25f
+                        || cy + half > bands.get(i + 4)[1] + gap * .25f) continue;
+                if (owned != null) return false;
+                owned =
+                        (quarterBudget == null
+                                        || quarterBudget.allocate(
+                                                (Math.max(0L, (long) (3))) + 1,
+                                                32L * 1 + 8L * (Math.max(0L, (long) (3))))
+                                ? new int[] {i, bands.get(i)[0], bands.get(i + 4)[1]}
+                                : null);
+            }
+        }
+
         if (owned == null) return false;
         int shaftLeft = -1, shaftRight = -1, runs = 0;
         boolean prior = false;
-        for (int xx = xl; xx <= xr; xx++) {
-            int count = 0, blank = 0, longest = 0;
-            for (int yy = owned[1]; yy <= owned[2]; yy++) {
-                if ((gray[yy * width + xx] & 255) < 170) {
-                    count++;
-                    blank = 0;
-                } else longest = Math.max(longest, ++blank);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int xx = xl; xx <= xr; xx++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int count = 0, blank = 0, longest = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int yy = owned[1]; yy <= owned[2]; yy++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        if ((gray[yy * width + xx] & 255) < 170) {
+                            count++;
+                            blank = 0;
+                        } else longest = Math.max(longest, ++blank);
+                    }
+                }
+
+                boolean shaft = count >= (owned[2] - owned[1] + 1) * .94f && longest <= 1;
+                if (shaft) {
+                    if (!prior) runs++;
+                    if (shaftLeft < 0) shaftLeft = xx;
+                    shaftRight = xx;
+                }
+                prior = shaft;
             }
-            boolean shaft = count >= (owned[2] - owned[1] + 1) * .94f && longest <= 1;
-            if (shaft) {
-                if (!prior) runs++;
-                if (shaftLeft < 0) shaftLeft = xx;
-                shaftRight = xx;
-            }
-            prior = shaft;
         }
+
         if (runs != 1
                 || shaftRight - shaftLeft + 1 < Math.max(2, Math.round(gap * .08f))
                 || shaftRight - shaftLeft + 1 > gap * .35f) return false;
         int fringe = Math.max(1, Math.round(gap * .15f));
         // The barline and rule cores remain strict. Residual attribution is deliberately
         // more conservative: faint glyph bodies must not disappear into paper.
-        int[][] envelopes = new int[5][2];
-        for (int r = 0; r < 5; r++) {
-            int[] band = bands.get(owned[0] + r);
-            int lo = band[0], hi = band[1];
-            while (lo > Math.max(y0, band[0] - fringe)
-                    && supported(gray, width, lo - 1, al, ar, 225)
-                    && supported(gray, width, lo - 1, bl, br, 225)) lo--;
-            while (hi < Math.min(y1, band[1] + fringe)
-                    && supported(gray, width, hi + 1, al, ar, 225)
-                    && supported(gray, width, hi + 1, bl, br, 225)) hi++;
-            envelopes[r][0] = lo;
-            envelopes[r][1] = hi;
-        }
-        int residual = 0;
-        for (int yy = top; yy <= bottom; yy++) {
-            boolean rule = false;
+        int[][] envelopes =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        (Math.max(0L, (long) (5))
+                                                        + Math.max(0L, (long) (5))
+                                                                * Math.max(0L, (long) (2)))
+                                                + 1,
+                                        32L * (1 + Math.max(0L, (long) (5)))
+                                                + 8L
+                                                        * (Math.max(0L, (long) (5))
+                                                                + Math.max(0L, (long) (5))
+                                                                        * Math.max(0L, (long) (2))))
+                        ? new int[5][2]
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
             for (int r = 0; r < 5; r++) {
-                int[] band = envelopes[r];
-                if (yy >= band[0] - 1 && yy <= band[1] + 1) rule = true;
-            }
-            if (rule) continue;
-            for (int xx = claimLeft; xx <= claimRight; xx++)
-                if ((gray[yy * width + xx] & 255) < 225) {
-                    residual++;
-                    if (xx < shaftLeft - fringe || xx > shaftRight + fringe) return false;
-                    int near = Math.max(shaftLeft, Math.min(shaftRight, xx));
-                    for (int across = Math.min(xx, near); across <= Math.max(xx, near); across++)
-                        if ((gray[yy * width + across] & 255) >= 225) return false;
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int[] band = bands.get(owned[0] + r);
+                int lo = band[0], hi = band[1];
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    while (lo > Math.max(y0, band[0] - fringe)
+                            && supported(gray, width, lo - 1, al, ar, 225, quarterBudget)
+                            && supported(gray, width, lo - 1, bl, br, 225, quarterBudget)) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        lo--;
+                    }
                 }
+
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    while (hi < Math.min(y1, band[1] + fringe)
+                            && supported(gray, width, hi + 1, al, ar, 225, quarterBudget)
+                            && supported(gray, width, hi + 1, bl, br, 225, quarterBudget)) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        hi++;
+                    }
+                }
+
+                envelopes[r][0] = lo;
+                envelopes[r][1] = hi;
+            }
         }
+
+        int residual = 0;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int yy = top; yy <= bottom; yy++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                boolean rule = false;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int r = 0; r < 5; r++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        int[] band = envelopes[r];
+                        if (yy >= band[0] - 1 && yy <= band[1] + 1) rule = true;
+                    }
+                }
+
+                if (rule) continue;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int xx = claimLeft; xx <= claimRight; xx++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if ((gray[yy * width + xx] & 255) < 225) {
+                            residual++;
+                            if (xx < shaftLeft - fringe || xx > shaftRight + fringe) return false;
+                            int near = Math.max(shaftLeft, Math.min(shaftRight, xx));
+                            {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                                for (int across = Math.min(xx, near);
+                                        across <= Math.max(xx, near);
+                                        across++) {
+                                    if (quarterBudget != null)
+                                        FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                                    if ((gray[yy * width + across] & 255) >= 225) return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return residual >= gap;
     }
 
     private static boolean supported(
             byte[] gray, int width, int y, int left, int right, int threshold) {
+        return supported(gray, width, y, left, right, threshold, null);
+    }
+
+    private static boolean supported(
+            byte[] gray,
+            int width,
+            int y,
+            int left,
+            int right,
+            int threshold,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         int count = 0;
-        for (int x = left; x <= right; x++) if ((gray[y * width + x] & 255) < threshold) count++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int x = left; x <= right; x++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if ((gray[y * width + x] & 255) < threshold) count++;
+            }
+        }
+
         return count >= (right - left + 1) * .85f;
     }
 }

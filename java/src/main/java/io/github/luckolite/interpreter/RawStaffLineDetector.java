@@ -52,29 +52,87 @@ final class RawStaffLineDetector {
      * postprocessor so stray staff-labelled notation between lines cannot merge a whole system
      * into one continuous projection band. */
     static List<StaffLines> detectFromStrength(int[] rowStrength, int minimumStrength, int height) {
-        return detectFromStrength(rowStrength, minimumStrength, height, true);
+        return detectFromStrength(rowStrength, minimumStrength, height, null);
+    }
+
+    static List<StaffLines> detectFromStrength(
+            int[] rowStrength,
+            int minimumStrength,
+            int height,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        return detectFromStrength(rowStrength, minimumStrength, height, true, quarterBudget);
     }
 
     /** A few staff-labelled slurs can invent a sixth-to-tenth-rule group in the
      * narrow whitespace between two independently printed staves. */
     static List<StaffLines> detectFromStrength(
             int[] strength, int minimum, int height, byte[] gray, int width) {
-        List<StaffLines> original = detectFromStrength(strength, minimum, height);
+        return detectFromStrength(strength, minimum, height, gray, width, null);
+    }
+
+    static List<StaffLines> detectFromStrength(
+            int[] strength,
+            int minimum,
+            int height,
+            byte[] gray,
+            int width,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+        if (quarterBudget != null && gray != null) throw new FaintQuarterRestInk.Refusal();
+
+        List<StaffLines> original = detectFromStrength(strength, minimum, height, quarterBudget);
         if (gray == null || width <= 0 || gray.length != width * height) return original;
-        List<StaffLines> result = new ArrayList<>(original);
-        for (int i = 1; i + 1 < original.size(); i++) {
-            StaffLines a = original.get(i - 1), b = original.get(i), c = original.get(i + 1);
-            float gap = Math.max(b.gap(), Math.max(a.gap(), c.gap()));
-            int above = b.top() - a.bottom(), below = c.top() - b.bottom();
-            if (above <= 0 || below <= 0 || above > gap * 1.5f || below > gap * 1.5f) continue;
-            if (printedRuleCount(new Candidate(b.rows(), b.gap(), 0), gray, width, height, 230) <= 1
-                    && printedRuleCount(new Candidate(a.rows(), a.gap(), 0), gray, width, height)
-                            >= 4
-                    && printedRuleCount(new Candidate(c.rows(), c.gap(), 0), gray, width, height)
-                            >= 4) result.remove(b);
+        List<StaffLines> result =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        1L + 4L * original.size(), 256L + 32L * original.size())
+                        ? new ArrayList<>(original)
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 1; i + 1 < original.size(); i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                StaffLines a = original.get(i - 1), b = original.get(i), c = original.get(i + 1);
+                float gap = Math.max(b.gap(), Math.max(a.gap(), c.gap()));
+                int above = b.top() - a.bottom(), below = c.top() - b.bottom();
+                if (above <= 0 || below <= 0 || above > gap * 1.5f || below > gap * 1.5f) continue;
+                if (printedRuleCount(
+                                        (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                                ? new Candidate(b.rows(), b.gap(), 0)
+                                                : null),
+                                        gray,
+                                        width,
+                                        height,
+                                        230)
+                                <= 1
+                        && printedRuleCount(
+                                        (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                                ? new Candidate(a.rows(), a.gap(), 0)
+                                                : null),
+                                        gray,
+                                        width,
+                                        height)
+                                >= 4
+                        && printedRuleCount(
+                                        (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                                ? new Candidate(c.rows(), c.gap(), 0)
+                                                : null),
+                                        gray,
+                                        width,
+                                        height)
+                                >= 4) FaintQuarterRestInk.remove(quarterBudget, result, b);
+            }
         }
+
         rejectUnsupportedAliases(result, gray, width, height);
-        return List.copyOf(result);
+        return (quarterBudget == null
+                        || quarterBudget.allocate(
+                                1L + 4L * (result).size(), 128L + 32L * (result).size())
+                ? List.copyOf(result)
+                : null);
     }
 
     /** Replace only compressed semantic aliases independently contradicted by five printed rules. */
@@ -365,7 +423,19 @@ final class RawStaffLineDetector {
 
     private static List<StaffLines> detectFromStrength(
             int[] rowStrength, int minimumStrength, int height, boolean filterScale) {
-        return detectFromStrength(rowStrength, minimumStrength, height, filterScale, null, 0);
+        return detectFromStrength(rowStrength, minimumStrength, height, filterScale, null);
+    }
+
+    private static List<StaffLines> detectFromStrength(
+            int[] rowStrength,
+            int minimumStrength,
+            int height,
+            boolean filterScale,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        return detectFromStrength(
+                rowStrength, minimumStrength, height, filterScale, null, 0, quarterBudget);
     }
 
     private static List<StaffLines> detectFromStrength(
@@ -375,32 +445,83 @@ final class RawStaffLineDetector {
             boolean filterScale,
             byte[] gray,
             int width) {
+        return detectFromStrength(
+                rowStrength, minimumStrength, height, filterScale, gray, width, null);
+    }
+
+    private static List<StaffLines> detectFromStrength(
+            int[] rowStrength,
+            int minimumStrength,
+            int height,
+            boolean filterScale,
+            byte[] gray,
+            int width,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+        if (quarterBudget != null && gray != null) throw new FaintQuarterRestInk.Refusal();
+
         if (rowStrength == null || rowStrength.length != height || minimumStrength <= 0)
-            return List.of();
-        List<Integer> peaks = localPeaks(rowStrength, minimumStrength);
-        List<Candidate> candidates = staffCandidates(peaks, rowStrength, minimumStrength, height);
+            return (quarterBudget == null || quarterBudget.allocate(1, 128) ? List.of() : null);
+        List<Integer> peaks = localPeaks(rowStrength, minimumStrength, quarterBudget);
+        List<Candidate> candidates =
+                staffCandidates(peaks, rowStrength, minimumStrength, height, quarterBudget);
 
         // Highest-confidence candidate wins when nearby notation creates multiple possible groups
         // around one staff. Staffs cannot overlap, so accepting the best groups first avoids an
         // ornament above a staff shifting all five selected rows by one position.
-        candidates.sort(Comparator.comparingDouble(Candidate::score).reversed());
-        List<StaffLines> result = new ArrayList<>();
-        for (Candidate candidate : candidates) {
-            if (gray != null && !hasPrintedRules(candidate, gray, width, height)) continue;
-            boolean overlaps = false;
-            for (StaffLines accepted : result) {
-                float margin = Math.min(candidate.gap(), accepted.gap()) * .75f;
-                if (candidate.rows()[0] <= accepted.bottom() + margin
-                        && candidate.rows()[4] >= accepted.top() - margin) {
-                    overlaps = true;
-                    break;
+        FaintQuarterRestInk.sort(
+                quarterBudget,
+                candidates,
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? Comparator.comparingDouble(Candidate::score).reversed()
+                        : null));
+        List<StaffLines> result =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (Candidate candidate : candidates) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (gray != null && !hasPrintedRules(candidate, gray, width, height)) continue;
+                boolean overlaps = false;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+                    for (StaffLines accepted : result) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        float margin = Math.min(candidate.gap(), accepted.gap()) * .75f;
+                        if (candidate.rows()[0] <= accepted.bottom() + margin
+                                && candidate.rows()[4] >= accepted.top() - margin) {
+                            overlaps = true;
+                            break;
+                        }
+                    }
                 }
+
+                if (!overlaps)
+                    FaintQuarterRestInk.add(
+                            quarterBudget,
+                            result,
+                            (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                    ? new StaffLines(candidate.rows(), candidate.gap())
+                                    : null));
             }
-            if (!overlaps) result.add(new StaffLines(candidate.rows(), candidate.gap()));
         }
-        if (filterScale) retainDominantStaffScale(result, null, 0, 0);
-        result.sort(Comparator.comparingInt(StaffLines::top));
-        return List.copyOf(result);
+
+        if (filterScale) retainDominantStaffScale(result, null, 0, 0, quarterBudget);
+        FaintQuarterRestInk.sort(
+                quarterBudget,
+                result,
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? Comparator.comparingInt(StaffLines::top)
+                        : null));
+        return (quarterBudget == null
+                        || quarterBudget.allocate(
+                                1L + 4L * (result).size(), 128L + 32L * (result).size())
+                ? List.copyOf(result)
+                : null);
     }
 
     /** Shadows can form periodic dark projection peaks without any thin printed rules.
@@ -449,23 +570,67 @@ final class RawStaffLineDetector {
      */
     private static void retainDominantStaffScale(
             List<StaffLines> staffs, byte[] gray, int width, int height) {
+        retainDominantStaffScale(staffs, gray, width, height, null);
+    }
+
+    private static void retainDominantStaffScale(
+            List<StaffLines> staffs,
+            byte[] gray,
+            int width,
+            int height,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+        if (quarterBudget != null && gray != null) throw new FaintQuarterRestInk.Refusal();
+
         if (staffs == null || staffs.size() < 4) return;
-        List<Float> gaps = new ArrayList<>();
-        for (StaffLines staff : staffs) gaps.add(staff.gap());
-        gaps.sort(Float::compare);
+        List<Float> gaps =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (StaffLines staff : staffs) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                FaintQuarterRestInk.add(
+                        quarterBudget,
+                        gaps,
+                        FaintQuarterRestInk.boxFloat(quarterBudget, staff.gap()));
+            }
+        }
+
+        FaintQuarterRestInk.sort(
+                quarterBudget,
+                gaps,
+                (quarterBudget == null || quarterBudget.allocate(1, 256) ? Float::compare : null));
         float median = gaps.get(gaps.size() / 2);
         int consistent = 0;
-        for (float gap : gaps) if (gap >= median * .68f && gap <= median * 1.47f) consistent++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (float gap : gaps) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (gap >= median * .68f && gap <= median * 1.47f) consistent++;
+            }
+        }
+
         if (consistent * 2 < staffs.size()) return;
-        List<StaffLines> candidates = List.copyOf(staffs);
-        staffs.removeIf(
-                staff ->
-                        (staff.gap() < median * .68f || staff.gap() > median * 1.47f)
-                                && !(gray != null
-                                        && staff.gap() >= median * .55f
-                                        && staff.gap() < median * .68f
-                                        && connectedToStaff(
-                                                staff, candidates, gray, width, height)));
+        List<StaffLines> candidates =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        1L + 4L * (staffs).size(), 128L + 32L * (staffs).size())
+                        ? List.copyOf(staffs)
+                        : null);
+        FaintQuarterRestInk.removeIf(
+                quarterBudget,
+                staffs,
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? staff ->
+                                (staff.gap() < median * .68f || staff.gap() > median * 1.47f)
+                                        && !(gray != null
+                                                && staff.gap() >= median * .55f
+                                                && staff.gap() < median * .68f
+                                                && connectedToStaff(
+                                                        staff, candidates, gray, width, height))
+                        : null));
     }
 
     /** A cue-sized part is real when a printed system rule joins it to another five-line staff. */
@@ -521,85 +686,188 @@ final class RawStaffLineDetector {
     }
 
     private static List<Integer> localPeaks(int[] strength, int minimumStrength) {
-        List<Integer> raw = new ArrayList<>();
-        for (int row = 0; row < strength.length; row++) {
-            if (strength[row] < minimumStrength) continue;
-            boolean maximum = true, prominent = false;
-            for (int check = Math.max(0, row - 2);
-                    check <= Math.min(strength.length - 1, row + 2);
-                    check++) {
-                if (strength[check] > strength[row]) maximum = false;
-                if (strength[check] < strength[row]) prominent = true;
+        return localPeaks(strength, minimumStrength, null);
+    }
+
+    private static List<Integer> localPeaks(
+            int[] strength, int minimumStrength, FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        List<Integer> raw =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int row = 0; row < strength.length; row++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (strength[row] < minimumStrength) continue;
+                boolean maximum = true, prominent = false;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int check = Math.max(0, row - 2);
+                            check <= Math.min(strength.length - 1, row + 2);
+                            check++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        if (strength[check] > strength[row]) maximum = false;
+                        if (strength[check] < strength[row]) prominent = true;
+                    }
+                }
+
+                if (maximum && prominent)
+                    FaintQuarterRestInk.add(
+                            quarterBudget, raw, FaintQuarterRestInk.boxInt(quarterBudget, row));
             }
-            if (maximum && prominent) raw.add(row);
         }
 
         // A thick or antialiased staff line may have two equally dark center rows. Keep only its
         // strongest center before looking for the five-line periodic pattern.
-        List<Integer> merged = new ArrayList<>();
-        for (int row : raw) {
-            if (merged.isEmpty() || row - merged.get(merged.size() - 1) > 3) {
-                merged.add(row);
-            } else {
-                int prior = merged.get(merged.size() - 1);
-                if (strength[row] > strength[prior]) merged.set(merged.size() - 1, row);
+        List<Integer> merged =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (int row : raw) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (merged.isEmpty() || row - merged.get(merged.size() - 1) > 3) {
+                    FaintQuarterRestInk.add(
+                            quarterBudget, merged, FaintQuarterRestInk.boxInt(quarterBudget, row));
+                } else {
+                    int prior = merged.get(merged.size() - 1);
+                    if (strength[row] > strength[prior])
+                        FaintQuarterRestInk.set(
+                                quarterBudget,
+                                merged,
+                                merged.size() - 1,
+                                FaintQuarterRestInk.boxInt(quarterBudget, row));
+                }
             }
         }
+
         return merged;
     }
 
     private static List<Candidate> staffCandidates(
             List<Integer> peaks, int[] strength, int minimumStrength, int height) {
-        List<Candidate> result = new ArrayList<>();
+        return staffCandidates(peaks, strength, minimumStrength, height, null);
+    }
+
+    private static List<Candidate> staffCandidates(
+            List<Integer> peaks,
+            int[] strength,
+            int minimumStrength,
+            int height,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        List<Candidate> result =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<>()
+                        : null);
         float maximumGap = Math.max(40f, height * .035f);
-        for (int first = 0; first + 4 < peaks.size(); first++) {
-            int top = peaks.get(first);
-            for (int last = first + 4; last < peaks.size(); last++) {
-                int bottom = peaks.get(last);
-                float gap = (bottom - top) / 4f;
-                if (gap < 2.5f) continue;
-                if (gap > maximumGap) break;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int first = 0; first + 4 < peaks.size(); first++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
 
-                float tolerance = Math.max(2f, gap * .24f);
-                int[] rows = new int[] {top, -1, -1, -1, bottom};
-                float error = 0f;
-                int previousIndex = first;
-                boolean complete = true;
-                for (int line = 1; line < 4; line++) {
-                    float expected = top + line * gap;
-                    int bestIndex = -1;
-                    float bestDistance = Float.MAX_VALUE;
-                    for (int index = previousIndex + 1; index < last; index++) {
-                        int row = peaks.get(index);
-                        float distance = Math.abs(row - expected);
-                        if (distance > tolerance) continue;
-                        if (distance < bestDistance
-                                || (distance == bestDistance
-                                        && bestIndex >= 0
-                                        && strength[row] > strength[peaks.get(bestIndex)])) {
-                            bestIndex = index;
-                            bestDistance = distance;
+                int top = peaks.get(first);
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int last = first + 4; last < peaks.size(); last++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        int bottom = peaks.get(last);
+                        float gap = (bottom - top) / 4f;
+                        if (gap < 2.5f) continue;
+                        if (gap > maximumGap) break;
+
+                        float tolerance = Math.max(2f, gap * .24f);
+                        int[] rows =
+                                (quarterBudget == null
+                                                || quarterBudget.allocate(
+                                                        (Math.max(0L, (long) (5))) + 1,
+                                                        32L * 1 + 8L * (Math.max(0L, (long) (5))))
+                                        ? new int[] {top, -1, -1, -1, bottom}
+                                        : null);
+                        float error = 0f;
+                        int previousIndex = first;
+                        boolean complete = true;
+                        {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            for (int line = 1; line < 4; line++) {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                                float expected = top + line * gap;
+                                int bestIndex = -1;
+                                float bestDistance = Float.MAX_VALUE;
+                                {
+                                    if (quarterBudget != null)
+                                        FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                                    for (int index = previousIndex + 1; index < last; index++) {
+                                        if (quarterBudget != null)
+                                            FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                                        int row = peaks.get(index);
+                                        float distance = Math.abs(row - expected);
+                                        if (distance > tolerance) continue;
+                                        if (distance < bestDistance
+                                                || (distance == bestDistance
+                                                        && bestIndex >= 0
+                                                        && strength[row]
+                                                                > strength[peaks.get(bestIndex)])) {
+                                            bestIndex = index;
+                                            bestDistance = distance;
+                                        }
+                                    }
+                                }
+
+                                if (bestIndex < 0) {
+                                    complete = false;
+                                    break;
+                                }
+                                rows[line] = peaks.get(bestIndex);
+                                previousIndex = bestIndex;
+                                // Evenly spaced printed lines need not land on integer pixels. Do
+                                // not
+                                // penalize their unavoidable rounding enough to discard a short
+                                // staff
+                                // whose five rules each pass the raw-ink threshold.
+                                error += Math.max(0f, bestDistance - .5f);
+                            }
                         }
-                    }
-                    if (bestIndex < 0) {
-                        complete = false;
-                        break;
-                    }
-                    rows[line] = peaks.get(bestIndex);
-                    previousIndex = bestIndex;
-                    // Evenly spaced printed lines need not land on integer pixels. Do not
-                    // penalize their unavoidable rounding enough to discard a short staff
-                    // whose five rules each pass the raw-ink threshold.
-                    error += Math.max(0f, bestDistance - .5f);
-                }
-                if (!complete) continue;
 
-                int totalStrength = 0;
-                for (int row : rows) totalStrength += strength[row];
-                float score = totalStrength - error * minimumStrength * .75f;
-                if (score >= minimumStrength * 4.5f) result.add(new Candidate(rows, gap, score));
+                        if (!complete) continue;
+
+                        int totalStrength = 0;
+                        {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+                            for (int row : rows) {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                                totalStrength += strength[row];
+                            }
+                        }
+
+                        float score = totalStrength - error * minimumStrength * .75f;
+                        if (score >= minimumStrength * 4.5f)
+                            FaintQuarterRestInk.add(
+                                    quarterBudget,
+                                    result,
+                                    (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                            ? new Candidate(rows, gap, score)
+                                            : null));
+                    }
+                }
             }
         }
+
         return result;
     }
 }

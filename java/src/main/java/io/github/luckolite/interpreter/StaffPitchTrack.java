@@ -494,15 +494,39 @@ final class StaffPitchTrack {
     }
 
     float[] at(float x) {
-        if (x < tailStart || x > tailEnd) return new float[] {tailBottom, tailGap};
+        return at(x, null);
+    }
+
+    float[] at(float x, FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        if (x < tailStart || x > tailEnd)
+            return (quarterBudget == null
+                            || quarterBudget.allocate(
+                                    (Math.max(0L, (long) (2))) + 1,
+                                    32L * 1 + 8L * (Math.max(0L, (long) (2))))
+                    ? new float[] {tailBottom, tailGap}
+                    : null);
         int right = 1;
-        while (right < points.length - 1 && x > points[right][0]) right++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            while (right < points.length - 1 && x > points[right][0]) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                right++;
+            }
+        }
+
         float[] a = points[right - 1], b = points[right];
         float fraction = (x - a[0]) / (b[0] - a[0]);
-        return new float[] {
-            a[1] + fraction * (b[1] - a[1]),
-            a[2] + Math.max(0, Math.min(1, fraction)) * (b[2] - a[2])
-        };
+        return (quarterBudget == null
+                        || quarterBudget.allocate(
+                                (Math.max(0L, (long) (2))) + 1,
+                                32L * 1 + 8L * (Math.max(0L, (long) (2))))
+                ? new float[] {
+                    a[1] + fraction * (b[1] - a[1]),
+                    a[2] + Math.max(0, Math.min(1, fraction)) * (b[2] - a[2])
+                }
+                : null);
     }
 
     /** A complete local five-line group resolves the one-line ambiguity of a partial match. */

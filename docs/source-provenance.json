@@ -565,14 +565,23 @@
     },
     "RawStaffLineDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RawStaffLineDetector.java",
-      "source_sha256": "4599192ed029eb5bd613221a51728b8c71c7edd8c08b030ce63023387ed15779",
-      "source_normalized_sha256": "1eacd57de498137fbc115eca115a5e5195fd5cb59aad4166f4b993657c695d24",
+      "source_sha256": "0801c98d9dbc7cf1b5a5f1d9ebd077d2735714c2429a471356c57984d3ac7f31",
+      "source_normalized_sha256": "bc510450db22470cf61fe083f4c1b8b66975eae0719c57ce740311be3cc927ef",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Evaluate existing interior texture rejection on the actual regularized emitted staff frame with independent printed neighbors. Corroborate staff-rule beam bands using complete bilateral staff witnesses, continuous same-rule paths, unchanged mass guards and an independent finite-rail end/body-to-tail veto; clipped evidence abstains. Reject photographic heads only with unchanged off-staff and absent-shaft guards, a continuously shaded body/surround, no thin printed ledger, and no independently bounded body or separate occluding neighbor. Ambiguous clipped neighbor witnesses conservatively preserve heads. Sixty-three original procedural regressions, including real pale whole-head and image-edge counterexamples. No private score pixels, song predicates, model or native record changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "6769fa213f97eed0105ab62cc9d21be0e683033d7cc2369809c321cfa082f361",
+      "standalone_sha256": "bc0c5492f4e62b7c7c941bf8876b1609b980d0dd4329e2737c913af87a5d647a",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawStaffLineDetector.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RawStaffLineDetector.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "ScoreDynamicChange.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicChange.java",
@@ -688,12 +697,12 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "3a47c4db19b7c7daec8e77cbfed66d5f10f563d8ecb2ee79a01cb15c672bc4d2",
+      "source_sha256": "b68acb770aefcbfcb759c1dc9c0d98faf904566d35337e5630dede7cf52f30e3",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "source_normalized_sha256": "96307d51209d98f856d5858bdb1c41f9277274e833414e58b8cccacf41a65614",
+      "source_normalized_sha256": "1e9554cb33c8ebf856d77dfca8607c551f59afb57d83819479c6b3cb163b013a",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "517fbb9e8a0edac560f856a641d529591a1cf018fe846202f6d0c3fdb45b6c68",
+      "standalone_sha256": "a1a707f8afbccbd8002605d997eab87fb1bc4ac6d9d07682ffaf5911d10a8301",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
@@ -703,7 +712,16 @@
       "recognition92_review_note": "Reviewed recognition92: wholly outside raw companion-rail proposal under a complete thin upper anchor and inherited two-gap bound; quantized partial-beam contour (quadratic bound-pair work inherits sampled span <=6 gaps; no absolute CPU cap claim); verified flat-rest frame overrides tracked frame using at least 60% contrasted columns, not a contiguous stroke, and may change retained rest geometry. Existing hairpin admission/145/225 and shared weighted 4M proposal budget, models, Guide291/audio97 and record layouts unchanged. Original procedural tests only.",
       "recognition92_r2_review_note": "Recognition92 R2: a tracked rest frame is eligible for the unchanged independent raw-flat proof only when every source column stays within its OWN seed top/bottom .15gap and gap .05gap. Material center/far-edge deformation retains its track. Original public curved-track oracle and eleven flat-rule originals remain unchanged; four independent original guard cases appended. No model, dependency, Guide291/audio97, native manifest or record-layout change.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
+      "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
@@ -775,16 +793,25 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "17977264a113510c38cf0597bd975ed3737ffb695a918f822169eb11f00540dd",
-      "source_normalized_sha256": "9b5a1d3a090f8c23b271ff7203bbb041d445d115cfeb4a801acfb560583c7e6c",
+      "source_sha256": "288025919746f54f13005c8ca104e2eba943df982dbe244aa7d812c782744334",
+      "source_normalized_sha256": "a934fed9c8f9e8c1b08a38f1aee9a725b93fe5583631d0ca7e7c730eed67d763",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
       "reviewed_source_state": "committed",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "standalone_sha256": "da0600343fb80a7bc298e53adb1303617ee3a6021e5e684e85598a3e89e809dc",
+      "standalone_sha256": "22a3d8919d7797f558537bff92a2d0e88fb82271aff5c6cfacff699aba4b019e",
       "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
       "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/StaffPitchTrack.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/StaffPitchTrack.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "OpeningMeasureLayout.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningMeasureLayout.java",
@@ -1093,13 +1120,22 @@
     },
     "CompactQuarterRestContour.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompactQuarterRestContour.java",
-      "source_sha256": "c26767da251ece839873ae44ff4c933f42195a10a61eec76dca9d4e1f30b524d",
+      "source_sha256": "f97412fd6b7ff4772d5b9dab0a10becf2c1c67f67c2c94a694d0d3a403ab5045",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "7fe455e8dbfa919a5c78f8aaa225d07e8d1fbb7888b3d31311a8b46398f565fe",
-      "standalone_sha256": "15f716723265a9162271712abb23d13abf51228dd841f4c13bd3a60f1a0610c9",
+      "source_normalized_sha256": "212c0970aca5d603b54658334b2e3b2309e54e67efed1f4886a392c35febbafa",
+      "standalone_sha256": "2069ec5d5c927890515c135d4790bd6b4f2122dd20db89febf233f712aefb4fb",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover a same-staff tie only through independently corroborated five-rule geometry, endpoint alignment and unchanged complete-curve proof on a local contrast view. Recover compressed quarter rests through connected observed paired outlines only in the existing seeded faint-recovery pass, preserving ordinary acquisition order. Existing pitch, duration, ownership, isolation, contrast and parallel-spine guards retained. Twenty-seven original procedural cases; no private pixels, score identities, models, new helper files or wire layouts.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompactQuarterRestContour.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompactQuarterRestContour.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "ConnectedItalicDynamic.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ConnectedItalicDynamic.java",
@@ -1769,12 +1805,21 @@
     },
     "QuarterRestLocalBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestLocalBody.java",
-      "source_sha256": "e962a1ad833025d86eff106ea92d5ae62c23a334f34fc200b8bd705c7bc1cbc9",
-      "source_normalized_sha256": "ab48d10849b2ea5d89130b6b59bf46b1f86630c1277602c2448c61f23c217cfa",
+      "source_sha256": "35b63311b98039986c1c761cfdc7d18f68a95ece44e0f626f0a73b71a5caf0cf",
+      "source_normalized_sha256": "d1a3c16220f59bf09a7236f2220d36fdf8378d2030d3acee4cde83677c8e0151",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
-      "standalone_sha256": "aee1f317f31e168ce8c245fca732a16da2204671ca4d85911ea06642f396b762",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/QuarterRestLocalBody.java"
+      "standalone_sha256": "5b4637796320bb0a604010a0938e1b879118de998ab253276f35eb4a5ca2ac5a",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/QuarterRestLocalBody.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "RestPaperTone.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestPaperTone.java",
@@ -2079,12 +2124,22 @@
     },
     "BeamInkConnectivity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BeamInkConnectivity.java",
-      "source_sha256": "604e8bc95623261f6905d3df0fd6066bb1d3a3f973846f7d221b7d979c8959b6",
-      "source_normalized_sha256": "ac97114780a2181cc14861a0ecbd91cf03a2153c5a7afd0941b049ad8c47cf77",
+      "source_sha256": "2e022d082e00e0a10337a22241e57d5b6c32860cc3c6ba464ee7d1acbb2439d1",
+      "source_normalized_sha256": "eb28963e1f5d258298058319b804e25bfe68d493c4d2a872bbee155c9f19397e",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BeamInkConnectivity.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BeamInkConnectivity.java",
+      "standalone_sha256": "858e120a9dd3ec2a4a47c99c2fad5fda093720d53838ee7a5654918758155cb9",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "PaleBeamRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleBeamRecovery.java",
@@ -2118,24 +2173,34 @@
     },
     "PrintedStemDirection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStemDirection.java",
-      "source_sha256": "009893f3ce5c6ff42e39c7dd48035a68b4b9b897478a595ee03d1629d06a9503",
-      "source_normalized_sha256": "fa62adbce9e5e549dc491cbc9aade77bdaeb75ecc26f5c3669de85726033c91d",
+      "source_sha256": "b94c8cc9d4adeda5776fafb6c041caf39ffa61ab4cdc366b3a3067769b9a1546",
+      "source_normalized_sha256": "8d61b10c31ed685a90d6309394e0ac68ff667f8fbe8ab36a0eeaf67762a747f1",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedStemDirection.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedStemDirection.java",
+      "standalone_sha256": "c6a569cc5265116046076194727f2751a9f8cd61fe07215a7f3224a62c7018e5",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "0fb30a808c10cf76d57a7893c2b40a0509818818d2796085cde6f6e698d4467d",
-      "source_normalized_sha256": "52b4585c15f58a6741cb266007770058f433bcbb272880ede781a9915f170bec",
+      "source_sha256": "c94e9d9a6077278747d05cc70a834c99f04ec7887cdc3893fa37cb55f1e9d9c2",
+      "source_normalized_sha256": "b44db2f25843668316f97813e42eff641a5512f3968982fb7ecac35e7792d8d6",
       "reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
       "reviewed_source_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
       "review_note": "Compute final-stem tip candidates once per connected-head check. Reject numeral shape, occlusion, contrast and joined-text failures before invoking the unchanged synchronous beam-owner predicate. Every accepted numeral still passes all original proofs in the same raster order. The only production caller is the pure ownership predicate in TripletRhythmDetector. No helper dependencies, models, weights, record layouts or recognition cache revision changed. Original generated filled-beam control rejects 1911 unnecessary owner calls; a valid-shape control still requires ownership. Private score pixels/logs stay outside this repository.",
       "reviewed_app_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
       "scoped_reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedTupletBeamOwner.java",
-      "standalone_sha256": "0bc0815ff36401554e2fe0069df9f1d08c29e3341277032740d50f4f45e9dca0",
+      "standalone_sha256": "159bfa5e4fe284db5843417cfe98e72eab20abb90312b94f2d1c232f56b992b4",
       "literal_tuplet_review": {
         "documentation": "docs/literal-tuplet-ownership.md",
         "reviewed_app_base_commit": "da1fd953b71cf1b539052c0d16f3b26eb615ac53",
@@ -2144,6 +2209,15 @@
         "scope": "Invocation-owned full-roster literal head/shaft/beam proof and independent local numeral witness after complete original recognizer failure; no Source authority/model/layout/cap change.",
         "rollout": "Source only; matched cumulative packaging deferred during active goal.",
         "reviewed_app_commit": "c8206f732dbc4b1e09f8f4e184c252560a2712a2"
+      },
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
       }
     },
     "guide_writer.py": {
@@ -4218,12 +4292,21 @@
     },
     "PrintedBoundaryRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBoundaryRestInk.java",
-      "source_sha256": "dcc2e4b26953e28b406f03683ec591c7a55f97e2f4784c3505a265ff5cdb1502",
-      "source_normalized_sha256": "b4cda8847f01f5665062630bd9df32220a6bc002647af1428d12de7f67c963a5",
-      "standalone_sha256": "7878b8ff02ef6309f222869489ba1edebcea75ef50c92ec1a374a45d4ae1cbe6",
+      "source_sha256": "f5d2c08f8e1d35dc50296d3c53992589df82c8ab8dc32d0c524a2ba3ad2bb976",
+      "source_normalized_sha256": "76078ebc09601e531b594ae24cf99a702ab73dff0039ef6ec297449908680831",
+      "standalone_sha256": "5535339b036a9066054a3290e62d3e1cb751d69cb5a44d9cf54d1f74d58d8e6b",
       "reviewed_source_state": "working-tree",
       "review_note": "Transport the exact accepted quarter-rest contour through the existing column frame. Reject only when two independent original-raster strips prove one unambiguous five-rule staff, a complete fixed barline agrees with the measure boundary, and every relevant foreground pixel belongs to independently supported rules or a connected bounded shaft fringe. Strict core proof and faint-glyph preservation remain separate. Existing classifier thresholds, unaffected dots and wire layouts stay unchanged. Twenty-seven original procedural regressions; no private score pixels or identities.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBoundaryRestInk.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBoundaryRestInk.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "CompleteStaffRuleBeamBand.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteStaffRuleBeamBand.java",
@@ -4245,12 +4328,21 @@
     },
     "QuarterRestRuleContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/QuarterRestRuleContrast.java",
-      "source_sha256": "8cd355567eace8fa2d0f36db581e0af3079f87b079f66535b31682295c6ee615",
-      "source_normalized_sha256": "76cd706c1937d1c2ce7c2d038a14fc67c76e80f9c7fc8fe2090e20a973bbf736",
-      "standalone_sha256": "0aae63b33757ad6bff058407778fdedb6456a23c491efb2753bde15dab9da71b",
+      "source_sha256": "1ec2c4907e25602376a1c1d981fab9f817b0d585f4bd6ad576e0405485cab269",
+      "source_normalized_sha256": "f18abb733b7a2b35169ec97caf13c537a17126d8f9b2a522e817cfd10fc99097",
+      "standalone_sha256": "de741487ffa16d5a90734ec0e34e29a4eaac0e812a2093d8763c26687ba00533",
       "reviewed_source_state": "working-tree",
       "review_note": "Recover only caller-masked rule rows of a bounded quarter-rest body when an independently corroborated five-rule frame and bilateral nonsaturated stripe contrast preserve connected darker body ink. Keep every non-rule row unchanged and retry the unchanged full quarter classifier before cropped-hook alternatives. Existing threshold and grammar are retained; saturated, missing-rule, one-sided or disconnected evidence abstains. Nineteen original procedural regressions plus 129 existing rest controls; no private score pixels, score identifiers, model or native format changes.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/QuarterRestRuleContrast.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/QuarterRestRuleContrast.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "FaintHairpinPair.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintHairpinPair.java",
@@ -4419,13 +4511,22 @@
     },
     "RestFigureOrigins.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestFigureOrigins.java",
-      "source_sha256": "489e9e3b1af18b3bdf24d7f525a842dc642986c40baceeac3e5a1cabd3bfd6d6",
-      "source_normalized_sha256": "1604e44ee32dd5834a4af9e55d2bb59a46a3a4beb1b6827b50ad358ef93acc66",
-      "standalone_sha256": "a14ff9be573e90a7ffc614cd9bee80899feb4b9a7b45d7f3e18fc6ed123eabc5",
+      "source_sha256": "0c9721abde98099a96689ecfbc87a52c904a8289ec6c310c36bf67160754a302",
+      "source_normalized_sha256": "9fcbef37cd880d4a709efddc208f783499ff3804270b5787b06e8942f7ff731f",
+      "standalone_sha256": "8faba86831ee6bca68535a3e7e0adb1b84251aed5b9be19a9ca720706560d6a8",
       "review_note": "Identity-based original and derived component provenance ties canonical selected rest proposals to their originating heads and photometric views. Unknown and equal-clone ownership abstains.",
       "reviewed_source_state": "committed",
       "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestFigureOrigins.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestFigureOrigins.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "java/src/main/java/io/github/luckolite/interpreter/Main.java": {
       "origin": "Original standalone implementation and adapter; Apache-2.0.",
@@ -4584,14 +4685,23 @@
     },
     "AccentedHeadRestOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/AccentedHeadRestOwnership.java",
-      "source_sha256": "5e3237fabf27dedc57242aaf2576f97c505070f7cc9f877c01017129cfab45b8",
-      "source_normalized_sha256": "07cd0bda902e4ab116c9398edf892a7752edef330536cca0e3fada5f78079bca",
-      "standalone_sha256": "7ac74bc539af0e7948efb41bfa8e9b33e6f74e5c377a8ba311d257aaa1b705b1",
+      "source_sha256": "985860e10e22ce05bca9f7ad65f29972c82b904f589bca702c040c051a386a0b",
+      "source_normalized_sha256": "4287e67175b15fe7cc8ac686592c6f4f730886c3e36fec14365c6f52d816d1b5",
+      "standalone_sha256": "24498808bf66bf64cb81b32dd5e59a37fddc2baa0571bbec835ec140b88070f8",
       "reviewed_app_base_commit": "7f4cd1d08e180ac7e31619134203bddddd476f74",
       "reviewed_source_state": "committed",
       "review_note": "An independently owned complete accent and original-gray pitched-head shaft account for every non-rule pixel of a false rest proposal. Bilateral raw five-line support proves ignored rules. Unknown, clipped, disconnected or ambiguous ownership abstains; no rhythm/proximity exclusion. Original Apache-2.0 procedural controls, no private score assets or new external dependency.",
       "scoped_reviewed_app_commit": "c98790ccc786348021df0c3c25d3a3fa7900828f",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AccentedHeadRestOwnership.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/AccentedHeadRestOwnership.java",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
+      }
     },
     "OpeningPickupContent.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OpeningPickupContent.java",
@@ -7847,6 +7957,23 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      }
+    },
+    "FaintQuarterRestInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintQuarterRestInk.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintQuarterRestInk.java",
+      "license": "Apache-2.0",
+      "source_sha256": "da71257393fd21e962d925fc3171be7c46f3108d4f3674d023e56347bd113efa",
+      "source_normalized_sha256": "a16bf366d6c77155810329f127852e62e116d2c1204d3534b90151e06cf28051",
+      "standalone_sha256": "66fe3223569db131e1c7e3fea24bcd749f9906afcaa8df99f2b5d42ec096cf8e",
+      "literal_faint_quarter_review": {
+        "documentation": "docs/literal-faint-quarter-recovery.md",
+        "reviewed_app_base_commit": "106af89348d2e89b0768cccf1b7900174bead69c",
+        "new_original_junit_tests": 3,
+        "new_original_assertions": 268,
+        "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
       }
     }
   },

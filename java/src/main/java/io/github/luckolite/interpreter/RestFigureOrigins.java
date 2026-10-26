@@ -96,13 +96,26 @@ final class RestFigureOrigins {
         }
 
         boolean contains(int x, int y) {
+            return contains(x, y, null);
+        }
+
+        boolean contains(int x, int y, FaintQuarterRestInk.Budget quarterBudget) {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
             if (x < 0 || x >= width || y < 0 || y >= height) return false;
             if (source != null) {
                 // EXACT existing rectifier sample; no inverse interpolation or AA dilation.
                 int sy = Math.round(bottoms[x] + (first + y - staffBottom));
-                return source.contains(x, sy);
+                return source.contains(x, sy, quarterBudget);
             }
-            for (int[] r : runs) if (r[0] == y && x >= r[1] && x <= r[2]) return true;
+            {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+                for (int[] r : runs) {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    if (r[0] == y && x >= r[1] && x <= r[2]) return true;
+                }
+            }
+
             return false;
         }
     }

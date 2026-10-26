@@ -53,7 +53,7 @@ final class QuarterRestLocalBody {
                             if (!visited[next] && (paper[yy * width + xx] & 255) < 170) {
                                 visited[next] = true;
                                 queue[count++] = next;
-                        }
+                            }
                         }
                 }
                 // A connected stem or rule must never be cropped into a putative rest.
@@ -87,6 +87,19 @@ final class QuarterRestLocalBody {
             int left,
             int right,
             SixteenthRestDetector.Staff staff) {
+        return frame(gray, width, height, left, right, staff, null);
+    }
+
+    static float[] frame(
+            byte[] gray,
+            int width,
+            int height,
+            int left,
+            int right,
+            SixteenthRestDetector.Staff staff,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         float gap = staff.gap();
         int a = Math.max(0, Math.round(left - gap * 3)),
                 b = Math.max(0, Math.round(left - gap * .75f));
@@ -97,23 +110,54 @@ final class QuarterRestLocalBody {
         int first = Math.max(flank, (int) Math.floor(staff.top() - gap * .8f));
         int last = Math.min(height - flank, (int) Math.ceil(staff.bottom() + gap * .8f));
         if (last <= first) return null;
-        var leftRules = rules(gray, width, a, b, first, last, flank, staff);
-        var rightRules = rules(gray, width, c, d, first, last, flank, staff);
+        var leftRules = rules(gray, width, a, b, first, last, flank, staff, quarterBudget);
+        var rightRules = rules(gray, width, c, d, first, last, flank, staff, quarterBudget);
         if (leftRules == null || rightRules == null) return null;
         float fraction = ((left + right) * .5f - (a + b) * .5f) / ((c + d - a - b) * .5f);
-        float[] rows = new float[5];
+        float[] rows =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        (Math.max(0L, (long) (5))) + 1,
+                                        32L * 1 + 8L * (Math.max(0L, (long) (5))))
+                        ? new float[5]
+                        : null);
         float mean = 0;
-        for (int i = 0; i < 5; i++) {
-            if (Math.abs(leftRules[i] - rightRules[i]) > gap * .2f) return null;
-            rows[i] = leftRules[i] + (rightRules[i] - leftRules[i]) * fraction;
-            mean += rows[i] / 5;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i < 5; i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (Math.abs(leftRules[i] - rightRules[i]) > gap * .2f) return null;
+                rows[i] = leftRules[i] + (rightRules[i] - leftRules[i]) * fraction;
+                mean += rows[i] / 5;
+            }
         }
+
         float fittedGap = 0;
-        for (int i = 0; i < 5; i++) fittedGap += (i - 2) * (rows[i] - mean) / 10;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i < 5; i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                fittedGap += (i - 2) * (rows[i] - mean) / 10;
+            }
+        }
+
         if (fittedGap < gap * .88f || fittedGap > gap * 1.12f) return null;
-        for (int i = 0; i < 5; i++)
-            if (Math.abs(rows[i] - (mean + (i - 2) * fittedGap)) > gap * .12f + .5f) return null;
-        return new float[] {mean + 2 * fittedGap, fittedGap};
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int i = 0; i < 5; i++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (Math.abs(rows[i] - (mean + (i - 2) * fittedGap)) > gap * .12f + .5f)
+                    return null;
+            }
+        }
+
+        return (quarterBudget == null
+                        || quarterBudget.allocate(
+                                (Math.max(0L, (long) (2))) + 1,
+                                32L * 1 + 8L * (Math.max(0L, (long) (2))))
+                ? new float[] {mean + 2 * fittedGap, fittedGap}
+                : null);
     }
 
     private static int[] rules(
@@ -125,27 +169,89 @@ final class QuarterRestLocalBody {
             int last,
             int flank,
             SixteenthRestDetector.Staff staff) {
-        int[] strength = new int[last - first];
-        for (int y = first; y < last; y++)
-            for (int x = left; x < right; x++) {
-                int ink = gray[y * width + x] & 255;
-                if (ink <= 225
-                        && (gray[(y - flank) * width + x] & 255) >= ink + 12
-                        && (gray[(y + flank) * width + x] & 255) >= ink + 12) strength[y - first]++;
+        return rules(gray, width, left, right, first, last, flank, staff, null);
+    }
+
+    private static int[] rules(
+            byte[] gray,
+            int width,
+            int left,
+            int right,
+            int first,
+            int last,
+            int flank,
+            SixteenthRestDetector.Staff staff,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        int[] strength =
+                (quarterBudget == null
+                                || quarterBudget.allocate(
+                                        (Math.max(0L, (long) (last - first))) + 1,
+                                        32L * 1 + 8L * (Math.max(0L, (long) (last - first))))
+                        ? new int[last - first]
+                        : null);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = first; y < last; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int x = left; x < right; x++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        int ink = gray[y * width + x] & 255;
+                        if (ink <= 225
+                                && (gray[(y - flank) * width + x] & 255) >= ink + 12
+                                && (gray[(y + flank) * width + x] & 255) >= ink + 12)
+                            strength[y - first]++;
+                    }
+                }
             }
-        int[] found = null;
-        for (var lines :
-                RawStaffLineDetector.detectFromStrength(
-                        strength, Math.max(4, Math.round((right - left) * .5f)), last - first)) {
-            if (lines.gap() < staff.gap() * .88f
-                    || lines.gap() > staff.gap() * 1.12f
-                    || Math.abs(lines.bottom() + first - staff.bottom()) > staff.gap() * .8f)
-                continue;
-            int[] rows = lines.rows().clone();
-            for (int i = 0; i < rows.length; i++) rows[i] += first;
-            if (found != null && !java.util.Arrays.equals(found, rows)) return null;
-            found = rows;
         }
+
+        int[] found = null;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (var lines :
+                    RawStaffLineDetector.detectFromStrength(
+                            strength,
+                            Math.max(4, Math.round((right - left) * .5f)),
+                            last - first,
+                            quarterBudget)) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (lines.gap() < staff.gap() * .88f
+                        || lines.gap() > staff.gap() * 1.12f
+                        || Math.abs(lines.bottom() + first - staff.bottom()) > staff.gap() * .8f)
+                    continue;
+                int[] rows =
+                        (quarterBudget == null
+                                        || quarterBudget.allocate(
+                                                1L + (lines.rows()).length,
+                                                32L + 8L * (lines.rows()).length)
+                                ? lines.rows().clone()
+                                : null);
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int i = 0; i < rows.length; i++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        rows[i] += first;
+                    }
+                }
+
+                if (found != null
+                        && !((quarterBudget == null
+                                        || quarterBudget.allocate(
+                                                1L
+                                                        + (found == null ? 0 : found.length)
+                                                        + (rows == null ? 0 : rows.length),
+                                                0))
+                                && java.util.Arrays.equals(found, rows))) return null;
+                found = rows;
+            }
+        }
+
         return found;
     }
 }

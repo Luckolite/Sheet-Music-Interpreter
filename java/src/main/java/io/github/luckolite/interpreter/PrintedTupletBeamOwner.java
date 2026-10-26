@@ -540,6 +540,40 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom) {
+        return owns(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                null);
+    }
+
+    static boolean owns(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         return Float.isFinite(
                 distance(
                         gray,
@@ -554,7 +588,8 @@ final class PrintedTupletBeamOwner {
                         numeralLeft,
                         numeralTop,
                         numeralRight,
-                        numeralBottom));
+                        numeralBottom,
+                        quarterBudget));
     }
 
     static float distance(
@@ -571,6 +606,40 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom) {
+        return distance(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                null);
+    }
+
+    static float distance(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         return distanceWithBounds(
                 gray,
                 width,
@@ -586,7 +655,8 @@ final class PrintedTupletBeamOwner {
                 numeralRight,
                 numeralBottom,
                 false,
-                false);
+                false,
+                quarterBudget);
     }
 
     /** The caller must already prove a complete rest-containing bracket. */
@@ -604,6 +674,40 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom) {
+        return bracketedDistance(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                null);
+    }
+
+    static float bracketedDistance(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         return distanceWithBounds(
                 gray,
                 width,
@@ -619,7 +723,8 @@ final class PrintedTupletBeamOwner {
                 numeralRight,
                 numeralBottom,
                 true,
-                false);
+                false,
+                quarterBudget);
     }
 
     /** Caller proves a same-page repeated numeral with its visible original outline. */
@@ -637,6 +742,40 @@ final class PrintedTupletBeamOwner {
             int numeralTop,
             int numeralRight,
             int numeralBottom) {
+        return joinedDistance(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                null);
+    }
+
+    static float joinedDistance(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         return distanceWithBounds(
                 gray,
                 width,
@@ -652,7 +791,8 @@ final class PrintedTupletBeamOwner {
                 numeralRight,
                 numeralBottom,
                 false,
-                true);
+                true,
+                quarterBudget);
     }
 
     private static float distanceWithBounds(
@@ -671,6 +811,44 @@ final class PrintedTupletBeamOwner {
             int numeralBottom,
             boolean bracketed,
             boolean joined) {
+        return distanceWithBounds(
+                gray,
+                width,
+                height,
+                firstX,
+                firstY,
+                lastX,
+                lastY,
+                gap,
+                stemDirection,
+                numeralLeft,
+                numeralTop,
+                numeralRight,
+                numeralBottom,
+                bracketed,
+                joined,
+                null);
+    }
+
+    private static float distanceWithBounds(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int stemDirection,
+            int numeralLeft,
+            int numeralTop,
+            int numeralRight,
+            int numeralBottom,
+            boolean bracketed,
+            boolean joined,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         float nearest = Float.POSITIVE_INFINITY;
         if (gray == null
                 || width < 1
@@ -682,32 +860,68 @@ final class PrintedTupletBeamOwner {
                 || lastX - firstX < gap * 2
                 || lastX - firstX > gap * 26) return Float.POSITIVE_INFINITY;
         int travel = -stemDirection;
-        List<Tip> first = tips(gray, width, height, firstX, firstY, gap, stemDirection, 1);
-        List<Tip> last = tips(gray, width, height, lastX, lastY, gap, stemDirection, -1);
+        List<Tip> first =
+                tips(gray, width, height, firstX, firstY, gap, stemDirection, 1, quarterBudget);
+        List<Tip> last =
+                tips(gray, width, height, lastX, lastY, gap, stemDirection, -1, quarterBudget);
         float numeralX = (numeralLeft + numeralRight) * .5f;
-        for (Tip a : first)
-            for (Tip b : last) {
-                if (b.x - a.x < gap || Math.abs(b.y - a.y) > gap * 3) continue;
-                float fraction = (numeralX - a.x) / (b.x - a.x);
-                if (fraction < (bracketed ? -.15f : .15f) || fraction > (bracketed ? 1.15f : .85f))
-                    continue;
-                float beamY = a.y + fraction * (b.y - a.y);
-                float distance = travel > 0 ? numeralTop - beamY : beamY - numeralBottom;
-                float minimum =
-                        joined ? -(numeralBottom - numeralTop + 1) * .45f : Math.max(2, gap * .2f);
-                if (distance < minimum || distance > gap * 1.8f) continue;
-                int covered = 0, total = 0;
-                for (int x = a.x + 2; x < b.x - 1; x++) {
-                    int y = Math.round(a.y + (b.y - a.y) * (x - a.x) / (float) (b.x - a.x));
-                    total++;
-                    if (core(gray, width, height, x, y, gap)) covered++;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (Tip a : first) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+                    for (Tip b : last) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        if (b.x - a.x < gap || Math.abs(b.y - a.y) > gap * 3) continue;
+                        float fraction = (numeralX - a.x) / (b.x - a.x);
+                        if (fraction < (bracketed ? -.15f : .15f)
+                                || fraction > (bracketed ? 1.15f : .85f)) continue;
+                        float beamY = a.y + fraction * (b.y - a.y);
+                        float distance = travel > 0 ? numeralTop - beamY : beamY - numeralBottom;
+                        float minimum =
+                                joined
+                                        ? -(numeralBottom - numeralTop + 1) * .45f
+                                        : Math.max(2, gap * .2f);
+                        if (distance < minimum || distance > gap * 1.8f) continue;
+                        int covered = 0, total = 0;
+                        {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            for (int x = a.x + 2; x < b.x - 1; x++) {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                                int y =
+                                        Math.round(
+                                                a.y
+                                                        + (b.y - a.y)
+                                                                * (x - a.x)
+                                                                / (float) (b.x - a.x));
+                                total++;
+                                if (core(gray, width, height, x, y, gap, quarterBudget)) covered++;
+                            }
+                        }
+
+                        if (total > 0
+                                && covered >= total * .94f
+                                && BeamInkConnectivity.connected(
+                                        gray,
+                                        width,
+                                        height,
+                                        a.x,
+                                        a.y,
+                                        b.x,
+                                        b.y,
+                                        gap,
+                                        quarterBudget))
+                            nearest = Math.min(nearest, joined ? Math.max(0, distance) : distance);
+                    }
                 }
-                if (total > 0
-                        && covered >= total * .94f
-                        && BeamInkConnectivity.connected(
-                                gray, width, height, a.x, a.y, b.x, b.y, gap))
-                    nearest = Math.min(nearest, joined ? Math.max(0, distance) : distance);
             }
+        }
+
         return nearest;
     }
 
@@ -722,6 +936,23 @@ final class PrintedTupletBeamOwner {
             float lastY,
             float gap,
             int direction) {
+        return connectedHeads(
+                gray, width, height, firstX, firstY, lastX, lastY, gap, direction, null);
+    }
+
+    static boolean connectedHeads(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float firstY,
+            float lastX,
+            float lastY,
+            float gap,
+            int direction,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         if (gray == null
                 || width < 1
                 || height < 1
@@ -731,23 +962,55 @@ final class PrintedTupletBeamOwner {
                 || Math.abs(direction) != 1
                 || lastX - firstX < gap * .8f
                 || lastX - firstX > gap * 26) return false;
-        var first = tips(gray, width, height, firstX, firstY, gap, direction, 1);
+        var first = tips(gray, width, height, firstX, firstY, gap, direction, 1, quarterBudget);
         if (first.isEmpty()) return false;
-        var last = tips(gray, width, height, lastX, lastY, gap, direction, -1);
-        for (var a : first)
-            for (var b : last) {
-                if (b.x - a.x < gap * .5f || Math.abs(b.y - a.y) > gap * 3) continue;
-                int covered = 0, total = 0;
-                for (int x = a.x + 2; x < b.x - 1; x++) {
-                    int y = Math.round(a.y + (b.y - a.y) * (x - a.x) / (float) (b.x - a.x));
-                    total++;
-                    if (core(gray, width, height, x, y, gap)) covered++;
+        var last = tips(gray, width, height, lastX, lastY, gap, direction, -1, quarterBudget);
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+            for (var a : first) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
+                    for (var b : last) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        if (b.x - a.x < gap * .5f || Math.abs(b.y - a.y) > gap * 3) continue;
+                        int covered = 0, total = 0;
+                        {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            for (int x = a.x + 2; x < b.x - 1; x++) {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                                int y =
+                                        Math.round(
+                                                a.y
+                                                        + (b.y - a.y)
+                                                                * (x - a.x)
+                                                                / (float) (b.x - a.x));
+                                total++;
+                                if (core(gray, width, height, x, y, gap, quarterBudget)) covered++;
+                            }
+                        }
+
+                        if (total > 0
+                                && covered >= total * .94f
+                                && BeamInkConnectivity.connected(
+                                        gray,
+                                        width,
+                                        height,
+                                        a.x,
+                                        a.y,
+                                        b.x,
+                                        b.y,
+                                        gap,
+                                        quarterBudget)) return true;
+                    }
                 }
-                if (total > 0
-                        && covered >= total * .94f
-                        && BeamInkConnectivity.connected(
-                                gray, width, height, a.x, a.y, b.x, b.y, gap)) return true;
             }
+        }
+
         return false;
     }
 
@@ -760,50 +1023,136 @@ final class PrintedTupletBeamOwner {
             float gap,
             int stemDirection,
             int outward) {
-        var result = new ArrayList<Tip>();
+        return tips(gray, width, height, headX, headY, gap, stemDirection, outward, null);
+    }
+
+    private static List<Tip> tips(
+            byte[] gray,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            int stemDirection,
+            int outward,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        var result =
+                (quarterBudget == null || quarterBudget.allocate(1, 256)
+                        ? new ArrayList<Tip>()
+                        : null);
         // A chord's shared attack x can be the shaft edge of its displaced second.
         // Require the same continuous shaft/beam evidence over the whole oval-side range.
         int center = Math.round(headX + stemDirection * gap * .3f), travel = -stemDirection;
         int radius = Math.max(1, Math.round(gap * .5f));
-        for (int x = center - radius; x <= center + radius; x++) {
-            if (x < 0 || x >= width) continue;
-            int hits = 0, total = 0, blank = 0;
-            for (int d = Math.round(gap * .6f); d <= gap * 6; d++) {
-                int y = Math.round(headY) + travel * d;
-                if (y < 0 || y >= height) break;
-                total++;
-                if ((gray[y * width + x] & 255) < 165) {
-                    hits++;
-                    blank = 0;
-                } else if (++blank > Math.max(1, Math.round(gap * .16f))) break;
-                if (total >= gap * 1.4f
-                        && hits >= total * .92f
-                        && outwardBeam(gray, width, height, x, y, gap, outward))
-                    result.add(new Tip(x, y));
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int x = center - radius; x <= center + radius; x++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                if (x < 0 || x >= width) continue;
+                int hits = 0, total = 0, blank = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int d = Math.round(gap * .6f); d <= gap * 6; d++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        int y = Math.round(headY) + travel * d;
+                        if (y < 0 || y >= height) break;
+                        total++;
+                        if ((gray[y * width + x] & 255) < 165) {
+                            hits++;
+                            blank = 0;
+                        } else if (++blank > Math.max(1, Math.round(gap * .16f))) break;
+                        if (total >= gap * 1.4f
+                                && hits >= total * .92f
+                                && outwardBeam(
+                                        gray, width, height, x, y, gap, outward, quarterBudget))
+                            FaintQuarterRestInk.add(
+                                    quarterBudget,
+                                    result,
+                                    (quarterBudget == null || quarterBudget.allocate(1, 256)
+                                            ? new Tip(x, y)
+                                            : null));
+                    }
+                }
             }
         }
+
         return result;
     }
 
     private static boolean outwardBeam(
             byte[] gray, int width, int height, int x, int y, float gap, int side) {
-        for (int angle = -10; angle <= 10; angle++) {
-            int hits = 0, total = 0;
-            for (int d = Math.round(gap * .25f); d <= gap * 1.35f; d++) {
-                total++;
-                if (core(gray, width, height, x + side * d, Math.round(y + angle * .06f * d), gap))
-                    hits++;
+        return outwardBeam(gray, width, height, x, y, gap, side, null);
+    }
+
+    private static boolean outwardBeam(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int y,
+            float gap,
+            int side,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int angle = -10; angle <= 10; angle++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                int hits = 0, total = 0;
+                {
+                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                    for (int d = Math.round(gap * .25f); d <= gap * 1.35f; d++) {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
+                        total++;
+                        if (core(
+                                gray,
+                                width,
+                                height,
+                                x + side * d,
+                                Math.round(y + angle * .06f * d),
+                                gap,
+                                quarterBudget)) hits++;
+                    }
+                }
+
+                if (total > 0 && hits >= total * .94f) return true;
             }
-            if (total > 0 && hits >= total * .94f) return true;
         }
+
         return false;
     }
 
     private static boolean core(byte[] gray, int width, int height, int x, int y, float gap) {
+        return core(gray, width, height, x, y, gap, null);
+    }
+
+    private static boolean core(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int y,
+            float gap,
+            FaintQuarterRestInk.Budget quarterBudget) {
+        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+
         int radius = Math.max(1, Math.round(gap * .08f));
         if (x < 0 || x >= width || y - radius < 0 || y + radius >= height) return false;
-        for (int dy = -radius; dy <= radius; dy++)
-            if ((gray[(y + dy) * width + x] & 255) >= 165) return false;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int dy = -radius; dy <= radius; dy++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if ((gray[(y + dy) * width + x] & 255) >= 165) return false;
+            }
+        }
+
         return true;
     }
 }
