@@ -7,14 +7,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-/** Reads printed triplets and beamed five- or seven-in-four groups from numeral and attack geometry. */
+/**
+ * Reads printed triplets and beamed five- or seven-in-four groups from numeral and attack geometry.
+ */
 final class TripletRhythmDetector {
     private TripletRhythmDetector() {}
 
     record Rhythm(List<ScoreNoteEvent> notes, List<ScoreRestEvent> rests) {}
 
-    /** A printed rest occupies one rhythmic slot just as a chord attack does.
-     * Virtual events are used only for grouping and never returned as sounding notes. */
+    /**
+     * A printed rest occupies one rhythmic slot just as a chord attack does. Virtual events are
+     * used only for grouping and never returned as sounding notes.
+     */
     static Rhythm withRests(
             List<ScoreNoteEvent> notes,
             List<ScoreRestEvent> rests,
@@ -50,7 +54,16 @@ final class TripletRhythmDetector {
                             beams <= 0 ? (float) value : 0,
                             beams < 0 ? 2 : 1));
         }
-        List<ScoreNoteEvent> marked = apply(slots, measures, gray, width, height, notes.size());
+        List<ScoreNoteEvent> marked =
+                apply(
+                        slots,
+                        measures,
+                        gray,
+                        width,
+                        height,
+                        notes.size(),
+                        new PrintedTupletBeamOwner.LiteralWork(8_000_000),
+                        rests);
         List<ScoreRestEvent> scaled = new ArrayList<>(rests);
         for (int i = 0; i < restIndices.size(); i++) {
             int index = restIndices.get(i);
@@ -208,9 +221,11 @@ final class TripletRhythmDetector {
                 && a.staffCount() == b.staffCount();
     }
 
-    /** Keep independent held voices out of a moving chord's rhythmic group.
-     * The three attack columns themselves remain consecutive: an intervening
-     * different-value attack must not be skipped to manufacture a triplet. */
+    /**
+     * Keep independent held voices out of a moving chord's rhythmic group. The three attack columns
+     * themselves remain consecutive: an intervening different-value attack must not be skipped to
+     * manufacture a triplet.
+     */
     private static Onset matching(Onset onset, List<ScoreNoteEvent> notes, ScoreNoteEvent first) {
         double value = ScoreNoteTiming.writtenDurationBeats(first);
         if (!Double.isFinite(value) || value <= 0 || value > 1) return null;
@@ -271,11 +286,15 @@ final class TripletRhythmDetector {
                 gray,
                 width,
                 height,
-                Integer.MAX_VALUE);
+                Integer.MAX_VALUE,
+                new PrintedTupletBeamOwner.LiteralWork(8_000_000),
+                List.of());
     }
 
-    /** Cheap candidate filter only: two horizontal arms separated by original paper.
-     * Full exact printed-group/curve/glyph proof is still required before any ratio changes. */
+    /**
+     * Cheap candidate filter only: two horizontal arms separated by original paper. Full exact
+     * printed-group/curve/glyph proof is still required before any ratio changes.
+     */
     static boolean hasJoinedBracketCandidate(
             byte[] gray, int width, int height, float x1, float x3, float headTop, float gap) {
         if (gray == null
@@ -424,6 +443,18 @@ final class TripletRhythmDetector {
             int width,
             int height,
             int virtualStart) {
+        return apply(notes, measures, gray, width, height, virtualStart, null, List.of());
+    }
+
+    private static List<ScoreNoteEvent> apply(
+            List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            int virtualStart,
+            PrintedTupletBeamOwner.LiteralWork literalWork,
+            List<ScoreRestEvent> literalRests) {
         if (notes == null
                 || notes.size() < 2
                 || measures == null
@@ -464,6 +495,24 @@ final class TripletRhythmDetector {
                 float y1 = Math.min(a.top(), Math.min(b.top(), c.top())) * height;
                 float y2 = Math.max(a.bottom(), Math.max(b.bottom(), c.bottom())) * height;
                 final List<ScoreNoteEvent> numeralGroupNotes = result;
+                var literal =
+                        a.indices().size() == 1
+                                        && b.indices().size() == 1
+                                        && c.indices().size() == 1
+                                ? PrintedTupletBeamOwner.LiteralProof.create(
+                                        gray,
+                                        width,
+                                        height,
+                                        result,
+                                        Math.min(virtualStart, result.size()),
+                                        measures,
+                                        a.indices().get(0),
+                                        b.indices().get(0),
+                                        c.indices().get(0),
+                                        gap,
+                                        literalWork,
+                                        literalRests)
+                                : null;
                 Glyph numeral =
                         findOwnedNumeral(
                                 gray,
@@ -493,7 +542,8 @@ final class TripletRhythmDetector {
                                                 gray,
                                                 width,
                                                 height,
-                                                gap));
+                                                gap),
+                                literal);
                 if (numeral == null && virtualStart < result.size()) {
                     final List<ScoreNoteEvent> restGroupNotes = result;
                     final float restGap =
@@ -1063,7 +1113,9 @@ final class TripletRhythmDetector {
         return result;
     }
 
-    /** Close attacks may belong to separate printed beam groups; an ink gap alone is insufficient. */
+    /**
+     * Close attacks may belong to separate printed beam groups; an ink gap alone is insufficient.
+     */
     private static boolean separateTupletBoundary(
             Onset left,
             Onset right,
@@ -1712,8 +1764,10 @@ final class TripletRhythmDetector {
         return result;
     }
 
-    /** Between piano staves a single numeral belongs to the nearer staff.
-     * Explicit cross-staff beams keep their existing grouping authority. */
+    /**
+     * Between piano staves a single numeral belongs to the nearer staff. Explicit cross-staff beams
+     * keep their existing grouping authority.
+     */
     /** An actual rest slot has no shaft; the two sounding notes must own its complete bracket. */
     private static boolean bracketedRestBeamOwns(
             Glyph glyph,
@@ -1996,6 +2050,83 @@ final class TripletRhythmDetector {
     }
 
     /** A cropped staff/shaft crossing cannot supply a separately printed numeral. */
+
+    /** Runs only after the entire original recognizer, including deferred consensus, failed. */
+    private static Glyph literalFallback(
+            PrintedTupletBeamOwner.LiteralProof literal,
+            Glyph[] pending,
+            int[] levels,
+            int count,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean boundedSecondary) {
+        if (!literal.reserve(16L + count + 16L * count * count)) return null;
+        boolean[] qualified = new boolean[count];
+        Glyph independentConsensus = null;
+        for (int i = 0; i < count; i++) {
+            Glyph found = pending[i];
+            if (!Float.isFinite(
+                    literal.distance(found.left(), found.top(), found.right(), found.bottom())))
+                continue;
+            qualified[i] = true;
+            for (int earlier = 0; earlier < i; earlier++)
+                if (qualified[earlier]
+                        && levels[earlier] != levels[i]
+                        && Math.abs(pending[earlier].left() - found.left()) <= gap * .25f
+                        && Math.abs(pending[earlier].right() - found.right()) <= gap * .25f
+                        && Math.abs(pending[earlier].top() - found.top()) <= gap * .25f
+                        && Math.abs(pending[earlier].bottom() - found.bottom()) <= gap * .25f)
+                    return found;
+            if (independentConsensus != null) continue;
+            var window =
+                    literal.numeralWindow(found.left(), found.top(), found.right(), found.bottom());
+            if (window == null) continue;
+            Glyph independent =
+                    findPrintedNumeral(
+                            window.pixels(),
+                            window.width(),
+                            window.height(),
+                            firstX - window.left(),
+                            lastX - window.left(),
+                            firstY - window.top(),
+                            lastY - window.top(),
+                            gap,
+                            shortNotes,
+                            headX - window.left(),
+                            headY - window.top(),
+                            number,
+                            boundedSecondary,
+                            glyph -> true);
+            int area = 0;
+            for (byte pixel : window.pixels()) if (pixel == 0) area++;
+            boolean four =
+                    independent != null
+                            && completeFourCrossbar(
+                                    window.pixels(),
+                                    window.width(),
+                                    area,
+                                    independent.left(),
+                                    independent.top(),
+                                    independent.right() - independent.left() + 1,
+                                    independent.bottom() - independent.top() + 1);
+            if (independent != null
+                    && !four
+                    && Math.abs(independent.left() + window.left() - found.left()) <= gap * .25f
+                    && Math.abs(independent.right() + window.left() - found.right()) <= gap * .25f
+                    && Math.abs(independent.top() + window.top() - found.top()) <= gap * .25f
+                    && Math.abs(independent.bottom() + window.top() - found.bottom()) <= gap * .25f)
+                independentConsensus = found;
+        }
+        return literal.work.exhausted ? null : independentConsensus;
+    }
+
     private static boolean numeralCrossedByShaft(
             Glyph glyph, byte[] gray, int width, int height, float gap) {
         int extension = Math.max(3, Math.round(gap * .7f)),
@@ -2092,6 +2223,50 @@ final class TripletRhythmDetector {
             MeasureRegion bar,
             List<MeasureRegion> measures,
             java.util.function.Predicate<Glyph> completeBeamGroup) {
+        return findOwnedNumeral(
+                gray,
+                width,
+                height,
+                firstX,
+                lastX,
+                firstY,
+                lastY,
+                gap,
+                shortNotes,
+                headX,
+                headY,
+                number,
+                contrasted,
+                boundedSecondary,
+                first,
+                soundingHeads,
+                bar,
+                measures,
+                completeBeamGroup,
+                null);
+    }
+
+    private static Glyph findOwnedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean contrasted,
+            boolean boundedSecondary,
+            ScoreNoteEvent first,
+            List<ScoreNoteEvent> soundingHeads,
+            MeasureRegion bar,
+            List<MeasureRegion> measures,
+            java.util.function.Predicate<Glyph> completeBeamGroup,
+            PrintedTupletBeamOwner.LiteralProof literal) {
         java.util.Set<Glyph> physicalNumerals =
                 completeBeamGroup == null ? null : new java.util.HashSet<>();
         java.util.function.Predicate<Glyph> ownership =
@@ -2165,7 +2340,8 @@ final class TripletRhythmDetector {
                                 number,
                                 boundedSecondary,
                                 ownership,
-                                physicalGroupContext)
+                                physicalGroupContext,
+                                literal)
                         : findPrintedNumeral(
                                 gray,
                                 width,
@@ -2234,8 +2410,10 @@ final class TripletRhythmDetector {
                 : null;
     }
 
-    /** Staff-rule context can be overridden only by actual ownership of all three real heads.
-     * Same-operation glyph/beam ownership is separately required by the caller. */
+    /**
+     * Staff-rule context can be overridden only by actual ownership of all three real heads.
+     * Same-operation glyph/beam ownership is separately required by the caller.
+     */
     private static boolean completePrintedThree(
             List<Onset> group,
             List<ScoreNoteEvent> notes,
@@ -3029,6 +3207,42 @@ final class TripletRhythmDetector {
             boolean boundedSecondary,
             java.util.function.Predicate<Glyph> ownership,
             java.util.function.Predicate<Glyph> physicalGroupContext) {
+        return findContrastedNumeral(
+                gray,
+                width,
+                height,
+                firstX,
+                lastX,
+                firstY,
+                lastY,
+                gap,
+                shortNotes,
+                headX,
+                headY,
+                number,
+                boundedSecondary,
+                ownership,
+                physicalGroupContext,
+                null);
+    }
+
+    private static Glyph findContrastedNumeral(
+            byte[] gray,
+            int width,
+            int height,
+            float firstX,
+            float lastX,
+            float firstY,
+            float lastY,
+            float gap,
+            boolean shortNotes,
+            float headX,
+            float headY,
+            int number,
+            boolean boundedSecondary,
+            java.util.function.Predicate<Glyph> ownership,
+            java.util.function.Predicate<Glyph> physicalGroupContext,
+            PrintedTupletBeamOwner.LiteralProof literal) {
         Glyph normal =
                 findPrintedNumeral(
                         gray,
@@ -3088,6 +3302,10 @@ final class TripletRhythmDetector {
         int[] admittedLevels = new int[admitted.length];
         int admittedCount = 0;
         Glyph deferredConsensus = null;
+        boolean pendingEnabled = literal != null && literal.reserve(64);
+        Glyph[] pending = pendingEnabled ? new Glyph[admitted.length] : null;
+        int[] pendingLevels = pendingEnabled ? new int[admitted.length] : null;
+        int pendingCount = 0;
         for (int pass = 0; pass < 2; pass++)
             for (int level : levels) {
                 var local =
@@ -3139,6 +3357,10 @@ final class TripletRhythmDetector {
                                     retry.bottom() + local.top());
                     if (originalFour != null
                             && originalFourOwnsRetry(gray, width, originalFour, found)) continue;
+                    if (pendingEnabled) {
+                        pending[pendingCount] = found;
+                        pendingLevels[pendingCount++] = level;
+                    }
                     boolean legacyContext =
                             boundedSecondary
                                     || validNumeralContext(
@@ -3175,7 +3397,24 @@ final class TripletRhythmDetector {
                     }
                 }
             }
-        return deferredConsensus;
+        if (deferredConsensus != null) return deferredConsensus;
+        return pendingEnabled
+                ? literalFallback(
+                        literal,
+                        pending,
+                        pendingLevels,
+                        pendingCount,
+                        firstX,
+                        lastX,
+                        firstY,
+                        lastY,
+                        gap,
+                        shortNotes,
+                        headX,
+                        headY,
+                        number,
+                        boundedSecondary)
+                : null;
     }
 
     /** The retry must be ink from this same complete raw four, not a neighboring glyph. */
@@ -3554,8 +3793,10 @@ final class TripletRhythmDetector {
         return false;
     }
 
-    /** Look for a separate, similarly sized upright glyph stacked over or under
-     * this 3. The caller requires chord tones at all three candidate attacks. */
+    /**
+     * Look for a separate, similarly sized upright glyph stacked over or under this 3. The caller
+     * requires chord tones at all three candidate attacks.
+     */
     private static boolean hasStackedFingering(
             byte[] gray, int width, int height, Glyph three, float gap) {
         float cx = (three.left() + three.right()) * .5f;
@@ -4063,7 +4304,10 @@ final class TripletRhythmDetector {
         return gap >= fallback * .65f && gap <= fallback * 1.35f ? gap : fallback;
     }
 
-    /** Separate a numeral above a proved thin crossing rule; brackets and original ownership remain mandatory. */
+    /**
+     * Separate a numeral above a proved thin crossing rule; brackets and original ownership remain
+     * mandatory.
+     */
     private static Glyph bracketedCurveThree(
             byte[] gray,
             int width,
@@ -4225,7 +4469,9 @@ final class TripletRhythmDetector {
         return null;
     }
 
-    /** Extra search height requires a connected ledger-note beam and independently printed staff. */
+    /**
+     * Extra search height requires a connected ledger-note beam and independently printed staff.
+     */
     private static boolean ledgerBeamOwns(
             Glyph glyph,
             ScoreNoteEvent first,

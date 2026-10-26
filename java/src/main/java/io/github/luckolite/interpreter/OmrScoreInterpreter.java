@@ -7561,16 +7561,19 @@ final class OmrScoreInterpreter {
     private static boolean prepayRawNaturalAttempt(
             RawCourtesyBudget budget, int w, int h, int seedArea, float gap) {
         long n = (long) w * h;
-        long eligible =
-                n / Math.max(1L, (long) Math.ceil(Math.max(gap * gap * .3f, seedArea * .5f)));
         long reach = Math.max(3, Math.round(gap * .6f));
-        // Crop, run-flood, every possible eligible exact retention and shape/crop-end check.
-        long work =
-                h * (2 * reach + 2)
-                        + 72 * n
-                        + eligible * (192 * n + 4L * w * (Math.max(2, Math.round(gap * .16f)) + 1));
-        long bytes = 96 * n + 4096 + eligible * (6 * n + 4L * w + 192);
-        return budget.prepay(work, bytes);
+        // The complete crop and worst-case run-flood/list production are paid
+        // BEFORE allocating the mask or asking findComponents for any result.
+        return budget.prepay(h * (2 * reach + 2) + 72 * n, 96 * n + 4096);
+    }
+
+    private static boolean prepayRawNaturalPart(RawCourtesyBudget budget, int w, int h, float gap) {
+        long n = (long) w * h;
+        // Same conservative per-part bounds as before; debit only when an
+        // actual eligible part is about to be retained/classified/edge-checked.
+        return budget.prepay(
+                192 * n + 4L * w * (Math.max(2, Math.round(gap * .16f)) + 1),
+                6 * n + 4L * w + 192);
     }
 
     /** Necessary existing voter/bar predicates run before optional raw reconstruction. */
@@ -7920,6 +7923,7 @@ final class OmrScoreInterpreter {
                                     > gap * .45f
                             || left + part.maxX < seed.minX
                             || left + part.minX > seed.maxX) continue;
+                    if (!prepayRawNaturalPart(rawCourtesy, w, h, gap)) return null;
                     byte[] separate =
                             retainExactComponent(ink, w, h, part, OmrMeasurePostProcessor.SYMBOL);
                     if (rawStrokeLeavesCrop(gray, width, height, separate, w, h, left, top, gap))

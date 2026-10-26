@@ -493,11 +493,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f2c38016d364776050da21ef0bee07e4dda5c74f94a21d8cee54d6dc1c5c17df",
+      "source_sha256": "08e6a6e4f083bbbd691476305c72286c0f049ace6e1b61a98a9f0f0433574b9e",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "cf135e22959a2581ebe2c0a8348a63e755b0b7c0baa104a51af651e3f548cf1e",
+      "source_normalized_sha256": "added37d9a2e863ff5249822b71f5f5f23693599b7ddae140f61a1db204700ab",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "3b2bec4998de637ed2647d67432dea805863c185e52a3ed53bcd241460f1fe3b",
+      "standalone_sha256": "4ab77e2ab04a2c777ec6f129ef307899026abf81d19a6d4f776c33e33a098f70",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
@@ -523,6 +523,13 @@
         "reviewed_app_commit": "7686b5630f35e029c1e94ca4ecfd6345d2e0219a",
         "additional_controls": "Actual bass clef and two-band pitch; wrong lane/missing dot and conflicting/unresolved same-onset votes.",
         "single_bar_fixture_review": "Existing12 controls preserve geometry with matching explicit prior (-1Bflat/-2BEflat);8guards preserve prior,4positive tests cancel;3new unknown-prior refusals."
+      },
+      "raw_natural_actual_part_review": {
+        "documentation": "docs/raw-natural-part-accounting.md",
+        "reviewed_app_base_commit": "c8206f732dbc4b1e09f8f4e184c252560a2712a2",
+        "new_original_tests": 6,
+        "scope": "Complete production prepaid before findComponents; unchanged per-part whole-crop bounds prepaid for each actual eligible part; no predicate/order/cap/model/layout change.",
+        "reviewed_app_commit": "b1bfc441db902c3e6a8de214ae594358bb9871d1"
       }
     },
     "PlayingTechniqueDetector.java": {
@@ -692,10 +699,10 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "fd8f9f8ab175c4fa129f2bd6b046f57f4c332c6e8109eff59055e2e543cee9ff",
-      "source_normalized_sha256": "c32a489096b6caabb8f7a1177977d346102a1e7e05d96a380ff68f61d9d8f20c",
+      "source_sha256": "a4fa1407bd2b0ba967700671ce67781158540129665ad858dc02c0056a298f28",
+      "source_normalized_sha256": "bba8d0a9e19e87d5052ed58f5068fdc9e6b057fcf965cf35b5e34d404447d525",
       "review_note": "A continuous middle waist is not a four crossbar if a separately observed two-sided lower bowl exists below it. Reuse existing lower-lobe/paper dimensions; preserve complete-four contradiction, positive-three rules and original Java17/21 regressions.",
-      "standalone_sha256": "87a6e09adabdd9ee8fe551ad64030d7080a38a9d305f8fbbabd1914d233a6996",
+      "standalone_sha256": "b40a62b70c7c603f47eff24c2756003b5ec02e112f6bf02458e650d722355bef",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "reviewed_app_base_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
       "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
@@ -719,6 +726,15 @@
         "standalone_namespace_and_aosp_parity": true,
         "commercial_data_included": false,
         "rollout": "Reviewed source; cumulative matched rollout deferred during active goal."
+      },
+      "literal_tuplet_review": {
+        "documentation": "docs/literal-tuplet-ownership.md",
+        "reviewed_app_base_commit": "da1fd953b71cf1b539052c0d16f3b26eb615ac53",
+        "new_original_tests": 25,
+        "focused_tests_passed": 184,
+        "scope": "Invocation-owned full-roster literal head/shaft/beam proof and independent local numeral witness after complete original recognizer failure; no Source authority/model/layout/cap change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "reviewed_app_commit": "c8206f732dbc4b1e09f8f4e184c252560a2712a2"
       }
     },
     "training/model.py": {
@@ -2093,14 +2109,24 @@
     },
     "PrintedTupletBeamOwner.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedTupletBeamOwner.java",
-      "source_sha256": "24abb37b322adc1a80eb3f2ccae447b2020af5024005a1099399673d4b1a7f27",
-      "source_normalized_sha256": "24abb37b322adc1a80eb3f2ccae447b2020af5024005a1099399673d4b1a7f27",
+      "source_sha256": "0fb30a808c10cf76d57a7893c2b40a0509818818d2796085cde6f6e698d4467d",
+      "source_normalized_sha256": "52b4585c15f58a6741cb266007770058f433bcbb272880ede781a9915f170bec",
       "reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
       "reviewed_source_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
       "review_note": "Compute final-stem tip candidates once per connected-head check. Reject numeral shape, occlusion, contrast and joined-text failures before invoking the unchanged synchronous beam-owner predicate. Every accepted numeral still passes all original proofs in the same raster order. The only production caller is the pure ownership predicate in TripletRhythmDetector. No helper dependencies, models, weights, record layouts or recognition cache revision changed. Original generated filled-beam control rejects 1911 unnecessary owner calls; a valid-shape control still requires ownership. Private score pixels/logs stay outside this repository.",
       "reviewed_app_state": "Committed global dense-tuplet search performance fix; namespace-only standalone adaptation, generated regression and unchanged acceptance predicates reviewed.",
       "scoped_reviewed_app_commit": "19218a38af75221e5aa5c9847273484b1eb9d3f4",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedTupletBeamOwner.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedTupletBeamOwner.java",
+      "standalone_sha256": "0bc0815ff36401554e2fe0069df9f1d08c29e3341277032740d50f4f45e9dca0",
+      "literal_tuplet_review": {
+        "documentation": "docs/literal-tuplet-ownership.md",
+        "reviewed_app_base_commit": "da1fd953b71cf1b539052c0d16f3b26eb615ac53",
+        "new_original_tests": 25,
+        "focused_tests_passed": 184,
+        "scope": "Invocation-owned full-roster literal head/shaft/beam proof and independent local numeral witness after complete original recognizer failure; no Source authority/model/layout/cap change.",
+        "rollout": "Source only; matched cumulative packaging deferred during active goal.",
+        "reviewed_app_commit": "c8206f732dbc4b1e09f8f4e184c252560a2712a2"
+      }
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
