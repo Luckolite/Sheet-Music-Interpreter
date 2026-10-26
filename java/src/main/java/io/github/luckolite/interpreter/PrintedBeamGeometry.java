@@ -129,6 +129,11 @@ final class PrintedBeamGeometry {
     }
 
     interface CarrierPlane {
+        /** Source may retain authenticated but unowned interior heads as pair vetoes. */
+        default boolean permitsPair(Column a, Column b) {
+            return true;
+        }
+
         default boolean contrastEnabled() {
             return false;
         }
@@ -242,6 +247,10 @@ final class PrintedBeamGeometry {
             plane.chargeContrast(setup);
             var strictPlane =
                     new CarrierPlane() {
+                        public boolean permitsPair(Column a, Column b) {
+                            return plane.permitsPair(a, b);
+                        }
+
                         public boolean at(Column a, Column b, int x, int y) {
                             return plane.strictAt(a, b, x, y);
                         }
@@ -689,7 +698,8 @@ final class PrintedBeamGeometry {
                     int a = lane.get(i), b = lane.get(i + 1);
                     if (nodes.get(a).maximumRails() < 1
                             || nodes.get(b).maximumRails() < 1
-                            || nodes.get(b).left() <= nodes.get(a).right()) continue;
+                            || nodes.get(b).left() <= nodes.get(a).right()
+                            || !plane.permitsPair(nodes.get(a), nodes.get(b))) continue;
                     var e = new Edge(a, b);
                     edges.add(e);
                     var p = prove(e, first(e), last(e), 0, 0);

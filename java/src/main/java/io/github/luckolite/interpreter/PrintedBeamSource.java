@@ -456,6 +456,34 @@ public final class PrintedBeamSource {
                             height,
                             columns,
                             new PrintedBeamGeometry.CarrierPlane() {
+                                public boolean permitsPair(
+                                        PrintedBeamGeometry.Column a,
+                                        PrintedBeamGeometry.Column b) {
+                                    work.take(heads.size() + 16L);
+                                    var first = byId.get(a.id());
+                                    var last = byId.get(b.id());
+                                    // A proved shaft in another direction is distinct voice
+                                    // context.
+                                    // An authenticated same-lane head with no unique owned shaft is
+                                    // still competing context; missing it cannot erase a beam
+                                    // column.
+                                    for (var head : heads) {
+                                        int owner = head.owner();
+                                        var binding = bindings[owner];
+                                        if (!body[owner]
+                                                || choices[owner] == 1
+                                                || binding == null
+                                                || first.binding.lane().id()
+                                                        != last.binding.lane().id()
+                                                || binding.lane().id() != first.binding.lane().id()
+                                                || score.notes().get(owner).measureIndex()
+                                                        != a.measure()) continue;
+                                        if (head.x() > a.right() && head.x() < b.left())
+                                            return false;
+                                    }
+                                    return true;
+                                }
+
                                 public boolean strictAt(
                                         PrintedBeamGeometry.Column a,
                                         PrintedBeamGeometry.Column b,

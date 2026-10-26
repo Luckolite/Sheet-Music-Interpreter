@@ -7126,9 +7126,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamGeometry.java",
       "license": "Apache-2.0",
       "review_note": "Bounded original shaft-component certificates retain only raw pixels connected to the accepted head-contact seed within each original candidate. Unknown intermediate carrier cells remain unavailable. Diagnostic Column copies sever page-owned evidence and precharge metadata. Package-only standalone counterpart; original procedural component and diagnostic-boundary regressions contain no captured score material. No model or general-accuracy claim.",
-      "source_sha256": "d871b8698ef68bddec4f932a50f78a83d83b2483e1c962ab39bd2e1aaa69f4af",
-      "source_normalized_sha256": "ec383c02321276018b576c549c99cb25eb96a8ec154837e61e53c6c16631f065",
-      "standalone_sha256": "4058ced0acdf1e70557665af7f9d5b37e3b6061de473ebca06edab994f23c468",
+      "source_sha256": "242fb953fe327c9fc2e4a280af0d909a3b01211335975e75e989d6428b527fcd",
+      "source_normalized_sha256": "242fb953fe327c9fc2e4a280af0d909a3b01211335975e75e989d6428b527fcd",
+      "standalone_sha256": "9da6249d77a93fc8f46f7ac575a47d7e32bce5bb6fcc6e384273f5c082554f98",
       "reviewed_app_commit": "0812aee2fbe43110e6ad2d29a930a329e3790591",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7139,6 +7139,15 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      },
+      "interior_head_pair_review": {
+        "documentation": "docs/interior-head-beam-context.md",
+        "reviewed_app_base_commit": "42df1b459562d78487409a9a7337e7b98fa089f7",
+        "new_original_junit_tests": 1,
+        "new_original_assertions": 96,
+        "scope": "Actual same-lane authenticated but unowned interior heads veto pair admission in both physical geometry passes; full roster scan prepaid to existing Source cap. No new model/layout/authority.",
+        "rollout": "Source only; cumulative pair deferred during active goal.",
+        "app_commit": "48f3650c8d9b30b6528fe261eb8aa863adb2b398"
       }
     },
     "PrintedBeamShafts.java": {
@@ -7195,9 +7204,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "71d9089cbb56b9d0e5f688a0976dd9b4713ec5a88cd0f8c611c0615fd5859ee8",
-      "source_normalized_sha256": "71d9089cbb56b9d0e5f688a0976dd9b4713ec5a88cd0f8c611c0615fd5859ee8",
-      "standalone_sha256": "a05ae622626680469f0cf815607ffb0187eddcc14886aa59d45e16b339dbef56",
+      "source_sha256": "113e984ee8385f7941d38829f3214e5e9f7ca8fde064e287b995c17a6cd41242",
+      "source_normalized_sha256": "113e984ee8385f7941d38829f3214e5e9f7ca8fde064e287b995c17a6cd41242",
+      "standalone_sha256": "c49d0cc6490152ada2921920d8b984196ec3c1af7bb719d3abf1ac98eb8b78f2",
       "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7217,6 +7226,15 @@
         "scope": "Paid actual bilateral closed thin raw runs for single-row references; existing3-reference fits and Source work cap. No new model/layout/authority.",
         "rollout": "Source only; cumulative pair deferred during active goal.",
         "app_commit": "42df1b459562d78487409a9a7337e7b98fa089f7"
+      },
+      "interior_head_pair_review": {
+        "documentation": "docs/interior-head-beam-context.md",
+        "reviewed_app_base_commit": "42df1b459562d78487409a9a7337e7b98fa089f7",
+        "new_original_junit_tests": 1,
+        "new_original_assertions": 96,
+        "scope": "Actual same-lane authenticated but unowned interior heads veto pair admission in both physical geometry passes; full roster scan prepaid to existing Source cap. No new model/layout/authority.",
+        "rollout": "Source only; cumulative pair deferred during active goal.",
+        "app_commit": "48f3650c8d9b30b6528fe261eb8aa863adb2b398"
       }
     },
     "PrintedIsolatedFlags.java": {
