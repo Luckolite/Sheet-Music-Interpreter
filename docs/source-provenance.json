@@ -7176,19 +7176,28 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamLocalRuleInk.java",
       "license": "Apache-2.0",
       "review_note": "Original bounded raw beam/shaft/staff/flag evidence; exact package-only standalone counterpart. Working-tree integration reviewed against this baseline commit; exact formatted source hashes identify the integrated changes. Original procedural tests only; no score ink, model change or general accuracy claim.",
-      "source_sha256": "ac74b75160e337a10ba35ab96e13d2155bf1ba78d09c4bfc4acd0684d672ce56",
-      "source_normalized_sha256": "ac74b75160e337a10ba35ab96e13d2155bf1ba78d09c4bfc4acd0684d672ce56",
-      "standalone_sha256": "347e07f9d79ff2e14fe49d9504557441e5fcdc443160f78b7016db1f18838cda",
-      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034"
+      "source_sha256": "2dfa375985bb58bd1cebef260f8a30cfad30dba6b0d8a53d9f09d98a1b9008b9",
+      "source_normalized_sha256": "2dfa375985bb58bd1cebef260f8a30cfad30dba6b0d8a53d9f09d98a1b9008b9",
+      "standalone_sha256": "d8fc21b7e5f6181cf5b4d9ad81a6ce2223e8a3322e57949c84c660e9f4536767",
+      "reviewed_app_commit": "28889c6160420f03f1ce778e652db95fef25b034",
+      "single_row_rule_review": {
+        "documentation": "docs/single-row-beam-rule-references.md",
+        "reviewed_app_base_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d",
+        "new_original_junit_tests": 1,
+        "new_original_assertions": 102,
+        "scope": "Paid actual bilateral closed thin raw runs for single-row references; existing3-reference fits and Source work cap. No new model/layout/authority.",
+        "rollout": "Source only; cumulative pair deferred during active goal.",
+        "app_commit": "42df1b459562d78487409a9a7337e7b98fa089f7"
+      }
     },
     "PrintedBeamSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "d3bd30b8669dfe2df585b16b51ec8bf2403cbee5bfd1993b62549cb2b2aceada",
-      "source_normalized_sha256": "c2fb1fa29acaded817ecd140651baf30535d1358120a11b602b28b352c247b78",
-      "standalone_sha256": "8503aa8aecce066c745d469e692d621ca1f0e5bccdf3b26423c61db4279a2f7e",
+      "source_sha256": "71d9089cbb56b9d0e5f688a0976dd9b4713ec5a88cd0f8c611c0615fd5859ee8",
+      "source_normalized_sha256": "71d9089cbb56b9d0e5f688a0976dd9b4713ec5a88cd0f8c611c0615fd5859ee8",
+      "standalone_sha256": "a05ae622626680469f0cf815607ffb0187eddcc14886aa59d45e16b339dbef56",
       "reviewed_app_commit": "3a901525cde4a8008dfd927bd1836cfb5dbbae65",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -7199,6 +7208,15 @@
         "parent_fresh_public_packet_tests_pass": true,
         "rollout": "Cumulative matched rollout deferred during active goal; installed recognition116 predates this repair.",
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
+      },
+      "single_row_rule_review": {
+        "documentation": "docs/single-row-beam-rule-references.md",
+        "reviewed_app_base_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d",
+        "new_original_junit_tests": 1,
+        "new_original_assertions": 102,
+        "scope": "Paid actual bilateral closed thin raw runs for single-row references; existing3-reference fits and Source work cap. No new model/layout/authority.",
+        "rollout": "Source only; cumulative pair deferred during active goal.",
+        "app_commit": "42df1b459562d78487409a9a7337e7b98fa089f7"
       }
     },
     "PrintedIsolatedFlags.java": {

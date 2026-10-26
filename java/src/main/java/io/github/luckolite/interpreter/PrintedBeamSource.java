@@ -1222,7 +1222,9 @@ public final class PrintedBeamSource {
         if (witness != null) return witness.contains(y) ? 1 : 0;
         var localInk = lane.localInks().get(context);
         if (localInk == null) {
-            localInk = new PrintedBeamLocalRuleInk(null, raw, w, h, (float) bottom, (float) gap);
+            localInk =
+                    new PrintedBeamLocalRuleInk(
+                            null, raw, w, h, (float) bottom, (float) gap, work::take);
             lane.localInks().put(context, localInk);
         }
         if (localInk.carrier(x, y)) return 1;
@@ -1261,7 +1263,9 @@ public final class PrintedBeamSource {
         if (witness != null) return witness.contains(y) ? 1 : 0;
         var localInk = lane.localInks().get(context);
         if (localInk == null) {
-            localInk = new PrintedBeamLocalRuleInk(null, raw, w, h, (float) bottom, (float) gap);
+            localInk =
+                    new PrintedBeamLocalRuleInk(
+                            null, raw, w, h, (float) bottom, (float) gap, work::take);
             lane.localInks().put(context, localInk);
         }
         if (localInk.carrier(x, y)) return 1;

@@ -14,11 +14,24 @@ final class PrintedBeamLocalRuleInk {
     private final byte[] gray;
     private final int width, height;
     private final float bottom, gap;
+    private final java.util.function.LongConsumer singleRowCharge;
     private final Map<Long, Optional<Profile>> profiles = new HashMap<>();
     private final Map<Integer, List<Reference>> columns = new HashMap<>();
 
     PrintedBeamLocalRuleInk(
             byte[] ignoredLabels, byte[] gray, int width, int height, float bottom, float gap) {
+        this(ignoredLabels, gray, width, height, bottom, gap, null);
+    }
+
+    PrintedBeamLocalRuleInk(
+            byte[] ignoredLabels,
+            byte[] gray,
+            int width,
+            int height,
+            float bottom,
+            float gap,
+            java.util.function.LongConsumer singleRowCharge) {
+        this.singleRowCharge = singleRowCharge;
         this.gray = gray;
         this.width = width;
         this.height = height;
@@ -82,7 +95,13 @@ final class PrintedBeamLocalRuleInk {
                     if (start < 0) start = y;
                 } else if (start >= 0) {
                     int last = y - 1, n = last - start + 1;
-                    if (start > lo && last < hi && n >= 2 && n <= Math.ceil(gap * .3f)) {
+                    if (start > lo
+                            && last < hi
+                            && n <= Math.ceil(gap * .3f)
+                            && (n >= 2
+                                    || n == 1
+                                            && singleRowCharge != null
+                                            && singleRowReference(x, start, lo, hi))) {
                         float contrast = 0, mass = 0;
                         for (int row = start - 1; row <= last + 1; row++) {
                             int v = gray[row * width + x] & 255;
@@ -118,6 +137,41 @@ final class PrintedBeamLocalRuleInk {
                                 || r.mass() < m / 1.35f
                                 || r.mass() > m * 1.35f);
         return List.copyOf(refs);
+    }
+
+    /** A one-row dark core needs an actual unique closed thin rule on both sides.
+     * No nearby singleton or interpolated line can supply either flank. New reads
+     * and loop operations spend the enclosing Source allowance before use. */
+    private boolean singleRowReference(int x, int row, int low, int high) {
+        singleRowCharge.accept(16);
+        int flank = Math.max(2, Math.round(gap * .45f));
+        if (x < flank || x + flank >= width) return false;
+        for (int side = -1; side <= 1; side += 2) {
+            int sx = x + side * flank, start = -1, foundFirst = -1, foundLast = -1;
+            for (int y = low; y <= high + 1; y++) {
+                singleRowCharge.accept(4);
+                boolean ink = y <= high && singleRowPixel(sx, y) < 165;
+                if (ink) {
+                    if (start < 0) start = y;
+                } else if (start >= 0) {
+                    int last = y - 1;
+                    if (start <= low
+                            || last >= high
+                            || last - start + 1 > Math.ceil(gap * .3f)
+                            || foundFirst >= 0) return false;
+                    foundFirst = start;
+                    foundLast = last;
+                    start = -1;
+                }
+            }
+            if (foundFirst < 0 || Math.abs((foundFirst + foundLast) * .5f - row) > 2) return false;
+        }
+        return true;
+    }
+
+    private int singleRowPixel(int x, int y) {
+        singleRowCharge.accept(1);
+        return gray[y * width + x] & 255;
     }
 
     private boolean fits(List<Reference> refs) {
