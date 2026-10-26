@@ -25,6 +25,14 @@ public final class ExpressiveDirectionText {
     private static final Pattern COMBINING_MARKS = Pattern.compile("\\p{M}+");
     private static final Pattern LEADING_STRENGTH = Pattern.compile("\\b(poco|molto)\\s*$");
     private static final Pattern TRAILING_STRENGTH = Pattern.compile("^\\s*(poco|molto)\\b");
+    private static final String NEGATION_WORD = "(?:no|non|not|senza|without)";
+    private static final String TEMPO_MODIFIER =
+            "(?:(?:a\\s+)?poco\\s+a\\s+poco|poco|molto|sempre)";
+    private static final Pattern NEGATION_PREFIX =
+            Pattern.compile("\\b" + NEGATION_WORD + "\\s+(?:" + TEMPO_MODIFIER + "\\s+)*$");
+    private static final Pattern BARE_NEGATION_QUALIFIER =
+            Pattern.compile(
+                    "\\s*" + NEGATION_WORD + "(?:\\s+" + TEMPO_MODIFIER + ")*[\\s.,;:()!]*");
     private static final List<Rule> RULES =
             List.of(
                     rule(Kind.RITARDANDO, "ritardando|ritard\\.?|rit\\.?"),
@@ -64,17 +72,47 @@ public final class ExpressiveDirectionText {
                 && PEDAL_RING.pattern().matcher(printed.toLowerCase(Locale.ROOT)).matches();
     }
 
+    /** Cached positive kinds still need the original text's action-specific negation guard. */
+    static boolean hasTempoNegation(ScoreExpressiveEvent event) {
+        if (!changingTempo(event.kind())) return false;
+        for (var evidence : event.evidence())
+            if (negatesTempo(event.kind(), normalized(evidence.printedText()))) return true;
+        String qualifier = normalized(event.qualifierText());
+        return BARE_NEGATION_QUALIFIER.matcher(qualifier).matches()
+                || negatesTempo(event.kind(), qualifier);
+    }
+
+    private static boolean negatesTempo(Kind kind, String text) {
+        for (var rule : RULES) {
+            if (rule.kind() != kind) continue;
+            var match = rule.pattern().matcher(text);
+            while (match.find())
+                if (NEGATION_PREFIX.matcher(text.substring(0, match.start())).find()) return true;
+        }
+        return false;
+    }
+
+    private static String normalized(String printed) {
+        return COMBINING_MARKS
+                .matcher(Normalizer.normalize(printed, Normalizer.Form.NFD))
+                .replaceAll("")
+                .toLowerCase(Locale.ROOT)
+                .replace('’', '\'');
+    }
+
+    static boolean changingTempo(Kind kind) {
+        return kind == Kind.RITARDANDO
+                || kind == Kind.RALLENTANDO
+                || kind == Kind.RITENUTO
+                || kind == Kind.ACCELERANDO;
+    }
+
     public static List<Direction> parse(String printed) {
         if (printed == null || printed.isBlank()) return List.of();
         if (SuddenDynamicText.parse(printed).isPresent())
             return List.of(
                     new Direction(Kind.UNRESOLVED_DIRECTION, Strength.UNSPECIFIED, printed, ""));
-        String normalized =
-                COMBINING_MARKS
-                        .matcher(Normalizer.normalize(printed, Normalizer.Form.NFD))
-                        .replaceAll("")
-                        .toLowerCase(Locale.ROOT)
-                        .replace('’', '\'');
+        String normalized = normalized(printed);
         var result = new ArrayList<Direction>();
         int progression = -1;
         for (var rule : RULES) {
@@ -101,7 +139,17 @@ public final class ExpressiveDirectionText {
             }
             // Keep the complete compound phrase rather than losing modifiers during tokenization.
             String qualifiers = (before + " " + after).trim();
-            result.add(new Direction(rule.kind(), strength, printed, qualifiers));
+            Kind kind = rule.kind();
+            if (changingTempo(kind) && NEGATION_PREFIX.matcher(before).find()) {
+                // Negation must govern this action, rather than an independent pedal or
+                // articulation modifier elsewhere in the complete phrase.
+                kind = Kind.UNRESOLVED_DIRECTION;
+                strength = Strength.UNSPECIFIED;
+            }
+            if (kind != Kind.UNRESOLVED_DIRECTION
+                    || result.stream()
+                            .noneMatch(value -> value.kind() == Kind.UNRESOLVED_DIRECTION))
+                result.add(new Direction(kind, strength, printed, qualifiers));
         }
         MetricModulationText.parse(printed)
                 .ifPresent(

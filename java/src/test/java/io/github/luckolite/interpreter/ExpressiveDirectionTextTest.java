@@ -25,6 +25,61 @@ public class ExpressiveDirectionTextTest {
     }
 
     @Test
+    public void negatedTempoPhrasesRetainEvidenceWithoutOppositeAction() {
+        for (String text :
+                List.of(
+                        "senza rall.",
+                        "no rit.",
+                        "non ritardando",
+                        "without slowing, no rallentando",
+                        "not accelerando",
+                        "senza molto rall.",
+                        "no poco rit.",
+                        "without a poco a poco accelerando")) {
+            var value = one(text, Kind.UNRESOLVED_DIRECTION);
+            assertEquals(Strength.UNSPECIFIED, value.strength());
+            assertFalse(value.qualifierText().isBlank());
+        }
+        one("senza pedale", Kind.PEDAL_UP);
+    }
+
+    @Test
+    public void independentNegatedModifiersDoNotNegateTheTempoAction() {
+        one("non legato, ritardando", Kind.RITARDANDO);
+        one("rit. non troppo", Kind.RITARDANDO);
+        one("rall. non legato", Kind.RALLENTANDO);
+        var compound = ExpressiveDirectionText.parse("molto rall. senza pedale");
+        assertEquals(
+                Set.of(Kind.RALLENTANDO, Kind.PEDAL_UP),
+                compound.stream()
+                        .map(ExpressiveDirectionText.Direction::kind)
+                        .collect(java.util.stream.Collectors.toSet()));
+        var tempo =
+                compound.stream()
+                        .filter(value -> value.kind() == Kind.RALLENTANDO)
+                        .findFirst()
+                        .orElseThrow();
+        assertEquals(Strength.MOLTO, tempo.strength());
+        assertEquals("senza pedale", tempo.qualifierText().replace("molto", "").trim());
+    }
+
+    @Test
+    public void negationBelongsToEachMatchedActionInCompoundDirections() {
+        var faster = ExpressiveDirectionText.parse("senza rall. e accel.");
+        assertEquals(
+                Set.of(Kind.UNRESOLVED_DIRECTION, Kind.ACCELERANDO),
+                faster.stream()
+                        .map(ExpressiveDirectionText.Direction::kind)
+                        .collect(java.util.stream.Collectors.toSet()));
+        var slower = ExpressiveDirectionText.parse("rit. senza accelerando");
+        assertEquals(
+                Set.of(Kind.RITARDANDO, Kind.UNRESOLVED_DIRECTION),
+                slower.stream()
+                        .map(ExpressiveDirectionText.Direction::kind)
+                        .collect(java.util.stream.Collectors.toSet()));
+    }
+
+    @Test
     public void strengthWorksBeforeAndAfterTheMark() {
         assertEquals(Strength.MOLTO, one("molto rall.", Kind.RALLENTANDO).strength());
         assertEquals(Strength.MOLTO, one("rall. molto", Kind.RALLENTANDO).strength());

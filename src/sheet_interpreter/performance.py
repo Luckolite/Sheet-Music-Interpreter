@@ -15,6 +15,7 @@ from .typed_events import event_kind, validate_unpitched
 from .rest_kinds import rest_kind, full_measure_span
 from .tremolo_wire import performance_pairs
 from .tremolo_performance import source_spans, pulse_windows
+from .tie_owners import releasing_links, sound_lanes
 
 SUPPORTED = {'RITARDANDO', 'RALLENTANDO', 'RITENUTO', 'ACCELERANDO', 'A_TEMPO',
              'TEMPO_PRIMO', 'SAME_TEMPO', 'FERMATA', 'BREATH', 'CAESURA',
@@ -261,7 +262,25 @@ def _perform_one(pages, bpm, slide_group=0):
     pages = resolve_pages(pages)
     beats, numeric, expressions, bindings, sounds, aliases, payloads, directions = [], [], [], {}, [], {}, [], []
     paired_sounds = {}
-    previous, offset = {}, 0.
+    source_rows, source_keys, page_pairs, source_offset = [], [], [], 0.
+    for page_index, page in enumerate(pages):
+        paired = source_spans(page)
+        page_pairs.append(paired)
+        for index, note in enumerate(page['events']):
+            if event_kind(note) == 'UNPITCHED':
+                continue
+            start, end = source_offset+note['startBeat'], source_offset+note['startBeat']+note['durationBeats']
+            if index in paired:
+                start, end = source_offset+paired[index]['start'], source_offset+paired[index]['end']
+            source_rows.append(dict(start=start, end=end,
+                    lane=(note['staffCount'], note['staffIndex'], note['midi']),
+                    tied=note.get('tiedFromPrevious', False), eligible=not note.get('grace', False), note=note))
+            source_keys.append((page_index, index))
+        source_offset += page['totalBeats']
+    source_links = releasing_links(source_rows, lambda row: sound_lanes(row, .125, .04),
+            lambda old, row: row['note'].get('guitarEffect', {}) == old['note'].get('guitarEffect', {}))
+    prior_keys = {source_keys[current]: source_keys[earlier] for current, earlier in source_links.items()}
+    offset = 0.
     for page_index, page in enumerate(pages):
         local = page['measureBeats']; starts = [0.]
         for duration in local:
@@ -271,10 +290,10 @@ def _perform_one(pages, bpm, slide_group=0):
         if not math.isclose(starts[-1], page['totalBeats'], abs_tol=1e-6):
             raise ValueError('Expressive page extent disagrees with its measures')
         physical = page.get('sourcePage', page_index)
-        paired = source_spans(page)
-        note_ids = []
-        for index, note in enumerate(page['events']):
-            identifier = f'note:{physical}:{index}'; note_ids.append(identifier)
+        paired = page_pairs[page_index]
+        note_ids = [f'note:{physical}:{index}' for index in range(len(page['events']))]
+        for index, note in sorted(enumerate(page['events']), key=lambda entry: (entry[1]['startBeat'], entry[0])):
+            identifier = note_ids[index]
             start, end = offset+note['startBeat'], offset+note['startBeat']+note['durationBeats']
             if index in paired:
                 start, end = offset+paired[index]['start'], offset+paired[index]['end']
@@ -288,15 +307,16 @@ def _perform_one(pages, bpm, slide_group=0):
                 payloads.append(dict(note, sourceEventId=identifier))
                 aliases[identifier] = old
                 continue
-            lane = (note['staffCount'], note['staffIndex'], note['midi'])
-            old = previous.get(lane)
-            if note.get('tiedFromPrevious') and lane[1] == 0 and lane[0] in (1, 2):
-                alternate = previous.get((3-lane[0], 0, lane[2]))
-                if alternate is not None and abs(sounds[alternate]['end']-start) <= .04 and (old is None or sounds[old]['end'] < sounds[alternate]['end']):
-                    old = alternate
-            if note.get('tiedFromPrevious') and old is not None and abs(sounds[old]['end']-start) <= .125 \
-                    and note.get('guitarEffect', {}) == payloads[old].get('guitarEffect', {}) \
-                    and (not note.get('_slideRelation') or note['_slideRelation'] == payloads[old].get('_slideRelation')):
+            prior = prior_keys.get((page_index, index))
+            old = None
+            if prior is not None:
+                prior_page, prior_index = prior
+                prior_physical = pages[prior_page].get('sourcePage', prior_page)
+                old = aliases.get(f'note:{prior_physical}:{prior_index}')
+            if (old is not None and note.get('_slideRelation')
+                    and note['_slideRelation'] != payloads[old].get('_slideRelation')):
+                old = None
+            if old is not None:
                 sounds[old]['end'] = max(sounds[old]['end'], end); aliases[identifier] = old
                 if note.get('_slideOrigins'):
                     merged = list(payloads[old].get('_slideOrigins', []))
@@ -307,7 +327,6 @@ def _perform_one(pages, bpm, slide_group=0):
                 old = len(sounds); sounds.append(dict(id=identifier, start=start, end=end,
                     staff=note['staffIndex'], count=note['staffCount']))
                 payloads.append(dict(note)); aliases[identifier] = old
-            previous[lane] = old
             if index in paired:
                 paired_sounds[old] = dict(paired[index], start=start, end=end)
         for supplied in page.get('score', {}).get('expressiveEvents', []):

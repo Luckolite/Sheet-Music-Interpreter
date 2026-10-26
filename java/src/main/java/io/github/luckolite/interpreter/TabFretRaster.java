@@ -113,18 +113,19 @@ public final class TabFretRaster {
                                 c.right() / (float) w,
                                 Math.min(1, (c.stringY() + c.gap() * .3f) / h)));
         }
-        // Preserve annotations in the rhythm lanes; numerals above a string are
-        // measure numbers or bend amounts, never frets on that string.
+        // Preserve literal annotations outside string lanes, including numeric bend amounts.
+        // Typed consumers still require attached ink/ownership; these words are not fret votes.
         for (var v : legacy)
-            if (!v.text().matches(".*[0-9].*")
-                    && tabs.stream()
-                            .noneMatch(
-                                    t ->
-                                            (v.top() + v.bottom()) * .5f * h
-                                                            >= t.top() - t.gap() * .6f
-                                                    && (v.top() + v.bottom()) * .5f * h
-                                                            <= t.bottom() + t.gap() * .6f))
-                result.add(v);
+            if (tabs.stream()
+                    .noneMatch(
+                            t -> {
+                                float y = (v.top() + v.bottom()) * .5f * h;
+                                int string = Math.round((y - t.top()) / t.gap());
+                                return string >= 0
+                                        && string < t.stringCount()
+                                        && Math.abs(y - t.top() - string * t.gap())
+                                                <= t.gap() * .47f;
+                            })) result.add(v);
         for (var v : legacy)
             if (v.text().matches(".*[hHpPbBrR/\\\\~<>].*"))
                 for (var t : tabs) {

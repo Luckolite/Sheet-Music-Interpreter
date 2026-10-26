@@ -82,6 +82,79 @@ public class TabGestureMarksTest {
     }
 
     @Test
+    public void reconciledNumericAmountsReachOnlyTheirAttachedBend() {
+        var tab = staff(List.of(fret));
+        var crop = new TabFretRaster.Crop(90, 134, 110, 146, 0, 140, 20);
+        for (String amount : List.of("1/4", "1/2", "1", "full", "½")) {
+            var annotation = word(amount, 150, 85);
+            var words =
+                    TabFretRaster.reconcile(
+                            List.of(tab),
+                            List.of(crop),
+                            List.of(word("5", 100, 140)),
+                            List.of(annotation),
+                            w,
+                            h);
+            assertTrue(amount, words.contains(annotation));
+            var parsed = TablatureDecoder.withWords(List.of(tab), words, w, h);
+            assertEquals(amount, 1, parsed.get(0).frets().size());
+            var marked = TabGestureMarks.apply(parsed, words, arrow(true, false), w, h);
+            int effect = marked.get(0).frets().get(0).marks();
+            assertEquals(
+                    amount,
+                    amount.equals("1/4") ? TabEffect.MICRO_BEND : TabEffect.BEND,
+                    TabEffect.kind(effect));
+            assertEquals(
+                    amount,
+                    amount.equals("1/4") ? .5 : amount.equals("1/2") || amount.equals("½") ? 1 : 2,
+                    TabEffect.semitones(effect),
+                    0);
+            var blank = new byte[w * h];
+            Arrays.fill(blank, (byte) 255);
+            assertEquals(
+                    amount,
+                    0,
+                    TabGestureMarks.apply(parsed, words, blank, w, h)
+                            .get(0)
+                            .frets()
+                            .get(0)
+                            .marks());
+        }
+        var onString = word("1", 200, 140);
+        assertFalse(
+                TabFretRaster.reconcile(
+                                List.of(tab),
+                                List.of(crop),
+                                List.of(word("5", 100, 140)),
+                                List.of(onString),
+                                w,
+                                h)
+                        .contains(onString));
+    }
+
+    @Test
+    public void reconciledSignedWhammyRetainsItsLiteralAmount() {
+        byte[] g = arrow(true, false), flipped = new byte[g.length];
+        for (int y = 0; y < h; y++) System.arraycopy(g, y * w, flipped, (h - 1 - y) * w, w);
+        var f = new TablatureDecoder.Fret(100, 259, 5, 5);
+        var tab = new TablatureDecoder.Staff(159, 20, -1, List.of(f), List.of(20f, 480f));
+        var amount = word("-1/4", 150, 314);
+        var words =
+                TabFretRaster.reconcile(
+                        List.of(tab),
+                        List.of(),
+                        List.of(),
+                        List.of(amount, word("w/bar", 175, 334)),
+                        w,
+                        h);
+        assertTrue(words.contains(amount));
+        var marked =
+                TabGestureMarks.apply(List.of(tab), words, flipped, w, h).get(0).frets().get(0);
+        assertEquals(TabEffect.BAR, TabEffect.kind(marked.marks()));
+        assertEquals(-.5, TabEffect.semitones(marked.marks()), 0);
+    }
+
+    @Test
     public void quarterToneIsHalfASemitone() {
         int m = marks(arrow(true, false), "1/4");
         assertEquals(.5, TabEffect.semitones(m), 0);

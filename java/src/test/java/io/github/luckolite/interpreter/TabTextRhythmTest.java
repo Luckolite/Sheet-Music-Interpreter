@@ -10,6 +10,30 @@ import static org.junit.Assert.*;
 public class TabTextRhythmTest {
     final int W = 500, H = 400;
 
+    @Test
+    public void nativeSearchTokensReachRhythmEvenWhenFretsAlreadySucceeded() {
+        for (String label :
+                List.of(
+                        "Q", "E", "S", "W", "H", "T", "Q.", "𝅝", "𝅗𝅥", "𝅘𝅥", "𝅘𝅥𝅮", "𝅘𝅥𝅯", "𝅘𝅥𝅰", "♩",
+                        "♪")) {
+            var vocabulary = TabTextSource.tokens("5 " + label + " Q");
+            var words =
+                    List.of(
+                            word("5", 150, 80, 12, 16),
+                            word(label, 150, 45, 12, 16),
+                            word("Q", 350, 45, 12, 16));
+            var nativeWords =
+                    words.stream().filter(value -> vocabulary.contains(value.text())).toList();
+            var rows = TablatureDecoder.withWords(List.of(staff(List.of())), nativeWords, W, H);
+            assertEquals(label, 1, rows.get(0).frets().size());
+            var fret = rows.get(0).frets().get(0);
+            double retained = fret.duration() > 0 ? fret.duration() : Math.pow(.5, fret.beams());
+            assertEquals(label, TabNotation.duration(label), retained, 0);
+            assertEquals(label, label.endsWith(".") ? 1 : 0, rows.get(0).frets().get(0).dots());
+            assertFalse(label, TabTextSource.needsRhythmOcr(rows.get(0)));
+        }
+    }
+
     TablatureDecoder.Word word(String s, float x, float y, float width, float height) {
         return new TablatureDecoder.Word(
                 s,

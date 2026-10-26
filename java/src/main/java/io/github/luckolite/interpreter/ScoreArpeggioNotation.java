@@ -253,7 +253,7 @@ public final class ScoreArpeggioNotation {
             for (var event : score.expressiveEvents()) {
                 var indices = targetIndices(score, event);
                 if (indices.isEmpty() || !allowed.containsAll(indices)) continue;
-                double onset = Double.NaN, release = Double.NaN;
+                double onset = Double.NaN;
                 boolean proved = true;
                 for (int index : indices) {
                     var n = score.notes().get(index);
@@ -266,16 +266,8 @@ public final class ScoreArpeggioNotation {
                                             + ScoreNoteTiming.resolvedWrittenDurationBeats(
                                                     n, score.notes(), beats),
                                     meter);
-                    if (!Double.isFinite(start)
-                            || !Double.isFinite(end)
-                            || start < 0
-                            || end <= start
-                            || end > beats
-                            || Double.isFinite(onset)
-                                    && (Math.abs(start - onset) > 1e-7
-                                            || Math.abs(end - release) > 1e-7)) proved = false;
+                    if (!compatibleMember(start, end, beats, onset)) proved = false;
                     onset = start;
-                    release = end;
                 }
                 if (!proved) continue;
                 var attack =
@@ -287,5 +279,16 @@ public final class ScoreArpeggioNotation {
             }
         }
         return List.copyOf(result);
+    }
+
+    /** Arpeggiation owns a shared attack; independently written releases may differ. */
+    static boolean compatibleMember(double start, double end, double measureBeats, double onset) {
+        return Double.isFinite(start)
+                && Double.isFinite(end)
+                && Double.isFinite(measureBeats)
+                && start >= 0
+                && end > start
+                && end <= measureBeats
+                && (!Double.isFinite(onset) || Math.abs(start - onset) <= 1e-7);
     }
 }

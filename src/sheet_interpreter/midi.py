@@ -8,6 +8,7 @@ from pathlib import Path
 from .boundary_ties import resolve_boundary_ties
 from .navigation import project_navigation
 from .typed_events import event_kind, validate_unpitched
+from .tie_owners import releasing_links, sound_lanes
 from .typed_performance import unpitched_intervals
 from .guitar_effect import validate as validate_guitar, pitch_offset as guitar_pitch_offset
 from .continuous_slide_curve import curve as continuous_slide_curve, gated_end
@@ -118,7 +119,7 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
         velocity = 0 if gain == 0 else max(1, min(127, round(unpitched_preview.velocity*gain)))
         if velocity:
             percussion.append((start, end, unpitched_preview.percussion_note, velocity, attack, reference))
-    previous = {}
+    source_rows = []
     for page in document["pages"]:
         starts = [0.0]
         for beats in page["measureBeats"]:
@@ -157,27 +158,28 @@ def _performance_events_prepared(document, bpm, expressive_document, unpitched_p
                         or gliss is not None or step or note.get('guitarEffect')
                         or note.get('tiedFromPrevious')):
                     raise ValueError('Unsupported conflicting continuous slide performance')
-            previous_tone = previous.get(lane)
-            # Recognition has already verified both endpoints of this tie.
-            # A hidden/restored lower staff must not force a second top-staff attack.
-            if note["tiedFromPrevious"] and lane[1] == 0 and lane[0] in (1, 2):
-                alternate = previous.get((3 - lane[0], 0, pitch))
-                if (alternate is not None and abs(alternate[1] - start) <= round(ppq * .04)
-                        and (previous_tone is None or previous_tone[1] < alternate[1])):
-                    previous_tone = alternate
-            if (note["tiedFromPrevious"] and previous_tone is not None
-                    and gliss is None and previous_tone[5] is None
-                    and continuous is None
-                    and note.get("guitarEffect", {}) == previous_tone[4]
-                    and (step == 0 or previous_tone[3] == step)
-                    and abs(previous_tone[1] - start) <= ppq // 8):
-                previous_tone[1] = max(previous_tone[1], end)
-                previous[lane] = previous_tone
-            else:
-                tone = [start, end, pitch, step, note.get("guitarEffect", {}), gliss, note.get("performanceAttack"), note['staffCount'], continuous]
-                tones.append(tone)
-                previous[lane] = tone
+            source_rows.append(dict(start=start, end=end, lane=lane, tied=note['tiedFromPrevious'],
+                                    eligible=not note.get('grace', False), step=step,
+                                    effect=note.get('guitarEffect', {}), gliss=gliss, continuous=continuous, note=note))
         offset += page["totalBeats"]
+    links = releasing_links(source_rows, lambda row: sound_lanes(row, ppq // 8, round(ppq * .04)),
+            lambda old, row: row['gliss'] is None and old['gliss'] is None
+            and row['continuous'] is None and old['continuous'] is None and row['effect'] == old['effect'])
+    owners = {}
+    for index in sorted(range(len(source_rows)), key=lambda i: (source_rows[i]['start'], i)):
+        row = source_rows[index]
+        prior = owners.get(links.get(index))
+        # An unmarked tied middle note inherits the original sound's tremolo subdivision.
+        if prior is not None and row['step'] != 0 and prior[3] != row['step']:
+            prior = None
+        if prior is not None:
+            prior[1] = max(prior[1], row['end'])
+            owners[index] = prior
+        else:
+            tone = [row['start'], row['end'], row['lane'][2], row['step'], row['effect'], row['gliss'],
+                    row['note'].get('performanceAttack'), row['note']['staffCount'], row['continuous']]
+            tones.append(tone)
+            owners[index] = tone
     active = {}
     channel_parts = {}
     pedal_controls = []

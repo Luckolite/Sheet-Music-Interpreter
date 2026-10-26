@@ -3,7 +3,9 @@
 package io.github.luckolite.interpreter;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -22,15 +24,6 @@ public final class YoutubeDescriptionCredits {
     private static final Pattern CREDIT =
             Pattern.compile(
                     "(?iu)^([\\p{L} /&,+().-]{2,80}?)(?:\\s*[:=]\\s*|\\s+[–—-]\\s*|\\s+by\\s+)(.+)$");
-    private static final String ROLE_MARKER =
-            "(?:artists?|performers?|composers?|composed|arrangers?|arranged|performed|written|music|piano|violin|vocals?)";
-    private static final Pattern INLINE =
-            Pattern.compile(
-                    "(?iu)\\s*(?:[|•]|[,;](?=\\s*"
-                            + ROLE_MARKER
-                            + "(?:\\s*(?:and|&|/)\\s*"
-                            + ROLE_MARKER
-                            + ")*\\s*(?:[:=–—-]|by\\b)))\\s*");
     private static final Pattern FOLLOWING_ROLE =
             Pattern.compile(
                     "(?iu)\\s+(?:and|&)\\s+(?=(?:arranged|performed|composed|written)\\s+by\\b)");
@@ -95,7 +88,7 @@ public final class YoutubeDescriptionCredits {
                 }
             }
             boolean matched = false;
-            for (String entry : INLINE.split(line)) {
+            for (String entry : inlineCredits(line)) {
                 Matcher credit = CREDIT.matcher(entry);
                 if (!credit.matches()) continue;
                 matched = true;
@@ -153,6 +146,29 @@ public final class YoutubeDescriptionCredits {
                 String.join("; ", composers.values()),
                 String.join("; ", arrangers.values()),
                 String.join("\n", unresolved.values()));
+    }
+
+    private static List<String> inlineCredits(String line) {
+        List<String> entries = new ArrayList<>();
+        int start = 0;
+        for (int i = 0; i < line.length(); i++) {
+            char separator = line.charAt(i);
+            boolean split = separator == '|' || separator == '•';
+            if (separator == ',' || separator == ';') {
+                Matcher following = CREDIT.matcher(line.substring(i + 1).trim());
+                // Use the actual role grammar, so inline and separate-line credits stay aligned.
+                // A comma inside a combined role label still belongs to that one credit.
+                boolean combinedLabel =
+                        separator == ',' && roles(line.substring(start, i).trim()) != 0;
+                split = !combinedLabel && following.matches() && roles(following.group(1)) != 0;
+            }
+            if (split) {
+                entries.add(line.substring(start, i).trim());
+                start = i + 1;
+            }
+        }
+        entries.add(line.substring(start).trim());
+        return entries;
     }
 
     private static int roles(String label) {

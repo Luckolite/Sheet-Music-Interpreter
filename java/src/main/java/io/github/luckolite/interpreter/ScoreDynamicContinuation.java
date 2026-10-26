@@ -201,6 +201,42 @@ public final class ScoreDynamicContinuation {
     /** Namespace generated page-local evidence while preserving independently authored semantics. */
     public static ScoreExpressiveEvent offsetEvidence(
             ScoreExpressiveEvent event, int offset, int page) {
+        if ((event.kind() == ScoreExpressiveEvent.Kind.FALL_OFF
+                        && event.evidence().stream()
+                                .anyMatch(e -> e.sourceId().equals(ScoreFallOffNotation.SOURCE)))
+                || (event.kind() == ScoreExpressiveEvent.Kind.NATURAL_HARMONIC
+                        && event.evidence().stream()
+                                .anyMatch(
+                                        e ->
+                                                e.sourceId()
+                                                        .equals(
+                                                                ScoreNaturalHarmonicNotation
+                                                                        .SOURCE)))) {
+            var shifted = event.offset(offset);
+            String localId = shifted.eventId().replaceFirst("^page:[0-9]+/", "");
+            return new ScoreExpressiveEvent(
+                    "page:" + page + "/" + localId,
+                    shifted.kind(),
+                    shifted.start(),
+                    shifted.end(),
+                    shifted.scope(),
+                    shifted.staffIndex(),
+                    shifted.staffCount(),
+                    shifted.targetEventId(),
+                    shifted.strength(),
+                    shifted.qualifierText(),
+                    shifted.evidence().stream()
+                            .map(
+                                    e ->
+                                            new ScoreExpressiveEvent.Evidence(
+                                                    e.sourceId(),
+                                                    page,
+                                                    e.visualX(),
+                                                    e.staffIndex(),
+                                                    e.staffCount(),
+                                                    e.printedText()))
+                            .toList());
+        }
         if (ScoreArpeggioNotation.owns(event))
             return ScoreArpeggioNotation.offsetEvidence(event, offset, page);
         if (ScorePedalDetector.owns(event))

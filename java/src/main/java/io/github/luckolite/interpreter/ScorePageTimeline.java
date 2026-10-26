@@ -9,6 +9,15 @@ public final class ScorePageTimeline {
 
     private ScorePageTimeline() {}
 
+    /** Physical trailing pages can be excluded without changing the arrangement's final bar. */
+    public static int lastEnabledPage(int[] counts, PageRange range) {
+        if (counts == null || range == null) return -1;
+        for (int page = Math.min(counts.length, range.pageAfterLast()) - 1;
+                page >= Math.max(0, range.firstPage());
+                page--) if (counts[page] > 0) return page;
+        return -1;
+    }
+
     public static java.util.List<PageRange> arrangements(int[] counts, int[] starts) {
         java.util.List<PageRange> result = new java.util.ArrayList<>();
         if (counts == null) return result;
@@ -141,12 +150,7 @@ public final class ScorePageTimeline {
         return ranges.isEmpty() ? new PageRange(0, 0) : ranges.get(0);
     }
 
-    /**
-     * A part can begin on a page whose printed measure one was missed. The next page's
-     * smaller printed number still proves a restart, and its value locates the unnumbered
-     * page on the new side of the boundary. Keep ordinary unnumbered continuation pages
-     * when the later number agrees with the earlier arrangement.
-     */
+    /** A following printed number can place an unnumbered page at a part restart. */
     private static int arrangementRestartBoundary(int page, int[] counts, int[] starts) {
         if (restart(page, counts, starts)) return page;
         if (starts == null
@@ -162,9 +166,8 @@ public final class ScorePageTimeline {
                 || prior >= starts.length
                 || starts[prior] <= 0
                 || starts[page] >= starts[prior]) return -1;
-        // A following page numbered near the number of measures on the unknown page is
-        // strong evidence that the unknown page began at measure one. Allow a few extra
-        // detected bar slices without swallowing an unrelated unnumbered continuation.
+        // Allow a few extra detected bar slices on the unknown page, but do not
+        // split an ordinary unnumbered continuation with a later large number.
         return starts[page] <= counts[page - 1] + 5 ? page - 1 : -1;
     }
 }

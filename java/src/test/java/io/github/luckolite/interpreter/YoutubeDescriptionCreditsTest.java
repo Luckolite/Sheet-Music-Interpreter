@@ -112,6 +112,54 @@ public final class YoutubeDescriptionCreditsTest {
     }
 
     @Test
+    public void allSupportedInlineRolesUseTheSameGrammarAsSeparateLines() {
+        for (String label :
+                new String[] {
+                    "Arrangement",
+                    "Arrangements",
+                    "Arr.",
+                    "Transcribed by",
+                    "Piano arrangement",
+                    "Violin arrangement",
+                    "Guitar arrangement"
+                }) {
+            credits("Composer: Ada Reed; " + label + ": Bo Stone", "", "Ada Reed", "Bo Stone");
+            credits("Composer: Ada Reed, " + label + ": Bo Stone", "", "Ada Reed", "Bo Stone");
+        }
+        for (String label :
+                new String[] {
+                    "Guitar",
+                    "Guitarist",
+                    "Viola",
+                    "Cello",
+                    "Cellist",
+                    "Bass",
+                    "Drums",
+                    "Flute",
+                    "Pianist",
+                    "Violinist",
+                    "Performance",
+                    "Singer",
+                    "Sung",
+                    "Vocalist",
+                    "Original artist",
+                    "Piano cover",
+                    "Featuring"
+                })
+            credits("Composer: Ada Reed; " + label + ": Bo Stone", "Bo Stone", "Ada Reed", "");
+        credits(
+                "Artist: Mara Vale; Songwriter: Ada Reed; Guitar: Bo Stone; Arrangement: Fox Lane",
+                "Mara Vale; Bo Stone",
+                "Ada Reed",
+                "Fox Lane");
+        credits(
+                "Composer, Arranger: Ada Reed; Guitar: Bo Stone",
+                "Bo Stone",
+                "Ada Reed",
+                "Ada Reed");
+    }
+
+    @Test
     public void inlineBylinesWithDifferentNamesRemainSeparate() {
         credits("Composed by Ada Reed and arranged by Bo Stone", "", "Ada Reed", "Bo Stone");
     }

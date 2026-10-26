@@ -3010,24 +3010,53 @@ final class OmrMeasurePostProcessor {
     private static List<Integer> mergeBoundaries(
             List<Integer> first, List<Integer> second, int width, float gap) {
         int tolerance = Math.max(Math.round(gap * 2.2f), width / 38);
-        List<Integer> combined = new ArrayList<>(first.size() + second.size());
-        combined.addAll(first);
-        combined.addAll(second);
-        combined.sort(Integer::compare);
-        List<Integer> merged = new ArrayList<>();
-        int total = combined.get(0), count = 1;
-        for (int index = 1; index < combined.size(); index++) {
-            int value = combined.get(index);
-            if (value - Math.round(total / (float) count) <= tolerance) {
-                total += value;
-                count++;
-            } else {
-                merged.add(Math.round(total / (float) count));
-                total = value;
-                count = 1;
+        // Match only across staves, one-to-one. Pooling both lists first allowed two distinct
+        // accepted bars from the same stave to merge merely because their spacing was narrow.
+        int rows = first.size(), columns = second.size();
+        if (rows > 32 || columns > 32)
+            return first.size() >= second.size() ? List.copyOf(first) : List.copyOf(second);
+        int[][] matches = new int[rows + 1][columns + 1];
+        long[][] costs = new long[rows + 1][columns + 1];
+        byte[][] steps = new byte[rows + 1][columns + 1];
+        for (int i = rows; i >= 0; i--)
+            for (int j = columns; j >= 0; j--) {
+                if (i == rows && j == columns) continue;
+                int best = -1;
+                long cost = Long.MAX_VALUE;
+                if (i < rows) {
+                    best = matches[i + 1][j];
+                    cost = costs[i + 1][j];
+                    steps[i][j] = 1;
+                }
+                if (j < columns
+                        && (matches[i][j + 1] > best
+                                || matches[i][j + 1] == best && costs[i][j + 1] < cost)) {
+                    best = matches[i][j + 1];
+                    cost = costs[i][j + 1];
+                    steps[i][j] = 2;
+                }
+                if (i < rows && j < columns) {
+                    long distance = Math.abs((long) first.get(i) - second.get(j));
+                    int paired = matches[i + 1][j + 1] + 1;
+                    long pairedCost = costs[i + 1][j + 1] + distance;
+                    if (distance <= tolerance
+                            && (paired > best || paired == best && pairedCost <= cost)) {
+                        best = paired;
+                        cost = pairedCost;
+                        steps[i][j] = 3;
+                    }
+                }
+                matches[i][j] = best;
+                costs[i][j] = cost;
             }
+        List<Integer> merged = new ArrayList<>();
+        for (int i = 0, j = 0; i < rows || j < columns; ) {
+            if (steps[i][j] == 3) {
+                merged.add((int) Math.round(((long) first.get(i++) + second.get(j++)) / 2d));
+            } else if (steps[i][j] == 1) merged.add(first.get(i++));
+            else merged.add(second.get(j++));
         }
-        merged.add(Math.round(total / (float) count));
+        merged.sort(Integer::compare);
         // The per-stave detector already rejects implausibly busy systems. Keep that same safety
         // ceiling after merging rather than allowing two noisy masks to amplify each other.
         if (merged.size() > 32)

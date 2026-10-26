@@ -211,6 +211,117 @@ public final class ScoreExpressivePerformanceTest {
     }
 
     @Test
+    public void negatedRecognizedAndLegacyTempoDirectionsDoNotSlowPreview() {
+        for (String text :
+                List.of("senza rall.", "no rit.", "non ritardando", "without rallentando")) {
+            var direction = ExpressiveDirectionText.parse(text).get(0);
+            var parsed = event("parsed", direction.kind(), 0, null, Scope.SCORE, 0);
+            var actual =
+                    new ScoreExpressiveEvent(
+                            parsed.eventId(),
+                            parsed.kind(),
+                            parsed.start(),
+                            parsed.end(),
+                            parsed.scope(),
+                            parsed.staffIndex(),
+                            parsed.staffCount(),
+                            parsed.targetEventId(),
+                            direction.strength(),
+                            direction.qualifierText(),
+                            parsed.evidence());
+            assertEquals(
+                    text,
+                    4,
+                    resolve(List.of(actual), List.of(), Map.of()).timeline().activeSecondsAtBeat(8),
+                    0);
+        }
+        var raw = event("legacy", Kind.RALLENTANDO, 0, null, Scope.SCORE, 0);
+        var legacy =
+                new ScoreExpressiveEvent(
+                        raw.eventId(),
+                        raw.kind(),
+                        raw.start(),
+                        raw.end(),
+                        raw.scope(),
+                        raw.staffIndex(),
+                        raw.staffCount(),
+                        raw.targetEventId(),
+                        raw.strength(),
+                        "senza",
+                        raw.evidence());
+        var result = resolve(List.of(legacy), List.of(), Map.of());
+        assertEquals(4, result.timeline().activeSecondsAtBeat(8), 0);
+        assertTrue(
+                result.diagnostics().stream().anyMatch(value -> value.contains("negated tempo")));
+        assertTrue(
+                resolve(List.of(raw), List.of(), Map.of()).timeline().activeSecondsAtBeat(8) > 4);
+    }
+
+    @Test
+    public void cachedFullEvidenceNegatesOnlyItsOwnTempoAction() {
+        for (String text :
+                List.of("senza rall.", "senza molto rall.", "no poco rall.", "non rallentando")) {
+            var result =
+                    resolve(List.of(literalTempo(Kind.RALLENTANDO, text, "")), List.of(), Map.of());
+            assertEquals(text, 4, result.timeline().activeSecondsAtBeat(8), 0);
+            assertTrue(
+                    result.diagnostics().stream()
+                            .anyMatch(value -> value.contains("negated tempo")));
+        }
+        var acceleration =
+                resolve(
+                        List.of(literalTempo(Kind.ACCELERANDO, "not accelerando", "")),
+                        List.of(),
+                        Map.of());
+        assertEquals(4, acceleration.timeline().activeSecondsAtBeat(8), 0);
+    }
+
+    @Test
+    public void cachedPedalArticulationAndNonTroppoQualifiersKeepPositiveTempo() {
+        String[][] cases = {
+            {"rall. senza pedale", "senza pedale"},
+            {"non legato, rallentando", "non legato,"},
+            {"rall. non troppo", "non troppo"},
+            {"rall. non legato", "non legato"},
+            {"rall. senza accelerando", "senza accelerando"}
+        };
+        for (String[] value : cases) {
+            var result =
+                    resolve(
+                            List.of(literalTempo(Kind.RALLENTANDO, value[0], value[1])),
+                            List.of(),
+                            Map.of());
+            assertTrue(value[0], result.timeline().activeSecondsAtBeat(8) > 4);
+            assertTrue(
+                    value[0],
+                    result.diagnostics().stream()
+                            .noneMatch(message -> message.contains("negated tempo")));
+        }
+        var result =
+                resolve(
+                        List.of(literalTempo(Kind.RITARDANDO, "rit. non troppo", "non troppo")),
+                        List.of(),
+                        Map.of());
+        assertTrue(result.timeline().activeSecondsAtBeat(8) > 4);
+    }
+
+    private static ScoreExpressiveEvent literalTempo(Kind kind, String printed, String qualifier) {
+        var original = event("literal", kind, 0, null, Scope.SCORE, 0);
+        return new ScoreExpressiveEvent(
+                original.eventId(),
+                original.kind(),
+                original.start(),
+                original.end(),
+                original.scope(),
+                original.staffIndex(),
+                original.staffCount(),
+                original.targetEventId(),
+                original.strength(),
+                qualifier,
+                List.of(new Evidence("original-literal", 0, .5f, 0, 2, printed)));
+    }
+
+    @Test
     public void conflictingSimultaneousDirectionsRemainExplicit() {
         var result =
                 resolve(

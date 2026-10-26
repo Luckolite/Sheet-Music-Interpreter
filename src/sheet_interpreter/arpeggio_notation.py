@@ -91,7 +91,7 @@ def plan(expression, page, available=None):
                    for b in beats[:measure+1])):
         return []
     begin, length = sum(beats[:measure]), beats[measure]
-    onset = release = None
+    onset = None
     for index in indices:
         event, note = events[index], notes[index]
         start, duration = event.get('startBeat'), event.get('durationBeats')
@@ -105,7 +105,7 @@ def plan(expression, page, available=None):
                 or any(type(v) not in (int, float) or not math.isfinite(v) for v in (start, duration))
                 or duration <= 0 or start < begin
                 or _computed_offset(start + duration - begin, length, begin) > length
-                or onset is not None and (abs(start-onset) > 1e-7 or abs(start+duration-release) > 1e-7)):
+                or onset is not None and abs(start-onset) > 1e-7):
             return []
-        onset, release = start, start + duration
+        onset = start
     return indices

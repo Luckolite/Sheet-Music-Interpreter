@@ -161,6 +161,11 @@ public final class ScoreExpressivePerformance {
                     && event.kind() != Kind.FERMATA
                     && event.kind() != Kind.BREATH
                     && event.kind() != Kind.CAESURA) continue;
+            if (ExpressiveDirectionText.changingTempo(event.kind())
+                    && ExpressiveDirectionText.hasTempoNegation(event)) {
+                diagnostics.add(event.eventId() + ": negated tempo direction remains unresolved");
+                continue;
+            }
             if (event.scope() == Scope.UNRESOLVED || event.start().isEmpty()) {
                 diagnostics.add(event.eventId() + ": unresolved musical ownership");
                 continue;

@@ -12,7 +12,7 @@ public final class TabTextSource {
     private static final class TokenPattern {
         private static final Pattern VALUE =
                 Pattern.compile(
-                        "-(?:[12]|(?i:full))|(?i:full|whammy|w/bar|bar|upstroke|downstroke|strum up|strum down)|-?(?:1 1/2|1/4|1/2|3/4|1\u00bd|[\u00bc\u00bd\u00be])|[\\uE846\\uE847]|<[0-9]{1,2}>|\\([0-9]{1,2}\\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|[xXHPT=]|[\\uE1E7\\uE241\\uE243\\uE245\\uE4E3-\\uE4E8\\uE4A2\\uEAB2\\uE080-\\uE089\\uECA5\\uECA6\\uECB7]");
+                        "-(?:[12]|(?i:full))|(?i:full|whammy|w/bar|bar|upstroke|downstroke|strum up|strum down)|-?(?:1 1/2|1/4|1/2|3/4|1\u00bd|[\u00bc\u00bd\u00be])|[\\uE846\\uE847]|<[0-9]{1,2}>|\\([0-9]{1,2}\\)|(?<![0-9])[0-9]{1,2}[bB][0-9]{1,2}(?:[rR][0-9]{1,2})?~*|(?<![0-9])(?:[0-9]{1,2}|[xX])(?:[/\\\\hHpP][0-9]{1,2})+~*|(?<![0-9])[0-9]{1,3}(?![0-9])~*|(?<![\\p{L}\\p{N}])[QESWHT](?:\\.{1,2})?(?![\\p{L}\\p{N}])|[xXP=]|[𝅝𝅗𝅥𝅘𝅥𝅘𝅥𝅮𝅘𝅥𝅯𝅘𝅥𝅰𝄻𝄼𝄽𝄾𝄿𝅀♩♪\\uE4E3-\\uE4E8](?:\\.{1,2})?|[\\uE1E7\\uE241\\uE243\\uE245\\uE4A2\\uEAB2\\uE080-\\uE089\\uECA5\\uECA6\\uECB7]");
     }
 
     private static final class DigitPattern {
@@ -28,6 +28,30 @@ public final class TabTextSource {
         var result = new ArrayList<>(found);
         result.sort(Comparator.comparingInt(String::length).reversed());
         return List.copyOf(result);
+    }
+
+    /** PDF search finds substrings too; a rhythm letter must be an isolated source token. */
+    public static boolean acceptSearchMatch(String pageText, String token, int start) {
+        if (!token.matches("[QESWHT]\\.{0,2}")) return true;
+        int end = start + token.length();
+        if (start < 0
+                || end > pageText.length()
+                || !pageText.regionMatches(start, token, 0, token.length())) return false;
+        return (start == 0 || !Character.isLetterOrDigit(pageText.codePointBefore(start)))
+                && (end == pageText.length()
+                        || !Character.isLetterOrDigit(pageText.codePointAt(end)))
+                && (end == pageText.length() || pageText.charAt(end) != '.');
+    }
+
+    public static boolean needsRhythmOcr(TablatureDecoder.Staff staff) {
+        return staff.frets().isEmpty()
+                || staff.standardTop() < 0
+                        && staff.frets().stream()
+                                .anyMatch(
+                                        fret ->
+                                                fret.fret() >= 0
+                                                        && fret.duration() <= 0
+                                                        && fret.beams() == 0);
     }
 
     public static List<TablatureDecoder.Word> disjoint(List<TablatureDecoder.Word> input) {

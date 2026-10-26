@@ -84,9 +84,13 @@ class ArpeggioIdentityTests(unittest.TestCase):
     def test_partial_available_chord_abstains(self):
         self.assertEqual([],plan(self.expression,self.page,[0,1,3]));self.assertEqual([0,1,2],plan(self.expression,self.page,[0,1,2]))
     def test_unknown_mismatched_or_fallback_clock_abstains(self):
-        for key,value in [('durationFallback',True),('durationBeats',1),('startBeat',.1),('sourceNoteIndex',8),('measureIndex',1),('staffCount',1)]:
+        for key,value in [('durationFallback',True),('durationBeats',5),('startBeat',.1),('sourceNoteIndex',8),('measureIndex',1),('staffCount',1)]:
             p=copy.deepcopy(self.page);p['events'][1][key]=value;self.assertEqual([],plan(self.expression,p),key)
         p=copy.deepcopy(self.page);p['measureBeats']=[];self.assertEqual([],plan(self.expression,p))
+    def test_same_attack_preserves_independent_written_releases(self):
+        for index, duration in enumerate([1,2,3]):
+            self.page['events'][index]['durationBeats']=duration
+        self.assertEqual([0,1,2],plan(self.expression,self.page))
     def test_source_event_count_mismatch_abstains(self):
         self.page['events'].pop();self.assertEqual([],plan(self.expression,self.page))
     def test_canonical_nonfallback_decoder_clock_needs_no_raw_rhythm(self):
@@ -122,6 +126,16 @@ class ArpeggioXmlTests(unittest.TestCase):
         doc=document();doc['pages'][0]['score']['expressiveEvents']=[]
         for e in doc['pages'][0]['events']:e['retainedArpeggio']=True
         self.assertEqual([],self.export(doc).findall('.//arpeggiate'))
+    def test_mixed_release_arpeggio_keeps_all_heads_and_their_durations(self):
+        doc=document()
+        for index,duration in enumerate([1,2,3]):
+            doc['pages'][0]['events'][index]['durationBeats']=duration
+            doc['pages'][0]['score']['notes'][index]['unbeamedDurationBeats']=duration
+        root=self.export(doc)
+        marked=[note for note in root.findall('.//note') if note.find('notations/arpeggiate')is not None]
+        self.assertEqual(3,len(marked))
+        self.assertEqual([10080,20160,30240],sorted(int(note.findtext('duration'))for note in marked))
+        self.assertEqual([],root.findall('.//words'))
     def test_wrong_staff_and_partial_filter_emit_nothing(self):
         for change in ['staff','partial','unknown']:
             doc=document();p=doc['pages'][0]

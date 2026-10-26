@@ -760,16 +760,15 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                     else (lambda n: n['midi'])))
                 selected.setdefault('releaseSymbols', []).append(symbol)
                 rendered.add(mark['identity'])
-        previous = {}
-        for n in notes:
-            if n.get('grace', False) or event_kind(n) == 'UNPITCHED':
-                continue
-            prior = previous.get(n['midi'])
-            if n.get('tiedFromPrevious') and prior and abs(prior['end']-n['start']) <= 2:
-                prior['tie_start'] = True
-                n['tie_stop'] = True
-                retained_slur_ties.add((prior['sourceIdentity'], n['sourceIdentity']))
-            previous[n['midi']] = n
+        from .tie_owners import releasing_links
+        tie_rows = [dict(start=n['start'], end=n['end'], lane=(staff, n.get('midi')),
+                         tied=n.get('tiedFromPrevious', False),
+                         eligible=not n.get('grace', False) and event_kind(n) == 'PITCHED') for n in notes]
+        for current, earlier in releasing_links(tie_rows, lambda row: [(row['lane'], 2)]).items():
+            prior, n = notes[earlier], notes[current]
+            prior['tie_start'] = True
+            n['tie_stop'] = True
+            retained_slur_ties.add((prior['sourceIdentity'], n['sourceIdentity']))
         groups = defaultdict(list)
         for n in notes:
             if not n.get('grace', False):
