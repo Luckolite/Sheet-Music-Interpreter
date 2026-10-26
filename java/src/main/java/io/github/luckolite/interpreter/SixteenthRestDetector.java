@@ -3217,16 +3217,29 @@ final class SixteenthRestDetector {
                                             quarterBudget)) return;
                             if (lowered
                                     && !ScoreNoteTiming.hasIndependentSustain(note)
-                                    && RestStaffRuleEdge.noteStem(
-                                            gray,
-                                            width,
-                                            height,
-                                            left,
-                                            right,
-                                            minY,
-                                            gap,
-                                            noteX,
-                                            note.pageY() * height)) return;
+                                    && (RestStaffRuleEdge.noteStem(
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    left,
+                                                    right,
+                                                    minY,
+                                                    gap,
+                                                    noteX,
+                                                    note.pageY() * height)
+                                            || FaintRestStemInk.owns(
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    notes,
+                                                    note,
+                                                    left,
+                                                    right,
+                                                    minY,
+                                                    gap,
+                                                    noteX,
+                                                    note.pageY() * height,
+                                                    quarterBudget))) return;
                             if (!ordinary
                                     && !lowered
                                     && !ScoreNoteTiming.hasIndependentSustain(note)
