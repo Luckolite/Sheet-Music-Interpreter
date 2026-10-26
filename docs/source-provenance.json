@@ -656,10 +656,10 @@
     },
     "TripletRhythmDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TripletRhythmDetector.java",
-      "source_sha256": "a47aecb312b5265ae29d3f1808b76513e0f47b0db0b2a3dc02da349f48e5faea",
-      "source_normalized_sha256": "fce5890e1285648009d6ad76477c341d8b159f271f8bd5dafe1d36a1163c494b",
+      "source_sha256": "fd8f9f8ab175c4fa129f2bd6b046f57f4c332c6e8109eff59055e2e543cee9ff",
+      "source_normalized_sha256": "c32a489096b6caabb8f7a1177977d346102a1e7e05d96a380ff68f61d9d8f20c",
       "review_note": "A continuous middle waist is not a four crossbar if a separately observed two-sided lower bowl exists below it. Reuse existing lower-lobe/paper dimensions; preserve complete-four contradiction, positive-three rules and original Java17/21 regressions.",
-      "standalone_sha256": "810353db52478b948deba92bd842bf713d8512c40991a377bcc4120e03b2fb75",
+      "standalone_sha256": "87a6e09adabdd9ee8fe551ad64030d7080a38a9d305f8fbbabd1914d233a6996",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "reviewed_app_base_commit": "e9ed7bb25697a8d657285ebd9bdef7bb8df15880",
       "scoped_reviewed_app_commit": "cb837eed837cdbe6f36214e34e0079053adae02c",
@@ -669,7 +669,21 @@
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
-      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports."
+      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
+      "owned_triplet_context_review": {
+        "documentation": "docs/owned-triplet-context.md",
+      "reviewed_app_commit": "f1e84d2fbbcd151fd05ac9dcff588fe6e1f9c542",
+        "reviewed_app_base_commit": "09661162ce10ee87a4abeeae1041253eac336cf2",
+        "scope": "Complete real single-beam three-head ownership can qualify in-staff numeral context. Existing twelve photometric observations support deferred distinct-threshold consensus only after the entire legacy search would fail. Original successful returns retain priority. No model, raster probe count, thresholds, resource caps, audio or wire layouts change.",
+        "original_regressions": [
+          "InStaffPrimaryBeamContextTest.java",
+          "LaterThresholdConsensusTest.java"
+        ],
+        "focused_tests": 159,
+        "standalone_namespace_and_aosp_parity": true,
+        "commercial_data_included": false,
+        "rollout": "Reviewed source; cumulative matched rollout deferred during active goal."
+      }
     },
     "training/model.py": {
       "source_sha256": "ce25ed9ab60a1018e9b88a8a94edf9aa4b62e6c580a567c9132a41ff442afd46"
