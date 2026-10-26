@@ -152,16 +152,29 @@ final class PrintedBeamShafts {
             if (start < 1 || start >= limit || first > last) continue;
             // A uniqueness decision requires BOTH possible stem directions.
             // Never return the first direction after refusing its rival scan.
-            if (!budget.take((long) (last - first + 1) * (limit - start + 1) * 2)) return List.of();
+            boolean cacheContrast = all && contrast && frame != null;
+            long cells = (long) (last - first + 1) * (limit - start + 1);
+            // Four prepaid cell slots cover first lookup/read/store and repeated lookup.
+            if (!budget.take(cells * (cacheContrast ? 4 : 2))) return List.of();
+            ContrastMemo memo = null;
+            if (cacheContrast) {
+                frame.take(128 + 4 * cells);
+                memo =
+                        new ContrastMemo(
+                                raw, width, height, first, last, start, limit, direction, gap,
+                                budget, frame, headY);
+            }
             var cols = new ArrayList<Column>();
             int prior = -2, remote = -1;
             boolean ambiguous = false;
             for (int x = first; x <= last; x++) {
                 int hits = 0, total = 0, blank = 0, end = start;
                 for (int y = start; y <= limit; y++) {
-                    if (dark(
-                            raw, width, height, x, y, direction, gap, budget, frame, headY,
-                            contrast)) {
+                    if (memo == null
+                            ? dark(
+                                    raw, width, height, x, y, direction, gap, budget, frame, headY,
+                                    contrast)
+                            : memo.at(x, y)) {
                         hits++;
                         blank = 0;
                         end = y;
@@ -201,7 +214,7 @@ final class PrintedBeamShafts {
                         var shaft =
                                 materialize(
                                         raw, width, height, headY, gap, budget, frame, direction,
-                                        start, end, run, contrast);
+                                        start, end, run, contrast, memo);
                         if (shaft != null) result.add(shaft);
                     }
                     from = to;
@@ -224,6 +237,25 @@ final class PrintedBeamShafts {
             int remote,
             List<Column> cols,
             boolean contrast) {
+        return materialize(
+                raw, width, height, headY, gap, budget, frame, direction, start, remote, cols,
+                contrast, null);
+    }
+
+    private static Shaft materialize(
+            byte[] raw,
+            int width,
+            int height,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            int direction,
+            int start,
+            int remote,
+            List<Column> cols,
+            boolean contrast,
+            ContrastMemo memo) {
         int left = cols.get(0).x(), right = cols.get(cols.size() - 1).x();
         // At least one literal 8-connected path survives every row from
         // the authenticated head's edge to the most remote observed cap.
@@ -240,9 +272,11 @@ final class PrintedBeamShafts {
             boolean any = false;
             for (int i = 0; i < next.length; i++) {
                 boolean actualDark =
-                        dark(
-                                raw, width, height, left + i, y, direction, gap, budget, frame,
-                                headY, contrast);
+                        memo == null
+                                ? dark(
+                                        raw, width, height, left + i, y, direction, gap, budget,
+                                        frame, headY, contrast)
+                                : memo.at(left + i, y);
                 if (savedRows != null
                         && actualDark
                         && y
@@ -286,6 +320,56 @@ final class PrintedBeamShafts {
                                     savedRows,
                                     contrast));
         return null;
+    }
+
+    /** Invocation/direction-local answers only; raw input remains immutable during the scan. */
+    private static final class ContrastMemo {
+        final byte[] raw, values;
+        final int width, height, left, right, start, limit, direction, stride;
+        final float gap, headY;
+        final Budget budget;
+        final PrintedBeamShaftPixels.Frame frame;
+
+        ContrastMemo(
+                byte[] raw,
+                int width,
+                int height,
+                int left,
+                int right,
+                int start,
+                int limit,
+                int direction,
+                float gap,
+                Budget budget,
+                PrintedBeamShaftPixels.Frame frame,
+                float headY) {
+            this.raw = raw;
+            this.width = width;
+            this.height = height;
+            this.left = left;
+            this.right = right;
+            this.start = start;
+            this.limit = limit;
+            this.direction = direction;
+            this.gap = gap;
+            this.budget = budget;
+            this.frame = frame;
+            this.headY = headY;
+            stride = right - left + 1;
+            values = new byte[stride * (limit - start + 1)];
+        }
+
+        boolean at(int x, int y) {
+            if (x < left || x > right || y < start || y > limit)
+                throw new IllegalArgumentException("Foreign memo cell");
+            int index = (y - start) * stride + x - left;
+            int prior = values[index];
+            if (prior != 0) return prior == 2;
+            boolean answer =
+                    dark(raw, width, height, x, y, direction, gap, budget, frame, headY, true);
+            values[index] = (byte) (answer ? 2 : 1);
+            return answer;
+        }
     }
 
     private static boolean dark(

@@ -32,6 +32,10 @@ public final class UnboundPhaseVetoOriginals {
         final List<PlayingTechniqueDetector.Staff> staffs;
 
         Scene(boolean middle) {
+            this(middle, CENTRAL);
+        }
+
+        Scene(boolean middle, int centralY) {
             Arrays.fill(raw, (byte) 245);
             for (int line = 0; line < 5; line++)
                 rect(raw, 4, W - 5, ACTUAL - (4 - line) * GAP, ACTUAL - (4 - line) * GAP, 0);
@@ -43,13 +47,13 @@ public final class UnboundPhaseVetoOriginals {
                 rect(raw, x + 10, x + 10, 200, ACTUAL, 0);
             }
             rect(raw, 270, 750, 200, 206, 0);
-            if (middle) head(raw, 500, CENTRAL);
+            if (middle) head(raw, 500, centralY);
             var notes =
                     List.of(
                             new ScoreNoteEvent(
                                     0, 260f / W, 0, 0, 1, ACTUAL / (float) H, false, 0, 1),
                             new ScoreNoteEvent(
-                                    0, 500f / W, 0, 0, 1, CENTRAL / (float) H, false, 0, 1),
+                                    0, 500f / W, 0, 0, 1, centralY / (float) H, false, 0, 1),
                             new ScoreNoteEvent(
                                     0, 740f / W, 0, 0, 1, ACTUAL / (float) H, false, 0, 1));
             score = new ScorePageInterpretation(List.of(new MeasureRegion(0, 1, 0, 1)), notes);
@@ -87,29 +91,36 @@ public final class UnboundPhaseVetoOriginals {
     }
 
     public static void main(String[] args) {
-        for (boolean middle : new boolean[] {false, true}) {
-            var scene = new Scene(middle);
-            var c = scene.capture();
-            check(c.statistics().refusal().isEmpty(), "source must not refuse");
-            check(!c.statistics().flagRefused(), "flag work must not refuse");
-            check(c.statistics().bound() == 2, "only two outer heads may bind");
-            check(
-                    "unbound".equals(c.diagnostics().get(1).get("status")),
-                    "central proposal remains genuinely unbound");
-            check(c.statistics().shaftOwners() == 2, "only original outer shafts owned");
-            check(
-                    c.source().detachedColumns().isEmpty(),
-                    "unknown context must not fabricate detached flags");
-            if (!middle) {
+        // The new shorter-sample proof legitimately binds the original316 proposal.
+        // Keep its physical-head veto, and independently retain genuinely unbound319.
+        for (int centralY : new int[] {CENTRAL, 319})
+            for (boolean middle : new boolean[] {false, true}) {
+                var c = new Scene(middle, centralY).capture();
+                boolean unbound = centralY == 319;
+                check(c.statistics().refusal().isEmpty(), "source must not refuse");
+                check(!c.statistics().flagRefused(), "flag work must not refuse");
                 check(
-                        c.source().groups().size() == 1,
-                        "no physical interior head: retain outer beam");
+                        c.statistics().bound() == (unbound ? 2 : 3),
+                        "actual recovered or unbound proposal count");
                 check(
-                        owners(c.source().groups().get(0)).equals(List.of(0, 2)),
-                        "actual outer group owns only outer notes");
-            } else
-                check(c.source().groups().isEmpty(), "physical unbound interior head vetoes group");
-        }
-        System.out.println("PASS " + checks + " original unbound phase-veto assertions");
+                        "unbound".equals(c.diagnostics().get(1).get("status")) == unbound,
+                        "physical missing-head and binding roles remain distinct");
+                check(c.statistics().shaftOwners() == 2, "only original outer shafts owned");
+                check(
+                        c.source().detachedColumns().isEmpty(),
+                        "context must not fabricate detached flags");
+                if (!middle) {
+                    check(
+                            c.source().groups().size() == 1,
+                            "no physical interior head retains outer beam");
+                    check(
+                            owners(c.source().groups().get(0)).equals(List.of(0, 2)),
+                            "only outer notes own beam");
+                } else
+                    check(
+                            c.source().groups().isEmpty(),
+                            "physical interior head vetoes beam whether bound or unbound");
+            }
+        System.out.println("PASS " + checks + " original bound/unbound phase-veto assertions");
     }
 }

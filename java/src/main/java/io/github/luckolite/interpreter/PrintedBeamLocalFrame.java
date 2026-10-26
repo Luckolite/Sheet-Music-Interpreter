@@ -116,6 +116,10 @@ final class PrintedBeamLocalFrame {
         int left = (int) Math.floor(head.x() - gap * .8f),
                 right = (int) Math.ceil(head.x() + gap * .8f);
         float[] result = frame(raw, width, height, left, right, staff, budget);
+        if (result == null)
+            result =
+                    PrintedBeamLocalSamples.at(
+                            raw, width, height, head.x(), left, right, staff, budget);
         // Match the observed five-rule search envelope; phase alone proves no ownership.
         if (result == null
                 || Math.abs(result[0] - staff.bottom()) > gap * .8f
@@ -260,7 +264,7 @@ final class PrintedBeamLocalFrame {
         return raw[y * w + x] & 255;
     }
 
-    private static boolean thin(
+    static boolean thin(
             byte[] raw, int w, int x, int y, int flank, float gap, FaintQuarterRestInk.Budget q) {
         FaintQuarterRestInk.charge(q, 8, 0);
         int ink = pixel(raw, w, x, y, q);

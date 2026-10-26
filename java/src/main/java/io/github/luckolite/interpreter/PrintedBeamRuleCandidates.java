@@ -5,6 +5,37 @@ package io.github.luckolite.interpreter;
 final class PrintedBeamRuleCandidates {
     private PrintedBeamRuleCandidates() {}
 
+    static final class Observation {
+        final int[] rows;
+        final boolean ambiguous;
+
+        private Observation(int[] rows, boolean ambiguous) {
+            this.rows = rows;
+            this.ambiguous = ambiguous;
+        }
+    }
+
+    private static final class Flag {
+        boolean ambiguous;
+    }
+
+    static Observation inspect(
+            int[] strength,
+            int minimum,
+            int height,
+            int first,
+            float nominalBottom,
+            float nominalGap,
+            FaintQuarterRestInk.Budget budget) {
+        if (budget == null) throw new IllegalArgumentException("Missing local rule budget");
+        FaintQuarterRestInk.charge(budget, 32, 64);
+        var flag = new Flag();
+        int[] rows =
+                scan(strength, minimum, height, first, nominalBottom, nominalGap, budget, flag);
+        FaintQuarterRestInk.charge(budget, 32, 64);
+        return new Observation(rows, flag.ambiguous);
+    }
+
     static int[] unique(
             int[] strength,
             int minimum,
@@ -13,6 +44,19 @@ final class PrintedBeamRuleCandidates {
             float nominalBottom,
             float nominalGap,
             FaintQuarterRestInk.Budget budget) {
+        FaintQuarterRestInk.charge(budget, 16, 0);
+        return scan(strength, minimum, height, first, nominalBottom, nominalGap, budget, null);
+    }
+
+    private static int[] scan(
+            int[] strength,
+            int minimum,
+            int height,
+            int first,
+            float nominalBottom,
+            float nominalGap,
+            FaintQuarterRestInk.Budget budget,
+            Flag flag) {
         if (budget == null) throw new IllegalArgumentException("Missing local rule budget");
         FaintQuarterRestInk.charge(budget, 32, 0);
         if (strength == null
@@ -84,7 +128,13 @@ final class PrintedBeamRuleCandidates {
                                             + strength[bottom];
                             float score = (float) total - error * minimum * .75f;
                             if (score < minimum * 4.5f) continue;
-                            if (found != null) return null;
+                            if (found != null) {
+                                if (flag != null) {
+                                    FaintQuarterRestInk.charge(budget, 2, 0);
+                                    flag.ambiguous = true;
+                                }
+                                return null;
+                            }
                             FaintQuarterRestInk.charge(budget, 16, 32L + 8L * 5);
                             found = new int[] {top, peaks[b], peaks[c], peaks[d], bottom};
                         }
