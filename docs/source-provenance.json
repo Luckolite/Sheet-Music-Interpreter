@@ -5890,10 +5890,10 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
       "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "source_sha256": "d976144998f4cd1d557befa2e64ccc4e0c7cd94825f10ba860e38f25bff1cf5a",
-      "source_normalized_sha256": "0816e319a6c2095880894ab5300cd20d26b035d7132e4926316f6f624fe66c26",
-      "standalone_sha256": "499ad408fa9497c146d462413b4517d07c0efcc283824e23cd7c72a0ebeb21fa",
-      "reviewed_app_commit": "f775c4e20d3707ae4d6f545054be67d1ea808a14",
+      "source_sha256": "709ce568cd31e99352a7b4224aad4b5e0d3799a6a2c283b8fe61073e68401271",
+      "source_normalized_sha256": "c0821407d5187ca1af38ca08c10b74e573fde5f665e70dd591a0e8b3d1a1eaa6",
+      "standalone_sha256": "5a41e8062484986c86c3a783e7b0190bd5326baac7ec7da2996bf64a081d532a",
+      "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
         "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
@@ -5906,7 +5906,13 @@
       },
       "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
       "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b",
-      "reviewed_source_state": "committed-app-source"
+      "reviewed_source_state": "committed-app-source",
+      "literal_connected_prefix_review": {
+        "documentation": "docs/literal-connected-prefix.md",
+        "scope": "Contrast-only literal connected prefix with unchanged per-column length/density, exact saved pixels and existing beam ownership/contact; strict complete-cap path unchanged. No model/layout/allowance changes.",
+        "original_junit_tests": 8,
+        "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b"
+      }
     },
     "PrintedBeamSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
@@ -10086,6 +10092,16 @@
     },
     "training/train.py": {
       "source_sha256": "eb21694c1e1785bd55224772f7d952d920a5d75f81b20aa776523e69f4f03b34"
+    },
+    "PrintedBeamConnectedPrefixTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedBeamConnectedPrefixTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedBeamConnectedPrefixTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "e095ea376364227e369fcdad33459acda20115e9e1ab92b15ea417665c2d6302",
+      "source_normalized_sha256": "24edd563036bf3acfda83afc1dc9324167676228c06403b73a13816a3721667e",
+      "standalone_sha256": "e7c1f0447ab70d80539dbf1dd2fba7580af13a0f81696b4903a068e44dac5c19",
+      "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b",
+      "review_note": "Original authored synthetic rasters and bounded identity/funding regressions; no score or device data."
     }
   },
   "finite_curved_approach_review": {

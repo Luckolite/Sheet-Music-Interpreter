@@ -294,7 +294,39 @@ final class PrintedBeamShafts {
                 }
             }
             if (!any) {
-                connected = false;
+                // A disconnected far speck must not erase a real head-connected shaft.
+                // Keep only the literal prefix, with the original per-column length and
+                // density laws. The caller must still certify ownership and beam contact.
+                int prefix = y - 1;
+                int cy = direction > 0 ? Math.round(headY) : height - 1 - Math.round(headY);
+                if (!contrast || savedRows == null || prefix - cy < gap * 1.7f) {
+                    connected = false;
+                    break;
+                }
+                frame.take(64L + cols.size() * 4L + (long) cols.size() * (prefix - start + 1));
+                var prefixColumns = new ArrayList<Column>(cols.size());
+                for (int col = 0; col < cols.size(); col++) {
+                    int end =
+                            Math.min(
+                                    prefix,
+                                    direction > 0
+                                            ? cols.get(col).endY()
+                                            : height - 1 - cols.get(col).endY());
+                    int hits = 0;
+                    for (int row = start; row <= end; row++)
+                        if ((savedRows[row - start] & (1 << col)) != 0) hits++;
+                    if (end - cy < gap * 1.7f || hits < (end - start + 1) * .9f) {
+                        connected = false;
+                        break;
+                    }
+                    prefixColumns.add(
+                            new Column(cols.get(col).x(), direction > 0 ? end : height - 1 - end));
+                }
+                if (!connected) break;
+                frame.take(48L + prefix - start + 1);
+                savedRows = java.util.Arrays.copyOf(savedRows, prefix - start + 1);
+                cols = prefixColumns;
+                remote = prefix;
                 break;
             }
             previous = next;
