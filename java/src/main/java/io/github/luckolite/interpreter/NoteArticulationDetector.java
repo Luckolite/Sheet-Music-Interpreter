@@ -126,7 +126,8 @@ final class NoteArticulationDetector {
                         || above > 4.2f
                         || w < gap * .65f
                         || h < gap * .8f
-                        || h > gap * 3.5f
+                        // Staff gap and raw positions are pixel-center coordinates.
+                        || g.bottom - g.top > gap * 3.5f
                         || h / w < .65f
                         || h / w > 2.2f
                         || n.y - g.bottom < gap * .7f) continue;
