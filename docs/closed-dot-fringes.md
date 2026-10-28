@@ -17,6 +17,12 @@ contrast, text, augmentation-dot, fermata, staff, semantic and ownership guards
 still decide their role. Existing recognized shapes take priority. No original
 candidate, context or existing recognition threshold is replaced.
 
+For a certified fringe body, the independent-darkness test uses its actual
+original raw core. A literal pale boundary supplies shape without diluting the
+core's darkness. The existing130 boundary, ordinary unproved-body behavior,
+distance and connected fermata-roof veto remain active. The sorted tone prefix
+supplies this measurement without another raster scan or allocation.
+
 Each invocation prepays at most262144 local cells, including histogram setup,
 and1000000 owner comparisons. Scratch and retained pixels have linear bounds;
 any optional funding refusal discards the entire new list. This adds a bounded

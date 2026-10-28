@@ -1259,8 +1259,8 @@ final class NoteArticulationDetector {
                                                 dy,
                                                 stemOwnedDot
                                                         || pairedTenuto(
-                                                                glyph, context, note, width)))))
-                    continue;
+                                                                glyph, context, note, width),
+                                                glyphIndex >= fringeStart)))) continue;
                 // A small off-axis dot beside a head is a duration dot, not staccato.
                 if (candidate == NoteArticulation.STACCATO && dx > .35f) continue;
                 if (raw && !joinedOwners.containsKey(glyph))
@@ -3398,6 +3398,20 @@ final class NoteArticulationDetector {
             float gap,
             float distance,
             boolean independentlyOwned) {
+        return shelteredDot(
+                glyph, labels, gray, width, height, gap, distance, independentlyOwned, false);
+    }
+
+    private static boolean shelteredDot(
+            Glyph glyph,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            float distance,
+            boolean independentlyOwned,
+            boolean certifiedClosedFringe) {
         for (int direction : new int[] {-1, 1}) {
             int occupied = 0;
             for (int bin = -2; bin <= 2; bin++) {
@@ -3426,9 +3440,18 @@ final class NoteArticulationDetector {
                 int[] tone = new int[glyph.pixels.length];
                 for (int i = 0; i < tone.length; i++) tone[i] = gray[glyph.pixels[i]] & 255;
                 java.util.Arrays.sort(tone);
-                // Only a near, independently dark dot may override the original
-                // shelter veto. Gray scan grain and distant text dots abstain.
-                if (tone[tone.length / 2] > 130
+                // Only the new tail has a closed-fringe certificate proving that every
+                // raw<155 pixel belongs to its actual original complete core. Gray
+                // antialiasing supplies shape, not the core's independent darkness.
+                int medianIndex = tone.length / 2;
+                if (certifiedClosedFringe) {
+                    int coreSize = 0;
+                    while (coreSize < tone.length && tone[coreSize] < 155) coreSize++;
+                    if (coreSize >= 3) medianIndex = coreSize / 2;
+                }
+                // Near independently dark dots retain the existing <=130 law;
+                // distant ownership and actual curved roofs still veto below/above.
+                if (tone[medianIndex] > 130
                         || connectedFermataRoof(glyph, labels, gray, width, height, gap, direction))
                     return true;
             }
