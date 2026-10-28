@@ -562,20 +562,22 @@ public final class SheetInterpreter {
                             staffs,
                             techniqueWords,
                             physicalPage);
+        finalInterpretation =
+                finalInterpretation.withClockContextSource(
+                        ScoreClockContextCapture.capture(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                finalInterpretation,
+                                clockAnalysis,
+                                clockPartSource,
+                                meterEvidence.provenance(),
+                                tabSourceGray));
         if (physicalPage >= 0)
             finalInterpretation =
                     PrintedBeamSource.apply(
                             finalInterpretation, labels, gray, width, height, staffs, physicalPage);
-        return finalInterpretation.withClockContextSource(
-                ScoreClockContextCapture.capture(
-                        labels,
-                        gray,
-                        width,
-                        height,
-                        finalInterpretation,
-                        clockAnalysis,
-                        clockPartSource,
-                        meterEvidence.provenance(),
-                        tabSourceGray));
+        return finalInterpretation;
     }
 }

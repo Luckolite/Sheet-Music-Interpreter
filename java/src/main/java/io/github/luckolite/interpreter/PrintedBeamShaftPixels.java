@@ -268,6 +268,11 @@ final class PrintedBeamShaftPixels {
             }
         }
 
+        /** Immutable producer tokens; optional consumers pay their own metadata work. */
+        List<Certificate> certificates() {
+            return certificates;
+        }
+
         boolean has(byte[] raw, int width, int height, int columnId, int x, int y) {
             frame.check(raw, width, height);
             if (this.columnId != columnId) throw new IdentityFault();

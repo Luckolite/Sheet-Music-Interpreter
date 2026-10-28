@@ -86,6 +86,444 @@ public final class PrintedBeamSource {
         }
     }
 
+    /** Same-capture optional evidence. No constructor accepts persisted beam values. */
+    static final class CaretEvidence implements PrintedBeamGeometry.PrimaryObserver {
+        private final ScorePageInterpretation source;
+        private final byte[] raw, labels;
+        private final int width, height, page;
+        private final Thread thread = Thread.currentThread();
+        private long remaining, bytes;
+        private boolean failed, resolved, consumed;
+        private PrintedBeamShaftPixels.Frame frame;
+        private final IdentityHashMap<
+                        FiniteRawBeamStrip.Proof,
+                        IdentityHashMap<PrintedBeamGeometry.Column, Contact>>
+                contacts = new IdentityHashMap<>();
+        private final List<PrintedBeamGeometry.Primary> primaries = new ArrayList<>();
+        private List<NoteArticulationDetector.Anchor> anchors = List.of();
+        private List<HeadBeam>[] owners;
+        private int[] additions;
+        private long legacyStorageQuota;
+        private final long producerLimit, admissionLimit, storageLimit;
+
+        private CaretEvidence(
+                ScorePageInterpretation source,
+                byte[] labels,
+                byte[] raw,
+                int width,
+                int height,
+                int page,
+                long work,
+                long bytes,
+                long legacyBytes,
+                long producerLimit,
+                long admissionLimit,
+                long storageLimit) {
+            this.source = source;
+            this.labels = labels;
+            this.raw = raw;
+            this.width = width;
+            this.height = height;
+            this.page = page;
+            remaining = Math.min(1_000_000, work);
+            this.bytes = Math.min(1_000_000, bytes);
+            this.legacyStorageQuota = Math.min(512_000_000, legacyBytes);
+            this.producerLimit = producerLimit;
+            this.admissionLimit = admissionLimit;
+            this.storageLimit = storageLimit;
+        }
+
+        private static final class Contact {
+            int next, last;
+            final List<PrintedBeamShaftPixels.Certificate> candidates;
+
+            Contact(int first, int last, List<PrintedBeamShaftPixels.Certificate> candidates) {
+                next = first;
+                this.last = last;
+                this.candidates = new ArrayList<>(candidates);
+            }
+        }
+
+        private record HeadBeam(
+                int owner,
+                int left,
+                int right,
+                int start,
+                int cap,
+                int direction,
+                int first,
+                int last,
+                int thickness,
+                int rasterLow,
+                int rasterHigh) {}
+
+        public boolean take(long work, long storage) {
+            if (failed
+                    || thread != Thread.currentThread()
+                    || work < 0
+                    || storage < 0
+                    || work > remaining
+                    || storage > bytes) {
+                failed = true;
+                contacts.clear();
+                primaries.clear();
+                return false;
+            }
+            remaining -= work;
+            bytes -= storage;
+            return true;
+        }
+
+        private boolean same(
+                ScorePageInterpretation score,
+                byte[] labels,
+                byte[] gray,
+                int width,
+                int height,
+                int page) {
+            return !failed
+                    && thread == Thread.currentThread()
+                    && source == score
+                    && this.labels == labels
+                    && raw == gray
+                    && this.width == width
+                    && this.height == height
+                    && this.page == page;
+        }
+
+        private void bind(PrintedBeamShaftPixels.Frame frame) {
+            if (!take(64, 64)) return;
+            try {
+                frame.check(source, raw, width, height, page);
+                this.frame = frame;
+            } catch (IllegalArgumentException invalid) {
+                failed = true;
+            }
+        }
+
+        public void contact(
+                byte[] gray,
+                int width,
+                int height,
+                PrintedBeamGeometry.Column shaft,
+                FiniteRawBeamStrip.Proof proof,
+                int top,
+                int firstTop,
+                int lastTop,
+                int[] accepted,
+                int count,
+                int left,
+                int low,
+                int stride) {
+            if (failed) return;
+            if (raw != gray
+                    || this.width != width
+                    || this.height != height
+                    || shaft.targets() == null
+                    || shaft.targets().frame != frame) {
+                failed = true;
+                return;
+            }
+            var certificates = shaft.targets().certificates();
+            if (!take(
+                    128L + 8L * certificates.size() * (count + 1),
+                    128L + 32L * certificates.size())) return;
+            var columns = contacts.computeIfAbsent(proof, k -> new IdentityHashMap<>());
+            Contact contact = columns.get(shaft);
+            if (contact == null) {
+                if (top != firstTop) {
+                    failed = true;
+                    return;
+                }
+                contact = new Contact(firstTop, lastTop, certificates);
+                columns.put(shaft, contact);
+            }
+            if (contact.next != top || contact.last != lastTop) {
+                failed = true;
+                return;
+            }
+            for (int i = contact.candidates.size() - 1; i >= 0; i--) {
+                var certificate = contact.candidates.get(i);
+                boolean reached = false;
+                for (int n = 0; n < count; n++) {
+                    int slot = accepted[n], x = left + slot % stride, y = low + slot / stride;
+                    if (certificate.has(x, y)) {
+                        reached = true;
+                        break;
+                    }
+                }
+                if (!reached) contact.candidates.remove(i);
+            }
+            contact.next++;
+        }
+
+        public void primary(PrintedBeamGeometry.Primary proof) {
+            if (!take(64, 64)) return;
+            if (proof.raw != raw || proof.width != width || proof.height != height) {
+                failed = true;
+                return;
+            }
+            primaries.add(proof);
+        }
+
+        @SuppressWarnings("unchecked")
+        private void resolve(
+                List<PrintedSlurOwners.GeometryHead> heads,
+                Binding[] bindings,
+                List<Lane> lanes,
+                Map<Integer, Node> byId) {
+            if (!take(128L * heads.size() + 128, 128L * heads.size() + 256)) return;
+            var list = new ArrayList<NoteArticulationDetector.Anchor>(heads.size());
+            owners = (List<HeadBeam>[]) new List<?>[heads.size()];
+            additions = new int[heads.size()];
+            for (var head : heads) {
+                int owner = head.owner();
+                Binding binding = bindings[owner];
+                Lane lane = binding == null ? null : binding.lane();
+                if (owner != list.size()) {
+                    failed = true;
+                    return;
+                }
+                if (lane == null) {
+                    double best = Double.POSITIVE_INFINITY;
+                    for (var candidate : lanes) {
+                        if (!take(16, 0)) return;
+                        double d =
+                                Math.abs(
+                                        head.y()
+                                                - (candidate.staff().top()
+                                                                + candidate.staff().bottom())
+                                                        * .5);
+                        if (d < best) {
+                            best = d;
+                            lane = candidate;
+                        }
+                    }
+                }
+                if (lane == null) {
+                    failed = true;
+                    return;
+                }
+                list.add(
+                        new NoteArticulationDetector.Anchor(
+                                head.x(), head.y(), lane.staff().gap(), lane.id(), lane.track()));
+                owners[owner] = new ArrayList<>();
+            }
+            anchors = List.copyOf(list);
+            for (var primary : primaries)
+                for (var column : new PrintedBeamGeometry.Column[] {primary.a, primary.b}) {
+                    Node node = byId.get(column.id());
+                    if (node == null || node.rival || column.direction() != -1) continue;
+                    var columnContacts = contacts.get(primary.strip);
+                    Contact contact = columnContacts == null ? null : columnContacts.get(column);
+                    if (contact == null || contact.next != contact.last + 1) continue;
+                    int index = column == primary.a ? 0 : primary.strip.columns().size() - 1;
+                    var raster = primary.strip.rasterTops().get(index);
+                    for (var certificate : contact.candidates) {
+                        if (!take(
+                                128L
+                                        + 32L * node.candidates.size()
+                                        + 16L * certificate.shaft.columns().size(),
+                                192)) return;
+                        Candidate candidate = null;
+                        for (var actual : node.candidates)
+                            if (actual.pixels() == certificate) candidate = actual;
+                        if (candidate == null
+                                || certificate.frame != frame
+                                || !node.owners.contains(candidate.owner())) continue;
+                        var shaft = certificate.shaft;
+                        boolean terminal = false;
+                        for (var end : shaft.columns())
+                            if (certificate.has(end.x(), end.endY())
+                                    && end.endY() >= raster.low()
+                                    && end.endY() <= raster.high() + primary.strip.thickness() - 1)
+                                terminal = true;
+                        if (!terminal) continue;
+                        owners[candidate.owner()].add(
+                                new HeadBeam(
+                                        candidate.owner(),
+                                        shaft.left(),
+                                        shaft.right(),
+                                        shaft.startY(),
+                                        shaft.endY(),
+                                        shaft.direction(),
+                                        primary.a.right() + 2,
+                                        primary.b.left() - 2,
+                                        primary.strip.thickness(),
+                                        raster.low(),
+                                        raster.high()));
+                    }
+                }
+            // Drop all certificates, bindings, carrier caches and geometry objects before rerun.
+            contacts.clear();
+            primaries.clear();
+            resolved = true;
+        }
+
+        private boolean ready() {
+            if (failed || !resolved) return false;
+            for (int i = 0; i < owners.length; i++)
+                if (!owners[i].isEmpty()
+                        && (source.notes().get(i).articulations() & NoteArticulation.ARTICULATIONS)
+                                == 0) return true;
+            return false;
+        }
+
+        List<NoteArticulationDetector.Anchor> anchors() {
+            return anchors;
+        }
+
+        boolean inputs(
+                byte[] labels,
+                byte[] raw,
+                int width,
+                int height,
+                List<NoteArticulationDetector.Anchor> notes) {
+            return resolved
+                    && !failed
+                    && this.labels == labels
+                    && this.raw == raw
+                    && this.width == width
+                    && this.height == height
+                    && anchors == notes
+                    && thread == Thread.currentThread();
+        }
+
+        int[] currentBits() {
+            if (!take(8L * source.notes().size() + 32, 4L * source.notes().size() + 32))
+                return new int[0];
+            int[] bits = new int[source.notes().size()];
+            for (int i = 0; i < bits.length; i++)
+                bits[i] = source.notes().get(i).articulations() & NoteArticulation.ARTICULATIONS;
+            return bits;
+        }
+
+        boolean proves(
+                int owner,
+                NoteArticulationDetector.Anchor note,
+                int left,
+                int top,
+                int right,
+                int bottom) {
+            if (!resolved
+                    || failed
+                    || owner < 0
+                    || owner >= anchors.size()
+                    || anchors.get(owner) != note
+                    || thread != Thread.currentThread()) return false;
+            float gap = note.gap();
+            double x = (left + right) * .5, y = (top + bottom) * .5, dy = (note.y() - y) / gap;
+            if (dy < .7 || dy > 8 || Math.abs(x - note.x()) > gap * .7) return false;
+            if (!take(32L + 32L * owners[owner].size(), 0)) return false;
+            for (var proof : owners[owner]) {
+                int separation = proof.cap - bottom, head = Math.round(note.y() - gap * .3f);
+                int thickness = Math.max(3, (int) Math.ceil(gap * .25f)),
+                        reach = Math.max(4, Math.round(gap * 1.5f));
+                if (proof.direction != -1
+                        || separation < Math.max(1, Math.round(gap * .25f))
+                        || separation > Math.round(gap * 2.5f)
+                        || head - proof.cap < gap * 3
+                        || proof.thickness < thickness) continue;
+                if (proof.right - proof.first < reach && proof.last - proof.left < reach) continue;
+                if (NoteArticulationDetector.ownedCaretBeyond(
+                        raw,
+                        width,
+                        height,
+                        note,
+                        proof.left,
+                        proof.right,
+                        proof.cap,
+                        thickness,
+                        separation,
+                        this)) return true;
+                if (failed) return false;
+            }
+            return false;
+        }
+
+        boolean sameAttack(int a, int b) {
+            return ScoreTechniqueChange.attackOf(source.notes().get(a))
+                    .equals(ScoreTechniqueChange.attackOf(source.notes().get(b)));
+        }
+
+        void claim(int owner) {
+            if (failed
+                    || owner < 0
+                    || owner >= additions.length
+                    || !take(16L * anchors.size() + 64, 0)) return;
+            var head = anchors.get(owner);
+            for (int i = 0; i < anchors.size(); i++)
+                if (anchors.get(i).staff() == head.staff()
+                        && Math.abs(anchors.get(i).x() - head.x()) < head.gap() * .45f
+                        && sameAttack(owner, i)) additions[i] |= NoteArticulation.MARCATO;
+        }
+
+        void discard() {
+            failed = true;
+            if (additions != null) Arrays.fill(additions, 0);
+            contacts.clear();
+            primaries.clear();
+        }
+
+        private ScorePageInterpretation apply(
+                ScorePageInterpretation score,
+                byte[] labels,
+                byte[] gray,
+                int width,
+                int height,
+                int page) {
+            if (!same(score, labels, gray, width, height, page) || !ready() || consumed)
+                return score;
+            consumed = true;
+            long area = (long) width * height;
+            // Deterministic conservative storage admission charge, not a physical heap
+            // allocation or a Runtime.freeMemory threshold. Existing consumer helpers
+            // retain their input/allocation limits. One rerun consumes this quota once.
+            // The separate proof book and the caret-stage8M byte ledger are unchanged.
+            long capacity = 64L * area + 4096L * source.notes().size() + 8_000_000;
+            if (area > 20_000_000 || capacity > legacyStorageQuota) return score;
+            legacyStorageQuota -= capacity;
+            int[] current = currentBits();
+            if (current.length != anchors.size()) return score;
+            NoteArticulationDetector.detectOwnedCarets(
+                    labels,
+                    gray,
+                    width,
+                    height,
+                    anchors,
+                    current,
+                    this,
+                    producerLimit,
+                    admissionLimit,
+                    storageLimit);
+            if (failed) return score;
+            if (!take(64L * source.notes().size() + 128, 64L * source.notes().size() + 256))
+                return score;
+            var notes = new ArrayList<ScoreNoteEvent>(source.notes());
+            boolean changed = false;
+            for (int i = 0; i < notes.size(); i++)
+                if (additions[i] != 0
+                        && (notes.get(i).articulations() & NoteArticulation.ARTICULATIONS) == 0) {
+                    notes.set(
+                            i,
+                            notes.get(i)
+                                    .withArticulations(
+                                            notes.get(i).articulations() | additions[i]));
+                    changed = true;
+                }
+            // This producer only adds MARCATO to the same ordered notes; retain the
+            // already-bound clock context. Generic note edits still invalidate it.
+            return changed
+                    ? score.withNotes(
+                                    notes,
+                                    java.util.stream.IntStream.range(0, notes.size())
+                                            .boxed()
+                                            .toList())
+                            .withClockContextSource(score.clockContextSource())
+                    : score;
+        }
+    }
+
     public static ScorePageInterpretation apply(
             ScorePageInterpretation score,
             byte[] labels,
@@ -94,9 +532,53 @@ public final class PrintedBeamSource {
             int height,
             List<PlayingTechniqueDetector.Staff> staffs,
             int physicalPage) {
+        return applyWithCaretLimits(
+                score,
+                labels,
+                gray,
+                width,
+                height,
+                staffs,
+                physicalPage,
+                1_000_000,
+                1_000_000,
+                512_000_000,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE);
+    }
+
+    static ScorePageInterpretation applyWithCaretLimits(
+            ScorePageInterpretation score,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            int physicalPage,
+            long proofWork,
+            long proofBytes,
+            long legacyBytes,
+            long producerLimit,
+            long admissionLimit,
+            long storageLimit) {
         if (score == null || physicalPage < 0) return score;
         if (!score.beamSource().groups().isEmpty()
                 || !score.beamSource().detachedColumns().isEmpty()) return score;
+        CaretEvidence evidence =
+                new CaretEvidence(
+                        score,
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        physicalPage,
+                        proofWork,
+                        proofBytes,
+                        legacyBytes,
+                        producerLimit,
+                        admissionLimit,
+                        storageLimit);
         Capture result =
                 capture(
                         score,
@@ -107,9 +589,12 @@ public final class PrintedBeamSource {
                         staffs,
                         physicalPage,
                         8_000_000,
-                        256_000_000);
+                        256_000_000,
+                        64_000_000,
+                        evidence);
         return result.statistics().refusal().isEmpty()
-                ? score.withBeamSource(result.source())
+                ? evidence.apply(score, labels, gray, width, height, physicalPage)
+                        .withBeamSource(result.source())
                 : score;
     }
 
@@ -147,6 +632,32 @@ public final class PrintedBeamSource {
             long shaftAllowance,
             long geometryAllowance,
             long flagAllowance) {
+        return capture(
+                score,
+                labels,
+                gray,
+                width,
+                height,
+                staffs,
+                page,
+                shaftAllowance,
+                geometryAllowance,
+                flagAllowance,
+                null);
+    }
+
+    private static Capture capture(
+            ScorePageInterpretation score,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            int page,
+            long shaftAllowance,
+            long geometryAllowance,
+            long flagAllowance,
+            CaretEvidence evidence) {
         int count = score == null ? 0 : score.notes().size(),
                 bound = 0,
                 bodies = 0,
@@ -185,6 +696,7 @@ public final class PrintedBeamSource {
             var pixelFrame =
                     new PrintedBeamShaftPixels.Frame(
                             score, gray, width, height, page, work::take, true);
+            if (evidence != null) evidence.bind(pixelFrame);
             var coreFrame = pixelFrame;
             var heads =
                     PrintedSlurContext.geometryHeads(
@@ -614,7 +1126,8 @@ public final class PrintedBeamSource {
                                             < 0;
                                 }
                             },
-                            geometryBudget);
+                            geometryBudget,
+                            evidence);
             geometryWork = result.work();
             if (result.budgetExceeded()) throw new Limit();
             var unlinkedIds = new HashSet<>(result.unlinkedColumns());
@@ -807,6 +1320,7 @@ public final class PrintedBeamSource {
                 flagRefused = true;
             }
             var source = ScoreBeamSource.capture(page, count, groups, detached);
+            if (evidence != null) evidence.resolve(heads, bindings, lanes, byId);
             return new Capture(
                     source,
                     new Statistics(

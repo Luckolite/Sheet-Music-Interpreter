@@ -220,6 +220,54 @@ final class PrintedBeamGeometry {
 
     private record StubKey(int edge, int candidate, int side) {}
 
+    /** Optional metadata observer. It cannot supply geometry or alter old budgets. */
+    interface PrimaryObserver {
+        boolean take(long work, long bytes);
+
+        void contact(
+                byte[] raw,
+                int width,
+                int height,
+                Column shaft,
+                FiniteRawBeamStrip.Proof proof,
+                int top,
+                int firstTop,
+                int lastTop,
+                int[] accepted,
+                int count,
+                int left,
+                int low,
+                int stride);
+
+        void primary(Primary proof);
+    }
+
+    /** Minted only from a primary belonging to the actual selected profile. */
+    static final class Primary {
+        final byte[] raw;
+        final int width, height;
+        final Column a, b;
+        final FiniteRawBeamStrip.Proof strip;
+        private final Group selected;
+
+        private Primary(
+                byte[] raw,
+                int width,
+                int height,
+                Column a,
+                Column b,
+                FiniteRawBeamStrip.Proof strip,
+                Group selected) {
+            this.raw = raw;
+            this.width = width;
+            this.height = height;
+            this.a = a;
+            this.b = b;
+            this.strip = strip;
+            this.selected = selected;
+        }
+    }
+
     static Result detect(
             byte[] raw,
             int width,
@@ -227,6 +275,17 @@ final class PrintedBeamGeometry {
             List<Column> columns,
             CarrierPlane plane,
             Budget budget) {
+        return detect(raw, width, height, columns, plane, budget, null);
+    }
+
+    static Result detect(
+            byte[] raw,
+            int width,
+            int height,
+            List<Column> columns,
+            CarrierPlane plane,
+            Budget budget,
+            PrimaryObserver observer) {
         if (raw == null
                 || columns == null
                 || plane == null
@@ -240,8 +299,12 @@ final class PrintedBeamGeometry {
             if (c == null || !seen.add(c.id()) || c.right() >= width || c.cap() >= height)
                 throw new IllegalArgumentException();
         try {
-            if (!plane.contrastEnabled())
-                return new Detector(raw, width, height, columns, plane, budget).run();
+            if (!plane.contrastEnabled()) {
+                var detector = new Detector(raw, width, height, columns, plane, budget, observer);
+                var result = detector.run();
+                publish(observer, result, detector, result, null, null);
+                return result;
+            }
             long setup = columns.size() * 2L + 96;
             budget.spend(setup);
             plane.chargeContrast(setup);
@@ -267,12 +330,78 @@ final class PrintedBeamGeometry {
                             plane.chargeContrast(units);
                         }
                     };
-            var strict = new Detector(raw, width, height, columns, strictPlane, budget).run();
-            var extended = new Detector(raw, width, height, columns, plane, budget).run();
-            return preserveStrictProfiles(strict, extended, columns, plane, budget);
+            var strictDetector =
+                    new Detector(raw, width, height, columns, strictPlane, budget, observer);
+            var strict = strictDetector.run();
+            var extendedDetector =
+                    new Detector(raw, width, height, columns, plane, budget, observer);
+            var extended = extendedDetector.run();
+            var selected = preserveStrictProfiles(strict, extended, columns, plane, budget);
+            publish(observer, selected, strictDetector, strict, extendedDetector, extended);
+            return selected;
         } catch (Exhausted exhausted) {
             return new Result(
                     List.of(), columns.stream().map(Column::id).toList(), true, budget.used());
+        }
+    }
+
+    private static boolean identical(List<Group> groups, Group target) {
+        for (var group : groups) if (group == target) return true;
+        return false;
+    }
+
+    private static void publish(
+            PrimaryObserver observer,
+            Result selected,
+            Detector first,
+            Result firstResult,
+            Detector second,
+            Result secondResult) {
+        if (observer == null) return;
+        long groups =
+                firstResult.groups().size()
+                        + (secondResult == null ? 0 : secondResult.groups().size());
+        if (!observer.take(selected.groups().size() + 1L, 0)) return;
+        long columns = 0;
+        for (var group : selected.groups()) columns += group.columns().size();
+        if (!observer.take(
+                32L * (groups + 1) * selected.groups().size() + 64L * (columns + groups) + 128,
+                128L * (columns + groups) + 256)) return;
+        var byColumn = new HashMap<Integer, Group>();
+        var owner = new IdentityHashMap<Group, Detector>();
+        for (var group : selected.groups()) {
+            Detector detector =
+                    identical(firstResult.groups(), group)
+                            ? first
+                            : secondResult != null && identical(secondResult.groups(), group)
+                                    ? second
+                                    : null;
+            if (detector == null) continue;
+            owner.put(group, detector);
+            for (int id : group.columns()) byColumn.put(id, group);
+        }
+        for (var detector : new Detector[] {first, second}) {
+            if (detector == null) continue;
+            if (!observer.take(64L * detector.edges.size() + 64, 64)) return;
+            for (int i = 0; i < detector.edges.size(); i++) {
+                var edge = detector.edges.get(i);
+                var proof = detector.primary.get(i);
+                if (proof == null) continue;
+                var a = detector.nodes.get(edge.a());
+                var b = detector.nodes.get(edge.b());
+                var group = byColumn.get(a.id());
+                if (group == null || group != byColumn.get(b.id()) || owner.get(group) != detector)
+                    continue;
+                if (!observer.take(16L * group.columns().size() + 64, 128)) return;
+                int at = group.columns().indexOf(a.id());
+                if (at < 0
+                        || at + 1 >= group.columns().size()
+                        || group.columns().get(at + 1) != b.id()
+                        || (group.bridges().get(at) & 1) == 0) continue;
+                observer.primary(
+                        new Primary(
+                                detector.raw, detector.width, detector.height, a, b, proof, group));
+            }
         }
     }
 
@@ -356,13 +485,22 @@ final class PrintedBeamGeometry {
         final List<Column> nodes;
         final CarrierPlane plane;
         final Budget budget;
+        final PrimaryObserver observer;
         final java.util.function.LongConsumer contrastCharge;
         final java.util.function.LongConsumer possibilityCharge;
         final ArrayList<Edge> edges = new ArrayList<>();
         final ArrayList<FiniteRawBeamStrip.Proof> primary = new ArrayList<>();
         final int[] parent;
 
-        Detector(byte[] r, int w, int h, List<Column> n, CarrierPlane p, Budget b) {
+        Detector(
+                byte[] r,
+                int w,
+                int h,
+                List<Column> n,
+                CarrierPlane p,
+                Budget b,
+                PrimaryObserver observer) {
+            this.observer = observer;
             raw = r;
             width = w;
             height = h;
@@ -465,8 +603,10 @@ final class PrintedBeamGeometry {
                             offset,
                             min);
             if (p == null) return null;
-            if (lo == first(e) && !contact(e, nodes.get(e.a()), lo, p, 0)) return null;
-            if (hi == last(e) && !contact(e, nodes.get(e.b()), hi, p, p.columns().size() - 1))
+            boolean observe = observer != null && offset == 0 && lo == first(e) && hi == last(e);
+            if (lo == first(e) && !contact(e, nodes.get(e.a()), lo, p, 0, observe)) return null;
+            if (hi == last(e)
+                    && !contact(e, nodes.get(e.b()), hi, p, p.columns().size() - 1, observe))
                 return null;
             return p;
         }
@@ -480,7 +620,8 @@ final class PrintedBeamGeometry {
                 Column shaft,
                 int boundary,
                 FiniteRawBeamStrip.Proof proof,
-                int columnIndex) {
+                int columnIndex,
+                boolean observe) {
             var bounds = proof.columns().get(columnIndex);
             int lowTop = (bounds.low() + 512) / 1024, highTop = (bounds.high() + 512) / 1024;
             int left = Math.min(boundary, shaft.left()), right = Math.max(boundary, shaft.right());
@@ -530,6 +671,10 @@ final class PrintedBeamGeometry {
                         }
                 }
                 if (!reached) return false;
+                if (observe)
+                    observer.contact(
+                            raw, width, height, shaft, proof, top, lowTop, highTop, queue, tail,
+                            left, low, cw);
             }
             return true;
         }

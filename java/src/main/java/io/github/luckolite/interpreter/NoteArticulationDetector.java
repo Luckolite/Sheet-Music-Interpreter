@@ -1494,6 +1494,61 @@ final class NoteArticulationDetector {
             long producerLimit,
             long admissionLimit,
             long storageLimit) {
+        return detectWithWordBodies(
+                labels,
+                gray,
+                width,
+                height,
+                notes,
+                wordBodies,
+                producerLimit,
+                admissionLimit,
+                storageLimit,
+                null,
+                null);
+    }
+
+    static int[] detectOwnedCarets(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Anchor> notes,
+            int[] current,
+            PrintedBeamSource.CaretEvidence evidence,
+            long producerLimit,
+            long admissionLimit,
+            long storageLimit) {
+        if (!evidence.inputs(labels, gray, width, height, notes)) {
+            evidence.discard();
+            return new int[notes.size()];
+        }
+        return detectWithWordBodies(
+                labels,
+                gray,
+                width,
+                height,
+                notes,
+                List.of(),
+                producerLimit,
+                admissionLimit,
+                storageLimit,
+                evidence,
+                current);
+    }
+
+    private static int[] detectWithWordBodies(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Anchor> notes,
+            List<ExpressiveWordBodyInk.Body> wordBodies,
+            long producerLimit,
+            long admissionLimit,
+            long storageLimit,
+            PrintedBeamSource.CaretEvidence evidence,
+            int[] current) {
         int[] result = new int[notes.size()];
         if (notes.isEmpty() || labels == null || labels.length != width * height) return result;
         // Raw components retain symbols that the semantic model omitted. Never erase staff
@@ -1656,7 +1711,9 @@ final class NoteArticulationDetector {
                                     legacyResult,
                                     labels,
                                     width,
-                                    height);
+                                    height,
+                                    evidence,
+                                    current);
                     candidates = caret.glyphs;
                     if (candidates.isEmpty()) break;
                     if (acceptedCaretBodies == null) caretPage.refuse();
@@ -1681,7 +1738,8 @@ final class NoteArticulationDetector {
                                 caret.context,
                                 caret.notes,
                                 width,
-                                height);
+                                height,
+                                evidence != null && caret.far.containsKey(glyph));
                     }
                     List<Glyph> context =
                             (pass == 0 && paperCandidates.contains(glyph))
@@ -1840,7 +1898,18 @@ final class NoteArticulationDetector {
                                 raw
                                         && candidate == NoteArticulation.MARCATO
                                         && dy > 6f
-                                        && beamOwnedMarcato(glyph, note, gray, width, height);
+                                        && (pass == 1
+                                                        && evidence != null
+                                                        && caret.far.containsKey(glyph)
+                                                ? evidence.proves(
+                                                        n,
+                                                        note,
+                                                        glyph.left,
+                                                        glyph.top,
+                                                        glyph.right,
+                                                        glyph.bottom)
+                                                : beamOwnedMarcato(
+                                                        glyph, note, gray, width, height));
                         if (candidate == 0
                                 || dy > 6f && !stemOwnedDot && !stemOwnedMarcato
                                 || dy > 5.5f
@@ -2021,11 +2090,23 @@ final class NoteArticulationDetector {
                     }
                     if (best < 0) continue;
                     if (pass == 1 && caret.blocked[best]) continue;
+                    boolean ownedFar =
+                            pass == 1 && evidence != null && caret.far.containsKey(glyph);
+                    if (ownedFar
+                            && (!evidence.sameAttack(best, caret.far.get(glyph))
+                                    || !evidence.proves(
+                                            best,
+                                            notes.get(best),
+                                            glyph.left,
+                                            glyph.top,
+                                            glyph.right,
+                                            glyph.bottom))) continue;
                     if ((mark == NoteArticulation.STACCATO
                                     || mark == NoteArticulation.STACCATISSIMO
                                     || mark == NoteArticulation.TENUTO)
                             && ExpressiveWordBodyInk.owns(
                                     wordBodies, glyph.pixels, glyph.count, width)) continue;
+                    if (ownedFar) evidence.claim(best);
                     if ((pass == 0 && faintAccents.contains(glyph))) claimedAccents.add(glyph);
                     if (!(pass == 0 && paperCandidates.contains(glyph))) printedClaims.add(glyph);
                     if (pass == 0 && acceptedCaretBodies != null) acceptedCaretBodies.add(glyph);
@@ -2088,13 +2169,17 @@ final class NoteArticulationDetector {
                         }
                 } else {
                     compoundClaims.resolve(result, notes, gray, width, height);
-                    if (!caretPage.finish(gray, labels, width, height, notes)) return legacyResult;
+                    if (!caretPage.finish(gray, labels, width, height, notes)) {
+                        if (evidence != null) evidence.discard();
+                        return legacyResult;
+                    }
                     for (int i = 0; i < result.length; i++)
                         if (!caret.blocked[i]) legacyResult[i] |= result[i];
                     result = legacyResult;
                 }
             }
         } catch (DetachedCaretBodies.Refusal refusal) {
+            if (evidence != null) evidence.discard();
             if (legacyResult == null) throw refusal;
             return legacyResult;
         }
@@ -2167,6 +2252,7 @@ final class NoteArticulationDetector {
             DetachedCaretBodies.Page page,
             List<Glyph> glyphs,
             boolean[] blocked,
+            java.util.IdentityHashMap<Glyph, Integer> far,
             DetachedCaretCosts.Ink[] context,
             DetachedCaretCosts.Note[] notes) {}
 
@@ -2218,7 +2304,9 @@ final class NoteArticulationDetector {
             int[] legacy,
             byte[] labels,
             int width,
-            int height) {
+            int height,
+            PrintedBeamSource.CaretEvidence evidence,
+            int[] current) {
         int N = notes.size(), G = originals.size();
         page.p(32L * (N + G) + 256, 128L * (N + G) + 2048);
         int[] roots = new int[N];
@@ -2255,7 +2343,9 @@ final class NoteArticulationDetector {
                 }
             }
         page.p(4L * N * N + 16L * N, 0);
-        for (int i = 0; i < N; i++) if (legacy[i] != 0) marked[caretRoot(roots, i)] = true;
+        for (int i = 0; i < N; i++)
+            if ((legacy[i] | (current == null ? 0 : current[i])) != 0)
+                marked[caretRoot(roots, i)] = true;
         for (int i = 0; i < N; i++) blocked[i] = marked[caretRoot(roots, i)];
         java.util.Arrays.sort(
                 sorted,
@@ -2272,6 +2362,7 @@ final class NoteArticulationDetector {
         boolean[] empty = new boolean[N];
         int[] kinds = new int[N];
         List<Glyph> out = new ArrayList<>();
+        var farBodies = new java.util.IdentityHashMap<Glyph, Integer>();
         for (Glyph seed : originals) {
             page.p(16, 0);
             if (joined.containsKey(seed) || seed.count < 3) continue;
@@ -2324,9 +2415,13 @@ final class NoteArticulationDetector {
             }
             for (int group = 0; group < groups; group++) {
                 page.p(8, 0);
-                if (!empty[group] || kinds[group] != 0) continue;
+                boolean originalMarcato =
+                        evidence != null && kinds[group] == NoteArticulation.MARCATO;
+                if (!empty[group] || kinds[group] != 0 && !originalMarcato) continue;
                 var body = page.grow(seed.pixels[0], gaps[group]);
-                if (body == null || body.pixels().length <= seed.count) continue;
+                if (body == null
+                        || body.pixels().length < seed.count
+                        || body.pixels().length == seed.count && !originalMarcato) continue;
                 float x = (body.left() + body.right()) * .5f,
                         y = (body.top() + body.bottom()) * .5f;
                 boolean far = false;
@@ -2335,7 +2430,8 @@ final class NoteArticulationDetector {
                     float dy = (rival.y - y) / rival.gap;
                     if (Math.abs(x - rival.x) <= rival.gap * .7f && dy > 6 && dy <= 8) far = true;
                 }
-                if (far) continue; // Whole body abstains; never remove an owner rival.
+                if (far && evidence == null) continue; // Old whole-body refusal remains unchanged.
+                if (originalMarcato && !far) continue;
                 page.p(8L * body.pixels().length + 64, 128);
                 int semantic = 0;
                 for (int p : body.pixels()) {
@@ -2356,6 +2452,24 @@ final class NoteArticulationDetector {
                                 body.pixels());
                 if (caretRawKind(glyph, width, gaps[group], page, true, height)
                         != NoteArticulation.MARCATO) continue;
+                int farOwner = -1;
+                if (far) {
+                    if (!evidence.take(16L * notes.size() + 64, 0)) continue;
+                    boolean valid = true;
+                    int firstOwner = -1;
+                    for (int i = 0; i < notes.size(); i++) {
+                        var rival = notes.get(i);
+                        float dy = (rival.y - y) / rival.gap;
+                        if (Math.abs(x - rival.x) > rival.gap * .7f || dy <= 6 || dy > 8) continue;
+                        if (!evidence.proves(
+                                        i, rival, glyph.left, glyph.top, glyph.right, glyph.bottom)
+                                || firstOwner >= 0 && !evidence.sameAttack(firstOwner, i))
+                            valid = false;
+                        if (firstOwner < 0) firstOwner = i;
+                    }
+                    if (!valid) continue;
+                    farOwner = firstOwner;
+                }
                 page.p(
                         DetachedCaretCosts.sum(
                                 64,
@@ -2378,11 +2492,15 @@ final class NoteArticulationDetector {
                 if (!duplicate) {
                     page.p(64, 128);
                     out.add(glyph);
+                    if (far) {
+                        page.p(64, 128);
+                        farBodies.put(glyph, farOwner);
+                    }
                 }
             }
         }
         page.p(64, 128);
-        return new CaretPass(page, out, blocked, context, noteCosts);
+        return new CaretPass(page, out, blocked, farBodies, context, noteCosts);
     }
 
     /** A contrast subset cannot turn ink from a complete printed three into an accent. */
@@ -2888,8 +3006,17 @@ final class NoteArticulationDetector {
     private static boolean directionText(
             Glyph target, List<Glyph> glyphs, float gap, byte[] labels) {
         List<Glyph> letters = new ArrayList<>();
+        // These are necessary, target-only conditions. The original per-run
+        // conditions below still decide each period and dash, in original order.
+        List<Glyph> periods = new ArrayList<>(), possibleDashes = new ArrayList<>();
         for (Glyph g : glyphs) {
             float h = g.bottom - g.top + 1, w = g.right - g.left + 1;
+            if (g.right < target.left && w <= gap * .4f && h <= gap * .4f) periods.add(g);
+            if (g.left <= target.right + gap * 12
+                    && Math.abs(g.y() - target.y()) <= gap * .15f
+                    && h <= gap * .25f
+                    && w >= gap * .55f
+                    && w <= gap * 1.8f) possibleDashes.add(g);
             if (g == target
                     || g.right > target.left + gap * .2f
                     || target.left - g.right > gap * 36
@@ -2923,7 +3050,7 @@ final class NoteArticulationDetector {
             // Abbreviated directions can end with a period and just one extender.
             // Require that punctuation rather than treating every dash near text as text.
             if (target.left - last.right < gap * 2.2f)
-                for (Glyph period : glyphs) {
+                for (Glyph period : periods) {
                     if (period.left > last.right
                             && period.right < target.left
                             && period.left - last.right < gap * .45f
@@ -2934,7 +3061,7 @@ final class NoteArticulationDetector {
             // Require a continuous run of thin dashes back to the word. Three
             // isolated tenutos elsewhere on the page do not constitute text.
             List<Glyph> dashes = new ArrayList<>();
-            for (Glyph g : glyphs)
+            for (Glyph g : possibleDashes)
                 if (g.left >= last.right
                         && g.left <= target.right + gap * 12
                         && Math.abs(g.y() - target.y()) <= gap * .15f
@@ -4295,6 +4422,41 @@ final class NoteArticulationDetector {
                     }
                 }
             }
+        return false;
+    }
+
+    /** Original beyond-ink/independent-rule law, with optional work paid before use. */
+    static boolean ownedCaretBeyond(
+            byte[] gray,
+            int width,
+            int height,
+            Anchor note,
+            int left,
+            int right,
+            int endpoint,
+            int thickness,
+            int separation,
+            PrintedBeamSource.CaretEvidence evidence) {
+        int look = Math.min(Math.max(3, Math.round(note.gap * .6f)), separation - 1);
+        if (look < 3) return false;
+        for (int x = left; x <= right; x++) {
+            if (!evidence.take(8L * look + 32, 0)) return false;
+            int beyond = 0;
+            for (int d = 1; d < 1 + look; d++) {
+                int y = endpoint - d;
+                if (y < 0 || y >= height) {
+                    beyond = look;
+                    break;
+                }
+                if ((gray[y * width + x] & 255) < 155) {
+                    // Covers horizontalRuleInk, both sides and all parallel-rule probes.
+                    long g = (long) Math.ceil(note.gap);
+                    if (!evidence.take(1024L * g * g + 8192, 512)) return false;
+                    if (!thinIndependentRule(gray, width, height, x, y, note.gap)) beyond++;
+                }
+            }
+            if (beyond <= look * .25f) return true;
+        }
         return false;
     }
 

@@ -171,8 +171,18 @@ final class DetachedCaretCosts {
     /** Preflight and original full-context scans are separately funded. */
     private static void words(DetachedCaretBodies.Page page, Ink target, Ink[] context, float gap) {
         long G = context.length;
-        page.a(sum(128, mul(192, G)), 256);
-        long E = 1, EL = 0, LL = 0, RL = 0, LP = 0, RP = 0, D = 0, RD = 0, embeddedPixels = 0;
+        page.a(sum(128, mul(256, G)), 256);
+        long E = 1,
+                EL = 0,
+                LL = 0,
+                RL = 0,
+                LP = 0,
+                RP = 0,
+                D = 0,
+                RD = 0,
+                P = 0,
+                RPd = 0,
+                embeddedPixels = 0;
         Ink mirror = reflect(target);
         float tx = (target.left + target.right) * .5f, ty = (target.top + target.bottom) * .5f;
         for (Ink g : context) {
@@ -212,11 +222,13 @@ final class DetachedCaretCosts {
                             && w <= gap * 1.8f;
             if (dash && g.left <= target.right + gap * 12) D++;
             if (dash && -g.right <= mirror.right + gap * 12) RD++;
+            if (w <= gap * .4f && h <= gap * .4f && g.right < target.left) P++;
+            if (w <= gap * .4f && h <= gap * .4f && -g.left < mirror.left) RPd++;
         }
-        long directTail = mul(LL, sum(mul(2, G), mul(D, D), mul(2, D))),
-                mirrorTail = mul(RL, sum(mul(2, G), mul(RD, RD), mul(2, RD)));
+        long directTail = mul(LL, sum(P, D, mul(D, D), mul(2, D))),
+                mirrorTail = mul(RL, sum(RPd, RD, mul(RD, RD), mul(2, RD)));
         long loops = sum(mul(E, E), mul(LL, LL), mul(RL, RL), directTail, mirrorTail);
-        long sortObjects = sum(E, LL, RL, mul(LL, D), mul(RL, RD));
+        long sortObjects = sum(sum(E, LL, RL, P, RPd, D, RD), mul(LL, D), mul(RL, RD));
         page.a(
                 sum(mul(16, loops), mul(8, sum(embeddedPixels, LP, RP)), 512),
                 sum(mul(128, sortObjects), 512));
@@ -229,6 +241,17 @@ final class DetachedCaretCosts {
             Note[] notes,
             int width,
             int height) {
+        admissionGlyph(page, g, context, notes, width, height, false);
+    }
+
+    static void admissionGlyph(
+            DetachedCaretBodies.Page page,
+            Ink g,
+            Ink[] context,
+            Note[] notes,
+            int width,
+            int height,
+            boolean ownedFar) {
         long a = mul(g.w(), g.h()),
                 p = g.count,
                 t = Math.max(g.w(), g.h()),
@@ -248,7 +271,7 @@ final class DetachedCaretCosts {
                     sum(mul(2, add(c.bytes, r.bytes)), mul(32, t), 1024));
             if ((g.top + g.bottom) * .5f >= n.y)
                 continue; // Scope gate follows common recovery in caller.
-            if (dy > 6)
+            if (dy > 6 && !ownedFar)
                 page.refuse(); // Entire-body preflight must have accounted for every far rival.
             detachedThree(page, g, context, n.gap);
             long pad = Math.max(3, Math.round(n.gap * 3)),
