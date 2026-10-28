@@ -99,6 +99,8 @@ final class NoteArticulationDetector {
             boolean ambiguous = false;
             boolean strokeMeasured = false;
             int strokeSpanTwice = -1;
+            BowCapProof capProof = null;
+            boolean capMeasured = false;
             // Existing UP shape tip-band law, measured on this complete component.
             work += g.count + 16L;
             if (work > 256_000_000L) return List.of();
@@ -136,6 +138,12 @@ final class NoteArticulationDetector {
                     if (Math.abs(g.x() - n.x) > gap * .7f && Math.abs(tipX - n.x) > gap * .7f)
                         continue;
                     if (!strokeMeasured) {
+                        if (!capMeasured) {
+                            work += completeUpBowCapWork(g);
+                            if (work > 256_000_000L) return List.of();
+                            capProof = completeUpBowCapProof(g, width);
+                            capMeasured = true;
+                        }
                         // Complete finite component profile and shape proof, before allocation.
                         work +=
                                 20L * (g.right - g.left + 1) * (g.bottom - g.top + 1)
@@ -143,7 +151,7 @@ final class NoteArticulationDetector {
                                         + 160L * (g.bottom - g.top + 1)
                                         + 384;
                         if (work > 256_000_000L) return List.of();
-                        strokeSpanTwice = completeBowStrokeSpanTwice(g, width);
+                        strokeSpanTwice = completeBowStrokeSpanTwice(g, width, capProof);
                         strokeMeasured = true;
                     }
                     if (strokeSpanTwice < 0 || strokeSpanTwice > 6d * gap) continue;
@@ -175,10 +183,18 @@ final class NoteArticulationDetector {
                 // and the UP row certificate before any new arrays or scans.
                 work += 32L * g.count + 64L * h + 4L * w * h + 512;
                 if (work > 256_000_000L) return List.of();
-                boolean upShape = upBowShape(g, width);
                 boolean downShape =
                         completeDownBowShape(g, width) || measuredDownBowShape(g, width);
-                tipQualified = upShape && !downShape && completeUpBowRows(g, width);
+                if (!downShape && !capMeasured) {
+                    work += completeUpBowCapWork(g);
+                    if (work > 256_000_000L) return List.of();
+                    capProof = completeUpBowCapProof(g, width);
+                    capMeasured = true;
+                }
+                // Every fully certified UP shape uses the same centroid-or-tip union.
+                // Existing tolerances and all distinct-attack rivals remain unchanged.
+                boolean upShape = upBowShape(g, width) || capAwareUpBowShape(g, width, capProof);
+                tipQualified = upShape && !downShape && completeUpBowRows(g, width, capProof);
                 if (tipQualified)
                     for (int slot = 0; slot < geometryCount; slot++) {
                         int i = geometryPeers[slot];
@@ -231,18 +247,24 @@ final class NoteArticulationDetector {
             if (nearHead(g, notes)
                     || !printedBodyContrast(g, gray, width, height)
                     || directionText(g, context, n.gap, labels)) continue;
-            boolean up = tipQualified || upBowShape(g, width),
-                    down =
-                            !tipQualified
-                                    && (completeDownBowShape(g, width)
-                                            || measuredDownBowShape(g, width));
+            boolean down =
+                    !tipQualified
+                            && (completeDownBowShape(g, width) || measuredDownBowShape(g, width));
+            if (!down && !capMeasured) {
+                work += completeUpBowCapWork(g);
+                if (work > 256_000_000L) return List.of();
+                capProof = completeUpBowCapProof(g, width);
+                capMeasured = true;
+            }
+            boolean up =
+                    tipQualified || upBowShape(g, width) || capAwareUpBowShape(g, width, capProof);
             if (up == down) continue;
             if (up && !tipQualified) {
                 // New component-only row certificate: all loops and row storage
                 // prepaid before construction; the existing page cap is unchanged.
                 work += 12L * g.count + 64L * (g.bottom - g.top + 1) + 128;
                 if (work > 256_000_000L) return List.of();
-                if (!completeUpBowRows(g, width)) continue;
+                if (!completeUpBowRows(g, width, capProof)) continue;
             }
             result.add(
                     new BowMark(
@@ -596,10 +618,272 @@ final class NoteArticulationDetector {
         return hits >= g.count * .85 && covered >= Math.ceil(binCount * 10d / 12);
     }
 
+    /** The original arm-fit law is unchanged. Only literal cap-run pixels from
+     * a complete independent graph proof may also count as fit hits. Cap-only
+     * pixels never fill the original arm-coverage bins. */
+    private static boolean capAwareUpBowShape(Glyph g, int width, BowCapProof proof) {
+        if (proof == null) return false;
+        double tip = 0;
+        int tips = 0;
+        for (int p : g.pixels)
+            if (p / width >= g.bottom - (g.bottom - g.top) * .15) {
+                tip += p % width;
+                tips++;
+            }
+        if (tips == 0) return false;
+        double apex = (tip / tips - g.left) / Math.max(1, g.right - g.left);
+        if (apex < .2 || apex > .85) return false;
+        int leftTop = g.bottom, rightTop = g.bottom;
+        for (int p : g.pixels) {
+            double x = (p % width - g.left) / (double) Math.max(1, g.right - g.left);
+            if (x < .25) leftTop = Math.min(leftTop, p / width);
+            if (x > .75) rightTop = Math.min(rightTop, p / width);
+        }
+        double leftY = (leftTop - g.top) / (double) Math.max(1, g.bottom - g.top);
+        double rightY = (rightTop - g.top) / (double) Math.max(1, g.bottom - g.top);
+        if (leftY > .45 || rightY > .45) return false;
+        int hits = 0;
+        int binCount = Math.min(12, g.right - g.left + 1);
+        boolean[] bins = new boolean[binCount];
+        for (int p : g.pixels) {
+            double x = (p % width - g.left) / (double) Math.max(1, g.right - g.left);
+            double y = (p / width - g.top) / (double) Math.max(1, g.bottom - g.top);
+            double expected =
+                    x < apex
+                            ? leftY + (1 - leftY) * x / apex
+                            : rightY + (1 - rightY) * (1 - x) / (1 - apex);
+            double slope = x < apex ? (1 - leftY) / apex : (1 - rightY) / (1 - apex);
+            double distance = Math.abs(y - expected) / Math.sqrt(1 + slope * slope);
+            boolean armFit =
+                    distance
+                            < .14 + 1.0 / Math.max(1, Math.min(g.right - g.left, g.bottom - g.top));
+            if (armFit) bins[Math.min(binCount - 1, (int) (x * binCount))] = true;
+            if (armFit || proof.contains(p % width - g.left, p / width - g.top)) hits++;
+        }
+        int covered = 0;
+        for (boolean bin : bins) if (bin) covered++;
+        return hits >= g.count * .85 && covered >= Math.ceil(binCount * 10d / 12);
+    }
+
+    private static long completeUpBowCapWork(Glyph g) {
+        long w = g.right - g.left + 1L, h = g.bottom - g.top + 1L;
+        return 16L * w * h + 64L * g.count + 192L * h + 512;
+    }
+
+    private record BowRowRun(int first, int last) {
+        boolean touches(BowRowRun other) {
+            return other != null && first <= other.last + 1 && last >= other.first - 1;
+        }
+
+        int width() {
+            return last - first + 1;
+        }
+    }
+
+    private record BowCapProof(int firstRow, List<BowRowRun> auxiliary) {
+        BowCapProof {
+            auxiliary = List.copyOf(auxiliary);
+        }
+
+        boolean contains(int x, int y) {
+            int row = y - firstRow;
+            return row >= 0
+                    && row < auxiliary.size()
+                    && x >= auxiliary.get(row).first
+                    && x <= auxiliary.get(row).last;
+        }
+    }
+
+    private static boolean completeUpBowRows(Glyph g, int width) {
+        return completeUpBowRowsStrict(g, width) || completeUpBowCapProof(g, width) != null;
+    }
+
+    private static boolean completeUpBowRows(Glyph g, int width, BowCapProof proof) {
+        return completeUpBowRowsStrict(g, width) || proof != null;
+    }
+
+    /** Complete literal row-run graph. One tiny cap overtrace must join exactly
+     * one already proved arm within that arm's measured prior cap width. Every
+     * component pixel remains in a literal run; no midpoint split or gap fill. */
+    private static BowCapProof completeUpBowCapProof(Glyph g, int width) {
+        int w = g.right - g.left + 1, h = g.bottom - g.top + 1;
+        if (w < 3 || h < 3 || (long) w * h > Integer.MAX_VALUE) return null;
+        boolean[] ink = new boolean[w * h];
+        int leftTop = g.bottom, rightTop = g.bottom;
+        for (int p : g.pixels) {
+            int x = p % width, y = p / width;
+            ink[(y - g.top) * w + x - g.left] = true;
+            if ((x - g.left) / (double) (w - 1) < .25) leftTop = Math.min(leftTop, y);
+            if ((x - g.left) / (double) (w - 1) > .75) rightTop = Math.min(rightTop, y);
+        }
+        if (leftTop == g.bottom || rightTop == g.bottom) return null;
+        var rows = new ArrayList<List<BowRowRun>>(h);
+        for (int y = 0; y < h; y++) {
+            var runs = new ArrayList<BowRowRun>(3);
+            for (int x = 0; x < w; ) {
+                if (!ink[y * w + x]) {
+                    x++;
+                    continue;
+                }
+                int first = x;
+                while (x + 1 < w && ink[y * w + x + 1]) x++;
+                runs.add(new BowRowRun(first, x));
+                x++;
+            }
+            if (runs.isEmpty() || runs.size() > 3) return null;
+            rows.add(runs);
+        }
+        int firstPair = Math.max(leftTop, rightTop) - g.top;
+        BowRowRun priorLeft = null, priorRight = null, priorAux = null, priorMerged = null;
+        int leftCapWidth = 0, rightCapWidth = 0, auxLeftWidth = 0, auxRightWidth = 0;
+        int auxStart = -1, auxEnd = -1;
+        boolean seenPair = false, joinedAux = false, merged = false;
+        for (int y = 0; y < h; y++) {
+            var runs = rows.get(y);
+            if (y < firstPair) {
+                if (runs.size() != 1 || priorMerged != null && !runs.get(0).touches(priorMerged))
+                    return null;
+                priorMerged = runs.get(0);
+                continue;
+            }
+            if (merged) {
+                if (runs.size() != 1 || !runs.get(0).touches(priorMerged)) return null;
+                priorMerged = runs.get(0);
+                continue;
+            }
+            if (runs.size() == 1) {
+                if (!seenPair
+                        || priorAux != null
+                        || priorLeft == null
+                        || priorRight == null
+                        || !runs.get(0).touches(priorLeft)
+                        || !runs.get(0).touches(priorRight)) return null;
+                merged = true;
+                priorMerged = runs.get(0);
+                continue;
+            }
+            BowRowRun left = runs.get(0), right = runs.get(runs.size() - 1);
+            if (!seenPair) {
+                if (y != firstPair || runs.size() != 2) return null;
+                if (priorMerged != null) {
+                    if (leftTop < rightTop
+                                    && (!left.touches(priorMerged) || right.touches(priorMerged))
+                            || rightTop < leftTop
+                                    && (!right.touches(priorMerged) || left.touches(priorMerged)))
+                        return null;
+                }
+                if (left.first >= w * .25 || right.last <= w * .75) return null;
+                seenPair = true;
+            } else if (!left.touches(priorLeft)
+                    || !right.touches(priorRight)
+                    || left.touches(priorRight)
+                    || right.touches(priorLeft)) return null;
+            if (runs.size() == 3) {
+                BowRowRun aux = runs.get(1);
+                if (joinedAux
+                        || auxStart < 0 && priorAux != null
+                        || auxStart >= 0 && y != auxEnd + 1
+                        || priorAux != null && !aux.touches(priorAux)) return null;
+                if (priorLeft != null && aux.touches(priorLeft)
+                        || priorRight != null && aux.touches(priorRight)
+                        || priorAux != null && (left.touches(priorAux) || right.touches(priorAux)))
+                    return null;
+                if (auxStart < 0) {
+                    auxStart = y;
+                    auxLeftWidth = leftCapWidth;
+                    auxRightWidth = rightCapWidth;
+                    if (priorLeft != null && aux.touches(priorLeft)
+                            || priorRight != null && aux.touches(priorRight)) return null;
+                }
+                auxEnd = y;
+                priorAux = aux;
+            } else if (priorAux != null) {
+                boolean joinLeft = priorAux.touches(left), joinRight = priorAux.touches(right);
+                if (joinLeft == joinRight) return null;
+                int capWidth = joinLeft ? auxLeftWidth : auxRightWidth;
+                int top = (joinLeft ? leftTop : rightTop) - g.top;
+                if (capWidth < 1 || auxStart - top > capWidth || y - top > capWidth) return null;
+                for (int row = auxStart; row <= auxEnd; row++) {
+                    var pair = rows.get(row);
+                    BowRowRun middle = pair.get(1), trunk = joinLeft ? pair.get(0) : pair.get(2);
+                    if (joinLeft
+                            ? middle.last - trunk.last > capWidth + 1
+                            : trunk.first - middle.first > capWidth + 1) return null;
+                }
+                joinedAux = true;
+                priorAux = null;
+            }
+            if (auxStart < 0) {
+                leftCapWidth = Math.max(leftCapWidth, left.width());
+                rightCapWidth = Math.max(rightCapWidth, right.width());
+            }
+            priorLeft = left;
+            priorRight = right;
+        }
+        if (!seenPair || !merged || auxStart < 0 || !joinedAux) return null;
+        double tip = 0;
+        int tips = 0;
+        for (int p : g.pixels)
+            if (p / width >= g.bottom - (h - 1) * .15) {
+                tip += p % width;
+                tips++;
+            }
+        if (tips == 0) return null;
+        double apex = (tip / tips - g.left) / (w - 1),
+                ly = (leftTop - g.top) / (double) (h - 1),
+                ry = (rightTop - g.top) / (double) (h - 1),
+                tol = .14 + 1.0 / Math.min(w - 1, h - 1);
+        if (apex < .2
+                || apex > .85
+                || ly > .45
+                || ry > .45
+                || !literalBowArmBandPath(
+                        rows, leftTop - g.top, ly, (1 - ly) / apex, tol, false, w, h)
+                || !literalBowArmBandPath(
+                        rows, rightTop - g.top, ry, (1 - ry) / (1 - apex), tol, true, w, h))
+            return null;
+        var auxiliary = new ArrayList<BowRowRun>(auxEnd - auxStart + 1);
+        for (int row = auxStart; row <= auxEnd; row++) auxiliary.add(rows.get(row).get(1));
+        return new BowCapProof(auxStart, auxiliary);
+    }
+
+    /** Carry every actual run intersecting the old finite arm band; never bridge
+     * a white row or favor one branch before its rival is checked. */
+    private static boolean literalBowArmBandPath(
+            List<List<BowRowRun>> rows,
+            int first,
+            double top,
+            double slope,
+            double tol,
+            boolean right,
+            int w,
+            int h) {
+        var reachable = new ArrayList<BowRowRun>();
+        for (int row = first; row < h; row++) {
+            double y = row / (double) (h - 1),
+                    center = right ? 1 - (y - top) / slope : (y - top) / slope,
+                    radius = tol * Math.sqrt(1 + slope * slope) / slope;
+            int bandL = (int) Math.floor((center - radius) * (w - 1)) + 1,
+                    bandR = (int) Math.ceil((center + radius) * (w - 1)) - 1;
+            var next = new ArrayList<BowRowRun>();
+            for (var run : rows.get(row)) {
+                int a = Math.max(bandL, run.first), b = Math.min(bandR, run.last);
+                if (a > b) continue;
+                var actual = new BowRowRun(a, b);
+                boolean connected = row == first;
+                for (var prior : reachable) if (actual.touches(prior)) connected = true;
+                if (connected) next.add(actual);
+            }
+            if (next.isEmpty()) return false;
+            reachable = next;
+        }
+        return true;
+    }
+
     /** Complete two-arm row support supplement; original approximate fit stays unchanged.
      * The bowMarks caller prepays 12count+64height+128 additional work.
      * No raw raster queries: only its complete immutable connected component. */
-    private static boolean completeUpBowRows(Glyph g, int width) {
+    private static boolean completeUpBowRowsStrict(Glyph g, int width) {
         int w = g.right - g.left + 1, h = g.bottom - g.top + 1;
         double tip = 0;
         int tips = 0, leftTop = g.bottom, rightTop = g.bottom;
@@ -741,9 +1025,13 @@ final class NoteArticulationDetector {
     /** Whole-component bow-only nominal width from every literal row-run center.
      * No pen-width estimate, favorable run selection or new raster samples. */
     private static int completeBowStrokeSpanTwice(Glyph g, int width) {
-        boolean up = upBowShape(g, width);
+        return completeBowStrokeSpanTwice(g, width, completeUpBowCapProof(g, width));
+    }
+
+    private static int completeBowStrokeSpanTwice(Glyph g, int width, BowCapProof proof) {
+        boolean up = upBowShape(g, width) || capAwareUpBowShape(g, width, proof);
         boolean down = completeDownBowShape(g, width) || measuredDownBowShape(g, width);
-        if (up == down || up && !completeUpBowRows(g, width)) return -1;
+        if (up == down || up && !completeUpBowRows(g, width, proof)) return -1;
         int w = g.right - g.left + 1, h = g.bottom - g.top + 1;
         boolean[] ink = new boolean[w * h];
         for (int p : g.pixels) ink[(p / width - g.top) * w + p % width - g.left] = true;
