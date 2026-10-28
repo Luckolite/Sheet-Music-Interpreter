@@ -558,6 +558,7 @@ final class ScoreDynamicsDetector {
             boolean paperProposals) {
         List<ScoreDynamicChange> result = new ArrayList<>();
         var arrivalLevels = new ArrayList<PrintedHairpinArrival.Level>();
+        List<CompleteOpposedHairpinPair.Shape> completeOpposedShapes = List.of();
         Map<ScoreDynamicChange, PlayingTechniqueDetector.Word> openWords = new HashMap<>();
         float minimumGap = Float.MAX_VALUE, maximumGap = 0;
         for (var staff : staffs)
@@ -683,6 +684,10 @@ final class ScoreDynamicsDetector {
             var wedges = new ArrayList<HairpinContinuation.Wedge>();
             var fragments = new ArrayList<ShadedHairpinFragments.Rail>();
             var faintPairCores = new ArrayList<ShadedHairpinFragments.Rail>();
+            var completeOpposed =
+                    gray == ownershipGray
+                            ? new CompleteOpposedHairpinPair.Collector(gray, width, height)
+                            : null;
             for (int p = 0; p < gray.length; p++) {
                 if (seen[p] || (gray[p] & 255) >= 145) continue;
                 int start = 0, n = 1;
@@ -743,6 +748,10 @@ final class ScoreDynamicsDetector {
                     upper[x] = Math.min(upper[x], y);
                     lower[x] = Math.max(lower[x], y);
                 }
+                if (completeOpposed != null && !qualifiedShort
+                        && (w < gap * 4 || w < h * 4))
+                    completeOpposed.candidate(
+                            owner, left, right, top, bottom, n, upper, lower);
                 if (gray == ownershipGray
                         && w >= gap * 2
                         && h <= gap
@@ -766,6 +775,7 @@ final class ScoreDynamicsDetector {
                 if (stroke != null) strokes.add(stroke);
                 if (h < gap * .4) continue;
                 int direction = hairpinDirection(upper, lower, gap);
+                int literalDirection = direction;
                 if (direction == 0) {
                     var faint =
                             FaintHairpinArms.recover(
@@ -800,6 +810,7 @@ final class ScoreDynamicsDetector {
                 }
                 var common = GrandStaffDynamics.directionPart(shared, owner, top, bottom);
                 if (direction != 0) {
+                    int priorPairResultSize = result.size();
                     addWithArrival(
                             result,
                             common == null ? owner : common,
@@ -814,6 +825,10 @@ final class ScoreDynamicsDetector {
                             common != null,
                             arrivalLevels,
                             ownershipGray);
+                    if (completeOpposed != null && common == null && literalDirection != 0
+                            && result.size() > priorPairResultSize)
+                        completeOpposed.acceptedLong(
+                                owner, left, right, top, bottom, n, upper, lower);
                     if (common == null) {
                         int a = Math.min(w - 1, Math.max(0, w / 20)),
                                 b = Math.max(0, w - 1 - w / 20);
@@ -829,6 +844,7 @@ final class ScoreDynamicsDetector {
                     }
                 }
             }
+            if (completeOpposed != null) completeOpposedShapes = completeOpposed.finish();
             for (var shape : FaintHairpinPair.recover(faintPairCores, ownershipGray, width, height))
                 addWithArrival(
                         result,
@@ -1105,6 +1121,26 @@ final class ScoreDynamicsDetector {
                 }
             }
         }
+        // Complete optional pairs never participate in any legacy recovery or normalization.
+        // Use the same conservative claim window as the normalized recovery immediately above.
+        for (var shape : completeOpposedShapes) {
+            var proposed = new ArrayList<ScoreDynamicChange>();
+            addWithArrival(
+                    proposed, shape.staff(), shape.left() / (float) width,
+                    shape.right() / (float) width, 0, shape.direction(), measures, notes,
+                    width, height, false, arrivalLevels, ownershipGray);
+            for (var change : proposed) {
+                boolean claimed = false;
+                for (var old : scoped)
+                    if (old.direction() == change.direction()
+                            && old.measureIndex() == change.measureIndex()
+                            && old.staffIndex() == change.staffIndex()
+                            && old.staffCount() == change.staffCount()
+                            && Math.abs(old.positionInMeasure() - change.positionInMeasure()) < .06f)
+                        claimed = true;
+                if (!claimed) scoped.add(change);
+            }
+        }
         scoped.sort(
                 Comparator.comparingInt(ScoreDynamicChange::measureIndex)
                         .thenComparingDouble(ScoreDynamicChange::positionInMeasure)
@@ -1112,7 +1148,7 @@ final class ScoreDynamicsDetector {
         return new Detection(scoped, events);
     }
 
-    private static boolean openHairpinInterior(
+    static boolean openHairpinInterior(
             byte[] gray, int width, int left, int[] upper, int[] lower, float gap) {
         int eligible = 0, open = 0;
         for (int x = 0; x < upper.length; x++) {

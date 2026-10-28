@@ -7532,18 +7532,19 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "555bdd1f154880d50bf922e9af33cb801af2d485c408060b3c5e254cca46145f",
-      "source_normalized_sha256": "b57558241da3d6fde4c59b6ed5b7faa9e457a7d317e95825578340cb92a413a6",
+      "source_sha256": "8e5504fdeb8c148a9b4ced874b76687c1122dbf60c8da37a90647de0f28e8c90",
+      "source_normalized_sha256": "9a8b32ba05b953ddc7a5c2af84f14c4f5dc85a3085a280e1fe50c565ee18ad5a",
       "review_note": "Preserve one visually qualified fp as an atomic ordered forte/piano pair at an actual onset; reject a bare m only when unchanged raw contour and pre-existing note-owned mordent evidence agree. Other literal levels and timing guards remain unchanged.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed recognition108 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "b49fbe4bbc5bbaad73dbdfcd76a0116817359a571aef7c97f90c2348f66feec2",
-      "reviewed_app_commit": "f57f81f1afc7516852d7f0275fbae1c03bb706dd",
+      "standalone_sha256": "c0d4592515ce102c1a4a9f6f1fa6bfacce25b8cb222b66c10b129074033acde7",
+      "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicsDetector.java",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
-      "standalone_normalized_sha256": "b49fbe4bbc5bbaad73dbdfcd76a0116817359a571aef7c97f90c2348f66feec2",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "4aeb87dff027ff866a72f82eb4aa655e78677e709ab8cb5a2ca55620002d3df5",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal."
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
@@ -10169,6 +10170,28 @@
       "standalone_normalized_sha256": "a8533558303f3220e1e63be3a8bb6f8c2e022471702fe18249d62407c90e8b62",
       "reviewed_app_commit": "0fcc5c4aa8b521c7b57a3fef199f7c62a1ca3c29",
       "certified_core_darkness_review": "Only a closed-fringe-certified final candidate uses its actual original raw core for the existing independent-darkness law. Ordinary bodies, inclusive130 boundary, distance, ownership and connected fermata-roof veto retain behavior. No additional raster read or allocation."
+    },
+    "CompleteOpposedHairpinPair.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteOpposedHairpinPair.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteOpposedHairpinPair.java",
+      "license": "Apache-2.0",
+      "source_sha256": "82aba3a7c02fc737537c9b758fa24f784e1d108161aad11b4ce9c5d46eef7724",
+      "source_normalized_sha256": "8b0a8000cde5544ae9187752fbe47763ca142b948b874fe61d7020a36c142253",
+      "standalone_sha256": "52304141364d09561a2c08991b8948ae13775a71b2f649fa2fc7790553aa6341",
+      "standalone_normalized_sha256": "60285b57df1424298257bd6fa653a01bbd75dd7e02cf47b275f44b0b5630fcf1",
+      "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
+      "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal."
+    },
+    "CompleteOpposedHairpinPairTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteOpposedHairpinPairTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteOpposedHairpinPairTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "0e8981572cec65806fd480bd31d6bff198431677cd1c9cbdad42afbe305066c4",
+      "source_normalized_sha256": "b324adfc3fb2208c41514762a78247e37226c8fe1554437a4fb61668d9ff784a",
+      "standalone_sha256": "fe68401592b96307cc36f92bc1a9238055e4c027f0798a040e4ac4d0aee681a1",
+      "standalone_normalized_sha256": "cb372e0f3f2a0a60c6faea5deffda78041f7e3d8803e0519130326b0aa2a78b2",
+      "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
+      "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal."
     }
   },
   "finite_curved_approach_review": {
@@ -14884,5 +14907,13 @@
     "documentation": "docs/closed-dot-fringes.md",
     "validation": "Nine original controls fail three positive cases on prior source and pass on candidate;180 original/retained tests pass. Private all-five saved OMR outputs add seven source-reviewed staccato bits with other fields exact. Source expectation correction remains separate from frozen comparison. Combined fresh native and cumulative app/public/deployment gates remain required.",
     "adaptation": "Package-only source and original test, with standalone AOSP line wrapping; no helper, model or wire changes."
+  },
+  "complete_opposed_hairpin_review": {
+    "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
+    "documentation": "docs/complete-opposed-hairpins.md",
+    "native_helper": "CompleteOpposedHairpinPair.java",
+    "native_selection_sha256": "05153feaf1eff575b361eac9d4b9c72ef5f0d63a4de7372d084c93a20f086651",
+    "validation": "161 original/retained tests per namespace; independent vertical-phase/claim-window preservation regressions. Private current pages1-3 detector-input replay restores exactly two short wedges with all prior dynamic records/events unchanged. Actual all-five native and cumulative app/public/deployment gates remain required.",
+    "adaptation": "Package-only shared source/helper/test, explicitly selected native helper; no model or wire change."
   }
 }
