@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 package io.github.luckolite.interpreter;
 
-/** Local five-rule proof for faded direction ownership; retains bilateral support and phase checks. */
+/** Five raw rules need bilateral contrast and consistent phase, independent of absolute exposure. */
 final class FaintDirectionRails {
     static boolean valid(byte[] gray, int width, int height, float x, float hint, float gap) {
         return gray != null
@@ -67,8 +67,7 @@ final class FaintDirectionRails {
                             for (int y = cy - band; y <= cy + band; y++) {
                                 if (y < flank || y + flank >= h) continue;
                                 int tone = crop[y * w + xx] & 255;
-                                if (tone < 190
-                                        && (crop[(y - flank) * w + xx] & 255) > tone + 12
+                                if ((crop[(y - flank) * w + xx] & 255) > tone + 12
                                         && (crop[(y + flank) * w + xx] & 255) > tone + 12) {
                                     ink = true;
                                     break;
@@ -108,8 +107,7 @@ final class FaintDirectionRails {
             for (int y = first; y <= last; y++) {
                 for (int x = 0; x < width; x++) {
                     int ink = gray[y * width + x] & 255;
-                    if (ink < 190
-                            && (gray[(y - flank) * width + x] & 255) > ink + 12
+                    if ((gray[(y - flank) * width + x] & 255) > ink + 12
                             && (gray[(y + flank) * width + x] & 255) > ink + 12)
                         support[y - first]++;
                 }

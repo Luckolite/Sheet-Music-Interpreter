@@ -91,6 +91,32 @@ public final class ScoreExpressionDetector {
             int height,
             Set<PlayingTechniqueDetector.Word> symbols) {
         var events = new ArrayList<>(score.expressiveEvents());
+        var printedBindings = new HashSet<PrintedBinding>();
+        for (var existing : events) {
+            var printed =
+                    existing.evidence().stream()
+                            .filter(e -> e.sourceId().equals(SOURCE) || e.sourceId().equals(SYMBOL))
+                            .toList();
+            if (printed.isEmpty()) continue;
+            var current = column(existing);
+            if (current.isEmpty()) continue;
+            String text = "";
+            if (existing.kind() == Kind.UNRESOLVED_DIRECTION) {
+                var readings =
+                        printed.stream().map(e -> bindingText(e.printedText())).distinct().toList();
+                if (readings.size() != 1) continue;
+                text = readings.get(0);
+            }
+            var binding =
+                    printedBinding(
+                            score,
+                            current.get(),
+                            existing.kind(),
+                            existing.strength(),
+                            existing.qualifierText(),
+                            text);
+            if (binding != null) printedBindings.add(binding);
+        }
         for (var word : words) {
             if (!EnglishCharacterOcrContext.admitted(word)) continue;
             if (coveredPedalWord(word, words)) continue;
@@ -259,6 +285,15 @@ public final class ScoreExpressionDetector {
                     id += ":word:" + direction.printedText().trim();
                 String eventId = id;
                 if (events.stream().anyMatch(e -> e.eventId().equals(eventId))) continue;
+                var binding =
+                        printedBinding(
+                                score,
+                                anchor,
+                                direction.kind(),
+                                direction.strength(),
+                                direction.qualifierText(),
+                                direction.printedText());
+                if (binding != null && !printedBindings.add(binding)) continue;
                 events.add(
                         new ScoreExpressiveEvent(
                                 id,
@@ -291,6 +326,42 @@ public final class ScoreExpressionDetector {
     }
 
     private record Column(int measure, int staff, int count, float position, boolean rest) {}
+
+    private record PrintedBinding(
+            int measure,
+            int staff,
+            int count,
+            Kind kind,
+            Strength strength,
+            String qualifier,
+            String text,
+            List<Integer> targets) {}
+
+    private static String bindingText(String text) {
+        return text.trim().replaceAll("\\s+", " ").toLowerCase(Locale.ROOT);
+    }
+
+    /** Repeated OCR coordinates may differ while the existing written-column membership is exact. */
+    private static PrintedBinding printedBinding(
+            ScorePageInterpretation score,
+            Column column,
+            Kind kind,
+            Strength strength,
+            String qualifier,
+            String text) {
+        if (column.rest()) return null;
+        var targets = targetIndicesForColumn(score, column);
+        if (targets.isEmpty()) return null;
+        return new PrintedBinding(
+                column.measure(),
+                column.staff(),
+                column.count(),
+                kind,
+                strength,
+                qualifier,
+                kind == Kind.UNRESOLVED_DIRECTION ? bindingText(text) : "",
+                List.copyOf(targets));
+    }
 
     private static ScoreNoteEvent closestDirectionNote(
             ScorePageInterpretation score,
