@@ -7213,12 +7213,12 @@
     },
     "RestFigureOrigins.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestFigureOrigins.java",
-      "source_sha256": "0c9721abde98099a96689ecfbc87a52c904a8289ec6c310c36bf67160754a302",
-      "source_normalized_sha256": "9fcbef37cd880d4a709efddc208f783499ff3804270b5787b06e8942f7ff731f",
-      "standalone_sha256": "8faba86831ee6bca68535a3e7e0adb1b84251aed5b9be19a9ca720706560d6a8",
+      "source_sha256": "d532fedb9b803a4befc9c5573ece67a1fea150d5b6b1168731cee52beb67c627",
+      "source_normalized_sha256": "2c57a13d4718f6dbe13d670eb1106f4c3609122ce2bd852ba8b4c1dfca20d4b4",
+      "standalone_sha256": "0a7dc29c5e8090b49b28e5b8dc35cd54f5fe7ddf1f5f0d59d31981e8efa5cb9d",
       "review_note": "Identity-based original and derived component provenance ties canonical selected rest proposals to their originating heads and photometric views. Unknown and equal-clone ownership abstains.",
       "reviewed_source_state": "committed",
-      "reviewed_app_commit": "d38b1b35832da0a4674b2ed633d56646856f89d1",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/RestFigureOrigins.java",
       "literal_faint_quarter_review": {
         "documentation": "docs/literal-faint-quarter-recovery.md",
@@ -7228,7 +7228,10 @@
         "scope": "Post-all-legacy complete literal quarter proof, genuine full rectifier ordinal identity, one optional64M/64M pool per detector invocation. No Source authority, model or record-layout change.",
         "rollout": "Source only; matched cumulative packaging deferred during active goal.",
         "app_commit": "14b533bf0297b0b36b3910858e847bf5012e9a2d"
-      }
+      },
+      "license": "Apache-2.0",
+      "standalone_normalized_sha256": "c4b6afa65bf3557f2b03005eaac9c5bdf3beaad672cf406e470861f53e47dd55",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
     },
     "RestPaperTone.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/RestPaperTone.java",
@@ -8532,13 +8535,13 @@
     },
     "SixteenthRestDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SixteenthRestDetector.java",
-      "source_sha256": "df77b1d9607f73ad8941b09345de89d22a233846539460adb640f0032ea31cf9",
+      "source_sha256": "bb4b03dfe98edc20f5ca1833d9e47a3bce89067f660bd8adda026697b622e9eb",
       "review_note": "Standing half-rest plates require a complete bilaterally supported staff-rule core and a one-row fading support edge. New proposals pass existing ownership and classification guards after the complete released detector; stable merge preserves earlier rests and dot associations. Original Apache-2.0 procedural optical and merge controls; no private score material, model, dependency or record-layout change.",
-      "source_normalized_sha256": "df77b1d9607f73ad8941b09345de89d22a233846539460adb640f0032ea31cf9",
+      "source_normalized_sha256": "6e6de7a49c3646bd605dd500ba576149700a2645b8cdfebb44ab7b381405a75e",
       "reviewed_app_snapshot": "music-sheets-rest-tuplet-841-source (retained provenance: public4af945db, 2026-10-05)",
       "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal.",
-      "standalone_sha256": "dcdc417b1071172f6578ec4e7a88288251ce31377e5447c309774ac469d4b438",
-      "reviewed_app_commit": "c2049935aa12073e6f898cb347b524023506aecf",
+      "standalone_sha256": "d264ac9b46696f7a58eef35714faa9d603a88067c73a99e9d55f14fd6cf05ca9",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
       "scoped_reviewed_app_commit": "cd5c764f66d068aa543540a8f6ae9aa290cedbd1",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "ad7ef113893dde7b2ab1aedfe377146525c37c52",
@@ -8572,7 +8575,9 @@
         "recognition_revision": 118,
         "original_assertions": 281,
         "boundary": "Genuine head-linked local note-fragment veto; source only, no new models/layouts/authority/caps."
-      }
+      },
+      "standalone_normalized_sha256": "795eabc277f9696775d91ab16f2affca58fc92ffa5e7aef9a3100e128ba499cb",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
     },
     "SlashedGraceFlagInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SlashedGraceFlagInk.java",
@@ -10349,6 +10354,83 @@
       "standalone_normalized_sha256": "230d7c698097215b7842047adaddfc5fb34c89e93b1acfc2158de974a9910cd7",
       "reviewed_app_commit": "4fb71f2f7abae8f52233f59f4fea770d73a9b406",
       "detached_caret_review": "Complete original-source bodies, unchanged angular and owner guards, all legacy resolution first, bounded atomic supplemental results. Root review restricts old-list membership to the legacy pass: new body arrays cannot equal old glyph records. Original Apache-2.0 fixtures only."
+    },
+    "ClosedCounterFalsifiersTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedCounterFalsifiersTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedCounterFalsifiersTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "f39d0ad287e0b603f435089b1858a9a9f5b444eba78e511e664822a2f366c02a",
+      "source_normalized_sha256": "10db0c04fa8ea3d85937b607704be762d1e695eb0c7f153d8b903830dca7df15",
+      "standalone_sha256": "568be2b7fea7baf1bfd8e854b915b49774f41e9b4b3126ae79dc00f0c2229b25",
+      "standalone_normalized_sha256": "b9467e3f08f5f24dd63c5a8184d51fe62443ee56d0a912cc9b900ef837c3a209",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "ClosedCounterRestInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedCounterRestInk.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedCounterRestInk.java",
+      "license": "Apache-2.0",
+      "source_sha256": "839a3c7c558bc2be7ebf93a8da15b49599fb02f4895985032544a53cd4bfe407",
+      "source_normalized_sha256": "839a3c7c558bc2be7ebf93a8da15b49599fb02f4895985032544a53cd4bfe407",
+      "standalone_sha256": "6309c3fab5578f95058e86c5961cb3578f87d133d9f7c81aeff65158410cb623",
+      "standalone_normalized_sha256": "1287673b1bae3643dfc27a41693358e07315de86220bc591642f3dcb3d676bd4",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "ClosedCounterRestInkTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedCounterRestInkTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedCounterRestInkTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "120729f290504b28a897ed04dc9a45130b31529d00b573f0211eca040b5d83e6",
+      "source_normalized_sha256": "120729f290504b28a897ed04dc9a45130b31529d00b573f0211eca040b5d83e6",
+      "standalone_sha256": "26d277046e981ea4a3d5ffcf056ae41b692d5cfff891ad287125e05c25259d7b",
+      "standalone_normalized_sha256": "53bbf9fceae0e63b8178d36ce5a2ee46951b76cbb6137bb6da31447f1190553f",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "ClosedCounterRestInvocation.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedCounterRestInvocation.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedCounterRestInvocation.java",
+      "license": "Apache-2.0",
+      "source_sha256": "2925d91029f83beffa907fb75d1fc1f666f40ea54440e63a51302baaa0716b28",
+      "source_normalized_sha256": "20b0f4a67f592c3d9fcd51a05f8d4fe9df20400937cb83d66e69bfa83cdc13d4",
+      "standalone_sha256": "1bdbb1fdb4fdc1519760f89824382d132897f63a147b483aa3a13a86d3781da2",
+      "standalone_normalized_sha256": "91fb54689330e85241bd4f6639309d5e3f464a2253512e1cedd1e06d9a53d07e",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "ClosedCounterRestInvocationTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedCounterRestInvocationTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedCounterRestInvocationTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "3a7627a4b5e172e0d051ada3ca53bc26d7e38a4e3bc27df6ad861358c98b6d7d",
+      "source_normalized_sha256": "71250bb307a3e7313a99a2a133d7720402f4b7d4389fd1927501084569c02d6b",
+      "standalone_sha256": "067b480bc7faeab626d739165ca4f50df51d48de74f20e339ca7522c67d6ffa1",
+      "standalone_normalized_sha256": "3b0e77a5895073605b783d1ec500aeee39e9e62b934a84733e5d888984be21b6",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "ClosedCounterRestTransactionTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedCounterRestTransactionTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedCounterRestTransactionTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "80487b88963c3bf2d12e4df9e913e4890d8035eea435a205b91e77bcf8051d19",
+      "source_normalized_sha256": "80487b88963c3bf2d12e4df9e913e4890d8035eea435a205b91e77bcf8051d19",
+      "standalone_sha256": "c2b06f0fb8ab85fa294898e9dadbea34d8fdaccc8846d33c2449a26972579c1e",
+      "standalone_normalized_sha256": "58e7671b94e8ba5ff3dec9c753901cf2799043a2deb7eaa67df8ba32d3e3a51e",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "PartialBowlRestOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PartialBowlRestOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PartialBowlRestOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "f8bba092c7778e196cbf26c9889ae6bc07a05d4fccfdbb4d2b19e52c220e1551",
+      "source_normalized_sha256": "f8bba092c7778e196cbf26c9889ae6bc07a05d4fccfdbb4d2b19e52c220e1551",
+      "standalone_sha256": "81e63405938ae5ab1d2071e5f40fdff33f1d5935e46e0ad4ef20c9de07397d3e",
+      "standalone_normalized_sha256": "c90bb86b7dbdc64d781477f1e438bd8173e673b4507af56137050a6b4df41c60",
+      "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+      "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
     }
   },
   "finite_curved_approach_review": {
@@ -15124,5 +15206,16 @@
     "native_selection_sha256": "1361c89340bb4ad0b05699af11bfbc2bfd39b20f08e23c0e5127e03ae51a7bcf",
     "validation": "31 new original/resource controls plus343 retained; 374 canonical standalone tests pass; 24576 Boolean law comparisons. Fresh all-five native adds five independently inspected marcato bits, every other serialized field exact. Broad app tests and matched deployment are separate gates.",
     "adaptation": "Package-only Java port. New separately bounded optional work/allocation; no old cap, model or wire-layout changes."
+  },
+  "closed_counter_review": {
+    "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
+    "documentation": "docs/closed-counter-rest-proof.md",
+    "native_helpers": [
+      "ClosedCounterRestInk.java",
+      "ClosedCounterRestInvocation.java"
+    ],
+    "native_selection_sha256": "beca95835f483a25c9bfc4e2589de9ae8279cb2b02118956534e061c1a912491",
+    "validation": "98 canonical app and98 standalone controls pass. Fresh actual all-five native run removes exactly one false rest and its uniquely source-mapped following-rest attachment; restCount changes3to2. All23 genuine rest controls,212 physical beam groups,358 supported masks and all other final fields preserved. Source/native qualification only; installed playback/deployment separate.",
+    "adaptation": "Package plus existing AOSP formatting; formatted app preimages exactly matched the prior standalone sources. No model, old budget or wire layout changes."
   }
 }

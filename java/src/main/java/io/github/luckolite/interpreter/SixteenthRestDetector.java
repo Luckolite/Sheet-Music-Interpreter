@@ -101,10 +101,12 @@ final class SixteenthRestDetector {
             List<ScoreNoteEvent> notes,
             List<ScoreNoteEvent> classificationNotes,
             FaintRecovery recovery) {
+        var counter = ClosedCounterRestInvocation.open(gray, width, height, notes);
         List<Staff> originalFrames = staffs;
         staffs = printedRestFrames(gray, width, height, staffs);
         Detection baseline =
-                detectWithDotsReleased(gray, width, height, measures, staffs, notes, recovery);
+                detectWithDotsReleased(
+                        gray, width, height, measures, staffs, notes, recovery, counter);
         List<ScoreRestEvent> combined = new ArrayList<>(baseline.rests());
         List<RestDot> dots = new ArrayList<>(baseline.dots());
         Detection additional =
@@ -155,12 +157,22 @@ final class SixteenthRestDetector {
         Detection current = addSupportedCore(strong, gray, width, height, measures, staffs, notes);
         current =
                 addOriginalFrameRests(
-                        current, gray, width, height, measures, originalFrames, staffs, notes);
+                        current,
+                        gray,
+                        width,
+                        height,
+                        measures,
+                        originalFrames,
+                        staffs,
+                        notes,
+                        counter);
         Detection complete =
                 RawBeamedTwoBulbRests.add(current, gray, width, height, measures, staffs, notes);
-        return recovery == null
-                ? complete
-                : recovery.finishEighth(recovery.finish(complete), staffs);
+        Detection legacy =
+                recovery == null
+                        ? complete
+                        : recovery.finishEighth(recovery.finish(complete), staffs);
+        return counter == null ? legacy : counter.finish(legacy);
     }
 
     /** A supported original frame remains a valid glyph view after quantized rule snapping. */
@@ -173,6 +185,20 @@ final class SixteenthRestDetector {
             List<Staff> original,
             List<Staff> snapped,
             List<ScoreNoteEvent> notes) {
+        return addOriginalFrameRests(
+                current, gray, width, height, measures, original, snapped, notes, null);
+    }
+
+    private static Detection addOriginalFrameRests(
+            Detection current,
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> original,
+            List<Staff> snapped,
+            List<ScoreNoteEvent> notes,
+            ClosedCounterRestInvocation counter) {
         if (original == null
                 || snapped == null
                 || original.size() != snapped.size()
@@ -189,7 +215,8 @@ final class SixteenthRestDetector {
                             gray, width, height, frame.top(), frame.bottom(), frame.gap()))
                 continue;
             Detection found =
-                    detectWithDotsReleased(gray, width, height, measures, List.of(frame), notes);
+                    detectWithDotsReleased(
+                            gray, width, height, measures, List.of(frame), notes, null, counter);
             rests.addAll(found.rests());
             dots.addAll(found.dots());
         }
@@ -448,8 +475,21 @@ final class SixteenthRestDetector {
             List<Staff> staffs,
             List<ScoreNoteEvent> notes,
             FaintRecovery recovery) {
+        return detectWithDotsReleased(gray, width, height, measures, staffs, notes, recovery, null);
+    }
+
+    private static Detection detectWithDotsReleased(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            FaintRecovery recovery,
+            ClosedCounterRestInvocation counter) {
         Detection baseline =
-                detectWithDotsStandard(gray, width, height, measures, staffs, notes, recovery);
+                detectWithDotsStandard(
+                        gray, width, height, measures, staffs, notes, recovery, counter);
         Detection contact =
                 BeamedHeadQuarterRests.detectWithDots(gray, width, height, measures, staffs, notes);
         List<ScoreRestEvent> candidates = new ArrayList<>(contact.rests());
@@ -503,10 +543,22 @@ final class SixteenthRestDetector {
             List<Staff> staffs,
             List<ScoreNoteEvent> notes,
             FaintRecovery recovery) {
+        return detectWithDotsStandard(gray, width, height, measures, staffs, notes, recovery, null);
+    }
+
+    private static Detection detectWithDotsStandard(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            FaintRecovery recovery,
+            ClosedCounterRestInvocation counter) {
         Detection original =
                 detectWithDots(
                         gray, width, height, measures, staffs, notes, true, false, null, recovery,
-                        null);
+                        null, counter);
         var joined = joinedEighthRests(gray, width, height, measures, staffs, notes);
         joined.addAll(independentUpQuarterRests(gray, width, height, measures, staffs, notes));
         joined.addAll(independentDownQuarterContacts(gray, width, height, measures, staffs, notes));
@@ -522,7 +574,18 @@ final class SixteenthRestDetector {
                 contrasted == gray
                         ? new Detection(List.of(), List.of())
                         : detectWithDots(
-                                contrasted, width, height, measures, staffs, contrastedNotes, true);
+                                contrasted,
+                                width,
+                                height,
+                                measures,
+                                staffs,
+                                contrastedNotes,
+                                true,
+                                false,
+                                null,
+                                null,
+                                null,
+                                counter);
         List<ScoreRestEvent> rests = new ArrayList<>(original.rests());
         rests.addAll(additional.rests());
         List<RestDot> dots = new ArrayList<>(original.dots());
@@ -538,7 +601,19 @@ final class SixteenthRestDetector {
         if (paper != gray) {
             var paperNotes = RestFigureOrigins.photometricView(notes, gray, paper, width, height);
             Detection isolated =
-                    detectWithDots(paper, width, height, measures, staffs, paperNotes, true);
+                    detectWithDots(
+                            paper,
+                            width,
+                            height,
+                            measures,
+                            staffs,
+                            paperNotes,
+                            true,
+                            false,
+                            null,
+                            null,
+                            null,
+                            counter);
             List<ScoreRestEvent> complete = new ArrayList<>(isolated.rests());
             List<RestDot> completeDots = new ArrayList<>(isolated.dots());
             java.util.Set<ScoreRestEvent> localSeeds = new java.util.HashSet<>();
@@ -619,7 +694,12 @@ final class SixteenthRestDetector {
                                 measures,
                                 staffs,
                                 ordinaryNotes,
-                                true);
+                                true,
+                                false,
+                                null,
+                                null,
+                                null,
+                                counter);
                 rests = new ArrayList<>(stable.rests());
                 dots = new ArrayList<>(stable.dots());
                 for (ScoreRestEvent rest : ordinary.rests()) {
@@ -650,7 +730,19 @@ final class SixteenthRestDetector {
         if (faint == gray) return stable;
         var faintNotes = RestFigureOrigins.photometricView(notes, gray, faint, width, height);
         Detection recovered =
-                detectWithDots(faint, width, height, measures, staffs, faintNotes, true, true);
+                detectWithDots(
+                        faint,
+                        width,
+                        height,
+                        measures,
+                        staffs,
+                        faintNotes,
+                        true,
+                        true,
+                        null,
+                        null,
+                        null,
+                        counter);
         rests = new ArrayList<>(stable.rests());
         dots = new ArrayList<>(stable.dots());
         for (ScoreRestEvent rest : recovered.rests()) {
@@ -1723,6 +1815,34 @@ final class SixteenthRestDetector {
             java.util.Map<ScoreRestEvent, int[]> bounds,
             FaintRecovery recovery,
             FaintView view) {
+        return detectWithDots(
+                gray,
+                width,
+                height,
+                measures,
+                staffs,
+                notes,
+                refineSymbols,
+                faintShapes,
+                bounds,
+                recovery,
+                view,
+                null);
+    }
+
+    private static Detection detectWithDots(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            boolean refineSymbols,
+            boolean faintShapes,
+            java.util.Map<ScoreRestEvent, int[]> bounds,
+            FaintRecovery recovery,
+            FaintView view,
+            ClosedCounterRestInvocation counter) {
         if (gray == null || gray.length != width * height)
             return new Detection(List.of(), List.of());
         if (staffs.stream().anyMatch(staff -> staff.pitchTrack() != null)) {
@@ -1740,7 +1860,8 @@ final class SixteenthRestDetector {
                             faintShapes,
                             null,
                             recovery,
-                            view);
+                            view,
+                            counter);
             List<ScoreRestEvent> combined = new ArrayList<>(plain.rests());
             List<RestDot> dots = new ArrayList<>(plain.dots());
             for (Staff staff : staffs)
@@ -1757,7 +1878,8 @@ final class SixteenthRestDetector {
                                     false,
                                     false,
                                     false,
-                                    recovery);
+                                    recovery,
+                                    counter);
                     combined.addAll(curved.rests());
                     dots.addAll(curved.dots());
                 }
@@ -1978,7 +2100,7 @@ final class SixteenthRestDetector {
                                         x - 1,
                                         columnInk);
                             int previousRestCount = result.size();
-                            inspect(
+                            inspectCounter(
                                     gray,
                                     width,
                                     height,
@@ -2004,7 +2126,8 @@ final class SixteenthRestDetector {
                                     quarterOnly,
                                     farRaised,
                                     placement.printedCenter() / height,
-                                    faintShapes);
+                                    faintShapes,
+                                    counter);
                             if (result.size() == previousRestCount
                                     && x - start >= staff.gap() * .7f) {
                                 var componentDomain =
@@ -2054,7 +2177,7 @@ final class SixteenthRestDetector {
                                                 if (isolatedInk[0] == null)
                                                     isolatedInk[0] = gray.clone();
                                                 try {
-                                                    inspectOwned(
+                                                    inspectOwnedCounter(
                                                             body.owned(
                                                                     gray,
                                                                     isolatedInk[0],
@@ -2084,7 +2207,8 @@ final class SixteenthRestDetector {
                                                             quarterOnly,
                                                             farRaised,
                                                             placement.printedCenter() / height,
-                                                            faintShapes);
+                                                            faintShapes,
+                                                            counter);
                                                 } finally {
                                                     body.restore(
                                                             isolatedInk[0], gray, width, height);
@@ -2115,7 +2239,18 @@ final class SixteenthRestDetector {
                                 track);
                 Detection additional =
                         detectOnPrintedStaff(
-                                gray, width, height, measures, calibrated, notes, faintShapes);
+                                gray,
+                                width,
+                                height,
+                                measures,
+                                calibrated,
+                                notes,
+                                faintShapes,
+                                false,
+                                false,
+                                false,
+                                null,
+                                counter);
                 result.addAll(additional.rests());
                 restDots.addAll(additional.dots());
             }
@@ -2251,6 +2386,34 @@ final class SixteenthRestDetector {
             boolean halfOnly,
             boolean supportedCoreOnly,
             FaintRecovery recovery) {
+        return detectOnPrintedStaff(
+                gray,
+                width,
+                height,
+                measures,
+                staff,
+                notes,
+                faintShapes,
+                contactOnly,
+                halfOnly,
+                supportedCoreOnly,
+                recovery,
+                null);
+    }
+
+    private static Detection detectOnPrintedStaff(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            Staff staff,
+            List<ScoreNoteEvent> notes,
+            boolean faintShapes,
+            boolean contactOnly,
+            boolean halfOnly,
+            boolean supportedCoreOnly,
+            FaintRecovery recovery,
+            ClosedCounterRestInvocation counter) {
         int first = Math.max(0, (int) Math.floor(staff.top() - staff.gap() * 6));
         int last = Math.min(height, (int) Math.ceil(staff.bottom() + staff.gap() * 6.4f));
         if (last <= first) return new Detection(List.of(), List.of());
@@ -2396,13 +2559,15 @@ final class SixteenthRestDetector {
                                                 faintShapes,
                                                 contourBounds,
                                                 recovery,
-                                                view);
+                                                view,
+                                                counter);
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
         var rejectedViewRests = new java.util.HashSet<ScoreRestEvent>();
         for (ScoreRestEvent rest : detected.rests()) {
             ScoreRestEvent mapped =
-                    sourceRest(rest, staff, measures, width, height, first, bandHeight);
+                    sourceCounterRest(
+                            rest, staff, measures, width, height, first, bandHeight, counter);
             int[] contour = contourBounds.get(rest);
             if (contour != null
                     && mapped.durationBeats() == 1
@@ -2441,14 +2606,15 @@ final class SixteenthRestDetector {
                     new RestDot(
                             dot.x(),
                             sourceY(staff, dot.x(), first + dot.y()),
-                            sourceRest(
+                            sourceCounterRest(
                                     dot.rest(),
                                     staff,
                                     measures,
                                     width,
                                     height,
                                     first,
-                                    bandHeight)));
+                                    bandHeight,
+                                    counter)));
         }
         return new Detection(List.copyOf(rests), List.copyOf(dots));
     }
@@ -2475,6 +2641,20 @@ final class SixteenthRestDetector {
 
         float[] local = staff.pitchTrack().at(x, quarterBudget);
         return local[0] + (flatY - staff.bottom());
+    }
+
+    /** Exact producer transport; also called separately for a dot's linked rest. */
+    private static ScoreRestEvent sourceCounterRest(
+            ScoreRestEvent rest,
+            Staff staff,
+            List<MeasureRegion> measures,
+            int width,
+            int height,
+            int first,
+            int bandHeight,
+            ClosedCounterRestInvocation counter) {
+        var mapped = sourceRest(rest, staff, measures, width, height, first, bandHeight);
+        return counter == null ? mapped : counter.mapped(rest, mapped);
     }
 
     private static ScoreRestEvent sourceRest(
@@ -2541,7 +2721,68 @@ final class SixteenthRestDetector {
             boolean farRaised,
             float printedStaffCenter,
             boolean faintShapes) {
-        inspectOwned(
+        var counter =
+                deepLowered ? ClosedCounterRestInvocation.open(gray, width, height, notes) : null;
+        inspectCounter(
+                gray,
+                width,
+                height,
+                measures,
+                notes,
+                staff,
+                top,
+                bottom,
+                line,
+                left,
+                right,
+                result,
+                restDots,
+                ordinary,
+                lowered,
+                deepLowered,
+                edgeFallback,
+                bulbOnly,
+                quarterOnly,
+                farRaised,
+                printedStaffCenter,
+                faintShapes,
+                counter);
+        if (counter != null) {
+            var committed = counter.finish(new Detection(result, restDots));
+            if (committed.rests() != result) {
+                result.clear();
+                result.addAll(committed.rests());
+                restDots.clear();
+                restDots.addAll(committed.dots());
+            }
+        }
+    }
+
+    private static void inspectCounter(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            List<ScoreRestEvent> result,
+            List<RestDot> restDots,
+            boolean ordinary,
+            boolean lowered,
+            boolean deepLowered,
+            boolean edgeFallback,
+            boolean bulbOnly,
+            boolean quarterOnly,
+            boolean farRaised,
+            float printedStaffCenter,
+            boolean faintShapes,
+            ClosedCounterRestInvocation counter) {
+        inspectOwnedCounter(
                 gray,
                 gray,
                 width,
@@ -2564,7 +2805,8 @@ final class SixteenthRestDetector {
                 quarterOnly,
                 farRaised,
                 printedStaffCenter,
-                faintShapes);
+                faintShapes,
+                counter);
     }
 
     private static void inspectOwned(
@@ -2591,7 +2833,7 @@ final class SixteenthRestDetector {
             boolean farRaised,
             float printedStaffCenter,
             boolean faintShapes) {
-        inspectOwnedMode(
+        inspectOwnedCounter(
                 gray,
                 ownershipGray,
                 width,
@@ -2616,6 +2858,60 @@ final class SixteenthRestDetector {
                 printedStaffCenter,
                 faintShapes,
                 null);
+    }
+
+    private static void inspectOwnedCounter(
+            byte[] gray,
+            byte[] ownershipGray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            List<ScoreRestEvent> result,
+            List<RestDot> restDots,
+            boolean ordinary,
+            boolean lowered,
+            boolean deepLowered,
+            boolean edgeFallback,
+            boolean bulbOnly,
+            boolean quarterOnly,
+            boolean farRaised,
+            float printedStaffCenter,
+            boolean faintShapes,
+            ClosedCounterRestInvocation counter) {
+        inspectOwnedModeCounter(
+                gray,
+                ownershipGray,
+                width,
+                height,
+                measures,
+                notes,
+                staff,
+                top,
+                bottom,
+                line,
+                left,
+                right,
+                result,
+                restDots,
+                ordinary,
+                lowered,
+                deepLowered,
+                edgeFallback,
+                bulbOnly,
+                quarterOnly,
+                farRaised,
+                printedStaffCenter,
+                faintShapes,
+                null,
+                null,
+                counter);
     }
 
     private static void inspectOwnedMode(
@@ -2697,6 +2993,62 @@ final class SixteenthRestDetector {
             boolean faintShapes,
             int[] supportedCoreBounds,
             FaintQuarterRestInk.Budget quarterBudget) {
+        inspectOwnedModeCounter(
+                gray,
+                ownershipGray,
+                width,
+                height,
+                measures,
+                notes,
+                staff,
+                top,
+                bottom,
+                line,
+                left,
+                right,
+                result,
+                restDots,
+                ordinary,
+                lowered,
+                deepLowered,
+                edgeFallback,
+                bulbOnly,
+                quarterOnly,
+                farRaised,
+                printedStaffCenter,
+                faintShapes,
+                supportedCoreBounds,
+                quarterBudget,
+                null);
+    }
+
+    private static void inspectOwnedModeCounter(
+            byte[] gray,
+            byte[] ownershipGray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            List<ScoreRestEvent> result,
+            List<RestDot> restDots,
+            boolean ordinary,
+            boolean lowered,
+            boolean deepLowered,
+            boolean edgeFallback,
+            boolean bulbOnly,
+            boolean quarterOnly,
+            boolean farRaised,
+            float printedStaffCenter,
+            boolean faintShapes,
+            int[] supportedCoreBounds,
+            FaintQuarterRestInk.Budget quarterBudget,
+            ClosedCounterRestInvocation counter) {
         if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
         if (quarterBudget != null
                 && (!ordinary
@@ -3400,6 +3752,20 @@ final class SixteenthRestDetector {
                                                                                 - rest
                                                                                         .positionInMeasure())
                                                                 < .018f)) return;
+                if (counter != null
+                        && counter.disproves(
+                                eighth,
+                                deepLowered,
+                                ownershipGray,
+                                width,
+                                height,
+                                notes,
+                                finiteProposal,
+                                left,
+                                right,
+                                minY,
+                                maxY,
+                                gap)) counter.record(rest);
                 if (rest.durationBeats() == 1 && result instanceof ContourRests contours)
                     FaintQuarterRestInk.putAbsent(
                             quarterBudget,

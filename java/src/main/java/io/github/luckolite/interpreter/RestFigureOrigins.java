@@ -295,6 +295,144 @@ final class RestFigureOrigins {
         return bind(mapped, evidence);
     }
 
+    /** Optional identity-only original plane; never a glyph-role certificate. */
+    static final class OriginalFrame {
+        final byte[] source, view;
+        final int width, height;
+        final OwnedNotes notes;
+        final Thread thread = Thread.currentThread();
+
+        private OriginalFrame(byte[] source, byte[] view, int width, int height, OwnedNotes notes) {
+            this.source = source;
+            this.view = view;
+            this.width = width;
+            this.height = height;
+            this.notes = notes;
+        }
+
+        boolean binds(
+                List<ScoreNoteEvent> actualNotes,
+                byte[] actual,
+                int w,
+                int h,
+                ClosedCounterRestInk.Payer payer) {
+            payer.take(24, 0);
+            return thread == Thread.currentThread()
+                    && notes == actualNotes
+                    && view == actual
+                    && width == w
+                    && height == h
+                    && source != null
+                    && actual != null
+                    && source.length == (long) w * h
+                    && actual.length == source.length;
+        }
+
+        boolean rootedAt(byte[] root, int w, int h, ClosedCounterRestInk.Payer payer) {
+            payer.take(24, 0);
+            if (source == root && width == w && height == h) return true;
+            int known = 0;
+            for (var note : notes.values) {
+                payer.take(24, 0);
+                HeadOrigin origin = notes.origins.get(note);
+                if (origin == null) continue;
+                if (origin.source == null
+                        || origin.source.originalGray != root
+                        || origin.source.width != w
+                        || origin.source.height != h) return false;
+                known++;
+            }
+            return known > 0;
+        }
+
+        boolean intersectsHead(
+                byte[] body,
+                int bit,
+                int left,
+                int top,
+                int w,
+                int h,
+                ClosedCounterRestInk.Payer payer) {
+            for (var note : notes.values) {
+                payer.take(16, 0);
+                HeadOrigin origin = notes.origins.get(note);
+                if (origin == null) continue;
+                if (origin.source == null) {
+                    for (int[] run : origin.runs) {
+                        payer.take(16, 0);
+                        int y = run[0] - top;
+                        if (y < 0 || y >= h) continue;
+                        int a = Math.max(0, run[1] - left), b = Math.min(w - 1, run[2] - left);
+                        if (a > b) continue;
+                        payer.take(8L * (b - a + 1), 0);
+                        for (int x = a; x <= b; x++) if ((body[y * w + x] & bit) != 0) return true;
+                    }
+                } else {
+                    // Registered rectifier mapping is used exactly, without inverse fitting.
+                    payer.take(8L * w * h, 0);
+                    for (int y = 0; y < h; y++)
+                        for (int x = 0; x < w; x++)
+                            if ((body[y * w + x] & bit) != 0
+                                    && containsFunded(origin, left + x, top + y, payer))
+                                return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private static boolean containsFunded(
+            HeadOrigin origin, int x, int y, ClosedCounterRestInk.Payer payer) {
+        payer.take(24, 0);
+        if (x < 0 || x >= origin.width || y < 0 || y >= origin.height) return false;
+        if (origin.source != null) {
+            int sourceY = Math.round(origin.bottoms[x] + (origin.first + y - origin.staffBottom));
+            return containsFunded(origin.source, x, sourceY, payer);
+        }
+        for (int[] run : origin.runs) {
+            payer.take(16, 0);
+            if (run[0] == y && x >= run[1] && x <= run[2]) return true;
+        }
+        return false;
+    }
+
+    static OriginalFrame originalFrame(
+            List<ScoreNoteEvent> values,
+            byte[] view,
+            int w,
+            int h,
+            ClosedCounterRestInk.Payer payer) {
+        if (payer == null) return null;
+        try {
+            payer.take(64, 0);
+            if (!(values instanceof OwnedNotes owned)
+                    || view == null
+                    || w < 1
+                    || h < 1
+                    || view.length != (long) w * h) return null;
+            byte[] source = null;
+            int known = 0;
+            for (var note : owned.values) {
+                payer.take(24, 0);
+                HeadOrigin origin = owned.origins.get(note);
+                if (origin == null) continue;
+                if (origin.gray != view
+                        || origin.width != w
+                        || origin.height != h
+                        || origin.originalGray == null
+                        || origin.originalGray.length != view.length) return null;
+                if (source != null && source != origin.originalGray) return null;
+                source = origin.originalGray;
+                known++;
+            }
+            if (known == 0) return null;
+            payer.take(32, 128);
+            return new OriginalFrame(source, view, w, h, owned);
+        } catch (ClosedCounterRestInk.Refusal refusal) {
+            return null;
+        }
+    }
+
     /** Original projection and mask BEFORE any dot/whole/half trimming. */
     static final class ProposalOrigin {
         final byte[] gray;
