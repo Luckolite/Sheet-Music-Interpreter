@@ -257,4 +257,138 @@ final class PrintedBeamRawContrast {
                 && right < b
                 && right - left + 1 <= Math.max(3, Math.ceil(gap * (shaft ? .35 : 1)));
     }
+
+    /** Beam-only exposure extension. Legacy enclosure predicates retain their original law. */
+    static boolean shaftWithRelativePaper(
+            byte[] raw, int width, int height, int x, int y, double gap, LongConsumer charge) {
+        check(raw, width, height, x, y, gap, charge);
+        charge.accept(1);
+        int value = raw[y * width + x] & 255;
+        if (value < 165 || value > 229) return false;
+        return relativeEnclosingSection(
+                raw,
+                width,
+                height,
+                x,
+                y,
+                Math.max(2, (int) Math.ceil(gap * .75)),
+                gap,
+                true,
+                true,
+                charge);
+    }
+
+    static boolean crossingWithRelativePaper(
+            byte[] raw, int width, int height, int x, int y, double gap, LongConsumer charge) {
+        check(raw, width, height, x, y, gap, charge);
+        int value = raw[y * width + x] & 255;
+        if (value < 165 || value > 229) return false;
+        int distance = Math.max(1, (int) Math.ceil(gap * .3));
+        int radius = Math.max(2, (int) Math.ceil(gap * .75));
+        if (y - distance < 0 || y + distance >= height || x - radius < 0 || x + radius >= width)
+            return false;
+        charge.accept(2L * (8L * radius + 16) + 2L * radius + 1 + 2L * distance + 16);
+        int left = raw[y * width + x - radius] & 255, right = raw[y * width + x + radius] & 255;
+        if (left > 229
+                || right > 229
+                || !(section(raw, width, height, x - radius, y, distance, gap, false, false)
+                        || relativeEnclosingSection(
+                                raw,
+                                width,
+                                height,
+                                x - radius,
+                                y,
+                                distance,
+                                gap,
+                                false,
+                                false,
+                                charge))
+                || !(section(raw, width, height, x + radius, y, distance, gap, false, false)
+                        || relativeEnclosingSection(
+                                raw,
+                                width,
+                                height,
+                                x + radius,
+                                y,
+                                distance,
+                                gap,
+                                false,
+                                false,
+                                charge))) return false;
+        int ceiling = Math.max(left, right);
+        for (int col = x - radius; col <= x + radius; col++)
+            if ((raw[y * width + col] & 255) > ceiling) return false;
+        int above = 0, below = 0;
+        for (int d = 1; d <= distance && above == 0; d++) {
+            int v = raw[(y - d) * width + x] & 255;
+            if (v > 229) return false;
+            if (v < 165
+                    || faint(raw, width, height, x, y - d, gap, true, charge)
+                    || shaftWithRelativePaper(raw, width, height, x, y - d, gap, charge)) above = d;
+        }
+        if (above == 0) return false;
+        for (int d = 1; d <= distance && below == 0; d++) {
+            int v = raw[(y + d) * width + x] & 255;
+            if (v > 229) return false;
+            if (v < 165
+                    || faint(raw, width, height, x, y + d, gap, true, charge)
+                    || shaftWithRelativePaper(raw, width, height, x, y + d, gap, charge)) below = d;
+        }
+        return below != 0 && above + below - 1 <= distance;
+    }
+
+    private static boolean relativeEnclosingSection(
+            byte[] raw,
+            int width,
+            int height,
+            int x,
+            int y,
+            int radius,
+            double gap,
+            boolean horizontal,
+            boolean shaft,
+            LongConsumer charge) {
+        charge.accept(16L * radius + 56);
+        int center = horizontal ? x : y, limit = horizontal ? width : height;
+        if (center - radius < 0 || center + radius >= limit) return false;
+        int stride = horizontal ? 1 : width, base = y * width + x;
+        int value = raw[base] & 255, relativePaper = value + 30;
+        if (relativePaper > 255) return false;
+        int requiredPaper = Math.max(210, relativePaper);
+        int a = 0, b = 0, relativeA = 0, relativeB = 0;
+        for (int d = 1; d <= radius; d++) {
+            int tone = raw[base - d * stride] & 255;
+            if (relativeA == 0 && tone >= relativePaper) relativeA = -d;
+            if (tone >= requiredPaper) {
+                a = -d;
+                break;
+            }
+        }
+        for (int d = 1; d <= radius; d++) {
+            int tone = raw[base + d * stride] & 255;
+            if (relativeB == 0 && tone >= relativePaper) relativeB = d;
+            if (tone >= requiredPaper) {
+                b = d;
+                break;
+            }
+        }
+        // Preserve the old section whenever both absolute paper banks exist,
+        // including its geometric refusals. Relative closure only fills the
+        // previously unadmitted exposure domain.
+        if (a == 0 || b == 0) {
+            a = relativeA;
+            b = relativeB;
+        }
+        if (a == 0 || b == 0) return false;
+        int paper = Math.min(raw[base + a * stride] & 255, raw[base + b * stride] & 255);
+        int minimum = 255;
+        for (int d = a + 1; d < b; d++) minimum = Math.min(minimum, raw[base + d * stride] & 255);
+        if (minimum > 229 || paper - minimum < 30 || 2 * value >= paper + minimum) return false;
+        int left = 0, right = 0, threshold = paper + minimum;
+        while (left > a && 2 * (raw[base + (left - 1) * stride] & 255) < threshold) left--;
+        while (right < b && 2 * (raw[base + (right + 1) * stride] & 255) < threshold) right++;
+        return left > a
+                && right < b
+                && right - left + 1 <= Math.max(3, Math.ceil(gap * (shaft ? .35 : 1)));
+    }
 }

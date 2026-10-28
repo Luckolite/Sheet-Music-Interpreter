@@ -439,9 +439,9 @@ final class PrintedBeamShafts {
                     frame.take(n);
                 };
         return PrintedBeamRawContrast.faint(raw, width, height, x, actual, gap, true, charge)
-                || PrintedBeamRawContrast.shaftWithEnclosingPaper(
+                || PrintedBeamRawContrast.shaftWithRelativePaper(
                         raw, width, height, x, actual, gap, charge)
-                || PrintedBeamRawContrast.crossingWithEnclosingPaper(
+                || PrintedBeamRawContrast.crossingWithRelativePaper(
                         raw, width, height, x, actual, gap, charge);
     }
 }

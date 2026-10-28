@@ -3710,12 +3710,12 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "a52786a6e41c61e4d45aec1375654ffd6bcf0b50545f1584e0691c6f3398d7bf",
-      "source_normalized_sha256": "a10206b642cd70d99b1424379df201f122131c42ca596577b2853495614d80f5",
-      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "standalone_sha256": "6f9a345295449084b653911e1d81d9574b4e16ca1fe2547fe0445063468525c6",
-      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
-      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "source_sha256": "ef7ca28bfe65d1fe092f64023d9449252333279ebf1fffcf446aef95d67527e4",
+      "source_normalized_sha256": "32480e1402650c29796a079a5ffb72e788f31bcba0e678233c3467e2a8026198",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "standalone_sha256": "2d06e19132d248253f1f24ab1648dc121db6865e05af7668a2c7d8e90274f118",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
@@ -3755,18 +3755,18 @@
         "original_assertions": 281,
         "boundary": "Genuine head-linked local note-fragment veto; source only, no new models/layouts/authority/caps."
       },
-      "reviewed_source_state": "committed-app-source",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending.",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "8f912db5cc62180070c13b632f9d1536a371961ea820cf37a0a3c0aca820057a",
-      "source_normalized_sha256": "5379c3da4bffc08691f5ec785346fefa6345021fdc4512ef7193972215f3ea8e",
-      "standalone_sha256": "da2d521d387cb322518afe9a48716cccf74010df08a0e8be2f9f1a9fff96faae",
+      "source_sha256": "83039573c2e5dc0c0eb391ead7a409badd84f5304c61d10897ea93c8fdc383f2",
+      "source_normalized_sha256": "c6694d99102679b1b1491ed843c4f9528b17783c59d282897ca2fe9bd46009e2",
+      "standalone_sha256": "60c21dd2fd854e93034f6c85a805faf27d3a4c5f99b9c81e8a83896cb77608cb",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
@@ -3796,9 +3796,9 @@
         "original_assertions": 281,
         "boundary": "Genuine head-linked local note-fragment veto; source only, no new models/layouts/authority/caps."
       },
-      "reviewed_source_state": "committed-app-source",
-      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending.",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "HairpinApertureBarExtentOriginalTest.java": {
@@ -5815,10 +5815,10 @@
     },
     "PrintedBeamRawContrast.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRawContrast.java",
-      "source_sha256": "9c4f17f96ac1f1f83694cb2b5db601307eb87233fda6516e8e2a0692b0ffc4a4",
-      "source_normalized_sha256": "9c4f17f96ac1f1f83694cb2b5db601307eb87233fda6516e8e2a0692b0ffc4a4",
+      "source_sha256": "3982276e77fbf1a30c251f52f6cf27439e66407eaab70b719d83622c807047c3",
+      "source_normalized_sha256": "d60aa2b75d4ac7868e3ee18774aaebf89bcc8d4c431b015e4118f6aab6e67785",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamRawContrast.java",
-      "standalone_sha256": "eb20475c6fcd63633ce1ff278edfdc1563b4cd0853276a0bd224b555805a45e9",
+      "standalone_sha256": "e938ecfcfa0eb30f5c7d078564f5036658786b7d0335dffed618c3e2088d8fff",
       "license": "Apache-2.0",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -5831,7 +5831,11 @@
         "reviewed_app_commit": "27692f06919ddb1f22c45c050a65c3b3e7d11a96"
       },
       "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
-      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b"
+      "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending."
     },
     "PrintedBeamRuleCandidates.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamRuleCandidates.java",
@@ -5898,11 +5902,11 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamShafts.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
-      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "source_sha256": "709ce568cd31e99352a7b4224aad4b5e0d3799a6a2c283b8fe61073e68401271",
-      "source_normalized_sha256": "c0821407d5187ca1af38ca08c10b74e573fde5f665e70dd591a0e8b3d1a1eaa6",
-      "standalone_sha256": "5a41e8062484986c86c3a783e7b0190bd5326baac7ec7da2996bf64a081d532a",
-      "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "source_sha256": "a7b481a240089ab90035dd671aefa776ada49fb8cfff4eeb5b23686f9546c1e1",
+      "source_normalized_sha256": "b4051d86211839ef01eeb872dfc665654fad82dc242059d1b41359eab8e75b70",
+      "standalone_sha256": "dfedbaf05aea3523eba41f240d83f8fa93dd07d18e6fc3b3b8499852dc5f46e5",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
         "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
@@ -5915,13 +5919,14 @@
       },
       "enclosing_paper_review": "docs/enclosing-paper-shafts.md",
       "enclosing_paper_app_commit": "32711fa898f23706a0609b7a518c4c4f5597ce6b",
-      "reviewed_source_state": "committed-app-source",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending.",
       "literal_connected_prefix_review": {
         "documentation": "docs/literal-connected-prefix.md",
         "scope": "Contrast-only literal connected prefix with unchanged per-column length/density, exact saved pixels and existing beam ownership/contact; strict complete-cap path unchanged. No model/layout/allowance changes.",
         "original_junit_tests": 8,
         "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b"
-      }
+      },
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb"
     },
     "PrintedBeamSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
@@ -9528,13 +9533,13 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "d41b737cea1f272750b03f3f85f15c855eeb698fbc39ce48534f4f023e13f88b",
-      "source_normalized_sha256": "0d07bd5a3c6023b7c2129a39531638e400e82dac951d98c7506bbe7829322ace",
-      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "standalone_sha256": "fde6c52b79e3f4e14604ca6dea3c7992c679d923d21438db2bfb0cc0f563138f",
-      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "source_sha256": "5b43c0929ab92283bb02242a51da5e75f2236aaa4605347ed73adef7bdd128f9",
+      "source_normalized_sha256": "2c859ffe4fad91981b032d3c3e141fee53952f8df89325647507cb83169c71a2",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "standalone_sha256": "e5ce7273629683287aa902b157b9cef85e72dc22d397126fb9fd44fc15f6f41d",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
@@ -9550,7 +9555,7 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "reviewed_source_state": "committed-app-source",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending.",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
       "standalone_normalized_sha256": "c3cc41d09802d5cdf08b104deba996abd2dfbf78d9759c1bf032baebf2d3fa23",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
@@ -10510,6 +10515,30 @@
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred."
+    },
+    "BeamRelativePaperTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BeamRelativePaperTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BeamRelativePaperTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "275abdbd9c44932b8495bb42a85e74f105318de45f622b2f609f393e869d6bb4",
+      "source_normalized_sha256": "5968714423327eb924130953610830d64541abe7802d7d5d389f1936648818e9",
+      "standalone_sha256": "a86abb3e961d1480cc8cf71aa524a4370a13990cf7eb8ad69f10090482911f67",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending."
+    },
+    "BeamShaftPaperExposureTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BeamShaftPaperExposureTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BeamShaftPaperExposureTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "03793d5fe906bb9f81c4f17bdb62095361a734ed4b10af7596ffdf744d93c967",
+      "source_normalized_sha256": "328e39a6e42a2af7ee619f76465e19fda2a700b50b17b1607359cb88a98afaf9",
+      "standalone_sha256": "df72f229a36965420a3adca2131ea3592a32edaf9e83009899afefe6bcf85587",
+      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
+      "reviewed_source_state": "Committed app source;56focused app and56standalone Java plus5Python checks;actualfive-page physical beam acceptance. Models/Guide299/audio101 unchanged; cumulative delivery gates pending."
     }
   },
   "finite_curved_approach_review": {
@@ -15333,5 +15362,28 @@
     "history": "889454bf PDF-word adapters were already represented by 052ebc47; history-only reconciliation preserves newer provenance.",
     "source_manifest": "FadedFlagShaft.java explicitly selected for the native decoder.",
     "boundary": "No source scans, private logs, song rules, model or wire changes. Untested background-staff experiment remains excluded."
+  },
+  "beam_relative_paper_exposure_review": {
+    "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+    "documentation": "docs/beam-paper-exposure.md",
+    "recognition": 122,
+    "guide": 299,
+    "audio": 101,
+    "app_focused_tests": 56,
+    "standalone_focused_java_tests": 56,
+    "python_cache_wire_tests": 5,
+    "original_caller_tests": 2,
+    "original_relative_paper_tests": 10,
+    "legacy_comparator_cases": 24576,
+    "actual_native_pages": 5,
+    "complete_groups_restored": 3,
+    "retained_old_native_edges": 365,
+    "retained_old_native_columns": 537,
+    "retained_detached_columns": 21,
+    "all_non_beam_fields_unchanged": true,
+    "legacy_predicates_unchanged": true,
+    "extra_work_prepaid_existing_caps": true,
+    "weights_or_serialized_layouts_changed": false,
+    "installed_or_deployed_claim": false
   }
 }
