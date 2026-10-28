@@ -25,7 +25,7 @@ class SourceBeamWireOriginalTest(unittest.TestCase):
                    rests=[],techniqueChanges=[],dynamicChanges=[],playbackDirections=[],expressiveEvents=[])
         old=guide_writer.encode(score,296);current=guide_writer.encode(score,297)
         self.assertEqual(297,struct.unpack_from('>i',current)[0])
-        self.assertEqual(120,guide_writer.RECOGNITION_REVISION)
+        self.assertEqual(121,guide_writer.RECOGNITION_REVISION)
         self.assertEqual(old[4:],current[4:len(old)])
         self.assertEqual(beam_source.encode_source(None,0),current[len(old):])
         with self.assertRaises(ValueError):guide_writer.encode(score,max(guide_writer.SUPPORTED_GUIDE_VERSIONS)+1)

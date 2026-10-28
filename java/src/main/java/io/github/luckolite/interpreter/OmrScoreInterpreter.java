@@ -14504,12 +14504,12 @@ final class OmrScoreInterpreter {
             Staff staff = nearestHeadStaff(staffs, candidate.centerY);
             if (staff == null) continue;
             float gap = staff.gap;
-            if (candidate.area > gap * gap * .65f
-                    || candidate.maxX - candidate.minX + 1 > gap * 1.2f) continue;
+            if (candidate.area > Math.round(gap * gap * .65f)
+                    || candidate.maxX - candidate.minX + 1 > gap * 1.5f) continue;
             for (Component main : heads) {
                 float distance = Math.abs(main.centerY - candidate.centerY);
                 if (main == candidate
-                        || main.area < candidate.area * 2.2f
+                        || main.area < candidate.area * 1.7f
                         || main.maxX - main.minX + 1 < gap
                         || distance < gap * 1.2f
                         || distance > gap * 7f
@@ -14519,6 +14519,16 @@ final class OmrScoreInterpreter {
                         || (candidate.centerY - main.centerY) * stem[2] <= 0
                         || (candidate.centerY - stem[1]) * stem[2] > gap * .3f
                         || Math.abs(candidate.centerX - stem[0]) > gap * .9f) continue;
+                boolean expandedIsland =
+                        candidate.area > gap * gap * .65f
+                                || candidate.maxX - candidate.minX + 1 > gap * 1.2f
+                                || main.area < candidate.area * 2.2f;
+                // Broader mask islands require balance around the proven shaft;
+                // a side-attached chord head retains its independent veto.
+                if (expandedIsland
+                        && (Math.abs(candidate.centerX - stem[0]) > gap * .2f
+                                || candidate.minX > stem[0] - gap * .35f
+                                || candidate.maxX < stem[0] + gap * .35f)) continue;
                 int edge = stem[2] > 0 ? main.maxY : main.minY;
                 // A staff rule through the stroke can hide both of its far ends.
                 // Follow only thick ink on either side of the stem in that case.

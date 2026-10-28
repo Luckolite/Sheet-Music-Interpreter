@@ -152,4 +152,123 @@ public class TremoloRhythmTest {
         assertEquals(2, notes.size());
         for (var n : notes()) assertEquals(.25, NoteOrnament.tremoloBeats(n.articulations()), 0);
     }
+
+    @Test
+    public void broadStrokeMaskIslandsDoNotBecomeChordTones() {
+        build(true, 1, false, false);
+        for (int y = 150; y <= 163; y++)
+            for (int x = 62; x <= 78; x++) if ((gray[y * W + x] & 255) < 170) labels[y * W + x] = 2;
+        byte[] rawBefore = gray.clone(), maskBefore = labels.clone();
+        var notes = notes();
+        assertEquals(2, notes.size());
+        for (var n : notes()) {
+            assertEquals(.5, ScoreNoteTiming.writtenDurationBeats(n), 0);
+            assertEquals(.25, NoteOrnament.tremoloBeats(n.articulations()), 0);
+        }
+        assertArrayEquals(rawBefore, gray);
+        assertArrayEquals(maskBefore, labels);
+    }
+
+    private void broadIsland() {
+        build(true, 1, false, false);
+        for (int y = 150; y <= 163; y++)
+            for (int x = 62; x <= 78; x++) if ((gray[y * W + x] & 255) < 170) labels[y * W + x] = 2;
+    }
+
+    @Test
+    public void oneSidedRawStrokeCannotGainTremoloFromBroadMask() {
+        broadIsland();
+        for (int y = 150; y <= 163; y++)
+            for (int x = 60; x <= 68; x++) gray[y * W + x] = (byte) 255;
+        var found = notes();
+        assertEquals(2, found.size());
+        assertTrue(found.get(0).positionInMeasure() < found.get(1).positionInMeasure());
+        assertEquals(0, NoteOrnament.tremoloBeams(found.get(0).articulations()));
+        assertEquals(2, NoteOrnament.tremoloBeams(found.get(1).articulations()));
+    }
+
+    @Test
+    public void erasedRawStrokeCannotGainTremoloFromBroadMask() {
+        broadIsland();
+        for (int y = 150; y <= 163; y++)
+            for (int x = 60; x <= 80; x++) gray[y * W + x] = (byte) 255;
+        for (int y = 150; y <= 163; y++) gray[y * W + 70] = 0;
+        var found = notes();
+        assertEquals(2, found.size());
+        assertTrue(found.get(0).positionInMeasure() < found.get(1).positionInMeasure());
+        assertEquals(0, NoteOrnament.tremoloBeams(found.get(0).articulations()));
+        assertEquals(2, NoteOrnament.tremoloBeams(found.get(1).articulations()));
+    }
+
+    private void genuineChordCompetitor(boolean hollow) throws Exception {
+        build(true, 1, false, false);
+        int area = 0;
+        for (int y = 154; y <= 160; y++)
+            for (int x = 70; x <= 86; x++)
+                if (Math.pow((x - 78) / 8., 2) + Math.pow((y - 157) / 3., 2) <= 1) {
+                    labels[y * W + x] = 2;
+                    area++;
+                    gray[y * W + x] =
+                            (byte)
+                                    (hollow
+                                                    && Math.pow((x - 78) / 4., 2)
+                                                                    + Math.pow((y - 157) / 1.5, 2)
+                                                            < 1
+                                            ? 255
+                                            : 0);
+                }
+        byte[] rawBefore = gray.clone(), maskBefore = labels.clone();
+        var component = Class.forName(OmrScoreInterpreter.class.getName() + "$Component");
+        var ctor = component.getDeclaredConstructors()[0];
+        ctor.setAccessible(true);
+        var principal = ctor.newInstance(184, 71, 90, 92, 104, 80.054344f, 98f);
+        var competitor = ctor.newInstance(area, 70, 86, 154, 160, 78f, 157f);
+        var staffClass = Class.forName(OmrScoreInterpreter.class.getName() + "$Staff");
+        var staffCtor = staffClass.getDeclaredConstructor(float.class, float.class, float.class);
+        staffCtor.setAccessible(true);
+        var staff = staffCtor.newInstance(80f, 128f, 12f);
+        var fragmentsMethod =
+                OmrScoreInterpreter.class.getDeclaredMethod(
+                        "stemSlashFragments",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        List.class,
+                        List.class);
+        fragmentsMethod.setAccessible(true);
+        List<?> fragments =
+                (List<?>)
+                        fragmentsMethod.invoke(
+                                null, gray, W, H, List.of(principal, competitor), List.of(staff));
+        assertFalse(
+                "A genuine chord head remains an independent competitor",
+                fragments.contains(competitor));
+        var countMethod =
+                OmrScoreInterpreter.class.getDeclaredMethod(
+                        "tremoloStrokeCounts",
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        component,
+                        float.class,
+                        List.class);
+        countMethod.setAccessible(true);
+        int[] counts =
+                (int[])
+                        countMethod.invoke(
+                                null, gray, W, H, principal, 12f, List.of(principal, competitor));
+        assertEquals(0, counts[0]);
+        assertArrayEquals(rawBefore, gray);
+        assertArrayEquals(maskBefore, labels);
+    }
+
+    @Test
+    public void genuineFilledChordCompetitorSurvivesBroadStrokeFilter() throws Exception {
+        genuineChordCompetitor(false);
+    }
+
+    @Test
+    public void genuineHollowChordCompetitorSurvivesBroadStrokeFilter() throws Exception {
+        genuineChordCompetitor(true);
+    }
 }

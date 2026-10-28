@@ -3710,15 +3710,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "3235dc0ab6f4f5a9daa15c68e82531d5e383cc7fe18204f4b3516f8cc1f1d689",
-      "source_normalized_sha256": "170c7c9aaf32e566304497d94a252d318472230c42914d0ec7bb144621859848",
+      "source_sha256": "a52786a6e41c61e4d45aec1375654ffd6bcf0b50545f1584e0691c6f3398d7bf",
+      "source_normalized_sha256": "a10206b642cd70d99b1424379df201f122131c42ca596577b2853495614d80f5",
       "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "standalone_sha256": "cb8ba758c7ceddedcfa0a4b17a997c391421d94ffb639509d9699b143702dbaf",
-      "reviewed_app_commit": "f775c4e20d3707ae4d6f545054be67d1ea808a14",
-      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "standalone_sha256": "6f9a345295449084b653911e1d81d9574b4e16ca1fe2547fe0445063468525c6",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -3739,7 +3739,7 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "600a36445aa5ffb9483490368118c0257df61ed1881155bc0ff7387576211156",
+      "standalone_normalized_sha256": "b40e4500d32164d80c87494e3edbcaaa3f679365528a01816825c7fe4bb4dcdc",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
@@ -3755,18 +3755,19 @@
         "original_assertions": 281,
         "boundary": "Genuine head-linked local note-fragment veto; source only, no new models/layouts/authority/caps."
       },
-      "reviewed_source_state": "committed-app-source"
+      "reviewed_source_state": "committed-app-source",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "4d66a60ea7766f5e0b278d6c9d67bf7763ed9cf85c4d37b90efd6b8aef16c9d3",
-      "source_normalized_sha256": "08264e6e3e35dd3139970e576899126ed1ed35be678b5c0cb2afbb704aa1df49",
-      "standalone_sha256": "95d677d7c7865fd241c89b13c18d35c133bd9aab24a86a1573db5006474fa582",
+      "source_sha256": "8f912db5cc62180070c13b632f9d1536a371961ea820cf37a0a3c0aca820057a",
+      "source_normalized_sha256": "5379c3da4bffc08691f5ec785346fefa6345021fdc4512ef7193972215f3ea8e",
+      "standalone_sha256": "da2d521d387cb322518afe9a48716cccf74010df08a0e8be2f9f1a9fff96faae",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "f775c4e20d3707ae4d6f545054be67d1ea808a14",
-      "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal.",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -3783,7 +3784,7 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "9f2287e44ed44af4512881bd191133675668aeb87864029f5b3740d17c6f880a",
+      "standalone_normalized_sha256": "4634520183279e46d86ee91bffd1072435517485f95258158fc896e2e13187d9",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
@@ -3796,7 +3797,9 @@
         "boundary": "Genuine head-linked local note-fragment veto; source only, no new models/layouts/authority/caps."
       },
       "reviewed_source_state": "committed-app-source",
-      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md."
+      "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "HairpinApertureBarExtentOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
@@ -5112,14 +5115,14 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c42cf4734c48275f3b2427c5b11eda217a19f418d71b2ab6416cb8f2b5eaa8a4",
+      "source_sha256": "58c24807e2a3fd74994af858db1e8eb23914e1492498768cedb8c737ef9b066f",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "c42cf4734c48275f3b2427c5b11eda217a19f418d71b2ab6416cb8f2b5eaa8a4",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "3279e9c51f4103a137052db18b8b4f7dfd30672c5b09d59be17d7edd8360dac2",
+      "source_normalized_sha256": "58c24807e2a3fd74994af858db1e8eb23914e1492498768cedb8c737ef9b066f",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
+      "standalone_sha256": "5c5c360ade6063be3212acd9991b797151fae0b6ccd85fa709d06763c37b8922",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
-      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "seeded_flag_pocket_review_note": "Semantic admission uses existing flag-pocket geometry only when a recognized other head has an attached raw shaft matching the same column and direction. Legacy faded-recovery overload delegates with null owner, retaining its behavior. Eight original semantic-seed methods include independent grace shafts; both released curved/straight entrance classes pass. No thresholds, private raster/model/dependency or layout changes.",
@@ -5129,7 +5132,7 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "bd8f9a52e394307a55aa5b2e97a59ff15b227a1f8b24800781e69bcfe7082444",
+      "standalone_normalized_sha256": "b8621384a02b114de021155f2108421dd275cc9811d58cd72fe557b45af91bed",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
@@ -5167,7 +5170,8 @@
         "scope": "Complete omitted integer thresholds within unchanged175..205 interval, after full old roster; all existing25-level body/core and owner predicates retained.",
         "rollout": "Source only; paired cumulative packaging deferred during active goal.",
         "app_commit": "106af89348d2e89b0768cccf1b7900174bead69c"
-      }
+      },
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -9524,15 +9528,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "ea9dd35bca68dd7ca94916a8dcda3bdd3cf42b06ba58d9b707aadec30cbb2468",
-      "source_normalized_sha256": "9e9d60bdc39be07b3de6366ea71c15797ff8092ce495e676b543d7ae7d1fdd13",
+      "source_sha256": "d41b737cea1f272750b03f3f85f15c855eeb698fbc39ce48534f4f023e13f88b",
+      "source_normalized_sha256": "0d07bd5a3c6023b7c2129a39531638e400e82dac951d98c7506bbe7829322ace",
       "review_note": "Reviewed local dyadic sample-family consensus and invocation-local paid contrast memo; package-only Java adaptation, unchanged Guide299/audio101 layouts and allowances. Original procedural controls; see docs/printed-beam-local-samples.md.",
-      "standalone_sha256": "ccabc34a30346c740470715d3782c6e1b23fc630b159be6fcc0b4f5393941ffe",
-      "reviewed_app_commit": "f775c4e20d3707ae4d6f545054be67d1ea808a14",
+      "standalone_sha256": "fde6c52b79e3f4e14604ca6dea3c7992c679d923d21438db2bfb0cc0f563138f",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Reviewed recognition118 source committed; matched packaging/deployment deferred during active goal.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -9548,12 +9552,13 @@
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
       "reviewed_source_state": "committed-app-source",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
-      "standalone_normalized_sha256": "2c6248740b84f8e0b499194c14d3444ea131bd93c8cf39c5ef34a1c6f9eeae3c",
+      "standalone_normalized_sha256": "c3cc41d09802d5cdf08b104deba996abd2dfbf78d9759c1bf032baebf2d3fa23",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
       "recognition117_review_note": "Reviewed cache epoch117 and matching historical-format regression; unchanged Guide299 layouts and audio99. Namespace/import differences retained.",
-      "recognition118_review_note": "Only recognition revision117 to118; retained reviewed native top-level versus standalone relative imports, Guide299/audio100 unchanged; faint stem original regressions and matched source contracts."
+      "recognition118_review_note": "Only recognition revision117 to118; retained reviewed native top-level versus standalone relative imports, Guide299/audio100 unchanged; faint stem original regressions and matched source contracts.",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred."
     },
     "hairpin-export.js": {
       "source_path": "app/src/youtube/assets/musescore/hairpin-export.js",
@@ -10457,6 +10462,54 @@
       "scoped_reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
       "review_note": "Reviewed exposure-invariant bilateral five-rule contrast and exact nonempty printed-column membership; original synthetic regressions contain no private score material.",
       "reviewed_source_state": "Committed app source;236app and224standalone focused tests;actualfive-page native source acceptance. Clocks/modifier bindings and cumulative installed/Hub gates remain open."
+    },
+    "FadedFlagShaft.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/FadedFlagShaft.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FadedFlagShaft.java",
+      "license": "Apache-2.0",
+      "source_sha256": "3d357b85c3c8bfdf10ac7769ab5b288eacefaceb7e7d80b56504a718c87a9971",
+      "source_normalized_sha256": "a1a6442c47bb66813dabd270445d95d6483f23eda995c81b45bc660a793ba1b5",
+      "standalone_sha256": "1303265a06055bb68fdef3e1e844068f28e4a05f6b96a4ad5f3c69cff99a5263",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred."
+    },
+    "ReturningFlagCountTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ReturningFlagCountTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ReturningFlagCountTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "4b9fe11e7fc8e74a4c4bfe2beb5d884aa0a5e6ff8dbbd45ea2818284e5a2792f",
+      "source_normalized_sha256": "4d7a63ab561dcad505b6f91a8739b97bff2084c5d5d3c648dff8da85ae12332a",
+      "standalone_sha256": "fcf2b73caf0828c7fcb11d08fd40da93a61383f165cd5c955bb159b3861ec7b6",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred."
+    },
+    "TremoloRhythmTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TremoloRhythmTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TremoloRhythmTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "cc1b128512651f9b3f54f8ccc085cd2957742f590d22c5d2501bd04d57b8ee21",
+      "source_normalized_sha256": "5296d4fda35c56ed0ae0fd0977461bce3e5314df4a9e553f98937ef9787531e6",
+      "standalone_sha256": "cacf6ac8ad7aad4f8d07e7e6fce0c9eb803f9ba31f94b0caf814a589715e59ad",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred."
+    },
+    "FadedFlagShaftTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FadedFlagShaftTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FadedFlagShaftTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "7d53d44e20a28ae74532f8bb5c0ed0910da5b53087617cc72e3883cd80beaccd",
+      "source_normalized_sha256": "ceabfd8f99adae67f0a96d1b18dbd5e73ccc4bdb36ee74c78b80d4839d0dc35a",
+      "standalone_sha256": "e3b5a527ccd724bd77a0d16e305641989f0ecceee7e5ca988c868042d47ef05d",
+      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
+      "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred."
     }
   },
   "finite_curved_approach_review": {
@@ -15272,5 +15325,13 @@
     ],
     "models_or_layouts_changed": false,
     "installed_or_deployed_claim": false
+  },
+  "retained_branch_recovery_review": {
+    "documentation": "docs/retained-branch-integration.md",
+    "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+    "scope": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
+    "history": "889454bf PDF-word adapters were already represented by 052ebc47; history-only reconciliation preserves newer provenance.",
+    "source_manifest": "FadedFlagShaft.java explicitly selected for the native decoder.",
+    "boundary": "No source scans, private logs, song rules, model or wire changes. Untested background-staff experiment remains excluded."
   }
 }
