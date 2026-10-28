@@ -14840,7 +14840,7 @@
     "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
     "documentation": "docs/qualified-dynamic-source.md",
     "adapter_boundary": "Mapped native MusicalOcr uses equivalent standalone invocation-local adapter and SheetInterpreter final normalization. Android OmrMeasureAnalyzer remains separately reviewed. Exact original expression Acquisition and existing inference/strip/glyph/supplement ordering are retained; no record-layout change.",
-    "validation": "70 focused Android tests;143 standalone dynamic, source-provenance, cache and adapter tests. Preceding staccato baseline full suite14482tests/1881classes reused. Actual current501-source native model/OCR page run changes only one duplicate point; final expressions, clock and all other page fields equal. Initial targeted runner fixture-cwd issue corrected without source changes.",
+    "validation": "70 focused Android tests;143 standalone dynamic, source-provenance, cache and adapter tests. Preceding staccato baseline full suite14482tests/1881classes reused. Actual current501-source native model/OCR page run changes only one duplicate point; final expressions, clock and all other page fields equal.",
     "deployment": "Source checkpoint; cumulative paired app/worker package and deployment remain required. No model, threshold, resource cap or wire changes.",
     "platform_adapter_review": {
       "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java": "c05adb8848580c0319161a07f8afd7e5ed42173354aa096d25fb64912afb89c2",
