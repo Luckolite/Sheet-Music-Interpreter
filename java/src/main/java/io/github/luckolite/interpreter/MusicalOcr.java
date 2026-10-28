@@ -676,6 +676,71 @@ public final class MusicalOcr {
         return List.copyOf(words);
     }
 
+    /** Keeps the original expression acquisition while carrying one invocation's sudden source. */
+    static final class SuddenDynamicAcquisition {
+        @FunctionalInterface
+        interface Read {
+            DirectionWordProvenance.Acquisition acquire() throws Exception;
+        }
+
+        private final DirectionWordProvenance.Acquisition expressionAcquisition;
+        private final SuddenDynamicSource.Root root;
+        private final List<SuddenDynamicSource.Group> groups;
+
+        private SuddenDynamicAcquisition(
+                DirectionWordProvenance.Acquisition expressionAcquisition,
+                SuddenDynamicSource.Root root,
+                List<SuddenDynamicSource.Group> groups) {
+            this.expressionAcquisition = expressionAcquisition;
+            this.root = root;
+            this.groups = List.copyOf(groups);
+        }
+
+        static SuddenDynamicAcquisition acquire(
+                byte[] gray, int width, int height, Read read) throws Exception {
+            var root = new SuddenDynamicSource.Root(gray, width, height);
+            var acquired = read.acquire();
+            var groups = new ArrayList<SuddenDynamicSource.Group>();
+            var seen = new HashSet<SuddenDynamicSource.ReadFrame>();
+            for (var origin : acquired.origins()) {
+                var frame =
+                        new SuddenDynamicSource.ReadFrame(
+                                origin.parent(), origin.left(), origin.top(),
+                                origin.right(), origin.bottom(), origin.scale());
+                if (!seen.add(frame)) continue;
+                var group =
+                        SuddenDynamicSource.capture(
+                                root, origin.text(), origin.parent(),
+                                origin.left(), origin.top(), origin.right(),
+                                origin.bottom(), origin.scale());
+                if (group != null) groups.add(group);
+            }
+            return new SuddenDynamicAcquisition(acquired, root, groups);
+        }
+
+        DirectionWordProvenance.Acquisition expressionAcquisition() {
+            return expressionAcquisition;
+        }
+
+        List<PlayingTechniqueDetector.Word> normalize(
+                List<PlayingTechniqueDetector.Word> words,
+                byte[] gray, int width, int height) {
+            return SuddenDynamicSource.normalize(words, root, groups, gray, width, height);
+        }
+    }
+
+    SuddenDynamicAcquisition acquiredDynamicsWithSuddenSource(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<PlayingTechniqueDetector.Word> ordinary)
+            throws Exception {
+        return SuddenDynamicAcquisition.acquire(
+                gray, width, height,
+                () -> acquiredDynamics(gray, width, height, staffs, ordinary));
+    }
+
     DirectionWordProvenance.Acquisition acquiredDynamics(
             byte[] gray,
             int width,

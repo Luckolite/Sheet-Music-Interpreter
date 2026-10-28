@@ -4644,19 +4644,20 @@
     },
     "MusicalOcr.java": {
       "source_path": "tools/native-worker/NativeMusicalOcr.java",
-      "source_sha256": "9f0fa0b5f9d94aec4395e9a7822571f96fcbc9d55af8b70d0583292a8e2d87f9",
-      "source_normalized_sha256": "9c14568e80c9431ad3883a7aaab37c83f4021bc567d72c99abe094c5c092b032",
-      "standalone_sha256": "eb9ccef6597d5422eefa1598eceaf8d9f29661c3ab956aa23c588ca4ead150d4",
+      "source_sha256": "69397ce84abd2371c4da250e82621ca065a6371be8e0a452f57353b6c7cd3fc5",
+      "source_normalized_sha256": "69397ce84abd2371c4da250e82621ca065a6371be8e0a452f57353b6c7cd3fc5",
+      "standalone_sha256": "3c58c03c0a446e4801b70cdec5be4c0a6fc82deda0e9100244a2e6b1b3d071ff",
       "license": "Apache-2.0",
       "review_note": "Accepted same-value, same-owner meter readings normalize horizontal padding only when their nonempty sampled global SYMBOL pixel sets match exactly and the union adds none. Rival readings remain visible; no outside-component ink ownership, new OCR votes, models or private fixtures.",
-      "reviewed_app_commit": "d993f7efd0ace0b3f4cbcb80dd89a3c6e1fbd861",
+      "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
       "reviewed_app_base_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "scoped_reviewed_app_commit": "a27d30c45fee5b1c64c64a47bcb9277765c6f063",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MusicalOcr.java",
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "reviewed_app_state": "Reviewed recognition101 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_normalized_sha256": "eb9ccef6597d5422eefa1598eceaf8d9f29661c3ab956aa23c588ca4ead150d4",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "acd88b660dee91f724cc8ffa3464347bfe1ffe722bcb263a21b7a6394d459ed9",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "qualified_dynamic_source_adapter_review": "Retain standalone caller-owned inference, existing strip acquisition, glyph and supplement ordering. Bind source before actual OCR, normalize final dynamic words from actual crop/scale origins, and preserve exact original expression acquisition. Additive semantic adapter for native source-identity repair; no whole-wrapper copy."
     },
     "MusicalOcrEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MusicalOcrEvidence.java",
@@ -8467,10 +8468,10 @@
       "source_path": "tools/native-worker/NativePageGuide.java",
       "source_sha256": "c0df11cae822a781e71a2ca9a7b93c745d489b25884d5e9330895c02c491f307",
       "source_normalized_sha256": "028a5b30a7b43194fb6b93dfb926710a607f58d245a568464758191beaab51f1",
-      "standalone_sha256": "f0c8120c702876f3d976c192b664085d3692f1ed776a292e2a26c3f59167182c",
+      "standalone_sha256": "65a8f839578fb89d34d7f032b4c29cf476500f7b217b0341b1803605b92b56fc",
       "license": "Apache-2.0",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
+      "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "bow291_review_note": "Standalone caller and native NativePageGuide both add raw bow acquisition through detectWithBows using unchanged actual labels, gray, staffs, measures and notes; resource/constructor/diagnostic adapters remain portable.",
@@ -8482,8 +8483,9 @@
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "f0c8120c702876f3d976c192b664085d3692f1ed776a292e2a26c3f59167182c",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "8c540534f7320c3e511997297dad7ae83575038eb9be60d4dfb872245e7702dc",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "qualified_dynamic_source_adapter_review": "Retain standalone caller-owned inference, existing strip acquisition, glyph and supplement ordering. Bind source before actual OCR, normalize final dynamic words from actual crop/scale origins, and preserve exact original expression acquisition. Additive semantic adapter for native source-identity repair; no whole-wrapper copy."
     },
     "SheetWrittenTieLinks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetWrittenTieLinks.java",
@@ -10114,6 +10116,35 @@
       "standalone_normalized_sha256": "a2b110c654a4b95cfc528da6146013a121710154b9a2ca578fd73a43bd8bd8ba",
       "reviewed_app_commit": "083201768a545cfbde1177a011a47cb70923b91a",
       "complete_raw_staccato_review": "Complete original raw dot components use the existing raster law before dark-core extraction. Joined/normalized additions retain existing admission. Original procedural controls; thresholds, models, palettes and caps unchanged."
+    },
+    "SuddenDynamicSource.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/SuddenDynamicSource.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/SuddenDynamicSource.java",
+      "source_sha256": "b14226836a9ef772b2ad12f2c4cad5caadcf3e831b7c9c0a1d25c633a052ffcb",
+      "source_normalized_sha256": "b14226836a9ef772b2ad12f2c4cad5caadcf3e831b7c9c0a1d25c633a052ffcb",
+      "standalone_sha256": "0447345618e58e92c5c8f0b74cf14dd09280352fee2296601a83aa486e5ade87",
+      "standalone_normalized_sha256": "bdce8e8a008db0887ff9bef9a0d4c3cbfcf8a882de02b3f7ddfad84b14674fa3",
+      "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
+      "license": "Apache-2.0",
+      "review_note": "Original procedural OCR/raster controls and pure helper; package-only executable adaptation with AOSP formatting. No private score, device or library material."
+    },
+    "SuddenDynamicSourceOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/SuddenDynamicSourceOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/SuddenDynamicSourceOriginalTest.java",
+      "source_sha256": "89c46741f84dd0e9d2de17cdb71163eb3b6e492aa14f71f76d1d8d7d7179beb5",
+      "source_normalized_sha256": "89c46741f84dd0e9d2de17cdb71163eb3b6e492aa14f71f76d1d8d7d7179beb5",
+      "standalone_sha256": "578faa451e9cb646165dd8135faf87c1f84077a7239e193c5c33db2e4ba7617b",
+      "standalone_normalized_sha256": "b4f954451ec56f2a10dd05554e722dca138c249b47cb8e2b52a407ffaf8da86a",
+      "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
+      "license": "Apache-2.0",
+      "review_note": "Original procedural OCR/raster controls and pure helper; package-only executable adaptation with AOSP formatting. No private score, device or library material."
+    },
+    "SuddenDynamicAdapterOriginalTest.java": {
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/SuddenDynamicAdapterOriginalTest.java",
+      "standalone_sha256": "bb9a2f29d7ae9f13921c4be480a517a79719a46901bdf7a266d2594da8c33fe5",
+      "license": "Apache-2.0",
+      "origin": "Original procedural standalone adapter integration regression",
+      "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00"
     }
   },
   "finite_curved_approach_review": {
@@ -14804,5 +14835,18 @@
     "documentation": "docs/complete-raw-staccato.md",
     "adaptation": "Package-only source and original test; reviewed native decoder selection already includes detector. No worker record-layout changes.",
     "validation_boundary": "Original procedural tests plus private all-five-page saved OMR qualification; cumulative native model and paired deployment remain completion gates."
+  },
+  "qualified_dynamic_source_review": {
+    "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00",
+    "documentation": "docs/qualified-dynamic-source.md",
+    "adapter_boundary": "Mapped native MusicalOcr uses equivalent standalone invocation-local adapter and SheetInterpreter final normalization. Android OmrMeasureAnalyzer remains separately reviewed. Exact original expression Acquisition and existing inference/strip/glyph/supplement ordering are retained; no record-layout change.",
+    "validation": "70 focused Android tests;143 standalone dynamic, source-provenance, cache and adapter tests. Preceding staccato baseline full suite14482tests/1881classes reused. Actual current501-source native model/OCR page run changes only one duplicate point; final expressions, clock and all other page fields equal. Initial targeted runner fixture-cwd issue corrected without source changes.",
+    "deployment": "Source checkpoint; cumulative paired app/worker package and deployment remain required. No model, threshold, resource cap or wire changes.",
+    "platform_adapter_review": {
+      "app/src/main/java/com/musicsheets/app/pdf/OmrMeasureAnalyzer.java": "c05adb8848580c0319161a07f8afd7e5ed42173354aa096d25fb64912afb89c2",
+      "tools/native-worker/NativeMusicalOcr.java": "69397ce84abd2371c4da250e82621ca065a6371be8e0a452f57353b6c7cd3fc5",
+      "tools/native-worker/decoder-sources.txt": "00c05ac6cb02221c6da8fec673742d4a03a94ffbedc1984f7465af853c167cac"
+    },
+    "standalone_adapter_original_tests": 3
   }
 }

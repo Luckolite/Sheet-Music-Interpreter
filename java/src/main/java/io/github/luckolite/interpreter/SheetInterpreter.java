@@ -281,8 +281,11 @@ public final class SheetInterpreter {
         notes = ScoreTiePitchGuard.apply(notes, score.keyChanges());
         var dynamicEvidence = new java.util.ArrayList<>(words);
         DirectionWordProvenance.Acquisition dynamicAcquisition = null;
+        MusicalOcr.SuddenDynamicAcquisition suddenAcquisition = null;
         if (ocr != null) {
-            dynamicAcquisition = ocr.acquiredDynamics(gray, width, height, staffs, words);
+            suddenAcquisition =
+                    ocr.acquiredDynamicsWithSuddenSource(gray, width, height, staffs, words);
+            dynamicAcquisition = suddenAcquisition.expressionAcquisition();
             for (var word : dynamicAcquisition.words())
                 if (!dynamicEvidence.contains(word)) dynamicEvidence.add(word);
         }
@@ -295,6 +298,8 @@ public final class SheetInterpreter {
             dynamicWords =
                     ocr.supplementDynamics(
                             gray, width, height, staffs, measures, notes, dynamicWords);
+        if (suddenAcquisition != null)
+            dynamicWords = suddenAcquisition.normalize(dynamicWords, gray, width, height);
         var techniqueWords = new java.util.ArrayList<>(words);
         if (ocr != null)
             techniqueWords.addAll(
