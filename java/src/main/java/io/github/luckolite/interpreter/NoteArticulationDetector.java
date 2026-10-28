@@ -933,6 +933,10 @@ final class NoteArticulationDetector {
         glyphs.addAll(paperCandidates);
         List<Glyph> candidates = new ArrayList<>(faintAccents), claimedAccents = new ArrayList<>();
         candidates.addAll(glyphs);
+        int fringeStart = candidates.size();
+        if (raw)
+            candidates.addAll(
+                    closedDotFringes(originalGlyphs, joinedOwners, notes, gray, width, height));
         List<Glyph> printedClaims = new ArrayList<>();
         CompoundClaims compoundClaims = new CompoundClaims(notes.size());
         // A peak-shaped first letter needs word context on its right as well.
@@ -1010,6 +1014,7 @@ final class NoteArticulationDetector {
                 float dx = Math.abs(glyph.x() - note.x) / note.gap,
                         dy = Math.abs(glyph.y() - note.y) / note.gap;
                 if (dx > .7f || dy < .7f || dy > 8f) continue;
+                if (glyphIndex >= fringeStart && dy > 3f) continue;
                 boolean faint = faintAccents.contains(glyph);
                 boolean softFaint = softFaintAccents.contains(glyph);
                 float glyphWidth = glyph.right - glyph.left + 1,
@@ -1040,6 +1045,7 @@ final class NoteArticulationDetector {
                         && glyphHeight <= note.gap * .62f
                         && rasterCoreMark(glyph, width, note.gap) == NoteArticulation.STACCATO)
                     candidate = NoteArticulation.STACCATO;
+                if (glyphIndex >= fringeStart) candidate = NoteArticulation.STACCATO;
                 // A blurred detached body must prove its existing shape again on dark ink.
                 // Keep all ownership, semantic notation, word, staff and dot guards below.
                 boolean recoveredCore = false;
@@ -2042,6 +2048,204 @@ final class NoteArticulationDetector {
             }
         }
         return false;
+    }
+
+    /** Optional local acquisition; existing candidates and all later role guards retain priority. */
+    private static List<Glyph> closedDotFringes(
+            List<Glyph> originals,
+            java.util.Map<Glyph, Integer> joined,
+            List<Anchor> notes,
+            byte[] gray,
+            int width,
+            int height) {
+        return closedDotFringes(originals, joined, notes, gray, width, height, 262144, 1000000);
+    }
+
+    private static List<Glyph> closedDotFringes(
+            List<Glyph> originals,
+            java.util.Map<Glyph, Integer> joined,
+            List<Anchor> notes,
+            byte[] gray,
+            int width,
+            int height,
+            long cellsLeft,
+            long pairsLeft) {
+        List<Glyph> added = new ArrayList<>();
+        // One invocation funds at most 262144 local cells (including histogram setup)
+        // and 1000000 owner comparisons. Every ROI allocation/scan is prepaid.
+        float maximumGap = 0;
+        for (Anchor n : notes)
+            if (Float.isFinite(n.gap) && n.gap > 0 && n.gap <= 64)
+                maximumGap = Math.max(maximumGap, n.gap);
+        for (Glyph core : originals) {
+            int cw = core.right - core.left + 1, ch = core.bottom - core.top + 1;
+            if (joined.containsKey(core) || core.count < 3 || Math.max(cw, ch) > maximumGap * .62f)
+                continue;
+            if (pairsLeft < notes.size()) return List.of();
+            pairsLeft -= notes.size();
+            Anchor owner = null;
+            for (Anchor n : notes) {
+                if (!Float.isFinite(n.gap) || n.gap <= 0 || n.gap > 64) continue;
+                float dx = Math.abs(core.x() - n.x) / n.gap, dy = Math.abs(core.y() - n.y) / n.gap;
+                if (dx <= .7f && dy >= .7f && dy <= 3f) {
+                    if (owner != null) {
+                        owner = null;
+                        break;
+                    }
+                    owner = n;
+                }
+            }
+            if (owner == null || Math.max(cw, ch) > owner.gap * .62f) continue;
+            float gap = owner.gap;
+            int pad = (int) Math.ceil(gap);
+            int l = core.left - pad,
+                    r = core.right + pad,
+                    t = core.top - pad,
+                    b = core.bottom + pad;
+            if (l <= 0 || t <= 0 || r >= width - 1 || b >= height - 1) continue;
+            int w = r - l + 1, h = b - t + 1, area = w * h;
+            if (cellsLeft < area + 256L) return List.of();
+            cellsLeft -= area + 256L;
+            // A local cell is read at most for histogram, flood, row/column proof and
+            // radial proof; each proof has <=8 neighbor visits. Peak scratch <=32*area
+            // bytes plus histogram, and retained literal pixels <=4*funded cells.
+            if (classify(core, width, gap, core.y() < owner.y) != 0
+                    || roundedAngular(core, width, gap, core.y() < owner.y) != 0
+                    || roundedTenuto(core, width, gap)
+                    || rasterCoreMark(core, width, gap) != 0) continue;
+            Glyph existingCore = printedCore(core, gray, width, height);
+            if (existingCore != null
+                    && (classify(existingCore, width, gap, core.y() < owner.y) != 0
+                            || roundedAngular(existingCore, width, gap, core.y() < owner.y) != 0
+                            || rasterCoreMark(existingCore, width, gap) != 0)) continue;
+            int[] histogram = new int[256], queue = new int[area];
+            byte[] state = new byte[area];
+            for (int y = t; y <= b; y++)
+                for (int x = l; x <= r; x++) histogram[gray[y * width + x] & 255]++;
+            int target = (area * 3 + 3) / 4, seen = 0, paper = 0;
+            while (paper < 255 && (seen += histogram[paper]) < target) paper++;
+            int boundary = paper - Math.max(8, Math.round(paper * .05f));
+            int minimum = 255, maximum = 0;
+            for (int p : core.pixels) {
+                int q = (p / width - t) * w + p % width - l;
+                state[q] = 1;
+                minimum = Math.min(minimum, gray[p] & 255);
+                maximum = Math.max(maximum, gray[p] & 255);
+            }
+            if (minimum > paper * .5f || maximum >= boundary) continue;
+            int size = 1, at = 0;
+            queue[0] = (core.pixels[0] / width - t) * w + core.pixels[0] % width - l;
+            state[queue[0]] |= 2;
+            boolean refused = false;
+            int left = w, right = 0, top = h, bottom = 0;
+            while (at < size && !refused) {
+                int q = queue[at++], x = q % w, y = q / w, p = (y + t) * width + x + l;
+                if (x == 0
+                        || y == 0
+                        || x == w - 1
+                        || y == h - 1
+                        || (gray[p] & 255) < 155 && (state[q] & 1) == 0) {
+                    refused = true;
+                    break;
+                }
+                left = Math.min(left, x);
+                right = Math.max(right, x);
+                top = Math.min(top, y);
+                bottom = Math.max(bottom, y);
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int nx = x + dx, ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                        int next = ny * w + nx;
+                        if ((state[next] & 2) == 0
+                                && (gray[(ny + t) * width + nx + l] & 255) < boundary) {
+                            state[next] |= 2;
+                            queue[size++] = next;
+                        }
+                    }
+            }
+            if (refused) continue;
+            int bw = right - left + 1, bh = bottom - top + 1;
+            if (bw < gap * .26f
+                    || bh < gap * .26f
+                    || bw > gap * .62f
+                    || bh > gap * .62f
+                    || size + 1 < gap * gap * .065f
+                    || size < bw * bh * .75f
+                    || bw / (float) bh <= .65f
+                    || bw / (float) bh >= 1.55f) continue;
+            for (int y = top; y <= bottom && !refused; y++) {
+                int first = -1, last = -1, count = 0;
+                for (int x = left; x <= right; x++)
+                    if ((state[y * w + x] & 2) != 0) {
+                        if (first < 0) first = x;
+                        last = x;
+                        count++;
+                    }
+                if (count > 0 && last - first + 1 != count) refused = true;
+            }
+            for (int x = left; x <= right && !refused; x++) {
+                int first = -1, last = -1, count = 0;
+                for (int y = top; y <= bottom; y++)
+                    if ((state[y * w + x] & 2) != 0) {
+                        if (first < 0) first = y;
+                        last = y;
+                        count++;
+                    }
+                if (count > 0 && last - first + 1 != count) refused = true;
+            }
+            if (refused) continue;
+            float cx = core.x() - l, cy = core.y() - t;
+            at = 0;
+            int reached = 0;
+            for (int p : core.pixels) {
+                int q = (p / width - t) * w + p % width - l;
+                state[q] |= 4;
+                queue[reached++] = q;
+            }
+            while (at < reached) {
+                int q = queue[at++], x = q % w, y = q / w;
+                float radius = (x - cx) * (x - cx) + (y - cy) * (y - cy);
+                int tone = gray[(y + t) * width + x + l] & 255;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int nx = x + dx, ny = y + dy;
+                        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                        int next = ny * w + nx;
+                        float nextRadius = (nx - cx) * (nx - cx) + (ny - cy) * (ny - cy);
+                        if ((state[next] & 2) != 0
+                                && (state[next] & 4) == 0
+                                && nextRadius >= radius
+                                && (gray[(ny + t) * width + nx + l] & 255) >= tone) {
+                            state[next] |= 4;
+                            queue[reached++] = next;
+                        }
+                    }
+            }
+            if (reached != size) continue;
+            int[] pixels = new int[size];
+            for (int i = 0; i < size; i++)
+                pixels[i] = (queue[i] / w + t) * width + queue[i] % w + l;
+            Glyph body = new Glyph(left + l, top + t, right + l, bottom + t, size, pixels);
+            if (rasterCoreMark(body, width, gap) != NoteArticulation.STACCATO) continue;
+            // The recovered centroid must retain the same unique geometric owner.
+            if (pairsLeft < notes.size()) return List.of();
+            pairsLeft -= notes.size();
+            Anchor bodyOwner = null;
+            for (Anchor n : notes) {
+                if (!Float.isFinite(n.gap) || n.gap <= 0) continue;
+                float dx = Math.abs(body.x() - n.x) / n.gap, dy = Math.abs(body.y() - n.y) / n.gap;
+                if (dx <= .7f && dy >= .7f && dy <= 3f) {
+                    if (bodyOwner != null) {
+                        bodyOwner = null;
+                        break;
+                    }
+                    bodyOwner = n;
+                }
+            }
+            if (bodyOwner == owner) added.add(body);
+        }
+        return added;
     }
 
     /** Paper shade must not supply the body of an otherwise plausible mark.

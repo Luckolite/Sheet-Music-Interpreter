@@ -4837,22 +4837,23 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "32f66a86653e7e0d896901fc40f5f9dce334854702c4ffeb0331acc0cd970e36",
+      "source_sha256": "addc27eabccc71c729ce3b6e6344a4c6c375f4e9ea94313611e9c49204698bd8",
       "review_note": "Rule-joined marcato additionally requires complete two-arm support. The independently derived erased-rule mask retains original observed ink; all prior owner, shape, text, crossbar and proximity guards remain active. A rule-joined wedge also requires paper beyond an opposite ruled-row contact; raw continuation into a flag refuses that fragment, while complete two-rule triangles remain valid. Original procedural controls only.",
-      "source_normalized_sha256": "12770f1254b71fb3120f5d01010ac4c48f5b997a2a8e48a1c0d69a745c1e9c31",
+      "source_normalized_sha256": "38e759b17188e9d1bfaa1c66fb9d8ad4dff257bd1ab02357f726cc731e586b73",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "reviewed_app_state": "Reviewed recognition111 source committed; cumulative matched rollout deferred during active goal.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "9000388d065d4acf79e5e75a1ae390cc7b8cbf86d660953a0230a142be4454d6",
+      "standalone_sha256": "64539e204b70aee9d280d06a69572d7216539262b2552e7b5c583ffc21492333",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "083201768a545cfbde1177a011a47cb70923b91a",
+      "reviewed_app_commit": "89d11fac0b729757fc2ec319ecd402d219f98304",
       "scoped_reviewed_app_commit": "4b0ecd4799e4591e547910310f55047a2cecadaa",
       "bow291_review_note": "Add complete measured bow-cap/two-leg detection with unique actual attack and above-own-staff context; existing articulation exclusions and opposite-rule continuation guards remain unchanged.",
       "ruled_caret_review_note": "An interior crossbar must close an already observed raw opening. A distant ruled caret additionally requires its own continuous thin terminated stem; independently proved short ledger crossings retain their finite raw envelope. Original procedural controls include AA text crossbars, detached/broken shafts and thick/partial ledger refusals. No private score content or model changes.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "standalone_normalized_sha256": "bd8b9c0c2e6e45c1876a032eb54b73a6874f225684c6fef08463c04a11d90dad",
+      "standalone_normalized_sha256": "8957be65bb3856125c2377ba5e022601f823ff8a49616889f04509a1d56f9059",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
-      "complete_raw_staccato_review": "Complete original raw dot components use the existing raster law before dark-core extraction. Joined/normalized additions retain existing admission. Original procedural controls; thresholds, models, palettes and caps unchanged."
+      "complete_raw_staccato_review": "Complete original raw dot components use the existing raster law before dark-core extraction. Joined/normalized additions retain existing admission. Original procedural controls; thresholds, models, palettes and caps unchanged.",
+      "closed_dot_fringe_review": "New optional local acquisition requires a complete convex monotone literal fringe around one existing raw core, unchanged unique owner and existing compact raster admission. Legacy shapes retain priority and all later role guards remain. Original procedural controls; bounded optional work refuses all additions atomically."
     },
     "NoteOrnament.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteOrnament.java",
@@ -10145,6 +10146,17 @@
       "license": "Apache-2.0",
       "origin": "Original procedural standalone adapter integration regression",
       "reviewed_app_commit": "4304d51eaf22263f19b76ef79f95ebe3d1c11c00"
+    },
+    "ClosedDotFringeOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedDotFringeOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedDotFringeOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "39400c2ca8b80cc1ebcc69acecd20213f6e5867a173b2029e046650e5862fef1",
+      "source_normalized_sha256": "099d60b4f0771ddd02cf701e8110b58e4d4a6231880222a2433329efae51eadc",
+      "standalone_sha256": "54403090178e54f8cb9649940774bc3f48204516000f1a80c2d3e6949afee3e3",
+      "standalone_normalized_sha256": "6c0a7e22bb129903deb3026668a9505ab90164196cfa8ddaf8108001d9659ebf",
+      "reviewed_app_commit": "89d11fac0b729757fc2ec319ecd402d219f98304",
+      "closed_dot_fringe_review": "New optional local acquisition requires a complete convex monotone literal fringe around one existing raw core, unchanged unique owner and existing compact raster admission. Legacy shapes retain priority and all later role guards remain. Original procedural controls; bounded optional work refuses all additions atomically."
     }
   },
   "finite_curved_approach_review": {
@@ -14848,5 +14860,11 @@
       "tools/native-worker/decoder-sources.txt": "00c05ac6cb02221c6da8fec673742d4a03a94ffbedc1984f7465af853c167cac"
     },
     "standalone_adapter_original_tests": 3
+  },
+  "closed_dot_fringe_review": {
+    "reviewed_app_commit": "89d11fac0b729757fc2ec319ecd402d219f98304",
+    "documentation": "docs/closed-dot-fringes.md",
+    "adaptation": "Package-only source and original test; selected detector already ships in native source closure. No helper, model or record-layout addition.",
+    "validation": "1096 Android tests,171 standalone original/retained tests, and actual compiled all-five saved OMR outputs equal reviewed ten-dot gain with no lost frozen controls or other changed saved fields. Fresh combined native pipeline and paired deployment remain completion gates."
   }
 }
