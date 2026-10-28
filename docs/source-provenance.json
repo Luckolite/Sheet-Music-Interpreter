@@ -15032,7 +15032,8 @@
     "documentation": "docs/complete-faint-hairpin-arms.md",
     "native_helper": "CompleteFaintHairpinArms.java",
     "native_selection_sha256": "abb28860477d8cd831dd9e35d6199374f4b161144ca9e156ad4cd4ee74a354d4",
-    "validation": "16 new original regressions; 379 focused app and 461 standalone tests pass. Private current pages1-3 saved detector-input replay adds one compact crescendo with all34 prior dynamics and expression events exact. Fresh combined all-five native and matched packaging/deployment gates pending.",
-    "adaptation": "Package-only helper/adapter/test; no new native selection, model, shared cap or serialized layout."
+    "validation": "16 new original regressions; 379 focused app and 461 standalone tests pass. Fresh current-source native model/OCR processing of all five pages adds exactly one compact crescendo. Every prior dynamic and every other final score field, including all notes, beams, slurs, clock context and expressive events, remains exact. Matched packaging/device/deployment gates remain separate.",
+    "adaptation": "Package-only helper/adapter/test; no new native selection, model, shared cap or serialized layout.",
+    "actual_all_five_native_qualified": true
   }
 }
