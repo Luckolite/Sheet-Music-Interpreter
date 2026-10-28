@@ -14967,5 +14967,20 @@
     "validation": "595 original/retained app-package tests;21 independent tests and24 challenged entry cases. Private source reconciliation adds seven active and eleven deferred curves while preserving legacy records/IDs and all other same-entry fields. Final later clock/full native and cumulative app/public/deployment gates remain required.",
     "admission_boundary": "Existing broad raw-rule/head-row tolerance retained; gently warped staff probes do not establish new local head-pitch or written-clock authority. No false slur output in24 reviewed challenge cases.",
     "adaptation": "Package-only executable sources and original tests with AOSP formatting; explicit helper selection. No model or wire change."
+  },
+  "current_combined_source_validation": {
+    "reviewed_app_commit": "1c53d7f0",
+    "recognition_revision": 120,
+    "guide_version": 299,
+    "audio_version": 101,
+    "app_jvm_unit_tests": 1987,
+    "standalone_java_tests": 14576,
+    "standalone_test_classes": 1888,
+    "private_full_native_pages": 5,
+    "native_source_count": 503,
+    "native_source_fingerprint": "1f3bbc591e48730ba0d9571ad58cecac43dbb278be0a5b25a1175ec6b5878937",
+    "native_scope": "Actual segmentation, OCR and complete page output with unchanged source/runtime/model pins; private source material is not distributed.",
+    "qualified_changes": "Twenty source-reviewed articulation omissions, three dynamic defects and seven active slurs; eleven additional curves remain deferred geometry. All other final page fields including pitches, rests, keys, timing context and expressive events match except the separately reviewed beam source metadata. All358 prior supported beam edges and529 columns retained.",
+    "boundary": "Source validation only; cumulative matched app/Hub/worker packaging, variant isolation and deployment remain separate required gates. No model or record-layout changes."
   }
 }
