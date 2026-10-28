@@ -829,6 +829,28 @@ final class NoteArticulationDetector {
             int height,
             List<Anchor> notes,
             List<ExpressiveWordBodyInk.Body> wordBodies) {
+        return detectWithWordBodies(
+                labels,
+                gray,
+                width,
+                height,
+                notes,
+                wordBodies,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE);
+    }
+
+    static int[] detectWithWordBodies(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Anchor> notes,
+            List<ExpressiveWordBodyInk.Body> wordBodies,
+            long producerLimit,
+            long admissionLimit,
+            long storageLimit) {
         int[] result = new int[notes.size()];
         if (notes.isEmpty() || labels == null || labels.length != width * height) return result;
         // Raw components retain symbols that the semantic model omitted. Never erase staff
@@ -961,368 +983,763 @@ final class NoteArticulationDetector {
                                                         g.pixels))
                                 .collect(java.util.stream.Collectors.toList())
                         : List.of();
-        for (int glyphIndex = 0; glyphIndex < candidates.size(); glyphIndex++) {
-            Glyph glyph = candidates.get(glyphIndex);
-            List<Glyph> context = paperCandidates.contains(glyph) ? glyphs : originalGlyphs;
-            List<Glyph> reflectedContext =
-                    paperCandidates.contains(glyph) ? reflectedGlyphs : originalReflected;
-            // A clearer subset cannot add a second meaning to an already accepted printed body.
-            if (paperCandidates.contains(glyph) && overlapsPrintedClaim(glyph, printedClaims))
-                continue;
-            // A dark arm belongs to the recovered complete mark, not a separate dash.
-            boolean fragment = false;
-            for (Glyph accent : claimedAccents) {
-                if (accent == glyph
-                        || glyph.left < accent.left
-                        || glyph.right > accent.right
-                        || glyph.top < accent.top
-                        || glyph.bottom > accent.bottom) continue;
-                for (int pixel : accent.pixels)
-                    if (pixel == glyph.pixels[0]) {
-                        fragment = true;
-                        break;
+        int[] legacyResult = null;
+        DetachedCaretBodies.Page caretPage =
+                raw
+                        ? new DetachedCaretBodies.Page(
+                                gray,
+                                labels,
+                                width,
+                                height,
+                                notes,
+                                producerLimit,
+                                admissionLimit,
+                                storageLimit)
+                        : null;
+        CaretAccepted acceptedCaretBodies = CaretAccepted.create(caretPage);
+        CaretPass caret = null;
+        try {
+            for (int pass = 0; pass < 2; pass++) {
+                if (pass == 1) {
+                    legacyResult = result;
+                    if (!raw) break;
+
+                    caret =
+                            caretPass(
+                                    caretPage,
+                                    originalGlyphs,
+                                    joinedOwners,
+                                    notes,
+                                    legacyResult,
+                                    labels,
+                                    width,
+                                    height);
+                    candidates = caret.glyphs;
+                    if (candidates.isEmpty()) break;
+                    if (acceptedCaretBodies == null) caretPage.refuse();
+                    List<Glyph> legacyCaretPriority = acceptedCaretBodies.snapshot();
+                    caretPage.a(64L + 16L * notes.size(), 16L * notes.size() + 2048);
+                    caretPage.a(
+                            16L * (claimedAccents.size() + legacyCaretPriority.size()) + 64,
+                            16L * (claimedAccents.size() + legacyCaretPriority.size()) + 256);
+                    result = new int[notes.size()];
+                    compoundClaims = new CompoundClaims(notes.size());
+                    claimedAccents = new ArrayList<>(claimedAccents);
+                    printedClaims = new ArrayList<>(legacyCaretPriority);
+                }
+                for (int glyphIndex = 0; glyphIndex < candidates.size(); glyphIndex++) {
+                    boolean closedDotFringe = pass == 0 && glyphIndex >= fringeStart;
+                    Glyph glyph = candidates.get(glyphIndex);
+                    if (pass == 1) {
+                        caretPage.a(64, 128);
+                        DetachedCaretCosts.admissionGlyph(
+                                caretPage,
+                                caretCostInk(glyph),
+                                caret.context,
+                                caret.notes,
+                                width,
+                                height);
                     }
-                if (fragment) break;
+                    List<Glyph> context =
+                            (pass == 0 && paperCandidates.contains(glyph))
+                                    ? glyphs
+                                    : originalGlyphs;
+                    List<Glyph> reflectedContext =
+                            (pass == 0 && paperCandidates.contains(glyph))
+                                    ? reflectedGlyphs
+                                    : originalReflected;
+                    // A clearer subset cannot add a second meaning to an already accepted printed
+                    // body.
+                    if (pass == 1) prepayCaretOverlap(caretPage, glyph, printedClaims);
+                    if ((pass == 1 || (pass == 0 && paperCandidates.contains(glyph)))
+                            && overlapsPrintedClaim(glyph, printedClaims)) continue;
+                    // A dark arm belongs to the recovered complete mark, not a separate dash.
+                    boolean fragment = false;
+                    for (Glyph accent : claimedAccents) {
+                        if (accent == glyph
+                                || glyph.left < accent.left
+                                || glyph.right > accent.right
+                                || glyph.top < accent.top
+                                || glyph.bottom > accent.bottom) continue;
+                        for (int pixel : accent.pixels)
+                            if (pixel == glyph.pixels[0]) {
+                                fragment = true;
+                                break;
+                            }
+                        if (fragment) break;
+                    }
+                    if (fragment) continue;
+                    // Semantic notation normally vetoes an articulation. A raw isolated
+                    // dot may have been mislabeled as a head and rejected by the pitch
+                    // reader; it can still be staccato if it is not an accepted head.
+                    int notation = 0;
+                    for (int pixel : glyph.pixels) {
+                        byte label = labels[pixel];
+                        if (label == OmrMeasurePostProcessor.NOTEHEAD
+                                || label == OmrMeasurePostProcessor.STEM_OR_REST
+                                || label == OmrMeasurePostProcessor.CLEF_OR_KEY
+                                || label == OmrMeasurePostProcessor.STAFF) notation++;
+                    }
+                    boolean semanticNotation = notation > glyph.count * .25f;
+                    Glyph printedCore = raw ? printedCore(glyph, gray, width, height) : null;
+                    // Contrast belongs to the glyph, not the candidate note.
+                    int bodyContrast = -1;
+                    int best = -1, mark = 0;
+                    double distance = Double.MAX_VALUE;
+                    Integer joinedOwner = joinedOwners.get(glyph);
+                    boolean completeRawBody =
+                            pass == 0
+                                    && raw
+                                    && joinedOwner == null
+                                    && glyphIndex >= faintAccents.size()
+                                    && glyphIndex < faintAccents.size() + originalGlyphs.size();
+                    for (int n = 0; n < notes.size(); n++) {
+                        if (joinedOwner != null && n != joinedOwner) continue;
+                        Anchor note = notes.get(n);
+                        float dx = Math.abs(glyph.x() - note.x) / note.gap,
+                                dy = Math.abs(glyph.y() - note.y) / note.gap;
+                        if (dx > .7f || dy < .7f || dy > 8f) continue;
+                        if (closedDotFringe && dy > 3f) continue;
+                        boolean faint = (pass == 0 && faintAccents.contains(glyph));
+                        boolean softFaint = (pass == 0 && softFaintAccents.contains(glyph));
+                        float glyphWidth = glyph.right - glyph.left + 1,
+                                glyphHeight = glyph.bottom - glyph.top + 1;
+                        if (faint
+                                && (glyphWidth < note.gap * .75f
+                                        || glyphWidth > note.gap * (softFaint ? 2.6f : 2.1f) + 1
+                                        || glyphHeight < note.gap * .35f
+                                        || glyphHeight > note.gap * (softFaint ? 1.65f : 1.25f)))
+                            continue;
+                        int candidate =
+                                (faint || provedJoinedAccents.contains(glyph))
+                                        ? NoteArticulation.ACCENT
+                                        : classify(glyph, width, note.gap, glyph.y() < note.y);
+                        if (candidate == 0)
+                            candidate = roundedAngular(glyph, width, note.gap, glyph.y() < note.y);
+                        if (candidate == NoteArticulation.MARCATO
+                                && interiorCrossbar(glyph, width, .45f)) continue;
+                        // A faint rounded dash needs nearby note ownership, not a lyric
+                        // extender several spaces beyond the staff.
+                        if (candidate == 0 && dy <= 3f && roundedTenuto(glyph, width, note.gap))
+                            candidate = NoteArticulation.TENUTO;
+                        // Apply the existing compact raster law to the complete raw body before
+                        // dark-core extraction can discard its literal antialiased boundary cells.
+                        // These upper bounds only skip bodies that cannot be staccato under that
+                        // law.
+                        if (candidate == 0
+                                && completeRawBody
+                                && glyphWidth <= note.gap * .62f
+                                && glyphHeight <= note.gap * .62f
+                                && rasterCoreMark(glyph, width, note.gap)
+                                        == NoteArticulation.STACCATO)
+                            candidate = NoteArticulation.STACCATO;
+                        if (closedDotFringe) candidate = NoteArticulation.STACCATO;
+                        // A blurred detached body must prove its existing shape again on dark ink.
+                        // Keep all ownership, semantic notation, word, staff and dot guards below.
+                        boolean recoveredCore = false;
+                        if (candidate == 0 && printedCore != null) {
+                            candidate = classify(printedCore, width, note.gap, glyph.y() < note.y);
+                            if (candidate == 0)
+                                candidate =
+                                        roundedAngular(
+                                                printedCore, width, note.gap, glyph.y() < note.y);
+                            if (candidate == 0) {
+                                int raster = rasterCoreMark(printedCore, width, note.gap);
+                                // Horizontal recovery still needs close note ownership, not a lyric
+                                // extender.
+                                if (raster != NoteArticulation.TENUTO || dy <= 3f)
+                                    candidate = raster;
+                            }
+                            if (candidate == NoteArticulation.MARCATO
+                                    && (interiorCrossbar(printedCore, width, .45f)
+                                            || interiorCrossbar(glyph, width, .45f))) candidate = 0;
+                            recoveredCore = candidate != 0;
+                        }
+                        if (pass == 1
+                                && (candidate != NoteArticulation.MARCATO || glyph.y() >= note.y))
+                            continue;
+                        if (raw
+                                && candidate != 0
+                                && detachedThreeOwns(glyph, originalGlyphs, width, note.gap))
+                            continue;
+                        if (raw
+                                && candidate != 0
+                                && glyph.y() < note.y
+                                && completeBowOwns(glyph, gray, width, height, note.gap)) continue;
+                        if (raw && !faint && candidate != 0) {
+                            if (bodyContrast < 0)
+                                bodyContrast =
+                                        printedBodyContrast(glyph, gray, width, height) ? 1 : 0;
+                            if (bodyContrast == 0) continue;
+                        }
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && (recoveredCore || (pass == 0 && paperCandidates.contains(glyph)))
+                                && continuedPrintedCurve(
+                                        recoveredCore ? printedCore : glyph,
+                                        gray,
+                                        labels,
+                                        width,
+                                        height,
+                                        note.gap)) continue;
+                        if (raw
+                                && candidate == NoteArticulation.STACCATISSIMO
+                                && descenderWord(glyph, context, labels, note.gap)) continue;
+                        if (recoveredCore
+                                && candidate == NoteArticulation.STACCATISSIMO
+                                && embeddedFragmentWord(glyph, context, labels, note.gap)) continue;
+                        boolean stemOwnedDot =
+                                raw
+                                        && candidate == NoteArticulation.STACCATO
+                                        && dy > 5.5f
+                                        && longStemDot(glyph, note, gray, width, height);
+                        boolean stemOwnedMarcato =
+                                raw
+                                        && candidate == NoteArticulation.MARCATO
+                                        && dy > 6f
+                                        && beamOwnedMarcato(glyph, note, gray, width, height);
+                        if (candidate == 0
+                                || dy > 6f && !stemOwnedDot && !stemOwnedMarcato
+                                || dy > 5.5f
+                                        && candidate != NoteArticulation.MARCATO
+                                        && !stemOwnedDot) continue;
+                        if (raw
+                                && (candidate == NoteArticulation.TENUTO
+                                        || candidate == NoteArticulation.STACCATO
+                                        || candidate == NoteArticulation.STACCATISSIMO)
+                                && directionText(glyph, context, note.gap, labels)) continue;
+                        if (raw
+                                && (candidate == NoteArticulation.MARCATO
+                                        || candidate == NoteArticulation.STACCATISSIMO)
+                                && (embeddedDirectionWord(glyph, context, note.gap, labels, width)
+                                        || directionText(glyph, context, note.gap, labels)
+                                        || directionText(
+                                                new Glyph(
+                                                        -glyph.right,
+                                                        glyph.top,
+                                                        -glyph.left,
+                                                        glyph.bottom,
+                                                        glyph.count,
+                                                        glyph.pixels),
+                                                reflectedContext,
+                                                note.gap,
+                                                labels))) continue;
+                        if (raw
+                                && candidate == NoteArticulation.STACCATO
+                                && embeddedTextDot(glyph, context, note.gap, labels)) continue;
+                        if (raw
+                                && (pass == 0 && paperCandidates.contains(glyph))
+                                && candidate == NoteArticulation.STACCATO
+                                && ShadedItalicFCap.proved(
+                                        gray,
+                                        labels,
+                                        width,
+                                        height,
+                                        note.gap,
+                                        glyph.left,
+                                        glyph.top,
+                                        glyph.right,
+                                        glyph.bottom)) continue;
+                        if (raw
+                                && candidate == NoteArticulation.STACCATO
+                                && initialsPunctuation(glyph, context, note.gap, labels)) continue;
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && continuedDashRow(glyph, context, notes, note)) continue;
+                        if (raw
+                                && candidate == NoteArticulation.STACCATO
+                                && endingNumberDot(
+                                        glyph, context, note.gap, gray, labels, width, height))
+                            continue;
+                        if (semanticNotation
+                                && (!raw
+                                        || (candidate != NoteArticulation.STACCATO
+                                                && (candidate != NoteArticulation.STACCATISSIMO
+                                                        || !filledTaper(
+                                                                glyph, width, glyph.y() < note.y)))
+                                        || nearHead(glyph, notes))) continue;
+                        if (raw
+                                && semanticNotation
+                                && candidate == NoteArticulation.STACCATISSIMO
+                                && attachedMarkStem(glyph, note, gray, width, height)) continue;
+                        if (raw
+                                && semanticNotation
+                                && candidate == NoteArticulation.STACCATO
+                                && OmrScoreInterpreter.flagStemOwnsDot(
+                                        labels,
+                                        gray,
+                                        width,
+                                        height,
+                                        note.x,
+                                        note.y,
+                                        note.gap,
+                                        glyph.pixels)) continue;
+                        if (candidate == NoteArticulation.TENUTO && nearHead(glyph, notes))
+                            continue;
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && ShadedLedgerMarkOwnership.provedWhite(
+                                        gray,
+                                        width,
+                                        height,
+                                        note.x,
+                                        note.y,
+                                        note.gap,
+                                        glyph.left,
+                                        glyph.top,
+                                        glyph.right,
+                                        glyph.bottom)) continue;
+                        if (raw
+                                && (pass == 0 && paperCandidates.contains(glyph))
+                                && candidate == NoteArticulation.TENUTO
+                                && ShadedLedgerMarkOwnership.proved(
+                                        gray,
+                                        width,
+                                        height,
+                                        note.x,
+                                        note.y,
+                                        note.gap,
+                                        glyph.left,
+                                        glyph.top,
+                                        glyph.right,
+                                        glyph.bottom)) continue;
+                        if (raw
+                                && (pass == 0 && paperCandidates.contains(glyph))
+                                && candidate == NoteArticulation.TENUTO
+                                && TrackedLedgerMarkOwnership.proved(
+                                        gray,
+                                        width,
+                                        height,
+                                        note.x,
+                                        note.y,
+                                        note.gap,
+                                        glyph.left,
+                                        glyph.top,
+                                        glyph.right,
+                                        glyph.bottom,
+                                        note.track)) continue;
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && (ledgerStackDash(glyph, note, gray, width, height)
+                                        || compactLedgerStaff(glyph, note, gray, width, height)))
+                            continue;
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && completeRasterLedger(glyph, note, notes, gray, width, height))
+                            continue;
+                        if (raw
+                                && candidate == NoteArticulation.TENUTO
+                                && glyph.bottom - glyph.top + 1
+                                        <= Math.max(2, Math.round(note.gap * .23f))
+                                && horizontalRuleInk(
+                                        gray,
+                                        width,
+                                        height,
+                                        Math.round(glyph.x()),
+                                        Math.round(glyph.y()),
+                                        note.gap,
+                                        235,
+                                        .50f)
+                                && contrastedHorizontalRule(
+                                        gray,
+                                        width,
+                                        height,
+                                        Math.round(glyph.x()),
+                                        Math.round(glyph.y()),
+                                        note.gap)
+                                && !paperSeparatedTenuto(glyph, note, notes, gray, width, height))
+                            continue;
+                        if (candidate == NoteArticulation.STACCATO
+                                && (durationDot(glyph, notes)
+                                        || (raw
+                                                && shelteredDot(
+                                                        recoveredCore ? printedCore : glyph,
+                                                        labels,
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        note.gap,
+                                                        dy,
+                                                        stemOwnedDot
+                                                                || pairedTenuto(
+                                                                        glyph, context, note,
+                                                                        width),
+                                                        closedDotFringe)))) continue;
+                        // A small off-axis dot beside a head is a duration dot, not staccato.
+                        if (candidate == NoteArticulation.STACCATO && dx > .35f) continue;
+                        if (raw && !joinedOwners.containsKey(glyph))
+                            compoundClaims.eligible(glyph, n, candidate, note, gray, width, height);
+                        double score = dx * 3 + dy;
+                        if (score < distance) {
+                            distance = score;
+                            best = n;
+                            mark = candidate;
+                        }
+                    }
+                    if (best < 0) continue;
+                    if (pass == 1 && caret.blocked[best]) continue;
+                    if ((mark == NoteArticulation.STACCATO
+                                    || mark == NoteArticulation.STACCATISSIMO
+                                    || mark == NoteArticulation.TENUTO)
+                            && ExpressiveWordBodyInk.owns(
+                                    wordBodies, glyph.pixels, glyph.count, width)) continue;
+                    if ((pass == 0 && faintAccents.contains(glyph))) claimedAccents.add(glyph);
+                    if (!(pass == 0 && paperCandidates.contains(glyph))) printedClaims.add(glyph);
+                    if (pass == 0 && acceptedCaretBodies != null) acceptedCaretBodies.add(glyph);
+                    compoundClaims.claim(glyph, best, mark);
+                    Anchor owner = notes.get(best);
+                    // One mark on a chord affects that chord, never another staff or another onset.
+                    for (int n = 0; n < notes.size(); n++) {
+                        Anchor note = notes.get(n);
+                        if (note.staff == owner.staff
+                                && Math.abs(note.x - owner.x) < owner.gap * .45f) {
+                            result[n] |= mark;
+                            compoundClaims.assignment(n, mark);
+                        }
+                    }
+                }
+                if (pass == 0) {
+                    if (raw) compoundClaims.resolve(result, notes, gray, width, height);
+                    if (raw)
+                        for (int i = 0; i < notes.size(); i++) {
+                            Anchor note = notes.get(i);
+                            if ((result[i] & NoteArticulation.ACCENT) == 0
+                                    && ruleJoinedAccent(
+                                            note,
+                                            notes,
+                                            originalGlyphs,
+                                            labels,
+                                            gray,
+                                            width,
+                                            height))
+                                for (int j = 0; j < notes.size(); j++)
+                                    if (notes.get(j).staff == note.staff
+                                            && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
+                                        result[j] |= NoteArticulation.ACCENT;
+                            if ((result[i] & NoteArticulation.MARCATO) == 0
+                                    && ruleJoinedMarcato(note, labels, gray, width, height))
+                                for (int j = 0; j < notes.size(); j++)
+                                    if (notes.get(j).staff == note.staff
+                                            && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
+                                        result[j] |= NoteArticulation.MARCATO;
+                            if ((result[i] & NoteArticulation.STACCATISSIMO) == 0
+                                    && ruleJoinedWedge(
+                                            note,
+                                            notes,
+                                            originalGlyphs,
+                                            gray,
+                                            labels,
+                                            width,
+                                            height))
+                                for (int j = 0; j < notes.size(); j++)
+                                    if (notes.get(j).staff == note.staff
+                                            && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
+                                        result[j] |= NoteArticulation.STACCATISSIMO;
+                            if ((result[i] & NoteArticulation.STACCATO) == 0
+                                    && textJoinedDot(
+                                            note, originalGlyphs, labels, gray, width, height))
+                                for (int j = 0; j < notes.size(); j++)
+                                    if (notes.get(j).staff == note.staff
+                                            && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
+                                        result[j] |= NoteArticulation.STACCATO;
+                        }
+                } else {
+                    compoundClaims.resolve(result, notes, gray, width, height);
+                    if (!caretPage.finish(gray, labels, width, height, notes)) return legacyResult;
+                    for (int i = 0; i < result.length; i++)
+                        if (!caret.blocked[i]) legacyResult[i] |= result[i];
+                    result = legacyResult;
+                }
             }
-            if (fragment) continue;
-            // Semantic notation normally vetoes an articulation. A raw isolated
-            // dot may have been mislabeled as a head and rejected by the pitch
-            // reader; it can still be staccato if it is not an accepted head.
+        } catch (DetachedCaretBodies.Refusal refusal) {
+            if (legacyResult == null) throw refusal;
+            return legacyResult;
+        }
+        return result;
+    }
+
+    /** Optional bookkeeping records actual accepted bodies without changing any legacy claims. */
+    private static final class CaretAccepted {
+        final DetachedCaretBodies.Page page;
+        Glyph[] bodies = new Glyph[0];
+        int count;
+
+        private CaretAccepted(DetachedCaretBodies.Page page) {
+            this.page = page;
+        }
+
+        static CaretAccepted create(DetachedCaretBodies.Page page) {
+            if (page == null || page.failed) return null;
+            try {
+                page.p(64, 128);
+                return new CaretAccepted(page);
+            } catch (DetachedCaretBodies.Refusal refusal) {
+                return null;
+            }
+        }
+
+        void add(Glyph glyph) {
+            if (page.failed) return;
+            try {
+                page.p(8, 0);
+                if (count == bodies.length) {
+                    long next = Math.max((long) count + 1, Math.max(8L, 2L * bodies.length));
+                    if (next > Integer.MAX_VALUE) page.refuse();
+                    page.p(2 * next + 2L * count + 64, 8 * next + 64);
+                    bodies = Arrays.copyOf(bodies, (int) next);
+                }
+                bodies[count++] = glyph;
+            } catch (DetachedCaretBodies.Refusal refusal) {
+                bodies = null;
+                count = 0;
+            }
+        }
+
+        List<Glyph> snapshot() {
+            page.p(2L * count + 64, 8L * count + 256);
+            return java.util.Collections.unmodifiableList(
+                    Arrays.asList(Arrays.copyOf(bodies, count)));
+        }
+    }
+
+    private static void prepayCaretOverlap(
+            DetachedCaretBodies.Page page, Glyph candidate, List<Glyph> claimed) {
+        page.a(32L * claimed.size() + 64, 0);
+        for (Glyph body : claimed) {
+            if (candidate.right < body.left
+                    || candidate.left > body.right
+                    || candidate.bottom < body.top
+                    || candidate.top > body.bottom) continue;
+            page.a(
+                    DetachedCaretCosts.sum(
+                            64,
+                            32L * candidate.count,
+                            DetachedCaretCosts.mul(
+                                    4, DetachedCaretCosts.mul(candidate.count, body.count))),
+                    0);
+        }
+    }
+
+    private record CaretPass(
+            DetachedCaretBodies.Page page,
+            List<Glyph> glyphs,
+            boolean[] blocked,
+            DetachedCaretCosts.Ink[] context,
+            DetachedCaretCosts.Note[] notes) {}
+
+    private static DetachedCaretCosts.Ink caretCostInk(Glyph g) {
+        return new DetachedCaretCosts.Ink(g.left, g.top, g.right, g.bottom, g.count);
+    }
+
+    /** Optional eligibility, never a replacement for common classification or role guards. */
+    private static int caretRawKind(
+            Glyph g,
+            int width,
+            float gap,
+            DetachedCaretBodies.Page page,
+            boolean complete,
+            int height) {
+        page.p(64, 128);
+        var cost = caretCostInk(g);
+        DetachedCaretCosts.producer(page, DetachedCaretCosts.classify(cost));
+        int kind = classify(g, width, gap, true);
+        if (kind == 0) {
+            page.p(64, 128);
+            DetachedCaretCosts.producer(page, DetachedCaretCosts.rounded(cost));
+            kind = roundedAngular(g, width, gap, true);
+        }
+        if (!complete) return kind; // Any old raw kind abstains; no unused contrast is evaluated.
+        if (kind == NoteArticulation.MARCATO) {
+            page.p(64, 128);
+            DetachedCaretCosts.producer(page, DetachedCaretCosts.crossbar(cost));
+            if (interiorCrossbar(g, width, .45f)) return 0;
+        }
+        if (kind != 0) {
+            page.p(64, 128);
+            DetachedCaretCosts.producer(page, DetachedCaretCosts.contrast(cost, width, height));
+            if (!printedBodyContrast(g, page.raw, width, height)) return 0;
+        }
+        return kind;
+    }
+
+    private static int caretRoot(int[] roots, int n) {
+        while (roots[n] != n) n = roots[n];
+        return n;
+    }
+
+    private static CaretPass caretPass(
+            DetachedCaretBodies.Page page,
+            List<Glyph> originals,
+            java.util.IdentityHashMap<Glyph, Integer> joined,
+            List<Anchor> notes,
+            int[] legacy,
+            byte[] labels,
+            int width,
+            int height) {
+        int N = notes.size(), G = originals.size();
+        page.p(32L * (N + G) + 256, 128L * (N + G) + 2048);
+        int[] roots = new int[N];
+        boolean[] blocked = new boolean[N], marked = new boolean[N];
+        Integer[] sorted = new Integer[N];
+        float maxGap = 0;
+        var noteCosts = new DetachedCaretCosts.Note[N];
+        for (int i = 0; i < N; i++) {
+            page.p(16, 0);
+            Anchor n = notes.get(i);
+            if (!Float.isFinite(n.x)
+                    || !Float.isFinite(n.y)
+                    || !Float.isFinite(n.gap)
+                    || n.x < 0
+                    || n.x >= width
+                    || n.y < 0
+                    || n.y >= height
+                    || n.gap < 3
+                    || n.gap > 64) page.refuse();
+            roots[i] = i;
+            sorted[i] = i;
+            maxGap = Math.max(maxGap, n.gap);
+            noteCosts[i] = new DetachedCaretCosts.Note(n.x, n.y, n.gap, n.staff);
+        }
+        // Transitive attack exclusion is conservative; every anchor remains an admission rival.
+        for (int i = 0; i < N; i++)
+            for (int j = i + 1; j < N; j++) {
+                page.p(8, 0);
+                Anchor a = notes.get(i), b = notes.get(j);
+                if (a.staff == b.staff && Math.abs(a.x - b.x) < Math.max(a.gap, b.gap) * .45f) {
+                    page.p(4L * N + 8, 0);
+                    int x = caretRoot(roots, i), y = caretRoot(roots, j);
+                    roots[y] = x;
+                }
+            }
+        page.p(4L * N * N + 16L * N, 0);
+        for (int i = 0; i < N; i++) if (legacy[i] != 0) marked[caretRoot(roots, i)] = true;
+        for (int i = 0; i < N; i++) blocked[i] = marked[caretRoot(roots, i)];
+        java.util.Arrays.sort(
+                sorted,
+                (a, b) -> {
+                    page.p(4, 0);
+                    return Float.compare(notes.get(a).x, notes.get(b).x);
+                });
+        var context = new DetachedCaretCosts.Ink[G];
+        for (int i = 0; i < G; i++) {
+            page.p(8, 0);
+            context[i] = caretCostInk(originals.get(i));
+        }
+        float[] gaps = new float[N];
+        boolean[] empty = new boolean[N];
+        int[] kinds = new int[N];
+        List<Glyph> out = new ArrayList<>();
+        for (Glyph seed : originals) {
+            page.p(16, 0);
+            if (joined.containsKey(seed) || seed.count < 3) continue;
             int notation = 0;
-            for (int pixel : glyph.pixels) {
-                byte label = labels[pixel];
+            boolean allRaw = true;
+            for (int p : seed.pixels) {
+                page.p(8, 0);
+                if (p < 0 || p >= page.raw.length) page.refuse();
+                if ((page.raw[p] & 255) >= 155) allRaw = false;
+                byte label = labels[p];
                 if (label == OmrMeasurePostProcessor.NOTEHEAD
                         || label == OmrMeasurePostProcessor.STEM_OR_REST
                         || label == OmrMeasurePostProcessor.CLEF_OR_KEY
                         || label == OmrMeasurePostProcessor.STAFF) notation++;
             }
-            boolean semanticNotation = notation > glyph.count * .25f;
-            Glyph printedCore = raw ? printedCore(glyph, gray, width, height) : null;
-            // Contrast belongs to the glyph, not the candidate note.
-            int bodyContrast = -1;
-            int best = -1, mark = 0;
-            double distance = Double.MAX_VALUE;
-            Integer joinedOwner = joinedOwners.get(glyph);
-            boolean completeRawBody =
-                    raw
-                            && joinedOwner == null
-                            && glyphIndex >= faintAccents.size()
-                            && glyphIndex < faintAccents.size() + originalGlyphs.size();
-            for (int n = 0; n < notes.size(); n++) {
-                if (joinedOwner != null && n != joinedOwner) continue;
-                Anchor note = notes.get(n);
-                float dx = Math.abs(glyph.x() - note.x) / note.gap,
-                        dy = Math.abs(glyph.y() - note.y) / note.gap;
-                if (dx > .7f || dy < .7f || dy > 8f) continue;
-                if (glyphIndex >= fringeStart && dy > 3f) continue;
-                boolean faint = faintAccents.contains(glyph);
-                boolean softFaint = softFaintAccents.contains(glyph);
-                float glyphWidth = glyph.right - glyph.left + 1,
-                        glyphHeight = glyph.bottom - glyph.top + 1;
-                if (faint
-                        && (glyphWidth < note.gap * .75f
-                                || glyphWidth > note.gap * (softFaint ? 2.6f : 2.1f) + 1
-                                || glyphHeight < note.gap * .35f
-                                || glyphHeight > note.gap * (softFaint ? 1.65f : 1.25f))) continue;
-                int candidate =
-                        (faint || provedJoinedAccents.contains(glyph))
-                                ? NoteArticulation.ACCENT
-                                : classify(glyph, width, note.gap, glyph.y() < note.y);
-                if (candidate == 0)
-                    candidate = roundedAngular(glyph, width, note.gap, glyph.y() < note.y);
-                if (candidate == NoteArticulation.MARCATO && interiorCrossbar(glyph, width, .45f))
-                    continue;
-                // A faint rounded dash needs nearby note ownership, not a lyric
-                // extender several spaces beyond the staff.
-                if (candidate == 0 && dy <= 3f && roundedTenuto(glyph, width, note.gap))
-                    candidate = NoteArticulation.TENUTO;
-                // Apply the existing compact raster law to the complete raw body before
-                // dark-core extraction can discard its literal antialiased boundary cells.
-                // These upper bounds only skip bodies that cannot be staccato under that law.
-                if (candidate == 0
-                        && completeRawBody
-                        && glyphWidth <= note.gap * .62f
-                        && glyphHeight <= note.gap * .62f
-                        && rasterCoreMark(glyph, width, note.gap) == NoteArticulation.STACCATO)
-                    candidate = NoteArticulation.STACCATO;
-                if (glyphIndex >= fringeStart) candidate = NoteArticulation.STACCATO;
-                // A blurred detached body must prove its existing shape again on dark ink.
-                // Keep all ownership, semantic notation, word, staff and dot guards below.
-                boolean recoveredCore = false;
-                if (candidate == 0 && printedCore != null) {
-                    candidate = classify(printedCore, width, note.gap, glyph.y() < note.y);
-                    if (candidate == 0)
-                        candidate =
-                                roundedAngular(printedCore, width, note.gap, glyph.y() < note.y);
-                    if (candidate == 0) {
-                        int raster = rasterCoreMark(printedCore, width, note.gap);
-                        // Horizontal recovery still needs close note ownership, not a lyric
-                        // extender.
-                        if (raster != NoteArticulation.TENUTO || dy <= 3f) candidate = raster;
-                    }
-                    if (candidate == NoteArticulation.MARCATO
-                            && (interiorCrossbar(printedCore, width, .45f)
-                                    || interiorCrossbar(glyph, width, .45f))) candidate = 0;
-                    recoveredCore = candidate != 0;
-                }
-                if (raw
-                        && candidate != 0
-                        && detachedThreeOwns(glyph, originalGlyphs, width, note.gap)) continue;
-                if (raw
-                        && candidate != 0
-                        && glyph.y() < note.y
-                        && completeBowOwns(glyph, gray, width, height, note.gap)) continue;
-                if (raw && !faint && candidate != 0) {
-                    if (bodyContrast < 0)
-                        bodyContrast = printedBodyContrast(glyph, gray, width, height) ? 1 : 0;
-                    if (bodyContrast == 0) continue;
-                }
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && (recoveredCore || paperCandidates.contains(glyph))
-                        && continuedPrintedCurve(
-                                recoveredCore ? printedCore : glyph,
-                                gray,
-                                labels,
-                                width,
-                                height,
-                                note.gap)) continue;
-                if (raw
-                        && candidate == NoteArticulation.STACCATISSIMO
-                        && descenderWord(glyph, context, labels, note.gap)) continue;
-                if (recoveredCore
-                        && candidate == NoteArticulation.STACCATISSIMO
-                        && embeddedFragmentWord(glyph, context, labels, note.gap)) continue;
-                boolean stemOwnedDot =
-                        raw
-                                && candidate == NoteArticulation.STACCATO
-                                && dy > 5.5f
-                                && longStemDot(glyph, note, gray, width, height);
-                boolean stemOwnedMarcato =
-                        raw
-                                && candidate == NoteArticulation.MARCATO
-                                && dy > 6f
-                                && beamOwnedMarcato(glyph, note, gray, width, height);
-                if (candidate == 0
-                        || dy > 6f && !stemOwnedDot && !stemOwnedMarcato
-                        || dy > 5.5f && candidate != NoteArticulation.MARCATO && !stemOwnedDot)
-                    continue;
-                if (raw
-                        && (candidate == NoteArticulation.TENUTO
-                                || candidate == NoteArticulation.STACCATO
-                                || candidate == NoteArticulation.STACCATISSIMO)
-                        && directionText(glyph, context, note.gap, labels)) continue;
-                if (raw
-                        && (candidate == NoteArticulation.MARCATO
-                                || candidate == NoteArticulation.STACCATISSIMO)
-                        && (embeddedDirectionWord(glyph, context, note.gap, labels, width)
-                                || directionText(glyph, context, note.gap, labels)
-                                || directionText(
-                                        new Glyph(
-                                                -glyph.right,
-                                                glyph.top,
-                                                -glyph.left,
-                                                glyph.bottom,
-                                                glyph.count,
-                                                glyph.pixels),
-                                        reflectedContext,
-                                        note.gap,
-                                        labels))) continue;
-                if (raw
-                        && candidate == NoteArticulation.STACCATO
-                        && embeddedTextDot(glyph, context, note.gap, labels)) continue;
-                if (raw
-                        && paperCandidates.contains(glyph)
-                        && candidate == NoteArticulation.STACCATO
-                        && ShadedItalicFCap.proved(
-                                gray,
-                                labels,
-                                width,
-                                height,
-                                note.gap,
-                                glyph.left,
-                                glyph.top,
-                                glyph.right,
-                                glyph.bottom)) continue;
-                if (raw
-                        && candidate == NoteArticulation.STACCATO
-                        && initialsPunctuation(glyph, context, note.gap, labels)) continue;
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && continuedDashRow(glyph, context, notes, note)) continue;
-                if (raw
-                        && candidate == NoteArticulation.STACCATO
-                        && endingNumberDot(glyph, context, note.gap, gray, labels, width, height))
-                    continue;
-                if (semanticNotation
-                        && (!raw
-                                || (candidate != NoteArticulation.STACCATO
-                                        && (candidate != NoteArticulation.STACCATISSIMO
-                                                || !filledTaper(glyph, width, glyph.y() < note.y)))
-                                || nearHead(glyph, notes))) continue;
-                if (raw
-                        && semanticNotation
-                        && candidate == NoteArticulation.STACCATISSIMO
-                        && attachedMarkStem(glyph, note, gray, width, height)) continue;
-                if (raw
-                        && semanticNotation
-                        && candidate == NoteArticulation.STACCATO
-                        && OmrScoreInterpreter.flagStemOwnsDot(
-                                labels,
-                                gray,
-                                width,
-                                height,
-                                note.x,
-                                note.y,
-                                note.gap,
-                                glyph.pixels)) continue;
-                if (candidate == NoteArticulation.TENUTO && nearHead(glyph, notes)) continue;
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && ShadedLedgerMarkOwnership.provedWhite(
-                                gray,
-                                width,
-                                height,
-                                note.x,
-                                note.y,
-                                note.gap,
-                                glyph.left,
-                                glyph.top,
-                                glyph.right,
-                                glyph.bottom)) continue;
-                if (raw
-                        && paperCandidates.contains(glyph)
-                        && candidate == NoteArticulation.TENUTO
-                        && ShadedLedgerMarkOwnership.proved(
-                                gray,
-                                width,
-                                height,
-                                note.x,
-                                note.y,
-                                note.gap,
-                                glyph.left,
-                                glyph.top,
-                                glyph.right,
-                                glyph.bottom)) continue;
-                if (raw
-                        && paperCandidates.contains(glyph)
-                        && candidate == NoteArticulation.TENUTO
-                        && TrackedLedgerMarkOwnership.proved(
-                                gray,
-                                width,
-                                height,
-                                note.x,
-                                note.y,
-                                note.gap,
-                                glyph.left,
-                                glyph.top,
-                                glyph.right,
-                                glyph.bottom,
-                                note.track)) continue;
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && (ledgerStackDash(glyph, note, gray, width, height)
-                                || compactLedgerStaff(glyph, note, gray, width, height))) continue;
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && completeRasterLedger(glyph, note, notes, gray, width, height)) continue;
-                if (raw
-                        && candidate == NoteArticulation.TENUTO
-                        && glyph.bottom - glyph.top + 1 <= Math.max(2, Math.round(note.gap * .23f))
-                        && horizontalRuleInk(
-                                gray,
-                                width,
-                                height,
-                                Math.round(glyph.x()),
-                                Math.round(glyph.y()),
-                                note.gap,
-                                235,
-                                .50f)
-                        && contrastedHorizontalRule(
-                                gray,
-                                width,
-                                height,
-                                Math.round(glyph.x()),
-                                Math.round(glyph.y()),
-                                note.gap)
-                        && !paperSeparatedTenuto(glyph, note, notes, gray, width, height)) continue;
-                if (candidate == NoteArticulation.STACCATO
-                        && (durationDot(glyph, notes)
-                                || (raw
-                                        && shelteredDot(
-                                                recoveredCore ? printedCore : glyph,
-                                                labels,
-                                                gray,
-                                                width,
-                                                height,
-                                                note.gap,
-                                                dy,
-                                                stemOwnedDot
-                                                        || pairedTenuto(
-                                                                glyph, context, note, width),
-                                                glyphIndex >= fringeStart)))) continue;
-                // A small off-axis dot beside a head is a duration dot, not staccato.
-                if (candidate == NoteArticulation.STACCATO && dx > .35f) continue;
-                if (raw && !joinedOwners.containsKey(glyph))
-                    compoundClaims.eligible(glyph, n, candidate, note, gray, width, height);
-                double score = dx * 3 + dy;
-                if (score < distance) {
-                    distance = score;
-                    best = n;
-                    mark = candidate;
-                }
+            if (!allRaw || notation > seed.count * .25f) continue;
+            float sx = seed.x(), sy = seed.y();
+            int low = 0, hi = N;
+            while (low < hi) {
+                page.p(8, 0);
+                int mid = (low + hi) >>> 1;
+                if (notes.get(sorted[mid]).x < sx - .7f * maxGap) low = mid + 1;
+                else hi = mid;
             }
-            if (best < 0) continue;
-            if ((mark == NoteArticulation.STACCATO
-                            || mark == NoteArticulation.STACCATISSIMO
-                            || mark == NoteArticulation.TENUTO)
-                    && ExpressiveWordBodyInk.owns(wordBodies, glyph.pixels, glyph.count, width))
-                continue;
-            if (faintAccents.contains(glyph)) claimedAccents.add(glyph);
-            if (!paperCandidates.contains(glyph)) printedClaims.add(glyph);
-            compoundClaims.claim(glyph, best, mark);
-            Anchor owner = notes.get(best);
-            // One mark on a chord affects that chord, never another staff or another onset.
-            for (int n = 0; n < notes.size(); n++) {
-                Anchor note = notes.get(n);
-                if (note.staff == owner.staff && Math.abs(note.x - owner.x) < owner.gap * .45f) {
-                    result[n] |= mark;
-                    compoundClaims.assignment(n, mark);
+            int groups = 0;
+            for (int k = low; k < N; k++) {
+                page.p(16, 0);
+                int index = sorted[k];
+                Anchor n = notes.get(index);
+                if (n.x > sx + .7f * maxGap) break;
+                float dy = (n.y - sy) / n.gap;
+                if (dy < .7f
+                        || dy > 8
+                        || Math.abs(sx - n.x) > .7f * n.gap
+                        || seed.right - seed.left + 1 > 2.1f * n.gap + 1
+                        || seed.bottom - seed.top + 1 > 1.7f * n.gap) continue;
+                int group = 0;
+                while (group < groups) {
+                    page.p(4, 0);
+                    if (Float.floatToIntBits(gaps[group]) == Float.floatToIntBits(n.gap)) break;
+                    group++;
+                }
+                if (group == groups) {
+                    gaps[group] = n.gap;
+                    empty[group] = false;
+                    kinds[group] = caretRawKind(seed, width, n.gap, page, false, height);
+                    groups++;
+                }
+                if (!blocked[index]) empty[group] = true;
+            }
+            for (int group = 0; group < groups; group++) {
+                page.p(8, 0);
+                if (!empty[group] || kinds[group] != 0) continue;
+                var body = page.grow(seed.pixels[0], gaps[group]);
+                if (body == null || body.pixels().length <= seed.count) continue;
+                float x = (body.left() + body.right()) * .5f,
+                        y = (body.top() + body.bottom()) * .5f;
+                boolean far = false;
+                for (Anchor rival : notes) {
+                    page.p(8, 0);
+                    float dy = (rival.y - y) / rival.gap;
+                    if (Math.abs(x - rival.x) <= rival.gap * .7f && dy > 6 && dy <= 8) far = true;
+                }
+                if (far) continue; // Whole body abstains; never remove an owner rival.
+                page.p(8L * body.pixels().length + 64, 128);
+                int semantic = 0;
+                for (int p : body.pixels()) {
+                    byte label = labels[p];
+                    if (label == OmrMeasurePostProcessor.NOTEHEAD
+                            || label == OmrMeasurePostProcessor.STEM_OR_REST
+                            || label == OmrMeasurePostProcessor.CLEF_OR_KEY
+                            || label == OmrMeasurePostProcessor.STAFF) semantic++;
+                }
+                if (semantic > body.pixels().length * .25f) continue;
+                Glyph glyph =
+                        new Glyph(
+                                body.left(),
+                                body.top(),
+                                body.right(),
+                                body.bottom(),
+                                body.pixels().length,
+                                body.pixels());
+                if (caretRawKind(glyph, width, gaps[group], page, true, height)
+                        != NoteArticulation.MARCATO) continue;
+                page.p(
+                        DetachedCaretCosts.sum(
+                                64,
+                                DetachedCaretCosts.mul(
+                                        4, DetachedCaretCosts.mul(glyph.count, glyph.count))),
+                        4L * glyph.count + 64);
+                Arrays.sort(glyph.pixels);
+                boolean duplicate = false;
+                for (Glyph other : out) {
+                    page.p(8L + 4L * glyph.count, 0);
+                    if (other.left == glyph.left
+                            && other.top == glyph.top
+                            && other.right == glyph.right
+                            && other.bottom == glyph.bottom
+                            && Arrays.equals(other.pixels, glyph.pixels)) {
+                        duplicate = true;
+                        break;
+                    }
+                }
+                if (!duplicate) {
+                    page.p(64, 128);
+                    out.add(glyph);
                 }
             }
         }
-        if (raw) compoundClaims.resolve(result, notes, gray, width, height);
-        if (raw)
-            for (int i = 0; i < notes.size(); i++) {
-                Anchor note = notes.get(i);
-                if ((result[i] & NoteArticulation.ACCENT) == 0
-                        && ruleJoinedAccent(
-                                note, notes, originalGlyphs, labels, gray, width, height))
-                    for (int j = 0; j < notes.size(); j++)
-                        if (notes.get(j).staff == note.staff
-                                && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
-                            result[j] |= NoteArticulation.ACCENT;
-                if ((result[i] & NoteArticulation.MARCATO) == 0
-                        && ruleJoinedMarcato(note, labels, gray, width, height))
-                    for (int j = 0; j < notes.size(); j++)
-                        if (notes.get(j).staff == note.staff
-                                && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
-                            result[j] |= NoteArticulation.MARCATO;
-                if ((result[i] & NoteArticulation.STACCATISSIMO) == 0
-                        && ruleJoinedWedge(
-                                note, notes, originalGlyphs, gray, labels, width, height))
-                    for (int j = 0; j < notes.size(); j++)
-                        if (notes.get(j).staff == note.staff
-                                && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
-                            result[j] |= NoteArticulation.STACCATISSIMO;
-                if ((result[i] & NoteArticulation.STACCATO) == 0
-                        && textJoinedDot(note, originalGlyphs, labels, gray, width, height))
-                    for (int j = 0; j < notes.size(); j++)
-                        if (notes.get(j).staff == note.staff
-                                && Math.abs(notes.get(j).x - note.x) < note.gap * .45f)
-                            result[j] |= NoteArticulation.STACCATO;
-            }
-        return result;
+        page.p(64, 128);
+        return new CaretPass(page, out, blocked, context, noteCosts);
     }
 
     /** A contrast subset cannot turn ink from a complete printed three into an accent. */
