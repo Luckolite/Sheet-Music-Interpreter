@@ -147,4 +147,81 @@ public class ReturningFlagCountTest {
         assertArrayEquals(g, gray);
         assertArrayEquals(l, labels);
     }
+
+    private void fadedFlags(boolean two) {
+        setup(false);
+        hook(0);
+        if (two) hook(17);
+        for (int i = 0; i < gray.length; i++)
+            if ((gray[i] & 255) < 255)
+                gray[i] = (byte) (labels[i] == 1 ? 195 : labels[i] == 4 ? 180 : 110);
+        byte[] original = gray.clone();
+        for (int yy = 2; yy < H - 2; yy++)
+            for (int x = 2; x < W - 2; x++) {
+                int sum = 0;
+                for (int dy = -2; dy <= 2; dy++)
+                    for (int dx = -2; dx <= 2; dx++) sum += original[(yy + dy) * W + x + dx] & 255;
+                gray[yy * W + x] = (byte) (sum / 25);
+            }
+    }
+
+    @Test
+    public void twoFadedFlagsKeepTheirSeparateRoots() throws Exception {
+        fadedFlags(true);
+        assertEquals(2, beams());
+    }
+
+    @Test
+    public void oneFadedFlagDoesNotAcquireASecondRoot() throws Exception {
+        fadedFlags(false);
+        assertEquals(1, beams());
+    }
+
+    private void mirrorFaded() {
+        byte[] before = gray.clone(), mask = labels.clone();
+        down = true;
+        for (int yy = 0; yy < H; yy++)
+            for (int x = 0; x < W; x++) {
+                int source = 160 - yy;
+                gray[yy * W + x] = source >= 0 && source < H ? before[source * W + x] : (byte) 255;
+                labels[yy * W + x] = source >= 0 && source < H ? mask[source * W + x] : 0;
+            }
+    }
+
+    @Test
+    public void oneFadedDownStemFlagRemainsAnEighth() throws Exception {
+        fadedFlags(false);
+        mirrorFaded();
+        assertEquals(1, beams());
+    }
+
+    @Test
+    public void twoFadedDownStemFlagsRetainTheirRoots() throws Exception {
+        fadedFlags(true);
+        mirrorFaded();
+        assertEquals(2, beams());
+    }
+
+    @Test
+    public void detachedFadedRootDoesNotBridgeMissingRawShaft() throws Exception {
+        fadedFlags(false);
+        for (int yy = 70; yy <= 96; yy++)
+            for (int x = 96; x <= 102; x++) gray[yy * W + x] = (byte) 255;
+        assertEquals(0, beams());
+    }
+
+    @Test
+    public void semanticPaleStaffDoesNotProveFlagsOnUniformPaper() throws Exception {
+        fadedFlags(true);
+        Arrays.fill(gray, (byte) 220);
+        assertEquals(0, beams());
+    }
+
+    @Test
+    public void fadedShaftWithoutItsRawHookStaysUnflagged() throws Exception {
+        fadedFlags(false);
+        for (int yy = 48; yy <= 115; yy++)
+            for (int x = 103; x <= 127; x++) gray[yy * W + x] = (byte) 255;
+        assertEquals(0, beams());
+    }
 }

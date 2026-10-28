@@ -22940,6 +22940,26 @@ final class OmrScoreInterpreter {
             attached =
                     paleStemToSupportedBeam(
                             labels, gray, width, height, head, staff, allowSinglePale);
+        // A complete source-proved shaft can be paler than the ordinary stem threshold.
+        // Preserve that threshold and all existing hook/root guards; a semantic trace alone
+        // cannot lend a neighbouring curve or acquire an extra returning flag.
+        if (attached == null
+                && gray != null
+                && hasCurvedFlag(labels, gray, width, height, head, gap, bestX, stemEnd, upward)
+                && FadedFlagShaft.matches(
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        head.minX,
+                        head.maxX,
+                        head.minY,
+                        head.maxY,
+                        head.centerY,
+                        gap,
+                        bestX,
+                        stemEnd,
+                        upward)) attached = new int[] {bestX, stemEnd, upward ? -1 : 1};
         if (!smallHead)
             attached =
                     CappedStemBeam.extend(
