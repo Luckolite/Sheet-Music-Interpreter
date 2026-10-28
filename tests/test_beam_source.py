@@ -23,9 +23,10 @@ class SourceBeamWireOriginalTest(unittest.TestCase):
     def test_current297_appends_to_exact_historical296_body(self):
         score=dict(measures=[],notes=[],firstMeasureNumber=0,keyChanges=[],tempoChanges=[],meterChanges=[],
                    rests=[],techniqueChanges=[],dynamicChanges=[],playbackDirections=[],expressiveEvents=[])
+        revision_before=guide_writer.RECOGNITION_REVISION
         old=guide_writer.encode(score,296);current=guide_writer.encode(score,297)
         self.assertEqual(297,struct.unpack_from('>i',current)[0])
-        self.assertEqual(124,guide_writer.RECOGNITION_REVISION)
+        self.assertEqual(revision_before,guide_writer.RECOGNITION_REVISION)
         self.assertEqual(old[4:],current[4:len(old)])
         self.assertEqual(beam_source.encode_source(None,0),current[len(old):])
         with self.assertRaises(ValueError):guide_writer.encode(score,max(guide_writer.SUPPORTED_GUIDE_VERSIONS)+1)
