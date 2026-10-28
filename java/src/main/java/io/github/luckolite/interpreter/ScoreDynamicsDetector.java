@@ -755,6 +755,22 @@ final class ScoreDynamicsDetector {
                     upper[x] = Math.min(upper[x], y);
                     lower[x] = Math.max(lower[x], y);
                 }
+                if (completeFaint != null
+                        && w >= gap * 3
+                        && w <= gap * 6
+                        && h <= gap * 1.75f
+                        && (qualifiedShort
+                                || w < h * 2.5f
+                                        && precedingPrintedLevel(
+                                                words,
+                                                ownershipGray,
+                                                width,
+                                                height,
+                                                left,
+                                                top,
+                                                bottom,
+                                                gap)))
+                    completeFaint.compactCandidate(owner, queue, n, left, right, top, bottom);
                 if (completeOpposed != null && !qualifiedShort && (w < gap * 4 || w < h * 4))
                     completeOpposed.candidate(owner, left, right, top, bottom, n, upper, lower);
                 if (gray == ownershipGray
@@ -1179,6 +1195,16 @@ final class ScoreDynamicsDetector {
             if (!shape.staff().equals(owner)
                     || GrandStaffDynamics.directionPart(shared, owner, shape.top(), shape.bottom())
                             != null) continue;
+            if (shape.requiresPrintedLevel()
+                    && !precedingPrintedLevel(
+                            words,
+                            ownershipGray,
+                            width,
+                            height,
+                            shape.left(),
+                            shape.top(),
+                            shape.bottom(),
+                            owner.gap())) continue;
             var proposed = new ArrayList<ScoreDynamicChange>();
             addWithArrival(
                     proposed,

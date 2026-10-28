@@ -7539,20 +7539,21 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "60c26d6bd74d912c8533d81ef8599377f82fde2a80854b14b6c9bc9fe28c7664",
-      "source_normalized_sha256": "5f9417974047dfa193177bc1930448fe164bed36a6e32017c1604509285230de",
+      "source_sha256": "76280e4ad0ce2203db3e727da1b09b683826745626553a205460b9ca1c17ef5e",
+      "source_normalized_sha256": "cb59c005599a9d0911253f09e7fec9be81162dfee0def8339e65628aef708c7e",
       "review_note": "Preserve one visually qualified fp as an atomic ordered forte/piano pair at an actual onset; reject a bare m only when unchanged raw contour and pre-existing note-owned mordent evidence agree. Other literal levels and timing guards remain unchanged.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed recognition108 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "6119e92c942b981e635f84694ef007d8c0a60485a6069573d10d5ce00aaea1ff",
-      "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
+      "standalone_sha256": "74e746be703da9e4198e311cb0adfa336afaccbf494625396126ee9b10361fa7",
+      "reviewed_app_commit": "41710cb205b83db6d4661cd6076170c88748a5de",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicsDetector.java",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
-      "standalone_normalized_sha256": "f183c040c0105275ea08a256b3a80d3a26876d2818c0147df1547e319a466b3b",
+      "standalone_normalized_sha256": "7f757a8df79702d03a00f98a777f07e179c4a7675ee31330cd2bf5ca687ecc4f",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal.",
-      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
+      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only.",
+      "qualified_complete_faint_hairpin_review": "Complete literal compact arms use the unchanged printed-level and compact span/height laws in place of the coarse aspect heuristic. Final raw prefix is rechecked against the full component. Admission kind and exact staff bind membership reuse. Original route, terminal rules, gray and geometry collector limits unchanged."
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
@@ -10241,12 +10242,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteFaintHairpinArms.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteFaintHairpinArms.java",
       "license": "Apache-2.0",
-      "source_sha256": "4505601e2930d1bf4efae26f8e23bc92fada001558f0a67b798dd956ffd879c4",
-      "source_normalized_sha256": "4505601e2930d1bf4efae26f8e23bc92fada001558f0a67b798dd956ffd879c4",
-      "standalone_sha256": "0b7155ff10cd7e1605af19976ab9ab29aba74d95232561703eed85ddcd564a83",
-      "standalone_normalized_sha256": "0b7155ff10cd7e1605af19976ab9ab29aba74d95232561703eed85ddcd564a83",
-      "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
-      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
+      "source_sha256": "a0f7b74c98bff4b6d670d252971ddd89f2ab36b2fa0c5920fd70e1254ea8acec",
+      "source_normalized_sha256": "a0f7b74c98bff4b6d670d252971ddd89f2ab36b2fa0c5920fd70e1254ea8acec",
+      "standalone_sha256": "8d8ad2b96f40cd5aa907e6184702181edaf33ee55ce755c2496efb6eaefca140",
+      "standalone_normalized_sha256": "8d8ad2b96f40cd5aa907e6184702181edaf33ee55ce755c2496efb6eaefca140",
+      "reviewed_app_commit": "41710cb205b83db6d4661cd6076170c88748a5de",
+      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only.",
+      "qualified_complete_faint_hairpin_review": "Complete literal compact arms use the unchanged printed-level and compact span/height laws in place of the coarse aspect heuristic. Final raw prefix is rechecked against the full component. Admission kind and exact staff bind membership reuse. Original route, terminal rules, gray and geometry collector limits unchanged."
     },
     "CompleteFaintHairpinArmsTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteFaintHairpinArmsTest.java",
@@ -10258,6 +10260,17 @@
       "standalone_normalized_sha256": "5293daaf4c85522bf23050f28ae11bb3b7ff0f88c160f5c3a0f3f5e7dd4f784e",
       "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
       "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
+    },
+    "QualifiedCompleteFaintHairpinArmsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/QualifiedCompleteFaintHairpinArmsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/QualifiedCompleteFaintHairpinArmsTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "56c7fd4e89cf55de69753ca837f94ee5cfe1a18022f112e1bb81bb4311f0b7bd",
+      "source_normalized_sha256": "56c7fd4e89cf55de69753ca837f94ee5cfe1a18022f112e1bb81bb4311f0b7bd",
+      "standalone_sha256": "0041f0439b1043cfff92d4ae669ef2afb23e8f6b4c8ceb5f2ad52d4a50ab53af",
+      "standalone_normalized_sha256": "0041f0439b1043cfff92d4ae669ef2afb23e8f6b4c8ceb5f2ad52d4a50ab53af",
+      "reviewed_app_commit": "41710cb205b83db6d4661cd6076170c88748a5de",
+      "qualified_complete_faint_hairpin_review": "Complete literal compact arms use the unchanged printed-level and compact span/height laws in place of the coarse aspect heuristic. Final raw prefix is rechecked against the full component. Admission kind and exact staff bind membership reuse. Original route, terminal rules, gray and geometry collector limits unchanged."
     }
   },
   "finite_curved_approach_review": {
@@ -15013,5 +15026,13 @@
     "native_selection_sha256": "abb28860477d8cd831dd9e35d6199374f4b161144ca9e156ad4cd4ee74a354d4",
     "validation": "18 original regressions; 445 focused standalone tests. Fresh current-source native model/OCR all-five-page qualification adds one reviewed ordinary crescendo, preserves every old dynamic record and all other final fields. Previous full suite evidence retained for unchanged dependencies. Matched app/worker package, device and deployment qualification remain separate.",
     "adaptation": "Package-only source/helper/test; explicitly selected native helper; existing gray, models, thresholds, shared limits and wire layouts unchanged."
+  },
+  "qualified_complete_faint_hairpin_review": {
+    "reviewed_app_commit": "41710cb205b83db6d4661cd6076170c88748a5de",
+    "documentation": "docs/complete-faint-hairpin-arms.md",
+    "native_helper": "CompleteFaintHairpinArms.java",
+    "native_selection_sha256": "abb28860477d8cd831dd9e35d6199374f4b161144ca9e156ad4cd4ee74a354d4",
+    "validation": "16 new original regressions; 379 focused app and 461 standalone tests pass. Private current pages1-3 saved detector-input replay adds one compact crescendo with all34 prior dynamics and expression events exact. Fresh combined all-five native and matched packaging/deployment gates pending.",
+    "adaptation": "Package-only helper/adapter/test; no new native selection, model, shared cap or serialized layout."
   }
 }

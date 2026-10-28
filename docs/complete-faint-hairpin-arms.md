@@ -5,3 +5,7 @@ The complete component must retain its seed, prove a shared tip, two continuous 
 Complete-component membership reuse is local to the exact staff record, including gap and phase. Original regressions reject reuse across distinct staff records and spacing. The public port contains original procedural fixtures only.
 
 Validation: 18 original regressions and 445 focused standalone tests pass. Fresh all-five-page native model/OCR processing restores one reviewed ordinary crescendo while every prior dynamic and other final score field remains exact. This qualifies source; matched Android/desktop packaging and deployment remain required.
+
+Compact wedges beside an independently inked printed level may also use the complete-arm proof within the existing compact span and height envelope. The original coarse-aspect route stays intact. The final prefix must still contain independent ink before the full recovered component; an overlapping OCR box cannot borrow the wedge itself. Admission kind and staff both bind local membership reuse.
+
+Sixteen new original tests cover both directions and raster phases, isolated operators, missing/padded/styled/distant levels, broken or extra arms, unchanged size bounds, full-prefix recheck and distinct admission keys. 379 focused app and 461 standalone tests pass. Three-page saved detector-input qualification adds one compact crescendo with every earlier dynamic and expression event intact. Combined fresh all-five native and matched package/deployment qualification remain pending.

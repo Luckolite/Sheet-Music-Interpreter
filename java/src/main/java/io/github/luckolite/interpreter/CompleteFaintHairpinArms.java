@@ -12,7 +12,8 @@ final class CompleteFaintHairpinArms {
             int right,
             int top,
             int bottom,
-            int direction) {}
+            int direction,
+            boolean requiresPrintedLevel) {}
 
     private record Captured(Shape shape, int[] pixels) {}
 
@@ -107,6 +108,29 @@ final class CompleteFaintHairpinArms {
                 int r,
                 int t,
                 int b) {
+            candidate(staff, seed, count, l, r, t, b, false);
+        }
+
+        void compactCandidate(
+                PlayingTechniqueDetector.Staff staff,
+                int[] seed,
+                int count,
+                int l,
+                int r,
+                int t,
+                int b) {
+            candidate(staff, seed, count, l, r, t, b, true);
+        }
+
+        private void candidate(
+                PlayingTechniqueDetector.Staff staff,
+                int[] seed,
+                int count,
+                int l,
+                int r,
+                int t,
+                int b,
+                boolean requiresPrintedLevel) {
             if (failed) return;
             try {
                 if (thread != Thread.currentThread()) throw REFUSAL;
@@ -114,13 +138,16 @@ final class CompleteFaintHairpinArms {
                 float gap = staff.gap();
                 int sw = r - l + 1, sh = b - t + 1;
                 // Existing straight-core prefilters; the complete body supplies later size proof.
-                if (sh > gap || sw < sh * 4 || sw > gap * 12 || count > sw * Math.max(8, gap))
-                    return;
+                if (requiresPrintedLevel
+                        ? sw < gap * 3 || sw > gap * 6 || sh > gap * 1.75f
+                        : sh > gap || sw < sh * 4 || sw > gap * 12) return;
+                if (count > sw * Math.max(8, gap)) return;
                 take(64, 0);
                 for (int k = 0; k < captured.size(); k++) {
                     var c = captured.get(k);
                     take(12, 0);
-                    if (!c.shape.staff().equals(staff)) continue;
+                    if (c.shape.requiresPrintedLevel() != requiresPrintedLevel
+                            || !c.shape.staff().equals(staff)) continue;
                     take(
                             count
                                             * (Math.max(
@@ -200,8 +227,11 @@ final class CompleteFaintHairpinArms {
                     if (stamp[k] != generation || state[k] != 3) return;
                 }
                 int bw = z - a + 1, bh = d - c + 1;
-                if (bw < gap * 4 || bw < bh * 4 || bh > gap * 3 || n > bw * Math.max(8, gap))
-                    return;
+                boolean sizePass =
+                        requiresPrintedLevel
+                                ? bw >= gap * 3 && bw <= gap * 6 && bh <= gap * 1.75f
+                                : bw >= gap * 4 && bw >= bh * 4 && bh <= gap * 3;
+                if (!sizePass || n > bw * Math.max(8, gap)) return;
                 take(n + bw * bh + 2L * bw + 64, 96L + bw * bh + 16L * bw);
                 boolean[] body = new boolean[bw * bh];
                 int[] upper = new int[bw], lower = new int[bw];
@@ -223,7 +253,10 @@ final class CompleteFaintHairpinArms {
                         480L + 8L * n);
                 int[] pixels = Arrays.copyOf(queue, n);
                 Arrays.sort(pixels);
-                captured.add(new Captured(new Shape(staff, a, z, c, d, direction), pixels));
+                captured.add(
+                        new Captured(
+                                new Shape(staff, a, z, c, d, direction, requiresPrintedLevel),
+                                pixels));
             } catch (Refusal e) {
                 failed = true;
             }
