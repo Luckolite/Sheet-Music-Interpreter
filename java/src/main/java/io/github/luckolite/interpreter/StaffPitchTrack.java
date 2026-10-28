@@ -440,6 +440,12 @@ final class StaffPitchTrack {
         return true;
     }
 
+    /** Same complete five-rule/no-sixth predicate as the subtle printed-staff route. */
+    static boolean completePrintedSlurRules(
+            byte[] gray, int width, int height, RawStaffLineDetector.StaffLines lines) {
+        return completeRules(gray, width, height, lines, true, 225);
+    }
+
     private static boolean completeRules(
             byte[] gray,
             int width,

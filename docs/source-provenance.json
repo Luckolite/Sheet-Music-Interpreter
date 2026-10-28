@@ -6555,14 +6555,18 @@
     },
     "PrintedSlurFrames.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurFrames.java",
-      "source_sha256": "2604c1ba4c248265c86fcc4ad8627fd7610d95fcd2337369a92cc3f589a6dc0f",
-      "source_normalized_sha256": "e84a07469aab553f47a72335f50e0a156c2d0d1c59359fa2e9261016d454abfe",
+      "source_sha256": "fc257ed76c7f8bea81726573e080d9b511a39385c00ad8ef057a812761d37e5b",
+      "source_normalized_sha256": "9d9bf469eb11bdf58fe0b52ab0d3d72faefea53cd3fbc9d51b43dc67b3d16040",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
       "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
       "review_note": "Use common independently verified staff frames for geometry-only or timed heads. Repeated systems require unique physical phase; duplicate/stale owners reject. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
-      "reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurFrames.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurFrames.java",
+      "license": "Apache-2.0",
+      "standalone_sha256": "b4393097ec31d254cf77652a6d4419f3a4bbd4113f38746b23d2eefd1ffc3ea2",
+      "standalone_normalized_sha256": "481a88a9704fede809285907720ee728850375365acbbf603f74b9eab0c53e2a",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
@@ -6596,15 +6600,18 @@
     },
     "PrintedSlurRecognition.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurRecognition.java",
-      "source_sha256": "36fec0607a0968f606b8ae9ba40fd765654a1742ed20dccf8b6469f7021a92e4",
-      "source_normalized_sha256": "88bada1e138194afe5ff9f5f047a6d28849ec98da7c778a0c3a95ba5a74a14f9",
-      "reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
+      "source_sha256": "3680d3080e16e2e468e15912831d23d23066ed5766c6f3b96fd4c4fe28438a6f",
+      "source_normalized_sha256": "85cc626732b1f71fd3b3bfdf549f817eaebcb6c6da3c964172fd2a5902aa7fad",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
       "scoped_reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "review_note": "Paired global nested-curve ownership proof rejects merged semantic islands; a capture-only mask copy unmasks proved unretained islands while preserving source pixels and retained notes. Original geometric regressions only.",
-      "standalone_sha256": "1c98794ec22efee981fcc4e4f92dbf00b99aef60a439eca9a31b3bcf591cc84f",
+      "standalone_sha256": "ad6eec4f98ecb26e44a0a01fa44390cc9e7d2e60c61bb695e51ebc48a6a4497e",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurRecognition.java",
-      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports."
+      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
+      "license": "Apache-2.0",
+      "standalone_normalized_sha256": "f8a96b5c2250303adeae9c456f329054ef20f50af06df2c131ccb9395c739167",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
     },
     "PrintedStaffAdmission.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStaffAdmission.java",
@@ -8739,14 +8746,14 @@
     },
     "StaffPitchTrack.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StaffPitchTrack.java",
-      "source_sha256": "9cd26beb29f6c7e2f11afe4275cfc5f5316ebb4ae942c6aa5f32ee44efe2d22e",
-      "source_normalized_sha256": "eee530d8cb054c51dc348449ed49039c7b8a74d3aa5d836edc1530b29a269906",
+      "source_sha256": "c161d5bfcb494fa8a5cf3c1d49ea12066d6ec895d6da32838e82ee3a117b1c10",
+      "source_normalized_sha256": "c2b87efbca635b93ed20aad4bfc3b767ee7ac79aefc2c0b15c8a4f0549475ea8",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "review_note": "Bound verified sampled staff authority to its observed horizontal range; retain existing local rule recovery outside it. Original generated rule regressions, no source-score pixels.",
       "reviewed_source_state": "committed",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
-      "standalone_sha256": "f104b754697a9509ac7887ac24ff00395318817b4b8abb9698c214aa1a411248",
-      "reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
+      "standalone_sha256": "be6efa1a013f044bc0c10a80ec210194c5ca48ee93504fe57785a6ee1aecf83b",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
       "scoped_reviewed_app_commit": "6c4dabfcdb0108e8d4dcede82b09550f5b839c3f",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/StaffPitchTrack.java",
       "literal_faint_quarter_review": {
@@ -8766,7 +8773,10 @@
         "scope": "Necessary zero-span early null on valid full-width strips; all35 other original methods and quarter at() unchanged.",
         "rollout": "Source only; cumulative matched packaging deferred during active goal.",
         "app_commit": "fefff1f322489713f99d5d8eed1af6f745f9d6cb"
-      }
+      },
+      "license": "Apache-2.0",
+      "standalone_normalized_sha256": "510630a726a115b7c95b50b53ce7bff59262dfbd06694e4de1cd6713d26df8b2",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
     },
     "StemEndBranchOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/StemEndBranchOwnership.java",
@@ -10192,6 +10202,39 @@
       "standalone_normalized_sha256": "cb372e0f3f2a0a60c6faea5deffda78041f7e3d8803e0519130326b0aa2a78b2",
       "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
       "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal."
+    },
+    "WholeStaffSlurRules.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeStaffSlurRules.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/WholeStaffSlurRules.java",
+      "license": "Apache-2.0",
+      "source_sha256": "7e52e9e33c21c85fda1579bb7f340f0e6fc62da8ccae164091addb993bfef92f",
+      "source_normalized_sha256": "7e52e9e33c21c85fda1579bb7f340f0e6fc62da8ccae164091addb993bfef92f",
+      "standalone_sha256": "2cea81e86c3271e5650c01355d8360169d0e1dfc60922e4eea2c8bb3290cc5ee",
+      "standalone_normalized_sha256": "11698ed34445ef959c4420a4d8dad7999b6cfb8b17a37461d671e6f130b3925d",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
+    },
+    "WholeStaffSlurFrameOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/WholeStaffSlurFrameOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/WholeStaffSlurFrameOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "a588a6f49d94390f7a139da68c5cb1ba628bf48f8b7df781c666045b68a193ff",
+      "source_normalized_sha256": "a588a6f49d94390f7a139da68c5cb1ba628bf48f8b7df781c666045b68a193ff",
+      "standalone_sha256": "88d2cc4e3d2a3e7736cc06d05ef834c23805427f7bfe467f5a46c8237751c12c",
+      "standalone_normalized_sha256": "bcd3e80063b8c09eb25af0eff02a9ccb2847594d4eaa363afa65b62c2b0f7708",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
+    },
+    "WholeStaffSlurRuleControlsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/WholeStaffSlurRuleControlsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/WholeStaffSlurRuleControlsTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "b05cbd3cb6728683af9f2a05625282772c48d7d7dd5acd7972c63573079efd6e",
+      "source_normalized_sha256": "b05cbd3cb6728683af9f2a05625282772c48d7d7dd5acd7972c63573079efd6e",
+      "standalone_sha256": "9de408a28d04fe841617bad964e2fbceea4a515c49e31f640917f02d3bb1fe9d",
+      "standalone_normalized_sha256": "df4378b6f87da3eb186f717ea1303f016207f74af651de7e522f937da96d3ee8",
+      "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
     }
   },
   "finite_curved_approach_review": {
@@ -14915,5 +14958,14 @@
     "native_selection_sha256": "05153feaf1eff575b361eac9d4b9c72ef5f0d63a4de7372d084c93a20f086651",
     "validation": "161 original/retained tests per namespace; independent vertical-phase/claim-window preservation regressions. Private current pages1-3 detector-input replay restores exactly two short wedges with all prior dynamic records/events unchanged. Actual all-five native and cumulative app/public/deployment gates remain required.",
     "adaptation": "Package-only shared source/helper/test, explicitly selected native helper; no model or wire change."
+  },
+  "whole_staff_slur_review": {
+    "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
+    "documentation": "docs/whole-staff-slur-rules.md",
+    "native_helper": "WholeStaffSlurRules.java",
+    "native_selection_sha256": "fbe6078522ac15aceb1c5e23391c1e54351689de905a98a9b12d866d7aaa50c8",
+    "validation": "595 original/retained app-package tests;21 independent tests and24 challenged entry cases. Private source reconciliation adds seven active and eleven deferred curves while preserving legacy records/IDs and all other same-entry fields. Final later clock/full native and cumulative app/public/deployment gates remain required.",
+    "admission_boundary": "Existing broad raw-rule/head-row tolerance retained; gently warped staff probes do not establish new local head-pitch or written-clock authority. No false slur output in24 reviewed challenge cases.",
+    "adaptation": "Package-only executable sources and original tests with AOSP formatting; explicit helper selection. No model or wire change."
   }
 }

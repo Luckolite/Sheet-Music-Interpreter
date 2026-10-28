@@ -9,10 +9,19 @@ final class PrintedSlurFrames {
     record Result<T extends PrintedSlurOwners.Location>(
             List<PrintedSlurPageCapture.Frame<T>> frames,
             Set<Integer> unboundOwners,
-            int unprovedStaffs) {
+            int unprovedStaffs,
+            Set<Integer> unprovedStaffSlots) {
+        Result(
+                List<PrintedSlurPageCapture.Frame<T>> frames,
+                Set<Integer> unboundOwners,
+                int unprovedStaffs) {
+            this(frames, unboundOwners, unprovedStaffs, Set.of());
+        }
+
         Result {
             frames = List.copyOf(frames);
             unboundOwners = Set.copyOf(unboundOwners);
+            unprovedStaffSlots = Set.copyOf(unprovedStaffSlots);
         }
     }
 
@@ -25,6 +34,35 @@ final class PrintedSlurFrames {
             List<PlayingTechniqueDetector.Staff> staffs,
             List<ScoreNoteEvent> notes,
             List<T> heads) {
+        return prepareInternal(gray, width, height, staffs, notes, heads, null);
+    }
+
+    static <T extends PrintedSlurOwners.Location> Result<T> prepareSupplemental(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<T> heads,
+            Result<?> legacy) {
+        return prepareInternal(
+                gray,
+                width,
+                height,
+                staffs,
+                notes,
+                heads.stream().filter(h -> legacy.unboundOwners().contains(h.owner())).toList(),
+                legacy.unprovedStaffSlots());
+    }
+
+    static <T extends PrintedSlurOwners.Location> Result<T> prepareInternal(
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            List<ScoreNoteEvent> notes,
+            List<T> heads,
+            Set<Integer> supplementalSlots) {
         if (width <= 0 || height <= 0 || gray == null || gray.length != (long) width * height)
             throw new IllegalArgumentException("Invalid printed frame raster");
         Objects.requireNonNull(staffs);
@@ -35,15 +73,33 @@ final class PrintedSlurFrames {
         var tracks = new ArrayList<StaffPitchTrack>();
         var groups = new ArrayList<List<T>>();
         int unproved = 0;
+        var unprovedSlots = new HashSet<Integer>();
+        var optionalProof =
+                supplementalSlots == null
+                        ? null
+                        : new WholeStaffSlurRules.Page(gray, width, height);
         for (var staff : staffs) {
             if (staff.index() < 0 || staff.count() < 1 || staff.index() >= staff.count())
                 throw new IllegalArgumentException("Invalid physical staff identity");
             var track =
-                    StaffPitchTrack.forPrintedSlurs(
-                            gray, width, height, staff.top(), staff.bottom(), staff.gap());
+                    supplementalSlots == null
+                            ? StaffPitchTrack.forPrintedSlurs(
+                                    gray, width, height, staff.top(), staff.bottom(), staff.gap())
+                            : supplementalSlots.contains(tracks.size())
+                                    ? optionalProof.prove(gray, width, height, staff)
+                                    : null;
             tracks.add(track);
             groups.add(new ArrayList<>());
-            if (track == null) unproved++;
+            if (track == null) {
+                unproved++;
+                unprovedSlots.add(tracks.size() - 1);
+            }
+        }
+        // Optional resource/source refusal drops every new track while preserving legacy proof.
+        if (optionalProof != null && !optionalProof.finish()) {
+            Collections.fill(tracks, null);
+            unproved = staffs.size();
+            for (int i = 0; i < staffs.size(); i++) unprovedSlots.add(i);
         }
         var seen = new HashSet<Integer>();
         var unbound = new HashSet<Integer>();
@@ -94,6 +150,6 @@ final class PrintedSlurFrames {
                     new PrintedSlurPageCapture.Frame<T>(
                             0, first, width - 1, last, tracks.get(i), group));
         }
-        return new Result<>(frames, unbound, unproved);
+        return new Result<>(frames, unbound, unproved, unprovedSlots);
     }
 }

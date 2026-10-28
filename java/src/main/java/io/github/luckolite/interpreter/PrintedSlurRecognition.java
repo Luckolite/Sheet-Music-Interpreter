@@ -58,6 +58,21 @@ final class PrintedSlurRecognition {
                             height,
                             prepared.frames(),
                             score.notes());
+            var supplemented =
+                    WholeStaffSlurRules.append(
+                            physicalPage,
+                            score,
+                            gray,
+                            labels,
+                            width,
+                            height,
+                            staffs,
+                            heads,
+                            prepared,
+                            captured,
+                            Set.of(),
+                            true);
+            captured = supplemented.captured();
             var result =
                     captured.limitReached() || captured.source().candidates().isEmpty()
                             ? score
@@ -66,8 +81,8 @@ final class PrintedSlurRecognition {
                     new Result(
                             result,
                             captured.statuses(),
-                            prepared.unboundOwners(),
-                            prepared.unprovedStaffs(),
+                            supplemented.unboundOwners(),
+                            supplemented.unprovedStaffs(),
                             captured.limitReached(),
                             false));
         }
@@ -151,6 +166,21 @@ final class PrintedSlurRecognition {
                     prepared.unprovedStaffs(),
                     true,
                     false);
+        var supplemented =
+                WholeStaffSlurRules.append(
+                        physicalPage,
+                        score,
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        staffs,
+                        heads,
+                        prepared,
+                        captured,
+                        ties,
+                        false);
+        captured = supplemented.captured();
         var result =
                 captured.source().spans().isEmpty() && captured.source().candidates().isEmpty()
                         ? score
@@ -158,8 +188,8 @@ final class PrintedSlurRecognition {
         return new Result(
                 result,
                 captured.statuses(),
-                prepared.unboundOwners(),
-                prepared.unprovedStaffs(),
+                supplemented.unboundOwners(),
+                supplemented.unprovedStaffs(),
                 false,
                 false);
     }
