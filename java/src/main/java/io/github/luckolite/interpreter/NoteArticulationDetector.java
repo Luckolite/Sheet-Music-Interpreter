@@ -957,7 +957,8 @@ final class NoteArticulationDetector {
                                                         g.pixels))
                                 .collect(java.util.stream.Collectors.toList())
                         : List.of();
-        for (Glyph glyph : candidates) {
+        for (int glyphIndex = 0; glyphIndex < candidates.size(); glyphIndex++) {
+            Glyph glyph = candidates.get(glyphIndex);
             List<Glyph> context = paperCandidates.contains(glyph) ? glyphs : originalGlyphs;
             List<Glyph> reflectedContext =
                     paperCandidates.contains(glyph) ? reflectedGlyphs : originalReflected;
@@ -998,6 +999,11 @@ final class NoteArticulationDetector {
             int best = -1, mark = 0;
             double distance = Double.MAX_VALUE;
             Integer joinedOwner = joinedOwners.get(glyph);
+            boolean completeRawBody =
+                    raw
+                            && joinedOwner == null
+                            && glyphIndex >= faintAccents.size()
+                            && glyphIndex < faintAccents.size() + originalGlyphs.size();
             for (int n = 0; n < notes.size(); n++) {
                 if (joinedOwner != null && n != joinedOwner) continue;
                 Anchor note = notes.get(n);
@@ -1025,6 +1031,15 @@ final class NoteArticulationDetector {
                 // extender several spaces beyond the staff.
                 if (candidate == 0 && dy <= 3f && roundedTenuto(glyph, width, note.gap))
                     candidate = NoteArticulation.TENUTO;
+                // Apply the existing compact raster law to the complete raw body before
+                // dark-core extraction can discard its literal antialiased boundary cells.
+                // These upper bounds only skip bodies that cannot be staccato under that law.
+                if (candidate == 0
+                        && completeRawBody
+                        && glyphWidth <= note.gap * .62f
+                        && glyphHeight <= note.gap * .62f
+                        && rasterCoreMark(glyph, width, note.gap) == NoteArticulation.STACCATO)
+                    candidate = NoteArticulation.STACCATO;
                 // A blurred detached body must prove its existing shape again on dark ink.
                 // Keep all ownership, semantic notation, word, staff and dot guards below.
                 boolean recoveredCore = false;
