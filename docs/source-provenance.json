@@ -15779,5 +15779,57 @@
     },
     "standaloneAdapter": "files.SheetInterpreter.java",
     "status": "QUALIFIED_SOURCE_TESTS_AND_FRESH_FIVE_PAGE_NATIVE"
+  },
+  "ci127_private_reflection_test_adapter_review": {
+    "reviewed_app_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
+    "reviewed_app_base_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
+    "reviewed_public_base_commit": "f6d586f1fd347ca314e9a352534ff6e4b6a0f29a",
+    "scope": "Test-helper reflection adapters only. Current private Detector constructor uses explicit7parameter lookup with null optional PrimaryObserver. Legacy contact controls use explicit6parameter lookup with observe=false; Edge uses its explicit(int,int)constructor. Nested OwnedEndpoint controls retain their originalfalse mode.",
+    "recognitionRevision": 127,
+    "guideFormat": 299,
+    "audioFormat": 101,
+    "productionSourceOrModelsOrLayoutsChanged": false,
+    "originalAssertionsAndStringLiteralsUnchanged": true,
+    "existingMappedSourceEntriesUnchanged": true,
+    "shaftAndOwnedEndpointNamespacePairsOnly": true,
+    "standaloneOriginalHelper": "java/src/test/java/io/github/luckolite/interpreter/FaintAbsenceOriginals.java",
+    "originalPublicJUnitTests": 6,
+    "originalPublicReflectionErrors": 2,
+    "targetedPublicJUnitTestsPassed": 6,
+    "targetedAppJUnitTestsPassed": 1,
+    "actualProductFixCount": 0,
+    "helpers": [
+      {
+        "repository": "app",
+        "path": "app/src/test/java/com/musicsheets/app/pdf/ShaftCertificateOriginals.java",
+        "before_sha256": "75b5781c0769288dc76e884585c9260c7114bb11c71cb8851971294f5a538c79",
+        "after_sha256": "9d67cc8541bfcee760d4b371583307f19bc2fef0825fd0de38e26ce12d9275d4"
+      },
+      {
+        "repository": "app",
+        "path": "app/src/test/java/com/musicsheets/app/pdf/OwnedEndpointOriginals.java",
+        "before_sha256": "ffbc614eb8f943e8971f44831d9c4b2766e336d3dc57f3809bf3268dee71243f",
+        "after_sha256": "e07321aa2bfebd7252838154f0daa6a8e30bf5839725200722ce063900a14a9a"
+      },
+      {
+        "repository": "public",
+        "path": "java/src/test/java/io/github/luckolite/interpreter/ShaftCertificateOriginals.java",
+        "before_sha256": "ff85357aadf538f189afe2915efbce5ddf395499d576ca983f110793115613fe",
+        "after_sha256": "c4c3644bf3da9f0d51e014e794ca1ac5d770f51737f2c7a96c1deab74e9b4243"
+      },
+      {
+        "repository": "public",
+        "path": "java/src/test/java/io/github/luckolite/interpreter/OwnedEndpointOriginals.java",
+        "before_sha256": "bc1e86034aa901b508d24a97d7049c1feae1d959826988445a670ad7bbe6add3",
+        "after_sha256": "3e95c27f474918bd5c31b73dba77dd1343b40cc1687a001a73a6e8e375771f82"
+      },
+      {
+        "repository": "public",
+        "path": "java/src/test/java/io/github/luckolite/interpreter/FaintAbsenceOriginals.java",
+        "before_sha256": "8a067cc8042ebf3c537085088ab95a7f518a5d856f7a121defda32ab8ca0a92a",
+        "after_sha256": "3c683ff4c59654058fb4148f43800a4b6408b8eb8fa2909deae0ed1a76cf0563"
+      }
+    ],
+    "status": "TARGETED_CURRENT127_TEST_ADAPTER_QUALIFICATION_COMPLETE"
   }
 }

@@ -80,11 +80,20 @@ public final class OwnedEndpointOriginals {
         var cols = List.of(shaft, other);
         Class<?> d = Class.forName(PrintedBeamGeometry.class.getName() + "$Detector"),
                 edge = Class.forName(PrintedBeamGeometry.class.getName() + "$Edge");
-        var dc = d.getDeclaredConstructors()[0];
+        // These controls exercise legacy geometry without optional Source evidence.
+        var dc =
+                d.getDeclaredConstructor(
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        List.class,
+                        PrintedBeamGeometry.CarrierPlane.class,
+                        PrintedBeamGeometry.Budget.class,
+                        PrintedBeamGeometry.PrimaryObserver.class);
         dc.setAccessible(true);
         Object detector =
-                dc.newInstance(raw, W, H, cols, plane, new PrintedBeamGeometry.Budget(limit));
-        var ec = edge.getDeclaredConstructors()[0];
+                dc.newInstance(raw, W, H, cols, plane, new PrintedBeamGeometry.Budget(limit), null);
+        var ec = edge.getDeclaredConstructor(int.class, int.class);
         ec.setAccessible(true);
         Object e = ec.newInstance(0, 1);
         var m =
@@ -94,12 +103,13 @@ public final class OwnedEndpointOriginals {
                         PrintedBeamGeometry.Column.class,
                         int.class,
                         FiniteRawBeamStrip.Proof.class,
-                        int.class);
+                        int.class,
+                        boolean.class);
         m.setAccessible(true);
         var interval = new FiniteRawBeamStrip.Interval(lowTop * 1024, highTop * 1024);
         var proof = new FiniteRawBeamStrip.Proof(1, List.of(interval), List.of(interval), null);
         try {
-            return (boolean) m.invoke(detector, e, shaft, boundary, proof, 0);
+            return (boolean) m.invoke(detector, e, shaft, boundary, proof, 0, false);
         } catch (InvocationTargetException ex) {
             throw ex.getCause();
         }

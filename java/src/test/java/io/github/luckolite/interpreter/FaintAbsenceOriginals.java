@@ -66,6 +66,7 @@ public class FaintAbsenceOriginals {
                 wider.prove(left, List.of(left, right)).isEmpty(),
                 "isolated flag has no false primary-absence certificate");
         Class<?> type = Class.forName(PrintedBeamGeometry.class.getName() + "$Detector");
+        // These controls exercise legacy geometry without optional Source evidence.
         var ctor =
                 type.getDeclaredConstructor(
                         byte[].class,
@@ -73,7 +74,8 @@ public class FaintAbsenceOriginals {
                         int.class,
                         List.class,
                         PrintedBeamGeometry.CarrierPlane.class,
-                        PrintedBeamGeometry.Budget.class);
+                        PrintedBeamGeometry.Budget.class,
+                        PrintedBeamGeometry.PrimaryObserver.class);
         ctor.setAccessible(true);
         var method =
                 type.getDeclaredMethod(
@@ -104,7 +106,7 @@ public class FaintAbsenceOriginals {
                 !PrintedBeamRawContrast.faint(unknown, W, H, 80, 45, 16, false, n -> {}),
                 "weak tail is not certain foreground");
         var budget = new PrintedBeamGeometry.Budget(1_000_000);
-        var detector = ctor.newInstance(unknown, W, H, List.of(), plane, budget);
+        var detector = ctor.newInstance(unknown, W, H, List.of(), plane, budget, null);
         check(
                 (boolean) method.invoke(detector, 80, 45d, 3, 16d, -1),
                 "uncertain faint tail vetoes a false hook");
@@ -115,7 +117,8 @@ public class FaintAbsenceOriginals {
                         H,
                         List.of(),
                         plane,
-                        new PrintedBeamGeometry.Budget(1_000_000));
+                        new PrintedBeamGeometry.Budget(1_000_000),
+                        null);
         check(
                 !(boolean) method.invoke(white, 80, 45d, 3, 16d, -1),
                 "clear paper does not invent possible ink");
@@ -126,18 +129,19 @@ public class FaintAbsenceOriginals {
                         H,
                         List.of(),
                         plane,
-                        new PrintedBeamGeometry.Budget(1_000_000));
+                        new PrintedBeamGeometry.Budget(1_000_000),
+                        null);
         check(
                 (boolean) method.invoke(open, 80, 45d, 3, 16d, -1),
                 "open uncertain run also blocks claimed absence");
         long total = budget.used();
         var exact = new PrintedBeamGeometry.Budget(total);
-        var d = ctor.newInstance(unknown, W, H, List.of(), plane, exact);
+        var d = ctor.newInstance(unknown, W, H, List.of(), plane, exact, null);
         check(
                 (boolean) method.invoke(d, 80, 45d, 3, 16d, -1) && exact.used() == total,
                 "exact veto prepayment");
         var under = new PrintedBeamGeometry.Budget(total - 1);
-        d = ctor.newInstance(unknown, W, H, List.of(), plane, under);
+        d = ctor.newInstance(unknown, W, H, List.of(), plane, under, null);
         try {
             method.invoke(d, 80, 45d, 3, 16d, -1);
             throw new AssertionError();

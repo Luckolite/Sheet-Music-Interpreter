@@ -226,9 +226,18 @@ public final class ShaftCertificateOriginals {
             throws Throwable {
         Class<?> d = Class.forName(PrintedBeamGeometry.class.getName() + "$Detector"),
                 edge = Class.forName(PrintedBeamGeometry.class.getName() + "$Edge");
-        var dc = d.getDeclaredConstructors()[0];
+        // These controls exercise legacy geometry without optional Source evidence.
+        var dc =
+                d.getDeclaredConstructor(
+                        byte[].class,
+                        int.class,
+                        int.class,
+                        List.class,
+                        PrintedBeamGeometry.CarrierPlane.class,
+                        PrintedBeamGeometry.Budget.class,
+                        PrintedBeamGeometry.PrimaryObserver.class);
         dc.setAccessible(true);
-        var ec = edge.getDeclaredConstructors()[0];
+        var ec = edge.getDeclaredConstructor(int.class, int.class);
         ec.setAccessible(true);
         Object
                 detector =
@@ -238,7 +247,8 @@ public final class ShaftCertificateOriginals {
                                 H,
                                 List.of(s, s),
                                 plane,
-                                new PrintedBeamGeometry.Budget(limit)),
+                                new PrintedBeamGeometry.Budget(limit),
+                                null),
                 e = ec.newInstance(0, 1);
         var interval = new FiniteRawBeamStrip.Interval(low * 1024, high * 1024);
         var proof = new FiniteRawBeamStrip.Proof(1, List.of(interval), List.of(interval), null);
@@ -249,10 +259,11 @@ public final class ShaftCertificateOriginals {
                         PrintedBeamGeometry.Column.class,
                         int.class,
                         FiniteRawBeamStrip.Proof.class,
-                        int.class);
+                        int.class,
+                        boolean.class);
         m.setAccessible(true);
         try {
-            return (boolean) m.invoke(detector, e, s, boundary, proof, 0);
+            return (boolean) m.invoke(detector, e, s, boundary, proof, 0, false);
         } catch (InvocationTargetException ex) {
             throw ex.getCause();
         }
