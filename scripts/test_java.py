@@ -8,11 +8,18 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 import shutil
 import urllib.request
 import time
 from pathlib import Path
 from build_java import ROOT, jdk_tool
+
+
+def print_diagnostic(message):
+    """Keep Unicode visible as escapes when the console cannot encode it."""
+    encoding = getattr(sys.stdout, 'encoding', None) or 'utf-8'
+    print(message.encode(encoding, errors='backslashreplace').decode(encoding))
 
 
 def parallel_batches(class_names, jobs):
@@ -73,13 +80,13 @@ def run_parallel(java, class_path, class_names, root, jobs, heap_mb):
         json.dumps({**manifest, 'exitCode': status, 'batches': results}, indent=2) + '\n',
         encoding='utf-8')
     for result in results:
-        print('Java batch %d: %d classes, exit %d; %s' %
+        print_diagnostic('Java batch %d: %d classes, exit %d; %s' %
               (result['batch'], len(result['classes']), result['exitCode'], result['log']))
         if result['exitCode']:
             # CI otherwise reports only the batch exit, losing the JUnit failure
             # once its ephemeral runner is gone. Keep the diagnostic bounded.
             tail = '\n'.join(Path(result['log']).read_text(encoding='utf-8', errors='replace').splitlines()[-80:])
-            print('Failed Java batch %d JUnit tail:\n%s' % (result['batch'], tail[-12000:]))
+            print_diagnostic('Failed Java batch %d JUnit tail:\n%s' % (result['batch'], tail[-12000:]))
     return status
 
 

@@ -84,8 +84,10 @@ final class NoteArticulationDetector {
             if (glyphs.size() == 4096) return List.of();
             glyphs.add(new Glyph(l, t, r, b, size, Arrays.copyOf(queue, size)));
         }
-        work += (long) glyphs.size() * notes.size() * 8;
+        // One extra geometry-index store per component/peer, plus reusable storage.
+        work += (long) glyphs.size() * notes.size() * 9 + notes.size() + 32;
         if (work > 256_000_000L) return List.of();
+        int[] geometryPeers = new int[notes.size()];
         List<BowMark> result = new ArrayList<>();
         for (Glyph g : glyphs) {
             if (g.count < 5
@@ -93,8 +95,21 @@ final class NoteArticulationDetector {
                     || g.top == 0
                     || g.right == width - 1
                     || g.bottom == height - 1) continue;
-            int owner = -1;
+            int owner = -1, geometryCount = 0;
             boolean ambiguous = false;
+            boolean strokeMeasured = false;
+            int strokeSpanTwice = -1;
+            // Existing UP shape tip-band law, measured on this complete component.
+            work += g.count + 16L;
+            if (work > 256_000_000L) return List.of();
+            double tip = 0;
+            int tips = 0;
+            for (int pixel : g.pixels)
+                if (pixel / width >= g.bottom - (g.bottom - g.top) * .15) {
+                    tip += pixel % width;
+                    tips++;
+                }
+            double tipX = tips == 0 ? Double.NaN : tip / tips;
             for (int i = 0; i < notes.size(); i++) {
                 Anchor n = notes.get(i);
                 float gap = n.gap;
@@ -110,13 +125,30 @@ final class NoteArticulationDetector {
                 if (above < -.6f
                         || above > 4.2f
                         || w < gap * .65f
-                        || w > gap * 3
                         || h < gap * .8f
                         || h > gap * 3.5f
                         || h / w < .65f
                         || h / w > 2.2f
-                        || Math.abs(g.x() - n.x) > gap * .7f
                         || n.y - g.bottom < gap * .7f) continue;
+                if (w > gap * 3) {
+                    // A peer outside both existing anchor tolerances cannot own this mark.
+                    if (Math.abs(g.x() - n.x) > gap * .7f && Math.abs(tipX - n.x) > gap * .7f)
+                        continue;
+                    if (!strokeMeasured) {
+                        // Complete finite component profile and shape proof, before allocation.
+                        work +=
+                                20L * (g.right - g.left + 1) * (g.bottom - g.top + 1)
+                                        + 64L * g.count
+                                        + 160L * (g.bottom - g.top + 1)
+                                        + 384;
+                        if (work > 256_000_000L) return List.of();
+                        strokeSpanTwice = completeBowStrokeSpanTwice(g, width);
+                        strokeMeasured = true;
+                    }
+                    if (strokeSpanTwice < 0 || strokeSpanTwice > 6d * gap) continue;
+                }
+                geometryPeers[geometryCount++] = i;
+                if (Math.abs(g.x() - n.x) > gap * .7f) continue;
                 if (owner >= 0) {
                     var a = events.get(owner);
                     var b = events.get(i);
@@ -125,6 +157,43 @@ final class NoteArticulationDetector {
                             || a.staffCount() != b.staffCount()
                             || a.positionInMeasure() != b.positionInMeasure()) ambiguous = true;
                 } else owner = i;
+            }
+            // Qualify the new anchor only when it can add a peer to the legacy domain.
+            // DOWN and ambiguous shapes never acquire or compete through a V tip.
+            work += 16L * geometryCount + 32;
+            if (work > 256_000_000L) return List.of();
+            boolean tipPotential = false, tipQualified = false;
+            for (int slot = 0; slot < geometryCount; slot++) {
+                Anchor peer = notes.get(geometryPeers[slot]);
+                if (Math.abs(g.x() - peer.x) > peer.gap * .7f
+                        && Math.abs(tipX - peer.x) <= peer.gap * .7f) tipPotential = true;
+            }
+            if (tipPotential) {
+                long w = g.right - g.left + 1L, h = g.bottom - g.top + 1L;
+                // Includes full component classification, measured-DOWN rectangle,
+                // and the UP row certificate before any new arrays or scans.
+                work += 32L * g.count + 64L * h + 4L * w * h + 512;
+                if (work > 256_000_000L) return List.of();
+                boolean upShape = upBowShape(g, width);
+                boolean downShape =
+                        completeDownBowShape(g, width) || measuredDownBowShape(g, width);
+                tipQualified = upShape && !downShape && completeUpBowRows(g, width);
+                if (tipQualified)
+                    for (int slot = 0; slot < geometryCount; slot++) {
+                        int i = geometryPeers[slot];
+                        Anchor peer = notes.get(i);
+                        if (Math.abs(g.x() - peer.x) <= peer.gap * .7f
+                                || Math.abs(tipX - peer.x) > peer.gap * .7f) continue;
+                        if (owner >= 0) {
+                            var a = events.get(owner);
+                            var b = events.get(i);
+                            if (a.measureIndex() != b.measureIndex()
+                                    || a.staffIndex() != b.staffIndex()
+                                    || a.staffCount() != b.staffCount()
+                                    || a.positionInMeasure() != b.positionInMeasure())
+                                ambiguous = true;
+                        } else owner = i;
+                    }
             }
             if (owner < 0 || ambiguous) continue;
             Anchor n = notes.get(owner);
@@ -161,10 +230,13 @@ final class NoteArticulationDetector {
             if (nearHead(g, notes)
                     || !printedBodyContrast(g, gray, width, height)
                     || directionText(g, context, n.gap, labels)) continue;
-            boolean up = upBowShape(g, width),
-                    down = completeDownBowShape(g, width) || measuredDownBowShape(g, width);
+            boolean up = tipQualified || upBowShape(g, width),
+                    down =
+                            !tipQualified
+                                    && (completeDownBowShape(g, width)
+                                            || measuredDownBowShape(g, width));
             if (up == down) continue;
-            if (up) {
+            if (up && !tipQualified) {
                 // New component-only row certificate: all loops and row storage
                 // prepaid before construction; the existing page cap is unchanged.
                 work += 12L * g.count + 64L * (g.bottom - g.top + 1) + 128;
@@ -663,6 +735,139 @@ final class NoteArticulationDetector {
             q1 = b1;
         }
         return true;
+    }
+
+    /** Whole-component bow-only nominal width from every literal row-run center.
+     * No pen-width estimate, favorable run selection or new raster samples. */
+    private static int completeBowStrokeSpanTwice(Glyph g, int width) {
+        boolean up = upBowShape(g, width);
+        boolean down = completeDownBowShape(g, width) || measuredDownBowShape(g, width);
+        if (up == down || up && !completeUpBowRows(g, width)) return -1;
+        int w = g.right - g.left + 1, h = g.bottom - g.top + 1;
+        boolean[] ink = new boolean[w * h];
+        for (int p : g.pixels) ink[(p / width - g.top) * w + p % width - g.left] = true;
+        if (down && !completeWideDownBowRows(ink, w, h)) return -1;
+        int minimum = Integer.MAX_VALUE, maximum = Integer.MIN_VALUE;
+        boolean separated = false;
+        for (int y = 0; y < h; y++) {
+            int runs = 0;
+            for (int x = 0; x < w; ) {
+                if (!ink[y * w + x]) {
+                    x++;
+                    continue;
+                }
+                int left = x;
+                while (x + 1 < w && ink[y * w + x + 1]) x++;
+                int centerTwice = left + x;
+                minimum = Math.min(minimum, centerTwice);
+                maximum = Math.max(maximum, centerTwice);
+                runs++;
+                x++;
+            }
+            if (runs >= 2) separated = true;
+        }
+        return separated && minimum <= maximum ? maximum - minimum : -1;
+    }
+
+    /** Every complete wide down-bow pixel belongs to its connected cap, one
+     * attached raster shoulder, or one of two ordered independently ending legs. */
+    private static boolean completeWideDownBowRows(boolean[] ink, int width, int height) {
+        int capEnd = 0, priorLeft = -1, priorRight = -1;
+        for (; capEnd < height; capEnd++) {
+            int[] bounds = new int[4];
+            int runs = literalBowRowRuns(ink, width, capEnd, bounds);
+            if (runs != 1) break;
+            if (capEnd > 0 && (bounds[0] > priorRight + 1 || bounds[1] < priorLeft - 1))
+                return false;
+            priorLeft = bounds[0];
+            priorRight = bounds[1];
+        }
+        if (capEnd < 2 || capEnd >= height) return false;
+        for (int shoulder = 0; shoulder <= 1; shoulder++) {
+            int first = capEnd + shoulder;
+            if (first >= height) continue;
+            if (shoulder == 1) {
+                boolean attached = true;
+                for (int x = 0; x < width; x++)
+                    if (ink[capEnd * width + x] && (x < priorLeft - 1 || x > priorRight + 1))
+                        attached = false;
+                if (!attached) continue;
+            }
+            int[] previous = new int[4];
+            if (literalBowRowRuns(ink, width, first, previous) != 2) continue;
+            if (!bowIntervalTouchesRow(ink, width, first - 1, previous[0], previous[1])
+                    || !bowIntervalTouchesRow(ink, width, first - 1, previous[2], previous[3]))
+                continue;
+            int leftRows = 1, rightRows = 1;
+            boolean leftAlive = true, rightAlive = true, valid = true;
+            for (int row = first + 1; row < height; row++) {
+                int[] bounds = new int[4];
+                int runs = literalBowRowRuns(ink, width, row, bounds);
+                if (runs == 2) {
+                    if (!leftAlive
+                            || !rightAlive
+                            || bounds[0] > previous[1] + 1
+                            || bounds[1] < previous[0] - 1
+                            || bounds[2] > previous[3] + 1
+                            || bounds[3] < previous[2] - 1
+                            || bounds[0] <= previous[3] + 1 && bounds[1] >= previous[2] - 1
+                            || bounds[2] <= previous[1] + 1 && bounds[3] >= previous[0] - 1) {
+                        valid = false;
+                        break;
+                    }
+                    previous = bounds;
+                    leftRows++;
+                    rightRows++;
+                } else if (runs == 1) {
+                    boolean touchesLeft =
+                            bounds[0] <= previous[1] + 1 && bounds[1] >= previous[0] - 1;
+                    boolean touchesRight =
+                            bounds[0] <= previous[3] + 1 && bounds[1] >= previous[2] - 1;
+                    boolean left = leftAlive && touchesLeft, right = rightAlive && touchesRight;
+                    if (left == right || touchesLeft && touchesRight) {
+                        valid = false;
+                        break;
+                    }
+                    if (left) {
+                        previous[0] = bounds[0];
+                        previous[1] = bounds[1];
+                        rightAlive = false;
+                        leftRows++;
+                    } else {
+                        previous[2] = bounds[0];
+                        previous[3] = bounds[1];
+                        leftAlive = false;
+                        rightRows++;
+                    }
+                } else {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid && leftRows >= capEnd && rightRows >= capEnd) return true;
+        }
+        return false;
+    }
+
+    /** Returns a refusal sentinel on a third run; no branch is discarded. */
+    private static int literalBowRowRuns(boolean[] ink, int width, int row, int[] bounds) {
+        int runs = 0;
+        for (int x = 0; x < width; x++) {
+            if (!ink[row * width + x]) continue;
+            if (runs == 2) return 3;
+            bounds[2 * runs] = x;
+            while (x + 1 < width && ink[row * width + x + 1]) x++;
+            bounds[2 * runs + 1] = x;
+            runs++;
+        }
+        return runs;
+    }
+
+    private static boolean bowIntervalTouchesRow(
+            boolean[] ink, int width, int row, int left, int right) {
+        for (int x = Math.max(0, left - 1); x <= Math.min(width - 1, right + 1); x++)
+            if (ink[row * width + x]) return true;
+        return false;
     }
 
     /** A complete cap and two measured legs, including a thick engraved cap. */

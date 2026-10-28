@@ -22,7 +22,7 @@ class ParallelRunnerChecks(unittest.TestCase):
     def setUpClass(cls):
         cls.runner = load_runner(PUBLIC, RUNNER_SOURCE)
 
-    def invoke(self, names, exits=None, launch_error=False):
+    def invoke(self, names, exits=None, launch_error=False, log_text=None, console_encoding=None, console_error=False):
         with tempfile.TemporaryDirectory(prefix='runner-proof-') as temp:
             root = pathlib.Path(temp); calls = []; lock = threading.Lock(); active = [0, 0]
             def fake(command, **kwargs):
@@ -33,14 +33,25 @@ class ParallelRunnerChecks(unittest.TestCase):
                 index = int(pathlib.Path(command[1][1:]).parent.name.split('-')[1])
                 try:
                     if launch_error and index == 2: raise OSError('independent simulated launch failure')
-                    kwargs['stdout'].write('Simulated JUnit batch %d complete\n' % index)
+                    if log_text is None:
+                        kwargs['stdout'].write('Simulated JUnit batch %d complete\n' % index)
+                    else:
+                        # A subprocess writes raw bytes to this descriptor, without Python newline translation.
+                        kwargs['stdout'].buffer.write(log_text.encode('utf-8'))
                     return types.SimpleNamespace(returncode=(exits or {}).get(index, 0))
                 finally:
                     with lock: active[0] -= 1
-            captured = io.StringIO()
+            console_bytes = io.BytesIO()
+            captured = (io.TextIOWrapper(console_bytes, encoding=console_encoding, errors='strict')
+                        if console_encoding else io.StringIO())
+            if console_error: captured.write = mock.Mock(side_effect=OSError('console device failed'))
             with mock.patch.object(self.runner.subprocess, 'run', side_effect=fake), contextlib.redirect_stdout(captured):
                 status = self.runner.run_parallel('not-a-real-java', 'C:/class path;C:/test.jar', names, root, 4, 512)
-            self.last_output = captured.getvalue()
+            captured.flush()
+            self.last_output = (console_bytes.getvalue().decode(console_encoding)
+                                if console_encoding else captured.getvalue())
+            self.last_logs = {index: (root / ('build/test-parallel/batch-%02d/junit.log' % index)).read_bytes()
+                              for index in range(1, 5)}
             results = json.loads((root / 'build/test-parallel/results.json').read_text(encoding="utf-8"))
             manifest = json.loads((root / 'build/test-parallel/manifest.json').read_text(encoding="utf-8"))
             self.assertLessEqual(active[1], 4)
@@ -73,6 +84,41 @@ class ParallelRunnerChecks(unittest.TestCase):
     def test_launch_failure_is_nonzero_and_other_batches_complete(self):
         status, result = self.invoke(['Test%02d' % n for n in range(17)], launch_error=True)
         self.assertEqual(1, status); self.assertEqual([0, 127, 0, 0], [b['exitCode'] for b in result['batches']])
+
+    def test_cp1252_console_keeps_unicode_failure_and_all_batches(self):
+        text = 'Simulated JUnit failure: \ufffd \u03bb \U0001f3b5\n'
+        status, result = self.invoke(['Test%02d' % n for n in range(17)], {2: 3},
+                                     log_text=text, console_encoding='cp1252')
+        self.assertEqual(1, status)
+        self.assertEqual([0, 3, 0, 0], [b['exitCode'] for b in result['batches']])
+        self.assertIn('Failed Java batch 2 JUnit tail:', self.last_output)
+        for escaped in [r'\ufffd', r'\u03bb', r'\U0001f3b5']:
+            self.assertIn(escaped, self.last_output)
+        for raw in self.last_logs.values(): self.assertEqual(text.encode('utf-8'), raw)
+
+    def test_utf8_console_preserves_literal_unicode_failure(self):
+        text = 'Simulated JUnit failure: \ufffd \u03bb \U0001f3b5\n'
+        status, result = self.invoke(['Test%02d' % n for n in range(17)], {4: 7},
+                                     log_text=text, console_encoding='utf-8')
+        self.assertEqual(1, status)
+        self.assertEqual([0, 0, 0, 7], [b['exitCode'] for b in result['batches']])
+        self.assertIn(text.rstrip(), self.last_output)
+        for raw in self.last_logs.values(): self.assertEqual(text.encode('utf-8'), raw)
+
+    def test_long_failure_tail_stays_bounded_and_raw_log_is_complete(self):
+        text = ''.join('line%03d ' % n + 'x' * 400 + '\n' for n in range(100))
+        status, result = self.invoke(['Test%02d' % n for n in range(17)], {2: 3}, log_text=text)
+        self.assertEqual(1, status)
+        tail = self.last_output.split('Failed Java batch 2 JUnit tail:\n', 1)[1]
+        tail = tail.split('Java batch 3:', 1)[0]
+        self.assertLessEqual(len(tail.rstrip('\n')), 12000)
+        self.assertIn('line099 ', tail)
+        self.assertNotIn('line000 ', tail)
+        for raw in self.last_logs.values(): self.assertEqual(text.encode('utf-8'), raw)
+
+    def test_non_encoding_console_errors_remain_visible(self):
+        with self.assertRaisesRegex(OSError, 'console device failed'):
+            self.invoke(['Test%02d' % n for n in range(17)], {2: 3}, console_error=True)
 
     def test_partition_is_deterministic_and_empty_batches_are_not_launched(self):
         names = ['A', 'B', 'C', 'D', 'E']

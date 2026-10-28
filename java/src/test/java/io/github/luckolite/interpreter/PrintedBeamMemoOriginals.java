@@ -11,8 +11,14 @@ import java.nio.charset.StandardCharsets;
 final class PrintedBeamMemoOriginals {
     static final String GEOMETRY_DIGEST =
             "8d56a8ad2c628b9ac00a3c6a58e3053d03cb47d75db534174b381911b02d4ba1";
-    static final String DEFAULT_DEBIT_DIGEST =
+    // Historical pre-recognition122 baseline. Relative enclosure prepays more work;
+    // the original624 geometry and query corpus remains unchanged. Only four default
+    // at rows changed: gap14.25/shade165or200 +104; gap64/shade165or200 +400,
+    // each from two enclosing sections adding4r+8 to both raw and page debit.
+    static final String PRE_RELATIVE_PAPER_122_DEFAULT_DEBIT_DIGEST =
             "02bbf5550f69de796481285f34345c6c25567ed757c02ec51fcef161363c1e78";
+    static final String DEFAULT_DEBIT_DIGEST =
+            "ccc1dfb286299250dfd62dfb6de8cb4fb3a8cb6a89472c10cccc991b35790640";
     static final String CONTEXT_DIGEST =
             "f9559dc805c3af95a53dc77d4f74e69ffb741124273825e02e4c3b717217b55f";
 
