@@ -3156,13 +3156,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintDirectionRails.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/FaintDirectionRails.java",
       "license": "Apache-2.0",
-      "source_sha256": "56627d89cdcbcc64dd67c15ceb24383ac54ef80869bb578692760244387ffb03",
-      "source_normalized_sha256": "7600298e534487839a5f4d6cad0afc5253717a2eaca0981782a25dc9ff7d28ae",
-      "reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
-      "scoped_reviewed_app_commit": "2cf83668224d470b01967776edce607194258a56",
-      "standalone_sha256": "9b73d3ca2f081cb6e1b02737ec58fad362a5a52afe0acb21e5514a61fd2b5ee4",
-      "review_note": "Require all five faint rails, bilateral support, consistent spacing and phase. Wider evidence spans local notation occlusion; malformed geometry fails closed.",
-      "reviewed_source_state": "Committed paired recognition44 source review; final cumulative package/deployment/runtime checks remain pending."
+      "source_sha256": "a0fc3d8762f69e61e87b3dce477623147fcc7d163d98423d619f21023653334a",
+      "source_normalized_sha256": "903d201e58799b3114f6b0d85e8285f4cc72a397c69077d34e7cccaad7113ab7",
+      "reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "scoped_reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "standalone_sha256": "697252d7e5f2db270a0c6c79d80ff3d95b9daa441efdeb70077cdc770a43059f",
+      "review_note": "Reviewed exposure-invariant bilateral five-rule contrast and exact nonempty printed-column membership; original synthetic regressions contain no private score material.",
+      "reviewed_source_state": "Committed app source;236app and224standalone focused tests;actualfive-page native source acceptance. Clocks/modifier bindings and cumulative installed/Hub gates remain open."
     },
     "FaintDynamicGlyphComponents.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/FaintDynamicGlyphComponents.java",
@@ -7561,15 +7561,17 @@
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
-      "source_sha256": "99d1f011d3a283c2bf2e9e9a78ea41b1b22997b741fa008a219e6ca0d13cd76b",
-      "source_normalized_sha256": "c8ffbd4dc3b2f82af733d1ac94bb7a386cc5e23a10f62a2f5d38a5470b71aeb6",
-      "review_note": "Reviewed package translation and required AOSP formatting only; parent exact-format comparison passed. Shared full-Current literal rest clocks/target ownership and opt-in binary64 frame semantics; original JDK-only procedural regressions, no score/model/app-history material.",
-      "standalone_sha256": "faf7397efde589eced44bc7615f4b7be27463a31d76df2e976565ab90d26ab6c",
-      "reviewed_app_commit": "bcc029d88d122ff3e4e0c33c83442e0c015cf30a",
+      "source_sha256": "d3f795f15045072bed5d7d24da30a9f6b55c7d12380ea1fd4ccdbf311504bd19",
+      "source_normalized_sha256": "f4cac227b0d0429932e3d32d416288ec4c7c61ecc5cb3597a54bd78716d8ba0c",
+      "review_note": "Reviewed exposure-invariant bilateral five-rule contrast and exact nonempty printed-column membership; original synthetic regressions contain no private score material.",
+      "standalone_sha256": "3a61ba1573a87693037ae8550217b32abb78dd5f0feaf0d1911c4aba93edc7d2",
+      "reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreExpressionDetector.java",
       "license": "Apache-2.0",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
-      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
+      "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
+      "scoped_reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "reviewed_source_state": "Committed app source;236app and224standalone focused tests;actualfive-page native source acceptance. Clocks/modifier bindings and cumulative installed/Hub gates remain open."
     },
     "ScoreExpressionNotation.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionNotation.java",
@@ -10431,6 +10433,30 @@
       "standalone_normalized_sha256": "c90bb86b7dbdc64d781477f1e438bd8173e673b4507af56137050a6b4df41c60",
       "reviewed_app_commit": "db250b52c54b69b5a16701867836692143094b04",
       "closed_counter_review": "Exact independently reviewed app source; package adaptation and existing standalone AOSP formatting only. Complete original-source proof, exact accepted-event identity transaction, explicit mapped aliases, unchanged legacy scheduling and whole-legacy funding refusal. Original Apache-2.0 fixtures; no private score assets."
+    },
+    "FaintDirectionExposureTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FaintDirectionExposureTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FaintDirectionExposureTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "c02c514301ce5c3291966b22eb993474dfee57cf80dd5358d4124345fc0cd942",
+      "source_normalized_sha256": "366f8f7df3525e2d5cef7a8593c7c6b01699daf6d6e07eac964c8a83f9d0c3ad",
+      "standalone_sha256": "cb04a23e2025e16266a84dea948131e59d75396ab2351a6597fff079a8483903",
+      "reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "scoped_reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "review_note": "Reviewed exposure-invariant bilateral five-rule contrast and exact nonempty printed-column membership; original synthetic regressions contain no private score material.",
+      "reviewed_source_state": "Committed app source;236app and224standalone focused tests;actualfive-page native source acceptance. Clocks/modifier bindings and cumulative installed/Hub gates remain open."
+    },
+    "ExpressionColumnDuplicateTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ExpressionColumnDuplicateTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ExpressionColumnDuplicateTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "845d6ff749c83bf0d813b1828a12e66899b5de0666de027cf6a9f455a4460c45",
+      "source_normalized_sha256": "f6ce96de0eeaad2d6573f28fdd3582379b232a3fefc77526ec00b372ce589312",
+      "standalone_sha256": "74ef46de78c95a990dbebd0bde1e34a7a204c886230ca02059a63a7347dc03da",
+      "reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "scoped_reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+      "review_note": "Reviewed exposure-invariant bilateral five-rule contrast and exact nonempty printed-column membership; original synthetic regressions contain no private score material.",
+      "reviewed_source_state": "Committed app source;236app and224standalone focused tests;actualfive-page native source acceptance. Clocks/modifier bindings and cumulative installed/Hub gates remain open."
     }
   },
   "finite_curved_approach_review": {
@@ -15217,5 +15243,34 @@
     "native_selection_sha256": "beca95835f483a25c9bfc4e2589de9ae8279cb2b02118956534e061c1a912491",
     "validation": "98 canonical app and98 standalone controls pass. Fresh actual all-five native run removes exactly one false rest and its uniquely source-mapped following-rest attachment; restCount changes3to2. All23 genuine rest controls,212 physical beam groups,358 supported masks and all other final fields preserved. Source/native qualification only; installed playback/deployment separate.",
     "adaptation": "Package plus existing AOSP formatting; formatted app preimages exactly matched the prior standalone sources. No model, old budget or wire layout changes."
+  },
+  "staff_rule_exposure_and_expression_column_review": {
+    "reviewed_app_commit": "2028a9a086b31c152688918309600aa1f2e8bb41",
+    "documentation": "docs/staff-rule-exposure.md",
+    "original_exposure_tests": 10,
+    "original_column_membership_tests": 8,
+    "independent_contrast_controls": 4,
+    "focused_app_tests": 236,
+    "focused_standalone_tests": 224,
+    "native_pages": 5,
+    "restored_tempo_grammar_occurrences": 3,
+    "restored_character_labels": 1,
+    "preserved_core_fields": [
+      "notes",
+      "rests",
+      "written rhythms",
+      "beams",
+      "key changes",
+      "semantic tempo/meter changes",
+      "dynamics",
+      "slurs"
+    ],
+    "remaining": [
+      "Unproved written clocks stay unresolved",
+      "Sudden-dynamic modifier bindings include duplicates and shifted targets",
+      "Full goal inventory and cumulative app/Hub/worker delivery gates remain open"
+    ],
+    "models_or_layouts_changed": false,
+    "installed_or_deployed_claim": false
   }
 }
