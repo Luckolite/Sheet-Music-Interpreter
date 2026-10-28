@@ -559,6 +559,7 @@ final class ScoreDynamicsDetector {
         List<ScoreDynamicChange> result = new ArrayList<>();
         var arrivalLevels = new ArrayList<PrintedHairpinArrival.Level>();
         List<CompleteOpposedHairpinPair.Shape> completeOpposedShapes = List.of();
+        List<CompleteFaintHairpinArms.Shape> completeFaintShapes = List.of();
         Map<ScoreDynamicChange, PlayingTechniqueDetector.Word> openWords = new HashMap<>();
         float minimumGap = Float.MAX_VALUE, maximumGap = 0;
         for (var staff : staffs)
@@ -680,6 +681,10 @@ final class ScoreDynamicsDetector {
         if (gray != null && gray.length == width * height) {
             boolean[] seen = new boolean[gray.length];
             int[] queue = new int[gray.length];
+            var completeFaint =
+                    paperProposals && gray == ownershipGray
+                            ? new CompleteFaintHairpinArms.Page(gray, width, height, staffs)
+                            : null;
             var strokes = new ArrayList<HairpinContinuation.Stroke>();
             var wedges = new ArrayList<HairpinContinuation.Wedge>();
             var fragments = new ArrayList<ShadedHairpinFragments.Rail>();
@@ -731,6 +736,8 @@ final class ScoreDynamicsDetector {
                 if (owner == null) continue;
                 float gap = owner.gap();
                 int w = right - left + 1, h = bottom - top + 1;
+                if (completeFaint != null)
+                    completeFaint.candidate(owner, queue, n, left, right, top, bottom);
                 // Compact hairpins beside a printed level can have a steeper opening.
                 // Isolated >/< still need the ordinary long, shallow shape.
                 boolean qualifiedShort =
@@ -748,10 +755,8 @@ final class ScoreDynamicsDetector {
                     upper[x] = Math.min(upper[x], y);
                     lower[x] = Math.max(lower[x], y);
                 }
-                if (completeOpposed != null && !qualifiedShort
-                        && (w < gap * 4 || w < h * 4))
-                    completeOpposed.candidate(
-                            owner, left, right, top, bottom, n, upper, lower);
+                if (completeOpposed != null && !qualifiedShort && (w < gap * 4 || w < h * 4))
+                    completeOpposed.candidate(owner, left, right, top, bottom, n, upper, lower);
                 if (gray == ownershipGray
                         && w >= gap * 2
                         && h <= gap
@@ -825,7 +830,9 @@ final class ScoreDynamicsDetector {
                             common != null,
                             arrivalLevels,
                             ownershipGray);
-                    if (completeOpposed != null && common == null && literalDirection != 0
+                    if (completeOpposed != null
+                            && common == null
+                            && literalDirection != 0
                             && result.size() > priorPairResultSize)
                         completeOpposed.acceptedLong(
                                 owner, left, right, top, bottom, n, upper, lower);
@@ -845,6 +852,7 @@ final class ScoreDynamicsDetector {
                 }
             }
             if (completeOpposed != null) completeOpposedShapes = completeOpposed.finish();
+            if (completeFaint != null) completeFaintShapes = completeFaint.finish();
             for (var shape : FaintHairpinPair.recover(faintPairCores, ownershipGray, width, height))
                 addWithArrival(
                         result,
@@ -1126,9 +1134,19 @@ final class ScoreDynamicsDetector {
         for (var shape : completeOpposedShapes) {
             var proposed = new ArrayList<ScoreDynamicChange>();
             addWithArrival(
-                    proposed, shape.staff(), shape.left() / (float) width,
-                    shape.right() / (float) width, 0, shape.direction(), measures, notes,
-                    width, height, false, arrivalLevels, ownershipGray);
+                    proposed,
+                    shape.staff(),
+                    shape.left() / (float) width,
+                    shape.right() / (float) width,
+                    0,
+                    shape.direction(),
+                    measures,
+                    notes,
+                    width,
+                    height,
+                    false,
+                    arrivalLevels,
+                    ownershipGray);
             for (var change : proposed) {
                 boolean claimed = false;
                 for (var old : scoped)
@@ -1136,8 +1154,55 @@ final class ScoreDynamicsDetector {
                             && old.measureIndex() == change.measureIndex()
                             && old.staffIndex() == change.staffIndex()
                             && old.staffCount() == change.staffCount()
-                            && Math.abs(old.positionInMeasure() - change.positionInMeasure()) < .06f)
-                        claimed = true;
+                            && Math.abs(old.positionInMeasure() - change.positionInMeasure())
+                                    < .06f) claimed = true;
+                if (!claimed) scoped.add(change);
+            }
+        }
+        // Every original recovery and optional opposed pair retains its claim priority.
+        for (var shape : completeFaintShapes) {
+            var owner = directionFloors.owner(shape.top(), shape.bottom());
+            if (owner == null)
+                owner =
+                        PrintedDirectionStaff.at(
+                                staffs,
+                                measures,
+                                notes,
+                                ownershipGray,
+                                width,
+                                height,
+                                (shape.left() + shape.right()) * .5f,
+                                shape.top(),
+                                shape.bottom());
+            if (owner == null)
+                owner = HairpinContinuation.distantOwner(staffs, shape.top(), shape.bottom());
+            if (!shape.staff().equals(owner)
+                    || GrandStaffDynamics.directionPart(shared, owner, shape.top(), shape.bottom())
+                            != null) continue;
+            var proposed = new ArrayList<ScoreDynamicChange>();
+            addWithArrival(
+                    proposed,
+                    owner,
+                    shape.left() / (float) width,
+                    shape.right() / (float) width,
+                    0,
+                    shape.direction(),
+                    measures,
+                    notes,
+                    width,
+                    height,
+                    false,
+                    arrivalLevels,
+                    ownershipGray);
+            for (var change : proposed) {
+                boolean claimed = false;
+                for (var old : scoped)
+                    if (old.direction() == change.direction()
+                            && old.measureIndex() == change.measureIndex()
+                            && old.staffIndex() == change.staffIndex()
+                            && old.staffCount() == change.staffCount()
+                            && Math.abs(old.positionInMeasure() - change.positionInMeasure())
+                                    < .06f) claimed = true;
                 if (!claimed) scoped.add(change);
             }
         }

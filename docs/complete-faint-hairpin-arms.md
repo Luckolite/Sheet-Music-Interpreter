@@ -1,0 +1,7 @@
+A short dark fragment could be discarded before the complete faint printed hairpin arms were examined. An additive reader now follows literal locally contrasted source ink from the original fragment and admits only independently complete ordinary-long wedges. It preserves the existing image, geometry, owner, timing, recovery precedence and old results.
+
+The complete component must retain its seed, prove a shared tip, two continuous straight arms and bright open interior, and reject gaps, extra arms, filled bodies, reclosures and unequal endpoints. The optional reader has an input-linear work bound, fixed memory bound and safe refusal that leaves the original result intact. Original synthetic regressions cover successful faint wedges, mirrored raster phases, negative geometries, bounded resource refusal and old endpoint priority. No score pixels, model weights or record formats are included or changed.
+
+Complete-component membership reuse is local to the exact staff record, including gap and phase. Original regressions reject reuse across distinct staff records and spacing. The public port contains original procedural fixtures only.
+
+Validation: 18 original regressions and 445 focused standalone tests pass. Fresh all-five-page native model/OCR processing restores one reviewed ordinary crescendo while every prior dynamic and other final score field remains exact. This qualifies source; matched Android/desktop packaging and deployment remain required.

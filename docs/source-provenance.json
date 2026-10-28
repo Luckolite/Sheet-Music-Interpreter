@@ -7539,19 +7539,20 @@
     },
     "ScoreDynamicsDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreDynamicsDetector.java",
-      "source_sha256": "8e5504fdeb8c148a9b4ced874b76687c1122dbf60c8da37a90647de0f28e8c90",
-      "source_normalized_sha256": "9a8b32ba05b953ddc7a5c2af84f14c4f5dc85a3085a280e1fe50c565ee18ad5a",
+      "source_sha256": "60c26d6bd74d912c8533d81ef8599377f82fde2a80854b14b6c9bc9fe28c7664",
+      "source_normalized_sha256": "5f9417974047dfa193177bc1930448fe164bed36a6e32017c1604509285230de",
       "review_note": "Preserve one visually qualified fp as an atomic ordered forte/piano pair at an actual onset; reject a bare m only when unchanged raw contour and pre-existing note-owned mordent evidence agree. Other literal levels and timing guards remain unchanged.",
       "reviewed_app_base_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_app_state": "Reviewed recognition108 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_sha256": "c0d4592515ce102c1a4a9f6f1fa6bfacce25b8cb222b66c10b129074033acde7",
-      "reviewed_app_commit": "3a659ab2150e002e666081d205f3b473f1d560bd",
+      "standalone_sha256": "6119e92c942b981e635f84694ef007d8c0a60485a6069573d10d5ce00aaea1ff",
+      "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreDynamicsDetector.java",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
-      "standalone_normalized_sha256": "4aeb87dff027ff866a72f82eb4aa655e78677e709ab8cb5a2ca55620002d3df5",
+      "standalone_normalized_sha256": "f183c040c0105275ea08a256b3a80d3a26876d2818c0147df1547e319a466b3b",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
-      "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal."
+      "complete_opposed_hairpin_review": "Complete short pairs use independently accepted ordinary long-wedge, literal two-rail, same-staff, common-axis, paper-gap and unique-neighbor proof. Optional publication follows all legacy recovery/scoping/events/normalization and retains the original claim window. Original procedural controls and bounded atomic refusal.",
+      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
     },
     "ScoreExpressionDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreExpressionDetector.java",
@@ -10235,6 +10236,28 @@
       "standalone_normalized_sha256": "df4378b6f87da3eb186f717ea1303f016207f74af651de7e522f937da96d3ee8",
       "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
       "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
+    },
+    "CompleteFaintHairpinArms.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteFaintHairpinArms.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteFaintHairpinArms.java",
+      "license": "Apache-2.0",
+      "source_sha256": "4505601e2930d1bf4efae26f8e23bc92fada001558f0a67b798dd956ffd879c4",
+      "source_normalized_sha256": "4505601e2930d1bf4efae26f8e23bc92fada001558f0a67b798dd956ffd879c4",
+      "standalone_sha256": "0b7155ff10cd7e1605af19976ab9ab29aba74d95232561703eed85ddcd564a83",
+      "standalone_normalized_sha256": "0b7155ff10cd7e1605af19976ab9ab29aba74d95232561703eed85ddcd564a83",
+      "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
+      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
+    },
+    "CompleteFaintHairpinArmsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteFaintHairpinArmsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteFaintHairpinArmsTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "819c9901c099e6a3c5822b857f9622a17cb72fd0e28be4257c717176ba4e5b4a",
+      "source_normalized_sha256": "50dc632d07472342d99b52b8216b9104f6b08d3bc7324bd9f2870018817813b9",
+      "standalone_sha256": "2d0199c199ef7121902a4aba9bc9f2ec30bb3c02f3ff6d4d491512742f45a29c",
+      "standalone_normalized_sha256": "5293daaf4c85522bf23050f28ae11bb3b7ff0f88c160f5c3a0f3f5e7dd4f784e",
+      "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
+      "complete_faint_arms_review": "An original dark fragment seeds complete connected literal locally contrasted arms. Existing enclosing-section, ordinary-long geometry and owner/arrival laws remain. Same-staff membership reuse includes gap/phase. Input-linear optional work and fixed storage prepay; complete-set refusal. Every old route and claim retains priority; original procedural regressions only."
     }
   },
   "finite_curved_approach_review": {
@@ -14982,5 +15005,13 @@
     "native_scope": "Actual segmentation, OCR and complete page output with unchanged source/runtime/model pins; private source material is not distributed.",
     "qualified_changes": "Twenty source-reviewed articulation omissions, three dynamic defects and seven active slurs; eleven additional curves remain deferred geometry. All other final page fields including pitches, rests, keys, timing context and expressive events match except the separately reviewed beam source metadata. All358 prior supported beam edges and529 columns retained.",
     "boundary": "Source validation only; cumulative matched app/Hub/worker packaging, variant isolation and deployment remain separate required gates. No model or record-layout changes."
+  },
+  "complete_faint_arms_review": {
+    "reviewed_app_commit": "211dc40cf62a04c4e7333c390d97e0198bf02c4a",
+    "documentation": "docs/complete-faint-hairpin-arms.md",
+    "native_helper": "CompleteFaintHairpinArms.java",
+    "native_selection_sha256": "abb28860477d8cd831dd9e35d6199374f4b161144ca9e156ad4cd4ee74a354d4",
+    "validation": "18 original regressions; 445 focused standalone tests. Fresh current-source native model/OCR all-five-page qualification adds one reviewed ordinary crescendo, preserves every old dynamic record and all other final fields. Previous full suite evidence retained for unchanged dependencies. Matched app/worker package, device and deployment qualification remain separate.",
+    "adaptation": "Package-only source/helper/test; explicitly selected native helper; existing gray, models, thresholds, shared limits and wire layouts unchanged."
   }
 }
