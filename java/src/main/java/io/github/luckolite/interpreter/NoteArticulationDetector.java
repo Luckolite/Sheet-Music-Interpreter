@@ -164,6 +164,13 @@ final class NoteArticulationDetector {
             boolean up = upBowShape(g, width),
                     down = completeDownBowShape(g, width) || measuredDownBowShape(g, width);
             if (up == down) continue;
+            if (up) {
+                // New component-only row certificate: all loops and row storage
+                // prepaid before construction; the existing page cap is unchanged.
+                work += 12L * g.count + 64L * (g.bottom - g.top + 1) + 128;
+                if (work > 256_000_000L) return List.of();
+                if (!completeUpBowRows(g, width)) continue;
+            }
             result.add(
                     new BowMark(
                             owner,
@@ -514,6 +521,148 @@ final class NoteArticulationDetector {
         int covered = 0;
         for (boolean bin : bins) if (bin) covered++;
         return hits >= g.count * .85 && covered >= Math.ceil(binCount * 10d / 12);
+    }
+
+    /** Complete two-arm row support supplement; original approximate fit stays unchanged.
+     * The bowMarks caller prepays 12count+64height+128 additional work.
+     * No raw raster queries: only its complete immutable connected component. */
+    private static boolean completeUpBowRows(Glyph g, int width) {
+        int w = g.right - g.left + 1, h = g.bottom - g.top + 1;
+        double tip = 0;
+        int tips = 0, leftTop = g.bottom, rightTop = g.bottom;
+        for (int p : g.pixels) {
+            int x = p % width, y = p / width;
+            if (y >= g.bottom - (h - 1) * .15) {
+                tip += x;
+                tips++;
+            }
+            if ((x - g.left) / (double) (w - 1) < .25) leftTop = Math.min(leftTop, y);
+            if ((x - g.left) / (double) (w - 1) > .75) rightTop = Math.min(rightTop, y);
+        }
+        if (tips == 0) return false;
+        double apex = (tip / tips - g.left) / (w - 1),
+                ly = (leftTop - g.top) / (double) (h - 1),
+                ry = (rightTop - g.top) / (double) (h - 1);
+        double ls = (1 - ly) / apex,
+                rs = (1 - ry) / (1 - apex),
+                tol = .14 + 1.0 / Math.min(w - 1, h - 1);
+        int[] minL = new int[h],
+                maxL = new int[h],
+                countL = new int[h],
+                minR = new int[h],
+                maxR = new int[h],
+                countR = new int[h];
+        Arrays.fill(minL, Integer.MAX_VALUE);
+        Arrays.fill(minR, Integer.MAX_VALUE);
+        Arrays.fill(maxL, -1);
+        Arrays.fill(maxR, -1);
+        for (int p : g.pixels) {
+            int xx = p % width - g.left, yy = p / width - g.top;
+            double x = xx / (double) (w - 1), y = yy / (double) (h - 1);
+            double xl = apex * (y - ly) / (1 - ly),
+                    xr = 1 - (1 - apex) * (y - ry) / (1 - ry),
+                    mid = (xl + xr) * .5;
+            if (x <= mid) {
+                minL[yy] = Math.min(minL[yy], xx);
+                maxL[yy] = Math.max(maxL[yy], xx);
+                countL[yy]++;
+            } else {
+                minR[yy] = Math.min(minR[yy], xx);
+                maxR[yy] = Math.max(maxR[yy], xx);
+                countR[yy]++;
+            }
+        }
+        boolean separated = false, merged = false;
+        for (int y = 0; y < h; y++) {
+            if (countL[y] > 0 && countL[y] != maxL[y] - minL[y] + 1
+                    || countR[y] > 0 && countR[y] != maxR[y] - minR[y] + 1) return false;
+            boolean two = countL[y] > 0 && countR[y] > 0 && maxL[y] + 1 < minR[y];
+            // A complete pair can close into its thick/rounded tip once. An
+            // interior crossbar cannot close then reopen the two physical arms.
+            if (two) {
+                if (merged) return false;
+                separated = true;
+            } else if (separated) merged = true;
+        }
+        return connectedBowArmRows(
+                        minL,
+                        maxL,
+                        countL,
+                        minR,
+                        maxR,
+                        countR,
+                        w,
+                        h,
+                        leftTop - g.top,
+                        ly,
+                        ls,
+                        tol,
+                        false)
+                && connectedBowArmRows(
+                        minL,
+                        maxL,
+                        countL,
+                        minR,
+                        maxR,
+                        countR,
+                        w,
+                        h,
+                        rightTop - g.top,
+                        ry,
+                        rs,
+                        tol,
+                        true);
+    }
+
+    /** Each admitted interval is literal contiguous row ink. Carry every reachable
+     * interval, so no favorable branch selection or missing-row bridge is hidden.
+     * Bands may share ink only where their existing geometric tolerances overlap. */
+    private static boolean connectedBowArmRows(
+            int[] minL,
+            int[] maxL,
+            int[] countL,
+            int[] minR,
+            int[] maxR,
+            int[] countR,
+            int w,
+            int h,
+            int first,
+            double top,
+            double slope,
+            double tol,
+            boolean right) {
+        int p0 = 0, q0 = -1, p1 = 0, q1 = -1;
+        for (int row = first; row < h; row++) {
+            double y = row / (double) (h - 1),
+                    center = right ? 1 - (y - top) / slope : (y - top) / slope;
+            double radius = tol * Math.sqrt(1 + slope * slope) / slope;
+            int bandL = (int) Math.floor((center - radius) * (w - 1)) + 1;
+            int bandR = (int) Math.ceil((center + radius) * (w - 1)) - 1;
+            int a0 = 0, b0 = -1, a1 = 0, b1 = -1;
+            for (int side = 0; side < 2; side++) {
+                int count = side == 0 ? countL[row] : countR[row];
+                if (count == 0) continue;
+                int a = Math.max(bandL, side == 0 ? minL[row] : minR[row]);
+                int b = Math.min(bandR, side == 0 ? maxL[row] : maxR[row]);
+                if (a > b) continue;
+                if (row != first
+                        && !((p0 <= q0 && a <= q0 + 1 && b >= p0 - 1)
+                                || (p1 <= q1 && a <= q1 + 1 && b >= p1 - 1))) continue;
+                if (side == 0) {
+                    a0 = a;
+                    b0 = b;
+                } else {
+                    a1 = a;
+                    b1 = b;
+                }
+            }
+            if (a0 > b0 && a1 > b1) return false;
+            p0 = a0;
+            q0 = b0;
+            p1 = a1;
+            q1 = b1;
+        }
+        return true;
     }
 
     /** A complete cap and two measured legs, including a thick engraved cap. */
