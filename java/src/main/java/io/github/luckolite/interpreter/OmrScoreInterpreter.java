@@ -90,15 +90,9 @@ final class OmrScoreInterpreter {
                         restHeadOrigins,
                         memberCollector);
         var physicalSplitCache = new java.util.IdentityHashMap<Component, List<Component>>();
-        boolean sharedLedgerStorage =
-                !rawCourtesy.exhausted
-                        && rawCourtesy.workLimit - rawCourtesy.workUsed >= 64
-                        && rawCourtesy.byteLimit - rawCourtesy.bytesUsed >= 4096
-                        && rawCourtesy.prepay(64, 4096);
-        var exactStackOwners =
-                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Component>() : null;
-        var sharedLedgerOwners =
-                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Staff>() : null;
+        boolean sharedLedgerStorage = false;
+        java.util.IdentityHashMap<Component, Component> exactStackOwners = null;
+        java.util.IdentityHashMap<Component, Staff> sharedLedgerOwners = null;
         List<Component> physicalSourceHeads = new ArrayList<>();
         var wholeUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
         var ledgerHalfUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
@@ -114,16 +108,34 @@ final class OmrScoreInterpreter {
                             staffs,
                             memberCollector);
             physicalSplitCache.put(original, exactSplit);
-            if (sharedLedgerStorage && exactSplit.size() > 1)
-                for (Component child : exactSplit)
-                    if (rawCourtesy.prepay(1, 64)) exactStackOwners.put(child, original);
+            boolean exactSplitOwnersCaptured = false;
             for (Component sourceHead : exactSplit) {
                 Staff owner = staffForHead(labels, gray, width, height, staffs, sourceHead);
-                if (sharedLedgerStorage
-                        && owner != null
+                if (owner != null
                         && sourceHead.centerY < owner.top - owner.pitchGap * 2.2f
-                        && sourceHead.centerY >= owner.top - owner.pitchGap * 8
-                        && rawCourtesy.prepay(1, 64)) sharedLedgerOwners.put(sourceHead, owner);
+                        && sourceHead.centerY >= owner.top - owner.pitchGap * 8) {
+                    // Allocate this optional ledger-only storage at the existing ownership
+                    // lookup, after an eligible remote head is known. Ordinary staves need none.
+                    if (!sharedLedgerStorage
+                            && !rawCourtesy.exhausted
+                            && rawCourtesy.workLimit - rawCourtesy.workUsed >= 64
+                            && rawCourtesy.byteLimit - rawCourtesy.bytesUsed >= 4096
+                            && rawCourtesy.prepay(64, 4096)) {
+                        sharedLedgerStorage = true;
+                        exactStackOwners = new java.util.IdentityHashMap<>();
+                        sharedLedgerOwners = new java.util.IdentityHashMap<>();
+                    }
+                    if (sharedLedgerStorage && rawCourtesy.prepay(1, 64))
+                        sharedLedgerOwners.put(sourceHead, owner);
+                }
+                // At first activation retain every sibling in this original exact split;
+                // earlier originals cannot contain an eligible remote owner or activation
+                // would already have happened. No new ownership scan is required.
+                if (sharedLedgerStorage && !exactSplitOwnersCaptured && exactSplit.size() > 1) {
+                    for (Component child : exactSplit)
+                        if (rawCourtesy.prepay(1, 64)) exactStackOwners.put(child, original);
+                    exactSplitOwnersCaptured = true;
+                }
                 List<Component> unison = owner == null ? List.of()
                         : captureStemlessWholeUnison(labels, gray, width, height,
                                 sourceHead, owner.gap, memberCollector);
