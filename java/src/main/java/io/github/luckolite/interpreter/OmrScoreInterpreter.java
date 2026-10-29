@@ -92,6 +92,8 @@ final class OmrScoreInterpreter {
         var physicalSplitCache = new java.util.IdentityHashMap<Component, List<Component>>();
         List<Component> physicalSourceHeads = new ArrayList<>();
         var wholeUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
+        var ledgerHalfUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
+        long[] ledgerHalfUnisonWork = {64_000_000L};
         for (Component original : rawHeadComponents) {
             var exactSplit =
                     splitStackedHeads(
@@ -108,10 +110,18 @@ final class OmrScoreInterpreter {
                 List<Component> unison = owner == null ? List.of()
                         : captureStemlessWholeUnison(labels, gray, width, height,
                                 sourceHead, owner.gap, memberCollector);
-                if (unison.isEmpty()) physicalSourceHeads.add(sourceHead);
-                else {
+                if (!unison.isEmpty()) {
                     wholeUnisonCache.put(sourceHead, unison);
                     physicalSourceHeads.addAll(unison);
+                } else {
+                    List<Component> halves = owner == null ? List.of()
+                            : captureLedgerHalfUnison(labels, gray, width, height, sourceHead,
+                                    owner, staffs, memberCollector, ledgerHalfUnisonWork);
+                    if (halves.isEmpty()) physicalSourceHeads.add(sourceHead);
+                    else {
+                        ledgerHalfUnisonCache.put(sourceHead, halves);
+                        physicalSourceHeads.addAll(halves);
+                    }
                 }
             }
         }
@@ -1119,7 +1129,8 @@ final class OmrScoreInterpreter {
         var rosterIdentities = new java.util.IdentityHashMap<Component, Boolean>();
         for (Component component : pairedRoster) rosterIdentities.put(component, true);
         for (Component component : heads)
-            if (!rosterIdentities.containsKey(component) && !wholeUnisonCache.containsKey(component)) {
+            if (!rosterIdentities.containsKey(component) && !wholeUnisonCache.containsKey(component)
+                    && !ledgerHalfUnisonCache.containsKey(component)) {
                 pairedRoster.add(component);
                 rosterIdentities.put(component, true);
             }
@@ -1630,6 +1641,7 @@ final class OmrScoreInterpreter {
                     && (head.centerY < physicalStaff.top - physicalStaff.gap * ledgerClearance
                             || head.centerY
                                     > physicalStaff.bottom + physicalStaff.gap * ledgerClearance)
+                    && !ledgerHalfUnisonCache.containsKey(head)
                     && !hasHeadLedgerSupport(
                             labels,
                             gray,
@@ -2048,10 +2060,11 @@ final class OmrScoreInterpreter {
                             event.articulations() | recoveredArticulations.getOrDefault(head, 0));
             // A shared shaft between the two ovals is not on the combined component's
             // outer edge. Check the separate heads before accepting a whole-note guess.
-            List<Component> unison =
-                    unpitched
-                            ? List.of()
-                            : sideBySideUnison(labels, gray, width, height, head, staff.gap);
+            boolean cachedLedgerHalf = !unpitched && ledgerHalfUnisonCache.containsKey(head);
+            List<Component> unison = unpitched ? List.of()
+                    : ledgerHalfUnisonCache.getOrDefault(head, List.of());
+            if (unison.isEmpty() && !unpitched)
+                unison = sideBySideUnison(labels, gray, width, height, head, staff.gap);
             boolean stemlessWhole = false;
             if (unison.isEmpty() && !unpitched) {
                 unison = wholeUnisonCache.getOrDefault(head, List.of());
@@ -2151,14 +2164,17 @@ final class OmrScoreInterpreter {
                         separate =
                                 separate.withArticulations(
                                         NoteOrnament.withTremolo(0, partBeams + partTremolo[0]));
-                    if (stemlessWhole) {
-                        var partFacts = List.of("EXACT_STEMLESS_WHOLE_UNISON_PART",
+                    if (stemlessWhole || cachedLedgerHalf) {
+                        var partFacts = List.of(stemlessWhole ? "EXACT_STEMLESS_WHOLE_UNISON_PART"
+                                        : "EXACT_LEDGER_HALF_UNISON_PART",
                                 "SHARED_LOGICAL_UNISON_ATTACK",
                                 partIndex == 0 ? "PRINTED_FILLED_OVAL_OWNED_SHAFT_PROVED"
-                                        : "WHOLE_HEAD_POCKET_PROVED_NO_OWN_SHAFT");
+                                        : stemlessWhole ? "WHOLE_HEAD_POCKET_PROVED_NO_OWN_SHAFT"
+                                                : "RAW_HOLLOW_CORE_OPPOSED_OWNED_SHAFT_PROVED");
                         var partValue = new PrintedValueDecision(labels, gray, width, height,
                                 part, partDuration, partBeams,
-                                partIndex == 1 ? PrintedValueExit.OPEN_WITHOUT_STEM_WHOLE
+                                partIndex == 1 ? (stemlessWhole ? PrintedValueExit.OPEN_WITHOUT_STEM_WHOLE
+                                        : PrintedValueExit.OPEN_WITH_STEM_HALF)
                                         : partBeams > 0 ? PrintedValueExit.BEAMED_INPUT
                                                 : PrintedValueExit.OPAQUE_DEFAULT_QUARTER,
                                 partFacts);
@@ -9225,6 +9241,18 @@ final class OmrScoreInterpreter {
             List<Component> source,
             List<Staff> staffs,
             ExactComponentMembers.Collector membership) {
+        return splitStackedHeads(labels, gray, width, height, source, staffs, membership, 1);
+    }
+
+    private static List<Component> splitStackedHeads(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<Component> source,
+            List<Staff> staffs,
+            ExactComponentMembers.Collector membership,
+            int retainedRefinements) {
         List<Component> result = new ArrayList<>();
         for (Component component : source) {
             var lineage =
@@ -9460,11 +9488,39 @@ final class OmrScoreInterpreter {
             }
             if (twoLobes) {
                 if (lineage != null) lineage.commit(List.of(upper, lower));
-                result.add(upper);
-                result.add(lower);
+                // A three-head parent can leave two ovals in one otherwise plausible lobe.
+                // Refine only a strictly smaller tall child, with the same split proofs and
+                // already-committed exact lineage. One refinement bounds this route to four heads.
+                for (Component part : List.of(upper, lower)) {
+                    float partHeight = part.maxY - part.minY + 1f;
+                    if (retainedRefinements > 0
+                            && part.area < component.area
+                            && partHeight < componentHeight
+                            && partHeight >= staff.gap * 1.45f
+                            && part.maxX - part.minX + 1 <= staff.gap * 1.8f) {
+                        var proposal = splitStackedHeads(labels, gray, width, height, List.of(part),
+                                staffs, null, 0);
+                        if (provedRetainedHeadPair(gray, width, height, proposal, staff.gap)) {
+                            result.addAll(splitStackedHeads(labels, gray, width, height,
+                                    List.of(part), staffs, membership, retainedRefinements - 1));
+                        } else result.add(part);
+                    } else result.add(part);
+                }
             } else result.add(component);
         }
         return List.copyOf(result);
+    }
+
+    private static boolean provedRetainedHeadPair(byte[] gray, int width, int height,
+            List<Component> parts, float gap) {
+        if (gray == null || parts.size() != 2
+                || !printedFilledOval(gray, width, parts.get(0), gap)
+                || !printedFilledOval(gray, width, parts.get(1), gap)) return false;
+        int[] a = attachedRawStem(gray, width, height, parts.get(0), gap);
+        int[] b = attachedRawStem(gray, width, height, parts.get(1), gap);
+        return a != null && b != null && a[2] == b[2]
+                && Math.abs(a[0] - b[0]) <= Math.max(1, Math.round(gap * .2f))
+                && Math.abs(a[1] - b[1]) <= Math.max(1, Math.round(gap * .3f));
     }
 
     private static boolean mixedStemmedVerticalVoices(
@@ -10165,6 +10221,46 @@ final class OmrScoreInterpreter {
             captured.add(child);
         }
         return split.commit(captured) ? List.copyOf(captured) : List.of();
+    }
+
+    /** Only a previously rejected remote compound can acquire this exact two-shaft ledger route. */
+    private static List<Component> captureLedgerHalfUnison(
+            byte[] labels, byte[] gray, int width, int height, Component parent, Staff owner,
+            List<Staff> staffs, ExactComponentMembers.Collector collector, long[] work) {
+        if (work == null || work.length == 0 || work[0] < 1) return List.of();
+        work[0]--;
+        float gap = owner.pitchGap;
+        long pixels = ((long) parent.maxX - parent.minX + 1) * (parent.maxY - parent.minY + 1);
+        float top = owner.pitchBottom - 4 * gap;
+        float remote = Math.max(top - parent.centerY, parent.centerY - owner.pitchBottom) / gap;
+        if (gray == null || !Float.isFinite(gap + remote) || gap < 8 || remote <= 1.8f
+                || remote > 4.5f || pixels < 1 || pixels > 4096
+                || parent.maxX - parent.minX + 1 < gap * 1.8f
+                || parent.maxX - parent.minX + 1 > Math.round(gap * 3.1f)
+                || parent.maxY - parent.minY + 1 < gap * .65f
+                || parent.maxY - parent.minY + 1 > gap * 1.4f) return List.of();
+        long cost = (long) Math.ceil(2048 * gap * gap + 128 * pixels + 4096);
+        if (cost > work[0]) { work[0] = 0; return List.of(); }
+        work[0] -= cost;
+        if (hasLedgerInk(gray, width, height, parent, gap, false)
+                || hasHeadLedgerSupport(labels, gray, width, height, parent, owner, false, staffs))
+            return List.of();
+        List<Component> chosen = sideBySideUnison(labels, gray, width, height, parent, gap);
+        if (chosen.size() != 2 || !printedFilledOval(gray, width, chosen.get(0), gap)) return List.of();
+        for (Component part : chosen)
+            if (!hasLedgerInk(gray, width, height, part, gap, false)
+                    || !hasInnerLedgerInk(gray, width, height, part, owner, false)
+                    || !hasHeadLedgerSupport(labels, gray, width, height, part, owner, false, staffs))
+                return List.of();
+        var split = collector.beginSplit(parent, labels, width);
+        if (split == null) return List.of();
+        List<Component> children = new ArrayList<>();
+        for (Component part : chosen) {
+            Component child = horizontalHeadSlice(labels, width, parent, part.minX, part.maxX, split);
+            if (child == null) return List.of();
+            children.add(child);
+        }
+        return split.commit(children) ? List.copyOf(children) : List.of();
     }
 
     /** Exact raw-light islands identify a physical whole counter across candidate seams. */

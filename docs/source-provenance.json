@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "6fbd37fd6cd2b804c6d6f9fa9a48488aea115183498c98d6f0735a4ee48b6f1b",
+      "source_sha256": "4caee2e7fe6a28033217ee9999d0111379113014375f8839c315707055004c1e",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "6fbd37fd6cd2b804c6d6f9fa9a48488aea115183498c98d6f0735a4ee48b6f1b",
+      "source_normalized_sha256": "4caee2e7fe6a28033217ee9999d0111379113014375f8839c315707055004c1e",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "dd9873f778a8c5e0360bc08faea4f755218b911d27552765a812bc9b55fba9c3",
+      "standalone_sha256": "f42077c6363d777cd2f61235f75415fa1957901453b13c4832d393332f7992a9",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
+      "reviewed_app_commit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "2234d535c2f39f4e87e38e828a31550c4bc6f78bf322ad39e40fdaa82e58db8e",
-      "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded.",
+      "standalone_normalized_sha256": "441f0ce1b0834fab24cfb4c047ead59f671a6b03d3998ab1e15982673512d419",
+      "current_source_review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11086,6 +11086,28 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
       "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded."
+    },
+    "RetainedStackLobeOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RetainedStackLobeOriginalTest.java",
+      "source_sha256": "9d5a31a133533255be6b150b3b39faf46c7156b00a6cbb532018556488d61d76",
+      "source_normalized_sha256": "9d5a31a133533255be6b150b3b39faf46c7156b00a6cbb532018556488d61d76",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RetainedStackLobeOriginalTest.java",
+      "standalone_sha256": "6694eb10f4edeeb53cfed8bfc5b09b460b28850f209d7edfdf6f5cec4e720fc2",
+      "standalone_normalized_sha256": "2786927a285aabf2b48f6641df5ea543a53e1f8415d67993df6f3fd769b1a133",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "5c5992aaf43dd1c7cbee7d24398ebb9fd8dc07a2",
+      "current_source_review": "A retained tall chord lobe may use one further shrinking exact split after the existing producer partition, only when both resulting raw filled ovals share a proved owned shaft. Existing split thresholds remain unchanged; one refinement bounds the result to four heads. Twelve original partition/rival/budget controls,148 focused tests and private full-page proof; no private score input is ported."
+    },
+    "LedgerHalfUnisonOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/LedgerHalfUnisonOriginalTest.java",
+      "source_sha256": "ad0f9f67382e2a507039ed1c9aedc643ae97ed11639a7a7ac2563230c474de40",
+      "source_normalized_sha256": "ad0f9f67382e2a507039ed1c9aedc643ae97ed11639a7a7ac2563230c474de40",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LedgerHalfUnisonOriginalTest.java",
+      "standalone_sha256": "03227e9ad84597dfc47fc37b94967872af74c902469ae17d5a2dd1289a84fa6c",
+      "standalone_normalized_sha256": "be9e1c0ba0b8983f018ec4a9b45221b462da377402aeee1161d84aa93b86cd08",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
+      "current_source_review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded."
     }
   },
   "finite_curved_approach_review": {
@@ -16183,6 +16205,18 @@
     {
       "appCommit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
       "review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "5c5992aaf43dd1c7cbee7d24398ebb9fd8dc07a2",
+      "review": "A retained tall chord lobe may use one further shrinking exact split after the existing producer partition, only when both resulting raw filled ovals share a proved owned shaft. Existing split thresholds remain unchanged; one refinement bounds the result to four heads. Twelve original partition/rival/budget controls,148 focused tests and private full-page proof; no private score input is ported.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
+      "review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded.",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
