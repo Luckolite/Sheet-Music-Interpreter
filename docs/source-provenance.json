@@ -5124,13 +5124,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "0057a5e26db1f07e4aa4b9a84cdd2d85ebe46b11e7bb508e18c716bc65d1997e",
+      "source_sha256": "3845fd81c4be6d4e89dad3b377dc9718e630b9f8b02ef3e9d3c4a0ee4a5c8c50",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "0057a5e26db1f07e4aa4b9a84cdd2d85ebe46b11e7bb508e18c716bc65d1997e",
+      "source_normalized_sha256": "3845fd81c4be6d4e89dad3b377dc9718e630b9f8b02ef3e9d3c4a0ee4a5c8c50",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "8c260396a3b22b15980db1fd6627c96dea19543742aaf5a45d229c2b27eb1caf",
+      "standalone_sha256": "70a3cd32eb7f7b123269b1552260e15a57360e52356ad941360dbe5022649092",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "99972686c25d0a21ef040e862438fbc6171980fd",
+      "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5141,8 +5141,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "8c260396a3b22b15980db1fd6627c96dea19543742aaf5a45d229c2b27eb1caf",
-      "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
+      "standalone_normalized_sha256": "5ff8ef6b615fb484ad80bb0ef4e7bac178f8b480da25a73cb3835a9bc01c5449",
+      "current_source_review": "Complete stemless whole oval and independently shaft-owned filled oval can retain two written values at one logical attack. Exact original producer member partition and value observations retained; old half-unison route unchanged. Original procedural controls only.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -10869,6 +10869,17 @@
       "license": "Apache-2.0",
       "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
       "standalone_normalized_sha256": "5a750077a2623e16aa99e0291746eb8c3e9da7148d4d8c36872e54f0c4388c17"
+    },
+    "WholeMovingUnisonOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/WholeMovingUnisonOriginalTest.java",
+      "source_sha256": "d7a0a0b25a5fe4965f92b45bcc49b2bd6a8658ce742dbe1a475510e851a8cd96",
+      "source_normalized_sha256": "d7a0a0b25a5fe4965f92b45bcc49b2bd6a8658ce742dbe1a475510e851a8cd96",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/WholeMovingUnisonOriginalTest.java",
+      "standalone_sha256": "a377355a12543d27f904fd687724a9c9e6311a169e006c30cde01ff7edc0629c",
+      "standalone_normalized_sha256": "768832bfff9c79343499a007dc762ec8ae0e46b776a69ce860e1fa1c0a4e44c2",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535",
+      "current_source_review": "Complete stemless whole oval and independently shaft-owned filled oval can retain two written values at one logical attack. Exact original producer member partition and value observations retained; old half-unison route unchanged. Original procedural controls only."
     }
   },
   "finite_curved_approach_review": {
@@ -15916,5 +15927,13 @@
     "license": "Apache-2.0",
     "reviewed_app_commit": "99972686",
     "validation": "164 focused Java tests and separate private exact-input qualification; no deployment claim."
+  },
+  "whole_moving_unison_review": {
+    "scope": "Complete enclosed whole-sized counter plus independent filled oval and unique owned shaft; bounded seam consensus abstains on competing interpretations. Exact pre-seal child producer partition, no duplicate census.",
+    "originals": "17 procedural tests; original geometry only, no captured pixels, private coordinates, fonts, models or logs.",
+    "validation": "158 focused Java tests; separate private-page proof documented privately.",
+    "boundary": "Ambiguous child slur endpoints abstain; no speculative copied or fan-out ownership. No model, record layout, runtime dependency or old half-unison change.",
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535"
   }
 }

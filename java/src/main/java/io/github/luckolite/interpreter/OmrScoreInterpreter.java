@@ -91,6 +91,7 @@ final class OmrScoreInterpreter {
                         memberCollector);
         var physicalSplitCache = new java.util.IdentityHashMap<Component, List<Component>>();
         List<Component> physicalSourceHeads = new ArrayList<>();
+        var wholeUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
         for (Component original : rawHeadComponents) {
             var exactSplit =
                     splitStackedHeads(
@@ -102,7 +103,17 @@ final class OmrScoreInterpreter {
                             staffs,
                             memberCollector);
             physicalSplitCache.put(original, exactSplit);
-            physicalSourceHeads.addAll(exactSplit);
+            for (Component sourceHead : exactSplit) {
+                Staff owner = staffForHead(labels, gray, width, height, staffs, sourceHead);
+                List<Component> unison = owner == null ? List.of()
+                        : captureStemlessWholeUnison(labels, gray, width, height,
+                                sourceHead, owner.gap, memberCollector);
+                if (unison.isEmpty()) physicalSourceHeads.add(sourceHead);
+                else {
+                    wholeUnisonCache.put(sourceHead, unison);
+                    physicalSourceHeads.addAll(unison);
+                }
+            }
         }
         memberCollector.seal(new ExactComponentMembers.Budget(2L * labels.length + 4096, 4096));
         List<Component> recoveredFadedHeads = new ArrayList<>();
@@ -1108,7 +1119,7 @@ final class OmrScoreInterpreter {
         var rosterIdentities = new java.util.IdentityHashMap<Component, Boolean>();
         for (Component component : pairedRoster) rosterIdentities.put(component, true);
         for (Component component : heads)
-            if (!rosterIdentities.containsKey(component)) {
+            if (!rosterIdentities.containsKey(component) && !wholeUnisonCache.containsKey(component)) {
                 pairedRoster.add(component);
                 rosterIdentities.put(component, true);
             }
@@ -2041,8 +2052,15 @@ final class OmrScoreInterpreter {
                     unpitched
                             ? List.of()
                             : sideBySideUnison(labels, gray, width, height, head, staff.gap);
+            boolean stemlessWhole = false;
+            if (unison.isEmpty() && !unpitched) {
+                unison = wholeUnisonCache.getOrDefault(head, List.of());
+                stemlessWhole = !unison.isEmpty();
+            }
             if (!unison.isEmpty()) {
-                // Opposite stems share a printed pitch/attack but have separate durations.
+                // Each printed component remains attached to its own DetectedNote below;
+                // the shared logical pitch/attack does not depend on horizontal engraving offset.
+                // Existing opposite-shaft unisons retain a half; proved stemless ovals retain a whole.
                 for (int partIndex = 0; partIndex < unison.size(); partIndex++) {
                     Component part = unison.get(partIndex);
 
@@ -2058,6 +2076,12 @@ final class OmrScoreInterpreter {
                             partIndex == 0
                                     ? detectBeamCount(beamLabels, gray, width, height, part, staff)
                                     : 0;
+                    if (stemlessWhole && partIndex == 0) {
+                        int[] movingStem = attachedRawStem(gray, width, height, part, staff.gap,
+                                Math.max(1, Math.round(staff.gap * .16f)), 205);
+                        partBeams = detectBeamCount(beamLabels, gray, width, height, part,
+                                staff, false, false, movingStem);
+                    }
                     int[] partTremolo =
                             tremoloStrokeCounts(gray, width, height, part, staff, heads);
                     if (partIndex == 0 && partTremolo[0] > 0)
@@ -2066,7 +2090,7 @@ final class OmrScoreInterpreter {
                                         Math.max(0, partBeams - partTremolo[1]),
                                         beamsBeyondTremolo(
                                                 gray, beamLabels, width, height, part, staff));
-                    float partDuration = partIndex == 0 ? (partBeams > 0 ? 0 : 1) : 2;
+                    float partDuration = partIndex == 0 ? (partBeams > 0 ? 0 : 1) : stemlessWhole ? 4 : 2;
                     int partDots =
                             partIndex == 0
                                     ? 0
@@ -2127,6 +2151,23 @@ final class OmrScoreInterpreter {
                         separate =
                                 separate.withArticulations(
                                         NoteOrnament.withTremolo(0, partBeams + partTremolo[0]));
+                    if (stemlessWhole) {
+                        var partFacts = List.of("EXACT_STEMLESS_WHOLE_UNISON_PART",
+                                "SHARED_LOGICAL_UNISON_ATTACK",
+                                partIndex == 0 ? "PRINTED_FILLED_OVAL_OWNED_SHAFT_PROVED"
+                                        : "WHOLE_HEAD_POCKET_PROVED_NO_OWN_SHAFT");
+                        var partValue = new PrintedValueDecision(labels, gray, width, height,
+                                part, partDuration, partBeams,
+                                partIndex == 1 ? PrintedValueExit.OPEN_WITHOUT_STEM_WHOLE
+                                        : partBeams > 0 ? PrintedValueExit.BEAMED_INPUT
+                                                : PrintedValueExit.OPAQUE_DEFAULT_QUARTER,
+                                partFacts);
+                        printedValueRoutes.put(part,
+                                partValue.withCallerState(partDuration, partBeams, partFacts));
+                        printedValueAdmissions.put(part, partFacts);
+                        writtenAccidentalChoices.put(part, chooseWrittenAccidental(labels, width,
+                                height, localAccidentals, part, accidentalGap, heads, gray));
+                    }
                     detected.add(new DetectedNote(separate, part, staff.gap));
                 }
                 continue;
@@ -10013,6 +10054,114 @@ final class OmrScoreInterpreter {
         Component hollow = leftOpen ? left : right, filled = leftOpen ? right : left;
         if (!hasRawUnisonHollowCore(gray, width, height, hollow)) return List.of();
         return List.of(filled, hollow);
+    }
+
+    /** A complete stemless whole and a separate moving oval can share a semantic component. */
+    private static List<Component> stemlessWholeUnison(
+            byte[] labels, byte[] gray, int width, int height, Component head, float gap) {
+        int w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        if (gray == null || w < gap * 1.8f || w > Math.round(gap * 3.1f)
+                || h < gap * .65f || h > gap * 1.4f) return List.of();
+        int middle = (head.minX + head.maxX) / 2;
+        int radius = Math.round(gap * .35f);
+        List<Component> selected = List.of();
+        List<Integer> selectedOpening = null;
+        int[] selectedStem = null;
+        boolean selectedWholeLeft = false;
+        int selectedDistance = Integer.MAX_VALUE;
+        for (int seam = middle - radius; seam <= middle + radius; seam++) {
+            Component left = horizontalHeadSlice(labels, width, head, head.minX, seam);
+            Component right = horizontalHeadSlice(labels, width, head, seam + 1, head.maxX);
+            if (left == null || right == null
+                    || Math.abs(left.centerY - right.centerY) > gap * .3f
+                    || left.area < gap * gap * .35f || right.area < gap * gap * .3f) continue;
+            boolean leftOpen = hasOpenCenter(labels, gray, width, height, left, gap);
+            boolean rightOpen = hasOpenCenter(labels, gray, width, height, right, gap);
+            if (leftOpen == rightOpen) continue;
+            Component whole = leftOpen ? left : right, moving = leftOpen ? right : left;
+            // Every seam needs the complete whole glyph; missing half shafts are insufficient.
+            if (!hasRawUnisonHollowCore(gray, width, height, whole)
+                    || !WholeHeadPocketEvidence.proved(gray, width, height,
+                            whole.minX, whole.minY, whole.maxX, whole.maxY, gap)
+                    || attachedRawStem(gray, width, height, whole, gap,
+                            Math.max(1, Math.round(gap * .16f)), 205) != null
+                    || !printedFilledOval(gray, width, moving, gap)
+                    || !hasAttachedStem(labels, width, height, moving, gap)) continue;
+            int[] stem = attachedRawStem(gray, width, height, moving, gap,
+                    Math.max(1, Math.round(gap * .16f)), 205);
+            if (stem == null) continue;
+            List<Integer> opening = wholeUnisonOpening(gray, width, whole, gap);
+            if (opening.isEmpty()) continue;
+            // Neighboring seams may trim the outer rim, but must describe the same actual
+            // enclosed pixels and the same narrow shaft, never competing voice assignments.
+            if (selectedOpening != null && (leftOpen != selectedWholeLeft
+                    || !opening.equals(selectedOpening) || stem[2] != selectedStem[2]
+                    || Math.abs(stem[0] - selectedStem[0]) > Math.max(1, Math.round(gap * .16f))
+                    || Math.abs(stem[1] - selectedStem[1]) > Math.max(1, Math.round(gap * .16f))))
+                return List.of();
+            if (Math.abs(seam - middle) < selectedDistance) {
+                selected = List.of(moving, whole);
+                selectedDistance = Math.abs(seam - middle);
+            }
+            if (selectedOpening == null) {
+                selectedOpening = opening;
+                selectedStem = stem;
+                selectedWholeLeft = leftOpen;
+            }
+        }
+        return selected;
+    }
+
+    /** Register only the actual exhaustive producer traversal, before the collector seals. */
+    private static List<Component> captureStemlessWholeUnison(
+            byte[] labels, byte[] gray, int width, int height, Component head, float gap,
+            ExactComponentMembers.Collector collector) {
+        List<Component> chosen = stemlessWholeUnison(labels, gray, width, height, head, gap);
+        if (chosen.isEmpty()) return List.of();
+        var split = collector.beginSplit(head, labels, width);
+        if (split == null) return List.of();
+        List<Component> captured = new ArrayList<>();
+        for (Component part : chosen) {
+            Component child = horizontalHeadSlice(labels, width, head, part.minX, part.maxX, split);
+            if (child == null) return List.of();
+            captured.add(child);
+        }
+        return split.commit(captured) ? List.copyOf(captured) : List.of();
+    }
+
+    /** Exact raw-light islands identify a physical whole counter across candidate seams. */
+    private static List<Integer> wholeUnisonOpening(
+            byte[] gray, int stride, Component head, float gap) {
+        int w = head.maxX - head.minX + 1, h = head.maxY - head.minY + 1;
+        boolean[] seen = new boolean[w * h];
+        int[] queue = new int[w * h];
+        List<Integer> opening = new ArrayList<>();
+        for (int seed = 0; seed < w * h; seed++) {
+            if (seen[seed] || (gray[(head.minY + seed / w) * stride + head.minX + seed % w] & 255) < 205)
+                continue;
+            int read = 0, end = 1;
+            queue[0] = seed;
+            seen[seed] = true;
+            boolean edge = false;
+            while (read < end) {
+                int p = queue[read++], x = p % w, y = p / w;
+                edge |= x == 0 || x == w - 1 || y == 0 || y == h - 1;
+                for (int delta : new int[] {-1, 1, -w, w}) {
+                    int n = p + delta;
+                    if (n < 0 || n >= w * h || seen[n]
+                            || Math.abs(n % w - x) + Math.abs(n / w - y) != 1) continue;
+                    if ((gray[(head.minY + n / w) * stride + head.minX + n % w] & 255) >= 205) {
+                        seen[n] = true;
+                        queue[end++] = n;
+                    }
+                }
+            }
+            if (edge || end < Math.max(2, gap * gap * .025f)) continue;
+            for (int i = 0; i < end; i++)
+                opening.add((head.minY + queue[i] / w) * stride + head.minX + queue[i] % w);
+        }
+        opening.sort(Integer::compareTo);
+        return opening;
     }
 
     /** A white notch above a filled head is not the interior of a second, held oval. */
