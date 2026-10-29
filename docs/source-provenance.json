@@ -6557,7 +6557,7 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSingleBeamPath.java",
       "license": "Apache-2.0",
       "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
-      "standalone_normalized_sha256": "f1afbeda4ce52c29bf4e63388f8b35d61159c57f9de9fbb90af55c291fe697e2"
+      "standalone_normalized_sha256": "7554c102812c71231305b3e3701bf36fbf19dc5c0958db7d110acc39acb5eebc"
     },
     "PrintedSingleRailCore.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSingleRailCore.java",
@@ -10865,7 +10865,8 @@
       "standalone_sha256": "bc8c94cf2828f73fb4e41aba54ed1181c41bf0a810b0cef0b21f4ae6d018dff8",
       "standalone_normalized_sha256": "bc8c94cf2828f73fb4e41aba54ed1181c41bf0a810b0cef0b21f4ae6d018dff8",
       "license": "Apache-2.0",
-      "current_source_review": "Retains every original annotation/rival/frame assertion. Synthetic suppression fixture now supplies decoded fret evidence because geometry-only candidates have no destructive authority."
+      "current_source_review": "Retains every original annotation/rival/frame assertion. Synthetic suppression fixture now supplies decoded fret evidence because geometry-only candidates have no destructive authority.",
+      "reviewed_app_commit": "3171badbf0ca381054232a7a2b8426b3c2e57004"
     },
     "RuleContactSingleBeamEvidenceTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/RuleContactSingleBeamEvidenceTest.java",
@@ -10876,7 +10877,7 @@
       "reviewed_app_commit": "99972686c25d0a21ef040e862438fbc6171980fd",
       "license": "Apache-2.0",
       "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
-      "standalone_normalized_sha256": "5a750077a2623e16aa99e0291746eb8c3e9da7148d4d8c36872e54f0c4388c17"
+      "standalone_normalized_sha256": "53be0a4aa85b9be6ceab9d200946fbf3e3074f5afcbb8511e03bf1bf592257f8"
     },
     "WholeMovingUnisonOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/WholeMovingUnisonOriginalTest.java",
