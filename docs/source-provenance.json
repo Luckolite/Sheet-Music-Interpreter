@@ -11283,14 +11283,14 @@
     },
     "LazyRemoteLedgerBudgetOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/LazyRemoteLedgerBudgetOriginalTest.java",
-      "source_sha256": "ffec54be5a27ea9ba3abfc317bbcf6636618e9bc20d3777461eff68331873220",
-      "source_normalized_sha256": "ffec54be5a27ea9ba3abfc317bbcf6636618e9bc20d3777461eff68331873220",
+      "source_sha256": "136bb66d1f315d3c873dc8bd9f6168b8a2235b5ce820c4553f882f735e870e1c",
+      "source_normalized_sha256": "4bcbc0fe1598c2cf697731638ceac3e5bf17d38110a605f657cc5a6215a4a8c5",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/LazyRemoteLedgerBudgetOriginalTest.java",
       "standalone_sha256": "923062e08349658b668e4f9c88ce01a4f11d4586522711441d2409e6b7e1c151",
       "standalone_normalized_sha256": "a759a6f4ca7f8f04f83f9de67c5e918ad7c54ec10e6f9798c41e2625f3b5eb78",
       "license": "Apache-2.0",
-      "reviewed_app_commit": "1c5fc8c3ad7eb9f8b1f13a7e170a464a44de8c0d",
-      "current_source_review": "Five original generated optional ledger-cache budget controls; no score pixels or model changes."
+      "reviewed_app_commit": "853f16d827b1141ee0d62584a550562b31457782",
+      "current_source_review": "Android-only test fixture adapter: inline original Apache cancellation fixture/reflection helpers absent from the Android test project. Original five assertions/prove bodies unchanged. All five used scenes retain exact raw labels/gray and measure/staff/component fields. Standalone keeps its existing legitimate shared test helpers and original five-test source unchanged; all15208 standalone Java tests pass. Actual app-only five-test run passes without public test classes. No production, model, decoder, layout or semantic change."
     }
   },
   "finite_curved_approach_review": {
@@ -16518,5 +16518,13 @@
         "qualified_candidate_sha256": "b6a067ac5962c74480e36b6f27c0ee5bd1a5ee07db35cea5a2fe5a577ee7cc11"
       }
     }
+  },
+  "android_ledger_regression_fixture_adapter_review": {
+    "appCommit": "853f16d827b1141ee0d62584a550562b31457782",
+    "originalCases": 5,
+    "actualAppMainClassesUsed": true,
+    "publicTestClassesOnAppTestClasspath": false,
+    "sameUsedRawLabelsGrayAndFields": true,
+    "sourcePolicy": "Original Apache procedural test helpers only, no private score assets or device data; app-specific fixture adaptation does not copy app production code into standalone."
   }
 }
