@@ -1770,6 +1770,20 @@ final class OmrScoreInterpreter {
                 beamCount =
                         transportedPairedBeamCount(
                                 gray, width, height, head, rhythmStaff, heads, beamCount);
+            if (transportedBeamConsulted && beamCount < 2)
+                beamCount =
+                        barlineOpposedDoubleBeamCount(
+                                gray,
+                                width,
+                                height,
+                                head,
+                                staff,
+                                rhythmStaff,
+                                staffs,
+                                heads,
+                                measure,
+                                beamCount,
+                                rawCourtesy);
             int afterTransportedBeam = beamCount;
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, rhythmStaff, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
@@ -22598,6 +22612,172 @@ final class OmrScoreInterpreter {
         return Math.min(3, beams);
     }
 
+    /** A full grand-staff barline is not a head's longer opposed shaft. */
+    private static int barlineOpposedDoubleBeamCount(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff owner,
+            Staff frame,
+            List<Staff> staffs,
+            List<Component> heads,
+            MeasureRegion measure,
+            int count,
+            RawCourtesyBudget budget) {
+        float gap = frame.gap;
+        if (count >= 2
+                || gray == null
+                || width <= 0
+                || height <= 0
+                || gray.length != (long) width * height
+                || owner.count < 2
+                || heads == null
+                || !Float.isFinite(gap)
+                || gap < 8
+                || gap > 48
+                || Math.min(
+                                Math.abs(head.centerY - frame.top),
+                                Math.abs(head.centerY - frame.bottom))
+                        > gap * 1.2f
+                || head.maxX - head.minX + 1 < gap * 1.05f
+                || head.maxX - head.minX + 1 > gap * 1.8f
+                || head.maxY - head.minY + 1 < gap * .7f
+                || head.maxY - head.minY + 1 > gap * 1.3f
+                || (long) (head.maxX - head.minX + 1) * (head.maxY - head.minY + 1) > 4096
+                || head.area < gap * gap * .8f
+                || budget == null
+                || !prepayBarlineProof(budget, 256L + heads.size(), 0)) return count;
+        // Preserve the existing opposed-voice choice: an aligned neighbouring head
+        // makes this additional acquisition ambiguous even before shaft interpretation.
+        for (Component other : heads) {
+            float dy = Math.abs(other.centerY - head.centerY);
+            if (other != head
+                    && dy >= gap * .75f
+                    && dy <= gap * 1.3f
+                    && Math.abs(other.centerX - head.centerX) <= gap * .3f) return count;
+        }
+        boolean axisCandidate = false;
+        int radius = Math.max(2, Math.round(gap * .3f));
+        for (int edge : new int[] {head.minX, head.maxX})
+            for (int x = Math.max(1, edge - radius); x <= Math.min(width - 2, edge + radius); x++) {
+                boolean ink = true;
+                for (int line = 0; line < 4; line++) {
+                    int y = Math.round(frame.top + (line + .5f) * gap);
+                    if (y < 0 || y >= height || (gray[y * width + x] & 255) >= 165) {
+                        ink = false;
+                        break;
+                    }
+                }
+                if (ink) axisCandidate = true;
+            }
+        if (!axisCandidate
+                || !prepayBarlineProof(budget, (long) Math.ceil(8192 + 256 * gap * gap), 4096))
+            return count;
+        int[] competing = attachedRawStem(gray, width, height, head, gap);
+        if (competing == null
+                || Math.abs(competing[1] - head.centerY) <= gap * 5.5f
+                || !printedFilledOval(gray, width, head, gap)) return count;
+        int direction = -competing[2];
+        int[] own = directionalVoiceShaft(gray, width, height, head, gap, direction);
+        if (own == null || Math.abs(own[1] - head.centerY) > gap * 5.5f) return count;
+        if (!prepayBarlineProof(budget, staffs.size(), 0)) return count;
+        float systemTop = Float.POSITIVE_INFINITY, systemBottom = Float.NEGATIVE_INFINITY;
+        int found = 0;
+        for (Staff other : staffs) {
+            if (other.count != owner.count
+                    || other.top < measure.top() * height - gap * .5f
+                    || other.bottom > measure.bottom() * height + gap * .5f
+                    || Math.abs(other.gap - gap) > gap * .2f) continue;
+            systemTop = Math.min(systemTop, other.top);
+            systemBottom = Math.max(systemBottom, other.bottom);
+            found++;
+        }
+        if (found != owner.count
+                || found < 2
+                || systemBottom - systemTop > gap * 22
+                || systemBottom - systemTop < gap * 6) return count;
+        int bar = -1, barRadius = Math.max(1, Math.round(gap * .22f));
+        int firstColumn = Math.max(1, competing[0] - barRadius),
+                lastColumn = Math.min(width - 2, competing[0] + barRadius);
+        int firstRow = Math.max(0, Math.round(systemTop)),
+                lastRow = Math.min(height - 1, Math.round(systemBottom));
+        int barColumns = Math.max(0, lastColumn - firstColumn + 1),
+                barRows = Math.max(0, lastRow - firstRow + 1);
+        if (barColumns == 0 || barRows == 0) return count;
+        long oldBarWork = (long) Math.ceil(4096 + 128 * gap * gap) + heads.size();
+        long explicitBarWork = 256L + barColumns * (barRows + (long) heads.size());
+        if (!prepayBarlineProof(budget, Math.max(oldBarWork, explicitBarWork), 4096)) return count;
+        for (int x = firstColumn; x <= lastColumn; x++) {
+            if (competing[2] < 0 ? x < head.maxX + 2 : x > head.minX - 2) continue;
+            if (x < measure.left() * width - gap || x > measure.right() * width + gap) continue;
+            int hits = 0, total = 0, blank = 0, longest = 0;
+            for (int y = firstRow; y <= lastRow; y++) {
+                total++;
+                if ((gray[y * width + x] & 255) < 165) {
+                    hits++;
+                    blank = 0;
+                } else {
+                    blank++;
+                    longest = Math.max(longest, blank);
+                }
+            }
+            if (hits < total * .94f || longest > 1) continue;
+            boolean otherHead = false;
+            for (Component h : heads)
+                if (h != head
+                        && h.area >= gap * gap * .5f
+                        && x >= h.minX
+                        && x <= h.maxX
+                        && h.centerY >= systemTop - gap * .5f
+                        && h.centerY <= systemBottom + gap * .5f) {
+                    otherHead = true;
+                    break;
+                }
+            if (!otherHead) {
+                bar = x;
+                break;
+            }
+        }
+        if (bar < 0) return count;
+        for (Component peer : heads) {
+            if (!prepayBarlineProof(budget, 1, 0)) return count;
+            float dx = peer.centerX - head.centerX;
+            if (peer == head
+                    || dx * (bar - head.centerX) >= 0
+                    || Math.abs(dx) < gap * .95f
+                    || Math.abs(dx) > gap * 3
+                    || Math.abs(peer.centerY - head.centerY) > gap * 2
+                    || peer.maxX - peer.minX + 1 < gap * 1.05f
+                    || peer.maxX - peer.minX + 1 > gap * 1.8f
+                    || peer.maxY - peer.minY + 1 < gap * .7f
+                    || peer.maxY - peer.minY + 1 > gap * 1.3f
+                    || (long) (peer.maxX - peer.minX + 1) * (peer.maxY - peer.minY + 1) > 4096
+                    || peer.area < gap * gap * .8f) continue;
+            if (!prepayBarlineProof(
+                    budget,
+                    (long) Math.ceil(8192 + 512 * gap * gap),
+                    (long) Math.ceil(8192 + 64 * gap * gap))) return count;
+            if (!printedFilledOval(gray, width, peer, gap)) continue;
+            int[] pair = directionalVoiceShaft(gray, width, height, peer, gap, direction);
+            if (pair == null || Math.abs(pair[1] - peer.centerY) > gap * 8) continue;
+            if (PairedGraceBeamInk.countPrintedSize(
+                            gray, width, height, own, pair, gap, frame.top, frame.pitchTrack)
+                    == 2) return 2;
+        }
+        return count;
+    }
+
+    /** Refusing this optional proof must not exhaust later legacy raw paths. */
+    private static boolean prepayBarlineProof(RawCourtesyBudget budget, long work, long bytes) {
+        return budget != null
+                && !budget.exhausted
+                && work >= 0
+                && bytes >= 0
+                && work <= budget.workLimit - budget.workUsed
+                && bytes <= budget.byteLimit - budget.bytesUsed
+                && budget.prepay(work, bytes);
+    }
     /** Written beam recovery only; no head admission or performance voice is changed. */
     private static int transportedPairedBeamCount(
             byte[] gray,

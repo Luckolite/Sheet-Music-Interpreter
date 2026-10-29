@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "d88d213f0f3db614c9acbf7b59330656e0cb70ab03f00dc8e8b83e9ed6a340f0",
+      "source_sha256": "3c79fd9d53ef3634844041529bb3ee1aed3ca43a32044ec42506b72f30be0df2",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "d88d213f0f3db614c9acbf7b59330656e0cb70ab03f00dc8e8b83e9ed6a340f0",
+      "source_normalized_sha256": "3c79fd9d53ef3634844041529bb3ee1aed3ca43a32044ec42506b72f30be0df2",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "8aff219dc3edf23be773adf48794f57f21e30b8fc76549ee673d8e04494a5e4d",
+      "standalone_sha256": "edfc7776495ef2f5f1c239fb4f4c6f59f68a179276a48ab99787d7edec5b83ea",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "95448d9772c0c0603bf3c3da14437fb9dda3e663",
+      "reviewed_app_commit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "2439bbb3706f0b392525d85d0c3ae71a48532457fe178d6a4ff303227d1baf05",
-      "current_source_review": "Reviewed bounded local own-head rule observations from independent five-rule pen profiles, only in the short-shaft core path after strict head exclusion. Legacy row/fringe predicates and clock authority unchanged; original raw staff/ledger/rail/hook/frame controls only. No page clones, private score data, model or format changes",
+      "standalone_normalized_sha256": "4cadaeec0651eff5d07018d56722f9ffd03e8fb6136aee5d1053b1b25853a9c8",
+      "current_source_review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11233,6 +11233,28 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "95448d9772c0c0603bf3c3da14437fb9dda3e663",
       "current_source_review": "Reviewed bounded local own-head rule observations from independent five-rule pen profiles, only in the short-shaft core path after strict head exclusion. Legacy row/fringe predicates and clock authority unchanged; original raw staff/ledger/rail/hook/frame controls only. No page clones, private score data, model or format changes"
+    },
+    "BarlineBeamBudgetTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BarlineBeamBudgetTest.java",
+      "source_sha256": "b7dd55529235db9ad5b23ac03076f9d1318f5b709af587df702f1cb34f37350c",
+      "source_normalized_sha256": "b7dd55529235db9ad5b23ac03076f9d1318f5b709af587df702f1cb34f37350c",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BarlineBeamBudgetTest.java",
+      "standalone_sha256": "6d402ccae92d816ca62cd2c7c1493452f587fedd3d283dda196451c9811ad4e7",
+      "standalone_normalized_sha256": "881d5a301e0f6ae569f161157ab6a546c06562b1813678a7db1f1b30f73d08ed",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
+      "current_source_review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes"
+    },
+    "BarlineOpposedBeamOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BarlineOpposedBeamOriginalTest.java",
+      "source_sha256": "9dfc8800dd420e892c6ca4cac5cba59c73abed2f9deb374f9c8ce78c8684fc8c",
+      "source_normalized_sha256": "9dfc8800dd420e892c6ca4cac5cba59c73abed2f9deb374f9c8ce78c8684fc8c",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BarlineOpposedBeamOriginalTest.java",
+      "standalone_sha256": "f77de54244f2bdd0ee9111a5ad6f22587707b444fe037f8d7f4c1a592aaddda8",
+      "standalone_normalized_sha256": "66af14bac89929f065635656c2dd686c083fe140b1c609de159d65898ab7434d",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
+      "current_source_review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes"
     }
   },
   "finite_curved_approach_review": {
@@ -16390,6 +16412,12 @@
     {
       "appCommit": "95448d9772c0c0603bf3c3da14437fb9dda3e663",
       "review": "Reviewed bounded local own-head rule observations from independent five-rule pen profiles, only in the short-shaft core path after strict head exclusion. Legacy row/fringe predicates and clock authority unchanged; original raw staff/ledger/rail/hook/frame controls only. No page clones, private score data, model or format changes",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
+      "review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
