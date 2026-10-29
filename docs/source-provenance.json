@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "76fccc9942a446e22ae6f8efe38fcb74ef6a77506acde0dc4fbef76a36962a53",
+      "source_sha256": "6fbd37fd6cd2b804c6d6f9fa9a48488aea115183498c98d6f0735a4ee48b6f1b",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "76fccc9942a446e22ae6f8efe38fcb74ef6a77506acde0dc4fbef76a36962a53",
+      "source_normalized_sha256": "6fbd37fd6cd2b804c6d6f9fa9a48488aea115183498c98d6f0735a4ee48b6f1b",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "0b4a4db63b4ab8da5664532294b48af3904d810b5becdab167448fee56589a66",
+      "standalone_sha256": "dd9873f778a8c5e0360bc08faea4f755218b911d27552765a812bc9b55fba9c3",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
+      "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "0c5cbef520c308b894eab4d4f73a3981570d2ee8d476b96850a1654d3718166e",
-      "current_source_review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded.",
+      "standalone_normalized_sha256": "2234d535c2f39f4e87e38e828a31550c4bc6f78bf322ad39e40fdaa82e58db8e",
+      "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11053,6 +11053,39 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
       "current_source_review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded."
+    },
+    "HollowLedgerModelEnvelope.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/HollowLedgerModelEnvelope.java",
+      "source_sha256": "18b4812fe3b70b9e86b37ddb0ff41ee2fdd7d4cc8392860fdbe78aa58fa7ec4a",
+      "source_normalized_sha256": "18b4812fe3b70b9e86b37ddb0ff41ee2fdd7d4cc8392860fdbe78aa58fa7ec4a",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HollowLedgerModelEnvelope.java",
+      "standalone_sha256": "59ddd9a88ad5562e50478e09127117c41353aa3f1958573449b2529f53cbb7a3",
+      "standalone_normalized_sha256": "b172624b9de53adf7f2c16c76e3a330d02c35c638d64562b3a92764aa553f7e0",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
+      "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded."
+    },
+    "FourPhysicalUpperLedgerOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FourPhysicalUpperLedgerOriginalTest.java",
+      "source_sha256": "df3a8d8eac6807e1e383c27c2d8e962823bcc121f5e939fb5b42672e266a7e95",
+      "source_normalized_sha256": "df3a8d8eac6807e1e383c27c2d8e962823bcc121f5e939fb5b42672e266a7e95",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FourPhysicalUpperLedgerOriginalTest.java",
+      "standalone_sha256": "22b8f4f2c980c88be8013a69dcc01d515a7d54659bcebadad918b7022365b9bd",
+      "standalone_normalized_sha256": "407fd24cc6c5305e825aa744e4a3e8eae1f2a9e9054f98f803ff0bcd1036cdea",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
+      "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded."
+    },
+    "HollowLedgerEnvelopeOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HollowLedgerEnvelopeOriginalTest.java",
+      "source_sha256": "e91a60f796eea8928c45ca1fe036744d6aac91c88b008e71ce4ba900d0cbc179",
+      "source_normalized_sha256": "e91a60f796eea8928c45ca1fe036744d6aac91c88b008e71ce4ba900d0cbc179",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HollowLedgerEnvelopeOriginalTest.java",
+      "standalone_sha256": "4b672355b2a32c98288942c2abce49dfae4b5e76a8eebce4357a99caa7b51a74",
+      "standalone_normalized_sha256": "b9492b505d396277c7c581aa02ad1f0a38f8dc7eac3c77b52019cff3ab29dfb7",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
+      "current_source_review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded."
     }
   },
   "finite_curved_approach_review": {
@@ -16144,6 +16177,12 @@
     {
       "appCommit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
       "review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "1554726533a37ad58cfc04c9ee7ed5571c034365",
+      "review": "A separate hollow-ledger model-envelope certificate owns its one-pixel vertical halo with a complete centered counter, real shaft and independently short bilateral ledger corners. Rounded pixel-center eligibility and all-four inner-rule evidence retain old strict body and chain functions unchanged. Nineteen original controls;320 focused tests; private full-page/tie recovery evidence excluded.",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }

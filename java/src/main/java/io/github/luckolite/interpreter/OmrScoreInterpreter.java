@@ -11899,6 +11899,44 @@ final class OmrScoreInterpreter {
         return true;
     }
 
+    private static boolean completeFourUpperLedgerChain(
+            byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null) return false;
+        float gap = staff.pitchGap, distance = (staff.pitchBottom - 4 * gap - head.centerY) / gap;
+        if (distance <= 4.5f || distance > 4.65f) return false;
+        // The near-boundary route still needs four observed physical rules, not a reduced count.
+        int required = 4;
+        int left = Math.max(0, Math.round(head.minX - gap * .3f));
+        int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
+        int margin = Math.max(1, Math.round(gap * .18f));
+        for (int rule = 1; rule <= required; rule++) {
+            float line = staff.pitchBottom - 4 * gap - rule * gap;
+            boolean found = false;
+            for (int y = Math.max(0, Math.round(line - gap * .18f));
+                    y <= Math.min(height - 1, Math.round(line + gap * .18f));
+                    y++) {
+                int ink = 0, l = 0, r = 0;
+                for (int x = left; x <= right; x++)
+                    if ((gray[y * width + x] & 255) < 165) {
+                        ink++;
+                        if (x < head.minX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            l++;
+                        if (x > head.maxX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            r++;
+                    }
+                if (ink >= (right - left + 1) * .85f
+                        && l >= margin
+                        && r >= margin
+                        && shortLedgerRule(gray, width, y, head, gap)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return false;
+        }
+        return true;
+    }
+
     private static int innerLedgerCount(
             byte[] gray, int width, int height, Component head, Staff staff) {
         if (gray == null) return 0;
@@ -12007,7 +12045,8 @@ final class OmrScoreInterpreter {
                 return false;
             // Existing admissions retain their original physical evidence and ownership.
             if (hasInnerLedgerInk(gray, width, height, part, staff, roundedGrace)) continue;
-            if (!completeUpperLedgerChain(gray, width, height, part, staff)
+            if (!(completeUpperLedgerChain(gray, width, height, part, staff)
+                            || completeFourUpperLedgerChain(gray, width, height, part, staff))
                     || !completeUpperLedgerBody(gray, width, height, part, staff.pitchGap)
                     || competingPrintedCore(labels, gray, width, height, part, staff, staffs))
                 return false;
@@ -12329,16 +12368,11 @@ final class OmrScoreInterpreter {
 
     private static boolean completeUpperLedgerBody(
             byte[] gray, int width, int height, Component head, float gap) {
-        return ClosedLedgerHeadBody.provedModelBoundary(
-                gray,
-                width,
-                height,
-                head.minX,
-                head.minY,
-                head.maxX,
-                head.maxY,
-                gap,
-                attachedRawStem(gray, width, height, head, gap));
+        int[] stem = attachedRawStem(gray, width, height, head, gap);
+        return ClosedLedgerHeadBody.provedModelBoundary(gray, width, height,
+                        head.minX, head.minY, head.maxX, head.maxY, gap, stem)
+                || HollowLedgerModelEnvelope.proved(gray, width, height,
+                        head.minX, head.minY, head.maxX, head.maxY, gap, stem);
     }
 
     private static boolean hasInnerLedgerInk(
