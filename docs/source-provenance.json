@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "ec45c26f332c82923d1aeb407c70dc01e0016a5778c0ee3c1403081ebeb55d74",
+      "source_sha256": "ca884bde4d49b6672544473e62d7e639e93e166ed41e5cc92b0b2ab1a9e38d71",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "ec45c26f332c82923d1aeb407c70dc01e0016a5778c0ee3c1403081ebeb55d74",
+      "source_normalized_sha256": "ca884bde4d49b6672544473e62d7e639e93e166ed41e5cc92b0b2ab1a9e38d71",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "4b1dae41a816f4922fb6a7af6803fd0d4e799dec4b9ac2cfa5c3e6c0211cf195",
+      "standalone_sha256": "eb4ee5e24d887161d87335fc9adc1d49631ef591b4e5cef63e6ae24ed964873d",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "62654e4f332fec971239fdf752ac0452a21fb9f4",
+      "reviewed_app_commit": "d7a2b7af8a42101af8a4f8d6d2786a78a6884ef6",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "6ff3f3413aa3b7931f28eb12a24b1e99b29b338d352e271d8d759311e5db933f",
-      "current_source_review": "Reviewed finite shared-ledger pairs and shared-shaft model-body recovery with exact collector-committed sibling identities, funded owner memoization and unchanged strict proofs. Existing quotas, sealed-source refusal and legacy courtesy availability preserved; original procedural regressions only, no private score data or model changes",
+      "standalone_normalized_sha256": "0f9c58cb0c3690802ff8905e69e8e697cb50811d7704420bb14af3569300172b",
+      "current_source_review": "Reviewed owned raw-head exclusion only in two-sided beam promotion; legacy band-count API remains unchanged. Original analytic three-head sloped rails, mirror, scale and genuine second-rail/rail-through-head controls; no private score data or models",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11189,6 +11189,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "62654e4f332fec971239fdf752ac0452a21fb9f4",
       "current_source_review": "Reviewed finite shared-ledger pairs and shared-shaft model-body recovery with exact collector-committed sibling identities, funded owner memoization and unchanged strict proofs. Existing quotas, sealed-source refusal and legacy courtesy availability preserved; original procedural regressions only, no private score data or model changes"
+    },
+    "SideProbeHeadPromotionOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/SideProbeHeadPromotionOriginalTest.java",
+      "source_sha256": "dc7a3f172d0d9e5b7641ff71964b5e40de159096b99f8b0f60acb0e0a0c0a065",
+      "source_normalized_sha256": "dc7a3f172d0d9e5b7641ff71964b5e40de159096b99f8b0f60acb0e0a0c0a065",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/SideProbeHeadPromotionOriginalTest.java",
+      "standalone_sha256": "ca6b65fa36118d4e1e96a1d8f0e9dfc7cfa4badcd1588b6da0d94aa322446588",
+      "standalone_normalized_sha256": "59fe20bf34a9a0fb011d0a4012c905d9223dc82a9f1cf8bb71cb60bb7079f5d2",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "d7a2b7af8a42101af8a4f8d6d2786a78a6884ef6",
+      "current_source_review": "Reviewed owned raw-head exclusion only in two-sided beam promotion; legacy band-count API remains unchanged. Original analytic three-head sloped rails, mirror, scale and genuine second-rail/rail-through-head controls; no private score data or models"
     }
   },
   "finite_curved_approach_review": {
@@ -16328,6 +16339,12 @@
     {
       "appCommit": "62654e4f332fec971239fdf752ac0452a21fb9f4",
       "review": "Reviewed finite shared-ledger pairs and shared-shaft model-body recovery with exact collector-committed sibling identities, funded owner memoization and unchanged strict proofs. Existing quotas, sealed-source refusal and legacy courtesy availability preserved; original procedural regressions only, no private score data or model changes",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "d7a2b7af8a42101af8a4f8d6d2786a78a6884ef6",
+      "review": "Reviewed owned raw-head exclusion only in two-sided beam promotion; legacy band-count API remains unchanged. Original analytic three-head sloped rails, mirror, scale and genuine second-rail/rail-through-head controls; no private score data or models",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }

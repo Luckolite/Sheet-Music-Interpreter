@@ -24061,9 +24061,11 @@ final class OmrScoreInterpreter {
             for (float distance : new float[] {.65f, 1f, 1.35f}) {
                 int offset = Math.max(3, Math.round(gap * distance));
                 leftProof |=
-                        thickBeamBands(gray, width, height, bestX - offset, top, bottom, gap) == 2;
+                        thickBeamBands(gray, width, height, bestX - offset, top, bottom, gap, head)
+                                == 2;
                 rightProof |=
-                        thickBeamBands(gray, width, height, bestX + offset, top, bottom, gap) == 2;
+                        thickBeamBands(gray, width, height, bestX + offset, top, bottom, gap, head)
+                                == 2;
             }
             if (leftProof && rightProof) beams = 2;
         }
@@ -27122,6 +27124,18 @@ final class OmrScoreInterpreter {
 
     private static int thickBeamBands(
             byte[] gray, int width, int height, int x, int top, int bottom, float gap) {
+        return thickBeamBands(gray, width, height, x, top, bottom, gap, null);
+    }
+
+    private static int thickBeamBands(
+            byte[] gray,
+            int width,
+            int height,
+            int x,
+            int top,
+            int bottom,
+            float gap,
+            Component owner) {
         if (x < 1 || x >= width - 1) return 0;
         int bands = 0, run = 0;
         for (int y = top; y <= Math.min(height, bottom + 1); y++) {
@@ -27130,6 +27144,24 @@ final class OmrScoreInterpreter {
                             && (gray[y * width + x - 1] & 255) < 165
                             && (gray[y * width + x] & 255) < 165
                             && (gray[y * width + x + 1] & 255) < 165;
+            // A side probe can cross this same oval above the real rail. Its bounded
+            // body cannot supply the independent second beam required by promotion.
+            if (ink
+                    && owner != null
+                    && HeadInkBeamExclusion.onlyHead(
+                            gray,
+                            width,
+                            height,
+                            y,
+                            Math.max(0, x - Math.round(gap * 2)),
+                            Math.min(width - 1, x + Math.round(gap * 2)),
+                            x,
+                            1,
+                            owner.minX,
+                            owner.maxX,
+                            owner.minY,
+                            owner.maxY,
+                            gap)) ink = false;
             if (ink) run++;
             else {
                 if (run >= Math.max(3, Math.round(gap * .30f))) bands++;
@@ -27138,7 +27170,6 @@ final class OmrScoreInterpreter {
         }
         return bands;
     }
-
     /** A nearby note on a different shaft cannot own a real small/grace note's stem. */
     private static boolean semanticFlagPocketHead(
             byte[] labels,
