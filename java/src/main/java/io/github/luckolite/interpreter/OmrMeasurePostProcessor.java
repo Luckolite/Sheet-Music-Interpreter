@@ -2020,10 +2020,31 @@ final class OmrMeasurePostProcessor {
             while (seen < target && paper < 255) seen += tones[++paper];
             limits[y - first] = Math.min(RAW_BARLINE_DARK, Math.max(0, paper - 12));
         }
+        // A dark staff crossing has no local paper percentile. Its antialiased shaft pixel
+        // can be slightly lighter than that rule while still being continuous printed ink.
+        boolean[] ruleCrossings = new boolean[limits.length];
+        for (int row = first; row <= last; row++) {
+            int dark = 0, samples = 0;
+            for (int xx = Math.max(0, x - surround); xx <= Math.min(width - 1, x + surround); xx++) {
+                samples++;
+                if ((gray[row * width + xx] & 255) <= RAW_BARLINE_DARK) dark++;
+            }
+            ruleCrossings[row - first] = dark >= samples * .9f;
+        }
+        for (int row = 0; row < ruleCrossings.length; row++) {
+            if (!ruleCrossings[row]) continue;
+            int end = row + 1;
+            while (end < ruleCrossings.length && ruleCrossings[end]) end++;
+            if (end - row > Math.max(2, Math.round(gap * .2f)))
+                Arrays.fill(ruleCrossings, row, end, false);
+            row = end - 1;
+        }
         for (int origin = Math.max(0, x - 2); origin <= Math.min(width - 1, x + 2); origin++) {
             int hits = 0, longest = 0, run = 0;
             for (int y = first; y <= last; y++) {
-                if ((gray[y * width + origin] & 255) <= limits[y - first]) {
+                int tone = gray[y * width + origin] & 255;
+                if (tone <= limits[y - first]
+                        || ruleCrossings[y - first] && tone <= RAW_BARLINE_DARK) {
                     hits++;
                     longest = Math.max(longest, ++run);
                 } else run = 0;

@@ -39,10 +39,12 @@ final class MeterOnlyCourtesyTail {
             previous = bar;
         }
         if (bands != 1) return false;
+        var numeralHeads = CourtesyFigureEightRim.capture(labels, gray, width, height,
+                left, right, gap, headTop, headBottom);
         int unowned = 0;
         for (int y = Math.max(0, headTop); y <= Math.min(height - 1, headBottom); y++)
             for (int x = left; x < width; x++) {
-                if (labels[y * width + x] == 2) return false;
+                if (labels[y * width + x] == 2 && !numeralHeads.owns(x, y)) return false;
                 if (x < left + gap * .3f || (gray[y * width + x] & 255) >= 180) continue;
                 boolean owned = false;
                 for (int yy = Math.max(0, y - 1); yy <= Math.min(height - 1, y + 1) && !owned; yy++)

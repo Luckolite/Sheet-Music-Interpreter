@@ -4555,14 +4555,17 @@
     },
     "MeterOnlyCourtesyTail.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterOnlyCourtesyTail.java",
-      "source_sha256": "16fa3c5d5d841c86f36b29e1bba1445e5857ddda07a5407f6ae0f951e6aa3226",
-      "source_normalized_sha256": "df02ecee4d5aba7924be366b0ac452c986cdb1c394dc182a9281260f498a4bd3",
-      "reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
+      "source_sha256": "7c6db3a7c3e96ea042304bd5629b1c9257629af5535558e6119692245ccfb488",
+      "source_normalized_sha256": "7c6db3a7c3e96ea042304bd5629b1c9257629af5535558e6119692245ccfb488",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
       "scoped_reviewed_app_commit": "1919926708834ecbce5c59c8d78b6d34e83d43f3",
       "reviewed_source_state": "Committed paired recognition60/guide287/audio93 sources; packaged rollout and whole-document acceptance pending.",
       "review_note": "Recognize key-bearing courtesy tails and independently proved four denominators without treating them as played bars.",
-      "standalone_sha256": "5664ab95c2bf2a80f429a58623c797cee98525ca93b16cfa346b7d88209b5964",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterOnlyCourtesyTail.java"
+      "standalone_sha256": "5e708cd9d4c6bb1a70bfdcbef9fb5e0cebc1aeecde6b9f459c5446a3b748918c",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterOnlyCourtesyTail.java",
+      "standalone_normalized_sha256": "f0d1a5a3f8dba9a8d222c9113a78fadd19ef8a2eedd5531e6856f47a8859c6f6",
+      "license": "Apache-2.0",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
     },
     "MeterReflowEvidence.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterReflowEvidence.java",
@@ -5098,11 +5101,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "7aa96d551dad6c222a2df64270e17ba3bb6c5255f12e3dd4c51e76637b35ec3d",
-      "source_normalized_sha256": "b3b4b115b24f56881c3cd9f5121c8faf7d4905b3e4ff0f2a95a5b9ba361d2844",
+      "source_sha256": "231583dabe1bb8797dc2d24ffdbcc773e4947dff7f9a5d5f352f2ac2deb7ade1",
+      "source_normalized_sha256": "231583dabe1bb8797dc2d24ffdbcc773e4947dff7f9a5d5f352f2ac2deb7ade1",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
-      "standalone_sha256": "1c28b36747c49cccb8891bcbc7f1cf0ec69038af3650d6a89cef0e2c7ba1ecab",
-      "reviewed_app_commit": "f976eec8bc8c5f07ae7a775fb9b62af5aeafaf24",
+      "standalone_sha256": "1ef4eae82a4f1f2f026cf869d54476e40aaad9dae19325d30b860663b681a9a8",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
@@ -5120,17 +5123,19 @@
         "new_production_dependencies": 0,
         "rollout": "Cumulative matched rollout deferred during active goal; released recognition116 predates repair."
       },
-      "reviewed_source_state": "committed-app-source"
+      "reviewed_source_state": "committed-app-source",
+      "standalone_normalized_sha256": "31deb849391ec8ec52eb1c81e6817c8ba1dbd868a097bdbd3841f93c1970842a",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "f25fba5857462c2149fa96cc43215c80617d0dcf3f9293eac6ece8475311e9ae",
+      "source_sha256": "5e75f8127b8b68295a831535d7dafa981e3a9e2e9080006a618249fc3110ebe9",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "f25fba5857462c2149fa96cc43215c80617d0dcf3f9293eac6ece8475311e9ae",
+      "source_normalized_sha256": "5e75f8127b8b68295a831535d7dafa981e3a9e2e9080006a618249fc3110ebe9",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "35d592c3a5c1cb71f81a37ce1ebbc171f2317e451117b9ed5b75b5ca98e039b8",
+      "standalone_sha256": "2c9612d72e029878c5deaf93e85cecdf4b60a9cbeb88c5a0aafd9a2c20e7acfb",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
+      "reviewed_app_commit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5141,8 +5146,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "61a4c8ef6392f730452716fa0921533e72c5a9ef4cc69d9ca53f5d40c68e1281",
-      "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only.",
+      "standalone_normalized_sha256": "e7bd2a76b889767727c641b01dddb7728f8ae97c312514ad296a1d725ffe4b18",
+      "current_source_review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -10902,6 +10907,72 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
       "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only."
+    },
+    "CourtesyFigureEightRim.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CourtesyFigureEightRim.java",
+      "source_sha256": "f1d83059ffb7f13f5436c957fb420ddc6fc69eb640e4c8d6dd9585622b53b8f0",
+      "source_normalized_sha256": "f1d83059ffb7f13f5436c957fb420ddc6fc69eb640e4c8d6dd9585622b53b8f0",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CourtesyFigureEightRim.java",
+      "standalone_sha256": "14b9eaa587d34b6e8ad2157711e4724600f399bbc61c3225613cc215f978f2cb",
+      "standalone_normalized_sha256": "5df6f74a43ec3119c51d1b5e877acd40e003bb9c3ed23c8b536accc80f3cdbf7",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+    },
+    "CourtesyFigureEightRimBoundsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CourtesyFigureEightRimBoundsTest.java",
+      "source_sha256": "bf9ddcd9f2db3cd6b68b381ef403acc8e409a7fb7311083ce0f505a6e90d7ac1",
+      "source_normalized_sha256": "bf9ddcd9f2db3cd6b68b381ef403acc8e409a7fb7311083ce0f505a6e90d7ac1",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CourtesyFigureEightRimBoundsTest.java",
+      "standalone_sha256": "dcaf01c604051c9922f18ae60bcc6088b09261f8af76439bfa968bea36d853a8",
+      "standalone_normalized_sha256": "e0caec8eec736f37b2b72509b3457d2d30c39e5e47d70e647da939e4e0a4df55",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+    },
+    "MeterTailHeadOwnershipOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/MeterTailHeadOwnershipOriginalTest.java",
+      "source_sha256": "7191f58bf9ae96b6b71c85101ad90f978821d80bd9b4d6df7e46abfb4152065f",
+      "source_normalized_sha256": "7191f58bf9ae96b6b71c85101ad90f978821d80bd9b4d6df7e46abfb4152065f",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/MeterTailHeadOwnershipOriginalTest.java",
+      "standalone_sha256": "c63fcdd124aa1bc08167a68a6d8accfc7238c4e021247a468574978466c18aca",
+      "standalone_normalized_sha256": "c936e1f80f888cc53c3200196ce08d79dcf74ec89ac52b5e5fd4459459e50a12",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+    },
+    "RuleCrossingStemOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RuleCrossingStemOriginalTest.java",
+      "source_sha256": "93b0e170fddaa631185d9e79901271536bd61c4f367c4ad933baebe5571f974c",
+      "source_normalized_sha256": "93b0e170fddaa631185d9e79901271536bd61c4f367c4ad933baebe5571f974c",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RuleCrossingStemOriginalTest.java",
+      "standalone_sha256": "faebb316b39c102e2ad67d710b4a943a324ab6fe176e13566fda36cf1ee99482",
+      "standalone_normalized_sha256": "9c23514580e50a8bb515638c52b31a8297e883c251d507d2ec3e2b3d5b812315",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+    },
+    "ShortStemSingleBeamSupport.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ShortStemSingleBeamSupport.java",
+      "source_sha256": "3be398c4efcc379f2cd48157d3782f17aee761fd4d8dc4fe90f9fc86fa3e20eb",
+      "source_normalized_sha256": "3be398c4efcc379f2cd48157d3782f17aee761fd4d8dc4fe90f9fc86fa3e20eb",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ShortStemSingleBeamSupport.java",
+      "standalone_sha256": "7afe9eb1ad92f9daf27d47a5c53d4d8d8c7b2e6e3a1f1a206e112fe83392ae93",
+      "standalone_normalized_sha256": "303db76c826b65c4e43f1ffbafb3ec0c715d92ddb9b1258536554fd116240738",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
+      "current_source_review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private."
+    },
+    "ShortStemBeamAdjudicationOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ShortStemBeamAdjudicationOriginalTest.java",
+      "source_sha256": "a96379ab1e0cda8df1c5fe1958244cb38dd30c907846f9c34477dff5bcd6bd2c",
+      "source_normalized_sha256": "a96379ab1e0cda8df1c5fe1958244cb38dd30c907846f9c34477dff5bcd6bd2c",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ShortStemBeamAdjudicationOriginalTest.java",
+      "standalone_sha256": "fa8042d07512bec1542317824bc6540b7ae045c6bbdc8944dcab0b48cb2be289",
+      "standalone_normalized_sha256": "12c33ec26caccf6764b355209b528f5330c767b4527b985b72d6fd443ce08110",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
+      "current_source_review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private."
     }
   },
   "finite_curved_approach_review": {
@@ -15964,5 +16035,19 @@
     "license": "Apache-2.0",
     "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
     "validation": "114 focused Java tests and separate private annotated exact-input qualification; no deployment claim."
-  }
+  },
+  "reviewed_additive_packets": [
+    {
+      "appCommit": "a811ad411b1627202807673222ffca8aaf714921",
+      "review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
+      "review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    }
+  ]
 }

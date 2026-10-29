@@ -2430,6 +2430,43 @@ final class OmrScoreInterpreter {
                                         note.head.maxY,
                                         note.staffGap,
                                         fadedUpStemBudget)) continue;
+                        // A short admitted shaft can still end in an independently owned rail.
+                        if (rest.durationBeats() < 1f
+                                && note.event.beamCount() == 1
+                                && note.event.visualSize() == ScoreNoteEvent.VisualSize.FULL
+                                && !note.event.crossStaffBeam()
+                                && attachedRawStem(gray, width, height, note.head, note.staffGap)
+                                        == null) {
+                            int[] shortShaft = attachedRawStem(
+                                    gray, width, height, note.head, note.staffGap * .65f);
+                            boolean ownedRail = false;
+                            if (shortShaft != null)
+                                for (DetectedNote peer : joined) {
+                                    if (peer == note || peer.event.beamCount() != 1
+                                            || peer.event.visualSize() != ScoreNoteEvent.VisualSize.FULL
+                                            || peer.event.crossStaffBeam()
+                                            || peer.event.measureIndex() != note.event.measureIndex()
+                                            || peer.event.staffIndex() != note.event.staffIndex()
+                                            || peer.event.staffCount() != note.event.staffCount()
+                                            || Math.abs(peer.staffGap - note.staffGap) > note.staffGap * .1f)
+                                        continue;
+                                    if (ShortStemSingleBeamSupport.proves(
+                                            labels, gray, width, height,
+                                            new ShortStemSingleBeamSupport.Head(
+                                                    note.head.minX, note.head.minY,
+                                                    note.head.maxX, note.head.maxY, note.head.centerY),
+                                            shortShaft,
+                                            new ShortStemSingleBeamSupport.Head(
+                                                    peer.head.minX, peer.head.minY,
+                                                    peer.head.maxX, peer.head.maxY, peer.head.centerY),
+                                            attachedRawStem(gray, width, height, peer.head, peer.staffGap),
+                                            note.staffGap)) {
+                                        ownedRail = true;
+                                        break;
+                                    }
+                                }
+                            if (ownedRail) continue;
+                        }
                         if (restOwnership.mayRemove(note.head)) {
                             removed.add(note);
                             verifiedBodies.add(rest);
