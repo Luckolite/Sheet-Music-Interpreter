@@ -16464,5 +16464,36 @@
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
-  ]
+  ],
+  "numbered_opening_export_review": {
+    "reviewed_app_commit": "da5f62ad493f00ca907eef1e3dace4afc086ec68",
+    "scope": "Independently proved pickup exports measure zero; positive first measure numbers remain; unknown zero remains one. The first page containing measures owns document opening proof, so empty covers cannot discard it or later pages reset numbering. Public Python applies equivalent ordinal semantics; app-specific Java XML/conversion code is not copied into standalone.",
+    "original_regressions": "16 original app Java writer/conversion controls and14 original public Python ordinal controls; no captured score pixels or coordinates.",
+    "checks": "199 Java writer/conversion tests and247 Python MusicXML/export tests pass, including all30original cases. These are source checks, not Android/device/deployment proof.",
+    "license": "Apache-2.0 public Python source and original tests; no models, dependencies, record layout or assets changed.",
+    "reviewed_source_and_port_hashes": {
+      "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java": {
+        "sha256": "81446723436f32341d65bcd753730e68a577083bf0d1383a4a88928050e427ca",
+        "normalized_sha256": "cc447a7a49b3400b93020ed0be2786c650a6279450c86a5455472883ad82b174",
+        "qualified_candidate_sha256": "cc447a7a49b3400b93020ed0be2786c650a6279450c86a5455472883ad82b174",
+        "difference": "Only checkout CRLF versus qualified LF"
+      },
+      "app/src/main/java/com/musicsheets/app/pdf/SheetConversionScore.java": {
+        "sha256": "1d99530ce3eed48fc7ebdf18b0841143017259d06d5a023b89c02bf783498f54",
+        "normalized_sha256": "465cbeead9e17454e0e10ae98408163f7971ebaff626063101223a71700f733b",
+        "qualified_candidate_sha256": "465cbeead9e17454e0e10ae98408163f7971ebaff626063101223a71700f733b",
+        "difference": "Only checkout CRLF versus qualified LF"
+      },
+      "src/sheet_interpreter/musicxml.py": {
+        "sha256": "66272a9ef49d49eefdcccd78d2843a24f6a0b65c3e051dad3256597c6868be48",
+        "normalized_sha256": "22161bd41123992a522810606778f95dc5def33cc178d78f2d919d0bd6b8b1cc",
+        "qualified_candidate_sha256": "22161bd41123992a522810606778f95dc5def33cc178d78f2d919d0bd6b8b1cc"
+      },
+      "tests/test_pickup_xml_ordinals_original.py": {
+        "sha256": "b6a067ac5962c74480e36b6f27c0ee5bd1a5ee07db35cea5a2fe5a577ee7cc11",
+        "normalized_sha256": "3307fdd52a1e973403cf757f866cd019c5904bb7d3639335277a96e09fc747c2",
+        "qualified_candidate_sha256": "b6a067ac5962c74480e36b6f27c0ee5bd1a5ee07db35cea5a2fe5a577ee7cc11"
+      }
+    }
+  }
 }
