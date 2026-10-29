@@ -408,6 +408,17 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     if not isinstance(key_fifths, int) or not -7 <= key_fifths <= 7 or not math.isfinite(bpm) or not 15 <= bpm <= 400:
         raise ValueError('Invalid MusicXML key or tempo')
     bars, events, expressions, full_rests, literal_rests = [], [], [], [], []
+    first_number = 1
+    for page in document['pages']:
+        if not page['measureBeats']:
+            continue
+        score = page['score']
+        first = score.get('firstMeasureNumber', 0)
+        if type(first) is int:
+            first_number = max(1, first)
+            if score.get('openingPickup') is True and 0 <= first <= 1:
+                first_number = 0
+        break
     parenthesis_level_ends = [float("-inf")] * 17
     printed_rest_groups = []
     octave_owned = {}
@@ -801,7 +812,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
                 if g['sourceIdentity'] in requested_slur_owners:
                     slur_attacks[g['sourceIdentity']] = emitted
         for index, bar in enumerate(bars):
-            measure = element(part, 'measure', number=index+1)
+            measure = element(part, 'measure', number=first_number+index)
             attributes = element(measure, 'attributes')
             element(attributes, 'divisions', DIVISIONS)
             for group in printed_rest_groups:
