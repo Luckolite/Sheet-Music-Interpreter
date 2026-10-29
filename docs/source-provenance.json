@@ -5124,13 +5124,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "07a297c99748b8f753dc6ab8b418e158c54b2825d5d1a766c7093f26f7c301fa",
+      "source_sha256": "0057a5e26db1f07e4aa4b9a84cdd2d85ebe46b11e7bb508e18c716bc65d1997e",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "0ba6bf0a72dafdf2ad31c57cdc959100d67af5f6e6ccd017be8ee001f241e890",
+      "source_normalized_sha256": "0057a5e26db1f07e4aa4b9a84cdd2d85ebe46b11e7bb508e18c716bc65d1997e",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "af89dfc857657954aeecc3fb4d762878efad4a0b0d0f35daf9fbfebced0c39af",
+      "standalone_sha256": "8c260396a3b22b15980db1fd6627c96dea19543742aaf5a45d229c2b27eb1caf",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "41c141abf1a0f1cbd701e5836fe5693519c8f4e0",
+      "reviewed_app_commit": "99972686c25d0a21ef040e862438fbc6171980fd",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5141,8 +5141,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "af89dfc857657954aeecc3fb4d762878efad4a0b0d0f35daf9fbfebced0c39af",
-      "current_source_review": "Reviewed inclusive integer raster extent for complete narrow sharps; geometry-only tablature candidates cannot suppress notation until decoded content, crossing bars or explicit tuning supplies independent evidence. All other shape, pitch, model and wire contracts retained; original synthetic regressions only.",
+      "standalone_normalized_sha256": "8c260396a3b22b15980db1fd6627c96dea19543742aaf5a45d229c2b27eb1caf",
+      "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -6540,13 +6540,16 @@
     },
     "PrintedSingleBeamPath.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSingleBeamPath.java",
-      "source_sha256": "cea5a0baa91a3dccdcd7d23638324dbd4c2ae1ebf4f3e3f71b03aa84c536e003",
-      "source_normalized_sha256": "791a5b665faba39e70a6213be10b56d1911f983eb22fd4348eb2f24e51b8b27e",
-      "standalone_sha256": "da7002563ce6d38c5baed56173ad0fca9247561c4386cba2c78bff77ea4fafa8",
+      "source_sha256": "a5a63e051149a5718b519999faa174bb159810f92d3c2afe96d8709294310cb0",
+      "source_normalized_sha256": "a5a63e051149a5718b519999faa174bb159810f92d3c2afe96d8709294310cb0",
+      "standalone_sha256": "f1afbeda4ce52c29bf4e63388f8b35d61159c57f9de9fbb90af55c291fe697e2",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSingleBeamPath.java"
+      "reviewed_app_commit": "99972686c25d0a21ef040e862438fbc6171980fd",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSingleBeamPath.java",
+      "license": "Apache-2.0",
+      "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
+      "standalone_normalized_sha256": "f1afbeda4ce52c29bf4e63388f8b35d61159c57f9de9fbb90af55c291fe697e2"
     },
     "PrintedSingleRailCore.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSingleRailCore.java",
@@ -10855,6 +10858,17 @@
       "standalone_normalized_sha256": "bc8c94cf2828f73fb4e41aba54ed1181c41bf0a810b0cef0b21f4ae6d018dff8",
       "license": "Apache-2.0",
       "current_source_review": "Retains every original annotation/rival/frame assertion. Synthetic suppression fixture now supplies decoded fret evidence because geometry-only candidates have no destructive authority."
+    },
+    "RuleContactSingleBeamEvidenceTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RuleContactSingleBeamEvidenceTest.java",
+      "source_sha256": "76c9f90713708b37328b01fd7f4acc342ed49690e78f2b203901623cc671c401",
+      "source_normalized_sha256": "76c9f90713708b37328b01fd7f4acc342ed49690e78f2b203901623cc671c401",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RuleContactSingleBeamEvidenceTest.java",
+      "standalone_sha256": "5a750077a2623e16aa99e0291746eb8c3e9da7148d4d8c36872e54f0c4388c17",
+      "reviewed_app_commit": "99972686c25d0a21ef040e862438fbc6171980fd",
+      "license": "Apache-2.0",
+      "current_source_review": "Independently proved staff-rule contact permits a bounded owned continuous single-rail endpoint recovery. Existing ordinary path thresholds and two-rail behavior retained; 15 original procedural regressions only.",
+      "standalone_normalized_sha256": "5a750077a2623e16aa99e0291746eb8c3e9da7148d4d8c36872e54f0c4388c17"
     }
   },
   "finite_curved_approach_review": {
@@ -15895,5 +15909,12 @@
     "publicOnlyCasesPassed": 15,
     "unfinishedIntegrationDefectsFixed": 1,
     "newPhantomPhysicalFixCredit": 0
+  },
+  "bounded_rule_contact_review": {
+    "scope": "Recover one continuous owned printed rail only after independent staff-rule endpoint-contact proof. Original connects thresholds and two-rail counting unchanged.",
+    "originals": "RuleContactSingleBeamEvidenceTest: 15 original procedural cases, no score ink, captured coordinates, fonts, models, logs or private library.",
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "99972686",
+    "validation": "164 focused Java tests and separate private exact-input qualification; no deployment claim."
   }
 }

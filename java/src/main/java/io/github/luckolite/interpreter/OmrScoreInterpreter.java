@@ -22474,6 +22474,9 @@ final class OmrScoreInterpreter {
             if (PairedGraceBeamInk.countSinglePrinted(
                             gray, width, height, own, pair, gap, staff.top, staff.pitchTrack)
                     == 1) return true;
+            if (PrintedSingleBeamPath.connectsAfterRuleContact(
+                    gray, width, height, own, pair, head.centerY, other.centerY,
+                    gap, staff.top, staff.pitchTrack)) return true;
         }
         return false;
     }
