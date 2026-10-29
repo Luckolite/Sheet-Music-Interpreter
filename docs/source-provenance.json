@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "5e2fc4e7b87810407b2ea11410014ec001fb8ad6926733bf0d07fc97e16a5e8e",
+      "source_sha256": "76fccc9942a446e22ae6f8efe38fcb74ef6a77506acde0dc4fbef76a36962a53",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "5e2fc4e7b87810407b2ea11410014ec001fb8ad6926733bf0d07fc97e16a5e8e",
+      "source_normalized_sha256": "76fccc9942a446e22ae6f8efe38fcb74ef6a77506acde0dc4fbef76a36962a53",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "5622b2f841adebad7e6700359bc47d6a5d4ac982716537d2d18b5d30367f52bd",
+      "standalone_sha256": "0b4a4db63b4ab8da5664532294b48af3904d810b5becdab167448fee56589a66",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
+      "reviewed_app_commit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "b65d80fa7af4d5e5987fa5fafe161498f820e4713f9c0e65b7047c954ad01a6e",
-      "current_source_review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded.",
+      "standalone_normalized_sha256": "0c5cbef520c308b894eab4d4f73a3981570d2ee8d476b96850a1654d3718166e",
+      "current_source_review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -10987,6 +10987,72 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
       "current_source_review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded."
+    },
+    "CommonTimeHeaderGlyph.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CommonTimeHeaderGlyph.java",
+      "source_sha256": "2c644260f7c5f5daac399ef76829e1f9d0deaf3113085390e1eef379a2812e66",
+      "source_normalized_sha256": "2c644260f7c5f5daac399ef76829e1f9d0deaf3113085390e1eef379a2812e66",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CommonTimeHeaderGlyph.java",
+      "standalone_sha256": "74199113b87ece6d3df99a0ed9c15c50829ce268211808321273017dfcab5070",
+      "standalone_normalized_sha256": "99f5a263be10c57c1be7fdcfdeb65c4ba49140639ba9b9abbda9a024a89f5c9b",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "fcc482da70c4aaad87f3f795bc24c540b66cab0f",
+      "current_source_review": "Opening-meter adapters register enlarged OCR tokens and already verified staff geometry to the original page frame. Portable helpers reuse complete common/cut-time evidence and strict one/two-digit token dimensions; Android capture adapters remain app-only. Original procedural partial-C, numeric, frame and staff controls;61 focused app tests and separate private instrumented OCR replay."
+    },
+    "HeaderMeterTokenGeometry.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/HeaderMeterTokenGeometry.java",
+      "source_sha256": "e193101272f2739e9a6568c15e76b6eda1415d2e0eb38728787e59019ea975b3",
+      "source_normalized_sha256": "e193101272f2739e9a6568c15e76b6eda1415d2e0eb38728787e59019ea975b3",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/HeaderMeterTokenGeometry.java",
+      "standalone_sha256": "dc127a0ef17b298b9d27c9d76891832481f5a3632b8bb7698ea3373a4430ece3",
+      "standalone_normalized_sha256": "9d4058d1e21308b7b200af3b9b8b8ed1d2d7b1eddba4616f9ddd13446209addd",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "fcc482da70c4aaad87f3f795bc24c540b66cab0f",
+      "current_source_review": "Opening-meter adapters register enlarged OCR tokens and already verified staff geometry to the original page frame. Portable helpers reuse complete common/cut-time evidence and strict one/two-digit token dimensions; Android capture adapters remain app-only. Original procedural partial-C, numeric, frame and staff controls;61 focused app tests and separate private instrumented OCR replay."
+    },
+    "CommonTimeHeaderGlyphTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CommonTimeHeaderGlyphTest.java",
+      "source_sha256": "754bff8d31d648e35447bc4c5a63dfa6d3e91ed37b55166de5b8a172cd4bb2f3",
+      "source_normalized_sha256": "754bff8d31d648e35447bc4c5a63dfa6d3e91ed37b55166de5b8a172cd4bb2f3",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CommonTimeHeaderGlyphTest.java",
+      "standalone_sha256": "94457a72017e05897c7e710318dc42947be838a58be5b60803d1fbc81982b2ac",
+      "standalone_normalized_sha256": "ff59d9d557327d569cec976ec643540363b2b5daad29ac622a12096348c82ee1",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "fcc482da70c4aaad87f3f795bc24c540b66cab0f",
+      "current_source_review": "Opening-meter adapters register enlarged OCR tokens and already verified staff geometry to the original page frame. Portable helpers reuse complete common/cut-time evidence and strict one/two-digit token dimensions; Android capture adapters remain app-only. Original procedural partial-C, numeric, frame and staff controls;61 focused app tests and separate private instrumented OCR replay."
+    },
+    "HeaderMeterTokenGeometryTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/HeaderMeterTokenGeometryTest.java",
+      "source_sha256": "b8bdad3fc8f1dd0e3cb17bd32f15d2c0ffd3fa6360bc44a64f37ffefd816a0ef",
+      "source_normalized_sha256": "b8bdad3fc8f1dd0e3cb17bd32f15d2c0ffd3fa6360bc44a64f37ffefd816a0ef",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/HeaderMeterTokenGeometryTest.java",
+      "standalone_sha256": "15aeab6d33198cf8ee1b434507d968f595e335fb36acb2bbb15a07af18583181",
+      "standalone_normalized_sha256": "677ad22629c6be80b082d7bd0d549ddc0befe2d4bf77d78a3c070cad91b25a1c",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "fcc482da70c4aaad87f3f795bc24c540b66cab0f",
+      "current_source_review": "Opening-meter adapters register enlarged OCR tokens and already verified staff geometry to the original page frame. Portable helpers reuse complete common/cut-time evidence and strict one/two-digit token dimensions; Android capture adapters remain app-only. Original procedural partial-C, numeric, frame and staff controls;61 focused app tests and separate private instrumented OCR replay."
+    },
+    "CrossStaffBeamCapBudgetTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CrossStaffBeamCapBudgetTest.java",
+      "source_sha256": "a0738bc0e1bcb12da8daadbb6768cacc4130910c8c42e091f40f9a8a9fe8d1f2",
+      "source_normalized_sha256": "a0738bc0e1bcb12da8daadbb6768cacc4130910c8c42e091f40f9a8a9fe8d1f2",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CrossStaffBeamCapBudgetTest.java",
+      "standalone_sha256": "323c2edbf6cbf9b24197cb7bffddcef3eb89674c08f97ff28706f1b224880fee",
+      "standalone_normalized_sha256": "3356f3c142b5b9745cea44cbf65b0a812b1f0719cb6b5cf066e0f254184def31",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
+      "current_source_review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded."
+    },
+    "CrossStaffBeamCapOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CrossStaffBeamCapOriginalTest.java",
+      "source_sha256": "b0cd85755241f3f0e62c0c2671afdffa4cada9adfe6fd6e677dfa27c5786e9b6",
+      "source_normalized_sha256": "b0cd85755241f3f0e62c0c2671afdffa4cada9adfe6fd6e677dfa27c5786e9b6",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CrossStaffBeamCapOriginalTest.java",
+      "standalone_sha256": "e81d732fd84c4e61efd992661ff33398e183550ca4d25f8515bf16c3d2897bd5",
+      "standalone_normalized_sha256": "1c7674fa133d80dbc2d8f7de033be50d04a9d4dbb3b760d306f0024c8184be92",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
+      "current_source_review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded."
     }
   },
   "finite_curved_approach_review": {
@@ -16066,6 +16132,18 @@
     {
       "appCommit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
       "review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "fcc482da70c4aaad87f3f795bc24c540b66cab0f",
+      "review": "Opening-meter adapters register enlarged OCR tokens and already verified staff geometry to the original page frame. Portable helpers reuse complete common/cut-time evidence and strict one/two-digit token dimensions; Android capture adapters remain app-only. Original procedural partial-C, numeric, frame and staff controls;61 focused app tests and separate private instrumented OCR replay.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "c9fc4aa81d5a3fb5d70d8809401d37574956d9fb",
+      "review": "A tiny cross-staff beam-end island requires contiguous admitted paired staff owners, independent full filled head bodies, complete owned long shafts and unchanged strict single-beam evidence. Nominal and supported grace-scale true oval vetoes, prepaid candidate and pixel budgets, invocation-local caches and conservative exhaustion preserve genuine heads. Seventeen original controls;203 focused tests; private page/source membership proof excluded.",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }

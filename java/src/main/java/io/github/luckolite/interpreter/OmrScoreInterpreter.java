@@ -13079,7 +13079,123 @@ final class OmrScoreInterpreter {
                 }
             }
         }
+        for (Component cap : crossStaffSingleBeamCaps(gray, width, height, heads, staffs, 64_000_000L))
+            if (!rejected.contains(cap)) rejected.add(cap);
         return rejected;
+    }
+
+    private static final class CrossStaffBeamBudget {
+        long remaining;
+        boolean exhausted;
+        CrossStaffBeamBudget(long work) { remaining = Math.max(0, work); }
+        boolean take(long work) {
+            if (work < 0 || work > remaining) { exhausted = true; remaining = 0; return false; }
+            remaining -= work;
+            return true;
+        }
+    }
+
+    private record CrossStaffBeamOwner(Staff staff, float gap, int[] stem) {}
+
+    /** A long source-staff shaft can terminate in the other admitted grand-staff member. */
+    private static List<Component> crossStaffSingleBeamCaps(
+            byte[] gray, int width, int height, List<Component> heads, List<Staff> staffs,
+            long workLimit) {
+        if (gray == null || width < 1 || height < 1 || gray.length != (long) width * height
+                || heads == null || staffs == null) return List.of();
+        var budget = new CrossStaffBeamBudget(workLimit);
+        var proofs = new java.util.IdentityHashMap<Component, CrossStaffBeamOwner>();
+        List<Component> result = new ArrayList<>();
+        for (Component cap : heads) {
+            if (!budget.take(1L + staffs.size())) return List.of();
+            Staff capStaff = nearestHeadStaff(staffs, cap.centerY);
+            if (capStaff == null || capStaff.count != 2) continue;
+            if (!budget.take(staffs.size())) return List.of();
+            int capIndex = staffs.indexOf(capStaff);
+            int sourceIndex = capStaff.index == 0 ? capIndex + 1 : capIndex - 1;
+            if (sourceIndex < 0 || sourceIndex >= staffs.size()) continue;
+            Staff source = staffs.get(sourceIndex);
+            if (source.count != 2 || source.index + capStaff.index != 1) continue;
+            float gap = capStaff.pitchTrack == null ? capStaff.gap : capStaff.pitchTrack.at(cap.centerX)[1];
+            if (!Float.isFinite(gap) || gap * .7f < 8 || gap > Math.min(width, height) / 8f
+                    || cap.maxX - cap.minX + 1 > gap * .65f
+                    || cap.maxY - cap.minY + 1 > gap * .65f
+                    || cap.area > gap * gap * .25f) continue;
+            if (!budget.take((long) Math.ceil(16 * gap * gap + 64))) return List.of();
+            // A genuine raw oval survives even when the model retained only its tiny cap.
+            if (FilledSparseBeamHead.matches(gray, width, height, cap.centerX, cap.centerY, gap)
+                    || FilledSparseBeamHead.matches(gray, width, height,
+                            cap.centerX, cap.centerY, gap * .7f)) continue;
+            boolean found = false;
+            for (Component main : heads) {
+                if (!budget.take(1)) return List.of();
+                if (main == cap || main.area < Math.max(gap * gap * .8f, cap.area * 3f)
+                        || Math.abs(main.centerX - cap.centerX) > gap * 1.5f
+                        || Math.abs(main.centerY - cap.centerY) <= gap * 6
+                        || Math.abs(main.centerY - cap.centerY) > gap * 12) continue;
+                CrossStaffBeamOwner mainProof = crossStaffBeamOwner(
+                        gray, width, height, main, staffs, proofs, budget);
+                if (budget.exhausted) return List.of();
+                if (mainProof == null || mainProof.staff != source
+                        || Math.abs(mainProof.gap - gap) > gap * .2f) continue;
+                int[] stem = mainProof.stem;
+                if (stem[0] < cap.minX - gap * .2f || stem[0] > cap.maxX + gap * .2f
+                        || Math.abs(stem[1] - cap.centerY) > gap * 1.1f
+                        || (cap.centerY - main.centerY) * stem[2] <= gap * 6) continue;
+                for (Component peer : heads) {
+                    if (!budget.take(1)) return List.of();
+                    if (peer == cap || peer == main
+                            || peer.area < Math.max(gap * gap * .8f, cap.area * 3f)
+                            || Math.abs(peer.centerX - main.centerX) < gap * 2
+                            || Math.abs(peer.centerX - main.centerX) > gap * 6
+                            || Math.abs(peer.centerY - cap.centerY) <= gap * 6
+                            || Math.abs(peer.centerY - cap.centerY) > gap * 12) continue;
+                    CrossStaffBeamOwner peerProof = crossStaffBeamOwner(
+                            gray, width, height, peer, staffs, proofs, budget);
+                    if (budget.exhausted) return List.of();
+                    if (peerProof == null || peerProof.staff != source
+                            || Math.abs(peerProof.gap - gap) > gap * .2f
+                            || peerProof.stem[2] != stem[2]) continue;
+                    if (!budget.take((long) Math.ceil(128 * gap * gap * gap + 4096))) return List.of();
+                    if (StemOwnedBeamTip.matches(gray, width, height, stem, peerProof.stem,
+                            cap.centerX, cap.centerY, cap.maxX - cap.minX + 1,
+                            cap.maxY - cap.minY + 1, cap.area, gap)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+            if (found) result.add(cap);
+        }
+        return List.copyOf(result);
+    }
+
+    /** Invocation-local ownership cache; no unproved or foreign staff can lend a shaft. */
+    private static CrossStaffBeamOwner crossStaffBeamOwner(
+            byte[] gray, int width, int height, Component head, List<Staff> staffs,
+            java.util.IdentityHashMap<Component, CrossStaffBeamOwner> proofs,
+            CrossStaffBeamBudget budget) {
+        if (!budget.take(1)) return null;
+        if (proofs.containsKey(head)) return proofs.get(head);
+        if (!budget.take(1L + staffs.size())) return null;
+        Staff owner = nearestHeadStaff(staffs, head.centerY);
+        CrossStaffBeamOwner result = null;
+        if (owner != null && owner.count == 2) {
+            float gap = owner.pitchTrack == null ? owner.gap : owner.pitchTrack.at(head.centerX)[1];
+            if (Float.isFinite(gap) && gap >= 8 && gap <= Math.min(width, height) / 8f) {
+                if (!budget.take((long) Math.ceil(128 * gap * gap + 64 * gap + 1024))) return null;
+                if (head.area >= gap * gap * .8f && printedFilledOval(gray, width, head, gap)) {
+                    int[] stem = attachedRawStem(gray, width, height, head, gap,
+                            Math.max(1, Math.round(gap * .16f)), 205, 12);
+                    if (stem != null && Math.abs(stem[1] - head.centerY) >= gap * 6
+                            && Math.abs(stem[1] - head.centerY) <= gap * 12)
+                        result = new CrossStaffBeamOwner(owner, gap, stem);
+                }
+            }
+        }
+        proofs.put(head, result);
+        return result;
     }
 
     private static List<Component> outlinedHookHeads(
