@@ -90,6 +90,15 @@ final class OmrScoreInterpreter {
                         restHeadOrigins,
                         memberCollector);
         var physicalSplitCache = new java.util.IdentityHashMap<Component, List<Component>>();
+        boolean sharedLedgerStorage =
+                !rawCourtesy.exhausted
+                        && rawCourtesy.workLimit - rawCourtesy.workUsed >= 64
+                        && rawCourtesy.byteLimit - rawCourtesy.bytesUsed >= 4096
+                        && rawCourtesy.prepay(64, 4096);
+        var exactStackOwners =
+                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Component>() : null;
+        var sharedLedgerOwners =
+                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Staff>() : null;
         List<Component> physicalSourceHeads = new ArrayList<>();
         var wholeUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
         var ledgerHalfUnisonCache = new java.util.IdentityHashMap<Component, List<Component>>();
@@ -105,8 +114,16 @@ final class OmrScoreInterpreter {
                             staffs,
                             memberCollector);
             physicalSplitCache.put(original, exactSplit);
+            if (sharedLedgerStorage && exactSplit.size() > 1)
+                for (Component child : exactSplit)
+                    if (rawCourtesy.prepay(1, 64)) exactStackOwners.put(child, original);
             for (Component sourceHead : exactSplit) {
                 Staff owner = staffForHead(labels, gray, width, height, staffs, sourceHead);
+                if (sharedLedgerStorage
+                        && owner != null
+                        && sourceHead.centerY < owner.top - owner.pitchGap * 2.2f
+                        && sourceHead.centerY >= owner.top - owner.pitchGap * 8
+                        && rawCourtesy.prepay(1, 64)) sharedLedgerOwners.put(sourceHead, owner);
                 List<Component> unison = owner == null ? List.of()
                         : captureStemlessWholeUnison(labels, gray, width, height,
                                 sourceHead, owner.gap, memberCollector);
@@ -125,7 +142,43 @@ final class OmrScoreInterpreter {
                 }
             }
         }
-        memberCollector.seal(new ExactComponentMembers.Budget(2L * labels.length + 4096, 4096));
+        var sharedLedgerBodies =
+                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Boolean>() : null;
+        var sharedUpperLedgerRails =
+                sharedLedgerStorage ? new java.util.IdentityHashMap<Component, Boolean>() : null;
+        if (sharedLedgerStorage)
+            for (Component c : physicalSourceHeads) {
+                if (!rawCourtesy.prepay(1, 0)) break;
+                Staff st = sharedLedgerOwners.get(c);
+                if (st == null) continue;
+                if (sharedLedgerBody(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                c,
+                                st,
+                                staffs,
+                                physicalSourceHeads,
+                                exactStackOwners,
+                                rawCourtesy)
+                        && rawCourtesy.prepay(1, 64)) sharedLedgerBodies.put(c, Boolean.TRUE);
+                if (completeSharedUpperLedgerChain(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                c,
+                                st,
+                                staffs,
+                                physicalSourceHeads,
+                                sharedLedgerOwners,
+                                ledgerHalfUnisonWork)
+                        && rawCourtesy.prepay(1, 64)) sharedUpperLedgerRails.put(c, Boolean.TRUE);
+            }
+        if (!memberCollector.seal(
+                new ExactComponentMembers.Budget(2L * labels.length + 4096, 4096)))
+            if (sharedLedgerBodies != null) sharedLedgerBodies.clear();
         List<Component> recoveredFadedHeads = new ArrayList<>();
         List<Component> recoveredFilledFragmentHeads = new ArrayList<>();
         Map<Component, Integer> recoveredCreaseGraces = new HashMap<>();
@@ -1642,6 +1695,8 @@ final class OmrScoreInterpreter {
                             || head.centerY
                                     > physicalStaff.bottom + physicalStaff.gap * ledgerClearance)
                     && !ledgerHalfUnisonCache.containsKey(head)
+                    && !(sharedLedgerBodies != null && sharedLedgerBodies.containsKey(head))
+                    && !(sharedUpperLedgerRails != null && sharedUpperLedgerRails.containsKey(head))
                     && !hasHeadLedgerSupport(
                             labels,
                             gray,
@@ -12178,6 +12233,306 @@ final class OmrScoreInterpreter {
             }
         }
         return best != null && distance <= best.gap * maximumGapDistance ? best : null;
+    }
+
+    private static boolean sharedLedgerBody(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Staff> staffs,
+            List<Component> roster,
+            java.util.IdentityHashMap<Component, Component> exactStackOwners,
+            RawCourtesyBudget work) {
+        float gap = staff.pitchGap;
+        if (work == null || !work.prepay(1, 0)) return false;
+        if (gray == null
+                || gray.length != (long) width * height
+                || !Float.isFinite(gap)
+                || gap < 8
+                || gap > 48
+                || head.centerY >= staff.top - gap * 2.2f
+                || head.centerY < staff.top - gap * 8
+                || (long) (head.maxX - head.minX + 1) * (head.maxY - head.minY + 1) > 4096)
+            return false;
+        // Existing strict admissions need no additional shared-body authority.
+        if (!work.prepay(
+                (long) Math.ceil(4096 + 128 * gap * gap), (long) Math.ceil(4096 + 96 * gap * gap)))
+            return false;
+        if (hasInnerLedgerInk(gray, width, height, head, staff, false)
+                || completeUpperLedgerBody(gray, width, height, head, gap)) return false;
+        long cost = (long) Math.ceil(4096 + 256 * gap * gap);
+        if (!work.prepay(cost, (long) Math.ceil(8192 + 64 * gap * gap))) return false;
+        if (!printedFilledOval(gray, width, head, staff.pitchGap)
+                || !hasLedgerInk(gray, width, height, head, staff.pitchGap, false)
+                || !(completeUpperLedgerChain(gray, width, height, head, staff)
+                        || completeFourUpperLedgerChain(gray, width, height, head, staff))
+                || competingPrintedCore(labels, gray, width, height, head, staff, staffs))
+            return false;
+        int[] stem = attachedRawStem(gray, width, height, head, staff.pitchGap);
+        if (stem == null) return false;
+        for (Component peer : roster) {
+            if (!work.prepay(1, 0)) return false;
+            if (peer == head
+                    || Math.abs(peer.centerY - head.centerY) < gap * .6f
+                    || Math.abs(peer.centerY - head.centerY) > gap * 4.1f
+                    || Math.abs(peer.centerX - head.centerX) > gap * .25f) continue;
+            long peerCost = (long) Math.ceil(1024 + 128 * gap * gap);
+            if (!work.prepay(peerCost, (long) Math.ceil(4096 + 32 * gap * gap))) return false;
+            if (!printedFilledOval(gray, width, peer, gap)
+                    || !hasHeadLedgerSupport(
+                            labels, gray, width, height, peer, staff, false, staffs)) continue;
+            int[] ps = attachedRawStem(gray, width, height, peer, gap);
+            if (ps == null || ps[2] != stem[2] || Math.abs(ps[0] - stem[0]) > 1) continue;
+            int shaftRadius = Math.max(1, Math.round(gap * .12f));
+            boolean continuous = true;
+            for (int y = Math.round(Math.min(head.centerY, peer.centerY));
+                    y <= Math.round(Math.max(head.centerY, peer.centerY));
+                    y++) {
+                boolean ink = false;
+                for (int x = stem[0] - shaftRadius; x <= stem[0] + shaftRadius; x++)
+                    if (x >= 0 && x < width && (gray[y * width + x] & 255) < 185) ink = true;
+                if (!ink) {
+                    continuous = false;
+                    break;
+                }
+            }
+            boolean sameSplit =
+                    exactStackOwners.containsKey(head)
+                            && exactStackOwners.get(head) == exactStackOwners.get(peer);
+            if (continuous
+                    && sharedBodyEnvelope(gray, width, height, head, peer, gap, stem, sameSplit))
+                return true;
+        }
+        return false;
+    }
+
+    private static boolean sharedBodyEnvelope(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Component peer,
+            float gap,
+            int[] stem,
+            boolean sameSplit) {
+        if (head.minX < 2 || head.maxX >= width - 2 || head.minY < 2 || head.maxY >= height - 2)
+            return false;
+        int shaftRadius = Math.max(1, Math.round(gap * .12f));
+        int left = head.minX, right = head.maxX, top = head.minY, bottom = head.maxY;
+        boolean exactSeam =
+                sameSplit
+                        && peer.minY == head.maxY + 1
+                        && Math.abs(peer.minX - head.minX) <= 1
+                        && Math.abs(peer.maxX - head.maxX) <= 1;
+        int peerTop =
+                peer.minY
+                        - (exactSeam || sharedUpperModelTip(gray, width, peer, gap, stem) ? 1 : 0);
+        // One model-edge row is allowed only while the next raw row closes the contour.
+        for (int extra = 0; extra <= 1; extra++) {
+            if (extra == 1) {
+                if (!sharedUpperModelTip(gray, width, head, gap, stem)) continue;
+            }
+            int t = top - extra, b = bottom;
+            boolean closed = true;
+            int inset = Math.max(1, Math.round((right - left + 1) * .25f));
+            for (int y = t - 1; y <= b + 1 && closed; y++)
+                for (int x = left + 1; x <= right - 1; x++) {
+                    boolean exterior =
+                            (y == t - 1 || y == b + 1) && x >= left + inset && x <= right - inset;
+                    boolean corner = (y == t || y == b) && (x == left + 1 || x == right - 1);
+                    if (!exterior && !corner) continue;
+                    if ((gray[y * width + x] & 255) >= 225) continue;
+                    if (Math.abs(x - stem[0]) <= shaftRadius) continue;
+                    if (x >= peer.minX && x <= peer.maxX && y >= peerTop && y <= peer.maxY)
+                        continue;
+                    if (sharedLedgerRow(gray, width, height, left, right, y, gap)) continue;
+                    closed = false;
+                    break;
+                }
+            if (closed) return true;
+        }
+        return false;
+    }
+
+    private static boolean sharedUpperModelTip(
+            byte[] gray, int width, Component head, float gap, int[] stem) {
+        if (head.minY < 1) return false;
+        int radius = Math.max(1, Math.round(gap * .12f));
+        int first = -1, last = -1, n = 0;
+        for (int x = head.minX; x <= head.maxX; x++) {
+            if (Math.abs(x - stem[0]) <= radius) continue;
+            if ((gray[(head.minY - 1) * width + x] & 255) >= 225) continue;
+            if ((gray[head.minY * width + x] & 255) >= 225) return false;
+            if (first < 0) first = x;
+            last = x;
+            n++;
+        }
+        return n > 0
+                && first > head.minX
+                && last < head.maxX
+                && last - first + 1 == n
+                && n <= Math.round((head.maxX - head.minX + 1) * .75f);
+    }
+
+    private static boolean sharedLedgerRow(
+            byte[] gray, int width, int height, int left, int right, int y, float gap) {
+        int span = Math.max(3, Math.round(gap * .35f));
+        if (left - span < 0 || right + span >= width || y < 1 || y >= height - 1) return false;
+        for (int x : new int[] {left - span, right + span}) {
+            int maximum = Math.max(2, Math.round(gap * .25f));
+            int a = y, b = y;
+            while (a > 0 && y - a <= maximum && (gray[(a - 1) * width + x] & 255) < 185) a--;
+            while (b < height - 1 && b - y <= maximum && (gray[(b + 1) * width + x] & 255) < 185)
+                b++;
+            if ((gray[y * width + x] & 255) >= 185 || b - a + 1 > maximum) return false;
+        }
+        for (int x = left - span; x <= right + span; x++)
+            if ((gray[y * width + x] & 255) >= 225) return false;
+        return true;
+    }
+
+    private static boolean completeSharedUpperLedgerChain(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Staff> staffs,
+            List<Component> roster,
+            java.util.IdentityHashMap<Component, Staff> owners,
+            long[] work) {
+        if (work == null || work.length != 1 || work[0] < 1) return false;
+        work[0]--;
+        float gap = staff.pitchGap;
+        float top = staff.pitchBottom - 4 * gap;
+        float distance = (top - head.centerY) / gap;
+        if (gray == null
+                || !Float.isFinite(gap)
+                || gap < 8
+                || gap > 48
+                || distance <= 4.5f
+                || distance > MAX_HEAD_LEDGER_GAPS) return false;
+        long cost = (long) Math.ceil(8192 + 1024 * gap * gap);
+        if (work[0] < cost) {
+            work[0] = 0;
+            return false;
+        }
+        work[0] -= cost;
+        if (!printedFilledOval(gray, width, head, gap)
+                || !completeUpperLedgerBody(gray, width, height, head, gap)
+                || !hasLedgerInk(gray, width, height, head, gap, false)
+                || competingPrintedCore(labels, gray, width, height, head, staff, staffs))
+            return false;
+        int[] shaft = attachedRawStem(gray, width, height, head, gap);
+        if (shaft == null || shaft[2] <= 0 || shaft[1] < top) return false;
+        int required = Math.max(0, (int) Math.ceil(distance - .65f) - 1);
+        if (required < 4) return false;
+        for (Component peer : roster) {
+            if (work[0] < 1) return false;
+            work[0]--;
+            if (peer == head
+                    || Math.abs(peer.centerX - head.centerX) < gap * 1.5f
+                    || Math.abs(peer.centerX - head.centerX) > gap * 3
+                    || Math.abs(peer.centerY - head.centerY) > gap * .75f) continue;
+            long peerCost = (long) Math.ceil(8192 + 128 * gap * gap);
+            if (work[0] < peerCost) {
+                work[0] = 0;
+                return false;
+            }
+            work[0] -= peerCost;
+            if (!printedFilledOval(gray, width, peer, gap)
+                    || !hasHeadLedgerSupport(
+                            labels, gray, width, height, peer, staff, false, staffs)
+                    || owners.get(peer) != staff) continue;
+            int[] other = attachedRawStem(gray, width, height, peer, gap);
+            if (other == null
+                    || other[2] <= 0
+                    || other[1] < top
+                    || Math.abs(other[0] - shaft[0]) < gap) continue;
+            int left = Math.max(0, Math.round(head.minX - gap * .3f));
+            int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
+            int margin = Math.max(1, Math.round(gap * .18f));
+            boolean complete = true, shared = false;
+            for (int rule = 1; rule <= required; rule++) {
+                float line = top - rule * gap;
+                boolean found = false;
+                for (int y = Math.max(0, Math.round(line - gap * .18f));
+                        y <= Math.min(height - 1, Math.round(line + gap * .18f));
+                        y++) {
+                    int ink = 0, l = 0, rr = 0;
+                    for (int x = left; x <= right; x++)
+                        if ((gray[y * width + x] & 255) < 165) {
+                            ink++;
+                            if (x < head.minX
+                                    && ShadedLedgerRule.thin(gray, width, height, x, y, gap)) l++;
+                            if (x > head.maxX
+                                    && ShadedLedgerRule.thin(gray, width, height, x, y, gap)) rr++;
+                        }
+                    if (ink < (right - left + 1) * .85f || l < margin || rr < margin) continue;
+                    if (finiteSharedLedgerRow(
+                            gray, width, height, y, head, peer, shaft, other, gap)) {
+                        found = true;
+                        shared = true;
+                        break;
+                    }
+                    if (shortLedgerRule(gray, width, y, head, gap)) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    complete = false;
+                    break;
+                }
+            }
+            if (complete && shared) return true;
+        }
+        return false;
+    }
+
+    private static boolean finiteSharedLedgerRow(
+            byte[] gray,
+            int width,
+            int height,
+            int y,
+            Component head,
+            Component peer,
+            int[] shaft,
+            int[] other,
+            float gap) {
+        int center = Math.round(head.centerX), left = center, right = center;
+        int maximum = (int) Math.ceil(gap * 6);
+        if (center < 1 || center >= width - 1 || (gray[y * width + center] & 255) >= 165)
+            return false;
+        while (left > 0 && center - left <= maximum && (gray[y * width + left - 1] & 255) < 165)
+            left--;
+        while (right < width - 1
+                && right - center <= maximum
+                && (gray[y * width + right + 1] & 255) < 165) right++;
+        if (left < 1 || right >= width - 1 || right - left + 1 > maximum) return false;
+        int outerLeft = Math.min(head.minX, peer.minX), outerRight = Math.max(head.maxX, peer.maxX);
+        int reach = Math.max(1, Math.round(gap * .65f));
+        if (left >= outerLeft
+                || right <= outerRight
+                || left < outerLeft - reach
+                || right > outerRight + reach
+                || shaft[0] < left
+                || shaft[0] > right
+                || other[0] < left
+                || other[0] > right) return false;
+        int shaftRadius = Math.max(1, Math.round(gap * .12f));
+        for (int x = left; x <= right; x++) {
+            if (Math.abs(x - shaft[0]) <= shaftRadius || Math.abs(x - other[0]) <= shaftRadius)
+                continue;
+            if (x >= head.minX && x <= head.maxX && y >= head.minY && y <= head.maxY) continue;
+            if (x >= peer.minX && x <= peer.maxX && y >= peer.minY && y <= peer.maxY) continue;
+            if (!ShadedLedgerRule.thin(gray, width, height, x, y, gap)) return false;
+        }
+        return true;
     }
 
     /**
