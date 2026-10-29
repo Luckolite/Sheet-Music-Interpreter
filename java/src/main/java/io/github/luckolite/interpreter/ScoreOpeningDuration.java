@@ -206,6 +206,10 @@ public final class ScoreOpeningDuration {
                                                 || !Float.isFinite(r.positionInMeasure())))
             return Double.NaN;
 
+        boolean omittedNumberedPickupLane =
+                numberedPickup
+                        && !terminal
+                        && opening.stream().anyMatch(n -> n.kind() == ScoreNoteEvent.Kind.PITCHED);
         double span = Double.NaN;
         int explicitLanes = 0;
 
@@ -224,7 +228,10 @@ public final class ScoreOpeningDuration {
                             .filter(r -> r.staffIndex() == lane)
                             .collect(java.util.stream.Collectors.toList());
 
-            if (voice.isEmpty() && gaps.isEmpty()) return Double.NaN;
+            if (voice.isEmpty() && gaps.isEmpty()) {
+                if (omittedNumberedPickupLane) continue;
+                return Double.NaN;
+            }
             if (voice.isEmpty() && gaps.size() == 1 && gaps.get(0).isFullMeasure()) continue;
             gaps =
                     gaps.stream()

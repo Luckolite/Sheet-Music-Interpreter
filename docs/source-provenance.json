@@ -3713,11 +3713,11 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "fa472c24bcb6198a4c13c883f23d2a8e1565fbc652c4296f1c3c731ba7f82e26",
-      "source_normalized_sha256": "fa472c24bcb6198a4c13c883f23d2a8e1565fbc652c4296f1c3c731ba7f82e26",
+      "source_sha256": "8be1ea1c40cab88e7feeae7bd9aad9cf4bd26b147d009926493c78d78541fdb9",
+      "source_normalized_sha256": "8be1ea1c40cab88e7feeae7bd9aad9cf4bd26b147d009926493c78d78541fdb9",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "1f2a2a0d9f732957920c62a56b365e50c5ffe2090307a687462b77636581d7c9",
-      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "standalone_sha256": "84f86ad2568b8fab1dc27b4f6f20d05891884d78311137eade047b8091c66558",
+      "reviewed_app_commit": "99101a3243fd5e77988e7c2d5cd09e32f07ae0b6",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
       "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
@@ -3742,8 +3742,8 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "006f69e07bf0e72da970dfd8666f59d25eeb45413a02cdd15961a93ed4425f10",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "standalone_normalized_sha256": "7545d8253f0b3f222dc59f0f3ae21b5806e7df7f65acefbfa43e69545cbbe8ed",
+      "current_source_review": "Recognition129 invalidates prior derived interpretations; Java identity/test package-only port. Guide299/audio101 formats and models unchanged; no Android APK version or update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
       "recognition117_release_review": {
@@ -3767,12 +3767,12 @@
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "f9be71898670b8c36467a0d95984d52868a8e303f05dcd4dd9e4a74efd7ec0c4",
-      "source_normalized_sha256": "f9be71898670b8c36467a0d95984d52868a8e303f05dcd4dd9e4a74efd7ec0c4",
-      "standalone_sha256": "c3391f8749b3b0874b062241ebb3155fc1af2138d0500bc1dffb19968399e942",
+      "source_sha256": "3c7c7be4a8cf542b6219f0267cbfc0a2a738af6f38fd0c783fb362d5cf9595be",
+      "source_normalized_sha256": "3c7c7be4a8cf542b6219f0267cbfc0a2a738af6f38fd0c783fb362d5cf9595be",
+      "standalone_sha256": "8a956db495f9378e7ab216c1a61326660036ebc5848600bd7da84424c641cbad",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "reviewed_app_commit": "99101a3243fd5e77988e7c2d5cd09e32f07ae0b6",
       "reviewed_app_state": "Committed recognition128 Android complete-rest caller integration; Guide299/audio101/model/layouts unchanged; cumulative runtime delivery deferred.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
@@ -3790,8 +3790,8 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "be19a4cf504b03fa671f76c758a5e5fc7a5d07c48ed2dc476ec5a8c88617202c",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "standalone_normalized_sha256": "1f1ce0d0d5102eb81b8aa3f5d3d3fec3a1b2e8938575483e5674866ffabfd05c",
+      "current_source_review": "Recognition129 invalidates prior derived interpretations; Java identity/test package-only port. Guide299/audio101 formats and models unchanged; no Android APK version or update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
       "recognition117_review_note": "Reviewed cache epoch117 and matching historical-format regression; unchanged Guide299 layouts and audio99. Namespace/import differences retained.",
@@ -7908,13 +7908,16 @@
     },
     "ScoreOpeningDuration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningDuration.java",
-      "source_sha256": "706936cdde0ddb01ad67c48c331e76784307f1d71e0ae2e005388168030e48b3",
-      "source_normalized_sha256": "d76ce48864690a55d3b23c40ee5e5d7e365b55cce0e659062af7b18916c8f3a3",
+      "source_sha256": "f53147134691fafd14e0bb1d46b34ac8ba453ea5793cd4f11aa9a2a341697835",
+      "source_normalized_sha256": "f53147134691fafd14e0bb1d46b34ac8ba453ea5793cd4f11aa9a2a341697835",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "1d6a1b8a238ed7378f027bee0487e88b631b9b31f339f9fb20348ed1132d5705",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreOpeningDuration.java"
+      "standalone_sha256": "8542f9eff2fb5801ae5da34e051a3dfb8a8a1c9c7ca551c4cbf663f5eb1973ec",
+      "reviewed_app_commit": "a5f38f60fa20c2e2255ad67cd36fb8a19d9d6f96",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreOpeningDuration.java",
+      "standalone_normalized_sha256": "39cd34b2d42a695d8db617b82d02c293565943b8dc9c5b4b223abc576f8c85c2",
+      "license": "Apache-2.0",
+      "current_source_review": "Independently numbered pitched pickup permits wholly absent staff only; legacy unnumbered/silent/terminal behavior retained. Original22 procedural controls; no private material or new clock authority."
     },
     "ScoreOpeningProofWire.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningProofWire.java",
@@ -9579,11 +9582,11 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "720c10aea2242bbeabe2cba8d4e80701a326c5e0d9604e64bfb96a14f000a277",
-      "source_normalized_sha256": "720c10aea2242bbeabe2cba8d4e80701a326c5e0d9604e64bfb96a14f000a277",
+      "source_sha256": "c87c37e2982c034092d1dfebc236a2812872a4a33d04b2e6c13876160eaa59c6",
+      "source_normalized_sha256": "027f796f163ef5847d66ebbfa0e0bef9d9b949bb88fb88d22343ea023ece4aff",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "eac22d6c2e9973424039a71c4c47a498ca025c7a16434ba1175def734e56a994",
-      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "standalone_sha256": "50588ed1c69b238a2c24ad627f024d6c5470639725379db04e54fa211a96f834",
+      "reviewed_app_commit": "99101a3243fd5e77988e7c2d5cd09e32f07ae0b6",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
@@ -9603,8 +9606,8 @@
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
       "reviewed_source_state": "Committedrecognition124 source;173app/176publicJava/15Python and freshactualfivepage acceptance; models/Guide299/audio101 unchanged, installedpairdeliverypending.",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
-      "standalone_normalized_sha256": "5b1db2784bbe139a5cd9d6e61be06f7770ac98fdf003e83a96fd6e68afc31b6d",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "standalone_normalized_sha256": "06d526f08b6466b9f3233b17372a0d1c1bb71396a357a9de5639fe6e073ddcb7",
+      "current_source_review": "Recognition128 to129 scalar only; existing reviewed package-relative imports retained. Guide299/audio101/models/dependencies/layouts unchanged; no APK update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
       "recognition117_review_note": "Reviewed cache epoch117 and matching historical-format regression; unchanged Guide299 layouts and audio99. Namespace/import differences retained.",
@@ -11266,6 +11269,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
       "current_source_review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes"
+    },
+    "OmittedNumberedPickupLaneOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OmittedNumberedPickupLaneOriginalTest.java",
+      "source_sha256": "9f7a15997c3c0eb1d0a78738f0fd00ca1486808cc7dac5fb497ca89e7923223a",
+      "source_normalized_sha256": "9f7a15997c3c0eb1d0a78738f0fd00ca1486808cc7dac5fb497ca89e7923223a",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OmittedNumberedPickupLaneOriginalTest.java",
+      "standalone_sha256": "f841d771599cd979e3ad77a9bec9cd223ca3752388340addd394208b9ba44021",
+      "standalone_normalized_sha256": "d20116684b7086f69146c986434d96a525e3a4edec5afb98ef015d41de606ba7",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "a5f38f60fa20c2e2255ad67cd36fb8a19d9d6f96",
+      "current_source_review": "Independently numbered pitched pickup permits wholly absent staff only; legacy unnumbered/silent/terminal behavior retained. Original22 procedural controls; no private material or new clock authority."
     }
   },
   "finite_curved_approach_review": {
@@ -16435,6 +16449,18 @@
     {
       "appCommit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
       "review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "a5f38f60fa20c2e2255ad67cd36fb8a19d9d6f96",
+      "review": "Independently numbered pitched pickup permits wholly absent staff only; legacy unnumbered/silent/terminal behavior retained. Original22 procedural controls; no private material or new clock authority.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "99101a3243fd5e77988e7c2d5cd09e32f07ae0b6",
+      "review": "Recognition129 invalidates prior derived interpretations; Java identity/test package-only port. Guide299/audio101 formats and models unchanged; no Android APK version or update.",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
