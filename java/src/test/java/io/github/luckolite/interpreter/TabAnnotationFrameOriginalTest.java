@@ -33,7 +33,15 @@ public final class TabAnnotationFrameOriginalTest {
                 original,
                 W,
                 H,
-                List.of(new TablatureDecoder.Staff(72, 8, 0, List.of(), List.of())),
+                // A decoded fret confirms this synthetic TAB band; bare rules cannot suppress
+                // notation.
+                List.of(
+                        new TablatureDecoder.Staff(
+                                72,
+                                8,
+                                0,
+                                List.of(new TablatureDecoder.Fret(150, 72, 0, 3)),
+                                List.of())),
                 true);
     }
 

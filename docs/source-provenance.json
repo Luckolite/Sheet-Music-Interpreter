@@ -5124,13 +5124,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "58c24807e2a3fd74994af858db1e8eb23914e1492498768cedb8c737ef9b066f",
+      "source_sha256": "07a297c99748b8f753dc6ab8b418e158c54b2825d5d1a766c7093f26f7c301fa",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "58c24807e2a3fd74994af858db1e8eb23914e1492498768cedb8c737ef9b066f",
+      "source_normalized_sha256": "0ba6bf0a72dafdf2ad31c57cdc959100d67af5f6e6ccd017be8ee001f241e890",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "5c5c360ade6063be3212acd9991b797151fae0b6ccd85fa709d06763c37b8922",
+      "standalone_sha256": "af89dfc857657954aeecc3fb4d762878efad4a0b0d0f35daf9fbfebced0c39af",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
+      "reviewed_app_commit": "41c141abf1a0f1cbd701e5836fe5693519c8f4e0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5141,8 +5141,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "b8621384a02b114de021155f2108421dd275cc9811d58cd72fe557b45af91bed",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "standalone_normalized_sha256": "af89dfc857657954aeecc3fb4d762878efad4a0b0d0f35daf9fbfebced0c39af",
+      "current_source_review": "Reviewed inclusive integer raster extent for complete narrow sharps; geometry-only tablature candidates cannot suppress notation until decoded content, crossing bars or explicit tuning supplies independent evidence. All other shape, pitch, model and wire contracts retained; original synthetic regressions only.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -9067,17 +9067,17 @@
     },
     "TablatureDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TablatureDecoder.java",
-      "source_sha256": "afc03d0ddf65948c64990d7fde8101257b08000eabfab274d2aa5bc43adc9e9b",
-      "source_normalized_sha256": "afc03d0ddf65948c64990d7fde8101257b08000eabfab274d2aa5bc43adc9e9b",
+      "source_sha256": "1595366a5074c9ccf1ee4ba99de44e5ded098fda2a7a2b64fbbd38fc4f5e7562",
+      "source_normalized_sha256": "c495f8aacd6dd601c56e3bd8740ccf330e646976e2cd47f06be99bb466d1bb3f",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "f76f25ced7dad9c2192a94a8aff863f737640cbb32a16127e651176ef8c06c0c",
-      "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
+      "standalone_sha256": "676b97d17307c92905808aa5cc8edc9d6c120114574d7c9714aa4aa586cdeccb",
+      "reviewed_app_commit": "41c141abf1a0f1cbd701e5836fe5693519c8f4e0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TablatureDecoder.java",
       "license": "Apache-2.0",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
-      "standalone_normalized_sha256": "f76f25ced7dad9c2192a94a8aff863f737640cbb32a16127e651176ef8c06c0c",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "676b97d17307c92905808aa5cc8edc9d6c120114574d7c9714aa4aa586cdeccb",
+      "current_source_review": "Reviewed inclusive integer raster extent for complete narrow sharps; geometry-only tablature candidates cannot suppress notation until decoded content, crossing bars or explicit tuning supplies independent evidence. All other shape, pitch, model and wire contracts retained; original synthetic regressions only."
     },
     "TechniqueClockBoundaryOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/TechniqueClockBoundaryOriginalTest.java",
@@ -9122,13 +9122,16 @@
     },
     "TempoChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/TempoChangeDetector.java",
-      "source_sha256": "588fbbbbc07b857ee88c96de7f82274c45b37495d68bea96e3d70abad8447095",
-      "source_normalized_sha256": "7bc389ed4c605442a1371704e33b972e778f13d683299520e5055c2918f0bb89",
+      "source_sha256": "cddbe13a980767dfb83b6e98c8d900541ee6d83f22240067734775e3f7c82d8e",
+      "source_normalized_sha256": "33e5b0e877fe80eb0355a738a36aab78e4b5341f2d941f4d0619e70a4d06e876",
       "review_note": "Own an elevated complete opening metronome equation through an independently printed part caption, paired header rows, unique staff and clear corridor. Recover clipped meter crop staff geometry only with agreeing bilateral printed-rule witnesses and owned stacked ink. Add blank context around isolated OCR digits without changing source pixels, scale consensus or font thresholds. Sixty-six original procedural and licensed-font regressions; no private score assets, song predicates, model or wire-layout changes.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "d1ead05afcfdc1bf8ddb6ea7f21c2a4725122f4d8eea8abf7001fd23b3771e64",
-      "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TempoChangeDetector.java"
+      "standalone_sha256": "1cfda61aaebed8e5867d480b16328fdc38aaf3cfb57701611ef6ea38a4a7667b",
+      "reviewed_app_commit": "8d44568b",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/TempoChangeDetector.java",
+      "standalone_normalized_sha256": "1cfda61aaebed8e5867d480b16328fdc38aaf3cfb57701611ef6ea38a4a7667b",
+      "license": "Apache-2.0",
+      "current_source_review": "Isolated two/three-digit OCR may retain one terminal parenthesis or bracket. Preserve exact original boxes and every optical equals/beat/attachment proof. Original geometric controls only; no private glyphs or score assets."
     },
     "TerminalCreditStroke.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/data/TerminalCreditStroke.java",
@@ -10809,6 +10812,49 @@
       "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "recognition127_clock_review_note": "Capture existing printed clock context before the optional Source pass; carry it only across the private same-order MARCATO mutation. Generic clock capture and generic withNotes remain strict. Original synthetic exact-context/producer/frame/duplicate/budget controls, no models/layouts/timing changes."
+    },
+    "NarrowSharpRasterExtentTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/NarrowSharpRasterExtentTest.java",
+      "source_sha256": "9bc21a191aa6a4e778ed1491dcfa6468171492c7a7b9c4190f13075724bab0d8",
+      "source_normalized_sha256": "0b4cf7be6af56894f4bc38ecc7facd7a5dc06e84495b7d9035473fcb3f304794",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/NarrowSharpRasterExtentTest.java",
+      "standalone_sha256": "77729c6651af27a9aba2db54c97dc0a1311e6fd6966f5599752a2383a809f8ee",
+      "standalone_normalized_sha256": "77729c6651af27a9aba2db54c97dc0a1311e6fd6966f5599752a2383a809f8ee",
+      "license": "Apache-2.0",
+      "current_source_review": "Reviewed inclusive integer raster extent for complete narrow sharps; geometry-only tablature candidates cannot suppress notation until decoded content, crossing bars or explicit tuning supplies independent evidence. All other shape, pitch, model and wire contracts retained; original synthetic regressions only.",
+      "reviewed_app_commit": "41c141abf1a0f1cbd701e5836fe5693519c8f4e0"
+    },
+    "TabErasureEvidenceOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TabErasureEvidenceOriginalTest.java",
+      "source_sha256": "08cba47bf599becd6c9bb9b6ed17511ff9c598791b67d0e7d3d6126e3a0a0fd7",
+      "source_normalized_sha256": "1885265e66a9f00fb8997d3ea8c575ca4f886b216f2efc13b1875adfb187a554",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TabErasureEvidenceOriginalTest.java",
+      "standalone_sha256": "33d30744a8ccff9d3e7ff9e40a420b9d246758e5880766073cc42edcb5feb653",
+      "standalone_normalized_sha256": "33d30744a8ccff9d3e7ff9e40a420b9d246758e5880766073cc42edcb5feb653",
+      "license": "Apache-2.0",
+      "current_source_review": "Reviewed inclusive integer raster extent for complete narrow sharps; geometry-only tablature candidates cannot suppress notation until decoded content, crossing bars or explicit tuning supplies independent evidence. All other shape, pitch, model and wire contracts retained; original synthetic regressions only.",
+      "reviewed_app_commit": "41c141abf1a0f1cbd701e5836fe5693519c8f4e0"
+    },
+    "ClosedTempoDigitsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedTempoDigitsTest.java",
+      "source_sha256": "6968d2813e7a6d340314bc7884e5a4c260afd3c5e028352156b57660c25505c8",
+      "source_normalized_sha256": "6968d2813e7a6d340314bc7884e5a4c260afd3c5e028352156b57660c25505c8",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedTempoDigitsTest.java",
+      "standalone_sha256": "c10fbf289358a376ef346a56463cc64b08c1ae1cbd65e1ede8d1555c5aeef79b",
+      "standalone_normalized_sha256": "c10fbf289358a376ef346a56463cc64b08c1ae1cbd65e1ede8d1555c5aeef79b",
+      "license": "Apache-2.0",
+      "current_source_review": "Isolated two/three-digit OCR may retain one terminal parenthesis or bracket. Preserve exact original boxes and every optical equals/beat/attachment proof. Original geometric controls only; no private glyphs or score assets.",
+      "reviewed_app_commit": "8d44568b"
+    },
+    "TabAnnotationFrameOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TabAnnotationFrameOriginalTest.java",
+      "source_sha256": "d04383c02202cfb241aa5068c4aacb87e2c568174d04141d54aa9637515ff10e",
+      "source_normalized_sha256": "08940aa199779b0377be4ab7c129c98519c04a4c9340986bd1f5318c5e292b3f",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TabAnnotationFrameOriginalTest.java",
+      "standalone_sha256": "bc8c94cf2828f73fb4e41aba54ed1181c41bf0a810b0cef0b21f4ae6d018dff8",
+      "standalone_normalized_sha256": "bc8c94cf2828f73fb4e41aba54ed1181c41bf0a810b0cef0b21f4ae6d018dff8",
+      "license": "Apache-2.0",
+      "current_source_review": "Retains every original annotation/rival/frame assertion. Synthetic suppression fixture now supplies decoded fret evidence because geometry-only candidates have no destructive authority."
     }
   },
   "finite_curved_approach_review": {

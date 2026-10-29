@@ -421,8 +421,16 @@ public final class TablatureDecoder {
                 TabTuning.apply(List.copyOf(result), words, w, h), words, w, h);
     }
 
+    /** Rule geometry proposes TAB; decoded content or independent structure confirms suppression. */
+    private static List<Staff> confirmedForNotationSuppression(List<Staff> tabs) {
+        return tabs.stream()
+                .filter(tab -> !tab.frets.isEmpty() || !tab.bars.isEmpty() || !tab.tuning.isEmpty())
+                .toList();
+    }
+
     public static byte[] withoutTabs(
             byte[] pixels, int w, int h, List<Staff> tabs, boolean grayscale) {
+        tabs = confirmedForNotationSuppression(tabs);
         if (tabs.isEmpty()) return pixels;
         byte[] result = pixels.clone();
         for (Staff tab : tabs)
@@ -448,6 +456,7 @@ public final class TablatureDecoder {
 
     public static List<MeasureRegion> reconcileMeasures(
             List<MeasureRegion> input, List<Staff> tabs, int w, int h) {
+        tabs = confirmedForNotationSuppression(tabs);
         if (tabs.isEmpty()) return input;
         var measures = new ArrayList<>(input);
         for (Staff tab : tabs) {
@@ -487,6 +496,7 @@ public final class TablatureDecoder {
 
     public static ScorePageInterpretation apply(
             ScorePageInterpretation score, List<Staff> tabs, int w, int h, int[] tuning, int capo) {
+        tabs = confirmedForNotationSuppression(tabs);
         if (tabs.isEmpty()) return score;
 
         for (var tab : tabs)

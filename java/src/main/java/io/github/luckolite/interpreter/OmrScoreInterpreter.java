@@ -19136,7 +19136,7 @@ final class OmrScoreInterpreter {
         int glyphHeight = glyph.maxY - glyph.minY + 1;
         if (glyphHeight < gap * 1.55f
                 || glyphHeight > gap * 3.65f
-                || glyphWidth < gap * .65f
+                || glyphWidth < Math.round(gap * .65f)
                 || glyphWidth > gap * 1.80f
                 || glyphHeight < glyphWidth * 1.45f
                 || glyphHeight > glyphWidth * 4.50f

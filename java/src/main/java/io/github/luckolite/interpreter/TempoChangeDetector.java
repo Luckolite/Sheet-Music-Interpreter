@@ -8,6 +8,9 @@ import java.util.List;
 
 /** Conservative detector for printed note-equals-number tempo marks. */
 final class TempoChangeDetector {
+    private static final java.util.regex.Pattern ISOLATED_DIGITS =
+            java.util.regex.Pattern.compile("([0-9]{2,3})[)\\]]?");
+
     private TempoChangeDetector() {}
 
     /** OCR may drop the note and equals sign while retaining a separate BPM numeral. */
@@ -21,13 +24,16 @@ final class TempoChangeDetector {
         if (gray == null || gray.length != width * height) return List.copyOf(result);
         for (var word : words) {
             String text = word.text().trim();
-            boolean merged = !text.matches("[0-9]{2,3}");
+            // A split OCR word can retain the equation's closing parenthesis or bracket.
+            // Its original raster box still has to prove both the equals sign and beat note.
+            var isolated = ISOLATED_DIGITS.matcher(text);
+            boolean merged = !isolated.matches();
             MeasureNumberReconciler.NumberToken token;
             if (merged) {
                 token = equalsPrefixedDigits(word, gray, width, height);
                 if (token == null) continue;
             } else {
-                int value = Integer.parseInt(text);
+                int value = Integer.parseInt(isolated.group(1));
                 if (value < 30 || value > 400) continue;
                 token =
                         new MeasureNumberReconciler.NumberToken(
