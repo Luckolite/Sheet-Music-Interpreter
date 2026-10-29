@@ -2023,12 +2023,15 @@
     "ClosedLedgerHeadBody.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedLedgerHeadBody.java",
       "license": "Apache-2.0",
-      "source_sha256": "d31ce3f6643dd5cde7685011c5563aa167b7360f784473f6bd809bc1f5f7d974",
-      "source_normalized_sha256": "523046dcd08b85ffc1109f7cc72e47062ae60a6611058a0b115a258a6b11ae6a",
-      "standalone_sha256": "4876c86cef76ee9254b6fb9f5c2e14bd11ec90539a3695a821d3e45e2098e5d0",
+      "source_sha256": "677093601d28e5ffd80ae31b08b2fae7ff9831b3ed5cfc664cfa40c5f71b2121",
+      "source_normalized_sha256": "677093601d28e5ffd80ae31b08b2fae7ff9831b3ed5cfc664cfa40c5f71b2121",
+      "standalone_sha256": "1f0ae352fc0108269bd78da1840e8e296568676673f3d693343a646fd93d4b6d",
       "reviewed_source_state": "working-tree",
       "review_note": "Upper-ledger fallback requires a complete filled or hollow body, a finite complete ledger chain and no overlap with another admitted local staff core. English character directions require actual grouped full-page context, a unique current written owner, independent strict dynamic-glyph or indexed two-scale literal proof and a local prose veto. Cache only raw OCR and failures, revalidate all current ordinary competitors and geometry; legacy flat records remain unclassified. Original generated geometry/text and existing licensed templates only; no private score fixtures, models, dependencies or record-layout changes.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedLedgerHeadBody.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedLedgerHeadBody.java",
+      "standalone_normalized_sha256": "f6c2b39e16dbd9597ca817dfcafb597504114f2da7c602ce10702d72adf56a20",
+      "reviewed_app_commit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
+      "current_source_review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded."
     },
     "ClosedStaffBarPhase.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedStaffBarPhase.java",
@@ -5129,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "5e75f8127b8b68295a831535d7dafa981e3a9e2e9080006a618249fc3110ebe9",
+      "source_sha256": "5e2fc4e7b87810407b2ea11410014ec001fb8ad6926733bf0d07fc97e16a5e8e",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "5e75f8127b8b68295a831535d7dafa981e3a9e2e9080006a618249fc3110ebe9",
+      "source_normalized_sha256": "5e2fc4e7b87810407b2ea11410014ec001fb8ad6926733bf0d07fc97e16a5e8e",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "2c9612d72e029878c5deaf93e85cecdf4b60a9cbeb88c5a0aafd9a2c20e7acfb",
+      "standalone_sha256": "5622b2f841adebad7e6700359bc47d6a5d4ac982716537d2d18b5d30367f52bd",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
+      "reviewed_app_commit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5146,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "e7bd2a76b889767727c641b01dddb7728f8ae97c312514ad296a1d725ffe4b18",
-      "current_source_review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private.",
+      "standalone_normalized_sha256": "b65d80fa7af4d5e5987fa5fafe161498f820e4713f9c0e65b7047c954ad01a6e",
+      "current_source_review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -10973,6 +10976,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
       "current_source_review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private."
+    },
+    "ModelBoundaryLedgerBodyOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ModelBoundaryLedgerBodyOriginalTest.java",
+      "source_sha256": "e326d8d42db1933057973a9ef465281b76d8a59995c48ebf9d3b9bbbbab0acd3",
+      "source_normalized_sha256": "e326d8d42db1933057973a9ef465281b76d8a59995c48ebf9d3b9bbbbab0acd3",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ModelBoundaryLedgerBodyOriginalTest.java",
+      "standalone_sha256": "eb446f1e1e9a14d4888fe7935c9ab772405fcc7e3478e3c799c1d9328898dd59",
+      "standalone_normalized_sha256": "aa1f40a74c715cb6cce73d82b0546c6b0b7c3159aebd4443e1d2bbbbdbd12858",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
+      "current_source_review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded."
     }
   },
   "finite_curved_approach_review": {
@@ -16046,6 +16060,12 @@
     {
       "appCommit": "ce4c04350330671e8c658a6735a6f2d1afa2d2d8",
       "review": "An admitted filled head with its own continuous short shaft, an independently owned full peer shaft and exactly one head-free continuous rail survives a separately proposed short rest. Twenty-four original adjudication-stage and raw-ownership controls;212 focused tests. Stage regression is not a procedural rest-detector end-to-end claim; private exact-input page proof remains private.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "fbede1e2318e322ceeedd19995e4d9f4474f60e6",
+      "review": "The additional remote-ledger body route may certify one connected interior model-tip row only through the complete unchanged body proof. Owned shaft, unique top-or-bottom extension, complete ledger chain and competing-staff refusal retained; original strict body API unchanged. Fourteen original direct-stage tests,301 focused tests and1799 exact boundary comparisons; private full-page source proof excluded.",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }

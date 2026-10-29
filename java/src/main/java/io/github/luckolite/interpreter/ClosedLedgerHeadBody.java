@@ -141,6 +141,48 @@ final class ClosedLedgerHeadBody {
         return false;
     }
 
+    /** A model may omit one raw oval tip; the original complete-body proof stays authoritative. */
+    static boolean provedModelBoundary(
+            byte[] g, int w, int h, int left, int top, int right, int bottom, float gap, int[] stem) {
+        if (proved(g, w, h, left, top, right, bottom, gap, stem)) return true;
+        if (g == null || g.length != (long) w * h || !Float.isFinite(gap) || gap < 6
+                || left < 1 || right >= w - 1 || top < 2 || bottom >= h - 2
+                || right < left || bottom < top || (long) (right - left + 1) * (bottom - top + 1) > 4096
+                || stem == null || stem.length != 3 || Math.abs(stem[2]) != 1) return false;
+        int shaftEdge = stem[2] > 0 ? left : right;
+        if (Math.abs(stem[0] - shaftEdge) > Math.max(1, Math.round(gap * .16f))
+                || (stem[2] > 0 ? stem[1] - bottom : top - stem[1]) < gap * 2.3f) return false;
+        int rawBody = 0;
+        for (int y = top; y <= bottom; y++) for (int x = left; x <= right; x++)
+            if ((g[y * w + x] & 255) < 165) rawBody++;
+        if (rawBody < 3) return false;
+        boolean above = connectedTip(g, w, left, top, right, bottom, gap, stem, -1)
+                && proved(g, w, h, left, top - 1, right, bottom, gap, stem);
+        boolean below = connectedTip(g, w, left, top, right, bottom, gap, stem, 1)
+                && proved(g, w, h, left, top, right, bottom + 1, gap, stem);
+        // A bounded unique model edge is different from searching for a more convenient box.
+        return above != below;
+    }
+
+    private static boolean connectedTip(
+            byte[] g, int w, int left, int top, int right, int bottom, float gap, int[] stem,
+            int direction) {
+        int outside = direction < 0 ? top - 1 : bottom + 1;
+        int inside = direction < 0 ? top : bottom;
+        int first = -1, last = -1, count = 0;
+        for (int x = left; x <= right; x++) {
+            if (direction == stem[2]
+                    && Math.abs(x - stem[0]) <= Math.max(1, Math.round(gap * .12f))) continue;
+            if ((g[outside * w + x] & 255) >= 225) continue;
+            if ((g[inside * w + x] & 255) >= 225) return false;
+            if (first < 0) first = x;
+            last = x;
+            count++;
+        }
+        return count > 0 && first > left && last < right
+                && last - first + 1 == count && count <= Math.round((right - left + 1) * .75f);
+    }
+
     private static boolean normal(Pocket p, int left, int top, int right, int bottom, float gap) {
         int pw = p.right - p.left + 1, ph = p.bottom - p.top + 1;
         return pw >= gap * .45f

@@ -12329,7 +12329,7 @@ final class OmrScoreInterpreter {
 
     private static boolean completeUpperLedgerBody(
             byte[] gray, int width, int height, Component head, float gap) {
-        return ClosedLedgerHeadBody.proved(
+        return ClosedLedgerHeadBody.provedModelBoundary(
                 gray,
                 width,
                 height,
