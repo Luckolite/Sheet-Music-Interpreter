@@ -110,6 +110,15 @@ public final class MeterChangeDetector {
                 readings.computeIfAbsent(measure, ignored -> new java.util.HashSet<>())
                         .add(reading.numerator());
             }
+        for (var proof : PairedInlineCommonTime.prove(labels, gray, width, height, measures)) {
+            boolean precedes = true;
+            for (var crop : proof.copies())
+                if (!precedesNotes(crop, width, height, proof.measureIndex(), measures, notes))
+                    precedes = false;
+            if (precedes)
+                readings.computeIfAbsent(proof.measureIndex(), ignored -> new java.util.HashSet<>())
+                        .add(4);
+        }
         if (numeric)
             for (var crop : candidates(labels, gray, width, height, measures, notes)) {
                 boolean four = false;

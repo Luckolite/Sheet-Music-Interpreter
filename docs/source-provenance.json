@@ -4409,17 +4409,17 @@
     },
     "MeterChangeDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterChangeDetector.java",
-      "source_sha256": "8b1edc9c8895a7f69532826d38db40607ab4138346a730b21dd2ab4b40e1df1b",
+      "source_sha256": "11cb1f1e2fb42590f637521db9fbd9a45d07d0d3635b12a9785f63f6140e4605",
       "review_note": "Append complete component seeds after existing projected crops; preserve existing crop order, caller eligibility and total 48-crop budget. No numeric meter value is inferred from semantic labels.",
-      "source_normalized_sha256": "8b1edc9c8895a7f69532826d38db40607ab4138346a730b21dd2ab4b40e1df1b",
-      "standalone_sha256": "f9ff446fac8c7997852eda3026c20fda1aa98728e26b73cea809e3698b52d9e6",
-      "reviewed_app_commit": "8dd683feff39cb12509561d137584e0f5564353e",
+      "source_normalized_sha256": "11cb1f1e2fb42590f637521db9fbd9a45d07d0d3635b12a9785f63f6140e4605",
+      "standalone_sha256": "5a3ef36db03a8f2f7bd0dbcf3c272b02605acaa746d425af86ad2d2d55d23bc2",
+      "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/MeterChangeDetector.java",
       "license": "Apache-2.0",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "reviewed_app_state": "Reviewed recognition95 source committed; cumulative matched rollout deferred during active goal.",
-      "standalone_normalized_sha256": "f9ff446fac8c7997852eda3026c20fda1aa98728e26b73cea809e3698b52d9e6",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "b8c89422190562ee10e93d501ed942cc386f5c0d70e576751975101b98b19667",
+      "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only."
     },
     "MeterComponentSeeds.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/MeterComponentSeeds.java",
@@ -5124,13 +5124,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "3845fd81c4be6d4e89dad3b377dc9718e630b9f8b02ef3e9d3c4a0ee4a5c8c50",
+      "source_sha256": "f25fba5857462c2149fa96cc43215c80617d0dcf3f9293eac6ece8475311e9ae",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "3845fd81c4be6d4e89dad3b377dc9718e630b9f8b02ef3e9d3c4a0ee4a5c8c50",
+      "source_normalized_sha256": "f25fba5857462c2149fa96cc43215c80617d0dcf3f9293eac6ece8475311e9ae",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "70a3cd32eb7f7b123269b1552260e15a57360e52356ad941360dbe5022649092",
+      "standalone_sha256": "35d592c3a5c1cb71f81a37ce1ebbc171f2317e451117b9ed5b75b5ca98e039b8",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535",
+      "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5141,8 +5141,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "5ff8ef6b615fb484ad80bb0ef4e7bac178f8b480da25a73cb3835a9bc01c5449",
-      "current_source_review": "Complete stemless whole oval and independently shaft-owned filled oval can retain two written values at one logical attack. Exact original producer member partition and value observations retained; old half-unison route unchanged. Original procedural controls only.",
+      "standalone_normalized_sha256": "61a4c8ef6392f730452716fa0921533e72c5a9ef4cc69d9ca53f5d40c68e1281",
+      "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -10880,6 +10880,28 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535",
       "current_source_review": "Complete stemless whole oval and independently shaft-owned filled oval can retain two written values at one logical attack. Exact original producer member partition and value observations retained; old half-unison route unchanged. Original procedural controls only."
+    },
+    "PairedInlineCommonTime.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedInlineCommonTime.java",
+      "source_sha256": "5c9e31e937f0c19a3e054a665b57594ca17b26b6f7c7dd353173a5ab20b16cfa",
+      "source_normalized_sha256": "5c9e31e937f0c19a3e054a665b57594ca17b26b6f7c7dd353173a5ab20b16cfa",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PairedInlineCommonTime.java",
+      "standalone_sha256": "7999330323079c5031b5c77deaacf06340faf99285b8123c79cbf88e67e36320",
+      "standalone_normalized_sha256": "295f9c01684d5684bb574239d2cf196879e3b12e8e5f4c71629ff3a4f06f96d0",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
+      "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only."
+    },
+    "PairedInlineCommonTimeTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PairedInlineCommonTimeTest.java",
+      "source_sha256": "044bc67308f112a8dfc9b81599794b2cc3cff14ec8a736661232b1aba56c02bb",
+      "source_normalized_sha256": "044bc67308f112a8dfc9b81599794b2cc3cff14ec8a736661232b1aba56c02bb",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PairedInlineCommonTimeTest.java",
+      "standalone_sha256": "d0a5f309b5d605f965d32555e11cfb934d0d79e45c8848ef0fe32fa5f967687c",
+      "standalone_normalized_sha256": "db5082375db7ffda719d58eb1c4b3be2509c4d042e34f5c9c2cf3669b4b256cf",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
+      "current_source_review": "Shared complete doublebar and aligned independently complete common-time glyph copies prove inline4/4 and own only their exact normalized head-label crops. Existing standalone clef/cavity route unchanged. Original procedural controls only."
     }
   },
   "finite_curved_approach_review": {
@@ -15935,5 +15957,12 @@
     "boundary": "Ambiguous child slur endpoints abstain; no speculative copied or fan-out ownership. No model, record layout, runtime dependency or old half-unison change.",
     "license": "Apache-2.0",
     "reviewed_app_commit": "b73fa7855f31466e208e29afd10570fdfe3f5535"
+  },
+  "paired_inline_common_time_review": {
+    "scope": "Complete paired inline common-time glyphs require independently observed staffs and shared continuous doublebar; matching complete silhouettes preserve occluded rule rows. Normalize only certified glyph-owned NOTEHEAD pixels.",
+    "originals": "20 original procedural rasters; no captured score pixels, private coordinates, fonts, logs, model/dependency changes.",
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "0cb0a910e12d4ba0461c41a30864d963e91ec445",
+    "validation": "114 focused Java tests and separate private annotated exact-input qualification; no deployment claim."
   }
 }

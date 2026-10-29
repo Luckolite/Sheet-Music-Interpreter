@@ -3335,6 +3335,7 @@ final class OmrScoreInterpreter {
                 || gray.length != labels.length
                 || measures == null
                 || measures.isEmpty()) return labels;
+        labels = PairedInlineCommonTime.normalize(labels, gray, width, height, measures);
         List<Staff> staffs = findStaffs(labels, gray, width, height, measures);
         List<Component> heads =
                 findComponents(labels, width, height, OmrMeasurePostProcessor.NOTEHEAD);
