@@ -11996,9 +11996,101 @@ final class OmrScoreInterpreter {
         if (below >= 2
                 && below >= above + 2
                 && lower.top - head.centerY <= lower.gap * MAX_HEAD_LEDGER_GAPS) return lower;
+        return crossedCompleteLedgerOwner(gray, width, height, head, upper, lower);
+    }
+
+    private static Staff crossedCompleteLedgerOwner(
+            byte[] gray, int width, int height, Component head, Staff upper, Staff lower) {
+        if (gray == null
+                || upper == null
+                || lower == null
+                || upper.count != 2
+                || lower.count != 2
+                || upper.index != 0
+                || lower.index != 1
+                || !Float.isFinite(upper.pitchGap)
+                || !Float.isFinite(lower.pitchGap)
+                || Math.abs(upper.pitchGap - lower.pitchGap)
+                        > Math.min(upper.pitchGap, lower.pitchGap) * .15f) return null;
+        float gap = Math.min(upper.pitchGap, lower.pitchGap);
+        if (gap < 6
+                || gap > 64
+                || head.maxX - head.minX + 1 > gap * 1.8f
+                || head.maxY - head.minY + 1 > gap * 1.3f) return null;
+        float upperBottom = upper.pitchBottom + upper.pitchSlope * (head.centerX - width * .5f);
+        float lowerTop =
+                lower.pitchBottom
+                        + lower.pitchSlope * (head.centerX - width * .5f)
+                        - 4 * lower.pitchGap;
+        if (upper.pitchTrack != null && upper.pitchTrack.activeAt(head.centerX))
+            upperBottom = upper.pitchTrack.at(head.centerX)[0];
+        if (lower.pitchTrack != null && lower.pitchTrack.activeAt(head.centerX)) {
+            float[] at = lower.pitchTrack.at(head.centerX);
+            lowerTop = at[0] - 4 * at[1];
+        }
+        if (head.centerY <= upperBottom || head.centerY >= lowerTop) return null;
+        boolean aboveLower = Math.abs((lowerTop - head.centerY) / lower.pitchGap - 3.5f) <= .2f;
+        boolean belowUpper = Math.abs((head.centerY - upperBottom) / upper.pitchGap - 3.5f) <= .2f;
+        if (!aboveLower && !belowUpper) return null;
+        if (!printedFilledOval(gray, width, head, gap)) return null;
+        int[] shaft = attachedRawStem(gray, width, height, head, gap);
+        if (shaft == null
+                || shaft[1] <= upperBottom + gap * .5f
+                || shaft[1] >= lowerTop - gap * .5f) return null;
+        boolean lowerSeries =
+                completePhysicalInterstaffLedgerSeries(
+                        gray, width, height, head, lowerTop, lower.pitchGap, -1);
+        boolean upperSeries =
+                completePhysicalInterstaffLedgerSeries(
+                        gray, width, height, head, upperBottom, upper.pitchGap, 1);
+        if (lowerSeries == upperSeries) return null;
+        if (aboveLower && lowerSeries && shaft[2] < 0) return lower;
+        if (belowUpper && upperSeries && shaft[2] > 0) return upper;
         return null;
     }
 
+    private static boolean completePhysicalInterstaffLedgerSeries(
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            float edge,
+            float gap,
+            int direction) {
+        float distance = (head.centerY - edge) * direction / gap;
+        if (!Float.isFinite(distance) || distance < 1 || distance > 8) return false;
+        int required = (int) Math.floor(distance + .18f);
+        if (required < 1 || required > 8) return false;
+        int left = Math.max(0, Math.round(head.minX - gap * .3f));
+        int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
+        int margin = Math.max(1, Math.round(gap * .18f));
+        for (int rule = 1; rule <= required; rule++) {
+            float line = edge + direction * rule * gap;
+            boolean found = false;
+            for (int y = Math.max(0, Math.round(line - gap * .18f));
+                    y <= Math.min(height - 1, Math.round(line + gap * .18f));
+                    y++) {
+                int ink = 0, l = 0, r = 0;
+                for (int x = left; x <= right; x++)
+                    if ((gray[y * width + x] & 255) < 165) {
+                        ink++;
+                        if (x < head.minX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            l++;
+                        if (x > head.maxX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            r++;
+                    }
+                if (ink >= (right - left + 1) * .85f
+                        && l >= margin
+                        && r >= margin
+                        && shortLedgerRule(gray, width, y, head, gap)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return false;
+        }
+        return true;
+    }
     private static boolean completeSecondLowerLedgerRules(
             byte[] gray, int width, int height, Component head, float bottom, float gap) {
         int left = Math.max(0, Math.round(head.minX - gap * .3f));
