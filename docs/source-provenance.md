@@ -12,6 +12,21 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 129 retains Guide 299 and audio 101 layouts and the existing model
+weights. Reviewed maintenance preserves exact physical unison parts, complete
+printed ledger/staff ownership, independently witnessed beam rails and continuous
+grandstaff bar axes. Optional ledger caches allocate only after an eligible owned
+head is found; the original cancellation zero-work contract remains in force.
+The original procedural regressions and exact source mappings are recorded in
+`source-provenance.json`.
+
+An independently numbered pitched pickup may omit an entirely empty staff while
+its nonempty lanes retain agreeing explicit durations. Printed meter and existing
+clock authority remain separate from that boundary duration. MusicXML uses zero
+for a proved opening pickup, retains positive excerpt numbers and carries opening
+proof past empty covers. Android-specific import, document binding and metadata
+wrappers are reviewed separately from the standalone recognition core.
+
 The accepted source130 extraction includes complete finite beam/curve ownership,
 joined-tuplet evidence, printed harmonic circles and outgoing falloff ownership.
 The 37 shared helpers retain namespace-only executable adaptation and explicit
