@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "18d5b49a2738c0337a51fbab0d720c6d63dd7eb0c08fc26fcdc0313a8c8901f1",
+      "source_sha256": "86bfd2fcc9605c36594f65873188431cbb3492d463bfd0952771b47c23691b33",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "18d5b49a2738c0337a51fbab0d720c6d63dd7eb0c08fc26fcdc0313a8c8901f1",
+      "source_normalized_sha256": "86bfd2fcc9605c36594f65873188431cbb3492d463bfd0952771b47c23691b33",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "bb51f96b0c2dbdaf7cdedeb4dae4d8caf09508a2e79cb08720b3a3b2ea3fe722",
+      "standalone_sha256": "394a07ca922a6b55c4714f4bc4af3db38c37f60adc94bc4f8c6ff085ff4f2d78",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
+      "reviewed_app_commit": "36c882ac877a7d6875b455c7b5bbf3e131e4da1d",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "057d13acfa23b347b108cd6da72a52b5335433a1107c84ed5a23d00cbf6b9b3e",
-      "current_source_review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational",
+      "standalone_normalized_sha256": "ad423e39ad8aba422e357c75de59d1d11d40e656426f545250ddc5c23e2a3d1e",
+      "current_source_review": "Reviewed adjacent-staff lower ledger ownership requiring complete filled oval, intervening rule and downward shaft; original procedural staff fixtures only; no private score assets, model or timing-authority changes",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11130,6 +11130,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
       "current_source_review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational"
+    },
+    "InterstaffLedgerOwnerOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/InterstaffLedgerOwnerOriginalTest.java",
+      "source_sha256": "8d55fe97638ad80ee775dd3a3e1e2a13957bd89dc8b704d4af5bb8206e112c78",
+      "source_normalized_sha256": "8d55fe97638ad80ee775dd3a3e1e2a13957bd89dc8b704d4af5bb8206e112c78",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/InterstaffLedgerOwnerOriginalTest.java",
+      "standalone_sha256": "55052bac982e41673b250c1df82b76eba20020d774d94df5c8e5ea21e991c510",
+      "standalone_normalized_sha256": "2fa8483f1c7cf672a9634524087a92fbe500318360de616cdbcda19e9ed246fc",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "36c882ac877a7d6875b455c7b5bbf3e131e4da1d",
+      "current_source_review": "Reviewed adjacent-staff lower ledger ownership requiring complete filled oval, intervening rule and downward shaft; original procedural staff fixtures only; no private score assets, model or timing-authority changes"
     }
   },
   "finite_curved_approach_review": {
@@ -16245,6 +16256,12 @@
     {
       "appCommit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
       "review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "36c882ac877a7d6875b455c7b5bbf3e131e4da1d",
+      "review": "Reviewed adjacent-staff lower ledger ownership requiring complete filled oval, intervening rule and downward shaft; original procedural staff fixtures only; no private score assets, model or timing-authority changes",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }

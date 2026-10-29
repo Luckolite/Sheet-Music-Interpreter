@@ -11853,6 +11853,18 @@ final class OmrScoreInterpreter {
                     attachedRawStem(gray, width, height, head, Math.min(upper.gap, lower.gap));
             if (shaft != null && shaft[2] < 0 && shaft[1] <= upperBottom) return upper;
         }
+        // A head beyond the second upper ledger has one intervening short rule.
+        // Its complete oval and downward shaft must reach that lower printed staff.
+        if (below == 1 && above == 0
+                && upper.count == lower.count && upper.index + 1 == lower.index
+                && Math.max(head.centerY - upperBottom, lowerTop - head.centerY)
+                        <= Math.min(head.centerY - upperBottom, lowerTop - head.centerY) * 1.55f
+                && lowerTop - head.centerY >= lower.gap * 2.2f
+                && lowerTop - head.centerY <= lower.gap * 3.2f
+                && printedFilledOval(gray, width, head, Math.min(upper.gap, lower.gap))) {
+            int[] shaft = attachedRawStem(gray, width, height, head, Math.min(upper.gap, lower.gap));
+            if (shaft != null && shaft[2] > 0 && shaft[1] >= lowerTop) return lower;
+        }
         // Close staves can surround a long ledger stem. Require that stem to reach
         // its own staff before allowing the distant ledger chain to win.
         if (head.centerY - upperBottom <= upper.gap * 1.8f
