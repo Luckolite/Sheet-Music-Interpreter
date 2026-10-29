@@ -24066,6 +24066,8 @@ final class OmrScoreInterpreter {
                     attached != null);
         int beams = 0;
         boolean inBand = false;
+        boolean ownRuleObserved = false;
+        boolean[] ownRuleRows = null;
         for (int y = top; y <= bottom; y++) {
             // A beam belongs to this note only when its horizontal run reaches this note's
             // own stem. Counting all ink in a wide window assigns a neighbour's partial
@@ -24121,6 +24123,31 @@ final class OmrScoreInterpreter {
                             head.minY,
                             head.maxY,
                             gap)) continue;
+            if (!smallHead
+                    && attached == null
+                    && gray != null
+                    && run >= minimumHorizontal
+                    && y >= head.minY
+                    && y <= head.maxY) {
+                if (!ownRuleObserved) {
+                    ownRuleObserved = true;
+                    ownRuleRows =
+                            OwnHeadPrintedRuleRows.observe(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    head.minX,
+                                    head.maxX,
+                                    head.minY,
+                                    head.maxY,
+                                    staff.top,
+                                    staff.bottom,
+                                    gap,
+                                    attachedRawStem(gray, width, height, head, gap * .65f));
+                }
+                if (ownRuleRows != null && ownRuleRows[y - head.minY]) continue;
+            }
             if (!smallHead
                     && gray != null
                     && run >= minimumHorizontal
