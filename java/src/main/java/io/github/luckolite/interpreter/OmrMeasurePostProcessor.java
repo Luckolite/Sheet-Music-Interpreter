@@ -60,6 +60,7 @@ final class OmrMeasurePostProcessor {
         List<StaffRun> staffs = findStaffs(labels, gray, width, height, origins);
         if (staffs.isEmpty()) return List.of();
         List<SystemRun> systems = mergeAlignedStaffs(staffs, labels, gray, width, height);
+        recoverIndependentGrandStaffBars(systems, labels, gray, width, height);
         List<MeasureRegion> result = new ArrayList<>();
         for (int i = 0; i < systems.size(); i++) {
             SystemRun system = systems.get(i);
@@ -2747,6 +2748,328 @@ final class OmrMeasurePostProcessor {
             for (int x = Math.max(0, left); x <= Math.min(width - 1, right); x++)
                 if (labels[y * width + x] == wanted) count++;
         return count;
+    }
+
+
+    /** Additional authority is confined to two complete actual staves and a continuous common rule. */
+    private static void recoverIndependentGrandStaffBars(
+            List<SystemRun> systems, byte[] labels, byte[] gray, int width, int height) {
+        if (gray == null) return;
+        recoverIndependentGrandStaffBars(systems, labels, gray, width, height, new GrandBarWork());
+    }
+
+    private static void recoverIndependentGrandStaffBars(
+            List<SystemRun> systems,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            GrandBarWork work) {
+        if (gray == null) return;
+        for (int systemIndex = 0; systemIndex < systems.size(); systemIndex++) {
+            if (!work.pay(64, 0)) return;
+            SystemRun system = systems.get(systemIndex);
+            if (system.members.size() != 2) continue;
+            StaffRun upper = system.members.get(0), lower = system.members.get(1);
+            float gap = upper.gap;
+            if (gap < 8
+                    || gap > 32
+                    || Math.abs(lower.gap - gap) > gap * .2f
+                    || lower.bottom - upper.top < gap * 6
+                    || lower.bottom - upper.top > gap * 22
+                    || Math.abs(upper.slope) > .002f
+                    || Math.abs(lower.slope) > .002f) continue;
+            int left = Math.max(upper.left, lower.left), right = Math.min(upper.right, lower.right);
+            for (int x = left + Math.round(gap * 2); x < right - gap * 2; x++) {
+                if (!work.pay(
+                        32L * (lower.bottom - upper.top + 1) + system.boundaries.size() * 3L + 32,
+                        0)) return;
+                boolean existing = false;
+                for (int boundaryIndex = 0;
+                        boundaryIndex < system.boundaries.size();
+                        boundaryIndex++)
+                    existing |= Math.abs(system.boundaries.get(boundaryIndex) - x) < gap * .7f;
+                if (existing
+                        || !grandSemanticRule(labels, width, x, upper)
+                        || !grandSemanticRule(labels, width, x, lower)) continue;
+                int dark = 0, white = 0, longest = 0;
+                for (int y = upper.top; y <= lower.bottom; y++) {
+                    if ((gray[y * width + x] & 255) < 165) {
+                        dark++;
+                        white = 0;
+                    } else {
+                        longest = Math.max(longest, ++white);
+                    }
+                }
+                if (longest > 1 || dark < (lower.bottom - upper.top + 1) * .94f) continue;
+                // Reserve the complete bounded rule/head proof before calling its existing readers.
+                float ruleGap = Math.max(gap, lower.gap);
+                long ruleWork =
+                        2L
+                                * 5
+                                * (2 * (long) Math.ceil(ruleGap * .32f) + 3)
+                                * ((long) Math.ceil(ruleGap * 2) + 1)
+                                * 8;
+                long axisWork =
+                        (long) (lower.bottom - upper.top + 1)
+                                * (32 + 4 * (long) Math.ceil(gap * .6f));
+                if (!work.pay(ruleWork + axisWork, 512)) return;
+                int[] u = new int[5], l = new int[5];
+                for (int i = 0; i < 5; i++) {
+                    u[i] = Math.round(upper.top + i * gap);
+                    l[i] = Math.round(lower.top + i * lower.gap);
+                }
+                float[] upperRows = connectionStaffRows(gray, width, height, x, u, gap, 0),
+                        lowerRows = connectionStaffRows(gray, width, height, x, l, lower.gap, 0);
+                if (upperRows == null
+                        || lowerRows == null
+                        || !grandThinAxis(
+                                gray, width, x, upper.top, lower.bottom, gap, upperRows, lowerRows))
+                    continue;
+                if (!grandOffAxisHeads(
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        x,
+                        upper.top,
+                        lower.bottom,
+                        gap,
+                        work,
+                        upperRows,
+                        lowerRows)) continue;
+                long count = system.boundaries.size() + 1L;
+                if (!work.pay(count * count * 16 + 64, count * 32 + 256)) return;
+                List<Integer> added = new ArrayList<>(system.boundaries);
+                added.add(x);
+                added.sort(Integer::compare);
+                system.boundaries = added;
+            }
+        }
+    }
+
+    /** Off-rule branches cannot belong to a thin independent bar, even if the model omitted a head. */
+    private static boolean grandThinAxis(
+            byte[] gray,
+            int w,
+            int bar,
+            int top,
+            int bottom,
+            float gap,
+            float[] upperRows,
+            float[] lowerRows) {
+        int height = gray.length / w;
+        for (int side = -1; side <= 1; side += 2) {
+            int y = Math.round(side < 0 ? upperRows[0] - gap * .5f : lowerRows[4] + gap * .5f);
+            if (y < 0 || y >= height || (gray[y * w + bar] & 255) < 165) return false;
+        }
+        for (int y = top; y <= bottom; y++) {
+            float nearest = Float.POSITIVE_INFINITY;
+            for (int i = 0; i < 5; i++) {
+                nearest = Math.min(nearest, Math.abs(y - upperRows[i]));
+                nearest = Math.min(nearest, Math.abs(y - lowerRows[i]));
+            }
+            if (nearest <= gap * .24f) continue;
+            int width = 1;
+            for (int side = -1; side <= 1; side += 2)
+                for (int d = 1; d <= Math.ceil(gap * .6f); d++) {
+                    int xx = bar + side * d;
+                    if (xx < 0 || xx >= w || (gray[y * w + xx] & 255) >= 165) break;
+                    width++;
+                }
+            if (width > Math.max(3, Math.ceil(gap * .4f))) return false;
+        }
+        return true;
+    }
+
+    private static boolean grandSemanticRule(byte[] labels, int width, int x, StaffRun staff) {
+        int covered = 0;
+        boolean end = false;
+        for (int y = staff.top; y <= staff.bottom; y++) {
+            if (isVerticalInk(labels[y * width + x])) {
+                covered++;
+                end |= y <= staff.top + staff.gap || y >= staff.bottom - staff.gap;
+            }
+        }
+        return end && covered >= Math.max(staff.gap * 1.65f, (staff.bottom - staff.top + 1) * .36f);
+    }
+
+    /** No head may own the common axis. Nearby complete heads need their own separated shaft. */
+    private static boolean grandOffAxisHeads(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            int bar,
+            int top,
+            int bottom,
+            float gap,
+            GrandBarWork work,
+            float[] upperRows,
+            float[] lowerRows) {
+        int l = Math.max(0, bar - Math.round(gap * 3f)),
+                r = Math.min(w - 1, bar + Math.round(gap * 3f));
+        int t = Math.max(0, top - Math.round(gap * 1.5f)),
+                b = Math.min(h - 1, bottom + Math.round(gap * 1.5f));
+        int cw = r - l + 1;
+        long area = (long) cw * (b - t + 1);
+        if (area > 65536 || !work.pay(area * 64 + 128, area * 5 + 128)) return false;
+        int nPixels = (int) area;
+        boolean[] seen = new boolean[nPixels];
+        int[] queue = new int[nPixels];
+        boolean nearby = false;
+        for (int y = t; y <= b; y++)
+            for (int x = l; x <= r; x++) {
+                int seed = (y - t) * cw + x - l;
+                if (seen[seed] || labels[y * w + x] != NOTEHEAD) continue;
+                int read = 0, n = 1, x0 = x, x1 = x, y0 = y, y1 = y;
+                long sx = 0, sy = 0;
+                boolean clipped = false;
+                seen[seed] = true;
+                queue[0] = seed;
+                while (read < n) {
+                    int at = queue[read++], xx = l + at % cw, yy = t + at / cw;
+                    sx += xx;
+                    sy += yy;
+                    x0 = Math.min(x0, xx);
+                    x1 = Math.max(x1, xx);
+                    y0 = Math.min(y0, yy);
+                    y1 = Math.max(y1, yy);
+                    for (int dy = -1; dy <= 1; dy++)
+                        for (int dx = -1; dx <= 1; dx++) {
+                            int nx = xx + dx, ny = yy + dy;
+                            if (nx < 0
+                                    || ny < 0
+                                    || nx >= w
+                                    || ny >= h
+                                    || labels[ny * w + nx] != NOTEHEAD) continue;
+                            if (nx < l || nx > r || ny < t || ny > b) {
+                                clipped = true;
+                                continue;
+                            }
+                            int k = (ny - t) * cw + nx - l;
+                            if (!seen[k]) {
+                                seen[k] = true;
+                                queue[n++] = k;
+                            }
+                        }
+                }
+                if (n < gap * gap * .3f) continue;
+                if (x0 <= bar && x1 >= bar) return false;
+                if (Math.min(Math.abs(bar - x0), Math.abs(bar - x1)) > gap * .9f) continue;
+                nearby = true;
+                float cx = sx / (float) n, cy = sy / (float) n;
+                boolean right = bar > cx;
+                if (clipped
+                        || (right ? bar - x1 : x0 - bar) < 2
+                        || x1 - x0 + 1 < gap * .95f
+                        || x1 - x0 + 1 > gap * 2.2f
+                        || y1 - y0 + 1 < gap * .7f
+                        || y1 - y0 + 1 > gap * 1.5f
+                        || !work.pay(
+                                16L
+                                                * (2 * (long) Math.ceil(gap) + 1)
+                                                * (2 * (long) Math.ceil(gap) + 1)
+                                        + 16L
+                                                * ((long) Math.ceil(gap * 1.5f) + 2)
+                                                * ((long) Math.ceil(gap * 3) + 20)
+                                        + 160L * ((long) Math.ceil(gap * 3) + 2),
+                                0)
+                        || !grandBodyPaper(
+                                labels, gray, w, h, bar, x0, x1, y0, y1, top, bottom, gap,
+                                upperRows, lowerRows)
+                        || !FilledSparseBeamHead.matches(gray, w, h, cx, cy, gap)
+                        || !(grandOwnSeparatedShaft(gray, w, h, cx, cy, x0, gap, true, bar)
+                                || grandOwnSeparatedShaft(gray, w, h, cx, cy, x1, gap, false, bar)))
+                    return false;
+            }
+        return nearby;
+    }
+
+    private static boolean grandBodyPaper(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            int bar,
+            int x0,
+            int x1,
+            int y0,
+            int y1,
+            int top,
+            int bottom,
+            float gap,
+            float[] upperRows,
+            float[] lowerRows) {
+        boolean observed = false;
+        for (int y = y0; y <= y1; y++) {
+            float nearest = Float.POSITIVE_INFINITY;
+            for (int i = 0; i < 5; i++) {
+                nearest = Math.min(nearest, Math.abs(y - upperRows[i]));
+                nearest = Math.min(nearest, Math.abs(y - lowerRows[i]));
+            }
+            if (nearest <= gap * .22f) continue;
+            int a = (x0 + x1) / 2, b = bar - 1, n = 0;
+            for (int x = x0; x <= x1; x++) if (labels[y * w + x] == NOTEHEAD) n++;
+            if (n < gap * .45f) continue;
+            if (bar < x0) {
+                a = bar + 1;
+                b = (x0 + x1) / 2;
+            }
+            boolean paper = false;
+            for (int x = a; x <= b; x++) paper |= (gray[y * w + x] & 255) >= 165;
+            if (!paper) return false;
+            observed = true;
+        }
+        return observed;
+    }
+
+    private static boolean grandOwnSeparatedShaft(
+            byte[] gray,
+            int w,
+            int h,
+            float cx,
+            float cy,
+            int edge,
+            float gap,
+            boolean down,
+            int bar) {
+        int from = Math.round(cy), to = Math.round(cy + (down ? 1 : -1) * gap * 2.5f);
+        if (Math.min(from, to) < 0 || Math.max(from, to) >= h) return false;
+        for (int x = Math.max(0, edge - 2); x <= Math.min(w - 1, edge + 2); x++) {
+            if (Math.abs(x - bar) < gap * .5f) continue;
+            int hit = 0, white = 0, maxWhite = 0, total = 0;
+            for (int y = Math.min(from, to); y <= Math.max(from, to); y++) {
+                total++;
+                if ((gray[y * w + x] & 255) < 165) {
+                    hit++;
+                    white = 0;
+                } else maxWhite = Math.max(maxWhite, ++white);
+            }
+            if (hit >= total * .9f && maxWhite <= 1) return true;
+        }
+        return false;
+    }
+
+    /** Optional page-local proof cap; exhaustion leaves ordinary geometry unchanged. */
+    private static final class GrandBarWork {
+        long operations, bytes;
+
+        GrandBarWork() {
+            this(128000000 - 32, 8000000 - 32);
+        }
+
+        GrandBarWork(long operations, long bytes) {
+            this.operations = operations;
+            this.bytes = bytes;
+        }
+
+        boolean pay(long o, long b) {
+            if (o < 0 || b < 0 || o > operations || b > bytes) return false;
+            operations -= o;
+            bytes -= b;
+            return true;
+        }
     }
 
     private static List<SystemRun> mergeAlignedStaffs(

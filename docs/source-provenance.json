@@ -5104,11 +5104,11 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "231583dabe1bb8797dc2d24ffdbcc773e4947dff7f9a5d5f352f2ac2deb7ade1",
-      "source_normalized_sha256": "231583dabe1bb8797dc2d24ffdbcc773e4947dff7f9a5d5f352f2ac2deb7ade1",
+      "source_sha256": "2746245e0fb6d6678f6f06d2d5818986ef1a5d917857dc54724342b766452859",
+      "source_normalized_sha256": "2746245e0fb6d6678f6f06d2d5818986ef1a5d917857dc54724342b766452859",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
-      "standalone_sha256": "1ef4eae82a4f1f2f026cf869d54476e40aaad9dae19325d30b860663b681a9a8",
-      "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
+      "standalone_sha256": "45508a3848e9520d51c0d1f8aa430513b4fdc9f66fd85e0261fd82bdbd4952a3",
+      "reviewed_app_commit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
       "license": "Apache-2.0",
@@ -5127,8 +5127,8 @@
         "rollout": "Cumulative matched rollout deferred during active goal; released recognition116 predates repair."
       },
       "reviewed_source_state": "committed-app-source",
-      "standalone_normalized_sha256": "31deb849391ec8ec52eb1c81e6817c8ba1dbd868a097bdbd3841f93c1970842a",
-      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+      "standalone_normalized_sha256": "7e840a8269c517d9fd7fc477deeea3045ec348d4cca1e2bd8a5ae3e5ef8d8666",
+      "current_source_review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes"
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
@@ -11255,6 +11255,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
       "current_source_review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes"
+    },
+    "IndependentGrandStaffBarOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/IndependentGrandStaffBarOriginalTest.java",
+      "source_sha256": "d0fd9763561144d4bbaf01661a1d3183eeae9a2b4a312ee8080ace984fbed419",
+      "source_normalized_sha256": "d0fd9763561144d4bbaf01661a1d3183eeae9a2b4a312ee8080ace984fbed419",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/IndependentGrandStaffBarOriginalTest.java",
+      "standalone_sha256": "d8e31446ada1d0657c1c1dc36efd29a89c27e4a3cd641bfbf1b46685f268b570",
+      "standalone_normalized_sha256": "85e678372a74b55ddeab6e779bad96b0964c7cf66aa7dd1587479d301ea7662b",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
+      "current_source_review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes"
     }
   },
   "finite_curved_approach_review": {
@@ -16418,6 +16429,12 @@
     {
       "appCommit": "0bc2e3480d23b6fe8e54392cb54c03bf1d9fd8ce",
       "review": "Reviewed independent continuous grandstaff bar-axis/opposed finite owned shaft and unchanged two-rail peer proof, only after legacy transported-beam consultation. Conservative staff and nested scan/allocation funding uses existing nonpoisoning quotas. Original analytic two-rail/bar/voice/budget controls only; no private score data, model, dependency or format changes",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
+      "review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
