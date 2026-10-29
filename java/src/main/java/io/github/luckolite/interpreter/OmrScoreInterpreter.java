@@ -22440,11 +22440,86 @@ final class OmrScoreInterpreter {
             Component head,
             Staff staff,
             List<Component> heads) {
+        return detectBeamCount(labels, gray, width, height, head, staff, heads, true);
+    }
+
+    private static int detectBeamCount(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            List<Component> heads,
+            boolean adjudicateRuleFringes) {
         int[] voiceStem = opposingVoiceStem(gray, width, height, head, staff.gap, heads);
         if (voiceStem != null)
             return detectBeamCount(
                     labels, gray, width, height, head, staff, false, false, voiceStem);
-        int count = detectBeamCount(labels, gray, width, height, head, staff);
+        ObservedStaffRuleFringe.Observation observation =
+                adjudicateRuleFringes ? new ObservedStaffRuleFringe.Observation() : null;
+        int count =
+                detectBeamCount(
+                        labels, gray, width, height, head, staff, false, false, null, observation);
+        if (adjudicateRuleFringes
+                && count > 1
+                && gray != null
+                && heads != null
+                && attachedRawStem(gray, width, height, head, staff.gap) == null) {
+            int[] shortShaft = attachedRawStem(gray, width, height, head, staff.gap * .65f);
+            StaffPitchTrack rules =
+                    shortShaft == null
+                            ? null
+                            : StaffPitchTrack.forPrintedSlurs(
+                                    gray, width, height, staff.top, staff.bottom, staff.gap);
+            if (rules != null
+                    && observation.valid
+                    && observation.bands.size() == count
+                    && !observation.attached)
+                for (Component peer : heads) {
+                    if (peer == head
+                            || Math.abs(peer.centerX - head.centerX) < staff.gap * 2
+                            || Math.abs(peer.centerX - head.centerX) > staff.gap * 5
+                            || Math.abs(peer.centerY - head.centerY) > staff.gap * 2) continue;
+                    int[] fullPeer = attachedRawStem(gray, width, height, peer, staff.gap);
+                    if (fullPeer == null) continue;
+                    ObservedStaffRuleFringe.Evidence observed =
+                            ObservedStaffRuleFringe.adjudicate(
+                                    labels,
+                                    gray,
+                                    width,
+                                    height,
+                                    new ShortStemSingleBeamSupport.Head(
+                                            head.minX,
+                                            head.minY,
+                                            head.maxX,
+                                            head.maxY,
+                                            head.centerY),
+                                    shortShaft,
+                                    new ShortStemSingleBeamSupport.Head(
+                                            peer.minX,
+                                            peer.minY,
+                                            peer.maxX,
+                                            peer.maxY,
+                                            peer.centerY),
+                                    fullPeer,
+                                    staff.gap,
+                                    rules,
+                                    observation);
+                    if (observed != null) {
+                        int revised =
+                                detectBeamCount(
+                                        observed.labels(), gray, width, height, head, staff);
+                        revised = Math.max(revised, observed.protectedRails());
+                        if (revised > 0 && revised < count) {
+                            int released =
+                                    detectBeamCount(
+                                            labels, gray, width, height, head, staff, heads, false);
+                            return Math.min(revised, released);
+                        }
+                    }
+                }
+        }
         if (count > 1) {
             for (Component other : heads) {
                 if (other == head) continue;
@@ -23310,6 +23385,30 @@ final class OmrScoreInterpreter {
             boolean corroborate,
             boolean allowSinglePale,
             int[] voiceStem) {
+        return detectBeamCount(
+                labels,
+                gray,
+                width,
+                height,
+                head,
+                staff,
+                corroborate,
+                allowSinglePale,
+                voiceStem,
+                null);
+    }
+
+    private static int detectBeamCount(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component head,
+            Staff staff,
+            boolean corroborate,
+            boolean allowSinglePale,
+            int[] voiceStem,
+            ObservedStaffRuleFringe.Observation observation) {
         float gap = staff.gap;
         // A stem attaches to this oval's edge. A wider window can borrow the preceding
         // triplet's stem and assign its beams to the following ordinary quarter note.
@@ -23448,6 +23547,17 @@ final class OmrScoreInterpreter {
         // local seam, but stay well below the roughly 3-4 staff-gap distance to the next stem.
         int stemTolerance = Math.max(2, Math.round(gap * 1.10f));
         int allowedRunGap = Math.max(1, Math.round(gap * .22f));
+        if (observation != null)
+            observation.frame(
+                    bestX,
+                    stemEnd,
+                    upward,
+                    top,
+                    bottom,
+                    horizontalLeft,
+                    horizontalRight,
+                    minimumHorizontal,
+                    attached != null);
         int beams = 0;
         boolean inBand = false;
         for (int y = top; y <= bottom; y++) {
@@ -23512,6 +23622,7 @@ final class OmrScoreInterpreter {
                             gray, width, height, bestX, stemEnd, y, upward, gap, stemThreshold))
                 run = 0;
             boolean band = run >= minimumHorizontal;
+            if (observation != null && band) observation.row(y, !inBand);
             if (band && !inBand) {
                 beams++;
                 inBand = true;

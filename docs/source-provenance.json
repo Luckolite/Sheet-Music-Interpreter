@@ -5132,13 +5132,13 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "4caee2e7fe6a28033217ee9999d0111379113014375f8839c315707055004c1e",
+      "source_sha256": "18d5b49a2738c0337a51fbab0d720c6d63dd7eb0c08fc26fcdc0313a8c8901f1",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "4caee2e7fe6a28033217ee9999d0111379113014375f8839c315707055004c1e",
+      "source_normalized_sha256": "18d5b49a2738c0337a51fbab0d720c6d63dd7eb0c08fc26fcdc0313a8c8901f1",
       "reviewed_app_state": "Committed reviewed recognition121 source; paired runtime rollout deferred.",
-      "standalone_sha256": "f42077c6363d777cd2f61235f75415fa1957901453b13c4832d393332f7992a9",
+      "standalone_sha256": "bb51f96b0c2dbdaf7cdedeb4dae4d8caf09508a2e79cb08720b3a3b2ea3fe722",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_commit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
+      "reviewed_app_commit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
       "license": "Apache-2.0",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
@@ -5149,8 +5149,8 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "441f0ce1b0834fab24cfb4c047ead59f671a6b03d3998ab1e15982673512d419",
-      "current_source_review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded.",
+      "standalone_normalized_sha256": "057d13acfa23b347b108cd6da72a52b5335433a1107c84ed5a23d00cbf6b9b3e",
+      "current_source_review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
         "documentation": "docs/natural-key-cancellation.md",
@@ -11108,6 +11108,28 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
       "current_source_review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded."
+    },
+    "ObservedStaffRuleFringe.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ObservedStaffRuleFringe.java",
+      "source_sha256": "758c00b8dd39ec4b47d9854ae2ad7a57cf58d6d48775288fd6bd6121e2c255cb",
+      "source_normalized_sha256": "758c00b8dd39ec4b47d9854ae2ad7a57cf58d6d48775288fd6bd6121e2c255cb",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ObservedStaffRuleFringe.java",
+      "standalone_sha256": "c1887be12c80b828eec4f7fbcf13f2f233f6aad9da97a9b35bb724f6d01fa1d0",
+      "standalone_normalized_sha256": "eb32fe7ed0fcdf679a26abde29d37d799370327de12386f3d92967fb82b17653",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
+      "current_source_review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational"
+    },
+    "ObservedStaffFringeOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ObservedStaffFringeOriginalTest.java",
+      "source_sha256": "7d04093f6547a4859c0f837281acdd4e95c367f9ec803e8bb2f0a3b7f99d6c88",
+      "source_normalized_sha256": "7d04093f6547a4859c0f837281acdd4e95c367f9ec803e8bb2f0a3b7f99d6c88",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ObservedStaffFringeOriginalTest.java",
+      "standalone_sha256": "1d132457b40166af6968e4c052a1118771255c2d3266f72b77232729a80504fc",
+      "standalone_normalized_sha256": "f75d3bac9a8c590415cbe21ac67cd0c41baa463f59a1bf4584f40dfaf632a78d",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
+      "current_source_review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational"
     }
   },
   "finite_curved_approach_review": {
@@ -16217,6 +16239,12 @@
     {
       "appCommit": "adbf5f499cf95b23d622f4e87947a3a56dccbf82",
       "review": "Two independently ledger-owned opposed-shaft unison parts can retain a held half and moving value before the compound parent ledger window rejects them. A pre-seal exact child partition and source-value observations preserve census and the common logical attack; old half/whole proof functions remain unchanged. Original source-free frame, member, budget and value controls with203 focused tests; private physical-reference proof excluded.",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "53f56f2d4dd81796b49f9fdfb99701d5a615a0a6",
+      "review": "Reviewed bounded observed staff-rule fringe adjudication; original procedural rails, hooks and rule fixtures; no score assets or model changes; timing authority remains observational",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
