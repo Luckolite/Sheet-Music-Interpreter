@@ -11865,6 +11865,20 @@ final class OmrScoreInterpreter {
             int[] shaft = attachedRawStem(gray, width, height, head, Math.min(upper.gap, lower.gap));
             if (shaft != null && shaft[2] > 0 && shaft[1] >= lowerTop) return lower;
         }
+        // The second lower ledger can sit through the oval instead of between it and
+        // the staff. Require both phase-bound physical rules and its own staff-reaching
+        // shaft before unrelated opposite ledgers may override that printed position.
+        if (above == 1
+                && Math.abs(head.centerY - upperBottom - 2 * upper.pitchGap)
+                        <= upper.pitchGap * .18f
+                && head.centerY - upperBottom < lowerTop - head.centerY
+                && printedFilledOval(gray, width, head, upper.pitchGap)
+                && completeSecondLowerLedgerRules(
+                        gray, width, height, head, upperBottom, upper.pitchGap)) {
+            int[] shaft =
+                    attachedRawStem(gray, width, height, head, Math.min(upper.gap, lower.gap));
+            if (shaft != null && shaft[2] < 0 && shaft[1] <= upperBottom) return upper;
+        }
         // Close staves can surround a long ledger stem. Require that stem to reach
         // its own staff before allowing the distant ledger chain to win.
         if (head.centerY - upperBottom <= upper.gap * 1.8f
@@ -11928,6 +11942,39 @@ final class OmrScoreInterpreter {
                 && below >= above + 2
                 && lower.top - head.centerY <= lower.gap * MAX_HEAD_LEDGER_GAPS) return lower;
         return null;
+    }
+
+    private static boolean completeSecondLowerLedgerRules(
+            byte[] gray, int width, int height, Component head, float bottom, float gap) {
+        int left = Math.max(0, Math.round(head.minX - gap * .3f));
+        int right = Math.min(width - 1, Math.round(head.maxX + gap * .3f));
+        int margin = Math.max(1, Math.round(gap * .18f));
+        for (int rule = 1; rule <= 2; rule++) {
+            float line = bottom + rule * gap;
+            boolean found = false;
+            for (int y = Math.max(0, Math.round(line - gap * .18f));
+                    y <= Math.min(height - 1, Math.round(line + gap * .18f));
+                    y++) {
+                int ink = 0, l = 0, r = 0;
+                for (int x = left; x <= right; x++)
+                    if ((gray[y * width + x] & 255) < 165) {
+                        ink++;
+                        if (x < head.minX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            l++;
+                        if (x > head.maxX && ShadedLedgerRule.thin(gray, width, height, x, y, gap))
+                            r++;
+                    }
+                if (ink >= (right - left + 1) * .85f
+                        && l >= margin
+                        && r >= margin
+                        && shortLedgerRule(gray, width, y, head, gap)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) return false;
+        }
+        return true;
     }
 
     /** Complete distant lower rails may cross another head; both exposed flanks stay thin. */
