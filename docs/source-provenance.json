@@ -3710,15 +3710,15 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "304261d44324ba5426e61f59ee1774b90f2f33d2f3884a641e846e4bb62fe137",
-      "source_normalized_sha256": "304261d44324ba5426e61f59ee1774b90f2f33d2f3884a641e846e4bb62fe137",
+      "source_sha256": "fa472c24bcb6198a4c13c883f23d2a8e1565fbc652c4296f1c3c731ba7f82e26",
+      "source_normalized_sha256": "fa472c24bcb6198a4c13c883f23d2a8e1565fbc652c4296f1c3c731ba7f82e26",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "006f69e07bf0e72da970dfd8666f59d25eeb45413a02cdd15961a93ed4425f10",
-      "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
-      "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
+      "standalone_sha256": "1f2a2a0d9f732957920c62a56b365e50c5ffe2090307a687462b77636581d7c9",
+      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
-      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
+      "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
+      "reviewed_app_state": "Committed recognition128 Android complete-rest caller integration; Guide299/audio101/model/layouts unchanged; cumulative runtime delivery deferred.",
       "bow291_review_note": "Recognition85 invalidates earlier derived interpretations for the cumulative reviewed bow/annotation/metadata repairs. Guide291 semantic fence and audio96 are independently implemented.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/GuideCacheIdentity.java",
@@ -3758,18 +3758,19 @@
       "reviewed_source_state": "Committedrecognition124 source;173app/176publicJava/15Python and freshactualfivepage acceptance; models/Guide299/audio101 unchanged, installedpairdeliverypending.",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "recognition126_review_note": "Complete literal cap graph and exact certified auxiliary fit pixels; original synthetic controls, same whole denominator/coverage/ownership/resource limits. Namespace-only Java port and matching cache revision, no model or layout changes.",
-      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed."
+      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
+      "recognition128_review_note": "Complete-rest pickup veto is now also wired at Android ingress; native/standalone behavior retained. Original exact-source caller regressions; no score material or model changes."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "543fffe9683046386617258c64bc8933a77f05dca946611bb360e8603394c0d1",
-      "source_normalized_sha256": "543fffe9683046386617258c64bc8933a77f05dca946611bb360e8603394c0d1",
-      "standalone_sha256": "be19a4cf504b03fa671f76c758a5e5fc7a5d07c48ed2dc476ec5a8c88617202c",
+      "source_sha256": "f9be71898670b8c36467a0d95984d52868a8e303f05dcd4dd9e4a74efd7ec0c4",
+      "source_normalized_sha256": "f9be71898670b8c36467a0d95984d52868a8e303f05dcd4dd9e4a74efd7ec0c4",
+      "standalone_sha256": "c3391f8749b3b0874b062241ebb3155fc1af2138d0500bc1dffb19968399e942",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
-      "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
-      "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
+      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "reviewed_app_state": "Committed recognition128 Android complete-rest caller integration; Guide299/audio101/model/layouts unchanged; cumulative runtime delivery deferred.",
       "recognition89_review_note": "Reviewed global contextual changes and namespace twins, procedural original regressions, resource and preservation checks. No private fixtures, model, dependency, wire or audio changes.",
       "recognition90_review_note": "Complete interstaff bar cores and finite physically owned hairpin endpoints; original procedural regressions only. Models, dependencies, helpers, Guide291 and audio97 unchanged.",
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
@@ -3800,10 +3801,11 @@
       },
       "reviewed_source_state": "Committedrecognition124 source;173app/176publicJava/15Python and freshactualfivepage acceptance; models/Guide299/audio101 unchanged, installedpairdeliverypending.",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
+      "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "recognition126_review_note": "Complete literal cap graph and exact certified auxiliary fit pixels; original synthetic controls, same whole denominator/coverage/ownership/resource limits. Namespace-only Java port and matching cache revision, no model or layout changes.",
-      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed."
+      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
+      "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd"
     },
     "HairpinApertureBarExtentOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
@@ -9560,15 +9562,15 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "3e96781ac376db1868928466ad42160a3fbe8bed666829899bb425561075e84a",
-      "source_normalized_sha256": "3e96781ac376db1868928466ad42160a3fbe8bed666829899bb425561075e84a",
+      "source_sha256": "720c10aea2242bbeabe2cba8d4e80701a326c5e0d9604e64bfb96a14f000a277",
+      "source_normalized_sha256": "720c10aea2242bbeabe2cba8d4e80701a326c5e0d9604e64bfb96a14f000a277",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "5b1db2784bbe139a5cd9d6e61be06f7770ac98fdf003e83a96fd6e68afc31b6d",
-      "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
+      "standalone_sha256": "eac22d6c2e9973424039a71c4c47a498ca025c7a16434ba1175def734e56a994",
+      "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
-      "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
-      "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
-      "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
+      "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+      "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
+      "reviewed_app_state": "Committed recognition128 Android complete-rest caller integration; Guide299/audio101/model/layouts unchanged; cumulative runtime delivery deferred.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
       "standalone_path": "src/sheet_interpreter/guide_writer.py",
@@ -9592,7 +9594,8 @@
       "recognition118_review_note": "Only recognition revision117 to118; retained reviewed native top-level versus standalone relative imports, Guide299/audio100 unchanged; faint stem original regressions and matched source contracts.",
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "recognition126_review_note": "Complete literal cap graph and exact certified auxiliary fit pixels; original synthetic controls, same whole denominator/coverage/ownership/resource limits. Namespace-only Java port and matching cache revision, no model or layout changes.",
-      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed."
+      "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
+      "recognition128_review_note": "Complete-rest pickup veto is now also wired at Android ingress; native/standalone behavior retained. Original exact-source caller regressions; no score material or model changes."
     },
     "hairpin-export.js": {
       "source_path": "app/src/youtube/assets/musescore/hairpin-export.js",
@@ -15831,5 +15834,20 @@
       }
     ],
     "status": "TARGETED_CURRENT127_TEST_ADAPTER_QUALIFICATION_COMPLETE"
+  },
+  "android_complete_rest_pickup_ingress_review": {
+    "scope": "Complete the existing content veto at Android final pickup ingress; native and standalone already apply it. Recognition128 refreshes stale Android-derived interpretations without changing Guide299/audio101 records.",
+    "original_regression": "scripts/check_pickup_ingress.py and java/src/test/resources/pickup-ingress/PickupIngressOriginalFixture.java",
+    "evidence": "Authored numeric/content scenarios compile exact current caller expressions and current pure Java helpers. Original Android fails four complete-rest cases while native/standalone retain them; short, pitched, unknown and numbering controls are preserved.",
+    "boundary": "Caller source-slice integration, not Android runtime, optical recognition or a physical-score repair. No private scores, coordinates, logs, libraries, models or dependencies are added.",
+    "license": "Apache-2.0",
+    "reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
+    "recognitionRevision": 128,
+    "guideFormat": 299,
+    "audioFormat": 101,
+    "originalCallerTestsPassed": 45,
+    "publicOnlyCasesPassed": 15,
+    "unfinishedIntegrationDefectsFixed": 1,
+    "newPhantomPhysicalFixCredit": 0
   }
 }

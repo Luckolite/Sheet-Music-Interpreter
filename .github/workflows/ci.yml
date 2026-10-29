@@ -31,6 +31,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: python scripts/build_java.py
+      - run: python scripts/check_pickup_ingress.py --public . --classpath src/sheet_interpreter/interpreter.jar --out build/pickup-ingress
       - run: python -m pip install ".[inference,pdf,audio]"
       - run: python scripts/verify_package.py
       - run: python scripts/test_java.py --jobs 4

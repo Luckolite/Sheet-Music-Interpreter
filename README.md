@@ -109,3 +109,18 @@ defaults to a 512 MiB heap; per-batch logs and results are saved under
 
 Bug reports and contributions are welcome. Use shareable examples and keep private logs
 and commercial scores out of public posts. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### Pickup caller integration regression
+
+After building the Java core, run the original numeric/content cases against the
+actual standalone pickup call:
+
+```sh
+python scripts/check_pickup_ingress.py --public . --classpath src/sheet_interpreter/interpreter.jar --out build/pickup-ingress
+```
+
+Use a new output directory on each run. Maintainers can add `--app <app-worktree>`
+and use its matching core classpath to check the exact Android and native caller
+expressions too. This compiles source slices with current helper sources; it does
+not run Android, image recognition or a packaged worker. The fixtures contain no
+score images or private data.
