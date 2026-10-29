@@ -777,7 +777,7 @@ public final class PrintedBeamSource {
                 }
                 bodies++;
                 var coreShafts =
-                        PrintedBeamShafts.atStrict(
+                        PrintedBeamShafts.atStrictVisited(
                                 gray,
                                 width,
                                 height,
@@ -788,7 +788,7 @@ public final class PrintedBeamSource {
                                 coreFrame);
                 if (shaftBudget.refused()) throw new Limit();
                 var envelopes =
-                        PrintedBeamShafts.atAll(
+                        PrintedBeamShafts.atAllVisited(
                                 gray,
                                 width,
                                 height,

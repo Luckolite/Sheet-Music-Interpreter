@@ -113,6 +113,52 @@ final class PrintedBeamShafts {
         return scan(raw, width, height, headX, headY, gap, budget, frame, false, false);
     }
 
+    /** Same shaft predicates; only actually visited raw/memo operations spend the pixel quota. */
+    static List<Shaft> atStrictVisited(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame) {
+        if (frame == null) throw new IllegalArgumentException("Missing source frame");
+        try {
+            return scan(raw, width, height, headX, headY, gap, budget, frame, false, false, true);
+        } catch (ContrastRefused refused) {
+            return List.of();
+        }
+    }
+
+    static List<Shaft> atAllVisited(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame) {
+        if (frame == null) throw new IllegalArgumentException("Missing source frame");
+        try {
+            return scan(
+                    raw,
+                    width,
+                    height,
+                    headX,
+                    headY,
+                    gap,
+                    budget,
+                    frame,
+                    true,
+                    frame.contrast,
+                    true);
+        } catch (ContrastRefused refused) {
+            return List.of();
+        }
+    }
+
     private static final class ContrastRefused extends RuntimeException {}
 
     private static List<Shaft> scan(
@@ -126,6 +172,21 @@ final class PrintedBeamShafts {
             PrintedBeamShaftPixels.Frame frame,
             boolean all,
             boolean contrast) {
+        return scan(raw, width, height, headX, headY, gap, budget, frame, all, contrast, false);
+    }
+
+    private static List<Shaft> scan(
+            byte[] raw,
+            int width,
+            int height,
+            float headX,
+            float headY,
+            float gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            boolean all,
+            boolean contrast,
+            boolean visitedBilling) {
         if (frame != null) frame.check(raw, width, height);
         if (raw == null
                 || width < 3
@@ -155,14 +216,25 @@ final class PrintedBeamShafts {
             boolean cacheContrast = all && contrast && frame != null;
             long cells = (long) (last - first + 1) * (limit - start + 1);
             // Four prepaid cell slots cover first lookup/read/store and repeated lookup.
-            if (!budget.take(cells * (cacheContrast ? 4 : 2))) return List.of();
+            if (!visitedBilling && !budget.take(cells * (cacheContrast ? 4 : 2))) return List.of();
             ContrastMemo memo = null;
             if (cacheContrast) {
                 frame.take(128 + 4 * cells);
                 memo =
                         new ContrastMemo(
-                                raw, width, height, first, last, start, limit, direction, gap,
-                                budget, frame, headY);
+                                raw,
+                                width,
+                                height,
+                                first,
+                                last,
+                                start,
+                                limit,
+                                direction,
+                                gap,
+                                budget,
+                                frame,
+                                headY,
+                                visitedBilling);
             }
             var cols = new ArrayList<Column>();
             int prior = -2, remote = -1;
@@ -171,9 +243,19 @@ final class PrintedBeamShafts {
                 int hits = 0, total = 0, blank = 0, end = start;
                 for (int y = start; y <= limit; y++) {
                     if (memo == null
-                            ? dark(
-                                    raw, width, height, x, y, direction, gap, budget, frame, headY,
-                                    contrast)
+                            ? visitedDark(
+                                    raw,
+                                    width,
+                                    height,
+                                    x,
+                                    y,
+                                    direction,
+                                    gap,
+                                    budget,
+                                    frame,
+                                    headY,
+                                    contrast,
+                                    visitedBilling)
                             : memo.at(x, y)) {
                         hits++;
                         blank = 0;
@@ -195,8 +277,20 @@ final class PrintedBeamShafts {
                 if (cols.size() > Math.max(3, gap * .35f)) continue;
                 var shaft =
                         materialize(
-                                raw, width, height, headY, gap, budget, frame, direction, start,
-                                remote, cols, contrast);
+                                raw,
+                                width,
+                                height,
+                                headY,
+                                gap,
+                                budget,
+                                frame,
+                                direction,
+                                start,
+                                remote,
+                                cols,
+                                contrast,
+                                null,
+                                visitedBilling);
                 if (shaft != null) result.add(shaft);
             } else {
                 for (int from = 0; from < cols.size(); ) {
@@ -213,8 +307,20 @@ final class PrintedBeamShafts {
                                             direction > 0 ? col.endY() : height - 1 - col.endY());
                         var shaft =
                                 materialize(
-                                        raw, width, height, headY, gap, budget, frame, direction,
-                                        start, end, run, contrast, memo);
+                                        raw,
+                                        width,
+                                        height,
+                                        headY,
+                                        gap,
+                                        budget,
+                                        frame,
+                                        direction,
+                                        start,
+                                        end,
+                                        run,
+                                        contrast,
+                                        memo,
+                                        visitedBilling);
                         if (shaft != null) result.add(shaft);
                     }
                     from = to;
@@ -239,7 +345,7 @@ final class PrintedBeamShafts {
             boolean contrast) {
         return materialize(
                 raw, width, height, headY, gap, budget, frame, direction, start, remote, cols,
-                contrast, null);
+                contrast, null, false);
     }
 
     private static Shaft materialize(
@@ -255,7 +361,8 @@ final class PrintedBeamShafts {
             int remote,
             List<Column> cols,
             boolean contrast,
-            ContrastMemo memo) {
+            ContrastMemo memo,
+            boolean visitedBilling) {
         int left = cols.get(0).x(), right = cols.get(cols.size() - 1).x();
         // At least one literal 8-connected path survives every row from
         // the authenticated head's edge to the most remote observed cap.
@@ -273,9 +380,19 @@ final class PrintedBeamShafts {
             for (int i = 0; i < next.length; i++) {
                 boolean actualDark =
                         memo == null
-                                ? dark(
-                                        raw, width, height, left + i, y, direction, gap, budget,
-                                        frame, headY, contrast)
+                                ? visitedDark(
+                                        raw,
+                                        width,
+                                        height,
+                                        left + i,
+                                        y,
+                                        direction,
+                                        gap,
+                                        budget,
+                                        frame,
+                                        headY,
+                                        contrast,
+                                        visitedBilling)
                                 : memo.at(left + i, y);
                 if (savedRows != null
                         && actualDark
@@ -359,6 +476,7 @@ final class PrintedBeamShafts {
         final byte[] raw, values;
         final int width, height, left, right, start, limit, direction, stride;
         final float gap, headY;
+        final boolean visitedBilling;
         final Budget budget;
         final PrintedBeamShaftPixels.Frame frame;
 
@@ -374,7 +492,9 @@ final class PrintedBeamShafts {
                 float gap,
                 Budget budget,
                 PrintedBeamShaftPixels.Frame frame,
-                float headY) {
+                float headY,
+                boolean visitedBilling) {
+            this.visitedBilling = visitedBilling;
             this.raw = raw;
             this.width = width;
             this.height = height;
@@ -395,13 +515,44 @@ final class PrintedBeamShafts {
             if (x < left || x > right || y < start || y > limit)
                 throw new IllegalArgumentException("Foreign memo cell");
             int index = (y - start) * stride + x - left;
+            if (visitedBilling && !budget.take(1)) throw new ContrastRefused();
             int prior = values[index];
             if (prior != 0) return prior == 2;
             boolean answer =
-                    dark(raw, width, height, x, y, direction, gap, budget, frame, headY, true);
+                    visitedDark(
+                            raw,
+                            width,
+                            height,
+                            x,
+                            y,
+                            direction,
+                            gap,
+                            budget,
+                            frame,
+                            headY,
+                            true,
+                            visitedBilling);
+            if (visitedBilling && !budget.take(1)) throw new ContrastRefused();
             values[index] = (byte) (answer ? 2 : 1);
             return answer;
         }
+    }
+
+    private static boolean visitedDark(
+            byte[] raw,
+            int width,
+            int height,
+            int x,
+            int y,
+            int direction,
+            double gap,
+            Budget budget,
+            PrintedBeamShaftPixels.Frame frame,
+            float headY,
+            boolean contrast,
+            boolean visitedBilling) {
+        if (visitedBilling && !budget.take(1)) throw new ContrastRefused();
+        return dark(raw, width, height, x, y, direction, gap, budget, frame, headY, contrast);
     }
 
     private static boolean dark(

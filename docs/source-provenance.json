@@ -5934,10 +5934,10 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamShafts.java",
       "license": "Apache-2.0",
       "review_note": "Reviewed beam-only relative-paper enclosure, unchanged legacy predicates, higher prepaid work under existing caps; original synthetic regressions and paired recognition122 cache invalidation.",
-      "source_sha256": "a7b481a240089ab90035dd671aefa776ada49fb8cfff4eeb5b23686f9546c1e1",
-      "source_normalized_sha256": "b4051d86211839ef01eeb872dfc665654fad82dc242059d1b41359eab8e75b70",
-      "standalone_sha256": "dfedbaf05aea3523eba41f240d83f8fa93dd07d18e6fc3b3b8499852dc5f46e5",
-      "reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "source_sha256": "ea8c520072d8d95923a6e00bbe7af7b41bf8514f9415524e95cfc35e02adf9e9",
+      "source_normalized_sha256": "ea8c520072d8d95923a6e00bbe7af7b41bf8514f9415524e95cfc35e02adf9e9",
+      "standalone_sha256": "22e2bf4455087213dafdb3a4d591fa664e2c24e4bf85f5595c67e8699667505d",
+      "reviewed_app_commit": "6e268099dd9d173b0eaf8f43b24dccbf968e1eab",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
         "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
@@ -5957,17 +5957,19 @@
         "original_junit_tests": 8,
         "reviewed_app_commit": "04d1e5c8e0f80b8ff21d614f5476bd0afb580e9b"
       },
-      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb"
+      "scoped_reviewed_app_commit": "c9c131488f7e6ca8d9b77174e2c92a8443efdbbb",
+      "standalone_normalized_sha256": "4eacef0e4ef4535cd7fef2048b8d0927b3a9784e4e1506508b33baadf3b4344d",
+      "current_source_review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes"
     },
     "PrintedBeamSource.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBeamSource.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "07bead602f8a27c1aab1f2fb1ba4fe4879b70140fb0f9cfb42e35dc23d1ca5ee",
-      "source_normalized_sha256": "837d0b4c68872f00078af9e2ce433702a74e9b448c779985802c98240ee69b9a",
-      "standalone_sha256": "e4e53caab9f215c02dda2c42572c8aa2f8c97af2cb6d069fca09cb23ca817fd6",
-      "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
+      "source_sha256": "001ac15bfe3b1a158a65556633368a0e865764997ef1f3d98e6d58f84940c90c",
+      "source_normalized_sha256": "001ac15bfe3b1a158a65556633368a0e865764997ef1f3d98e6d58f84940c90c",
+      "standalone_sha256": "46aa0ab150f05242908b0abb10c9e4e7d286ca2d5aa7f2997d3188c2fb059753",
+      "reviewed_app_commit": "6e268099dd9d173b0eaf8f43b24dccbf968e1eab",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
         "reviewed_app_base_commit": "48c8c6157fe509d2d5bd3d32f275b1862ff5e921",
@@ -6006,11 +6008,12 @@
       },
       "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
       "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924",
-      "standalone_normalized_sha256": "add5969d712989c55b810f02e7555bc3f2370c0fda8676878d4bf4eb0b1ea04f",
+      "standalone_normalized_sha256": "a0aeba8998e361a3439fcdc99d05b54b9f34a3f97ff0cbeccf3a0e7a08541376",
       "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
-      "recognition127_clock_review_note": "Capture existing printed clock context before the optional Source pass; carry it only across the private same-order MARCATO mutation. Generic clock capture and generic withNotes remain strict. Original synthetic exact-context/producer/frame/duplicate/budget controls, no models/layouts/timing changes."
+      "recognition127_clock_review_note": "Capture existing printed clock context before the optional Source pass; carry it only across the private same-order MARCATO mutation. Generic clock capture and generic withNotes remain strict. Original synthetic exact-context/producer/frame/duplicate/budget controls, no models/layouts/timing changes.",
+      "current_source_review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes"
     },
     "PrintedBoundaryRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBoundaryRestInk.java",
@@ -11153,6 +11156,17 @@
       "license": "Apache-2.0",
       "reviewed_app_commit": "dddc0b894ca6673e6348f7d7eadcd57112af5b35",
       "current_source_review": "Reviewed exact second lower-ledger phase with two complete short rules, thin exposed flanks, full filled oval and own staff-reaching shaft; original procedural controls only; no private score assets or model changes"
+    },
+    "VisitedBeamShaftWorkOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/VisitedBeamShaftWorkOriginalTest.java",
+      "source_sha256": "061e85f8dbf96de841194f6c49e50af7f51bfa2ee714b2d9fe900bd9b96d60fe",
+      "source_normalized_sha256": "061e85f8dbf96de841194f6c49e50af7f51bfa2ee714b2d9fe900bd9b96d60fe",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/VisitedBeamShaftWorkOriginalTest.java",
+      "standalone_sha256": "11c87eb353c36afd2f2d9f9faf4cd92d226149bcb72b37193587b0f32acf73f6",
+      "standalone_normalized_sha256": "9a0f83f5ec237808aef2c68fc661d9b24d7428713a71ee119bf5221c2b3bc236",
+      "license": "Apache-2.0",
+      "reviewed_app_commit": "6e268099dd9d173b0eaf8f43b24dccbf968e1eab",
+      "current_source_review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes"
     }
   },
   "finite_curved_approach_review": {
@@ -16280,6 +16294,12 @@
     {
       "appCommit": "dddc0b894ca6673e6348f7d7eadcd57112af5b35",
       "review": "Reviewed exact second lower-ledger phase with two complete short rules, thin exposed flanks, full filled oval and own staff-reaching shaft; original procedural controls only; no private score assets or model changes",
+      "license": "Apache-2.0",
+      "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
+    },
+    {
+      "appCommit": "6e268099dd9d173b0eaf8f43b24dccbf968e1eab",
+      "review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes",
       "license": "Apache-2.0",
       "sourcePolicy": "Original procedural regressions only; no private score pixels, captured coordinates, commercial fonts, phone logs, personal libraries, model/dependency changes or signing material."
     }
