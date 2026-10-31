@@ -2212,13 +2212,15 @@
     },
     "CompleteBeamGroupInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteBeamGroupInk.java",
-      "source_sha256": "1c8b1e24327ac4501b27887cfe3d17f02301b317cd87f6842b0b53427b8ebcda",
-      "source_normalized_sha256": "b6079211250a7aa4f557918520210a322e3c42d019d752fb3a11298ed4dae7b7",
-      "standalone_sha256": "dbc908c3322ac0640921a23da3481d744859fe46779b4a80f005099c91ae7125",
+      "source_sha256": "80e2841ae8964497b25962c126c95670a00cf17871c2b98d6cd13403e9560eec",
+      "source_normalized_sha256": "ba71c69d3c179c5e4543ee8f883aa9661967c4754248c4a7909cdf49ffdf3b4f",
+      "standalone_sha256": "4e8b796b82146400ecbd9644f3c7fe40abc22e32e6e9daa56e08b54311deb21f",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteBeamGroupInk.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteBeamGroupInk.java",
+      "license": "Apache-2.0",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "CompleteCapitalFTopologyTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteCapitalFTopologyTest.java",
@@ -3715,10 +3717,10 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "45aa5657c6eea97d3fbc236d796b364e57d0b72a320fcb3cd4433eb1104c29ba",
-      "source_normalized_sha256": "2a67880562808e5db3cc0b1c60a20d608b1d36288f9267fcd24bff8b5e136777",
+      "source_sha256": "e7e7d5352ac824e27758a5ae04d22cdbb2e0c80f0810815c6b043629acc04557",
+      "source_normalized_sha256": "9290fafbdbaea78d82f30bf45c7437bf03f14f6efc41577a96e8427659bc6ccf",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "4d535e0623634d4372274e72d4354fb7781292151342c06cbd8804752e37687f",
+      "standalone_sha256": "89dd5b27216cfde21f1ee78b894ac6eaa4e82fa07d0a80f8a43d94466b0f2ce2",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
@@ -3744,7 +3746,7 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "14f3b4c75dba6a5230b6848e687e9897564412cc69254140b1eb3d4b78215f4d",
+      "standalone_normalized_sha256": "db83659e6f1abe91d352a0023711bdbc962868cdace3b86a0e1bf009fa8674d2",
       "current_source_review": "Recognition129 invalidates prior derived interpretations; Java identity/test package-only port. Guide299/audio101 formats and models unchanged; no Android APK version or update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
@@ -3767,14 +3769,15 @@
       "recognition128_review_note": "Complete-rest pickup veto is now also wired at Android ingress; native/standalone behavior retained. Original exact-source caller regressions; no score material or model changes.",
       "recognition130_review_note": "Recognition130 invalidates older derived results for reviewed flag/rest recognition changes. Guide299/audio101/model layouts unchanged.",
       "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
-      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged.",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "c50067828d726b782f97db21ca3839085519843176d8198861cc85fa02754fd4",
-      "source_normalized_sha256": "29d47ebcd51dfd4cd60ed08da372853550f0992744a38491c285b41c7304e9ff",
-      "standalone_sha256": "4cac070364185649b256694ab129fc0493cc3cdc471b1ff143a282c8aab5e558",
+      "source_sha256": "d3654ba297d534a023dfd145ce174bee318ca8e838bea2ba0e19576cbeb46d91",
+      "source_normalized_sha256": "ed6d9f614d899972aad2cf18c71cd65b50c753990c94fbb3ecc3b3ac6ce9951a",
+      "standalone_sha256": "156b98c9ebdff9d71e1789b55f693d5460a236dd6246a38d6ff8f63a4961d8a5",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
@@ -3795,7 +3798,7 @@
       "recognition101_review_note": "Complete independently owned rehearsal frames retain bounded cap fringes and full capital-F topology without changing unboxed dynamic recognition. Missing printed system-number crops retain complete clipped components and require full numeric OCR text, one element and overlapping source boxes at two scales before supplementing existing tokens. Conflicting original tokens remain unchanged. General procedural regressions; no song-specific rule, private score image, model or record-layout change.",
       "recognition102_review_note": "Absolute dynamics snapped to exact source note columns use existing proved written/exported onsets. Compact lowercase dynamic reanchoring requires exactly one complete raw body covering one eligible note column; rival components abstain and existing exact anchors take precedence. Already-owned simultaneous same-pitch attacks merge only when both have positive finite equal written durations, preserving unequal original holds and source markings. Original constructed scalar/pixel regressions only; no song-specific rules, private score assets, models or record-layout changes.",
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
-      "standalone_normalized_sha256": "f095ec0fb43fc5b823e12b1041be29511348f29914b4d46927ba1156003bc372",
+      "standalone_normalized_sha256": "fd63b6a0a80703ba9cb8c4ed6ff5670955cf2d0cf26130501d049ceddd8e624a",
       "current_source_review": "Recognition129 invalidates prior derived interpretations; Java identity/test package-only port. Guide299/audio101 formats and models unchanged; no Android APK version or update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
@@ -3816,7 +3819,8 @@
       "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
       "recognition130_review_note": "Current epoch130 expectations; all earlier epochs still rejected, historical record layouts preserved.",
       "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
-      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged.",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "HairpinApertureBarExtentOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
@@ -5142,11 +5146,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "8f69e707b74c901410f3585900b3220b253b0043bbe77f621fff95a364226983",
+      "source_sha256": "c6494d040afe383996c166db7907e7ca8bef1fe17d70d3601e28b7f4f8bc67da",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "e47eb2e3e3529ab5a6003dc4c70cdb69de265dcda27c88aa2f4f517d9cd1f77d",
+      "source_normalized_sha256": "3e7abf863748c6cc943032976d5a5e4392c0b0134c24a29bc4f20a9e58bd5cc9",
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
-      "standalone_sha256": "9afde004b382989a9e6358c6d539cc1dfad38ea15e89118e1eea9dc5216f1a97",
+      "standalone_sha256": "fb0595fe0fd3440c7ca12a06161a54288c13f00472ebed392ed7bbafb61c9d5e",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
@@ -5159,7 +5163,7 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "461b9d2003cf3e40545400313fc03598f7d60ed4b1809db7bb6b1baa2f79e6f9",
+      "standalone_normalized_sha256": "69684d5eee56a52a2c2d808b79358c6a833ec26790fb5749898ae6c52b395b07",
       "current_source_review": "Allocate bounded shared-ledger caches only after an eligible independently owned remote head; exact split sibling capture retained. Existing cancellation zero-work contract restored;812 focused tests and1373 retained complete native note records preserved. Models, limits and layouts unchanged.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
@@ -5200,7 +5204,8 @@
       },
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "recognition130_review_note": "Recognition130: preserve legacy compact-half handling; additional HALF/WHOLE single-flag cases require matching raw/directional shaft, one detected exterior direction and no explicit tremolo ownership. Original owned/foreign/opposed and sustained controls; no models or shape threshold changes.",
-      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies."
+      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies.",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -5389,15 +5394,17 @@
     },
     "PairedTremoloInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PairedTremoloInk.java",
-      "source_sha256": "59ac658fd7fab9fb58fdd0e7540e481b973ceedff8c5a8d9af4672478b6f6110",
-      "source_normalized_sha256": "8a6f31a668a3b953ce0f137b44429890371ccf258284aab8df745114e7d717dc",
-      "standalone_sha256": "d49013cd037163feae2aef0b70607b5d9db1ad2f6d58249c3d7f6232df665421",
+      "source_sha256": "7b6ad62b26065f1f8a53d3032ef622f86be60cad602ce6412be6a0f6fcd32317",
+      "source_normalized_sha256": "b5551463540faca2ec60e6d079af7fce65a278b6e5b08a1d73cbe52129b1ba20",
+      "standalone_sha256": "7e6ea435837583230be41dd5aba797838b72b7d53457d9bf6bd1d4952fa82b6f",
       "reviewed_source_state": "Committed source; 10458 Java and 584 Python tests passed (44 skipped). Paired deployment and whole-library accuracy acceptance pending.",
       "review_note": "Match flank continuity rejection to the minimum admitted stroke thickness, preventing thin staff rules from becoming floating tremolo rails. Original mirrored staff/beam and true floating-stroke fixtures.",
       "reviewed_app_commit": "36c78456a09ba96802930712da07866e87a4c369",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PairedTremoloInk.java",
-      "standalone_normalized_sha256": "d49013cd037163feae2aef0b70607b5d9db1ad2f6d58249c3d7f6232df665421",
-      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority."
+      "standalone_normalized_sha256": "d09cfed0bf549237c2265763c9e460f20911b6e9c7f2e71875d5e45032673570",
+      "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
+      "license": "Apache-2.0",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "PaleBeamRecovery.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaleBeamRecovery.java",
@@ -9600,7 +9607,7 @@
       "source_sha256": "6b709f0a2102dc5eeb57efd13a367e00456f4c9c4be83a991dc5622f2ff456c4",
       "source_normalized_sha256": "51d7b802c65762284ad741ab6b7d13545cb4ba0f450ab0198556e25789e0d783",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "12ed34bf9e23c6cc12cf346a7e66bed1cc09454c6d266b31bde54187efc0b714",
+      "standalone_sha256": "2a084aed89feb2632daa0de0671049ecba5c77be4f5ec10d8eebb3756bed2985",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
@@ -9621,7 +9628,7 @@
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
       "reviewed_source_state": "Committedrecognition124 source;173app/176publicJava/15Python and freshactualfivepage acceptance; models/Guide299/audio101 unchanged, installedpairdeliverypending.",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
-      "standalone_normalized_sha256": "94a3d7760c7ef5372fc609a7ae6c9b3ad517990f21dd05ccd3e8b1149d4aa8c1",
+      "standalone_normalized_sha256": "d080f95e4054bce57d8dfcc3b6034549ebe18a67a7168a2ce5dc6ee8b02e2e72",
       "current_source_review": "Recognition128 to129 scalar only; existing reviewed package-relative imports retained. Guide299/audio101/models/dependencies/layouts unchanged; no APK update.",
       "recognition116_reviewed_app_commit": "3b927b3504faa5b3d2f3c6a033124c2fca16190f",
       "recognition116_review_note": "Recognition116 invalidates derived recognition115 caches without changing Guide299 framing. Java adaptation remains namespace-only; original epoch regressions reject all earlier revisions.",
@@ -10069,14 +10076,14 @@
     },
     "tests/test_recognition_epoch_contract.py": {
       "standalone_path": "tests/test_recognition_epoch_contract.py",
-      "standalone_sha256": "ea8282cfbb9251ddd7a526f2dee1e176bebf1dc6c932d5ab6bc576b5b191e235",
+      "standalone_sha256": "84f4e06805c61f980c2692b2168b7b8813c67a99bc4f7b97e0386032d6bb13ba",
       "reviewed_sha256": "84701179970bb2b8da1db73722c5489acefda092063c5b9c6a25a7896911fc7f",
       "license": "Apache-2.0",
       "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload.",
       "reviewed_app_commit": "5ca30bab96936f6a6444738dbbef012a904365c8",
       "reviewed_app_state": "Recognition125 qualifiedsource; installed desktop124 snapshot remains separate.",
       "recognition111_review_note": "Recognition111 contract/source change reviewed in the source111 cohort; no score payload.",
-      "standalone_normalized_sha256": "d3d42fb52947cfe980db1ea47052ea3310fc1dca8871679fc1419c0826196273",
+      "standalone_normalized_sha256": "11621cc31bd7f39ee05c867345a665eded71e4e13b7c55abe1b525d9cf121b80",
       "scoped_reviewed_app_commit": "5ca30bab96936f6a6444738dbbef012a904365c8",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes."
     },
@@ -11331,19 +11338,21 @@
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteRailOriginalScene.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteRailOriginalScene.java",
       "license": "Apache-2.0",
-      "source_sha256": "912bcc1c2313821ff9d99789bfaf56d52e620cd6f8aafb6511c723b855dfa71e",
-      "source_normalized_sha256": "39249759ba3704e58755fcb006a97377582313a3092f979e0f3e71218252a68e",
-      "standalone_sha256": "09f0b28924fef193070525ae68e845784a2419b578295798f442073a3aa674a4",
-      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies."
+      "source_sha256": "d891db178a01b6e55909bdfe8f0bd07d2edeb1f5d1576ffd5565c03f394226f5",
+      "source_normalized_sha256": "fe3bf31c00cc896990d6c1efc18a4d86ff477cedc9edb9feb183f805206e89df",
+      "standalone_sha256": "06145f7cce897dae4f2ccd5e2d20b7d5477907c0e7ad8475851aa3eb0bb8c20b",
+      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies.",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "CompleteRailOwnershipOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteRailOwnershipOriginalTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteRailOwnershipOriginalTest.java",
       "license": "Apache-2.0",
-      "source_sha256": "2ab09391c638c886f12bc5b73e8043dd8915ac86030f717640917c8581f62160",
-      "source_normalized_sha256": "c72da8ecc15183d456ab7f0312e74b9a14ef910163b171264064652ed6eb558a",
-      "standalone_sha256": "725a83c62a686876b67e2f83df0f324cd0df1d32286ae67a5a118563fc6dd99b",
-      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies."
+      "source_sha256": "ee8080e47779ae39b21dff5c27f14ac3aaa106c5e13c45e27b72ba95a6bb28eb",
+      "source_normalized_sha256": "684d95ed7220ab5e9f05149b4613dacdd9f9c77b3e8ebe0f3aef90598fd4553c",
+      "standalone_sha256": "5266825d5e0acef9bc92917f48cf02f47c6e51cee10f99e9bea07e49c82648cf",
+      "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies.",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     },
     "OriginalBeamAnalysisSnapshot.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/OriginalBeamAnalysisSnapshot.java",
@@ -11362,6 +11371,60 @@
       "source_normalized_sha256": "39bb75243f1a1ed3b9f78172611e28496bbaff2fc21e3e17d76ed413aad65297",
       "standalone_sha256": "875aed42fd903e2641f20b487ae2e47d0a9d9db3d92de85ffc2517e43d44d380",
       "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
+    },
+    "ShaftInkEquivalenceOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ShaftInkEquivalenceOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ShaftInkEquivalenceOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "d876287e943411c98d6b153082ef9c76132859cbfd950319051e4683c8574f43",
+      "source_normalized_sha256": "c3f06508e6cbe6e031c00dc81dd977122f191e5750e1e5fb2879dcbe07055018",
+      "standalone_sha256": "3108349c4368e3e6fc9d4920e0fb8475824aa249848db5da085ccda3671913eb",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+    },
+    "ShaftEquivalenceOriginalScenes.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ShaftEquivalenceOriginalScenes.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ShaftEquivalenceOriginalScenes.java",
+      "license": "Apache-2.0",
+      "source_sha256": "260c17fd265beff8a5f1fd992d92cf374e01528cd7addcfd06bb69ec2783ddee",
+      "source_normalized_sha256": "1d297acd4fd340b653c088ec70a0ce58a65be6808563e0e32ab8afd83a6254c1",
+      "standalone_sha256": "332584a31bf0a2b7de219abdd80c9d3b675d84cc945b2c65cee6dd16c138b55c",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+    },
+    "PrimaryRayScenes.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrimaryRayScenes.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrimaryRayScenes.java",
+      "license": "Apache-2.0",
+      "source_sha256": "9689ccc6ae8ce0967135dc6bdfcd0d02407076ad136e1a40350cdd81206bf895",
+      "source_normalized_sha256": "b26dff3fcc014b676c7081581d7f483a75df6d42f808a441814ee5312cfd522e",
+      "standalone_sha256": "c333824515b564fcff577bc9610d67ee25faa495e9b317dcb379719b7cdeb1dc",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+    },
+    "FixedInsetPrimaryRayTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/FixedInsetPrimaryRayTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/FixedInsetPrimaryRayTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "f446587695855b24a0172bc561c8e5a5c4aefa650e421552ba5d064c54f9ff8e",
+      "source_normalized_sha256": "124c08cd03cdb7228cd823a9d9e55d66b701faffeb164ed60749ebb95358788d",
+      "standalone_sha256": "6d293ad1d25e0efd0d10834c507f6e6e0ae7071309e9a50fe8ad5f26353683de",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+    },
+    "OpeningBeamPickupTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OpeningBeamPickupTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OpeningBeamPickupTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "20d11add3405cff208ba7a8e0fde7ed05a149a04ea7f5eb8ddc80a81572388a4",
+      "source_normalized_sha256": "782cc41327e357da04aeafddd1f08c2e15e3d936aa6c9e04b8ffbff16b3c8927",
+      "standalone_sha256": "93cdaf184ccc60657d1443db5af622ec22bb98da74bcc47cc1de39e9bf1d4894",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+    },
+    "CompleteOwnedBeamValueOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteOwnedBeamValueOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CompleteOwnedBeamValueOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "a3ffcce93d1684881a84291049590bd8a29c0ddf8c059f5b8042eab61846768a",
+      "source_normalized_sha256": "f914f3a7c9ba2fcdd5b32006d4c44b164c55c6701ce60d589f32c5c096484958",
+      "standalone_sha256": "dcd7cfbd0e11ca999791d73d0eb00b4bc1c837f9d723ec24c06453eb8338604e",
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
     }
   },
   "finite_curved_approach_review": {
@@ -16634,5 +16697,12 @@
     "asset_license": "Test-only unmodified DejaVu Serif with complete accompanying Bitstream Vera/Arev notice; no runtime font dependency.",
     "layout": "Guide299 and audio101 unchanged; no model changes.",
     "deployment": "Deferred during active goal; source qualification and publication separate."
+  },
+  "owned_beam_raster_equivalence_review": {
+    "recognition_revision": 133,
+    "scope": "Continuous ink reconciles distinct shaft representatives inside the original stem-search and measure bounds. An independently complete owned ordinary beam group can resolve a conflicting sustained-note detector result while retaining detector lineage.",
+    "primary_ray": "Legacy whole-ray acceptance remains; one fixed existing-inset ray is evaluated only when needed. Both rays independently retain the same 165 threshold, core width and 90 percent coverage; no per-column union or offset search. Existing connectivity, exterior continuation and unowned-shaft checks remain.",
+    "regressions": "Original procedural shaft, ordinary-beam, sustained-note, fragmented-ink, complete-group and typed pickup-clock examples. No commercial score data or private observer code is distributed.",
+    "compatibility": "Guide299 and audio101 layouts, model assets, runtime dependencies and native source manifest unchanged. Recognition133 invalidates older derived interpretations."
   }
 }

@@ -1846,21 +1846,21 @@ final class OmrScoreInterpreter {
                             head.centerY,
                             localGap,
                             hollowSlope)
-                    // A gray-filled core and two complete owned rails jointly contradict
-                    // a relative-contrast pocket; genuine paper counters remain sustained.
+                    // A gray-filled core with local rails, or a completely owned ordinary
+                    // beam group, contradicts a relative-contrast pocket.
                     && !(beamCount >= 2
-                            && PaleFilledHeadCore.isFilled(
-                                    gray,
-                                    width,
-                                    height,
-                                    head.minX,
-                                    head.minY,
-                                    head.maxX,
-                                    head.maxY,
-                                    head.centerX,
-                                    head.centerY,
-                                    localGap)
-                            && (pairedPrintedRails(
+                                    && PaleFilledHeadCore.isFilled(
+                                            gray,
+                                            width,
+                                            height,
+                                            head.minX,
+                                            head.minY,
+                                            head.maxX,
+                                            head.maxY,
+                                            head.centerX,
+                                            head.centerY,
+                                            localGap)
+                                    && pairedPrintedRails(
                                             gray,
                                             width,
                                             height,
@@ -1868,26 +1868,26 @@ final class OmrScoreInterpreter {
                                             rhythmStaff,
                                             heads,
                                             beamCount)
-                                    || initialBeamCount == 2
-                                            && beamCount == 2
-                                            && completeJunctionOwnedDoubleRails(
-                                                    labels,
-                                                    gray,
-                                                    width,
-                                                    height,
-                                                    head,
-                                                    rhythmStaff,
-                                                    heads,
-                                                    staffs,
-                                                    measures,
-                                                    measureIndex,
-                                                    pairedRailHeads,
-                                                    attachedTremolos,
-                                                    detachedTremolos,
-                                                    printedEndpointPremises,
-                                                    pairedProbe,
-                                                    pairedComponents,
-                                                    pairedRoster)))) {
+                            || initialBeamCount == 2
+                                    && beamCount == 2
+                                    && completeJunctionOwnedDoubleRails(
+                                            labels,
+                                            gray,
+                                            width,
+                                            height,
+                                            head,
+                                            rhythmStaff,
+                                            heads,
+                                            staffs,
+                                            measures,
+                                            measureIndex,
+                                            pairedRailHeads,
+                                            attachedTremolos,
+                                            detachedTremolos,
+                                            printedEndpointPremises,
+                                            pairedProbe,
+                                            pairedComponents,
+                                            pairedRoster))) {
                 unbeamedDuration = ScoreNoteEvent.DURATION_HALF;
                 admissions.add("CLOSED_WRITTEN_POCKET_HALF_OVERRIDE");
             }
@@ -1988,6 +1988,35 @@ final class OmrScoreInterpreter {
                             labels, gray, width, height, head, rhythmStaff, heads)) {
                 beamCount = 1;
                 unbeamedDuration = 0;
+            }
+            // Independently owned ordinary beams can resolve an open detector HALF.
+            // Preserve its detector receipt and record the structural caller recovery.
+            if (!unpitched
+                    && initialBeamCount == 2
+                    && beamCount == 2
+                    && printedValue.exit() == PrintedValueExit.OPEN_WITH_STEM_HALF
+                    && printedValue.value() == ScoreNoteEvent.DURATION_HALF
+                    && unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                    && completeJunctionOwnedDoubleRails(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            head,
+                            rhythmStaff,
+                            heads,
+                            staffs,
+                            measures,
+                            measureIndex,
+                            pairedRailHeads,
+                            attachedTremolos,
+                            detachedTremolos,
+                            printedEndpointPremises,
+                            pairedProbe,
+                            pairedComponents,
+                            pairedRoster)) {
+                unbeamedDuration = 0;
+                admissions.add("COMPLETE_OWNED_ORDINARY_BEAM_VALUE_OVERRIDE");
             }
             if (unbeamedDuration >= ScoreNoteEvent.DURATION_HALF) beamCount = 0;
             Component dotAnchor =
@@ -24133,16 +24162,46 @@ final class OmrScoreInterpreter {
                     && peer.minX <= stems.get(last)[0]) return false;
         float[] xs = new float[owners.size()], ys = new float[owners.size()];
         var used = new java.util.HashSet<Integer>();
+        int previousRaw = -1, previousTrace = -1, previousBridgeRight = -1;
         for (int i = 0; i < owners.size(); i++) {
             Component c = owners.get(i);
             int[] r = stems.get(c);
             if (!used.add(r[0])) return false;
             var traced =
                     PairedTremoloInk.stem(gray, width, height, c.centerX, c.centerY, gap, -r[2]);
-            if (traced == null
-                    || traced.x() != r[0]
-                    || traced.endY() != r[1]
-                    || traced.headY() != Math.round(c.centerY)) return false;
+            if (traced == null || traced.endY() != r[1] || traced.headY() != Math.round(c.centerY))
+                return false;
+            int lo = Math.min(r[0], traced.x()), hi = Math.max(r[0], traced.x());
+            if (i > 0
+                    && (r[0] <= previousRaw
+                            || traced.x() <= previousTrace
+                            || lo <= previousBridgeRight)) return false;
+            if (traced.x() < left
+                    || traced.x() > right
+                    || i == 0 && traced.x() - gap < left
+                    || i == owners.size() - 1 && traced.x() + gap > right) {
+                return false;
+            }
+            if (traced.x() != r[0]
+                    && !PairedTremoloInk.sameShaftInk(
+                            gray,
+                            width,
+                            height,
+                            c.centerX,
+                            c.centerY,
+                            gap,
+                            -r[2],
+                            r[0],
+                            Math.round(c.centerY),
+                            r[1],
+                            traced,
+                            left,
+                            right,
+                            top,
+                            bottom)) return false;
+            previousRaw = r[0];
+            previousTrace = traced.x();
+            previousBridgeRight = hi;
             xs[i] = c.centerX;
             ys[i] = c.centerY;
         }
@@ -24173,7 +24232,9 @@ final class OmrScoreInterpreter {
                         bottom,
                         gap,
                         frame.top,
-                        frame.pitchTrack)) return true;
+                        frame.pitchTrack)) {
+                    return true;
+                }
         }
         return false;
     }

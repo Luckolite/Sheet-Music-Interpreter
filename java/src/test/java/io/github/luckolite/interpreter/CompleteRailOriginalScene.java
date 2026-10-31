@@ -81,6 +81,18 @@ public final class CompleteRailOriginalScene {
 
     static OmrScoreInterpreter.Analysis scene(String mode) {
         if (mode.equals("pairedIssuerControl")) return pairedIssuerControl();
+        if (mode.equals("sustainedHalfBesideForeignGroup")
+                || mode.equals("sustainedWholeBesideForeignGroup"))
+            return sustainedForeign(mode.equals("sustainedWholeBesideForeignGroup"));
+        int centerOverride =
+                mode.equals("paperCounterDown") || mode.equals("paperCounterSlope")
+                        ? 255
+                        : mode.equals("paleCounter230")
+                                ? 230
+                                : mode.equals("paleCounter245") ? 245 : -1;
+        if (mode.equals("paperCounterDown")) mode = "positiveDown";
+        if (mode.equals("paperCounterSlope")) mode = "positiveSlope";
+        if (mode.equals("paleCounter230") || mode.equals("paleCounter245")) mode = "positiveUp";
         boolean labelSymbol = mode.equals("railLabelSymbol"),
                 labelBackground = mode.equals("railLabelBackground"),
                 thinSymbol = mode.equals("thinInteriorSymbol"),
@@ -99,7 +111,14 @@ public final class CompleteRailOriginalScene {
         int[] shafts = new int[xs.length];
         int base = down ? 248 : 90, dir = down ? -1 : 1;
         for (int i = 0; i < xs.length; i++) {
-            p.head(xs[i], 172, i == 0 ? (mode.equals("paperCounter") ? 255 : 195) : 50);
+            p.head(
+                    xs[i],
+                    172,
+                    i == 0
+                            ? (centerOverride >= 0
+                                    ? centerOverride
+                                    : mode.equals("paperCounter") ? 255 : 195)
+                            : 50);
             shafts[i] = xs[i] + (down ? -11 : 10);
             if (!mode.equals("whole"))
                 p.rect(
@@ -281,5 +300,31 @@ public final class CompleteRailOriginalScene {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    static OmrScoreInterpreter.Analysis sustainedForeign(boolean whole) {
+        Page p = new Page(false);
+        p.head(85, 172, 255);
+        if (!whole) p.rect(95, 96, 90, 172, OmrMeasurePostProcessor.STEM_OR_REST, 35);
+        for (int cx : new int[] {190, 288, 386}) {
+            p.head(cx, 172, 50);
+            p.rect(cx + 10, cx + 11, 90, 172, OmrMeasurePostProcessor.STEM_OR_REST, 35);
+        }
+        p.rect(200, 397, 90, 94, OmrMeasurePostProcessor.STEM_OR_REST, 35);
+        p.rect(200, 397, 102, 106, OmrMeasurePostProcessor.STEM_OR_REST, 35);
+        for (int x = 97; x < 200; x++)
+            for (int y = 90; y <= 106; y++)
+                if ((p.g[y * p.w + x] & 255) < 165)
+                    throw new AssertionError("foreignrailsattached to sustain");
+        if ((p.g[172 * p.w + 85] & 255) != 255)
+            throw new AssertionError("genuinepaper counter lost");
+        var gray = p.g.clone();
+        var labels = p.l.clone();
+        var out =
+                OmrScoreInterpreter.analyze(
+                        p.l, p.g, p.w, p.h, List.of(new MeasureRegion(.06f, .94f, .15f, .9f)));
+        if (!Arrays.equals(gray, p.g) || !Arrays.equals(labels, p.l))
+            throw new AssertionError("source mutation");
+        return out;
     }
 }

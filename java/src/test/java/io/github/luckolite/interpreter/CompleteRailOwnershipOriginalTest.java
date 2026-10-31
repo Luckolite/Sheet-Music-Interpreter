@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /** Original broad beam ownership scenes; no downloaded or commercial raster.
  * Fingerprints freeze already-reviewed synthetic Analysis outputs, not outputs recomputed
  * by the implementation under test. Readable rhythm/lineage assertions explain each gain.
- * This pale-fill repair deliberately does not change non-pale heads or add tremolo recall.
+ * Complete owned ordinary beams arbitrate head appearance; these cases do not assert new tremolo recall.
  */
 @RunWith(Parameterized.class)
 public final class CompleteRailOwnershipOriginalTest {
@@ -168,10 +168,10 @@ public final class CompleteRailOwnershipOriginalTest {
                     },
                     {
                         "paperCounter",
-                        "a6fbe5085131306edfb878ee8f491cb71d68a7ce8714191a1b9de1cbf0d5a2d9",
+                        "49ecbb6bdf134f85ac70122d8905ff10615ba6611b2ea4eabc1de595eeaf6b69",
                         3,
-                        0,
-                        2.0f,
+                        2,
+                        0.0f,
                         false
                     },
                     {

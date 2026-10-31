@@ -1699,6 +1699,99 @@ final class PairedTremoloInk {
         return shaft.get((shaft.size() - 1) / 2);
     }
 
+    /** Complete common ink span, within the already searched stem window. */
+    static boolean sameShaftInk(
+            byte[] gray,
+            int w,
+            int h,
+            double cx,
+            double cy,
+            double gap,
+            int direction,
+            int rawX,
+            int headY,
+            int endY,
+            Stem traced,
+            int left,
+            int right,
+            int top,
+            int bottom) {
+        if (traced == null || traced.headY() != headY || traced.endY() != endY) return false;
+        if (rawX == traced.x()) return true; // Caller legacy fast path normally avoids this call.
+        if (!valid(gray, w, h, gap)
+                || w < 3
+                || !Double.isFinite(cx)
+                || !Double.isFinite(cy)
+                || cx < 0
+                || cx >= w
+                || cy < 0
+                || cy >= h
+                || Math.abs((long) direction) != 1
+                || left < 0
+                || right >= w
+                || left > right
+                || top < 0
+                || bottom >= h
+                || top > bottom) return false;
+        double xf = Math.rint(cx + direction * .25 * gap),
+                xl = Math.rint(cx + direction * .95 * gap),
+                startD = Math.rint(cy),
+                stepsD = Math.rint(9 * gap);
+        if (!Double.isFinite(xf)
+                || !Double.isFinite(xl)
+                || !Double.isFinite(startD)
+                || !Double.isFinite(stepsD)
+                || xf < Integer.MIN_VALUE
+                || xf > Integer.MAX_VALUE
+                || xl < Integer.MIN_VALUE
+                || xl > Integer.MAX_VALUE
+                || startD < Integer.MIN_VALUE
+                || startD > Integer.MAX_VALUE
+                || stepsD < Integer.MIN_VALUE
+                || stepsD > Integer.MAX_VALUE) return false;
+        if (stepsD < 1) return false;
+        long first = (long) xf, last = (long) xl, start = (long) startD, steps = (long) stepsD;
+        if ((long) direction * (last - first) < 0 || headY != start) return false;
+        long sx0 = Math.max(1, Math.min(first, last)),
+                sx1 = Math.min((long) w - 2, Math.max(first, last));
+        long far = start - (long) direction * (steps - 1);
+        long sy0 = Math.max(0, Math.min(start, far)),
+                sy1 = Math.min((long) h - 1, Math.max(start, far));
+        long x0 = Math.min(rawX, traced.x()),
+                x1 = Math.max(rawX, traced.x()),
+                y0 = Math.min(headY, endY),
+                y1 = Math.max(headY, endY);
+        if (x0 < sx0
+                || x1 > sx1
+                || y0 < sy0
+                || y1 > sy1
+                || x0 < left
+                || x1 > right
+                || y0 < top
+                || y1 > bottom) return false;
+        long columns = x1 - x0 + 1,
+                rows = y1 - y0 + 1,
+                searchColumns = sx1 - sx0 + 1,
+                searchRows = sy1 - sy0 + 1;
+        if (columns <= 0
+                || rows <= 0
+                || searchColumns <= 0
+                || searchRows <= 0
+                || columns > Long.MAX_VALUE / rows
+                || searchColumns > Long.MAX_VALUE / searchRows) return false;
+        long cells = columns * rows, allowance = searchColumns * searchRows;
+        if (cells > allowance) return false;
+        for (long y = y0; y <= y1; y++)
+            for (long x = x0; x <= x1; x++) {
+                long at = y * (long) w + x;
+                if (at < 0 || at >= gray.length) return false;
+                if (!dark(gray, w, (int) x, (int) y)) {
+                    return false;
+                }
+            }
+        return true;
+    }
+
     static List<Mark> find(byte[] gray, int w, int h, Stem left, Stem right, double gap) {
         return findWindow(gray, w, h, left, right, gap, false, java.util.Set.of());
     }

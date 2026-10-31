@@ -60,7 +60,22 @@ final class CompleteBeamGroupInk {
             }
             if (ink == core) thick++;
         }
-        if (totalRail == 0 || thick < totalRail * .9f) return false;
+        if (totalRail == 0) return false;
+        if (thick < totalRail * .9f) {
+            // Test one complete interior ray; never combine it column by column with the edge.
+            long work = (long) totalRail * core;
+            if (work <= 0 || work > (long) w * h) return false;
+            int insetThick = 0;
+            for (int x = first.x() + 2; x < last.x() - 1; x++) {
+                int edge = Math.round(first.endY() + (x - first.x()) * slope), ink = 0;
+                for (int d = 0; d < core; d++) {
+                    long y = (long) edge + (long) direction * (inset + (long) d);
+                    if (y >= 0 && y < h && (gray[(int) (y * w + x)] & 255) < 165) ink++;
+                }
+                if (ink == core) insetThick++;
+            }
+            if (insetThick < totalRail * .9f) return false;
+        }
         // A group continuing past either outer owner is incomplete.
         for (int side : new int[] {-1, 1}) {
             int edge = side < 0 ? first.x() : last.x(), dark = 0, total = 0;
