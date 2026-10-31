@@ -1860,8 +1860,34 @@ final class OmrScoreInterpreter {
                                     head.centerX,
                                     head.centerY,
                                     localGap)
-                            && pairedPrintedRails(
-                                    gray, width, height, head, rhythmStaff, heads, beamCount))) {
+                            && (pairedPrintedRails(
+                                            gray,
+                                            width,
+                                            height,
+                                            head,
+                                            rhythmStaff,
+                                            heads,
+                                            beamCount)
+                                    || initialBeamCount == 2
+                                            && beamCount == 2
+                                            && completeJunctionOwnedDoubleRails(
+                                                    labels,
+                                                    gray,
+                                                    width,
+                                                    height,
+                                                    head,
+                                                    rhythmStaff,
+                                                    heads,
+                                                    staffs,
+                                                    measures,
+                                                    measureIndex,
+                                                    pairedRailHeads,
+                                                    attachedTremolos,
+                                                    detachedTremolos,
+                                                    printedEndpointPremises,
+                                                    pairedProbe,
+                                                    pairedComponents,
+                                                    pairedRoster)))) {
                 unbeamedDuration = ScoreNoteEvent.DURATION_HALF;
                 admissions.add("CLOSED_WRITTEN_POCKET_HALF_OVERRIDE");
             }
@@ -24008,6 +24034,146 @@ final class OmrScoreInterpreter {
                             gap,
                             staff.top,
                             staff.pitchTrack)) return true;
+        }
+        return false;
+    }
+
+    private static boolean completeJunctionOwnedDoubleRails(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Component target,
+            Staff frame,
+            List<Component> heads,
+            List<Staff> staffs,
+            List<MeasureRegion> measures,
+            int measureIndex,
+            java.util.Set<Component> pairedRailHeads,
+            java.util.Map<?, ?> attached,
+            java.util.Map<?, ?> detached,
+            java.util.Map<?, ?> endpoints,
+            java.util.List<PairedTremoloInk.Pair> paired,
+            java.util.Map<Integer, Component> pairedComponents,
+            java.util.List<Component> roster) {
+        if (gray == null || frame == null || measureIndex < 0 || measureIndex >= measures.size())
+            return false;
+        Staff physical = nearestHeadStaff(staffs, target.centerY);
+        if (physical == null) return false;
+        MeasureRegion measure = measures.get(measureIndex);
+        if (measureIndex > 0 && measure.equals(measures.get(measureIndex - 1))
+                || measureIndex + 1 < measures.size()
+                        && measure.equals(measures.get(measureIndex + 1))) return false;
+        int left = (int) Math.ceil(measure.left() * width),
+                right = (int) Math.floor(measure.right() * width),
+                top = (int) Math.ceil(measure.top() * height),
+                bottom = (int) Math.floor(measure.bottom() * height);
+        float gap = frame.gap;
+        int[] raw = attachedRawStem(gray, width, height, target, gap),
+                up = directionalVoiceShaft(gray, width, height, target, gap, -1),
+                down = directionalVoiceShaft(gray, width, height, target, gap, 1);
+        int[] sole = up == null ? down : down == null ? up : null;
+        if (raw == null || sole == null || !java.util.Arrays.equals(raw, sole)) return false;
+        var owners = new java.util.ArrayList<Component>();
+        var stems = new java.util.IdentityHashMap<Component, int[]>();
+        var peers = new java.util.ArrayList<Component>();
+        for (Component other : heads) {
+            if (nearestHeadStaff(staffs, other.centerY) != physical) continue;
+            if (containingMeasureForStaff(
+                            measures,
+                            other.centerX / width,
+                            other.centerY / height,
+                            physical,
+                            height)
+                    != measureIndex) continue;
+            peers.add(other);
+            int[] r = attachedRawStem(gray, width, height, other, gap),
+                    u = directionalVoiceShaft(gray, width, height, other, gap, -1),
+                    d = directionalVoiceShaft(gray, width, height, other, gap, 1);
+            int[] s = u == null ? d : d == null ? u : null;
+            if (r == null || s == null || !java.util.Arrays.equals(r, s) || r[2] != raw[2])
+                continue;
+            if (pairedRailHeads.contains(other)
+                    || attached.containsKey(other)
+                    || detached.containsKey(other)
+                    || endpoints.containsKey(other)) return false;
+            if (other.minX < left
+                    || other.maxX > right
+                    || other.minY < top
+                    || other.maxY > bottom
+                    || r[0] < left
+                    || r[0] > right
+                    || r[1] < top
+                    || r[1] > bottom) return false;
+            for (var pair : paired)
+                for (var ids : java.util.List.of(pair.firstIds(), pair.secondIds()))
+                    for (int id : ids) if (pairedComponents.get(id) == other) return false;
+            owners.add(other);
+            stems.put(other, r);
+        }
+        owners.sort(java.util.Comparator.comparingDouble(c -> c.centerX));
+        if (owners.size() < 3 || owners.size() > 32 || !owners.contains(target)) return false;
+        Component first = owners.get(0), last = owners.get(owners.size() - 1);
+        if (stems.get(first)[0] - gap < left || stems.get(last)[0] + gap > right) return false;
+        for (Component peer : peers)
+            if (peer.centerX >= first.centerX
+                    && peer.centerX <= last.centerX
+                    && !owners.contains(peer)) return false;
+        for (Component peer : roster)
+            if (!owners.contains(peer)
+                    && nearestHeadStaff(staffs, peer.centerY) == physical
+                    && containingMeasureForStaff(
+                                    measures,
+                                    peer.centerX / width,
+                                    peer.centerY / height,
+                                    physical,
+                                    height)
+                            == measureIndex
+                    && peer.maxX >= stems.get(first)[0]
+                    && peer.minX <= stems.get(last)[0]) return false;
+        float[] xs = new float[owners.size()], ys = new float[owners.size()];
+        var used = new java.util.HashSet<Integer>();
+        for (int i = 0; i < owners.size(); i++) {
+            Component c = owners.get(i);
+            int[] r = stems.get(c);
+            if (!used.add(r[0])) return false;
+            var traced =
+                    PairedTremoloInk.stem(gray, width, height, c.centerX, c.centerY, gap, -r[2]);
+            if (traced == null
+                    || traced.x() != r[0]
+                    || traced.endY() != r[1]
+                    || traced.headY() != Math.round(c.centerY)) return false;
+            xs[i] = c.centerX;
+            ys[i] = c.centerY;
+        }
+        if (!CompleteBeamGroupInk.proves(gray, width, height, xs, ys, gap, -raw[2])) return false;
+        int index = owners.indexOf(target);
+        for (int adjacent : new int[] {index - 1, index + 1}) {
+            if (adjacent < 0 || adjacent >= owners.size()) continue;
+            Component a = owners.get(Math.min(index, adjacent)),
+                    b = owners.get(Math.max(index, adjacent));
+            int[] as = stems.get(a), bs = stems.get(b);
+            for (var observed :
+                    PairedGraceBeamInk.observeDoubleBands(
+                            gray, width, height, as, bs, gap, frame.top, frame.pitchTrack))
+                if (InclusiveRailBandOwnership.proves(
+                        observed,
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        owners.size(),
+                        as,
+                        bs,
+                        Math.round(a.centerY),
+                        Math.round(b.centerY),
+                        left,
+                        right,
+                        top,
+                        bottom,
+                        gap,
+                        frame.top,
+                        frame.pitchTrack)) return true;
         }
         return false;
     }

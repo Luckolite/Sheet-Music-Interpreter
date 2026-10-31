@@ -6,6 +6,86 @@ package io.github.luckolite.interpreter;
 final class PairedGraceBeamInk {
     private PairedGraceBeamInk() {}
 
+    record ObservedBand(int x, int top, int bottom) {}
+
+    record ObservedPair(
+            byte[] gray,
+            int width,
+            int height,
+            int[] first,
+            int[] last,
+            StaffPitchTrack track,
+            java.util.List<ObservedBand> bands) {
+        ObservedPair {
+            first = first.clone();
+            last = last.clone();
+            bands = java.util.List.copyOf(bands);
+        }
+
+        public int[] first() {
+            return first.clone();
+        }
+
+        public int[] last() {
+            return last.clone();
+        }
+    }
+
+    private static final ThreadLocal<java.util.ArrayList<ObservedBand>> OWNED_CORE_OBSERVATION =
+            new ThreadLocal<>();
+
+    /** Evidence transport only; classification is the unchanged original countAtContrast. */
+    static java.util.List<ObservedPair> observeDoubleBands(
+            byte[] gray,
+            int w,
+            int h,
+            int[] a,
+            int[] b,
+            float gap,
+            float staffTop,
+            StaffPitchTrack track) {
+        if (OWNED_CORE_OBSERVATION.get() != null
+                || gray == null
+                || a == null
+                || b == null
+                || a.length != 3
+                || b.length != 3
+                || w < 3
+                || h < 3
+                || gray.length != (long) w * h
+                || !Float.isFinite(gap)
+                || gap < 4
+                || !Float.isFinite(staffTop)
+                || a[0] < 1
+                || b[0] >= w - 1
+                || a[0] >= b[0]
+                || a[1] < 0
+                || a[1] >= h
+                || b[1] < 0
+                || b[1] >= h
+                || Math.abs(a[2]) != 1
+                || a[2] != b[2]
+                || (long) b[0] - a[0] + 1 > gap * 40) return java.util.List.of();
+        int span = b[0] - a[0];
+        float edge = Math.min(.2f, Math.max(2, Math.round(gap * .15f)) / (float) span);
+        float[] columns = {edge, .25f, .5f, .75f, 1 - edge};
+        var results = new java.util.ArrayList<ObservedPair>();
+        for (float fraction : new float[] {.5f, .75f, 1f}) {
+            var bands = new java.util.ArrayList<ObservedBand>();
+            OWNED_CORE_OBSERVATION.set(bands);
+            try {
+                int count =
+                        countAtContrast(
+                                gray, w, h, a, b, gap, fraction, 2.2f, columns, staffTop, track);
+                if (count == 2 && bands.size() == 10)
+                    results.add(new ObservedPair(gray, w, h, a, b, track, bands));
+            } finally {
+                OWNED_CORE_OBSERVATION.remove();
+            }
+        }
+        return java.util.List.copyOf(results);
+    }
+
     static int count(byte[] gray, int width, int height, int[] a, int[] b, float gap) {
         return count(gray, width, height, a, b, gap, 1.5f, 3f, Float.NaN, null);
     }
@@ -489,6 +569,9 @@ final class PairedGraceBeamInk {
                         float core = (start + y - 1) * .5f - end;
                         if (cores == null) cores = new float[3];
                         if (coreCount < 3) cores[coreCount] = core;
+                        var observation = OWNED_CORE_OBSERVATION.get();
+                        if (observation != null && coreCount < 3)
+                            observation.add(new ObservedBand(x, start, y - 1));
                         coreCount++;
                     }
                     start = -1;

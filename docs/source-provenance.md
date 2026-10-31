@@ -12,6 +12,17 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 131 adds finite inter-system placement for complete up-bows: adjacent
+single-staff rows, written attack/measure support and printed rule evidence own
+the additional placement. Existing shape, text, contrast and rival checks remain.
+Original procedural and OFL Bravura controls accompany the change; models and
+Guide 299/audio 101 layouts are unchanged.
+Complete ordinary groups with at least three distinct owned shafts also retain
+their two printed beams when pale heads resemble sustained notes. Existing
+core observations and separate raw-ink paths establish the rails; semantic labels
+do not substitute for that ink. Original complete-analysis regressions cover the
+change while preserving standalone adaptations and the compact-head route.
+
 Recognition 130 preserves the existing compact-head route and adds owned single-
 flag arbitration for sustained-looking heads with one detected exterior stem
 direction. Opposing-stem and tremolo cases keep their existing handling. Complete

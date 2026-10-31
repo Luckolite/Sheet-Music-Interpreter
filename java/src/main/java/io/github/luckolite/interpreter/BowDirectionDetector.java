@@ -43,7 +43,7 @@ final class BowDirectionDetector {
         List<ScoreTechniqueChange> result = new ArrayList<>();
         for (var mark :
                 NoteArticulationDetector.bowMarks(
-                        labels, gray, width, height, anchors, notes, staffs)) {
+                        labels, gray, width, height, anchors, notes, staffs, measures)) {
             var n = notes.get(mark.owner());
             result.add(
                     new ScoreTechniqueChange(
