@@ -3291,6 +3291,60 @@ final class SixteenthRestDetector {
                         && maxY - minY >= (faintShapes ? Math.round(gap * 2.35f) : gap * 2.35f)
                         && maxY - minY <= gap * 3.25f
                         && Math.abs(maxY - staff.bottom()) <= gap * .35f;
+        // Complete repeated bulbs and their tail disambiguate coarse quarter-rest centers.
+        // Require the original direct-ink proposal, with no trimmed bounds.
+        boolean completeSixteenth =
+                quarter
+                        && sixteenth
+                        && !eighth
+                        && !thirtySecond
+                        && !half
+                        && !whole
+                        && !quarterOnly
+                        && !noteDotRemoved
+                        && supportedCoreBounds == null
+                        && gray == ownershipGray
+                        && finiteProposal.direct
+                        && minY == finiteProposal.firstInk
+                        && maxY == finiteProposal.lastInk
+                        && !straightShafts(
+                                gray,
+                                width,
+                                left,
+                                right,
+                                minY,
+                                maxY,
+                                line,
+                                top,
+                                gap,
+                                true,
+                                quarterBudget)
+                        && completeFlaggedRestContour(
+                                gray,
+                                width,
+                                height,
+                                measures,
+                                notes,
+                                staff,
+                                top,
+                                bottom,
+                                line,
+                                left,
+                                right,
+                                minY,
+                                maxY,
+                                gap,
+                                eighth,
+                                sixteenth,
+                                thirtySecond,
+                                lowered,
+                                deepLowered,
+                                noteDotRemoved,
+                                ink,
+                                faintShapes,
+                                quarterBudget);
+        if (completeSixteenth) quarter = false;
+
         // The new full-depth bulb-only view is restricted to a complete two-bulb
         // rest. It cannot reinterpret existing deep eighth or quarter phases.
         if (deepLowered && bulbOnly && (!sixteenth || thirtySecond)) return;
@@ -3300,112 +3354,39 @@ final class SixteenthRestDetector {
                 && !quarter
                 && !half
                 && !whole
+                && !completeSixteenth
                 && straightShafts(
                         gray, width, left, right, minY, maxY, line, top, gap, true, quarterBudget))
             return;
-        if (!quarter && !half && !whole) {
-            if (eighth
-                    && PrintedFlatGlyph.matches(
-                            gray, width, height, left, minY, right, maxY, gap, quarterBudget))
-                return;
-            if (eighth
-                    && straightShafts(
-                            gray,
-                            width,
-                            left,
-                            right,
-                            Math.max(0, minY - Math.round(gap)),
-                            maxY,
-                            line,
-                            top,
-                            gap,
-                            false,
-                            quarterBudget)
-                    && !(lowered
-                            && separatedUpQuarterAboveRest(
-                                    gray, width, height, measures, notes, staff, left, right, minY,
-                                    maxY, line, top, gap))) return;
-            // Three rest bulbs also reverse their row centres five times. The
-            // complete bulb count, spacing and diagonal foot below adjudicate
-            // those glyphs; a wave silhouette alone must not erase them.
-            if (!thirtySecond
-                    && RestVerticalWave.crosses(
-                            gray, width, height, left, right, minY, maxY, gap, quarterBudget))
-                return;
-            if ((!eighth && !sixteenth && !thirtySecond)
-                    || minY
-                            < Math.round(
-                                    staff.top()
-                                            + gap
-                                                    * (thirtySecond
-                                                            ? .15f
-                                                            : deepLowered ? .8f : .85f))
-                    || minY > staff.top() + gap * 1.55f) return;
-            List<Integer> lobes =
-                    restBulbs(ink, line, top, minY, maxY, gap, faintShapes, quarterBudget);
-            if (thirtySecond
-                    ? lobes.size() != 3
-                            || lobes.get(1) - lobes.get(0) < gap * .7f
-                            || lobes.get(1) - lobes.get(0) > gap * 1.3f
-                            || lobes.get(2) - lobes.get(1) < gap * .7f
-                            || lobes.get(2) - lobes.get(1) > gap * 1.3f
-                            || maxY - lobes.get(2) < gap * .8f
-                    : eighth
-                            ? lobes.size() != 1 || maxY - lobes.get(0) < gap * .8f
-                            : lobes.size() != 2
-                                    || lobes.get(1) - lobes.get(0) < gap * .7f
-                                    || lobes.get(1) - lobes.get(0) > gap * 1.3f
-                                    || maxY - lobes.get(1) < gap * .8f) return;
-            // Below the second bulb only a narrow tail remains. Its foot slopes left of the tip;
-            // accidentals, paired dots and isolated note flags do not have this geometry.
-            int footRight = -1;
-            {
-                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                for (int y = maxY - Math.round(gap * .45f); y <= maxY; y++) {
-                    if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                    if (!line[y - top]) {
-                        if (ink[y - top] > gap * .50f) {
-                            // A thin antialiased edge of the next verified staff rule can join
-                            // the tail for one row without widening the printed rest itself.
-                            boolean ruleEdge = false;
-                            int reach = noteDotRemoved ? Math.max(1, Math.round(gap * .2f)) : 1;
-                            {
-                                if (quarterBudget != null)
-                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                                for (int dy = 1; dy <= reach && y + dy <= bottom; dy++) {
-                                    if (quarterBudget != null)
-                                        FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                                    if (line[y + dy - top]) {
-                                        ruleEdge = true;
-                                        break;
-                                    }
-                                }
-                            }
+        if (!quarter
+                && !half
+                && !whole
+                && !completeSixteenth
+                && !completeFlaggedRestContour(
+                        gray,
+                        width,
+                        height,
+                        measures,
+                        notes,
+                        staff,
+                        top,
+                        bottom,
+                        line,
+                        left,
+                        right,
+                        minY,
+                        maxY,
+                        gap,
+                        eighth,
+                        sixteenth,
+                        thirtySecond,
+                        lowered,
+                        deepLowered,
+                        noteDotRemoved,
+                        ink,
+                        faintShapes,
+                        quarterBudget)) return;
 
-                            if (ruleEdge) continue;
-                            return;
-                        }
-                        {
-                            if (quarterBudget != null)
-                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                            for (int x = left; x <= right; x++) {
-                                if (quarterBudget != null)
-                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
-                                if ((gray[y * width + x] & 255) < 170)
-                                    footRight = Math.max(footRight, x);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (footRight < 0 || right - footRight < gap * .15f) return;
-            if (RestDiagonalContinuation.crosses(
-                    gray, width, left, right, minY, maxY, gap, quarterBudget)) return;
-            if (eighth
-                    && deepLowered
-                    && continuedRestTail(gray, width, height, left, right, maxY, gap)) return;
-        }
         // Component isolation is only for contour classification. Printed-note,
         // voice, text and augmentation-dot ownership still use all original ink.
         boolean isolatedContour = gray != ownershipGray;
@@ -3803,6 +3784,131 @@ final class SixteenthRestDetector {
         }
     }
 
+    /** Complete flagged-rest contour proof shared by ordinary reads and quarter conflicts. */
+    private static boolean completeFlaggedRestContour(
+            byte[] gray,
+            int width,
+            int height,
+            List<MeasureRegion> measures,
+            List<ScoreNoteEvent> notes,
+            Staff staff,
+            int top,
+            int bottom,
+            boolean[] line,
+            int left,
+            int right,
+            int minY,
+            int maxY,
+            float gap,
+            boolean eighth,
+            boolean sixteenth,
+            boolean thirtySecond,
+            boolean lowered,
+            boolean deepLowered,
+            boolean noteDotRemoved,
+            int[] ink,
+            boolean faintShapes,
+            FaintQuarterRestInk.Budget quarterBudget) {
+
+        if (eighth
+                && PrintedFlatGlyph.matches(
+                        gray, width, height, left, minY, right, maxY, gap, quarterBudget))
+            return false;
+        if (eighth
+                && straightShafts(
+                        gray,
+                        width,
+                        left,
+                        right,
+                        Math.max(0, minY - Math.round(gap)),
+                        maxY,
+                        line,
+                        top,
+                        gap,
+                        false,
+                        quarterBudget)
+                && !(lowered
+                        && separatedUpQuarterAboveRest(
+                                gray, width, height, measures, notes, staff, left, right, minY,
+                                maxY, line, top, gap))) return false;
+        // Three rest bulbs also reverse their row centres five times. The
+        // complete bulb count, spacing and diagonal foot below adjudicate
+        // those glyphs; a wave silhouette alone must not erase them.
+        if (!thirtySecond
+                && RestVerticalWave.crosses(
+                        gray, width, height, left, right, minY, maxY, gap, quarterBudget))
+            return false;
+        if ((!eighth && !sixteenth && !thirtySecond)
+                || minY
+                        < Math.round(
+                                staff.top()
+                                        + gap * (thirtySecond ? .15f : deepLowered ? .8f : .85f))
+                || minY > staff.top() + gap * 1.55f) return false;
+        List<Integer> lobes =
+                restBulbs(ink, line, top, minY, maxY, gap, faintShapes, quarterBudget);
+        if (thirtySecond
+                ? lobes.size() != 3
+                        || lobes.get(1) - lobes.get(0) < gap * .7f
+                        || lobes.get(1) - lobes.get(0) > gap * 1.3f
+                        || lobes.get(2) - lobes.get(1) < gap * .7f
+                        || lobes.get(2) - lobes.get(1) > gap * 1.3f
+                        || maxY - lobes.get(2) < gap * .8f
+                : eighth
+                        ? lobes.size() != 1 || maxY - lobes.get(0) < gap * .8f
+                        : lobes.size() != 2
+                                || lobes.get(1) - lobes.get(0) < gap * .7f
+                                || lobes.get(1) - lobes.get(0) > gap * 1.3f
+                                || maxY - lobes.get(1) < gap * .8f) return false;
+        // Below the second bulb only a narrow tail remains. Its foot slopes left of the tip;
+        // accidentals, paired dots and isolated note flags do not have this geometry.
+        int footRight = -1;
+        {
+            if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+            for (int y = maxY - Math.round(gap * .45f); y <= maxY; y++) {
+                if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                if (!line[y - top]) {
+                    if (ink[y - top] > gap * .50f) {
+                        // A thin antialiased edge of the next verified staff rule can join
+                        // the tail for one row without widening the printed rest itself.
+                        boolean ruleEdge = false;
+                        int reach = noteDotRemoved ? Math.max(1, Math.round(gap * .2f)) : 1;
+                        {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            for (int dy = 1; dy <= reach && y + dy <= bottom; dy++) {
+                                if (quarterBudget != null)
+                                    FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                                if (line[y + dy - top]) {
+                                    ruleEdge = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (ruleEdge) continue;
+                        return false;
+                    }
+                    {
+                        if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        for (int x = left; x <= right; x++) {
+                            if (quarterBudget != null)
+                                FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                            if ((gray[y * width + x] & 255) < 170)
+                                footRight = Math.max(footRight, x);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (footRight < 0 || right - footRight < gap * .15f) return false;
+        if (RestDiagonalContinuation.crosses(
+                gray, width, left, right, minY, maxY, gap, quarterBudget)) return false;
+        if (eighth && deepLowered && continuedRestTail(gray, width, height, left, right, maxY, gap))
+            return false;
+
+        return true;
+    }
     /** A separate upward quarter shaft cannot be the tail of the complete rest below it. */
     private static boolean separatedUpQuarterAboveRest(
             byte[] gray,

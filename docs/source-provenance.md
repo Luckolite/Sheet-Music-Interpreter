@@ -12,6 +12,14 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 130 preserves the existing compact-head route and adds owned single-
+flag arbitration for sustained-looking heads with one detected exterior stem
+direction. Opposing-stem and tremolo cases keep their existing handling. Complete
+untrimmed two-bulb contours reuse the full existing flagged-rest validation before
+a coarse quarter-rest center profile can take precedence. Shape thresholds,
+model weights and Guide 299/audio 101 layouts are unchanged. Original procedural
+and OFL Bravura-generated regressions accompany these source changes.
+
 App conversion wrappers recheck tie accidentals after selecting the effective key
 for engraving, including retained and owner-preserving projections. The standalone
 caller already supplies inherited key context to the unchanged `ScoreTiePitchGuard`.

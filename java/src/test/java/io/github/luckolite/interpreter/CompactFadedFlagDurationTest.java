@@ -87,9 +87,15 @@ public class CompactFadedFlagDurationTest {
     }
 
     @Test
-    public void fullSizeHollowKeepsExistingEvidencePriority() {
+    public void fullSizeSingleOwnedFlagHasEighthValueReviewedOracle() {
         var n = read(true, false, false, true);
+        assertEquals(1, n.beamCount());
+        assertEquals(0f, n.unbeamedDurationBeats(), 0f);
+    }
+    @Test
+    public void unflaggedFullSizeHollowRetainsHalfValue() {
+        var n = read(false, false, false, true);
         assertEquals(0, n.beamCount());
-        assertTrue(n.unbeamedDurationBeats() >= 2);
+        assertEquals(2f, n.unbeamedDurationBeats(), 0f);
     }
 }

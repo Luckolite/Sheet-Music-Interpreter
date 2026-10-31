@@ -1908,6 +1908,37 @@ final class OmrScoreInterpreter {
                     unbeamedDuration = 0;
                 }
             }
+            // Independently owned flag geometry can disprove a sustained fallback even
+            // when the semantic stem was missed. Opposing shafts keep their voice ownership.
+            if (gray != null
+                    && beamCount == 1
+                    && (unbeamedDuration == ScoreNoteEvent.DURATION_HALF
+                            || unbeamedDuration == ScoreNoteEvent.DURATION_WHOLE)
+                    && !attachedTremolos.containsKey(head)
+                    && !detachedTremolos.containsKey(head)) {
+                int[] ownedFlagStem = attachedRawStem(gray, width, height, head, localGap);
+                int[] upFlagOwner = directionalVoiceShaft(gray, width, height, head, localGap, -1);
+                int[] downFlagOwner = directionalVoiceShaft(gray, width, height, head, localGap, 1);
+                int[] soleFlagDirection =
+                        upFlagOwner == null
+                                ? downFlagOwner
+                                : downFlagOwner == null ? upFlagOwner : null;
+                if (ownedFlagStem != null
+                        && soleFlagDirection != null
+                        && java.util.Arrays.equals(ownedFlagStem, soleFlagDirection)
+                        && hasCurvedFlag(
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                head,
+                                localGap,
+                                ownedFlagStem[0],
+                                ownedFlagStem[1],
+                                ownedFlagStem[2] < 0)) {
+                    unbeamedDuration = 0;
+                }
+            }
             // A compact faded fill can mimic a hollow counter. Its shaded center and
             // two independently attached shafts joined by complete rails must agree.
             if (beamCount >= 2
