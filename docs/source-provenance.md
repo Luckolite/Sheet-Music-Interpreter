@@ -12,6 +12,12 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+App conversion wrappers recheck tie accidentals after selecting the effective key
+for engraving, including retained and owner-preserving projections. The standalone
+caller already supplies inherited key context to the unchanged `ScoreTiePitchGuard`.
+Original synthetic effective-key regressions cover natural, sharp and later-change
+contexts; no app-only dependencies or score material are included.
+
 Recognition 129 retains Guide 299 and audio 101 layouts and the existing model
 weights. Reviewed maintenance preserves exact physical unison parts, complete
 printed ledger/staff ownership, independently witnessed beam rails and continuous
