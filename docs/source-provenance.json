@@ -1882,13 +1882,14 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BowDirectionDetector.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/BowDirectionDetector.java",
       "license": "Apache-2.0",
-      "source_sha256": "5abd9e81b5f60f8824a610852d4a6e5e9ff2a3c688ae29c5a5e9ef60a36fb99b",
-      "source_normalized_sha256": "89cfcf838a2b6044e656f6160e3be47170b3f88519e019ad9e9990d086be5e3f",
-      "standalone_sha256": "841cb52180631eaf9ec8c3cafd19904ae2c1c1e6b32db78c30a8b7e2c86f9946",
+      "source_sha256": "9402faa8397b8f81f48b263704dcaba531753fd118fdabc268d412e151fceff7",
+      "source_normalized_sha256": "9402faa8397b8f81f48b263704dcaba531753fd118fdabc268d412e151fceff7",
+      "standalone_sha256": "1bfb9d594a6e0d6fabbb06fd70fddde05f9bf0eef77e1b52c7a26eff2624702c",
       "reviewed_source_state": "Reviewed working-tree bow291/recognition85 delta; final grouped source publication and packaged rollout pending",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "bow291_review_note": "Complete connected raw bow bodies retain every component pixel and uniquely own one exact staff attack; ordinary word techniques and existing optical exclusion predicates remain unchanged. New pure-JDK helper; no private score fixture.",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
+      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     },
     "BoxedRehearsalF.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/BoxedRehearsalF.java",
@@ -3714,10 +3715,10 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "6c8d19f6eefa89a87129077d1fde9026583abae44e16a3391dbe7120c34f5e5c",
-      "source_normalized_sha256": "32bde27b666d17627abbf6a6ab76e0d882b23afcbe820d8dc2ed142c310f1ed2",
+      "source_sha256": "45aa5657c6eea97d3fbc236d796b364e57d0b72a320fcb3cd4433eb1104c29ba",
+      "source_normalized_sha256": "2a67880562808e5db3cc0b1c60a20d608b1d36288f9267fcd24bff8b5e136777",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "5df272094582099f8dc9eff4ef2f28ad7fbaad83405582cc5b28982bb6b0a62a",
+      "standalone_sha256": "4d535e0623634d4372274e72d4354fb7781292151342c06cbd8804752e37687f",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
@@ -3765,14 +3766,15 @@
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
       "recognition128_review_note": "Complete-rest pickup veto is now also wired at Android ingress; native/standalone behavior retained. Original exact-source caller regressions; no score material or model changes.",
       "recognition130_review_note": "Recognition130 invalidates older derived results for reviewed flag/rest recognition changes. Guide299/audio101/model layouts unchanged.",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
+      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "cac72f7c297e184bf6bb3dfd795c5f9f66a362bfa3d5913e4f7bdd624a241049",
-      "source_normalized_sha256": "2c2d92ee0aabe7462654e0994d78e732a30fe14fb769f3d903cfaeea5d33439b",
-      "standalone_sha256": "a2ab122606ff38fd71405158f8ee28a968a499112111dff83cbf479e229168e3",
+      "source_sha256": "c50067828d726b782f97db21ca3839085519843176d8198861cc85fa02754fd4",
+      "source_normalized_sha256": "29d47ebcd51dfd4cd60ed08da372853550f0992744a38491c285b41c7304e9ff",
+      "standalone_sha256": "4cac070364185649b256694ab129fc0493cc3cdc471b1ff143a282c8aab5e558",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
@@ -3813,7 +3815,8 @@
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
       "reviewed_app_base_commit": "e2831dddac0e6063be1b5b29316e48f9f0bb61bd",
       "recognition130_review_note": "Current epoch130 expectations; all earlier epochs still rejected, historical record layouts preserved.",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
+      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     },
     "HairpinApertureBarExtentOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
@@ -4857,13 +4860,13 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "271f4e0587bbb2272e3fd68515991699bd80cecbf573cd26ef624e57ccb2084a",
+      "source_sha256": "30af8fcc530fe21e3524ee6663aceb5961fbd3b3cc81b7bc28af7d2ae5a0ca3e",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "source_normalized_sha256": "2e4e39ed8302167b61fa9ca4c8a9950c08e73aa2e96176b27d33fd7271761040",
+      "source_normalized_sha256": "30af8fcc530fe21e3524ee6663aceb5961fbd3b3cc81b7bc28af7d2ae5a0ca3e",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "45fe5be13e470a2378ed03e85d690f8945abaafc0c8ecf6df4a21fc3fcfbe640",
+      "standalone_sha256": "b7e31ecb966cd02b88a9736e98b47893b201aa0739c169dd23d53bf0cc213d02",
       "license": "Apache-2.0",
       "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
@@ -4879,7 +4882,8 @@
       "reviewed_source_state": "Committedrecognition124 source;173app/176publicJava/15Python and freshactualfivepage acceptance; models/Guide299/audio101 unchanged, installedpairdeliverypending.",
       "recognition126_review_note": "Complete literal cap graph and exact certified auxiliary fit pixels; original synthetic controls, same whole denominator/coverage/ownership/resource limits. Namespace-only Java port and matching cache revision, no model or layout changes.",
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
+      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     },
     "NoteOrnament.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteOrnament.java",
@@ -9596,7 +9600,7 @@
       "source_sha256": "6b709f0a2102dc5eeb57efd13a367e00456f4c9c4be83a991dc5622f2ff456c4",
       "source_normalized_sha256": "51d7b802c65762284ad741ab6b7d13545cb4ba0f450ab0198556e25789e0d783",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "standalone_sha256": "0ef8708a4f059f155ae91689dc5459fef9c63005cbb192c506185855ea131932",
+      "standalone_sha256": "12ed34bf9e23c6cc12cf346a7e66bed1cc09454c6d266b31bde54187efc0b714",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
@@ -10065,7 +10069,7 @@
     },
     "tests/test_recognition_epoch_contract.py": {
       "standalone_path": "tests/test_recognition_epoch_contract.py",
-      "standalone_sha256": "6ef766df72c8c91eef0a9a0042a2df90ac778dff80243f77b4ef1fd13fb2545a",
+      "standalone_sha256": "ea8282cfbb9251ddd7a526f2dee1e176bebf1dc6c932d5ab6bc576b5b191e235",
       "reviewed_sha256": "84701179970bb2b8da1db73722c5489acefda092063c5b9c6a25a7896911fc7f",
       "license": "Apache-2.0",
       "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload.",
@@ -11304,23 +11308,15 @@
       "reviewed_app_commit": "853f16d827b1141ee0d62584a550562b31457782",
       "current_source_review": "Android-only test fixture adapter: inline original Apache cancellation fixture/reflection helpers absent from the Android test project. Original five assertions/prove bodies unchanged. All five used scenes retain exact raw labels/gray and measure/staff/component fields. Standalone keeps its existing legitimate shared test helpers and original five-test source unchanged; all15208 standalone Java tests pass. Actual app-only five-test run passes without public test classes. No production, model, decoder, layout or semantic change."
     },
-    "ElevatedBowSupport.java": {
-      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ElevatedBowSupport.java",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ElevatedBowSupport.java",
-      "license": "Apache-2.0",
-      "source_sha256": "3d18885271970df383745c286426bb2fb9cd06f390edad3c5919340763c6ff67",
-      "source_normalized_sha256": "27cd3baba11fa02a33e17115e7968df1a499d280063761bce54acc1885957944",
-      "standalone_sha256": "77c7276bc3c2a6a18d1fe0d1fbce910c25d3c383ccddce0db9e6898a954e7d10",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
-    },
     "ElevatedBowOriginalSceneTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/ElevatedBowOriginalSceneTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ElevatedBowOriginalSceneTest.java",
       "license": "Apache-2.0",
-      "source_sha256": "f34f1f7fee97a30e4e1870638fb630f3baa279a5969a7c004e0c5417a1f6c045",
-      "source_normalized_sha256": "cb902305577bd29fce2500b6362214b1209e08089f34aa1acca22f2b2d42c6a3",
-      "standalone_sha256": "6f0741a3bb96a88257806863a1594e5107aeb2c6fc27ca684bcad2d720af18b7",
-      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes."
+      "source_sha256": "07e6934f5b03fa788069acf289f5a31420386a01357cf91f64f7b642fb4d644b",
+      "source_normalized_sha256": "5ed66cb355e065f2aa2d425dce6b53d22f6f592e739db13de252f511c69f2fe8",
+      "standalone_sha256": "43226f3e907d5abdfdb20c637d7cf1a3d7137c0c9c751e4d13e991aa00234e5c",
+      "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     },
     "InclusiveRailBandOwnership.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/InclusiveRailBandOwnership.java",
@@ -11357,6 +11353,15 @@
       "source_normalized_sha256": "1e54a243704b0a875b56e7a638f9ef9a888f86cab2d7707014e8ef786e64244a",
       "standalone_sha256": "2e33486df65bd36243d08e3ff7b34a69609a246d46ac959b6bd0e02d5cdb92df",
       "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies."
+    },
+    "ElevatedBowProseTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ElevatedBowProseTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ElevatedBowProseTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "49cd200ad88fb2d4a0b0ca4fb996e4c8e9af8d6b3024ad6bcfdb4ea255dafe9b",
+      "source_normalized_sha256": "39bb75243f1a1ed3b9f78172611e28496bbaff2fc21e3e17d76ed413aad65297",
+      "standalone_sha256": "875aed42fd903e2641f20b487ae2e47d0a9d9db3d92de85ffc2517e43d44d380",
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
     }
   },
   "finite_curved_approach_review": {
@@ -16598,12 +16603,36 @@
     "scope": "Intact complete UP bodies strictly in the lower half of a finite gap between adjacent single staffs, with same-call measure/attack support and independent printed rules. Legacy placement, shape, text, contrast and rival handling remain.",
     "work": "One optional per-page bounded work budget; exhaustion abstains on additions.",
     "source_validation": "113 original controls in each namespace; private saved-caller evidence reviewed separately. Full native and deployment qualification reported separately.",
-    "licensing": "Original procedural and OFL Bravura fixtures only; no commercial score rasters, library, device logs, secrets or model changes."
+    "licensing": "Original procedural and OFL Bravura fixtures only; no commercial score rasters, library, device logs, secrets or model changes.",
+    "current_status": "Withdrawn by recognition132; historical131 scope retained for provenance."
   },
   "complete_owned_double_rail_review": {
     "recognition_revision": 131,
     "scope": "Ordinary complete groups with three or more distinct shafts can preserve two printed beams for pale sustained-looking heads. The unchanged core classifier identifies the two bands; inclusive paths use raw ink rather than a semantic stem-label proxy.",
     "unchanged": "Existing compact route, pale-head scope, contrast/core thresholds, physical ownership, tremolo roles, model weights and binary layouts.",
     "validation": "172 original tests in each namespace, including genuine paired discovery/issuer and full Analysis controls. Public tests contain no commercial score data. Full native qualification and deployment are reported separately."
+  },
+  "elevated_bow_withdrawal_review": {
+    "recognition_revision": 132,
+    "scope": "The optional elevated UP domain is withdrawn because word-leading V prose can satisfy its shape and ownership checks. Restore prior bow behavior while retaining independent131 rhythm fixes.",
+    "known_missing": "Six original positive elevated-bow test oracles remain unchanged but explicitly ignored; the feature is unsupported, not repaired.",
+    "regressions": "107 active focused checks;6 known unsupported ignored. Existing logical font and deterministic unmodified DejaVu Vivo negatives retained.",
+    "assets": {
+      "DejaVuSerif.ttf": {
+        "standalone_path": "java/src/test/resources/bow-text-fonts/DejaVuSerif.ttf",
+        "sha256": "107244956e9962b9e96faccdc551825e0ae0898ae13737133e1b921a2fd35ffa"
+      },
+      "LICENSE_DEJAVU": {
+        "standalone_path": "java/src/test/resources/bow-text-fonts/LICENSE_DEJAVU",
+        "sha256": "d75938dec098f06f0ac3c00853065d94f020be1c3c62ef1dc2975ba15b4d9b0e"
+      },
+      "PROVENANCE.md": {
+        "standalone_path": "java/src/test/resources/bow-text-fonts/PROVENANCE.md",
+        "sha256": "d9203ca3fc4ef4cd22fd8d2bf607533e90f21fef94bc31a9ac9e97e61ced1ef5"
+      }
+    },
+    "asset_license": "Test-only unmodified DejaVu Serif with complete accompanying Bitstream Vera/Arev notice; no runtime font dependency.",
+    "layout": "Guide299 and audio101 unchanged; no model changes.",
+    "deployment": "Deferred during active goal; source qualification and publication separate."
   }
 }

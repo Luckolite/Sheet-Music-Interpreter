@@ -39,18 +39,6 @@ final class NoteArticulationDetector {
             List<Anchor> notes,
             List<ScoreNoteEvent> events,
             List<PlayingTechniqueDetector.Staff> staffs) {
-        return bowMarks(labels, gray, width, height, notes, events, staffs, List.of());
-    }
-
-    static List<BowMark> bowMarks(
-            byte[] labels,
-            byte[] gray,
-            int width,
-            int height,
-            List<Anchor> notes,
-            List<ScoreNoteEvent> events,
-            List<PlayingTechniqueDetector.Staff> staffs,
-            List<MeasureRegion> measures) {
         long area = (long) width * height;
         if (width <= 0
                 || height <= 0
@@ -101,7 +89,6 @@ final class NoteArticulationDetector {
         if (work > 256_000_000L) return List.of();
         int[] geometryPeers = new int[notes.size()];
         List<BowMark> result = new ArrayList<>();
-        var elevated = new ElevatedBowSupport(gray, width, height, notes, events, staffs, measures);
         for (Glyph g : glyphs) {
             if (g.count < 5
                     || g.left == 0
@@ -114,7 +101,6 @@ final class NoteArticulationDetector {
             int strokeSpanTwice = -1;
             BowCapProof capProof = null;
             boolean capMeasured = false;
-            boolean elevatedMeasured = false, elevatedUp = false;
             // Existing UP shape tip-band law, measured on this complete component.
             work += g.count + 16L;
             if (work > 256_000_000L) return List.of();
@@ -139,6 +125,7 @@ final class NoteArticulationDetector {
                 float above = (frame.top() - g.bottom) / gap;
                 float w = g.right - g.left + 1, h = g.bottom - g.top + 1;
                 if (above < -.6f
+                        || above > 4.2f
                         || w < gap * .65f
                         || h < gap * .8f
                         // Staff gap and raw positions are pixel-center coordinates.
@@ -146,32 +133,6 @@ final class NoteArticulationDetector {
                         || h / w < .65f
                         || h / w > 2.2f
                         || n.y - g.bottom < gap * .7f) continue;
-                if (above > 4.2f) {
-                    // Additional UP-only domain: a complete finite lower-half inter-system gap.
-                    // New work exhaustion abstains here; legacy-domain work/results are untouched.
-                    if (!elevated.possible(g.left, g.top, g.right, g.bottom, i)
-                            || Math.abs(g.x() - n.x) > gap * .7f
-                                    && Math.abs(tipX - n.x) > gap * .7f) continue;
-                    if (!elevatedMeasured) {
-                        long proofWork =
-                                completeUpBowCapWork(g)
-                                        + 64L * g.count
-                                        + 128L * (g.bottom - g.top + 1)
-                                        + 8L * (g.right - g.left + 1) * (g.bottom - g.top + 1)
-                                        + 1024;
-                        if (!elevated.reserve(proofWork)) continue;
-                        var proof = completeUpBowCapProof(g, width);
-                        elevatedUp =
-                                !completeDownBowShape(g, width)
-                                        && !measuredDownBowShape(g, width)
-                                        && (upBowShape(g, width)
-                                                || capAwareUpBowShape(g, width, proof))
-                                        && completeUpBowRows(g, width, proof);
-                        elevatedMeasured = true;
-                    }
-                    if (!elevatedUp || !elevated.owns(g.left, g.top, g.right, g.bottom, i))
-                        continue;
-                }
                 if (w > gap * 3) {
                     // A peer outside both existing anchor tolerances cannot own this mark.
                     if (Math.abs(g.x() - n.x) > gap * .7f && Math.abs(tipX - n.x) > gap * .7f)

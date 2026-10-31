@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 132 withdraws the optional elevated up-bow placement because a word-leading V can satisfy its geometric proof. Prior bow behavior and independent rhythm repairs are retained. Six genuine elevated-bow expectations remain explicit known-unsupported tests; logical-font and deterministic DejaVu prose exclusions remain active. The unmodified DejaVu font and complete notice are test-only assets. Guide 299/audio 101 and models are unchanged.
+
+
 Recognition 131 adds finite inter-system placement for complete up-bows: adjacent
 single-staff rows, written attack/measure support and printed rule evidence own
 the additional placement. Existing shape, text, contrast and rival checks remain.
