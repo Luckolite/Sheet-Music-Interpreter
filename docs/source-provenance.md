@@ -12,6 +12,8 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 134 qualifies a short opening from complete source-owned notehead extents and all accepted meter headers, retaining the existing distance and beam checks. Missing producer evidence uses the prior conservative path. Local and full-page pipelines pass their original Analysis; managed ANALYZE transport remains unchanged. Original synthetic tests cover authentication, ownership, lane coverage and strict clock recapture. Guide 299/audio 101 and models are unchanged.
+
 Recognition 133 reconciles independent shaft traces through their complete shared ink and checks one fixed interior beam ray when the outer edge is antialiased. It preserves prior acceptance, thickness and ownership rules, and detector lineage. Original synthetic regressions cover shaft gaps, sustained-note exclusions, beam boundaries and pickup clocks. Guide 299/audio 101 and models are unchanged.
 
 Recognition 132 withdraws the optional elevated up-bow placement because a word-leading V can satisfy its geometric proof. Prior bow behavior and independent rhythm repairs are retained. Six genuine elevated-bow expectations remain explicit known-unsupported tests; logical-font and deterministic DejaVu prose exclusions remain active. The unmodified DejaVu font and complete notice are test-only assets. Guide 299/audio 101 and models are unchanged.

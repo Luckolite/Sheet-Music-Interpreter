@@ -428,7 +428,8 @@ public final class SheetInterpreter {
                         height,
                         staffs,
                         meterEvidence.changes(),
-                        meterEvidence.headers());
+                        meterEvidence.headers(),
+                        clockAnalysis);
         var expressionWords =
                 ocr == null
                         ? techniqueWords

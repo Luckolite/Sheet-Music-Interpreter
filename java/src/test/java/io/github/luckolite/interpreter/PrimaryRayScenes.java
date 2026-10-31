@@ -183,7 +183,7 @@ public final class PrimaryRayScenes {
                     "aaValid",
                     "narrow",
                     "missingHeader",
-                    "ambiguousHeader",
+                    "additionalAcceptedHeader",
                     "conflictMeter",
                     "unownedHead",
                     "unownedShaft",
@@ -195,7 +195,8 @@ public final class PrimaryRayScenes {
                     "companionWrongCount");
 
     static boolean expectedConsumer(String mode, boolean candidate) {
-        return mode.equals("narrow")
+        return mode.equals("additionalAcceptedHeader")
+                || mode.equals("narrow")
                 || mode.equals("companionFull")
                 || candidate && (mode.equals("aaValid") || mode.equals("companionAA"));
     }
@@ -268,7 +269,7 @@ public final class PrimaryRayScenes {
         List<MeterChangeDetector.Crop> headers =
                 mode.equals("missingHeader")
                         ? List.of()
-                        : mode.equals("ambiguousHeader")
+                        : mode.equals("additionalAcceptedHeader")
                                 ? List.of(
                                         OpeningBeamPickupTest.HEADERS.get(0),
                                         new MeterChangeDetector.Crop(70, 97, 91, 167, 100, 16))
