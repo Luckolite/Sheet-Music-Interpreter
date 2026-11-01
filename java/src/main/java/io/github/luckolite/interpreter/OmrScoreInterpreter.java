@@ -2977,7 +2977,11 @@ final class OmrScoreInterpreter {
                             note.head.centerY,
                             note.staffGap,
                             staffs.indexOf(owner),
-                            owner == null ? null : owner.pitchTrack));
+                            owner == null ? null : owner.pitchTrack,
+                            owner == null ? Float.NaN : owner.top,
+                            owner == null ? Float.NaN : owner.bottom,
+                            owner == null ? -1 : owner.index,
+                            owner == null ? 0 : owner.count));
         }
         int[] marks = NoteArticulationDetector.detect(labels, gray, width, height, anchors);
         for (int i = 0; i < withRests.size(); i++)

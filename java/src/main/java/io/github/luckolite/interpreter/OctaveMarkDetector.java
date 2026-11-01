@@ -25,6 +25,39 @@ final class OctaveMarkDetector {
         private static final int[] VALUES = {-1, 1};
     }
 
+    /** Exact short-dash ink already accepted by the ordinary printed octave-word
+     * and dash-chain recognizers. A separate genuine tenuto is never in this set. */
+    static java.util.BitSet printedDashInk(
+            byte[] gray, int width, int height, List<PlayingTechniqueDetector.Staff> staffs) {
+        var result = new java.util.BitSet();
+        if (staffs.isEmpty()) return result;
+        gray = contrastedInk(gray, width, height);
+        for (var word : printedWords(gray, width, height, staffs, true)) {
+            int shift = shift(word.text());
+            if (shift == 0) continue;
+            var staff = owner(word, staffs, shift, height, true, gray, width);
+            if (staff == null) continue;
+            float gap = staff.gap();
+            float textRight =
+                    Math.min(
+                            word.right() * width,
+                            word.left() * width
+                                    + Math.max(
+                                            gap * 2, (word.bottom() - word.top()) * height * 3.5f));
+            dashEnd(
+                    gray,
+                    width,
+                    height,
+                    textRight,
+                    word.top() * height,
+                    word.bottom() * height,
+                    gap,
+                    3,
+                    result);
+        }
+        return result;
+    }
+
     private OctaveMarkDetector() {}
 
     static int shift(String text) {
@@ -1050,12 +1083,26 @@ final class OctaveMarkDetector {
             float bottom,
             float gap,
             int minimum) {
+        return dashEnd(gray, width, height, start, top, bottom, gap, minimum, null);
+    }
+
+    private static float dashEnd(
+            byte[] gray,
+            int width,
+            int height,
+            float start,
+            float top,
+            float bottom,
+            float gap,
+            int minimum,
+            java.util.BitSet acceptedInk) {
         if (gray == null || gray.length != width * height) return -1;
         int left = Math.max(0, Math.round(start - gap * .35f));
         int y1 = Math.max(0, Math.round(top - gap * .15f)),
                 y2 = Math.min(height - 1, Math.round(bottom + gap * .4f));
         int best = -1;
         for (int y = y1; y <= y2; y++) {
+            var runs = acceptedInk == null ? null : new ArrayList<int[]>();
             int first = -1,
                     last = -1,
                     count = 0,
@@ -1120,13 +1167,28 @@ final class OctaveMarkDetector {
                     if (count > 0 && ++interruptions <= 1) continue;
                     break;
                 }
+                if (runs != null) runs.add(new int[] {a, x - 1, scanY});
                 if (length < gap * .18f) shortDots++;
                 if (first < 0) first = a;
                 last = x - 1;
                 count++;
             }
             if (count >= Math.max(minimum, skippedSuffix ? 6 : shortDots > count / 2 ? 5 : 3)
-                    && last - first >= gap * 3) best = Math.max(best, last);
+                    && last - first >= gap * 3) {
+                best = Math.max(best, last);
+                if (acceptedInk != null)
+                    for (int[] run : runs)
+                        for (int column = run[0]; column <= run[1]; column++) {
+                            // A previously visited seed already owns its full vertical ink segment.
+                            if (acceptedInk.get(run[2] * width + column)) continue;
+                            int a = run[2], b = a;
+                            while (a > 0 && (gray[(a - 1) * width + column] & 255) < 165) a--;
+                            while (b + 1 < height && (gray[(b + 1) * width + column] & 255) < 165)
+                                b++;
+                            for (int yInk = a; yInk <= b; yInk++)
+                                acceptedInk.set(yInk * width + column);
+                        }
+            }
         }
         return best < 0 ? -1 : best + gap * .55f;
     }

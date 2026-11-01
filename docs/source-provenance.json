@@ -4866,20 +4866,20 @@
     },
     "NoteArticulationDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteArticulationDetector.java",
-      "source_sha256": "30af8fcc530fe21e3524ee6663aceb5961fbd3b3cc81b7bc28af7d2ae5a0ca3e",
+      "source_sha256": "c1b5800e47e50e841dd98c1247cceab996f5d45b0594d547632e58b9ac1ad02c",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
-      "source_normalized_sha256": "30af8fcc530fe21e3524ee6663aceb5961fbd3b3cc81b7bc28af7d2ae5a0ca3e",
+      "source_normalized_sha256": "c1b5800e47e50e841dd98c1247cceab996f5d45b0594d547632e58b9ac1ad02c",
       "reviewed_app_base_commit": "8812ebc0b8276b4a84b5852ea74ccc4b689c78b8",
       "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/NoteArticulationDetector.java",
-      "standalone_sha256": "b7e31ecb966cd02b88a9736e98b47893b201aa0739c169dd23d53bf0cc213d02",
+      "standalone_sha256": "0405cd078630ee7532bc1680c0b3299a7d96d81e480cd6050f696199f585cf22",
       "license": "Apache-2.0",
       "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "bow291_review_note": "Add complete measured bow-cap/two-leg detection with unique actual attack and above-own-staff context; existing articulation exclusions and opposite-rule continuation guards remain unchanged.",
       "ruled_caret_review_note": "An interior crossbar must close an already observed raw opening. A distant ruled caret additionally requires its own continuous thin terminated stem; independently proved short ledger crossings retain their finite raw envelope. Original procedural controls include AA text crossbars, detached/broken shafts and thick/partial ledger refusals. No private score content or model changes.",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
-      "standalone_normalized_sha256": "b7e31ecb966cd02b88a9736e98b47893b201aa0739c169dd23d53bf0cc213d02",
+      "standalone_normalized_sha256": "0405cd078630ee7532bc1680c0b3299a7d96d81e480cd6050f696199f585cf22",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "complete_raw_staccato_review": "Complete original raw dot components use the existing raster law before dark-core extraction. Joined/normalized additions retain existing admission. Original procedural controls; thresholds, models, palettes and caps unchanged.",
       "closed_dot_fringe_review": "New optional local acquisition requires a complete convex monotone literal fringe around one existing raw core, unchanged unique owner and existing compact raster admission. Legacy shapes retain priority and all later role guards remain. Original procedural controls; bounded optional work refuses all additions atomically.",
@@ -4889,7 +4889,8 @@
       "recognition126_review_note": "Complete literal cap graph and exact certified auxiliary fit pixels; original synthetic controls, same whole denominator/coverage/ownership/resource limits. Namespace-only Java port and matching cache revision, no model or layout changes.",
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
       "recognition131_review": "Namespace-only executable port with AOSP formatting; finite adjacent single-staff UP ownership or matching cache epoch. Original Apache-2.0/OFL fixtures; no source score material, models or layout changes.",
-      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged."
+      "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged.",
+      "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets."
     },
     "NoteOrnament.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/NoteOrnament.java",
@@ -5098,14 +5099,16 @@
     },
     "OctaveMarkDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveMarkDetector.java",
-      "source_sha256": "bcd1ec68bdfeaf899dea5d9839b2175743f43004782ca730ea062fac4a34584c",
-      "source_normalized_sha256": "e6660cee3beabf4138ddb47661cd6908aacd3092f46d3548705e6e890fbd268d",
+      "source_sha256": "42e1c6e878836c26ffe0a06bcf457cd4354c90c781a879df63075c3b96602628",
+      "source_normalized_sha256": "42e1c6e878836c26ffe0a06bcf457cd4354c90c781a879df63075c3b96602628",
       "review_note": "Intrinsic octave bass clefs, complete contested ledger ownership, grace accidentals, independently rooted beam/slur separation, and below-staff full octave-word ownership. Original procedural/licensed-font regressions; no private score pixels, model changes or song-specific rules.",
       "reviewed_source_state": "working-tree",
-      "standalone_sha256": "9df69823fab27b8eb0f2361b25891d1b5bfe468a4bc7114918eb0e8ff940fdd8",
+      "standalone_sha256": "22d6c9875750183ee2d696b8a302a5868e693a4977d7cdbc17878b9ab7b90419",
       "reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
       "scoped_reviewed_app_commit": "bfdbf8ffd34400e72afacb03560270a4d888e0b6",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OctaveMarkDetector.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/OctaveMarkDetector.java",
+      "license": "Apache-2.0",
+      "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets."
     },
     "OctaveWordShapes.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OctaveWordShapes.java",
@@ -5149,11 +5152,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "af03eed1debd59ec9ffddb188d785d038755560cb1b618a36cc9babae5333e70",
+      "source_sha256": "e58af2a925cb50deb2517c6bc5f551321c00328bf5930faa744e91eceb2a8c45",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "233bb269d91c506cec0ebfeedcf4d19c908085b79b8128fdb420ab48373599e2",
+      "source_normalized_sha256": "e58af2a925cb50deb2517c6bc5f551321c00328bf5930faa744e91eceb2a8c45",
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
-      "standalone_sha256": "bd23c6b34feb479cabd38b18fe11caaad5b6d2d26eb6735d5b83daf2d404583e",
+      "standalone_sha256": "6cba5bfaac2dde5cb61cf31eb90bb11c68af7d429dda59462c720dbf53c9c842",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
@@ -5166,7 +5169,7 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "6d5313bbe41dc9aa6918e15425a14d47db18052a3e5e13f7a760fca3b47d3ea5",
+      "standalone_normalized_sha256": "6cba5bfaac2dde5cb61cf31eb90bb11c68af7d429dda59462c720dbf53c9c842",
       "current_source_review": "Allocate bounded shared-ledger caches only after an eligible independently owned remote head; exact split sibling capture retained. Existing cancellation zero-work contract restored;812 focused tests and1373 retained complete native note records preserved. Models, limits and layouts unchanged.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
@@ -5210,7 +5213,8 @@
       "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies.",
       "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes.",
       "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced.",
-      "repeated_key_role_review": "A complete one-to-one ordered repetition of the established nonzero key at the existing selected row clef keeps its signature role. Key voting, spacing and glyph classifiers unchanged. Original procedural regression only; no private score assets."
+      "repeated_key_role_review": "A complete one-to-one ordered repetition of the established nonzero key at the existing selected row clef keeps its signature role. Key voting, spacing and glyph classifiers unchanged. Original procedural regression only; no private score assets.",
+      "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -11500,6 +11504,24 @@
       "source_normalized_sha256": "2a617d41ef1c2905a51ddfd774e970b4be5b4b8f654cbac86f6dad065ad2a8b6",
       "standalone_sha256": "2aa486e904066e0ab71b553bcac4280a0591d40f21f77cfe129cc97958c21bce",
       "repeated_key_role_review": "A complete one-to-one ordered repetition of the established nonzero key at the existing selected row clef keeps its signature role. Key voting, spacing and glyph classifiers unchanged. Original procedural regression only; no private score assets."
+    },
+    "PhysicalStaffAccentOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PhysicalStaffAccentOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PhysicalStaffAccentOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "b0915b07033f691f4a558652f5bc2fb5e7c12f3805dcf933ebbfa379356a15e5",
+      "source_normalized_sha256": "b0915b07033f691f4a558652f5bc2fb5e7c12f3805dcf933ebbfa379356a15e5",
+      "standalone_sha256": "746f586faa6ef35bda32043765efc5123775fdeaf586fbb6e39fed2cc982c2c1",
+      "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets."
+    },
+    "RegisteredOctaveLeaderOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/RegisteredOctaveLeaderOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/RegisteredOctaveLeaderOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "fb6ae1139f6ff0e444675ddb37294ba69843b9bb624700a22c32a2e5515a013c",
+      "source_normalized_sha256": "fb6ae1139f6ff0e444675ddb37294ba69843b9bb624700a22c32a2e5515a013c",
+      "standalone_sha256": "798b6a1582eb2216580c99b2a5b25545999908e1cd75f8b9bd6010cd2c80fcd1",
+      "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets."
     }
   },
   "finite_curved_approach_review": {

@@ -8,7 +8,20 @@ import java.util.List;
 
 /** Conservative isolated-ink recognition. Unknown marks never shorten a note. */
 final class NoteArticulationDetector {
-    record Anchor(float x, float y, float gap, int staff, StaffPitchTrack track) {
+    record Anchor(
+            float x,
+            float y,
+            float gap,
+            int staff,
+            StaffPitchTrack track,
+            float staffTop,
+            float staffBottom,
+            int staffIndex,
+            int staffCount) {
+        Anchor(float x, float y, float gap, int staff, StaffPitchTrack track) {
+            this(x, y, gap, staff, track, Float.NaN, Float.NaN, -1, 0);
+        }
+
         Anchor(float x, float y, float gap, int staff) {
             this(x, y, gap, staff, null);
         }
@@ -22,6 +35,75 @@ final class NoteArticulationDetector {
         float y() {
             return (top + bottom) * .5f;
         }
+    }
+
+    /** Physical staff proximity is independent of a remote ledger head's height.
+     * Missing, overlapping or contradictory frames retain legacy attribution. */
+    private static int physicalStaffAccentOwner(
+            Glyph glyph, List<Anchor> notes, byte[] gray, int width, int height) {
+        java.util.LinkedHashMap<Integer, Anchor> frames = new java.util.LinkedHashMap<>();
+        for (Anchor n : notes) {
+            if (!Float.isFinite(n.staffTop + n.staffBottom + n.gap)
+                    || n.gap <= 0
+                    || n.staffTop >= n.staffBottom) return -1;
+            Anchor prior = frames.putIfAbsent(n.staff, n);
+            if (prior != null
+                    && (prior.staffTop != n.staffTop
+                            || prior.staffBottom != n.staffBottom
+                            || prior.gap != n.gap
+                            || prior.staffIndex != n.staffIndex
+                            || prior.staffCount != n.staffCount)) return -1;
+        }
+        var ordered = new ArrayList<>(frames.values());
+        ordered.sort(java.util.Comparator.comparingDouble(n -> n.staffTop));
+        Anchor selected = null;
+        for (int i = 0; i + 1 < ordered.size(); i++) {
+            Anchor upper = ordered.get(i), lower = ordered.get(i + 1);
+            if (upper.staffBottom >= lower.staffTop) return -1;
+            if (glyph.top <= upper.staffBottom || glyph.bottom >= lower.staffTop) continue;
+            float[] u =
+                    PrintedDirectionStaff.printedRules(
+                            gray, width, height, glyph.x(), upper.staffBottom, upper.gap);
+            float[] l =
+                    PrintedDirectionStaff.printedRules(
+                            gray, width, height, glyph.x(), lower.staffBottom, lower.gap);
+            if (!samePhysicalFrame(u, upper) || !samePhysicalFrame(l, lower)) return -1;
+            float upperBottom = u[0], lowerTop = l[0] - 4 * l[1];
+            if (glyph.top <= upperBottom || glyph.bottom >= lowerTop) return -1;
+            float middle = (upperBottom + lowerTop) * .5f;
+            Anchor owner = glyph.bottom < middle ? upper : glyph.top > middle ? lower : null;
+            if (owner == null || selected != null) return -1;
+            selected = owner;
+        }
+        if (selected == null) return -1;
+        int best = -1;
+        double distance = Double.POSITIVE_INFINITY;
+        for (int i = 0; i < notes.size(); i++) {
+            Anchor n = notes.get(i);
+            float dx = Math.abs(glyph.x() - n.x) / n.gap;
+            float dy = Math.abs(glyph.y() - n.y) / n.gap;
+            if (n.staff != selected.staff || dx > .7f || dy < .7f || dy > 8f) continue;
+            double score = dx * 3 + dy;
+            if (score < distance) {
+                distance = score;
+                best = i;
+            }
+        }
+        if (best < 0) return -1;
+        Anchor attack = notes.get(best);
+        float[] atHead =
+                PrintedDirectionStaff.printedRules(
+                        gray, width, height, attack.x, attack.staffBottom, attack.gap);
+        return samePhysicalFrame(atHead, attack) ? best : -1;
+    }
+
+    private static boolean samePhysicalFrame(float[] rules, Anchor n) {
+        // Existing PrintedDirectionStaff owner/frame agreement policy, unchanged.
+        return rules != null
+                && rules.length >= 2
+                && Float.isFinite(rules[0] + rules[1])
+                && Math.abs(rules[0] - n.staffBottom) <= n.gap * 1.5f
+                && Math.abs(rules[1] - n.gap) <= n.gap * .15f;
     }
 
     private NoteArticulationDetector() {}
@@ -1554,6 +1636,7 @@ final class NoteArticulationDetector {
         // Raw components retain symbols that the semantic model omitted. Never erase staff
         // lines: doing so would manufacture dashes/dots from beams, stems and noteheads.
         boolean raw = gray != null && gray.length == labels.length;
+        java.util.BitSet octaveDashInk = null;
         boolean[] seen = new boolean[labels.length];
         int[] queue = new int[labels.length];
         List<Glyph> glyphs = new ArrayList<>();
@@ -1786,6 +1869,7 @@ final class NoteArticulationDetector {
                     // Contrast belongs to the glyph, not the candidate note.
                     int bodyContrast = -1;
                     int best = -1, mark = 0;
+                    int physicalAccentOwner = Integer.MIN_VALUE;
                     double distance = Double.MAX_VALUE;
                     Integer joinedOwner = joinedOwners.get(glyph);
                     boolean completeRawBody =
@@ -1889,6 +1973,17 @@ final class NoteArticulationDetector {
                         if (recoveredCore
                                 && candidate == NoteArticulation.STACCATISSIMO
                                 && embeddedFragmentWord(glyph, context, labels, note.gap)) continue;
+                        if (raw && candidate == NoteArticulation.ACCENT) {
+                            if (physicalAccentOwner == Integer.MIN_VALUE)
+                                physicalAccentOwner =
+                                        physicalStaffAccentOwner(glyph, notes, gray, width, height);
+                            if (physicalAccentOwner >= 0
+                                    && note.staff != notes.get(physicalAccentOwner).staff) continue;
+                        }
+                        boolean staffOwnedAccent =
+                                candidate == NoteArticulation.ACCENT
+                                        && physicalAccentOwner >= 0
+                                        && note.staff == notes.get(physicalAccentOwner).staff;
                         boolean stemOwnedDot =
                                 raw
                                         && candidate == NoteArticulation.STACCATO
@@ -1911,10 +2006,14 @@ final class NoteArticulationDetector {
                                                 : beamOwnedMarcato(
                                                         glyph, note, gray, width, height));
                         if (candidate == 0
-                                || dy > 6f && !stemOwnedDot && !stemOwnedMarcato
+                                || dy > 6f
+                                        && !stemOwnedDot
+                                        && !stemOwnedMarcato
+                                        && !staffOwnedAccent
                                 || dy > 5.5f
                                         && candidate != NoteArticulation.MARCATO
-                                        && !stemOwnedDot) continue;
+                                        && !stemOwnedDot
+                                        && !staffOwnedAccent) continue;
                         if (raw
                                 && (candidate == NoteArticulation.TENUTO
                                         || candidate == NoteArticulation.STACCATO
@@ -1986,6 +2085,51 @@ final class NoteArticulationDetector {
                                         note.y,
                                         note.gap,
                                         glyph.pixels)) continue;
+                        if (raw && candidate == NoteArticulation.TENUTO) {
+                            if (octaveDashInk == null) {
+                                var frames =
+                                        new java.util.LinkedHashMap<
+                                                Integer, PlayingTechniqueDetector.Staff>();
+                                boolean completeFrames = true;
+                                for (Anchor a : notes) {
+                                    if (!Float.isFinite(a.staffTop + a.staffBottom + a.gap)
+                                            || a.gap <= 0
+                                            || a.staffTop >= a.staffBottom
+                                            || a.staffIndex < 0
+                                            || a.staffCount <= a.staffIndex) {
+                                        completeFrames = false;
+                                        break;
+                                    }
+                                    var frame =
+                                            new PlayingTechniqueDetector.Staff(
+                                                    a.staffTop,
+                                                    a.staffBottom,
+                                                    a.gap,
+                                                    a.staffIndex,
+                                                    a.staffCount);
+                                    var prior = frames.putIfAbsent(a.staff, frame);
+                                    if (prior != null && !prior.equals(frame)) {
+                                        completeFrames = false;
+                                        break;
+                                    }
+                                }
+                                octaveDashInk =
+                                        completeFrames
+                                                ? OctaveMarkDetector.printedDashInk(
+                                                        gray,
+                                                        width,
+                                                        height,
+                                                        new ArrayList<>(frames.values()))
+                                                : new java.util.BitSet();
+                            }
+                            boolean ownedDash = glyph.count > 0;
+                            for (int pixel : glyph.pixels)
+                                if (!octaveDashInk.get(pixel)) {
+                                    ownedDash = false;
+                                    break;
+                                }
+                            if (ownedDash) continue;
+                        }
                         if (candidate == NoteArticulation.TENUTO && nearHead(glyph, notes))
                             continue;
                         if (raw
