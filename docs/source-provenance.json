@@ -5149,11 +5149,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "c6494d040afe383996c166db7907e7ca8bef1fe17d70d3601e28b7f4f8bc67da",
+      "source_sha256": "ff1d58a229a13dbde007ef1c2715e8a6024b74e395ec05325e360171edbec302",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "3e7abf863748c6cc943032976d5a5e4392c0b0134c24a29bc4f20a9e58bd5cc9",
+      "source_normalized_sha256": "b25b5139681558099389367aa95927bb4d12919a5bf7e947a4d9f0d37525af86",
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
-      "standalone_sha256": "fb0595fe0fd3440c7ca12a06161a54288c13f00472ebed392ed7bbafb61c9d5e",
+      "standalone_sha256": "8a1bade9cb2601bcd6be4077c34cbf00fa85b72a5817d9d4bbc26980543a4d91",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
@@ -5166,7 +5166,7 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "69684d5eee56a52a2c2d808b79358c6a833ec26790fb5749898ae6c52b395b07",
+      "standalone_normalized_sha256": "2b118be916abd386f5557fbc75664766fc77257afbb421af0cf2b5f579c78f64",
       "current_source_review": "Allocate bounded shared-ledger caches only after an eligible independently owned remote head; exact split sibling capture retained. Existing cancellation zero-work contract restored;812 focused tests and1373 retained complete native note records preserved. Models, limits and layouts unchanged.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
@@ -5208,7 +5208,8 @@
       "retained_branch_review_note": "Reviewed retained-branch recovery: independently owned faded flag shafts and centered broad tremolo mask islands with existing bilateral raw proof. Original synthetic regressions and negative controls only. Recognition121; Guide299/audio101, models and dependencies unchanged. Matched runtime packaging/deployment remains deferred.",
       "recognition130_review_note": "Recognition130: preserve legacy compact-half handling; additional HALF/WHOLE single-flag cases require matching raw/directional shaft, one detected exterior direction and no explicit tremolo ownership. Original owned/foreign/opposed and sustained controls; no models or shape threshold changes.",
       "recognition131_review": "Complete ordinary beam groups require at least three distinct independently owned shafts, original two-band core observations and separate inclusive raw-ink paths. Existing standalone adaptations retained; only new shared functional blocks are namespace-adapted. Original fixtures and readable semantic assertions plus canonical synthetic snapshots; no score material or new dependencies.",
-      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes.",
+      "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -11460,6 +11461,24 @@
       "source_normalized_sha256": "cab32f5401922ca8562c4edf24750cd3a58ea0147ec937d1f2cfe9656e115626",
       "standalone_sha256": "92d9f1bdd91ed7c22983d63ddcbc2ee763c373a145cb41c4bc71c6b3bd48533f",
       "closed_counter_paper_review": "Sparse semantic head fragments in the exact already-closed counters of a proved courtesy eight belong to the numeral. Counter boxes never supply ownership; existing figure, paper, size, fringe and played-head guards remain. Original procedural tests only."
+    },
+    "BeamShoulderDotOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/BeamShoulderDotOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/BeamShoulderDotOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "1dfeda19b17884d06cc3bf84c318a38a01a3d25e3166b4b5a0000887814b0a89",
+      "source_normalized_sha256": "7ef5d5102c6564f775a8bcb182c8dd3a2d27d138c051eaa03034680ed5aac697",
+      "standalone_sha256": "b9d6fdc0ef568ce6155e0e54bec1be17a058781841d3122a10980ef1aa5ce95e",
+      "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced."
+    },
+    "DotSearchDomainOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/DotSearchDomainOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/DotSearchDomainOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "e5db1516094b3cac40ed6ecbc97bd1a64735c378b33b77efa52bf5f7342376dd",
+      "source_normalized_sha256": "cf437c5926445af0e8e976a7d22cc6ac96f975d3276a6afc1f3253b70abe3d49",
+      "standalone_sha256": "2b3c6376e619e8a161435c37b0a669eb3d63cd7436ec1ce1d79bfcb9c8ca5f5b",
+      "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced."
     }
   },
   "finite_curved_approach_review": {

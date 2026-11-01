@@ -25417,10 +25417,11 @@ final class OmrScoreInterpreter {
         int inner = Math.max(2, Math.round(gap * .18f));
         int outer = Math.max(inner + 2, Math.round(gap * .43f));
         int box = Math.max(inner + 1, (int) Math.floor(gap * .28f));
+        int searchLeft = Math.max(outer, head.maxX + Math.round(gap * .25f));
         for (int cy = Math.max(outer, Math.round(head.centerY - gap * .6f));
                 cy <= Math.min(height - 1 - outer, Math.round(head.centerY + gap * .6f));
                 cy++) {
-            for (int cx = Math.max(outer, head.maxX + Math.round(gap * .25f));
+            for (int cx = searchLeft;
                     cx <= Math.min(width - 1 - outer, head.maxX + Math.round(gap * 1.55f));
                     cx++) {
                 if ((gray[cy * width + cx] & 255) >= 70) continue;
@@ -25448,7 +25449,7 @@ final class OmrScoreInterpreter {
                 if (darkInner != 8
                         || clearOuter < 6
                         || !shallowDotConnection(gray, width, height, cx, cy, gap, inner)
-                        || steepDotConnection(gray, width, height, cx, cy, gap, inner)) continue;
+                        || steepDotConnection(gray, width, height, cx, cy, gap, searchLeft)) continue;
                 int area = 0, minX = cx + box, maxX = cx - box, minY = cy + box, maxY = cy - box;
                 long sx = 0, sy = 0;
                 for (int y = cy - box; y <= cy + box; y++)
@@ -25479,9 +25480,9 @@ final class OmrScoreInterpreter {
 
     /** A bulb with a connected vertical tail belongs to a rest or flag. */
     private static boolean steepDotConnection(
-            byte[] gray, int width, int height, int cx, int cy, float gap, int inner) {
+            byte[] gray, int width, int height, int cx, int cy, float gap, int searchLeft) {
         int distance = Math.round(gap * 1.15f),
-                left = cx - inner,
+                left = searchLeft,
                 right = cx + Math.round(gap * .85f);
         int top = cy - distance, bottom = cy + distance;
         if (left < 0 || right >= width || top < 0 || bottom >= height) return false;
