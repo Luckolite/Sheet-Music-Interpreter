@@ -60,7 +60,10 @@ final class OctaveClefDigit {
                         b = Math.max(b, queue[i] % w);
                     }
                 int gw = b - a + 1, gh = end - minY + 1;
-                if (gw < gap * .3f || gw > gap * 1.1f || gh < gw * 1.1f) continue;
+                boolean legacyDimensions = gw >= gap * .3f && gw <= gap * 1.1f && gh >= gw * 1.1f;
+                if (!legacyDimensions
+                        && !ClefEightWaist.proves(gray, width, height, x0 + a, y0 + minY, gw, gh))
+                    continue;
                 if (holes(gray, width, x0 + a, y0 + minY, gw, gh) == 2
                         && !neighboringDigit(gray, width, height, x0 + a, y0 + minY, gw, gh, gap))
                     return true;

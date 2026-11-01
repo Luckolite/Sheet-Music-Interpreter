@@ -2432,7 +2432,15 @@ final class OmrScoreInterpreter {
         detected = reconcileSingleShaftChords(detected, labels, gray, width, height);
         detected =
                 applyPrintedClefs(
-                        detected, staffs, clefOrKeyComponents, labels, gray, width, height);
+                        detected,
+                        staffs,
+                        clefOrKeyComponents,
+                        labels,
+                        gray,
+                        width,
+                        height,
+                        clefKeyMembers,
+                        headerAccidentals);
         detected.sort(
                 Comparator.comparingInt((DetectedNote note) -> note.event.measureIndex())
                         .thenComparingDouble(note -> note.event.positionInMeasure())
@@ -6329,9 +6337,29 @@ final class OmrScoreInterpreter {
             byte[] gray,
             int width,
             int height) {
+        return applyPrintedClefs(notes, staffs, glyphs, labels, gray, width, height, null, null);
+    }
+
+    private static List<DetectedNote> applyPrintedClefs(
+            List<DetectedNote> notes,
+            List<Staff> staffs,
+            List<Component> glyphs,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            ExactComponentMembers.Collector clefMembers,
+            List<Component> headerAccidentals) {
         List<DetectedNote> result = new ArrayList<>(notes);
         Map<Integer, Integer> inherited = new HashMap<>();
         List<AccidentalCandidate> headerPieces = null;
+        var cohortBudget =
+                new ExactComponentMembers.Budget(8L * labels.length, 16L * labels.length);
+        boolean cohortReady =
+                clefMembers != null
+                        && headerAccidentals != null
+                        && clefMembers.sameInputFrame(labels, gray, width, height)
+                        && clefMembers.revalidateForExport(cohortBudget);
         for (Staff staff : staffs) {
             List<ClefGlyph> clefs = new ArrayList<>();
             float gap = staff.gap;
@@ -6492,6 +6520,37 @@ final class OmrScoreInterpreter {
             for (DetectedNote note : notes)
                 if (staffForHead(labels, gray, width, height, staffs, note.head) == staff)
                     firstNoteX = Math.min(firstNoteX, note.head.minX);
+            if (cohortReady && firstNoteX < width)
+                for (Component complete :
+                        inRowTrebleCohorts(
+                                glyphs,
+                                notes,
+                                staffs,
+                                staff,
+                                firstNoteX,
+                                clefs,
+                                labels,
+                                gray,
+                                width,
+                                height,
+                                clefMembers,
+                                headerAccidentals,
+                                cohortBudget)) {
+                    Staff frame = headerPrintedFrame(staff, complete.centerX);
+                    int clef =
+                            OctaveClefDigit.above(
+                                            gray,
+                                            width,
+                                            height,
+                                            complete.minX,
+                                            complete.minY,
+                                            complete.maxX,
+                                            frame.top,
+                                            frame.gap)
+                                    ? ScoreNoteEvent.CLEF_TREBLE_OTTAVA
+                                    : ScoreNoteEvent.CLEF_TREBLE;
+                    clefs.add(new ClefGlyph(complete.maxX, clef));
+                }
             boolean alreadyPrinted = false;
             for (ClefGlyph c : clefs) if (c.x < firstNoteX) alreadyPrinted = true;
             if (!alreadyPrinted && firstNoteX < width && staff.pitchTrack != null) {
@@ -6614,6 +6673,202 @@ final class OmrScoreInterpreter {
                 || joined.minY > top + gap * .1f
                 || Math.abs(joined.centerY - (bottom - gap * 1.5f)) > gap * .65f) return null;
         return joined;
+    }
+
+    private static boolean trebleFragmentLink(Component body, Component part, float gap) {
+        // The existing joinHeaderClefFragments acquisition bounds, before its seed gate.
+        return part.minX >= body.minX - gap * .2f
+                && part.maxX <= body.maxX + gap * .6f
+                && part.minY >= body.minY - gap * 2.5f
+                && part.maxY <= body.maxY + gap * 2
+                && part.minY <= body.maxY + gap * 1.2f
+                && part.maxY >= body.minY - gap * 1.2f;
+    }
+
+    /** Acquire the complete raw-connected cohort before asking the unchanged whole-G model. */
+    private static List<Component> inRowTrebleCohorts(
+            List<Component> glyphs,
+            List<DetectedNote> notes,
+            List<Staff> staffs,
+            Staff staff,
+            float firstHead,
+            List<ClefGlyph> printed,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            ExactComponentMembers.Collector members,
+            List<Component> headers,
+            ExactComponentMembers.Budget budget) {
+        int n = glyphs.size();
+        if (!budget.take((long) n * n + n, 128L * n)) return List.of();
+        int[] parent = new int[n];
+        for (int i = 0; i < n; i++) parent[i] = i;
+        float gap = staff.gap;
+        for (int i = 0; i < n; i++)
+            for (int j = i + 1; j < n; j++) {
+                Component a = glyphs.get(i), b = glyphs.get(j);
+                if (!trebleFragmentLink(a, b, gap) && !trebleFragmentLink(b, a, gap)) continue;
+                int x = i, y = j;
+                while (parent[x] != x) x = parent[x];
+                while (parent[y] != y) y = parent[y];
+                parent[y] = x;
+            }
+        Map<Integer, List<Component>> groups = new java.util.LinkedHashMap<>();
+        for (int i = 0; i < n; i++) {
+            int p = i;
+            while (parent[p] != p) p = parent[p];
+            groups.computeIfAbsent(p, unused -> new ArrayList<>()).add(glyphs.get(i));
+        }
+        List<Component> result = new ArrayList<>();
+        List<Component> heads = notes.stream().map(DetectedNote::head).toList();
+        for (List<Component> cohort : groups.values()) {
+            if (cohort.size() < 2) continue;
+            int left = width, right = -1, top = height, bottom = -1, area = 0;
+            double sx = 0, sy = 0;
+            for (Component c : cohort) {
+                left = Math.min(left, c.minX);
+                right = Math.max(right, c.maxX);
+                top = Math.min(top, c.minY);
+                bottom = Math.max(bottom, c.maxY);
+                area += c.area;
+                sx += (double) c.centerX * c.area;
+                sy += (double) c.centerY * c.area;
+            }
+            Component union =
+                    new Component(
+                            area,
+                            left,
+                            right,
+                            top,
+                            bottom,
+                            (float) (sx / area),
+                            (float) (sy / area));
+            if (left <= firstHead || !completeHeaderTreble(union, staff)) continue;
+            boolean rival = false;
+            for (ClefGlyph c : printed) if (c.x >= left && c.x <= right) rival = true;
+            for (Staff other : staffs)
+                if (other != staff && completeHeaderTreble(union, other)) rival = true;
+            for (Component h : headers) if (boxesIntersect(union, h)) rival = true;
+            for (Component h : heads) if (boxesIntersect(union, h)) rival = true;
+            // Never consume a partial cohort while an intersecting original remains outside it.
+            for (Component c : glyphs)
+                if (cohort.stream().noneMatch(part -> part == c) && boxesIntersect(union, c))
+                    rival = true;
+            int w = right - left + 1, h = bottom - top + 1;
+            long cells = (long) w * h;
+            if (rival || cells > 65_536 || !budget.take(20 * cells, 16 * cells)) continue;
+            float[] rails =
+                    PrintedDirectionStaff.printedRules(
+                            gray, width, height, union.centerX, staff.pitchBottom, staff.pitchGap);
+            if (rails == null
+                    || Math.abs(rails[0] - staff.pitchBottom) > gap * 1.5f
+                    || Math.abs(rails[1] - staff.pitchGap) > gap * .15f) continue;
+            boolean[] owned = new boolean[(int) cells];
+            List<int[]> footprints = new ArrayList<>();
+            for (Component c : cohort) {
+                var footprint = members.producerFootprint(c, budget);
+                if (footprint == null
+                        || footprint.parentIdentity() != null
+                        || footprint.originalIdentity() != c
+                        || !budget.take(c.area, 4L * c.area)) {
+                    rival = true;
+                    break;
+                }
+                int[] pixels = footprint.pixels();
+                if (pixels.length != c.area) {
+                    rival = true;
+                    break;
+                }
+                footprints.add(pixels);
+                for (int p : pixels) {
+                    int x = p % width, y = p / width;
+                    if (x < left
+                            || x > right
+                            || y < top
+                            || y > bottom
+                            || labels[p] != OmrMeasurePostProcessor.CLEF_OR_KEY) {
+                        rival = true;
+                        break;
+                    }
+                    int q = (y - top) * w + x - left;
+                    if (owned[q]) {
+                        rival = true;
+                        break;
+                    }
+                    owned[q] = true;
+                }
+                if (rival) break;
+            }
+            if (rival) continue;
+            // A rival is an actual admission by the unchanged accidental picker, not a label proxy.
+            List<AccidentalCandidate> accidentalRoles = new ArrayList<>();
+            for (Component c : cohort)
+                accidentalRoles.add(
+                        new AccidentalCandidate(c, OmrMeasurePostProcessor.CLEF_OR_KEY));
+            accidentalRoles.add(
+                    new AccidentalCandidate(union, OmrMeasurePostProcessor.CLEF_OR_KEY));
+            if (!budget.take((long) notes.size() * notes.size() * accidentalRoles.size(), 0))
+                continue;
+            for (DetectedNote note : notes)
+                if (chooseWrittenAccidental(
+                                        labels,
+                                        width,
+                                        height,
+                                        accidentalRoles,
+                                        note.head,
+                                        note.staffGap,
+                                        heads,
+                                        gray)
+                                .glyph()
+                        != null) {
+                    rival = true;
+                    break;
+                }
+            if (rival) continue;
+            boolean[] ink = new boolean[(int) cells], seen = new boolean[(int) cells];
+            int[] queue = new int[(int) cells];
+            int seed = -1, dark = 0;
+            for (int y = top; y <= bottom; y++)
+                for (int x = left; x <= right; x++) {
+                    int p = y * width + x, q = (y - top) * w + x - left;
+                    if (labels[p] == OmrMeasurePostProcessor.NOTEHEAD) rival = true;
+                    if ((gray[p] & 255) <= 175) {
+                        ink[q] = true;
+                        seed = q;
+                        dark++;
+                    }
+                }
+            if (rival || seed < 0) continue;
+            int take = 0, count = 1;
+            queue[0] = seed;
+            seen[seed] = true;
+            while (take < count) {
+                int p = queue[take++], x = p % w, y = p / w;
+                for (int dy = -1; dy <= 1; dy++)
+                    for (int dx = -1; dx <= 1; dx++) {
+                        int xx = x + dx, yy = y + dy;
+                        if (xx < 0 || xx >= w || yy < 0 || yy >= h) continue;
+                        int q = yy * w + xx;
+                        if (ink[q] && !seen[q]) {
+                            seen[q] = true;
+                            queue[count++] = q;
+                        }
+                    }
+            }
+            if (count != dark) continue;
+            for (int[] pixels : footprints) {
+                boolean support = false;
+                for (int p : pixels) if ((gray[p] & 255) <= 175) support = true;
+                if (!support) rival = true;
+            }
+            if (!rival) result.add(union);
+        }
+        return result;
+    }
+
+    private static boolean boxesIntersect(Component a, Component b) {
+        return a.minX <= b.maxX && b.minX <= a.maxX && a.minY <= b.maxY && b.minY <= a.maxY;
     }
 
     private static Component bassBodyBelowOctave(
