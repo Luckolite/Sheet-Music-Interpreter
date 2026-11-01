@@ -12,7 +12,7 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
-Recognition 135 repairs barline head contact, courtesy-meter counter ownership and false augmentation-dot shoulders. All changes use existing optical and ownership contracts; 31 original procedural regressions contain no private score data. Guide 299, audio 101, models and wire layouts remain unchanged.
+Recognition 135 repairs barline head contact, courtesy-meter counter ownership and false augmentation-dot shoulders. All changes use existing optical and ownership contracts; 37 original procedural regressions contain no private score data. Canonical Song tempo is converted once from its meter pulse; app and desktop callers retain the resulting quarter-note clock, while explicit printed-pulse APIs remain compatible. Guide 299, audio 101, models and wire layouts remain unchanged.
 
 
 Recognition 134 qualifies a short opening from complete source-owned notehead extents and all accepted meter headers, retaining the existing distance and beam checks. Missing producer evidence uses the prior conservative path. Local and full-page pipelines pass their original Analysis; managed ANALYZE transport remains unchanged. Original synthetic tests cover authentication, ownership, lane coverage and strict clock recapture. Guide 299/audio 101 and models are unchanged.
@@ -1372,7 +1372,7 @@ heads, adjacent complete homologous physical systems and both returning/outgoing
 arc evidence, preserving existing pitch, onset and competing-voice guards.
 
 Public 0.1.10 uses guide 283 and analysis marker -24 with 33-byte typed rest records;
-legacy guides 260ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“282 and analysis layouts retain 32-byte LITERAL rests. The
+legacy guides 260ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ282 and analysis layouts retain 32-byte LITERAL rests. The
 recognition 25 epoch is independent of this physical layout. Original Apache-2.0
 procedural/scalar regressions cover the shared behavior and writer compatibility.
 Package and existing Diagnostics adaptations preserve executable source behavior.

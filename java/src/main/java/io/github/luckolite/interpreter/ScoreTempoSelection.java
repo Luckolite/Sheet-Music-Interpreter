@@ -58,6 +58,22 @@ public final class ScoreTempoSelection {
                                 .toList();
         if (selectedMarkedBpm <= 0) return ordered;
         double quarterBpm = selectedQuarterBpm(selectedMarkedBpm, fallbackQuarterBpm, ordered);
+        return forEngravingQuarterBpm(quarterBpm, fallbackBeatUnit, ordered);
+    }
+
+    /** Re-engraves an already converted quarter-note clock without applying the printed unit again. */
+    public static List<ScoreTempoChange> forEngravingQuarterBpm(
+            double quarterBpm, double fallbackBeatUnit, List<ScoreTempoChange> printed) {
+        var ordered =
+                (printed == null ? List.<ScoreTempoChange>of() : printed)
+                        .stream()
+                                .sorted(
+                                        java.util.Comparator.comparingInt(
+                                                        ScoreTempoChange::measureIndex)
+                                                .thenComparingDouble(
+                                                        ScoreTempoChange::positionInMeasure))
+                                .toList();
+        if (quarterBpm <= 0) return ordered;
         if (ordered.stream()
                 .anyMatch(mark -> mark.measureIndex() == 0 && mark.positionInMeasure() == 0))
             return atOpeningTempo(quarterBpm, ordered);

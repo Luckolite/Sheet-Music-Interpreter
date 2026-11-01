@@ -8241,10 +8241,13 @@
     },
     "ScoreTempoSelection.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/playback/ScoreTempoSelection.java",
-      "source_sha256": "2f8a5db98ab3c85aed7641530885e1c61fbbe8f326bbb34aa6d9574ddfa7afce",
+      "source_sha256": "10196f74cf0492c4e347d98c650d42b8b59b6140b733c3cbc20b90acacb68997",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
-      "source_normalized_sha256": "2f8a5db98ab3c85aed7641530885e1c61fbbe8f326bbb34aa6d9574ddfa7afce",
-      "reviewed_source_state": "Music Sheets1.18.389 reviewed conversion tempo staging, preserving accepted1.18.388"
+      "source_normalized_sha256": "0b1d5ae2bf2302c74aa29192fcaca141e63cb0ed29d29609471677d795ec4bac",
+      "reviewed_source_state": "Music Sheets1.18.389 reviewed conversion tempo staging, preserving accepted1.18.388",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreTempoSelection.java",
+      "standalone_sha256": "c1d684bd7b66c1334ef653395af28b2efc8f2ec8e58159ac50b701c82802c16e",
+      "tempo_unit_135_review": "Song meter-pulse values are converted to quarter-note clocks once. Existing APIs for explicitly selected printed pulses remain compatible. A new quarter-clock engraving entry retains pulse units and later tempo ratios."
     },
     "ScoreTiePitchGuard.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreTiePitchGuard.java",
@@ -11479,6 +11482,14 @@
       "source_normalized_sha256": "cf437c5926445af0e8e976a7d22cc6ac96f975d3276a6afc1f3253b70abe3d49",
       "standalone_sha256": "2b3c6376e619e8a161435c37b0a669eb3d63cd7436ec1ce1d79bfcb9c8ca5f5b",
       "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced."
+    },
+    "java/src/test/java/io/github/luckolite/interpreter/QuarterTempoEngravingOriginalTest.java": {
+      "origin": "Original standalone tempo records and unit conversions; Apache-2.0.",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/QuarterTempoEngravingOriginalTest.java",
+      "standalone_sha256": "48d09acf330263a71d35456ebbc0bf1a63545afaafb8cd029609994514ed0254",
+      "reviewed_sha256": "48d09acf330263a71d35456ebbc0bf1a63545afaafb8cd029609994514ed0254",
+      "license": "Apache-2.0",
+      "recognition135_review_note": "Six original canonical quarter-clock/compound-meter/engraving and explicit-pulse compatibility regressions. App-only Song callers and desktop request preparation are qualified separately; no Android classes or private score data ported."
     }
   },
   "finite_curved_approach_review": {
@@ -16768,13 +16779,20 @@
   },
   "wonder_timing_135_review": {
     "summary": "Recover independently proved common bars at head contact, exclude exact closed courtesy-meter counters from played ink, and reject false dot shoulders using the existing producer search domain. Original synthetic regressions only.",
-    "new_original_tests": 31,
+    "new_original_tests": 37,
     "cache_revision": 135,
     "guide": 299,
     "audio": 101,
     "models_changed": false,
     "runtime_helpers_added": false,
     "standalone_adapter": "Existing Diagnostics.log adapter retained.",
-    "desktop_contract": "App/Hub/native writer/standalone writer all recognition 135; existing Guide 299/audio 101 record layouts unchanged."
+    "desktop_contract": "App/Hub/native writer/standalone writer all recognition 135; existing Guide 299/audio 101 record layouts unchanged.",
+    "tempo": "Canonical library tempo uses its meter pulse. App and native audio convert it once; engraving accepts the resulting quarter-note clock. Existing explicit printed-pulse APIs retain their original semantics.",
+    "app_only_callers": [
+      "SongActivity",
+      "SheetConversionEngravingPolicy",
+      "SheetConversionPlayback",
+      "NativeAudioTrack"
+    ]
   }
 }
