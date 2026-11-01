@@ -9611,8 +9611,8 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "6b709f0a2102dc5eeb57efd13a367e00456f4c9c4be83a991dc5622f2ff456c4",
-      "source_normalized_sha256": "51d7b802c65762284ad741ab6b7d13545cb4ba0f450ab0198556e25789e0d783",
+      "source_sha256": "36f5a2d56f9c48fca6683791321efa7667af69c573f40ab5c360e07846807f7f",
+      "source_normalized_sha256": "e40b2d9d988be83f318f791ad0d4c2c6cfadc2f601f65e20ffc08bf87185f52c",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes.",
       "standalone_sha256": "08c2706b4992015e123592ad64b97cdf137ebbe9cc575b2e30b84b07cef6b9e2",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
@@ -16774,6 +16774,7 @@
     "audio": 101,
     "models_changed": false,
     "runtime_helpers_added": false,
-    "standalone_adapter": "Existing Diagnostics.log adapter retained."
+    "standalone_adapter": "Existing Diagnostics.log adapter retained.",
+    "desktop_contract": "App/Hub/native writer/standalone writer all recognition 135; existing Guide 299/audio 101 record layouts unchanged."
   }
 }
