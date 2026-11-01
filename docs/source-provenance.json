@@ -2212,15 +2212,16 @@
     },
     "CompleteBeamGroupInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CompleteBeamGroupInk.java",
-      "source_sha256": "80e2841ae8964497b25962c126c95670a00cf17871c2b98d6cd13403e9560eec",
-      "source_normalized_sha256": "ba71c69d3c179c5e4543ee8f883aa9661967c4754248c4a7909cdf49ffdf3b4f",
-      "standalone_sha256": "4e8b796b82146400ecbd9644f3c7fe40abc22e32e6e9daa56e08b54311deb21f",
+      "source_sha256": "9e781f2eab81c74a193bf64911a46605af9d1d32dbf65193c1aba07894fcc115",
+      "source_normalized_sha256": "9e781f2eab81c74a193bf64911a46605af9d1d32dbf65193c1aba07894fcc115",
+      "standalone_sha256": "0b8ab21d90e24e4a407d51983d6e2b50784b4056e91cf96776c3e277a0e1ad43",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CompleteBeamGroupInk.java",
       "license": "Apache-2.0",
-      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes."
+      "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "CompleteCapitalFTopologyTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CompleteCapitalFTopologyTest.java",
@@ -2580,12 +2581,15 @@
     },
     "CrossStaffBeamDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossStaffBeamDetector.java",
-      "source_sha256": "37a0a6da78198254737f11e001b6e7eb237e51a55757d3e3b71f143f0f4478a6",
-      "source_normalized_sha256": "1aa0fa46772e8dd4b1f09300a0906fef609d85b65ea9d6e92dfc6999a0cb16cd",
+      "source_sha256": "ce204e443b6dfb2d539f1a1125edeb4ceaed1ef6341de15263cdcc7ce2d0121d",
+      "source_normalized_sha256": "ce204e443b6dfb2d539f1a1125edeb4ceaed1ef6341de15263cdcc7ce2d0121d",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CrossStaffBeamDetector.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CrossStaffBeamDetector.java",
+      "license": "Apache-2.0",
+      "standalone_sha256": "3f81b62333fd429ac79ac344070fbffadccffa57c776219eea216d9ef86b62b8",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "CueCaptionOwnershipOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CueCaptionOwnershipOriginalTest.java",
@@ -5051,12 +5055,13 @@
     },
     "ObservedStemBeam.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ObservedStemBeam.java",
-      "source_sha256": "b08cb441cdea2d5e0bc9c5cedf0ffe7abd154fa3a6440338a696912b3c3dd2e7",
-      "source_normalized_sha256": "b08cb441cdea2d5e0bc9c5cedf0ffe7abd154fa3a6440338a696912b3c3dd2e7",
+      "source_sha256": "d76d15e28269ea78ce5230c4d1549ff02dc67282ddbca9eeb4eed2872b1dbbae",
+      "source_normalized_sha256": "d76d15e28269ea78ce5230c4d1549ff02dc67282ddbca9eeb4eed2872b1dbbae",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ObservedStemBeam.java",
-      "standalone_sha256": "9bfdab934c15f555eadf1caafb4d1ebdf0ac198e5fff0ddc2af5aca4aa690683",
+      "standalone_sha256": "46bc527cbd7dc0cdfb5f76c5be7db8743bb93cd451bc03fc024f2afd96131449",
       "license": "Apache-2.0",
-      "review_note": "Shared source130 helper with namespace-only executable token adaptation, explicit native decoder selection and source-free original regressions. No model, private score, device, signing or app-history data."
+      "review_note": "Shared source130 helper with namespace-only executable token adaptation, explicit native decoder selection and source-free original regressions. No model, private score, device, signing or app-history data.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "OcrCtcDecoder.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OcrCtcDecoder.java",
@@ -5154,11 +5159,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "6d29a586003516dfcb7ebcc8ab95f364553b265711a295e0ad3fff84b97dbf2d",
+      "source_sha256": "727656b63334e74bb6bf6ce7e1e5fb828344bbc694c2f271ac8b9e968186e456",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "6d29a586003516dfcb7ebcc8ab95f364553b265711a295e0ad3fff84b97dbf2d",
+      "source_normalized_sha256": "727656b63334e74bb6bf6ce7e1e5fb828344bbc694c2f271ac8b9e968186e456",
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
-      "standalone_sha256": "c5e0cb71a00535c41dc6225229cf49de46d18b76ea6efa8c9d3bc092924289b6",
+      "standalone_sha256": "1212cb94a725f4a4b1d6d833ca6a7316bd3ad70240cd069c6cdaa71e33539ff4",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
@@ -5171,7 +5176,7 @@
       "recognition91_review_note": "Reviewed recognition91: observed terminal ribbon; boundary-crossing hairpin proposal completion (anchor coordinate-span <=4; new 4M proposal budget); complete raw beam following-rest voice. Existing admission fits and 145/225, model, Guide291 and audio97 unchanged. Original procedural tests only.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "c5e0cb71a00535c41dc6225229cf49de46d18b76ea6efa8c9d3bc092924289b6",
+      "standalone_normalized_sha256": "1212cb94a725f4a4b1d6d833ca6a7316bd3ad70240cd069c6cdaa71e33539ff4",
       "current_source_review": "Allocate bounded shared-ledger caches only after an eligible independently owned remote head; exact split sibling capture retained. Existing cancellation zero-work contract restored;812 focused tests and1373 retained complete native note records preserved. Models, limits and layouts unchanged.",
       "release_transport_review": "For valid blank/no-staff inputs, unavailable context preserves the supplied measure count without inventing source observations or clock authority. The original strict whole-analysis server parity assertion remains enabled; an original two-measure blank control covers the early return. A generic comment replaces an internal review title.",
       "natural_cancellation_review": {
@@ -5217,7 +5222,8 @@
       "dot_producer_domain_review": "Reuse the existing producer dot-search left boundary for connected vertical-tail checks. Final counts retain ordinary genuine round, tie and rule-linked disks. Standalone Diagnostics.log adapter preserved; no Android dependencies introduced.",
       "repeated_key_role_review": "A complete one-to-one ordered repetition of the established nonzero key at the existing selected row clef keeps its signature role. Key voting, spacing and glyph classifiers unchanged. Original procedural regression only; no private score assets.",
       "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets.",
-      "complete_clef_review": "Whole connected two-counter prefix with exact integer-cell waist supplements existing dimensions; complete in-row raw-connected authenticated clef cohort uses unchanged full-G authority and rejects head/key/accidental rivals. Original OFL fonts only. Known legacy narrow-route B limitation explicitly retained/ignored, not claimed fixed."
+      "complete_clef_review": "Whole connected two-counter prefix with exact integer-cell waist supplements existing dimensions; complete in-row raw-connected authenticated clef cohort uses unchanged full-G authority and rejects head/key/accidental rivals. Original OFL fonts only. Known legacy narrow-route B limitation explicitly retained/ignored, not claimed fixed.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -6001,9 +6007,9 @@
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedBeamSource.java",
       "license": "Apache-2.0",
       "review_note": "Package-only counterpart. Retains exact legacy float-offset arithmetic, supported-seed slope/head acceptance and original work charges. Only unsupported phase intervals enter the128-prepaid exact bilateral five-band spacing fit. Original procedural boundary regression checks actual binding and raw bottom bits. No score material, model or quota changes.",
-      "source_sha256": "001ac15bfe3b1a158a65556633368a0e865764997ef1f3d98e6d58f84940c90c",
-      "source_normalized_sha256": "001ac15bfe3b1a158a65556633368a0e865764997ef1f3d98e6d58f84940c90c",
-      "standalone_sha256": "46aa0ab150f05242908b0abb10c9e4e7d286ca2d5aa7f2997d3188c2fb059753",
+      "source_sha256": "295b2b22dc3ef4094078d27705d029875f7b7c3c46be634f87a7646db484ef79",
+      "source_normalized_sha256": "295b2b22dc3ef4094078d27705d029875f7b7c3c46be634f87a7646db484ef79",
+      "standalone_sha256": "ec0df7a4222f3e19336c68e4b2cb868541c7bcfadad6deac5ee517df7595752b",
       "reviewed_app_commit": "6e268099dd9d173b0eaf8f43b24dccbf968e1eab",
       "faint_literal_pixel_review": {
         "documentation": "docs/faint-beam-pixel-evidence.md",
@@ -6043,12 +6049,13 @@
       },
       "local_phase_uniqueness_review": "docs/local-frame-phase-uniqueness.md",
       "local_phase_uniqueness_app_commit": "de946d8968fa588ae7273095b0d175d48811b924",
-      "standalone_normalized_sha256": "a0aeba8998e361a3439fcdc99d05b54b9f34a3f97ff0cbeccf3a0e7a08541376",
+      "standalone_normalized_sha256": "ec0df7a4222f3e19336c68e4b2cb868541c7bcfadad6deac5ee517df7595752b",
       "scoped_reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
       "reviewed_app_state": "Recognition127 source with matching cache identity; installed desktop124 remains separate.",
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
       "recognition127_clock_review_note": "Capture existing printed clock context before the optional Source pass; carry it only across the private same-order MARCATO mutation. Generic clock capture and generic withNotes remain strict. Original synthetic exact-context/producer/frame/duplicate/budget controls, no models/layouts/timing changes.",
-      "current_source_review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes"
+      "current_source_review": "Reviewed visited-operation billing for two Source shaft entry routes; existing 8m quota, allocation reservations, predicates and legacy APIs retained. Original procedural work/refusal and carrier geometry fixtures only. Budget admission intentionally expands by excluding unvisited rectangle cells; no private data or model changes",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "PrintedBoundaryRestInk.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedBoundaryRestInk.java",
@@ -6624,13 +6631,13 @@
     },
     "PrintedSlurContours.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurContours.java",
-      "source_sha256": "f4f45ffabf055de8983f22f03c9d891fabe39b9b08eb74c552d64e9c6579c909",
-      "source_normalized_sha256": "7c867c6be108b03409d12300e761bf8c577247d4039a82199b76e14bbbe4ed65",
+      "source_sha256": "33b27a3ee3bedb791a52b077a2e515c263740e9f306dec40c47c4391af281986",
+      "source_normalized_sha256": "33b27a3ee3bedb791a52b077a2e515c263740e9f306dec40c47c4391af281986",
       "source_state": "Reviewed preparatory app working-tree source; final functional adoption commit pending",
       "review_note": "Previously published raw bow and white-cap proof now committed with its actual caller; no source pixels are synthesized. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published. Preserve invocation-local physical OCR identity; classify literal mf from bounded complete raw core and independently source-bound notation context without erasing unknown pixels; require actual original/current local five-rule support before separating rest ink. Preserve existing owner/timing and record layouts. Original generated regressions only; no private score pixels, logs, library data, model or signing material. Recognition73 invalidates derived caches; guide290/audio96 layouts unchanged. Portable SHA hex avoids Android API34 dependency.",
       "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
-      "standalone_sha256": "5a5a588e829a1dee2aeaf11d5576b70f8ce3510f56b66124c339d13124ba264f",
+      "standalone_sha256": "df26e6a422c0dcf3e92993566e520b1cea0f98532ce8cad68fe443d6e6df0f4e",
       "license": "Apache-2.0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurContours.java",
       "recognition93_review_note": "Reviewed recognition93: complete same-owner accent/returning-slur partitions carry their proven chevron classification through the ordinary caller; dot recognition and subsequent contrast/text/numeral/semantic guards remain. The released slur fit and complete finite-strip proof are retained, with one prepaid weighted8M search ledger and at most8 bounded strip certificates; no absolute CPU cap claim. One independent high-arch synthetic rendering remains uncovered. Complete legato directions preserve original unresolved expressive text, without a new performance policy. Tuplet five reads its terminal raster band. A new full-depth bulb-only rest scan requires a complete two-bulb sixteenth and existing note/raw-beam/staff/text ownership. Original procedural regressions only; models, Guide291/audio97 and record layouts unchanged.",
@@ -6638,7 +6645,8 @@
       "recognition94_review_note": "Reviewed recognition94: complete raw returning slurs may use a coherent engraved taper only when the center and both observed edges independently return, finite ends remain thin, all widths admit one peak under raster uncertainty, and distinct independently raw-visible same-part heads own the caps. Existing thin recognition, pixel thresholds, cap distances and fit rules remain unchanged. The optional route prepays bounded profile/owner work and propagates UNKNOWN on resource exhaustion. Twelve original analytic regressions; no source scans, model, dependency or record layout change.",
       "recognition97_review_note": "Complete rail-crossing phrase evidence retains finite full-curve checks. Literal neutral full-rest captions require complete original OCR wording, unique existing full-rest ownership and independently registered staff/paper separation when the OCR box includes a rule. Part-local neutral captions preserve literal words on the owning staff without adding pedal sound or changing timing. Guide292/audio97/model lineage unchanged.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
-      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports."
+      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "PrintedSlurFrames.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurFrames.java",
@@ -6657,11 +6665,11 @@
     },
     "PrintedSlurOwners.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurOwners.java",
-      "source_sha256": "a4a242410bdde9e70c93bbfa4b49ad20e1c14361b7d4ccdfdf8937d94c2b4433",
-      "source_normalized_sha256": "c8f2914377154c3c618fc34dcdbdfa6a8abe19abbed037feae313f3b660eeed8",
+      "source_sha256": "b989e6b4841eabee24f6690cac9f1c68d1ffdb6c0b87aa899840000536d46387",
+      "source_normalized_sha256": "b989e6b4841eabee24f6690cac9f1c68d1ffdb6c0b87aa899840000536d46387",
       "source_state": "Reviewed preparatory app source; final functional adoption commit pending",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "standalone_sha256": "236f080710f145b3cb31f04755d4af9060e5b98915da63cd6953c773c3f40ff0",
+      "standalone_sha256": "0ea4f5f670e89cf9ec84d9399aa47e2183ff69004bf00bec40df220f3b4c302b",
       "reviewed_app_commit": "2a877be06c1df81e5ecaad9da96abd9ac45486b5",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurOwners.java",
       "license": "Apache-2.0",
@@ -6670,35 +6678,39 @@
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
       "recognition100_review_note": "Photometric tuplet retries retain independently owned complete original-four contradiction; only contained retry ink from the same full component is refused as three. Typed grace-to-grace slur endpoint fallback requires ordinary end-owner absence, unique grace start, both unchanged strict raw body proofs and existing staff/side/vertical/order/pitch/tie guards. No new contour thresholds, model, audio or wire layout.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
-      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports."
+      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "PrintedSlurPageCapture.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurPageCapture.java",
-      "source_sha256": "2e51387ac5025b96d26956fd02e44820addbae6a9bf43daefec139723ff97ecf",
-      "source_normalized_sha256": "a6a075e879df1f4d18e524a5f5798d1990870ab9cf7339bdb458dcccea2f35fd",
+      "source_sha256": "d0efd1dc220a9b3cd29237bd5654d38a8416dacf792c778e5c717f04da5b0c01",
+      "source_normalized_sha256": "d0efd1dc220a9b3cd29237bd5654d38a8416dacf792c778e5c717f04da5b0c01",
       "source_state": "Committed source; paired packaged rollout remains pending.",
       "reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
       "scoped_reviewed_app_commit": "3762d6ecaead39b460ed0c65b1220b8ee09abc39",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "review_note": "Retain uniquely bound pixel arcs when preliminary timing is reversed or equal; final assembled clocks/pitches/ties still govern promotion. Recognition37 agrees across app/Hub/writers; guide285 and audio79 remain unchanged. Original procedural regression only; no private score or model changes.",
-      "standalone_sha256": "242d906ebe7de201dc3fe13eaf8eb941ab3cb1878ce51e1814d50b005c245f84",
+      "standalone_sha256": "621b46b69cf5fbfe0bfc5adda8daf54c6e90cdf6672f3b2a15ebb1220981f7a6",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurPageCapture.java",
-      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports."
+      "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
+      "license": "Apache-2.0",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "PrintedSlurRecognition.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedSlurRecognition.java",
-      "source_sha256": "3680d3080e16e2e468e15912831d23d23066ed5766c6f3b96fd4c4fe28438a6f",
-      "source_normalized_sha256": "85cc626732b1f71fd3b3bfdf549f817eaebcb6c6da3c964172fd2a5902aa7fad",
+      "source_sha256": "8c48253d6c0350f59bf29681fbf8af1cbec3a47bbc5441e1e8718fc5dc48ec18",
+      "source_normalized_sha256": "8c48253d6c0350f59bf29681fbf8af1cbec3a47bbc5441e1e8718fc5dc48ec18",
       "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
       "scoped_reviewed_app_commit": "cbd253e8e60cb082e9dd3a4ec59da1c6965260f2",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "review_note": "Paired global nested-curve ownership proof rejects merged semantic islands; a capture-only mask copy unmasks proved unretained islands while preserving source pixels and retained notes. Original geometric regressions only.",
-      "standalone_sha256": "ad6eec4f98ecb26e44a0a01fa44390cc9e7d2e60c61bb695e51ebc48a6a4497e",
+      "standalone_sha256": "ec3de0bdbbe86c1c714b8c9d32e0525d443f886d27795bbc1ecbda6a1eaf4840",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedSlurRecognition.java",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
       "license": "Apache-2.0",
-      "standalone_normalized_sha256": "f8a96b5c2250303adeae9c456f329054ef20f50af06df2c131ccb9395c739167",
-      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
+      "standalone_normalized_sha256": "ec3de0bdbbe86c1c714b8c9d32e0525d443f886d27795bbc1ecbda6a1eaf4840",
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "PrintedStaffAdmission.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedStaffAdmission.java",
@@ -7932,14 +7944,16 @@
     },
     "ScoreNoteTiming.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreNoteTiming.java",
-      "source_sha256": "d6ee5a4fdeaba0c3802ca172451a22f252e0329921e2e4da893a719e70984496",
+      "source_sha256": "ea6ec2d05af176d741ba218f5f6d2626e9f058519742c754d4d2aec7ca8b73c2",
       "review_note": "Global recognition/performance repairs; namespace-equivalent portable helpers and separately reviewed caller adapters. Original synthetic regressions; no private score assets.",
-      "source_normalized_sha256": "14c18eb1f79803250ec13bdb07ee061115f794621b9c6c3a2b7f64a354ccde89",
+      "source_normalized_sha256": "ea6ec2d05af176d741ba218f5f6d2626e9f058519742c754d4d2aec7ca8b73c2",
       "reviewed_app_state": "Reviewed six-class interpreter worktree extension; package/diagnostic token parity verified against standalone port.",
       "reviewed_source_state": "Committed combined source snapshot; paired package deployment and whole-library accuracy acceptance pending.",
-      "standalone_sha256": "981ec75c5021e9544c2c8ffdcdb9c17ab5105d794d8c5000e5cea45db0c04ac2",
+      "standalone_sha256": "af878c86ce873a6506434181ef36d7103e5b03406b9768877fb92fed68eb3b3f",
       "reviewed_app_commit": "c0374eebf5c075b83813a66051faa22bcb431360",
-      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreNoteTiming.java"
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ScoreNoteTiming.java",
+      "license": "Apache-2.0",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "ScoreOpeningDuration.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/ScoreOpeningDuration.java",
@@ -8576,9 +8590,9 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "dfe25920abbcf8213158efadfeaeec998f135feddcfc3ddb3ead72cb9a681ab2",
-      "source_normalized_sha256": "165a1b5b398113efd99b70a19d405e0915dbd6cb926f9b253ef7bd3230fc2ce1",
-      "standalone_sha256": "0c9e105b4214cefa4725eedacf9ad13b93f73955e12d686f164e2603050afa53",
+      "source_sha256": "3fc07cfd60e54549cf909f0767fb916e0e92835f873847d31224f24efe2e0762",
+      "source_normalized_sha256": "3fc07cfd60e54549cf909f0767fb916e0e92835f873847d31224f24efe2e0762",
+      "standalone_sha256": "db76fd59bcff647df0503d056c76b67fa06fb81ff84890fb4e008a970e27b46f",
       "license": "Apache-2.0",
       "review_note": "Invocation-local physical region birth and actual accepted multi-rest identity project logical full rests only for exact source and sealed aliases; no origin is reconstructed from equal values. Interior written heads survive rest-fragment cleanup when an eligible own shaft exists, selected before cap-length competition. Native and standalone consumers use equivalent ordered lifecycle; original procedural regressions contain no private score pixels. Recognition82, Guide290/audio96 unchanged layouts.",
       "reviewed_app_commit": "d1f4234af38fe95f05325ab5094c8455bb2d1fd1",
@@ -8593,11 +8607,12 @@
       "recognition103_review_note": "Recognition103 preserves accepted multi-rest origin identity when logical bars are inserted or removed. Reindexing runs after rhythm reconciliation and only relocates previously accepted identity; it adds no admission, rest count, timing, record, wire, Guide292, model, OCR, or dependency change. The 12 procedural originals are mirrored once in app and once in standalone, yielding 12 unique regressions and 24 invocations; 17 existing controls per namespace remain controls. No private score material.",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
       "release130_review_note": "Reviewed platform adapter; see release130_source_review. No claim of whole-file token parity.",
-      "standalone_normalized_sha256": "f9655fe9a023767f13c4bcd3d28763b54e27ec121c4566f6aff598f970a297a0",
+      "standalone_normalized_sha256": "db76fd59bcff647df0503d056c76b67fa06fb81ff84890fb4e008a970e27b46f",
       "current_source_review": "Reviewed current source and standalone counterpart for the cumulative source-bound beam, notation, key, articulation and bounded context batch. Original procedural regressions only; physical source observations and model facts do not establish complete musical authority.",
       "qualified_dynamic_source_adapter_review": "Retain standalone caller-owned inference, existing strip acquisition, glyph and supplement ordering. Bind source before actual OCR, normalize final dynamic words from actual crop/scale origins, and preserve exact original expression acquisition. Additive semantic adapter for native source-identity repair; no whole-wrapper copy.",
       "recognition127_clock_adapter_review": "Reviewed equivalent final lifecycle change: bind existing full clock context before PrintedBeamSource.apply; native and standalone inference/word/port adapters remain separate. No full-wrapper token-parity claim, generic clock weakening, models or layouts change.",
-      "recognition134_review": "Pass original Analysis to the optional complete-member opening-layout proof; all existing platform-specific pipeline adapters retained."
+      "recognition134_review": "Pass original Analysis to the optional complete-member opening-layout proof; all existing platform-specific pipeline adapters retained.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "SheetWrittenTieLinks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetWrittenTieLinks.java",
@@ -10322,12 +10337,13 @@
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/WholeStaffSlurRules.java",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/WholeStaffSlurRules.java",
       "license": "Apache-2.0",
-      "source_sha256": "7e52e9e33c21c85fda1579bb7f340f0e6fc62da8ccae164091addb993bfef92f",
-      "source_normalized_sha256": "7e52e9e33c21c85fda1579bb7f340f0e6fc62da8ccae164091addb993bfef92f",
-      "standalone_sha256": "2cea81e86c3271e5650c01355d8360169d0e1dfc60922e4eea2c8bb3290cc5ee",
-      "standalone_normalized_sha256": "11698ed34445ef959c4420a4d8dad7999b6cfb8b17a37461d671e6f130b3925d",
+      "source_sha256": "ebbf7e05385da6e3e05e634f86ddf93034a684d7c73e4ec92c0d4956996a2c0c",
+      "source_normalized_sha256": "ebbf7e05385da6e3e05e634f86ddf93034a684d7c73e4ec92c0d4956996a2c0c",
+      "standalone_sha256": "fd268dc20898a73878909b5b882f36ffc6b1b80c2153b68c3fd13aab6b663978",
+      "standalone_normalized_sha256": "fd268dc20898a73878909b5b882f36ffc6b1b80c2153b68c3fd13aab6b663978",
       "reviewed_app_commit": "1c53d7f0b6fd34dace3974e914a3d73b00ce9efc",
-      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority."
+      "whole_staff_slur_review": "Slur-only supplemental capture after complete legacy capture uses unique raw whole-width five-rule/no-sixth proof on failed staff slots. Source-sealed, independently bounded, atomic refusal and valid larger-page legacy preservation. Default frame consumers and existing source IDs remain unchanged; existing broad head-row tolerance confers no new pitch/clock authority.",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
     "WholeStaffSlurFrameOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/WholeStaffSlurFrameOriginalTest.java",
@@ -11570,6 +11586,78 @@
       "source_normalized_sha256": "5ce55e9476eefc34efe60a40bf07a46fc4956f0fb6afd8af701ab028befc2754",
       "standalone_sha256": "e16dbdc09e898f6fac51f76b1b0dfb4e8eaae74cdb854a55e6866393807ed24a",
       "complete_clef_review": "Whole connected two-counter prefix with exact integer-cell waist supplements existing dimensions; complete in-row raw-connected authenticated clef cohort uses unchanged full-G authority and rejects head/key/accidental rivals. Original OFL fonts only. Known legacy narrow-route B limitation explicitly retained/ignored, not claimed fixed."
+    },
+    "ClosedCrossStaffBeamGroups.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/ClosedCrossStaffBeamGroups.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/ClosedCrossStaffBeamGroups.java",
+      "license": "Apache-2.0",
+      "source_sha256": "d1d2c5a06954e83487a60d48e57bce2cc2f82ab2f7849391c83eeae164566d0d",
+      "source_normalized_sha256": "d1d2c5a06954e83487a60d48e57bce2cc2f82ab2f7849391c83eeae164566d0d",
+      "standalone_sha256": "18139a89565879aaad4e20f1daffc2de13889dea45671b60314b35166a89cd10",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "CrossStaffPhraseEndpointInk.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossStaffPhraseEndpointInk.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CrossStaffPhraseEndpointInk.java",
+      "license": "Apache-2.0",
+      "source_sha256": "40c6410d435681af5f0bc5f55ac8f3ea8c1a56f25751d331c6ea36c7d5081540",
+      "source_normalized_sha256": "40c6410d435681af5f0bc5f55ac8f3ea8c1a56f25751d331c6ea36c7d5081540",
+      "standalone_sha256": "e8cedaec61a0e0a72122378881df63e8b8dcb556d2e67ddedc482ff22e699002",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "PrintedPhraseEndpoints.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PrintedPhraseEndpoints.java",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PrintedPhraseEndpoints.java",
+      "license": "Apache-2.0",
+      "source_sha256": "1e4e8ea20d9d2056c6b8fe3ad8e5c7a0f8b237aa216ec3c178149ee100f51561",
+      "source_normalized_sha256": "1e4e8ea20d9d2056c6b8fe3ad8e5c7a0f8b237aa216ec3c178149ee100f51561",
+      "standalone_sha256": "5aaeb458dabf6646e6b5d04925384eed9153aff9f28d086a378edd44963a0679",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "TerminalPhraseEndpointOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/TerminalPhraseEndpointOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/TerminalPhraseEndpointOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "8c05f53ccba8d016de04f8dee074b200d6f4856d1a9d7e1e6a8f7239c8a91e27",
+      "source_normalized_sha256": "8c05f53ccba8d016de04f8dee074b200d6f4856d1a9d7e1e6a8f7239c8a91e27",
+      "standalone_sha256": "362d5399b693d673e54c3e63f00db44c1e4232ad88f51ce7cb95c67db92b2012",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "AsymmetricEllipseSlurOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/AsymmetricEllipseSlurOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/AsymmetricEllipseSlurOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
+      "source_normalized_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
+      "standalone_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "ClosedCrossStaffBeamOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/ClosedCrossStaffBeamOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/ClosedCrossStaffBeamOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "cb69adaefa90c030a0663f10a9a193600c0499da150b371ce481ef0b235adb0d",
+      "source_normalized_sha256": "cb69adaefa90c030a0663f10a9a193600c0499da150b371ce481ef0b235adb0d",
+      "standalone_sha256": "9c812281a195b571e5769628563d5c87bb6aab1b475ee017816fdb96dfa37117",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "OpposedBeamVoiceOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OpposedBeamVoiceOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OpposedBeamVoiceOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "dde0095f02464109d65b137eed4bce89ab6f91d8623a9304c75d3bb3b14a4d3f",
+      "source_normalized_sha256": "dde0095f02464109d65b137eed4bce89ab6f91d8623a9304c75d3bb3b14a4d3f",
+      "standalone_sha256": "c025f08488284ca047c45a1bb3c33274dcce7fa57779f930749c55eb3605fca7",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "OpposedBeamGraceRoleOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OpposedBeamGraceRoleOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OpposedBeamGraceRoleOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "9299795b8c8c57942d84a8f2f89853ee859df1d384bafb8960c0a8d30a2dd6c7",
+      "source_normalized_sha256": "9299795b8c8c57942d84a8f2f89853ee859df1d384bafb8960c0a8d30a2dd6c7",
+      "standalone_sha256": "daa73a3ddec1d91d8f5fc49bc7c0cd2c792a01ccbdb3454a7abdae584487e95d",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     }
   },
   "finite_curved_approach_review": {

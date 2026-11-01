@@ -30671,4 +30671,34 @@ final class OmrScoreInterpreter {
         if (!Float.isFinite(raw)) return null;
         return new int[] {glyph.minX, glyph.maxX, glyph.minY, glyph.maxY};
     }
+
+    static boolean printedFilledComponent(
+            byte[] gray,
+            int width,
+            int height,
+            int count,
+            int left,
+            int top,
+            int right,
+            int bottom,
+            float cx,
+            float cy,
+            float gap) {
+        if (gray == null
+                || gray.length != (long) width * height
+                || width < 1
+                || height < 1
+                || count < 1
+                || gap < 6
+                || gap > 64
+                || left < 0
+                || top < 0
+                || right >= width
+                || bottom >= height
+                || left > right
+                || top > bottom
+                || !Float.isFinite(cx + cy + gap)) return false;
+        var head = new Component(count, left, right, top, bottom, cx, cy);
+        return printedFilledOval(gray, width, head, gap) && !enclosedHollowInk(gray, width, head);
+    }
 }

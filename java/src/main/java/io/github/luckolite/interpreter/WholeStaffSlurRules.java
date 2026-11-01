@@ -192,7 +192,7 @@ final class WholeStaffSlurRules {
         for (var frame : additional.frames())
             for (var head : frame.heads()) unbound.remove(head.owner());
         return new Supplement(
-                new PrintedSlurPageCapture.Result(source, statuses, false),
+                new PrintedSlurPageCapture.Result(source, statuses, false, captured.declined()),
                 Set.copyOf(unbound),
                 legacy.unprovedStaffs() - (staffs.size() - additional.unprovedStaffs()));
     }

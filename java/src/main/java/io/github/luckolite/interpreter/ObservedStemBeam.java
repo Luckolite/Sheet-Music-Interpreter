@@ -10,6 +10,11 @@ final class ObservedStemBeam {
     private final byte[] gray;
     private final int w, h;
     private long work;
+    private boolean refused;
+
+    boolean refused() {
+        return refused;
+    }
 
     private record Stem(int left, int right, int end, int start) {}
 
@@ -34,7 +39,10 @@ final class ObservedStemBeam {
     }
 
     private boolean take(long cost) {
-        if (cost < 0 || cost > work) return false;
+        if (cost < 0 || cost > work) {
+            refused = true;
+            return false;
+        }
         work -= cost;
         return true;
     }

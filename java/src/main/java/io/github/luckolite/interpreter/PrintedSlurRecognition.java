@@ -12,7 +12,36 @@ final class PrintedSlurRecognition {
             Set<Integer> unboundOwners,
             int unprovedStaffs,
             boolean limitReached,
-            boolean alreadyCaptured) {
+            boolean alreadyCaptured,
+            PrintedPhraseEndpoints.Pending pending) {
+        Result(
+                ScorePageInterpretation score,
+                Map<PrintedSlurOwners.Status, Integer> statuses,
+                Set<Integer> unboundOwners,
+                int unprovedStaffs,
+                boolean limitReached,
+                boolean alreadyCaptured) {
+            this(
+                    score,
+                    statuses,
+                    unboundOwners,
+                    unprovedStaffs,
+                    limitReached,
+                    alreadyCaptured,
+                    null);
+        }
+
+        Result withPending(PrintedPhraseEndpoints.Pending value) {
+            return new Result(
+                    score,
+                    statuses,
+                    unboundOwners,
+                    unprovedStaffs,
+                    limitReached,
+                    alreadyCaptured,
+                    value);
+        }
+
         Result {
             Objects.requireNonNull(score);
             statuses = Map.copyOf(statuses);
@@ -79,12 +108,15 @@ final class PrintedSlurRecognition {
                             : score.withSlurSource(captured.source());
             return Optional.of(
                     new Result(
-                            result,
-                            captured.statuses(),
-                            supplemented.unboundOwners(),
-                            supplemented.unprovedStaffs(),
-                            captured.limitReached(),
-                            false));
+                                    result,
+                                    captured.statuses(),
+                                    supplemented.unboundOwners(),
+                                    supplemented.unprovedStaffs(),
+                                    captured.limitReached(),
+                                    false)
+                            .withPending(
+                                    PrintedPhraseEndpoints.retain(
+                                            score, captured, gray, width, height, physicalPage)));
         }
         return Optional.of(
                 capture(
@@ -186,12 +218,15 @@ final class PrintedSlurRecognition {
                         ? score
                         : score.withSlurSource(captured.source());
         return new Result(
-                result,
-                captured.statuses(),
-                supplemented.unboundOwners(),
-                supplemented.unprovedStaffs(),
-                false,
-                false);
+                        result,
+                        captured.statuses(),
+                        supplemented.unboundOwners(),
+                        supplemented.unprovedStaffs(),
+                        false,
+                        false)
+                .withPending(
+                        PrintedPhraseEndpoints.retain(
+                                score, captured, gray, width, height, physicalPage));
     }
 
     private static Set<PrintedSlurOwners.Tie> retainedTies(

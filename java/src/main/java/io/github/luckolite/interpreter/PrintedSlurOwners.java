@@ -566,6 +566,64 @@ final class PrintedSlurOwners {
         return rows >= Math.max(2, (minimum + 1) / 2) && clearance >= 0 && clearance <= 2;
     }
 
+    record CapEvidence(Optional<Location> owner, Set<Integer> possibleOwners) {
+        CapEvidence {
+            possibleOwners = Set.copyOf(possibleOwners);
+        }
+    }
+
+    /** Unchanged ordinary candidate law, including its original ambiguity ranking. */
+    static CapEvidence rawCapEvidence(
+            PrintedSlurContours.Point cap,
+            boolean above,
+            boolean start,
+            List<? extends Location> heads,
+            byte[] gray,
+            int width,
+            int height,
+            StaffPitchTrack track) {
+        var values = candidates(cap, above, start, heads, gray, width, height, track);
+        var ids = new HashSet<Integer>();
+        for (var value : values) ids.add(value.head().owner());
+        return new CapEvidence(
+                values.isEmpty() || ambiguous(values)
+                        ? Optional.empty()
+                        : Optional.of(values.get(0).head()),
+                ids);
+    }
+
+    /** The same literal head-edge ink property used by ordinary endpoint candidates. */
+    static boolean rawHeadCapSupports(
+            PrintedSlurContours.Point cap,
+            Location head,
+            boolean above,
+            boolean start,
+            byte[] gray,
+            int width,
+            int height,
+            float gap) {
+        double dx = Math.abs(head.x() - cap.x()) / gap;
+        double clearance = (above ? head.y() - cap.y() : cap.y() - head.y()) / gap;
+        return dx <= .85
+                && (start ? cap.x() >= head.x() : cap.x() <= head.x())
+                && headBody(gray, width, height, head, gap)
+                && (clearance <= 2
+                        || headFacingEdgeSupports(cap, head, above, gray, width, height, gap));
+    }
+
+    /** Raw ink property only; callers still need independent complete role and ownership proof. */
+    static boolean rawShaftCapSupports(
+            PrintedSlurContours.Point cap,
+            Location head,
+            boolean above,
+            byte[] gray,
+            int width,
+            int height,
+            float gap,
+            List<? extends Location> heads) {
+        return shaftSupports(cap, head, above, gray, width, height, gap, heads);
+    }
+
     private static boolean shaftSupports(
             PrintedSlurContours.Point cap,
             Location head,

@@ -516,6 +516,7 @@ public final class SheetInterpreter {
         finalInterpretation =
                 PrintedCueSize.apply(
                         finalInterpretation, expressionWords, staffs, gray, width, height);
+        PrintedPhraseEndpoints.Pending phrasePending = null;
         if (physicalPage >= 0)
             try {
                 var captured =
@@ -527,7 +528,10 @@ public final class SheetInterpreter {
                                 width,
                                 height,
                                 staffs);
-                if (captured.isPresent()) finalInterpretation = captured.get().score();
+                if (captured.isPresent()) {
+                    finalInterpretation = captured.get().score();
+                    phrasePending = captured.get().pending();
+                }
             } catch (RuntimeException unavailable) {
                 Diagnostics.log("Printed phrase capture unavailable: " + unavailable.getMessage());
             }
@@ -563,6 +567,17 @@ public final class SheetInterpreter {
                             staffs,
                             techniqueWords,
                             physicalPage);
+        if (physicalPage >= 0)
+            finalInterpretation =
+                    PrintedBeamSource.apply(
+                            finalInterpretation,
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            staffs,
+                            physicalPage,
+                            phrasePending);
         finalInterpretation =
                 finalInterpretation.withClockContextSource(
                         ScoreClockContextCapture.capture(
@@ -575,10 +590,6 @@ public final class SheetInterpreter {
                                 clockPartSource,
                                 meterEvidence.provenance(),
                                 tabSourceGray));
-        if (physicalPage >= 0)
-            finalInterpretation =
-                    PrintedBeamSource.apply(
-                            finalInterpretation, labels, gray, width, height, staffs, physicalPage);
         return finalInterpretation;
     }
 }

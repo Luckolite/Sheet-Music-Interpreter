@@ -1033,6 +1033,13 @@ public final class ScoreNoteTiming {
     public static boolean hasIndependentDuration(ScoreNoteEvent note, List<ScoreNoteEvent> notes) {
         if (hasIndependentSustain(note)) return true;
         if (note == null || notes == null) return false;
+        // A physical opposed-stem beam carries one voice between staves. Faster
+        // attacks on the destination stave do not shorten its written duration.
+        if (note.crossStaffBeam() && CrossStaffBeamDetector.opposedSingleBeamValue(note))
+            for (ScoreNoteEvent other : notes)
+                if (other != note
+                        && other.crossStaffBeam()
+                        && CrossStaffBeamDetector.opposedSingleBeamPair(note, other)) return true;
         // Every check below is confined to this bar/staff. Reuse the session index
         // instead of rescanning the whole piece (including a nested all-note scan).
         TimingSession session = SESSION.get();

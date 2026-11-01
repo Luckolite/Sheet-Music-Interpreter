@@ -548,6 +548,32 @@ public final class PrintedBeamSource {
                 Long.MAX_VALUE);
     }
 
+    static ScorePageInterpretation apply(
+            ScorePageInterpretation score,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            int physicalPage,
+            PrintedPhraseEndpoints.Pending pending) {
+        return applyWithCaretLimits(
+                score,
+                labels,
+                gray,
+                width,
+                height,
+                staffs,
+                physicalPage,
+                1_000_000,
+                1_000_000,
+                512_000_000,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE,
+                Long.MAX_VALUE,
+                pending);
+    }
+
     static ScorePageInterpretation applyWithCaretLimits(
             ScorePageInterpretation score,
             byte[] labels,
@@ -562,6 +588,38 @@ public final class PrintedBeamSource {
             long producerLimit,
             long admissionLimit,
             long storageLimit) {
+        return applyWithCaretLimits(
+                score,
+                labels,
+                gray,
+                width,
+                height,
+                staffs,
+                physicalPage,
+                proofWork,
+                proofBytes,
+                legacyBytes,
+                producerLimit,
+                admissionLimit,
+                storageLimit,
+                null);
+    }
+
+    private static ScorePageInterpretation applyWithCaretLimits(
+            ScorePageInterpretation score,
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            List<PlayingTechniqueDetector.Staff> staffs,
+            int physicalPage,
+            long proofWork,
+            long proofBytes,
+            long legacyBytes,
+            long producerLimit,
+            long admissionLimit,
+            long storageLimit,
+            PrintedPhraseEndpoints.Pending pending) {
         if (score == null || physicalPage < 0) return score;
         if (!score.beamSource().groups().isEmpty()
                 || !score.beamSource().detachedColumns().isEmpty()) return score;
@@ -592,10 +650,39 @@ public final class PrintedBeamSource {
                         256_000_000,
                         64_000_000,
                         evidence);
-        return result.statistics().refusal().isEmpty()
-                ? evidence.apply(score, labels, gray, width, height, physicalPage)
-                        .withBeamSource(result.source())
-                : score;
+        if (!result.statistics().refusal().isEmpty()) return score;
+        var heads =
+                PrintedSlurContext.geometryHeads(score.notes(), score.measures(), width, height);
+        var closed =
+                ClosedCrossStaffBeamGroups.capture(
+                        heads,
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        staffs,
+                        score.measures(),
+                        score.notes(),
+                        result.source());
+        var applied =
+                evidence.apply(score, labels, gray, width, height, physicalPage)
+                        .withBeamSource(result.source());
+        if (closed.matches(gray, labels, width, height, applied.measures(), applied.notes()))
+            applied = applied.withBeamSource(closed.source());
+        var completed =
+                PrintedPhraseEndpoints.complete(
+                        applied,
+                        pending,
+                        result,
+                        gray,
+                        labels,
+                        width,
+                        height,
+                        staffs,
+                        physicalPage,
+                        closed,
+                        heads);
+        return closed.project(completed);
     }
 
     static Capture capture(

@@ -11,7 +11,16 @@ final class PrintedSlurContours {
 
     record Point(int x, float y) {}
 
-    record Bow(List<Point> points, boolean above, float bendInGaps, float rmsInGaps) {
+    record Bow(
+            List<Point> points,
+            boolean above,
+            float bendInGaps,
+            float rmsInGaps,
+            boolean asymmetric) {
+        Bow(List<Point> points, boolean above, float bendInGaps, float rmsInGaps) {
+            this(points, above, bendInGaps, rmsInGaps, false);
+        }
+
         Bow {
             points = List.copyOf(points);
         }
@@ -1780,7 +1789,33 @@ final class PrintedSlurContours {
         errors.sort(Double::compare);
         if (rms > .15
                 || errors.get((int) ((errors.size() - 1) * .95)) > .27
-                || hinged < squared * .45) return reject(component, "fit-or-sharp-hinge", audit);
+                || hinged < squared * .45) {
+            double[] asymmetric = asymmetricEllipse(chosen, physicalLeft, physicalSpan);
+            if (asymmetric == null
+                    || Math.abs(asymmetric[2]) <= Math.sqrt(2) * Math.abs(asymmetric[3]))
+                return reject(component, "fit-or-sharp-hinge", audit);
+            double c = asymmetric[2], d = asymmetric[3];
+            double peak = d == 0 ? 0 : 2 * d / (c + Math.copySign(Math.sqrt(c * c + 8 * d * d), c));
+            double height = Math.abs((c + d * peak) * Math.sqrt(Math.max(0, 1 - peak * peak)));
+            if (height < .24 || height > 12) return reject(component, "not-bowed", audit);
+            double loss = 0;
+            var asymmetricErrors = new ArrayList<Double>();
+            for (var run : chosen) {
+                double t = 2.0 * (run.x() - physicalLeft) / physicalSpan - 1;
+                double error = run.rectified() - value(asymmetric, t, true);
+                loss += error * error;
+                asymmetricErrors.add(Math.abs(error));
+            }
+            double asymmetricRms = Math.sqrt(loss / chosen.size());
+            asymmetricErrors.sort(Double::compare);
+            if (asymmetricRms > .15
+                    || asymmetricErrors.get((int) ((asymmetricErrors.size() - 1) * .95)) > .27
+                    || hinged < loss * .45) return reject(component, "fit-or-sharp-hinge", audit);
+            shape = asymmetric;
+            ellipse = true;
+            bend = -Math.copySign(height, c);
+            rms = asymmetricRms;
+        }
         // Require the returning curvature over both outer quarters, not just a hooked tail.
         double leftSlope = localSlope(chosen, physicalLeft, physicalSpan, true);
         double rightSlope = localSlope(chosen, physicalLeft, physicalSpan, false);
@@ -1789,7 +1824,7 @@ final class PrintedSlurContours {
                 || Math.abs(rightSlope - leftSlope) < Math.abs(bend) * 1.6)
             return reject(component, "not-returning", audit);
         var points = chosen.stream().map(run -> new Point(run.x(), run.y())).toList();
-        var bow = new Bow(points, bend > 0, (float) Math.abs(bend), (float) rms);
+        var bow = new Bow(points, bend > 0, (float) Math.abs(bend), (float) rms, shape.length == 4);
         if (fittedSelections != null) fittedSelections.put(bow, List.copyOf(chosen));
         return bow;
     }
@@ -1797,7 +1832,39 @@ final class PrintedSlurContours {
     private static double value(double[] shape, double t, boolean ellipse) {
         return shape[0]
                 + shape[1] * t
-                + shape[2] * (ellipse ? Math.sqrt(Math.max(0, 1 - t * t)) : t * t);
+                + shape[2] * (ellipse ? Math.sqrt(Math.max(0, 1 - t * t)) : t * t)
+                + (shape.length == 4 ? shape[3] * t * Math.sqrt(Math.max(0, 1 - t * t)) : 0);
+    }
+
+    /** A single convex asymmetric arch; no offset, threshold or span search. */
+    private static double[] asymmetricEllipse(List<Run> runs, double left, double span) {
+        double[][] matrix = new double[4][5];
+        for (var run : runs) {
+            double t = 2.0 * (run.x() - left) / span - 1;
+            double root = Math.sqrt(Math.max(0, 1 - t * t));
+            double[] basis = {1, t, root, t * root};
+            for (int row = 0; row < 4; row++) {
+                for (int col = 0; col < 4; col++) matrix[row][col] += basis[row] * basis[col];
+                matrix[row][4] += basis[row] * run.rectified();
+            }
+        }
+        for (int col = 0; col < 4; col++) {
+            int pivot = col;
+            for (int row = col + 1; row < 4; row++)
+                if (Math.abs(matrix[row][col]) > Math.abs(matrix[pivot][col])) pivot = row;
+            if (Math.abs(matrix[pivot][col]) < 1e-8) return null;
+            double[] swap = matrix[col];
+            matrix[col] = matrix[pivot];
+            matrix[pivot] = swap;
+            double divisor = matrix[col][col];
+            for (int k = col; k < 5; k++) matrix[col][k] /= divisor;
+            for (int row = 0; row < 4; row++)
+                if (row != col) {
+                    double factor = matrix[row][col];
+                    for (int k = col; k < 5; k++) matrix[row][k] -= factor * matrix[col][k];
+                }
+        }
+        return new double[] {matrix[0][4], matrix[1][4], matrix[2][4], matrix[3][4]};
     }
 
     private static double squaredError(

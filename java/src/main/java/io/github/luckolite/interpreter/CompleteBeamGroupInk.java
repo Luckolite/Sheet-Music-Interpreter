@@ -27,6 +27,38 @@ final class CompleteBeamGroupInk {
             if (s == null) return false;
             stems.add(s);
         }
+        return provesShafts(gray, w, h, stems, gap, direction);
+    }
+
+    /** Raw closed-group property only. Callers must independently own every supplied full shaft. */
+    static boolean provesShafts(
+            byte[] gray,
+            int w,
+            int h,
+            List<PairedTremoloInk.Stem> stems,
+            float gap,
+            int direction) {
+        if (gray == null
+                || w < 1
+                || h < 1
+                || gray.length != (long) w * h
+                || stems == null
+                || stems.size() < 2
+                || stems.size() > 32
+                || !Float.isFinite(gap)
+                || gap < 6
+                || Math.abs(direction) != 1) return false;
+        for (int i = 0; i < stems.size(); i++) {
+            var stem = stems.get(i);
+            if (stem == null
+                    || stem.x() < 0
+                    || stem.x() >= w
+                    || stem.headY() < 0
+                    || stem.headY() >= h
+                    || stem.endY() < 0
+                    || stem.endY() >= h
+                    || i > 0 && stem.x() <= stems.get(i - 1).x()) return false;
+        }
         var first = stems.get(0);
         var last = stems.get(stems.size() - 1);
         if (last.x() - first.x() < gap || last.x() - first.x() > gap * 40) return false;

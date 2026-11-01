@@ -20,13 +20,28 @@ final class PrintedSlurPageCapture {
         }
     }
 
+    record Declined(
+            String id,
+            Frame<? extends PrintedSlurOwners.Location> frame,
+            PrintedSlurContours.Bow bow,
+            PrintedSlurOwners.Status status) {}
+
     record Result(
             ScoreSlurSource source,
             Map<PrintedSlurOwners.Status, Integer> statuses,
-            boolean limitReached) {
+            boolean limitReached,
+            List<Declined> declined) {
+        Result(
+                ScoreSlurSource source,
+                Map<PrintedSlurOwners.Status, Integer> statuses,
+                boolean limitReached) {
+            this(source, statuses, limitReached, List.of());
+        }
+
         Result {
             Objects.requireNonNull(source);
             statuses = Map.copyOf(statuses);
+            declined = List.copyOf(declined);
         }
     }
 
@@ -182,7 +197,10 @@ final class PrintedSlurPageCapture {
         int markOrdinal = 0;
         int shortRailOrdinal = 0;
         int jointOrdinal = 0;
+        int asymmetricOrdinal = 0;
         var pieces = new ArrayList<PrintedSystemSlurJoins.Observed>();
+        var declined = new ArrayList<Declined>();
+        boolean retainDeclined = sourceNotes != null;
         boolean admitJoins = sourceNotes != null;
         for (var frame : frames) {
             var hints =
@@ -225,10 +243,15 @@ final class PrintedSlurPageCapture {
                                                         + physicalPage
                                                         + "-mark-arc-"
                                                         + markOrdinal++
-                                                : "printed-page-"
-                                                        + physicalPage
-                                                        + "-arc-"
-                                                        + ordinal++;
+                                                : bow.asymmetric()
+                                                        ? "printed-page-"
+                                                                + physicalPage
+                                                                + "-asymmetric-arc-"
+                                                                + asymmetricOrdinal++
+                                                        : "printed-page-"
+                                                                + physicalPage
+                                                                + "-arc-"
+                                                                + ordinal++;
                 if (geometryOnly) {
                     var bound =
                             PrintedSlurOwners.bind(
@@ -246,6 +269,14 @@ final class PrintedSlurPageCapture {
                                     bow, bound.span().orElseThrow(), frame.heads(), frame.track()))
                         continue;
                     statuses.merge(bound.status(), 1, Integer::sum);
+                    if (retainDeclined
+                            && (bound.status() == PrintedSlurOwners.Status.NO_START_OWNER
+                                    || bound.status() == PrintedSlurOwners.Status.NO_END_OWNER)) {
+                        if (declined.size() == 4096) {
+                            declined.clear();
+                            retainDeclined = false;
+                        } else declined.add(new Declined(id, frame, bow, bound.status()));
+                    }
                     bound.span().ifPresent(candidates::add);
                     continue;
                 }
@@ -267,6 +298,14 @@ final class PrintedSlurPageCapture {
                         && beam.owns(bow, owned.span().orElseThrow(), frame.heads(), frame.track()))
                     continue;
                 statuses.merge(owned.status(), 1, Integer::sum);
+                if (retainDeclined
+                        && (owned.status() == PrintedSlurOwners.Status.NO_START_OWNER
+                                || owned.status() == PrintedSlurOwners.Status.NO_END_OWNER)) {
+                    if (declined.size() == 4096) {
+                        declined.clear();
+                        retainDeclined = false;
+                    } else declined.add(new Declined(id, frame, bow, owned.status()));
+                }
                 owned.span().ifPresent(spans::add);
                 if (owned.status() == PrintedSlurOwners.Status.UNPITCHED_UNRESOLVED
                         || owned.status() == PrintedSlurOwners.Status.SAME_PITCH_UNRESOLVED
@@ -394,6 +433,7 @@ final class PrintedSlurPageCapture {
                         candidates,
                         List.of(new ScoreSlurPages.Page(physicalPage, noteCount))),
                 statuses,
-                false);
+                false,
+                declined);
     }
 }
