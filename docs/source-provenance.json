@@ -10949,14 +10949,15 @@
     },
     "CourtesyFigureEightRim.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CourtesyFigureEightRim.java",
-      "source_sha256": "f1d83059ffb7f13f5436c957fb420ddc6fc69eb640e4c8d6dd9585622b53b8f0",
-      "source_normalized_sha256": "f1d83059ffb7f13f5436c957fb420ddc6fc69eb640e4c8d6dd9585622b53b8f0",
+      "source_sha256": "d79ea83cad45dc1989786c3a992d81f5a2e453fe1f0372aaadcd4988ad4e13f0",
+      "source_normalized_sha256": "d79ea83cad45dc1989786c3a992d81f5a2e453fe1f0372aaadcd4988ad4e13f0",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CourtesyFigureEightRim.java",
-      "standalone_sha256": "14b9eaa587d34b6e8ad2157711e4724600f399bbc61c3225613cc215f978f2cb",
-      "standalone_normalized_sha256": "5df6f74a43ec3119c51d1b5e877acd40e003bb9c3ed23c8b536accc80f3cdbf7",
+      "standalone_sha256": "0607deee649e151005762a06c67df6e1dd0b693047661daf8b479d5cd43e661f",
+      "standalone_normalized_sha256": "0607deee649e151005762a06c67df6e1dd0b693047661daf8b479d5cd43e661f",
       "license": "Apache-2.0",
       "reviewed_app_commit": "a811ad411b1627202807673222ffca8aaf714921",
-      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof."
+      "current_source_review": "Complete thin staff-rule crossing continuity preserves a truly attached ledger stem; finite complete figure-eight rim ownership exempts only its sparse model head fragments in a cautionary meter tail. Existing raw, bar, counter, rest and head guards retained. Twenty-one original controls;156 focused tests; separate private full-page proof.",
+      "closed_counter_paper_review": "Sparse semantic head fragments in the exact already-closed counters of a proved courtesy eight belong to the numeral. Counter boxes never supply ownership; existing figure, paper, size, fringe and played-head guards remain. Original procedural tests only."
     },
     "CourtesyFigureEightRimBoundsTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CourtesyFigureEightRimBoundsTest.java",
@@ -11450,6 +11451,15 @@
       "source_normalized_sha256": "6366dbb3b95803c6739c9981679f52c6b7935ed010209242b73a1cb9beb87aa6",
       "standalone_sha256": "2e0ebf351980ead07d7ea6852c690c63e1e6fdd2bf4170552ad895792c248c23",
       "owned_head_bar_review": "A full common bar may contact a complete independently stemmed head. Every excessive branch member must be exact validated head ink or a full common axis; unchanged width, paper, body, shaft and negative guards. Original procedural tests only."
+    },
+    "CourtesyClosedCounterPaperOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/CourtesyClosedCounterPaperOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/CourtesyClosedCounterPaperOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "cab32f5401922ca8562c4edf24750cd3a58ea0147ec937d1f2cfe9656e115626",
+      "source_normalized_sha256": "cab32f5401922ca8562c4edf24750cd3a58ea0147ec937d1f2cfe9656e115626",
+      "standalone_sha256": "92d9f1bdd91ed7c22983d63ddcbc2ee763c373a145cb41c4bc71c6b3bd48533f",
+      "closed_counter_paper_review": "Sparse semantic head fragments in the exact already-closed counters of a proved courtesy eight belong to the numeral. Counter boxes never supply ownership; existing figure, paper, size, fringe and played-head guards remain. Original procedural tests only."
     }
   },
   "finite_curved_approach_review": {

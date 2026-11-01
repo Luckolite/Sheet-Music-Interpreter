@@ -16,7 +16,8 @@ final class CourtesyFigureEightRim {
         }
     }
 
-    private record Hole(int left, int right, int top, int bottom, float x, float y) {}
+    private record Hole(
+            int left, int right, int top, int bottom, float x, float y, int[] members) {}
 
     static Proof capture(
             byte[] labels,
@@ -88,7 +89,8 @@ final class CourtesyFigureEightRim {
                             top + y0,
                             top + y1,
                             sx / (float) end,
-                            sy / (float) end));
+                            sy / (float) end,
+                            Arrays.copyOf(queue, end)));
         }
         // All five independent thin rules identify the denominator's physical staff band.
         List<Integer> rules = new ArrayList<>();
@@ -152,6 +154,10 @@ final class CourtesyFigureEightRim {
             int x1 = Math.min(right, Math.max(a.right, b.right) + Math.round(gap * .45f));
             int y0 = Math.max(top, Math.round(staffTop + gap * 1.8f));
             int y1 = Math.min(bottom, Math.round(staffBottom + gap * .2f));
+            // Only the exact already-closed counters supply paper ownership, never their boxes.
+            Arrays.fill(seen, false);
+            for (int member : a.members) seen[member] = true;
+            for (int member : b.members) seen[member] = true;
             int paper = 0, rows = 0, headPixels = 0, fringe = 0;
             boolean outside = false;
             for (int y = y0; y <= y1; y++) {
@@ -166,7 +172,9 @@ final class CourtesyFigureEightRim {
                     if (labels[y * width + x] == 2) {
                         headPixels++;
                         if ((gray[y * width + x] & 255) >= 180) fringe++;
-                        outside |= !nearRimInk(gray, width, height, x, y);
+                        outside |=
+                                !nearRimInk(gray, width, height, x, y)
+                                        && !seen[(y - top) * w + x - left];
                     }
             }
             // Only small mislabeled rim fragments are eligible; an independently complete
@@ -179,7 +187,9 @@ final class CourtesyFigureEightRim {
                     || fringe > Math.max(2, gap * gap * .04f)) continue;
             for (int y = y0; y <= y1; y++)
                 for (int x = x0; x <= x1; x++)
-                    if (labels[y * width + x] == 2 && nearRimInk(gray, width, height, x, y))
+                    if (labels[y * width + x] == 2
+                            && (nearRimInk(gray, width, height, x, y)
+                                    || seen[(y - top) * w + x - left]))
                         owned[(y - top) * w + x - left] = true;
         }
         return new Proof(left, top, w, h, owned);
