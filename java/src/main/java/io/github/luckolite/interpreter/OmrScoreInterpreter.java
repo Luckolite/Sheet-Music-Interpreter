@@ -3065,7 +3065,8 @@ final class OmrScoreInterpreter {
         }
         // Opposed-pair ownership needs the printed directions of the original heads.
         // Preserve the early legacy pass and finish this proof before appending extra voices.
-        voicedNotes = CrossStaffBeamDetector.markOpposed(voicedNotes, beamHeads, gray, width, height);
+        voicedNotes =
+                CrossStaffBeamDetector.markOpposed(voicedNotes, beamHeads, gray, width, height);
         var clockFinalHeads = new ArrayList<Component>();
         for (var printed : joined) clockFinalHeads.add(printed.head);
         // Append extra voices after the original heads, retaining all original source indices.
