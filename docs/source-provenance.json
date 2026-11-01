@@ -11663,9 +11663,9 @@
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedSystemSlurCaptureOriginalsTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedSystemSlurCaptureOriginalsTest.java",
       "license": "Apache-2.0",
-      "source_sha256": "fdff15b66bdb2fb6e225716c9b45a9ba446d2862ddb9e19b488d2d981968790a",
-      "source_normalized_sha256": "81d7ff8b548f68db69fd59e25c72b6aa2478b0b4d966cf2870d0267b7de94467",
-      "standalone_sha256": "74ba5b3ac9756bf760c3e354f91834103944edb04613f387b89164f5179f7f4d",
+      "source_sha256": "db8b18fc356a3c4a4152b70b5b554f8846e8f353295cf8cfafda98a57bf3add6",
+      "source_normalized_sha256": "a9ed27e6df8e20f38b4452bb0c457ca2fa9c9ea97c94947eb1167834b0e5b5d1",
+      "standalone_sha256": "afee0b6bf91eefd943a6c0f4a898b1c4be92fd0dd803ae4757eb2d26a3b49d79",
       "review": "Legacy slur capture source/status/limit remain equal; only source-bound declined diagnostics are newly retained. Two negative tests verify exact frame/cap/status evidence without promoting a candidate."
     }
   },

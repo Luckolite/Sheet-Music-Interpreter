@@ -91,9 +91,10 @@ public class PrintedSystemSlurCaptureOriginalsTest {
         assertTrue(result.source().candidates().isEmpty());
         assertTrue(legacy.declined().isEmpty());
         assertEquals(2, result.declined().size());
-        var expectedStatuses = List.of(
-                PrintedSlurOwners.Status.NO_END_OWNER,
-                PrintedSlurOwners.Status.NO_START_OWNER);
+        var expectedStatuses =
+                List.of(
+                        PrintedSlurOwners.Status.NO_END_OWNER,
+                        PrintedSlurOwners.Status.NO_START_OWNER);
         int[][] expectedCaps = {{678, 728}, {102, 266}};
         for (int i = 0; i < result.declined().size(); i++) {
             var declined = result.declined().get(i);
@@ -114,9 +115,16 @@ public class PrintedSystemSlurCaptureOriginalsTest {
                 assertTrue(point.y() <= declined.frame().bottom());
                 previousX = point.x();
             }
-            var bound = PrintedSlurOwners.bind(
-                    declined.id(), 9, bow, declined.frame().heads(),
-                    f.gray, f.w, f.h, declined.frame().track());
+            var bound =
+                    PrintedSlurOwners.bind(
+                            declined.id(),
+                            9,
+                            bow,
+                            declined.frame().heads(),
+                            f.gray,
+                            f.w,
+                            f.h,
+                            declined.frame().track());
             assertEquals(expectedStatuses.get(i), bound.status());
             assertTrue(bound.span().isEmpty());
         }
