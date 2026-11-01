@@ -41,6 +41,14 @@ final class CrossStaffBeamDetector {
                 result.set(i, result.get(i).withCrossStaffBeam());
             }
         }
+        return markOpposed(result, heads, gray, width, height);
+    }
+
+    /** Additive opposed-pair proof requires the original heads' printed stem metadata. */
+    static java.util.List<ScoreNoteEvent> markOpposed(java.util.List<ScoreNoteEvent> notes,
+            java.util.List<Head> heads, byte[] gray, int width, int height) {
+        if (notes.size() != heads.size()) throw new IllegalArgumentException("Head/event mismatch");
+        var result = new java.util.ArrayList<>(notes);
         // Other voices may interleave between the two literal owners of one beam.
         // Require unique opposed-stem partners rather than treating list adjacency as a voice.
         int[] partner = new int[notes.size()];

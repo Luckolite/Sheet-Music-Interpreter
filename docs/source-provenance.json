@@ -2581,15 +2581,16 @@
     },
     "CrossStaffBeamDetector.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/CrossStaffBeamDetector.java",
-      "source_sha256": "ce204e443b6dfb2d539f1a1125edeb4ceaed1ef6341de15263cdcc7ce2d0121d",
-      "source_normalized_sha256": "ce204e443b6dfb2d539f1a1125edeb4ceaed1ef6341de15263cdcc7ce2d0121d",
+      "source_sha256": "adfe4e6f0d770ac08a73184ad602ead750b4d095ab44f0e9787d1c912ae3ba33",
+      "source_normalized_sha256": "adfe4e6f0d770ac08a73184ad602ead750b4d095ab44f0e9787d1c912ae3ba33",
       "reviewed_app_commit": "650d1b3a312dcd7eb58f83945a6a3be321c9b4dd",
       "reviewed_source_state": "Reviewed uncommitted 882 worktree based on the recorded app commit",
       "review_note": "Reviewed uncommitted 882 worktree based on 650d1b3a312dcd7eb58f83945a6a3be321c9b4dd; full executable-token parity after package/diagnostics adaptation. Original synthetic geometry and framing controls; no private score, log, library, model, dependency or signing material.",
       "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/CrossStaffBeamDetector.java",
       "license": "Apache-2.0",
-      "standalone_sha256": "3f81b62333fd429ac79ac344070fbffadccffa57c776219eea216d9ef86b62b8",
-      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+      "standalone_sha256": "97713f1172e3ffb569f12301855fefef4256d2ae4a538020441ff5adcb09b250",
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts.",
+      "opposed_pair_ingress_review": "Early legacy cross-staff ownership stays before tie/rest handling. The identical additive opposed-pair proof runs once after original printed stem directions, before extra voices. Full-caller originals reproduce the omitted late ownership; no ink or value thresholds change."
     },
     "CueCaptionOwnershipOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/CueCaptionOwnershipOriginalTest.java",
@@ -5159,11 +5160,11 @@
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
-      "source_sha256": "727656b63334e74bb6bf6ce7e1e5fb828344bbc694c2f271ac8b9e968186e456",
+      "source_sha256": "e959a35a393f23e965e21880e14912005982bf2710d195dd53f01b043419a365",
       "review_note": "Retains reviewed hollow, curved-mark and articulation laws. This successor adds pitch-gated immediately adjacent printed-beam voice ownership and complete labelled flat-body lower-tip ownership with raw topology, header and separate-note guards. New unlabelled raw-hollow recovery additionally requires closed-pocket widths to turn outside observed staff-rule bands, refusing staff-closed slur wedges while retaining rule-crossed oval controls. This is an additional refusal after unchanged rim, own-shaft and central-pocket checks, not sufficient admission authority. All legacy labelled/beam routes and caller fields remain unchanged. Original procedural tests only; no private score content or model changes.",
-      "source_normalized_sha256": "727656b63334e74bb6bf6ce7e1e5fb828344bbc694c2f271ac8b9e968186e456",
+      "source_normalized_sha256": "e959a35a393f23e965e21880e14912005982bf2710d195dd53f01b043419a365",
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
-      "standalone_sha256": "1212cb94a725f4a4b1d6d833ca6a7316bd3ad70240cd069c6cdaa71e33539ff4",
+      "standalone_sha256": "e18fb79752f3c008f9feb95255cd7fa8018873d5d88f89da6b1b8f4e7b6e03a5",
       "reviewed_app_base_commit": "f35728a8aa54ad905276707014439af44502ea61",
       "reviewed_app_commit": "5890f31f8659dced7d02f6f3fbafe5b31f065ae0",
       "scoped_reviewed_app_commit": "619cf57ee08c59765af88152ec67286859c969bc",
@@ -5223,7 +5224,8 @@
       "repeated_key_role_review": "A complete one-to-one ordered repetition of the established nonzero key at the existing selected row clef keeps its signature role. Key voting, spacing and glyph classifiers unchanged. Original procedural regression only; no private score assets.",
       "staff_expression_review": "Printed adjacent staff rules resolve interstaff accent ownership; exact accepted octave-leader ink cannot also be tenuto. Missing/ambiguous evidence preserves prior behavior. Original procedural and previously licensed generated glyph fixtures; no commercial score assets.",
       "complete_clef_review": "Whole connected two-counter prefix with exact integer-cell waist supplements existing dimensions; complete in-row raw-connected authenticated clef cohort uses unchanged full-G authority and rejects head/key/accidental rivals. Original OFL fonts only. Known legacy narrow-route B limitation explicitly retained/ignored, not claimed fixed.",
-      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts.",
+      "opposed_pair_ingress_review": "Early legacy cross-staff ownership stays before tie/rest handling. The identical additive opposed-pair proof runs once after original printed stem directions, before extra voices. Full-caller originals reproduce the omitted late ownership; no ink or value thresholds change."
     },
     "OnnxOcrInference.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxOcrInference.java",
@@ -11667,6 +11669,16 @@
       "source_normalized_sha256": "a9ed27e6df8e20f38b4452bb0c457ca2fa9c9ea97c94947eb1167834b0e5b5d1",
       "standalone_sha256": "afee0b6bf91eefd943a6c0f4a898b1c4be92fd0dd803ae4757eb2d26a3b49d79",
       "review": "Legacy slur capture source/status/limit remain equal; only source-bound declined diagnostics are newly retained. Two negative tests verify exact frame/cap/status evidence without promoting a candidate."
+    },
+    "OpposedBeamCallerOrderOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OpposedBeamCallerOrderOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OpposedBeamCallerOrderOriginalTest.java",
+      "license": "Apache-2.0",
+      "review_note": "Original procedural four-head normal Omr caller-order scene with independent interleaved bass beams; missing literal beam and owned shaft negatives. No private pixels, fonts, documents or runtime observers.",
+      "source_sha256": "4ac8602b85eb88b3607820757705312a2e80dbcbc0645a327002c9c0027a3229",
+      "source_normalized_sha256": "c4fb926b94360fbb2e5b542858793b1c4538e2308e7e1357321050f444c4e4d4",
+      "standalone_sha256": "915bfc4040e3be302e65a87ceee2614c254ee1864ab376217995944ea57742b7",
+      "opposed_pair_ingress_review": "Early legacy cross-staff ownership stays before tie/rest handling. The identical additive opposed-pair proof runs once after original printed stem directions, before extra voices. Full-caller originals reproduce the omitted late ownership; no ink or value thresholds change."
     }
   },
   "finite_curved_approach_review": {
@@ -16995,5 +17007,10 @@
     "evaluation_boundary": "Original controls and private source/normal-consumer qualification distinguish recognition from production/device delivery. Private score rasters, coordinates and library records are excluded from this repository.",
     "new_original_active_tests": 99,
     "new_original_tests_total": 100
+  },
+  "opposed_pair_ingress_review": {
+    "scope": "Preserve early legacy path; complete bounded unique literal opposed-pair ownership after original printed stem metadata exists, before appending extra voices. Existing mark contract delegates the same proof.",
+    "validation": "Three original full Omr caller scenes plus38 relevant retained controls pass; original normal caller has1 expected ownership failure and2 refusal passes. Whole producer final qualification pending.",
+    "boundary": "No model weights, wire layouts, private images, assets or library state changed. Recognition136/Guide299/audio101 retained."
   }
 }
