@@ -7483,8 +7483,22 @@ final class OmrScoreInterpreter {
                                 staff,
                                 firstHead,
                                 !cancelledSignature)) continue;
+                // A complete ordered repetition retains its header role even when the
+                // first note follows closely; its established key is independent evidence.
+                boolean repeatedHeader =
+                        firstInRow
+                                && clef != null
+                                && prior != null
+                                && prior != 0
+                                && fifths == prior
+                                && run.size() == Math.abs(prior)
+                                && completeRun.size() == run.size()
+                                && recognized.size() == run.size()
+                                && orderedSignaturePitches(
+                                        labels, width, height, run, recognized, staff);
                 if (headerAccidentals != null
                         && (cancelledSignature
+                                || repeatedHeader
                                 || signatureHeader
                                         && orderedSignaturePitches(
                                                 labels, width, height, run, recognized, staff)))
