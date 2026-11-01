@@ -12,6 +12,9 @@ Model lineage, evaluation and checksums are documented separately in
 
 ## Source map
 
+Recognition 136 repairs complete clef and signature roles, physical staff expression ownership, phrase contours and complete beam/voice clocks. New source helpers are explicitly included in the Android/desktop selection. Original procedural and existing OFL font regressions contain no private score material. Guide 299, audio 101 and model weights/layouts are unchanged. See [asymmetric phrase arches](asymmetric-phrase-arches.md) for the added analytic geometry family.
+
+
 Recognition 135 repairs barline head contact, courtesy-meter counter ownership and false augmentation-dot shoulders. All changes use existing optical and ownership contracts; 37 original procedural regressions contain no private score data. Canonical Song tempo is converted once from its meter pulse; app and desktop callers retain the resulting quarter-note clock, while explicit printed-pulse APIs remain compatible. Guide 299, audio 101, models and wire layouts remain unchanged.
 
 
