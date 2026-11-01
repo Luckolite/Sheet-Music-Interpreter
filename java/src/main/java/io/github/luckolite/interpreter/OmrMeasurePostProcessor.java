@@ -3,6 +3,7 @@
 package io.github.luckolite.interpreter;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -2821,12 +2822,22 @@ final class OmrMeasurePostProcessor {
                 }
                 float[] upperRows = connectionStaffRows(gray, width, height, x, u, gap, 0),
                         lowerRows = connectionStaffRows(gray, width, height, x, l, lower.gap, 0);
-                if (upperRows == null
-                        || lowerRows == null
-                        || !grandThinAxis(
-                                gray, width, x, upper.top, lower.bottom, gap, upperRows, lowerRows))
-                    continue;
-                if (!grandOffAxisHeads(
+                if (upperRows == null || lowerRows == null) continue;
+                if (grandThinAxis(
+                        gray, width, x, upper.top, lower.bottom, gap, upperRows, lowerRows)) {
+                    if (!grandOffAxisHeads(
+                            labels,
+                            gray,
+                            width,
+                            height,
+                            x,
+                            upper.top,
+                            lower.bottom,
+                            gap,
+                            work,
+                            upperRows,
+                            lowerRows)) continue;
+                } else if (!grandHeadContactAxis(
                         labels,
                         gray,
                         width,
@@ -2882,6 +2893,79 @@ final class OmrMeasurePostProcessor {
         return true;
     }
 
+    /** A complete independently stemmed head may touch a common bar's shoulder. Every
+     * branch pixel must still belong to that head or to a complete thin vertical axis. */
+    private static boolean grandHeadContactAxis(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            int bar,
+            int top,
+            int bottom,
+            float gap,
+            GrandBarWork work,
+            float[] upperRows,
+            float[] lowerRows) {
+        int left = Math.max(0, bar - Math.round(gap * 3f));
+        int right = Math.min(w - 1, bar + Math.round(gap * 3f));
+        int first = Math.max(0, top - Math.round(gap * 1.5f));
+        int last = Math.min(h - 1, bottom + Math.round(gap * 1.5f));
+        int cw = right - left + 1, radius = (int) Math.ceil(gap * .6f);
+        long area = (long) cw * (last - first + 1);
+        if (area > 65536
+                || !work.pay(
+                        area + (2L * radius + 1) * (bottom - top + 1) * 4,
+                        (area + 7) / 8 + 2L * radius + 256)) return false;
+        BitSet owned = new BitSet((int) area);
+        if (!grandOffAxisHeads(
+                labels, gray, w, h, bar, top, bottom, gap, work, upperRows, lowerRows, owned))
+            return false;
+        boolean[] axis = new boolean[2 * radius + 1];
+        for (int d = -radius; d <= radius; d++) {
+            int x = bar + d;
+            if (x < 0 || x >= w) continue;
+            int dark = 0, blank = 0, longest = 0;
+            for (int y = top; y <= bottom; y++) {
+                if ((gray[y * w + x] & 255) < 165) {
+                    dark++;
+                    blank = 0;
+                } else longest = Math.max(longest, ++blank);
+            }
+            axis[d + radius] = longest <= 1 && dark >= (bottom - top + 1) * .94f;
+        }
+        if (!axis[radius]) return false;
+        for (int side : new int[] {-1, 1}) {
+            int y = Math.round(side < 0 ? upperRows[0] - gap * .5f : lowerRows[4] + gap * .5f);
+            if (y < 0 || y >= h || (gray[y * w + bar] & 255) < 165) return false;
+        }
+        boolean usedHead = false;
+        for (int y = top; y <= bottom; y++) {
+            float nearest = Float.POSITIVE_INFINITY;
+            for (int i = 0; i < 5; i++) {
+                nearest = Math.min(nearest, Math.abs(y - upperRows[i]));
+                nearest = Math.min(nearest, Math.abs(y - lowerRows[i]));
+            }
+            if (nearest <= gap * .24f) continue;
+            int a = bar, b = bar;
+            while (bar - a < radius && a > 0 && (gray[y * w + a - 1] & 255) < 165) a--;
+            while (b - bar < radius && b + 1 < w && (gray[y * w + b + 1] & 255) < 165) b++;
+            if (b - a + 1 <= Math.max(3, Math.ceil(gap * .4f))) continue;
+            int axisWidth = 0;
+            for (int x = a; x <= b; x++) {
+                if (axis[x - bar + radius]) axisWidth++;
+                else if (x >= left
+                        && x <= right
+                        && y >= first
+                        && y <= last
+                        && owned.get((y - first) * cw + x - left)) usedHead = true;
+                else return false;
+            }
+            if (axisWidth > Math.max(3, Math.ceil(gap * .4f))) return false;
+        }
+        return usedHead;
+    }
+
     private static boolean grandSemanticRule(byte[] labels, int width, int x, StaffRun staff) {
         int covered = 0;
         boolean end = false;
@@ -2907,6 +2991,23 @@ final class OmrMeasurePostProcessor {
             GrandBarWork work,
             float[] upperRows,
             float[] lowerRows) {
+        return grandOffAxisHeads(
+                labels, gray, w, h, bar, top, bottom, gap, work, upperRows, lowerRows, null);
+    }
+
+    private static boolean grandOffAxisHeads(
+            byte[] labels,
+            byte[] gray,
+            int w,
+            int h,
+            int bar,
+            int top,
+            int bottom,
+            float gap,
+            GrandBarWork work,
+            float[] upperRows,
+            float[] lowerRows,
+            BitSet owned) {
         int l = Math.max(0, bar - Math.round(gap * 3f)),
                 r = Math.min(w - 1, bar + Math.round(gap * 3f));
         int t = Math.max(0, top - Math.round(gap * 1.5f)),
@@ -2962,6 +3063,7 @@ final class OmrMeasurePostProcessor {
                 boolean right = bar > cx;
                 if (clipped
                         || (right ? bar - x1 : x0 - bar) < 2
+                                && (owned == null || y0 <= top || y1 >= bottom)
                         || x1 - x0 + 1 < gap * .95f
                         || x1 - x0 + 1 > gap * 2.2f
                         || y1 - y0 + 1 < gap * .7f
@@ -2975,13 +3077,15 @@ final class OmrMeasurePostProcessor {
                                                 * ((long) Math.ceil(gap * 3) + 20)
                                         + 160L * ((long) Math.ceil(gap * 3) + 2),
                                 0)
-                        || !grandBodyPaper(
-                                labels, gray, w, h, bar, x0, x1, y0, y1, top, bottom, gap,
-                                upperRows, lowerRows)
+                        || !(grandBodyPaper(
+                                        labels, gray, w, h, bar, x0, x1, y0, y1, top, bottom, gap,
+                                        upperRows, lowerRows)
+                                || owned != null && y0 > top && y1 < bottom)
                         || !FilledSparseBeamHead.matches(gray, w, h, cx, cy, gap)
                         || !(grandOwnSeparatedShaft(gray, w, h, cx, cy, x0, gap, true, bar)
                                 || grandOwnSeparatedShaft(gray, w, h, cx, cy, x1, gap, false, bar)))
                     return false;
+                if (owned != null) for (int i = 0; i < n; i++) owned.set(queue[i]);
             }
         return nearby;
     }

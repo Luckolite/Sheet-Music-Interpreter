@@ -5120,10 +5120,10 @@
     },
     "OmrMeasurePostProcessor.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrMeasurePostProcessor.java",
-      "source_sha256": "2746245e0fb6d6678f6f06d2d5818986ef1a5d917857dc54724342b766452859",
-      "source_normalized_sha256": "2746245e0fb6d6678f6f06d2d5818986ef1a5d917857dc54724342b766452859",
+      "source_sha256": "0c3883f78c364d4736ab7b2ae3007cceec7811a3f00d3def7e9aa66328f84049",
+      "source_normalized_sha256": "0c3883f78c364d4736ab7b2ae3007cceec7811a3f00d3def7e9aa66328f84049",
       "review_note": "Reviewed global text/source-owner repair and original regressions; see docs/audited-ownership-repairs.md. Package-only Java port, except public timeline visibility and the pure written-tie helper API name/visibility. Existing models and record layouts are unchanged.",
-      "standalone_sha256": "45508a3848e9520d51c0d1f8aa430513b4fdc9f66fd85e0261fd82bdbd4952a3",
+      "standalone_sha256": "9d8a93896272b3dccb1cea4f6be02be6378e932dfdc0c89e3d690212cdb45811",
       "reviewed_app_commit": "7bced0fdbe0eabd1951229082e0723ec376decd8",
       "scoped_reviewed_app_commit": "61029a658ee219db344b767df304c5f9555791dc",
       "reviewed_app_base_commit": "42a4f42769d275ea7fea042cc9dafab062c5fc17",
@@ -5143,8 +5143,9 @@
         "rollout": "Cumulative matched rollout deferred during active goal; released recognition116 predates repair."
       },
       "reviewed_source_state": "committed-app-source",
-      "standalone_normalized_sha256": "7e840a8269c517d9fd7fc477deeea3045ec348d4cca1e2bd8a5ae3e5ef8d8666",
-      "current_source_review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes"
+      "standalone_normalized_sha256": "9d8a93896272b3dccb1cea4f6be02be6378e932dfdc0c89e3d690212cdb45811",
+      "current_source_review": "Reviewed independent two-staff continuous semantic/raw bar-axis recovery with complete off-axis heads and finite shafts; legacy per-staff head guards unchanged. Separate bounded optional page work/storage ledger prepays derived scan/crop/copy bounds. Original analytic fullstaff/bar/raw-bulge/shaft/refusal controls only; no private score content, model or record-format changes",
+      "owned_head_bar_review": "A full common bar may contact a complete independently stemmed head. Every excessive branch member must be exact validated head ink or a full common axis; unchanged width, paper, body, shaft and negative guards. Original procedural tests only."
     },
     "OmrScoreInterpreter.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/OmrScoreInterpreter.java",
@@ -11440,6 +11441,15 @@
       "source_normalized_sha256": "ae956fa46fed5e298130f70cdf93b09e033874cde344333847ab6bd7d4111e6c",
       "standalone_sha256": "7f9ff55069edaf79b4811d342b46332dae7b478532f52ec387d1333c95df84a4",
       "recognition134_review": "Complete uniquely bound original head members may prove the existing opening margin. Every accepted owned meter header constrains the first head. Original procedural examples only; legacy fallback, source invalidation and strict recapture preserved."
+    },
+    "OwnedHeadBarShoulderOriginalTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/OwnedHeadBarShoulderOriginalTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/OwnedHeadBarShoulderOriginalTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "6366dbb3b95803c6739c9981679f52c6b7935ed010209242b73a1cb9beb87aa6",
+      "source_normalized_sha256": "6366dbb3b95803c6739c9981679f52c6b7935ed010209242b73a1cb9beb87aa6",
+      "standalone_sha256": "2e0ebf351980ead07d7ea6852c690c63e1e6fdd2bf4170552ad895792c248c23",
+      "owned_head_bar_review": "A full common bar may contact a complete independently stemmed head. Every excessive branch member must be exact validated head ink or a full common axis; unchanged width, paper, body, shaft and negative guards. Original procedural tests only."
     }
   },
   "finite_curved_approach_review": {
