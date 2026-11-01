@@ -54,7 +54,7 @@ public class PrintedSystemSlurCaptureOriginalsTest {
     public void absentRawBoundaryKeepsTheCompleteLegacyOutput() {
         var f = new PrintedSystemSlurJoinOriginalsTest.Field(true, 1, 0);
         f.erase(738, 155, 742, 221);
-        assertEquals(capture(f, false), capture(f, true));
+        assertLegacyOutputAndDeclinedEvidence(f);
     }
 
     @Test
@@ -75,7 +75,52 @@ public class PrintedSystemSlurCaptureOriginalsTest {
                         0,
                         ScoreNoteEvent.ACCIDENTAL_FROM_KEY,
                         1));
-        assertEquals(capture(f, false), capture(f, true));
+        assertLegacyOutputAndDeclinedEvidence(f);
+    }
+
+    private static void assertLegacyOutputAndDeclinedEvidence(
+            PrintedSystemSlurJoinOriginalsTest.Field f) {
+        byte[] before = f.gray.clone();
+        var legacy = capture(f, false);
+        var result = capture(f, true);
+        assertEquals(legacy.source(), result.source());
+        assertEquals(legacy.statuses(), result.statuses());
+        assertEquals(legacy.limitReached(), result.limitReached());
+        assertFalse(result.limitReached());
+        assertTrue(result.source().spans().isEmpty());
+        assertTrue(result.source().candidates().isEmpty());
+        assertTrue(legacy.declined().isEmpty());
+        assertEquals(2, result.declined().size());
+        var expectedStatuses = List.of(
+                PrintedSlurOwners.Status.NO_END_OWNER,
+                PrintedSlurOwners.Status.NO_START_OWNER);
+        int[][] expectedCaps = {{678, 728}, {102, 266}};
+        for (int i = 0; i < result.declined().size(); i++) {
+            var declined = result.declined().get(i);
+            assertEquals("printed-page-9-arc-" + i, declined.id());
+            assertSame(f.frames.get(i), declined.frame());
+            assertEquals(expectedStatuses.get(i), declined.status());
+            var bow = declined.bow();
+            assertTrue(bow.above());
+            assertFalse(bow.asymmetric());
+            assertEquals(expectedCaps[i][0], bow.points().get(0).x());
+            assertEquals(expectedCaps[i][1], bow.points().get(bow.points().size() - 1).x());
+            int previousX = -1;
+            for (var point : bow.points()) {
+                assertTrue(point.x() > previousX);
+                assertTrue(point.x() >= declined.frame().left());
+                assertTrue(point.x() <= declined.frame().right());
+                assertTrue(point.y() >= declined.frame().top());
+                assertTrue(point.y() <= declined.frame().bottom());
+                previousX = point.x();
+            }
+            var bound = PrintedSlurOwners.bind(
+                    declined.id(), 9, bow, declined.frame().heads(),
+                    f.gray, f.w, f.h, declined.frame().track());
+            assertEquals(expectedStatuses.get(i), bound.status());
+            assertTrue(bound.span().isEmpty());
+        }
+        assertArrayEquals(before, f.gray);
     }
 
     private static void timed(boolean above) {

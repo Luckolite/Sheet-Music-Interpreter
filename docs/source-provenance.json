@@ -11627,8 +11627,8 @@
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/AsymmetricEllipseSlurOriginalTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/AsymmetricEllipseSlurOriginalTest.java",
       "license": "Apache-2.0",
-      "source_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
-      "source_normalized_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
+      "source_sha256": "28cde6a447073865250a9bb6cdd7f5cb0db631ff077e22047c1f03da008592c2",
+      "source_normalized_sha256": "28cde6a447073865250a9bb6cdd7f5cb0db631ff077e22047c1f03da008592c2",
       "standalone_sha256": "9be90e1bd1763ec7c53e1d7a39518594f8d349265ade784cc165dc5b59706236",
       "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
     },
@@ -11658,6 +11658,15 @@
       "source_normalized_sha256": "9299795b8c8c57942d84a8f2f89853ee859df1d384bafb8960c0a8d30a2dd6c7",
       "standalone_sha256": "daa73a3ddec1d91d8f5fc49bc7c0cd2c792a01ccbdb3454a7abdae584487e95d",
       "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+    },
+    "PrintedSystemSlurCaptureOriginalsTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PrintedSystemSlurCaptureOriginalsTest.java",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PrintedSystemSlurCaptureOriginalsTest.java",
+      "license": "Apache-2.0",
+      "source_sha256": "fdff15b66bdb2fb6e225716c9b45a9ba446d2862ddb9e19b488d2d981968790a",
+      "source_normalized_sha256": "81d7ff8b548f68db69fd59e25c72b6aa2478b0b4d966cf2870d0267b7de94467",
+      "standalone_sha256": "74ba5b3ac9756bf760c3e354f91834103944edb04613f387b89164f5179f7f4d",
+      "review": "Legacy slur capture source/status/limit remain equal; only source-bound declined diagnostics are newly retained. Two negative tests verify exact frame/cap/status evidence without promoting a candidate."
     }
   },
   "finite_curved_approach_review": {
