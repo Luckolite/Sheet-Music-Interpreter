@@ -42,7 +42,7 @@ jobs:
           import os, tomllib
           with open('pyproject.toml', 'rb') as stream:
               project = tomllib.load(stream)['project']
-          assert project['name'] == 'sheet-music-interpreter'
+          assert project['name'] == 'sheet-music-reader'
           expected = os.environ['REQUESTED_VERSION'] or os.environ['RELEASE_TAG'].removeprefix('v')
           assert project['version'] == expected, 'Release and package versions differ'
           PY
@@ -67,7 +67,7 @@ jobs:
     timeout-minutes: 10
     environment:
       name: pypi
-      url: https://pypi.org/project/sheet-music-interpreter/
+      url: https://pypi.org/project/sheet-music-reader/
     permissions:
       id-token: write
     steps:
