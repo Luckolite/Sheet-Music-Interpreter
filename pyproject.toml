@@ -4,17 +4,18 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "score-reader"
-version = "0.1.5"
+version = "0.1.6"
 description = "Experimental offline sheet-music recognition with permissively licensed weights and a standalone Java decoder"
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
 license = {text = "Apache-2.0"}
 authors = [{name = "Luckolite"}]
-dependencies = ["numpy>=1.23.5,<2", "Pillow>=10,<13"]
+dependencies = ["numpy>=1.23.5,<2", "Pillow>=10,<13", "tensorflow==2.15.1", "rapidocr==3.9.2", "onnxruntime==1.23.2"]
 classifiers = ["Development Status :: 3 - Alpha", "Topic :: Multimedia :: Sound/Audio :: MIDI", "Programming Language :: Python :: 3", "Programming Language :: Java"]
 
 [project.optional-dependencies]
-inference = ["tensorflow==2.15.1", "rapidocr==3.9.2", "onnxruntime==1.23.2"]
+# Retain the former extra so existing installation commands remain valid.
+inference = []
 pdf = ["pypdfium2>=4.30,<5"]
 audio = ["imageio-ffmpeg>=0.5,<0.7"]
 

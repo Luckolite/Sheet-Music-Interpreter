@@ -70,8 +70,8 @@ class LocalOcr:
             from rapidocr import RapidOCR
         except ImportError as error:
             raise RuntimeError(
-                "Install the inference extra for built-in OCR: "
-                "pip install 'score-reader[inference]'"
+                "Recognition dependencies are missing. Run: "
+                "pip install --upgrade score-reader"
             ) from error
         self.engine = RapidOCR()
 

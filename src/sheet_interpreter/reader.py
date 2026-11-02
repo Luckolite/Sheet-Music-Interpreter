@@ -104,7 +104,7 @@ class Interpreter:
         try:
             import tensorflow as tf
         except ImportError as error:
-            raise RuntimeError("Install the inference extra: pip install 'score-reader[inference]'") from error
+            raise RuntimeError("Recognition dependencies are missing. Run: pip install --upgrade score-reader") from error
         self.runtime = tf.lite.Interpreter(model_path=str(path), num_threads=threads)
         self.runtime.allocate_tensors()
         self.input = self.runtime.get_input_details()[0]

@@ -29,7 +29,15 @@ You do not need to publish your own code. Follow the [license and notice require
 
 ## Install and use
 
-Requires **Python 3.10 or 3.11** and **JDK 17+**. Build from source for the latest features;
+Requires **Python 3.10 or 3.11** and **JDK 17+**. Image recognition is included in the default PyPI installation:
+
+```sh
+python -m pip install score-reader
+```
+
+Use `score-reader[pdf,audio]` to add PDF input and MP3 export.
+
+Build from source for the latest features;
 [release downloads](https://github.com/Luckolite/Music-Sheets-Interpreter/releases) may be older.
 
 ```sh
@@ -43,7 +51,7 @@ on macOS/Linux, then run:
 
 ```sh
 python scripts/build_java.py
-python -m pip install ".[inference,pdf]"
+python -m pip install ".[pdf]"
 sheet-interpreter score.pdf --output score.json --midi preview.mid --musicxml score.musicxml
 ```
 
