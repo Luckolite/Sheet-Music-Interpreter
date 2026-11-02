@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "music-sheets-interpreter"
+name = "sheet-music-interpreter"
 version = "0.1.5"
 description = "Experimental offline sheet-music recognition with permissively licensed weights and a standalone Java decoder"
 readme = "README.md"

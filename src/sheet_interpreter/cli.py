@@ -87,7 +87,7 @@ def main():
             try:
                 import pypdfium2 as pdfium
             except ImportError as error:
-                raise ValueError("PDF input needs the pdf extra: pip install 'music-sheets-interpreter[pdf]'") from error
+                raise ValueError("PDF input needs the pdf extra: pip install 'sheet-music-interpreter[pdf]'") from error
             pdf = pdfium.PdfDocument(source_bytes)
             source_pages = len(pdf)
             try:
