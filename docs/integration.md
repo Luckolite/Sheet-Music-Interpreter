@@ -50,6 +50,18 @@ beats or one quarter of the principal's duration, whichever is smaller. The
 principal chord moves together; accompaniment and later beats keep their timing.
 This is a preview convention, not a claim that every ornament style is recognized.
 
+## Tempo and source identities
+
+Detected tempo changes report `bpm` in quarter notes per minute and `beatUnit`
+as the printed pulse length in quarter notes. Eighth note = 163, for example,
+reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo
+directly. Decoded events include `sourceNoteIndex`, the zero-based head index
+within that page.
+
+Persistent instruction labels require matching source identities and consistent
+note clocks. Older saved JSON without these identities keeps its prior omission
+of those labels.
+
 ## MP3 export from decoded JSON
 
 ```python
@@ -66,6 +78,15 @@ It accepts optional `ffmpeg=` (executable path) and `bitrate=` (kbps, default 19
 Install the `[audio]` extra or provide local FFmpeg with `libmp3lame`. The existing
 output is replaced only after encoding succeeds. This is an audio preview, not a
 promise of realistic instrumentation or additional expressive-mark interpretation.
+
+For the CLI, `--mp3-bitrate 192` selects the bitrate in kbps (default 192), and
+`--ffmpeg /path/to/ffmpeg` selects an encoder. MIDI and MP3 can be exported together.
+MP3 shares MIDI's tempo changes, ties, tremolo, supported guitar effects and repeat
+navigation, including the same expressive limitations. Rendering is streamed in
+bounded blocks and limited to one hour. Exporting an already decoded document
+through the Python API requires no recognition rerun or network access.
+FFmpeg has its own license and is supplied separately from the repository's
+Apache-2.0 source and model artifacts.
 
 ## OCR and optional annotations
 

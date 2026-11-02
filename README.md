@@ -29,61 +29,43 @@ You do not need to publish your own code. Follow the [license and notice require
 
 ## Install and use
 
-Requires **Python 3.10 or 3.11** and **JDK 17+**. Image recognition is included in the default PyPI installation:
+Requires **Python 3.10 or 3.11** and **JDK 17+** on your PATH.
 
 ```sh
 python -m pip install score-reader
 ```
 
-Use `score-reader[pdf,audio]` to add PDF input and MP3 export.
-
-Build from source for the latest features;
-[release downloads](https://github.com/Luckolite/Music-Sheets-Interpreter/releases) may be older.
+The package includes the recognition model and its runtime dependencies. For PDF
+input and MP3 export, install the extras:
 
 ```sh
-git clone https://github.com/Luckolite/Music-Sheets-Interpreter.git
-cd Music-Sheets-Interpreter
-python -m venv .venv
+python -m pip install "score-reader[pdf,audio]"
 ```
 
-Activate with `.venv\Scripts\Activate.ps1` on Windows or `source .venv/bin/activate`
-on macOS/Linux, then run:
+### Read a score
 
 ```sh
-python scripts/build_java.py
-python -m pip install ".[pdf]"
-sheet-interpreter score.pdf --output score.json --midi preview.mid --musicxml score.musicxml
+sheet-interpreter score.png --output score.json --midi preview.mid --musicxml score.musicxml
 ```
 
-Images work too. `--midi` and `--musicxml` are optional. Use `--meter 3/4`, `--bpm 90`,
-`--key-fifths 2` or `--pages 1,2,3` when needed. Default meter and tempo are 4/4 and 120 BPM.
-
-Detected tempo changes report `bpm` in quarter notes per minute, including fractional values,
-and `beatUnit` as the printed pulse length in quarter notes. For example, eighth note = 163
-reports `bpm: 81.5, beatUnit: 0.5`. MIDI and MusicXML use the quarter-note tempo directly.
-Decoded events include `sourceNoteIndex`, the zero-based head index within that page.
-Persistent instruction labels require matching source identities and consistent note clocks;
-older saved JSON without these identities keeps its prior omission of those labels.
-Everything runs locally after installation; no account or server is required.
-
-### MP3 audio previews
-
-To export it, install FFmpeg on PATH or the optional bundled encoder:
+Use an image or PDF as input. JSON output is required; MIDI, MusicXML and MP3
+exports are optional. For example, with the extras installed:
 
 ```sh
-python -m pip install ".[audio]"
 sheet-interpreter score.pdf --output score.json --mp3 preview.mp3
 ```
 
-You can export MIDI and MP3 together. `--mp3-bitrate 192` sets the MP3 bitrate in
-kbps (default 192); `--ffmpeg /path/to/ffmpeg` selects an encoder explicitly.
-MP3 uses a basic built-in synthesized tone, not a realistic instrument soundfont.
-It shares MIDI's tempo changes, ties, tremolo, supported guitar effects and repeat
-navigation, including MIDI's current expressive limitations. Rendering is streamed
-in bounded blocks and limited to one hour. No soundfont, inference rerun or network
-is needed to export an already decoded document through the Python API.
-FFmpeg is a separate optional dependency with its own license; it is not committed
-or bundled in this repository's Apache-2.0 source/model artifacts.
+MP3 previews use a basic synthesized tone. The audio extra supplies an FFmpeg
+encoder. You can also use an existing FFmpeg installation.
+
+Use `--pages 1,2,3` to select PDF pages, `--meter 3/4` for the initial meter,
+`--bpm 90` for the initial quarter-note tempo, or `--key-fifths 2` for two sharps.
+The default meter and tempo are 4/4 and 120 BPM. Run `sheet-interpreter --help`
+for all options.
+
+Processing runs locally. See [API and output details](docs/integration.md) for
+Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Sheet-Music-Interpreter/releases)
+for standalone JAR and model downloads.
 
 ## Integration and model
 
@@ -103,8 +85,25 @@ weights or commercial score scans. See the [model card](models/MODEL_CARD.md), [
 
 ## Development
 
+To build from source:
+
+```sh
+git clone https://github.com/Luckolite/Sheet-Music-Interpreter.git
+cd Sheet-Music-Interpreter
+python -m venv .venv
+```
+
+Activate with `.venv\Scripts\Activate.ps1` on Windows or
+`source .venv/bin/activate` on macOS/Linux, then build and install:
+
 ```sh
 python scripts/build_java.py
+python -m pip install ".[pdf,audio]"
+```
+
+Run the checks:
+
+```sh
 python scripts/test_java.py
 python -m unittest discover -s tests
 python scripts/smoke_test.py
