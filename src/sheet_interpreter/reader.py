@@ -104,7 +104,7 @@ class Interpreter:
         try:
             import tensorflow as tf
         except ImportError as error:
-            raise RuntimeError("Install the inference extra: pip install 'sheet-music-interpreter[inference]'") from error
+            raise RuntimeError("Install the inference extra: pip install 'music-sheets-interpreter[inference]'") from error
         self.runtime = tf.lite.Interpreter(model_path=str(path), num_threads=threads)
         self.runtime.allocate_tensors()
         self.input = self.runtime.get_input_details()[0]
