@@ -71,7 +71,7 @@ class LocalOcr:
         except ImportError as error:
             raise RuntimeError(
                 "Install the inference extra for built-in OCR: "
-                "pip install 'sheet-music-reader[inference]'"
+                "pip install 'score-reader[inference]'"
             ) from error
         self.engine = RapidOCR()
 
