@@ -34,7 +34,7 @@ def find_ffmpeg(executable=None):
     except (ImportError, RuntimeError) as error:
         raise RuntimeError(
             "MP3 export needs FFmpeg on PATH, --ffmpeg /path/to/ffmpeg, "
-            "or pip install 'music-sheets-interpreter[audio]'"
+            "or pip install 'sheet-music-interpreter[audio]'"
         ) from error
 
 
