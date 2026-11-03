@@ -1,4 +1,4 @@
-# Music Sheets Interpreter
+# Score-OMR
 
 Offline sheet-music recognition for images and PDFs, with downloadable model weights,
 a Java decoder and a Python interface. Exports JSON, MIDI, MP3 and MusicXML.
@@ -64,7 +64,7 @@ The default meter and tempo are 4/4 and 120 BPM. Run `score-reader --help`
 for all options. The former `sheet-interpreter` command remains available as an alias.
 
 Processing runs locally. See [API and output details](docs/integration.md) for
-Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Sheet-Music-Interpreter/releases)
+Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Score-OMR/releases)
 for standalone JAR and model downloads.
 
 ## Integration and model
@@ -88,8 +88,8 @@ weights or commercial score scans. See the [model card](models/MODEL_CARD.md), [
 To build from source:
 
 ```sh
-git clone https://github.com/Luckolite/Sheet-Music-Interpreter.git
-cd Sheet-Music-Interpreter
+git clone https://github.com/Luckolite/Score-OMR.git
+cd Score-OMR
 python -m venv .venv
 ```
 

@@ -24,8 +24,8 @@ score-reader = "sheet_interpreter.cli:main"
 sheet-interpreter = "sheet_interpreter.cli:main"
 
 [project.urls]
-Repository = "https://github.com/Luckolite/Music-Sheets-Interpreter"
-Issues = "https://github.com/Luckolite/Music-Sheets-Interpreter/issues"
+Repository = "https://github.com/Luckolite/Score-OMR"
+Issues = "https://github.com/Luckolite/Score-OMR/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
