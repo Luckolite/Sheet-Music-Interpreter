@@ -45,14 +45,14 @@ python -m pip install "score-reader[pdf,audio]"
 ### Read a score
 
 ```sh
-sheet-interpreter score.png --output score.json --midi preview.mid --musicxml score.musicxml
+score-reader score.png --output score.json --midi preview.mid --musicxml score.musicxml
 ```
 
 Use an image or PDF as input. JSON output is required; MIDI, MusicXML and MP3
 exports are optional. For example, with the extras installed:
 
 ```sh
-sheet-interpreter score.pdf --output score.json --mp3 preview.mp3
+score-reader score.pdf --output score.json --mp3 preview.mp3
 ```
 
 MP3 previews use a basic synthesized tone. The audio extra supplies an FFmpeg
@@ -60,8 +60,8 @@ encoder. You can also use an existing FFmpeg installation.
 
 Use `--pages 1,2,3` to select PDF pages, `--meter 3/4` for the initial meter,
 `--bpm 90` for the initial quarter-note tempo, or `--key-fifths 2` for two sharps.
-The default meter and tempo are 4/4 and 120 BPM. Run `sheet-interpreter --help`
-for all options.
+The default meter and tempo are 4/4 and 120 BPM. Run `score-reader --help`
+for all options. The former `sheet-interpreter` command remains available as an alias.
 
 Processing runs locally. See [API and output details](docs/integration.md) for
 Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Sheet-Music-Interpreter/releases)

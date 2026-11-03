@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "score-reader"
-version = "0.1.6"
+version = "0.1.6.post1"
 description = "Experimental offline sheet-music recognition with permissively licensed weights and a standalone Java decoder"
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
@@ -20,6 +20,7 @@ pdf = ["pypdfium2>=4.30,<5"]
 audio = ["imageio-ffmpeg>=0.5,<0.7"]
 
 [project.scripts]
+score-reader = "sheet_interpreter.cli:main"
 sheet-interpreter = "sheet_interpreter.cli:main"
 
 [project.urls]

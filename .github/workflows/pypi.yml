@@ -6,7 +6,7 @@ on:
       version:
         description: Package version to publish
         required: true
-        default: '0.1.6'
+        default: '0.1.6.post1'
   release:
     types: [published]
 
@@ -55,7 +55,9 @@ jobs:
         run: |
           python -m pip install --force-reinstall --no-deps dist/*.whl
           python -m pip check
-          python -m sheet_interpreter.cli examples/scale.png --output base-install-smoke.json --midi base-install-smoke.mid --musicxml base-install-smoke.musicxml
+          score-reader --help
+          sheet-interpreter --help
+          score-reader examples/scale.png --output base-install-smoke.json --midi base-install-smoke.mid --musicxml base-install-smoke.musicxml
           python -m pip install ".[pdf,audio]"
           python scripts/smoke_test.py
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
