@@ -59,6 +59,40 @@ final class ObservedStemBeam {
         return gray[actual(y, direction) * w + x] & 255;
     }
 
+    /** Separate a compact bow from the attached beam before applying the raw contour proof. */
+    Optional<PrintedSlurContours.Bow> compactBowAbove(
+            PrintedSlurOwners.Location a, PrintedSlurOwners.Location b, StaffPitchTrack track) {
+        var first = notes.get(a.owner());
+        var last = notes.get(b.owner());
+        float gap = track.at((a.x() + b.x()) * .5f)[1];
+        float span = b.x() - a.x();
+        if (first.kind() != ScoreNoteEvent.Kind.PITCHED || last.kind() != ScoreNoteEvent.Kind.PITCHED
+                || a.grace() || b.grace() || first.measureIndex() != last.measureIndex()
+                || first.diatonicPitchIdentity() == last.diatonicPitchIdentity()
+                || first.staffIndex() != last.staffIndex() || first.staffCount() != last.staffCount()
+                || first.crossStaffBeam() || last.crossStaffBeam()
+                || first.beamCount() < 1 || first.beamCount() != last.beamCount()
+                || first.stemDirection() != 1 || last.stemDirection() != 1
+                || gap < 8 || gap > 64 || span < gap * 1.65f || span > gap * 2.9f
+                || !take((long) Math.ceil(gap * gap * 32 + w * 4L))) return Optional.empty();
+        Stem sa = stem(a, gap, -1), sb = stem(b, gap, -1);
+        if (sa == null || sb == null || !connectedShaft(sa, -1) || !connectedShaft(sb, -1))
+            return Optional.empty();
+        int ay = actual(sa.end(), -1), by = actual(sb.end(), -1);
+        if (Math.abs(ay - by) > gap * .4f) return Optional.empty();
+        int bottom = Math.round(Math.min(ay, by) - gap * .2f);
+        var result = PrintedSlurContours.findAboveStemTips(gray, w, h, Math.round(a.x()),
+                Math.round(bottom - gap * 1.3f), Math.round(b.x() + gap), bottom, track);
+        if (result.limitReached()) return Optional.empty();
+        var bows = result.bows().stream().filter(bow ->
+                bow.above()
+                        && Math.abs(bow.start().x() - (sa.left() + sa.right()) * .5f) <= gap * .35f
+                        && Math.abs(bow.end().x() - (sb.left() + sb.right()) * .5f) <= gap * .35f
+                        && ay - bow.start().y() <= gap * .8f
+                        && by - bow.end().y() <= gap * .8f).toList();
+        return bows.size() == 1 ? Optional.of(bows.get(0)) : Optional.empty();
+    }
+
     boolean owns(
             PrintedSlurContours.Bow bow,
             ScoreSlurPages.Span span,

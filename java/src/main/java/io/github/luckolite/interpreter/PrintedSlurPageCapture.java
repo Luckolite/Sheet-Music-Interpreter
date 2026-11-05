@@ -427,6 +427,9 @@ final class PrintedSlurPageCapture {
                 }
             }
         }
+        if (sourceNotes != null)
+            addCompactStemBows(physicalPage, frames, sourceNotes, gray, width, height,
+                    retainedTies, geometryOnly, spans, candidates);
         return new Result(
                 ScoreSlurSource.capture(
                         spans,
@@ -435,5 +438,51 @@ final class PrintedSlurPageCapture {
                 statuses,
                 false,
                 declined);
+    }
+
+    private static void addCompactStemBows(
+            int page, List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            List<ScoreNoteEvent> notes, byte[] gray, int width, int height,
+            Set<PrintedSlurOwners.Tie> retainedTies, boolean geometryOnly,
+            List<ScoreSlurPages.Span> spans, List<ScoreSlurPages.Span> candidates) {
+        var detector = new ObservedStemBeam(notes, gray, width, height);
+        var recovered = new ArrayList<ScoreSlurPages.Span>();
+        for (var frame : frames) {
+            var heads = frame.heads().stream()
+                    .sorted(Comparator.comparingDouble(PrintedSlurOwners.Location::x)).toList();
+            for (int i = 0; i + 1 < heads.size(); i++) {
+                var a = heads.get(i);
+                var b = heads.get(i + 1);
+                float gap = frame.track().at(a.x())[1];
+                if (i > 0 && a.x() - heads.get(i - 1).x() < gap * .5f
+                        || i + 2 < heads.size() && heads.get(i + 2).x() - b.x() < gap * .5f)
+                    continue;
+                boolean exists = java.util.stream.Stream.concat(spans.stream(), candidates.stream())
+                        .anyMatch(s -> s.start().noteIndex() == a.owner()
+                                && s.end().noteIndex() == b.owner());
+                if (exists) continue;
+                var found = detector.compactBowAbove(a, b, frame.track());
+                if (detector.refused()) return;
+                if (found.isEmpty()) continue;
+                var bow = found.get();
+                var span = new ScoreSlurPages.Span(
+                        "printed-page-" + page + "-stem-bow-" + a.owner() + ":" + b.owner(),
+                        new ScoreSlurPages.Anchor(page, a.owner()),
+                        new ScoreSlurPages.Anchor(page, b.owner()),
+                        ScoreSlurSpan.Placement.ABOVE, ScoreSlurSpan.LineType.SOLID,
+                        List.of(new ScoreSlurSpan.ArcEvidence(page, bow.start().x() / (float) width,
+                                bow.start().y() / height, bow.end().x() / (float) width,
+                                bow.end().y() / height)));
+                if (geometryOnly) recovered.add(span);
+                else {
+                    var binding = new PrintedSlurOwners.Binding(
+                            PrintedSlurOwners.Status.GEOMETRY_OWNED, Optional.of(span));
+                    PrintedSlurOwners.resolveBinding(binding,
+                            List.of((PrintedSlurOwners.Head) a, (PrintedSlurOwners.Head) b),
+                            retainedTies).span().ifPresent(recovered::add);
+                }
+            }
+        }
+        (geometryOnly ? candidates : spans).addAll(recovered);
     }
 }

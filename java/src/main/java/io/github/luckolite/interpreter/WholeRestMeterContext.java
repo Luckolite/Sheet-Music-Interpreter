@@ -96,6 +96,10 @@ final class WholeRestMeterContext {
                         shortBars,
                         acceptedHeaders);
         var rests = new ArrayList<>(s.rests());
+        var openingRests = acceptedHeaders.stream()
+                .map(header -> WholeRestClassifier.openingHeaderRest(s, gray, w, h, header))
+                .filter(Objects::nonNull).distinct().toList();
+        if (openingRests.size() == 1) rests.add(0, openingRests.get(0));
         for (var d : decisions) {
             var found = d.event();
             if (!found.isFullMeasure()

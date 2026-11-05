@@ -256,6 +256,74 @@ final class WholeRestClassifier {
         return List.copyOf(result);
     }
 
+    /** An opening rest can hang below the meter while its bar content starts to the right. */
+    static ScoreRestEvent openingHeaderRest(
+            ScorePageInterpretation score, byte[] gray, int w, int h,
+            MeterChangeDetector.Crop header) {
+        if (score.openingPickup() || score.measures().size() < 3
+                || score.notes().stream().anyMatch(n -> n.measureIndex() == 0)
+                || score.rests().stream().anyMatch(r -> r.measureIndex() == 0)
+                || MeterChangeDetector.followingMeasure(header, w, h, score.measures()) != 0)
+            return null;
+        var first = score.measures().get(0);
+        float gap = header.gap();
+        if (gap < 6 || gap > 64) return null;
+        int rule = Math.round(header.firstLine() + 4 * gap);
+        int edge = Math.round(first.left() * w);
+        var plate = bottomRulePlate(gray, w, h, rule, gap,
+                Math.max(1, header.left() - Math.round(gap)),
+                Math.min(w - 2, edge + Math.round(gap)));
+        if (plate == null || plate.left() >= edge || plate.right() > edge
+                || plate.right() < header.left() || plate.left() > header.right()
+                || unaccountedDotInk(gray, w, h, plate, first, List.of(), new int[0]))
+            return null;
+        // Require two matching, independently retained rests on the same physical staff.
+        for (int m = 1; m <= 2; m++) {
+            var region = score.measures().get(m);
+            if (Math.abs(region.top() - first.top()) * h > gap * .3f) return null;
+            final int measure = m;
+            if (score.notes().stream().anyMatch(n -> n.measureIndex() == measure)) return null;
+            var rests = score.rests().stream().filter(r -> r.measureIndex() == measure).toList();
+            if (rests.size() != 1) return null;
+            var rest = rests.get(0);
+            if (rest.staffIndex() != 0 || rest.staffCount() != 1 || rest.durationBeats() != 4
+                    || Math.abs(rest.pageY() * h - (plate.first() + plate.last()) * .5f)
+                            > gap * .2f) return null;
+            int x = Math.round((region.left()
+                    + rest.positionInMeasure() * (region.right() - region.left())) * w);
+            var matching = bottomRulePlate(gray, w, h, rule, gap,
+                    Math.max(1, x - Math.round(gap * 1.5f)),
+                    Math.min(w - 2, x + Math.round(gap * 1.5f)));
+            if (matching == null
+                    || Math.abs((plate.right() - plate.left()) - (matching.right() - matching.left())) > 2
+                    || Math.abs((plate.last() - plate.first()) - (matching.last() - matching.first())) > 1)
+                return null;
+        }
+        return ScoreRestEvent.fullMeasure(0, 0,
+                (plate.first() + plate.last()) * .5f / h,
+                (plate.last() - plate.first() + 1f) / h, 0, 1);
+    }
+
+    private static Plate bottomRulePlate(
+            byte[] gray, int w, int h, int rule, float gap, int lo, int hi) {
+        if (rule < 1 || rule + gap >= h || hi <= lo
+                || ink(gray, w, lo, hi, rule) < (hi - lo + 1) * .9f) return null;
+        int row = rule + 1;
+        while (row < rule + gap * .3f && ink(gray, w, lo, hi, row) >= (hi - lo + 1) * .9f)
+            row++;
+        Plate match = null;
+        for (int x = lo; x <= hi; x++) {
+            if (!dark(gray, w, x, row)) continue;
+            int left = x;
+            while (x < hi && dark(gray, w, x + 1, row)) x++;
+            var plate = completePlate(gray, w, h, lo, hi, left, x, rule, row, gap, Support.SECOND_RULE);
+            if (plate == null) continue;
+            if (match != null) return null;
+            match = plate;
+        }
+        return match;
+    }
+
     private static boolean unaccountedDotInk(
             byte[] g,
             int w,

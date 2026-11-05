@@ -10,6 +10,8 @@ import java.util.List;
 final class TempoChangeDetector {
     private static final java.util.regex.Pattern ISOLATED_DIGITS =
             java.util.regex.Pattern.compile("([0-9]{2,3})[)\\]]?");
+    private static final java.util.regex.Pattern DECIMAL_EQUATION =
+            java.util.regex.Pattern.compile("^[Jj♩♪.]?\\s*=\\s*([0-9]{2,3})\\.([0-9]{1,17})$");
 
     private TempoChangeDetector() {}
 
@@ -219,6 +221,14 @@ final class TempoChangeDetector {
             int height,
             List<MeasureRegion> measures,
             java.util.Map<MeasureNumberReconciler.NumberToken, Integer> provedEquals) {
+        return detectProved(tokens, gray, width, height, measures, provedEquals, java.util.Map.of());
+    }
+
+    private static List<ScoreTempoChange> detectProved(
+            List<MeasureNumberReconciler.NumberToken> tokens,
+            byte[] gray, int width, int height, List<MeasureRegion> measures,
+            java.util.Map<MeasureNumberReconciler.NumberToken, Integer> provedEquals,
+            java.util.Map<MeasureNumberReconciler.NumberToken, Double> decimalRates) {
         if (tokens == null
                 || tokens.isEmpty()
                 || gray == null
@@ -238,6 +248,7 @@ final class TempoChangeDetector {
                         : directionMeasures(measures, gray, width, height);
         for (MeasureNumberReconciler.NumberToken token : tokens) {
             if (token.value() < 30 || token.value() > 400) continue;
+            double rate = decimalRates.getOrDefault(token, (double) token.value());
             boolean provedApproximation = provedEquals.containsKey(token);
             int equalsLeft =
                     provedApproximation
@@ -291,7 +302,7 @@ final class TempoChangeDetector {
             if (measureIndex == 0 && token.bottom() <= measure.top()) position = 0f;
             if (position < .22f) position = 0f;
             double unit = printedBeatUnit(token, gray, width, height, equalsLeft);
-            result.add(new ScoreTempoChange(measureIndex, position, token.value() * unit, unit));
+            result.add(new ScoreTempoChange(measureIndex, position, rate * unit, unit));
         }
         result.sort(
                 Comparator.comparingInt(ScoreTempoChange::measureIndex)
@@ -442,12 +453,27 @@ final class TempoChangeDetector {
         var all = new ArrayList<MeasureNumberReconciler.NumberToken>();
         if (tokens != null) all.addAll(tokens);
         var proved = new java.util.HashMap<MeasureNumberReconciler.NumberToken, Integer>();
+        var decimalRates = new java.util.HashMap<MeasureNumberReconciler.NumberToken, Double>();
         var syntax =
                 java.util.regex.Pattern.compile(
                         "^[♩♪♫♬√J.]?\\s*=\\s*(?:ca\\.?|c\\.|circa|~|\u2248)\\s*([0-9]{2,3})$",
                         java.util.regex.Pattern.CASE_INSENSITIVE);
         for (var word : words) {
             if (word == null || word.text() == null) continue;
+            var decimal = DECIMAL_EQUATION.matcher(word.text().trim());
+            if (decimal.matches()) {
+                double rate = Double.parseDouble(decimal.group(1) + "." + decimal.group(2));
+                var integerPart = equalsPrefixedDigits(
+                        new PlayingTechniqueDetector.Word("=" + decimal.group(1),
+                                word.left(), word.top(), word.right(), word.bottom()),
+                        gray, width, height);
+                if (integerPart != null && rate >= 30 && rate <= 400
+                        && hasPrintedDecimalPoint(integerPart, gray, width, height)) {
+                    all.add(integerPart);
+                    decimalRates.put(integerPart, rate);
+                }
+                continue;
+            }
             var match = syntax.matcher(word.text().trim());
             if (!match.matches()) continue;
             int value = Integer.parseInt(match.group(1)), count = match.group(1).length();
@@ -529,7 +555,7 @@ final class TempoChangeDetector {
             all.add(accepted);
             proved.put(accepted, eq);
         }
-        var ordinary = detectProved(all, gray, width, height, measures, proved);
+        var ordinary = detectProved(all, gray, width, height, measures, proved, decimalRates);
         if (measures == null || measures.isEmpty() || all.size() > 10000 || words.size() > 10000)
             return ordinary;
         var contextualMeasures = directionMeasures(measures, gray, width, height);
@@ -580,7 +606,8 @@ final class TempoChangeDetector {
                                 contextualMeasures,
                                 ownedLaterEquations);
                 if (owner < 0) continue;
-                var event = new ScoreTempoChange(owner, 0, token.value() * unit, unit);
+                double rate = decimalRates.getOrDefault(token, (double) token.value());
+                var event = new ScoreTempoChange(owner, 0, rate * unit, unit);
                 if (!contextual.contains(event)) contextual.add(event);
             }
         if (contextual.size() != 1 || ordinary.contains(contextual.get(0))) return ordinary;
@@ -590,6 +617,32 @@ final class TempoChangeDetector {
                 Comparator.comparingInt(ScoreTempoChange::measureIndex)
                         .thenComparingDouble(ScoreTempoChange::positionInMeasure));
         return List.copyOf(result);
+    }
+
+    private static boolean hasPrintedDecimalPoint(
+            MeasureNumberReconciler.NumberToken integerPart, byte[] gray, int width, int height) {
+        int edge = Math.round(integerPart.right() * width);
+        int top = Math.round(integerPart.top() * height);
+        int bottom = Math.round(integerPart.bottom() * height);
+        int digitHeight = bottom - top + 1;
+        int limit = Math.min(width - 1, edge + Math.round(digitHeight * .5f));
+        int first = -1, last = -1;
+        for (int x = edge + 1; x <= limit; x++) {
+            boolean hasInk = false;
+            for (int y = top; y <= bottom; y++) {
+                if ((gray[y * width + x] & 255) > 155) continue;
+                if (y < bottom - digitHeight * .35f) return false;
+                hasInk = true;
+            }
+            if (!hasInk) {
+                if (first >= 0) break;
+                continue;
+            }
+            if (first < 0) first = x;
+            last = x;
+        }
+        return first > edge + 1 && last < limit && last - first + 1 >= 2
+                && last - first + 1 <= digitHeight * .35f;
     }
 
     private static boolean canDeferStaffSearch(

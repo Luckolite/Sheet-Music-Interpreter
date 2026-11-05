@@ -35,4 +35,15 @@ public class ScoreTempoMarkTest {
         assertEquals(0, mark.dots());
         assertEquals("81.25", mark.text());
     }
+    @Test public void repeatingPulseRateUsesEquivalentExactQuarterMark() {
+        var mark = ScoreTempoMark.from(new ScoreTempoChange(0, 0, 80, .75));
+        assertEquals("quarter", mark.musicXmlUnit());
+        assertEquals(0, mark.dots());
+        assertEquals("80", mark.text());
+
+        var exactDotted = ScoreTempoMark.from(new ScoreTempoChange(0, 0, 60, .75));
+        assertEquals("eighth", exactDotted.musicXmlUnit());
+        assertEquals(1, exactDotted.dots());
+        assertEquals("80", exactDotted.text());
+    }
 }

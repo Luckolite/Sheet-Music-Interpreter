@@ -28542,6 +28542,8 @@ final class OmrScoreInterpreter {
         List<DetectedNote> result = new ArrayList<>(source);
         List<DetectedNote> printedGeometry = null;
         int[] detachedMarks = null;
+        int[] systemPredecessors = new int[result.size()];
+        java.util.Arrays.fill(systemPredecessors, -1);
         for (int currentIndex = 1; currentIndex < result.size(); currentIndex++) {
             DetectedNote current = result.get(currentIndex);
             if (current.event.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
@@ -28645,6 +28647,9 @@ final class OmrScoreInterpreter {
                                 || (detachedMarks[currentIndex] & detached) == 0;
             }
             if (!tied) continue;
+            if (previousIndex >= 0
+                    && systemBreakTieCandidate(result.get(previousIndex), current, width))
+                systemPredecessors[currentIndex] = previousIndex;
             ScoreNoteEvent event = current.event;
             result.set(
                     currentIndex,
@@ -28679,7 +28684,84 @@ final class OmrScoreInterpreter {
                             current.head,
                             current.staffGap));
         }
+        discardSharedSystemTieInk(labels, gray, width, height, source, result, systemPredecessors);
         return result;
+    }
+
+    /** Two chord notes may not claim the same returning ink on both sides of a system break. */
+    private static void discardSharedSystemTieInk(
+            byte[] labels, byte[] gray, int width, int height,
+            List<DetectedNote> source, List<DetectedNote> result, int[] predecessors) {
+        if (gray == null) return;
+        for (int i = 0; i < predecessors.length; i++) {
+            if (predecessors[i] < 0) continue;
+            var end = source.get(i);
+            var start = source.get(predecessors[i]);
+            for (int j = i + 1; j < predecessors.length; j++) {
+                var otherEnd = source.get(j);
+                if (!samePrintedOnset(end, otherEnd)) break;
+                if (predecessors[j] < 0) continue;
+                var otherStart = source.get(predecessors[j]);
+                if (!samePrintedOnset(start, otherStart)) continue;
+                int startOwner = systemTieInkOwner(labels, gray, width, height, start, otherStart, true);
+                if (startOwner == 0 || startOwner != systemTieInkOwner(
+                        labels, gray, width, height, end, otherEnd, false)) continue;
+                int redundant = startOwner < 0 ? j : i;
+                result.set(redundant, source.get(redundant));
+                predecessors[redundant] = -1;
+                if (redundant == i) break;
+            }
+        }
+    }
+
+    private static int systemTieInkOwner(
+            byte[] labels, byte[] gray, int width, int height,
+            DetectedNote first, DetectedNote second, boolean outgoing) {
+        var a = new SystemTieInk();
+        var b = new SystemTieInk();
+        for (int side : new int[] {-1, 1}) {
+            if (!hasSystemEndTieArc(labels, gray, width, height, first, outgoing, side, a)
+                    || !hasSystemEndTieArc(labels, gray, width, height, second, outgoing, side, b)
+                    || !a.overlaps(b)) continue;
+            float firstDistance = Math.abs(a.nearY(outgoing) - first.head.centerY);
+            float secondDistance = Math.abs(b.nearY(outgoing) - second.head.centerY);
+            if (Math.abs(firstDistance - secondDistance) >= Math.min(first.staffGap, second.staffGap) * .4f)
+                return firstDistance < secondDistance ? -1 : 1;
+        }
+        return 0;
+    }
+
+    private static final class SystemTieInk {
+        int[] columns;
+        float[] rows;
+
+        boolean accept(int[] columns, float[] rows) {
+            this.columns = columns.clone();
+            this.rows = rows.clone();
+            return true;
+        }
+
+        float nearY(boolean outgoing) {
+            for (int i = 0; i < rows.length; i++) {
+                float row = rows[outgoing ? i : rows.length - 1 - i];
+                if (Float.isFinite(row)) return row;
+            }
+            return Float.NaN;
+        }
+
+        boolean overlaps(SystemTieInk other) {
+            int shared = 0, compared = 0;
+            for (int i = 0; i < columns.length; i++) {
+                if (!Float.isFinite(rows[i])) continue;
+                for (int j = 0; j < other.columns.length; j++) {
+                    if (columns[i] != other.columns[j] || !Float.isFinite(other.rows[j])) continue;
+                    compared++;
+                    if (Math.abs(rows[i] - other.rows[j]) <= 1) shared++;
+                    break;
+                }
+            }
+            return compared >= 8 && shared >= compared * .8f;
+        }
     }
 
     /** Reuses the complete curve proof after independently corroborated rule contrast removal. */
@@ -28893,12 +28975,13 @@ final class OmrScoreInterpreter {
             // Compact engraved ties can start inside the head shoulders. Keep
             // those candidates for the raw returning-arc test, but never relax
             // semantic-only matching or merge overlapping/same-onset heads.
+            // The two raster head centers can differ by one pixel after quantization.
             boolean compactPrintedCandidate =
                     gray != null
                             && labels != null
                             && gray.length == labels.length
                             && horizontal > 2
-                            && current.head.centerX - previous.head.centerX >= gap * 1.8f;
+                            && current.head.centerX - previous.head.centerX + 1 >= gap * 1.8f;
             boolean heldAcrossBar =
                     gray != null
                             && labels != null
@@ -29254,7 +29337,7 @@ final class OmrScoreInterpreter {
         float gap = Math.max(2f, (previous.staffGap + current.staffGap) * .5f);
         if (right <= left
                 || right - left + 1 < gap * 1.3f
-                        && current.head.centerX - previous.head.centerX < gap * 1.8f) return false;
+                        && current.head.centerX - previous.head.centerX + 1 < gap * 1.8f) return false;
         float centerY = (previous.head.centerY + current.head.centerY) * .5f;
         if (frame != null && right - left <= gap * 6) {
             for (float overlap : new float[] {0, .3f, .6f}) {
@@ -29308,6 +29391,15 @@ final class OmrScoreInterpreter {
             if (hasPrintedTieArc(
                     labels, gray, width, height, arcLeft, arcRight, centerY, gap, false, frame))
                 return true;
+            // A returning arc can clear the upper rim of a whole-note destination.
+            // Recheck that small clearance only between adjacent bars, with raw curve proof.
+            if (current.event.unbeamedDurationBeats() == ScoreNoteEvent.DURATION_WHOLE
+                    && current.event.measureIndex() == previous.event.measureIndex() + 1
+                    && current.head.centerX - previous.head.centerX <= gap * 5
+                    && hasPrintedTieArc(
+                            labels, gray, width, height,
+                            Math.round(previous.head.centerX), Math.round(current.head.centerX),
+                            centerY - gap * .125f, gap, true, frame)) return true;
             // Compact returning shoulders can end slightly inside the head bounds.
             // Keep the full dark-curve proof and a staff-scaled overlap limit.
             if (current.head.centerX - previous.head.centerX <= gap * 4) {
@@ -29417,6 +29509,12 @@ final class OmrScoreInterpreter {
             DetectedNote note,
             boolean outgoing,
             int side) {
+        return hasSystemEndTieArc(labels, gray, width, height, note, outgoing, side, null);
+    }
+
+    private static boolean hasSystemEndTieArc(
+            byte[] labels, byte[] gray, int width, int height, DetectedNote note,
+            boolean outgoing, int side, SystemTieInk witness) {
         float gap = note.staffGap;
         int step = Math.max(2, Math.round(gap * .2f));
         int maximumSpan =
@@ -29447,7 +29545,7 @@ final class OmrScoreInterpreter {
                             gap,
                             null,
                             205,
-                            side)) return true;
+                            side, false, false, null, witness)) return true;
                 }
             }
         }
@@ -29475,7 +29573,7 @@ final class OmrScoreInterpreter {
                             side,
                             true,
                             false,
-                            null)) return true;
+                            null, witness)) return true;
                 }
             }
         }
@@ -29502,7 +29600,7 @@ final class OmrScoreInterpreter {
                             side,
                             true,
                             false,
-                            null)) return true;
+                            null, witness)) return true;
                 }
             }
         }
@@ -29530,7 +29628,7 @@ final class OmrScoreInterpreter {
                             side,
                             true,
                             false,
-                            null)) return true;
+                            null, witness)) return true;
                 }
             }
         }
@@ -29818,6 +29916,14 @@ final class OmrScoreInterpreter {
             boolean strictContrast,
             boolean flatProfile,
             TieFrame frame) {
+        return hasContinuousTieArc(labels, gray, width, height, left, right, centerY, gap,
+                target, inkLimit, requiredSide, strictContrast, flatProfile, frame, null);
+    }
+
+    private static boolean hasContinuousTieArc(
+            byte[] labels, byte[] gray, int width, int height, int left, int right,
+            float centerY, float gap, Component target, int inkLimit, int requiredSide,
+            boolean strictContrast, boolean flatProfile, TieFrame frame, SystemTieInk witness) {
         // Boundary arc evidence needs raw pixels; semantic-only decoding remains supported.
         if (gray == null || gray.length != (long) width * height) return false;
         {
@@ -30026,7 +30132,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                         // A short returning arc can cross a staff rule at one end. Treat a
                         // few such pixels as occluded only when the remaining curve and
@@ -30075,7 +30181,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                         // Both ends of a short tie can merge into the same thick staff rule.
                         // Require an almost complete curve and an independently visible middle
@@ -30124,7 +30230,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                         // A long, deeply bowed tie can cross several distinct staff rules.
                         // Require every sampled bin to be fully covered, both returning
@@ -30189,7 +30295,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                         // Antialiased shoulders can reduce the dark count while staff rules
                         // obscure a returning curve. Require nearly complete coverage in
@@ -30260,7 +30366,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                         // A compact tie can touch a staff rule at its crest instead of
                         // at the endpoints. Both returning shoulders must remain visible;
@@ -30328,7 +30434,7 @@ final class OmrScoreInterpreter {
                                             inkLimit,
                                             strictContrast,
                                             straightRows,
-                                            contrastOffsets)) return true;
+                                            contrastOffsets)) return witness == null || witness.accept(sampleColumns, strokeCenters);
                         }
                     }
         return false;

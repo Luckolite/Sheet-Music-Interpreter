@@ -40,6 +40,23 @@ public class PrintedSlurContoursTest {
     }
 
     @Test
+    public void narrowReturningBowRequiresTheBoundedStemWindow() {
+        var gray = paper();
+        curve(gray, 80, 97, 75, 0, 4, false);
+        assertTrue(find(gray).isEmpty());
+        var bows = PrintedSlurContours.findAboveStemTips(
+                gray, W, H, 74, 67, 106, 86, staff()).bows();
+        assertEquals(1, bows.size());
+        assertEquals(80, bows.get(0).start().x());
+        assertEquals(97, bows.get(0).end().x());
+
+        var straight = paper();
+        curve(straight, 80, 97, 75, 0, 0, false);
+        assertTrue(PrintedSlurContours.findAboveStemTips(
+                straight, W, H, 74, 67, 106, 86, staff()).bows().isEmpty());
+    }
+
+    @Test
     public void unequalHeightReturningBowIsNotRestrictedToSamePitch() {
         var gray = paper();
         curve(gray, 40, 190, 55, 8, 14, false);

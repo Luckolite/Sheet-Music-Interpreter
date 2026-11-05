@@ -187,6 +187,14 @@ final class PrintedSlurContours {
                 8_000_000L);
     }
 
+    /** A small region on the outside of two independently owned beam stems. */
+    static Result findAboveStemTips(
+            byte[] gray, int w, int h, int left, int top, int right, int bottom,
+            StaffPitchTrack track) {
+        return findRawScoped(gray, null, w, h, left, top, right, bottom, track,
+                null, null, null, 8_000_000L, true);
+    }
+
     static RawResult findWithRawEvidence(
             byte[] gray,
             byte[] labels,
@@ -223,6 +231,14 @@ final class PrintedSlurContours {
     }
 
     private static Result findRaw(
+            byte[] gray, byte[] labels, int width, int height, int left, int top,
+            int right, int bottom, StaffPitchTrack track, Consumer<Rejection> audit,
+            HeadEvidence heads, RawSink rawSink, long shortRailAllowance) {
+        return findRawScoped(gray, labels, width, height, left, top, right, bottom,
+                track, audit, heads, rawSink, shortRailAllowance, false);
+    }
+
+    private static Result findRawScoped(
             byte[] gray,
             byte[] labels,
             int width,
@@ -235,7 +251,8 @@ final class PrintedSlurContours {
             Consumer<Rejection> audit,
             HeadEvidence heads,
             RawSink rawSink,
-            long shortRailAllowance) {
+            long shortRailAllowance,
+            boolean compactStemWindow) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -397,7 +414,7 @@ final class PrintedSlurContours {
         var bows = new ArrayList<Bow>();
         var fittedSelections = rawSink == null ? null : new IdentityHashMap<Bow, List<Run>>();
         for (var component : components.values()) {
-            Bow bow = fit(component, audit, fittedSelections);
+            Bow bow = fit(component, audit, fittedSelections, false, compactStemWindow);
             List<Run> selected = fittedSelections == null ? null : fittedSelections.remove(bow);
             if (bow == null) continue;
             if (!capped(gray, labels, width, height, bow, track, true, heads, frames))
@@ -412,7 +429,7 @@ final class PrintedSlurContours {
         boolean fallbackLimit =
                 orientedFallback(
                         gray, labels, width, height, left, top, right, bottom, track, heads, frames,
-                        bows, rawSink);
+                        bows, rawSink, compactStemWindow);
         var shortRailBows = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
         if (!unownedLimited)
             literalConnectivityFallback(
@@ -430,7 +447,7 @@ final class PrintedSlurContours {
                     parents,
                     8_000_000L,
                     shortRailBows,
-                    shortRailAllowance);
+                    shortRailAllowance, compactStemWindow);
         var jointBows = Collections.newSetFromMap(new IdentityHashMap<Bow, Boolean>());
         if (!unownedLimited && heads != null)
             appendJointRibbons(
@@ -553,7 +570,7 @@ final class PrintedSlurContours {
             HeadEvidence heads,
             Frames frames,
             List<Bow> existing,
-            RawSink sink) {
+            RawSink sink, boolean compactStemWindow) {
         var runs = new ArrayList<Run>();
         var parents = new int[MAX_RUNS];
         var legacy = List.copyOf(existing);
@@ -646,7 +663,7 @@ final class PrintedSlurContours {
             if (!proof.complete() && !bold) continue;
             // Existing complete returning-curvature grammar independently supplies the role.
             var selected = new IdentityHashMap<Bow, List<Run>>();
-            Bow bow = fit(component, null, selected);
+            Bow bow = fit(component, null, selected, false, compactStemWindow);
             if (bow == null
                     || !capped(gray, labels, width, height, bow, track, true, heads, frames)
                     || !capped(gray, labels, width, height, bow, track, false, heads, frames))
@@ -699,7 +716,7 @@ final class PrintedSlurContours {
             int[] proximityParents,
             long budget,
             Set<Bow> shortRailBows,
-            long shortRailAllowance) {
+            long shortRailAllowance, boolean compactStemWindow) {
         int n = runs.size();
         int logarithm = n == 0 ? 0 : 32 - Integer.numberOfLeadingZeros(n);
         long points = 0;
@@ -769,7 +786,7 @@ final class PrintedSlurContours {
                 sink,
                 unowned,
                 proximityParents,
-                null);
+                null, compactStemWindow);
         // Additional bounded search is additive: neither its rival graph nor a refused
         // budget may remove a previously accepted complete interpretation.
         if (shortRailAllowance < bound) return;
@@ -802,7 +819,7 @@ final class PrintedSlurContours {
                 sink,
                 unowned,
                 proximityParents,
-                parents);
+                parents, compactStemWindow);
         shortRailBows.addAll(existing.subList(before, existing.size()));
     }
 
@@ -820,7 +837,7 @@ final class PrintedSlurContours {
             RawSink sink,
             Map<Integer, List<RawBand>> unowned,
             int[] proximityParents,
-            int[] originalParents) {
+            int[] originalParents, boolean compactStemWindow) {
         int n = runs.size();
         var groups = new LinkedHashMap<Integer, List<Run>>();
         var indices = new IdentityHashMap<Run, Integer>();
@@ -935,7 +952,7 @@ final class PrintedSlurContours {
                     continue;
             }
             var selected = sink == null ? null : new IdentityHashMap<Bow, List<Run>>();
-            Bow bow = fit(component, null, selected);
+            Bow bow = fit(component, null, selected, false, compactStemWindow);
             if (bow == null) continue;
             if (rival) {
                 var foreignOwners = new LinkedHashSet<Integer>();
@@ -1700,21 +1717,21 @@ final class PrintedSlurContours {
                             (b.last() - base) / gap,
                             List.of(b)));
         }
-        return fit(runs, null, null, true);
+        return fit(runs, null, null, true, false);
     }
 
     private static Bow fit(
             List<Run> component,
             Consumer<Rejection> audit,
             IdentityHashMap<Bow, List<Run>> fittedSelections) {
-        return fit(component, audit, fittedSelections, false);
+        return fit(component, audit, fittedSelections, false, false);
     }
 
     private static Bow fit(
             List<Run> component,
             Consumer<Rejection> audit,
             IdentityHashMap<Bow, List<Run>> fittedSelections,
-            boolean pixelCells) {
+            boolean pixelCells, boolean compactStemWindow) {
         if (component.size() < 12) return null;
         var columns = new LinkedHashMap<Integer, List<Run>>();
         float gap = 0;
@@ -1727,7 +1744,9 @@ final class PrintedSlurContours {
         int span = right - left;
         double physicalLeft = pixelCells ? left - .5 : left,
                 physicalSpan = pixelCells ? span + 1. : span;
-        if ((pixelCells ? span + 1 : span) < gap * 1.6f || columns.size() < (span + 1) * .8f)
+        if ((compactStemWindow || pixelCells ? span + 1 : span)
+                        < gap * (compactStemWindow ? 1.35f : 1.6f)
+                || columns.size() < (span + 1) * .8f)
             return reject(component, "short-or-gapped", audit);
         // Closed glyphs and joined branches carry two separate contours in the same columns.
         long branched = columns.values().stream().filter(column -> column.size() > 1).count();

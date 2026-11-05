@@ -18,8 +18,16 @@ public record ScoreTempoMark(int glyph, String musicXmlUnit, int dots, double ma
         for (int i = 0; i < units.length; i++)
             for (int dots = 0; dots <= 2; dots++) {
                 double pulse = units[i] * (2 - Math.pow(.5, dots));
-                if (Math.abs(pulse - tempo.beatUnit()) < 1e-9)
-                    return new ScoreTempoMark(glyphs[i], names[i], dots, tempo.bpm() / pulse);
+            if (Math.abs(pulse - tempo.beatUnit()) < 1e-9) {
+                try {
+                    double marked = BigDecimal.valueOf(tempo.bpm())
+                            .divide(BigDecimal.valueOf(pulse)).doubleValue();
+                    return new ScoreTempoMark(glyphs[i], names[i], dots, marked);
+                } catch (ArithmeticException repeatingDecimal) {
+                    // Use an equivalent exact pulse when the displayed rate would repeat.
+                    return new ScoreTempoMark(0xE1D5, "quarter", 0, tempo.bpm());
+                }
+            }
             }
         // An unsupported pulse is represented by an equivalent quarter mark, without rounding.
         return new ScoreTempoMark(0xE1D5, "quarter", 0, tempo.bpm());

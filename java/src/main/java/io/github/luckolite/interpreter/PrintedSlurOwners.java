@@ -161,7 +161,7 @@ final class PrintedSlurOwners {
                 bindPixelCells(id, page, bow, heads, gray, width, height, track), heads, ties);
     }
 
-    private static Result resolveBinding(Binding binding, List<Head> heads, Set<Tie> ties) {
+    static Result resolveBinding(Binding binding, List<Head> heads, Set<Tie> ties) {
         if (binding.span().isEmpty()) return absent(binding.status());
         var arc = binding.span().orElseThrow();
         var byOwner = new HashMap<Integer, Head>();
