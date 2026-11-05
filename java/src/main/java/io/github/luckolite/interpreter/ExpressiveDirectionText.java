@@ -52,17 +52,21 @@ public final class ExpressiveDirectionText {
                     rule(Kind.PEDAL_DOWN, "ped\\.?|pedale"),
                     PEDAL_RELEASE,
                     PEDAL_RING,
+                    rule(Kind.UNRESOLVED_DIRECTION,
+                            "^\\s*(?:" + EnglishCharacterOcrContext.INTENSITY + ")[.!]?\\s*$"),
                     rule(
                             Kind.UNRESOLVED_DIRECTION,
                             "stringendo(?:\\s+sempre)?|(?:molto\\s+)?piu\\s+vivo"
                                     + "|^\\s*(?:[mpf]{1,3}\\s+)?faster\\s*[-.!]*\\s*$"
                                     + "|scherzando|agitato|festoso|espressivo|dolce(?:\\s+e\\s+cantabile)?"
                                     + "|cantabile|con\\s+(?:brio|fuoco|anima)|tranquillo|grazioso"
+                                    + "|sostenut[oaie](?=[.!]?\\s*$)"
+                                    + "|^\\s*(?:vib\\.?|vibrato)(?:\\s*\\(abrupt\\s+cut[- ]off\\))?\\s*$"
                                     + "|^\\s*(?:(?:ppp|pp|p|mp|mf|fff|ff|f)\\s+)?"
                                     + "(?:(?:molto|poco|sempre)\\s+)?legato[.!]?\\s*$"
                                     // English character directions need the complete OCR line;
                                     // never a prose substring.
-                                    + "|^\\s*(?:sweetly|flowing|triumphantly|ethereal|with\\s+driving\\s+intensity|like\\s+an\\s+echo)[.!]?\\s*$"
+                                    + "|^\\s*(?:ad\\s+libitum|with\\s+power|delicately|sweetly|flowing|triumphantly|ethereal|with\\s+(?:driving\\s+intensity|liberation)|like\\s+an\\s+echo)[.!]?\\s*$"
                                     + "|giocoso|maestoso|appassionato|leggiero|free\\s+time|^\\s*(?:freely|gently)(?:\\s*(?:,|and)\\s*(?:freely|gently))*[.!]?\\s*$"));
 
     private ExpressiveDirectionText() {}

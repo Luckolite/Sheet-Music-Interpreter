@@ -43,10 +43,16 @@ final class ExpressiveWordBodyInk {
         byte[] contrasted = RestPaperTone.normalizeOrdinaryRestInk(gray, width, height, gap, 220f);
         List<Body> result = new ArrayList<>();
         for (var word : words) {
+            boolean vibrato = word != null && word.text() != null
+                    && word.text().strip().matches("(?i)(?:vib\\.?|vibrato)(?:\\s*\\(abrupt\\s+cut[- ]off\\))?");
+            boolean shortVibrato = vibrato && word.text().strip().equalsIgnoreCase("vib.");
+            boolean exclamation = word != null && EnglishCharacterOcrContext.intensity(word.text())
+                    && word.text().strip().endsWith("!");
+            boolean admitted = EnglishCharacterOcrContext.admitted(word);
             if (word == null
                     || word.text() == null
-                    || !EnglishCharacterOcrContext.admitted(word)
-                    || word.text().replaceAll("[^A-Za-z]", "").length() < 6
+                    || !exclamation && !admitted
+                    || !vibrato && word.text().replaceAll("[^A-Za-z]", "").length() < 6
                     || ExpressiveDirectionText.parse(word.text()).isEmpty()
                     || !Float.isFinite(word.left())
                     || !Float.isFinite(word.top())
@@ -62,11 +68,12 @@ final class ExpressiveWordBodyInk {
                     y1 = Math.min(height - 1, Math.round(word.bottom() * height));
             int w = x1 - x0 + 1, h = y1 - y0 + 1;
             if (w < gap * 3.5f || w > gap * 24 || h < gap * .65f || h > gap * 6) continue;
+            byte[] inkSource = exclamation ? gray : contrasted;
             boolean[] seen = new boolean[w * h];
             int[] queue = new int[w * h];
             for (int seed = 0; seed < seen.length; seed++) {
                 int sx = seed % w + x0, sy = seed / w + y0;
-                if (seen[seed] || (contrasted[sy * width + sx] & 255) >= 185) continue;
+                if (seen[seed] || (inkSource[sy * width + sx] & 255) >= 185) continue;
                 int take = 0, count = 1, left = sx, right = sx, top = sy, bottom = sy;
                 boolean clipped = false;
                 queue[0] = seed;
@@ -84,23 +91,31 @@ final class ExpressiveWordBodyInk {
                             if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
                             int next = ny * w + nx;
                             if (!seen[next]
-                                    && (contrasted[(ny + y0) * width + nx + x0] & 255) < 185) {
+                                    && (inkSource[(ny + y0) * width + nx + x0] & 255) < 185) {
                                 seen[next] = true;
                                 queue[count++] = next;
                         }
                         }
                 }
                 int bw = right - left + 1, bh = bottom - top + 1;
-                if (clipped
-                        || bw < gap * 3.5f
-                        || bw < w * .45f
-                        || bw > gap * 18
-                        || bh < gap * .7f
-                        || bh > gap * 3.2f
-                        || bw / (float) bh < 2.1f
-                        || bw / (float) bh > 12
-                        || count < gap * gap
-                        || count > bw * bh * .75f) continue;
+                boolean prefix = vibrato && left - x0 <= gap && right - x0 <= 2 * gap
+                        && bw >= gap * .65f && bw <= gap * 1.4f
+                        && bh >= gap * .85f && bh <= gap * 1.7f
+                        && count >= gap * gap * .3f && count <= bw * bh * .7f;
+                if (shortVibrato && !clipped && bw >= gap * .18f && bw <= gap * .46f
+                        && bh >= gap * .16f && bh <= gap * .42f
+                        && left - x0 >= w * .27f && right - x0 <= w * .68f
+                        && top - y0 <= h * .49f) {
+                    var dot = vibratoDot(gray, width, height, left, top, right, bottom, gap);
+                    if (dot != null) result.add(dot);
+                }
+                boolean punctuation = exclamation && x1 - right <= gap * .85f
+                        && bw >= gap * .35f && bw <= gap
+                        && bh >= gap * 1.35f && bh <= gap * 2.4f
+                        && terminalExclamation(gray, width, left, top, right, bottom);
+                if (clipped || !punctuation && (!admitted || !prefix && (bw < gap * 3.5f || bw < w * .45f || bw > gap * 18
+                        || bh < gap * .7f || bh > gap * 3.2f || bw / (float) bh < 2.1f
+                        || bw / (float) bh > 12 || count < gap * gap || count > bw * bh * .75f))) continue;
                 boolean[] ink = new boolean[bw * bh];
                 int notation = 0;
                 boolean head = false;
@@ -119,8 +134,9 @@ final class ExpressiveWordBodyInk {
                             && note.x() <= right + 1
                             && note.y() >= top - 1
                             && note.y() <= bottom + 1) head = true;
-                if (head || notation > count * .1f) continue;
-                boolean[] owned = counterStrokeOwnership(ink, bw, bh, gap);
+                if (head || notation > count * (prefix ? .25f : .1f)) continue;
+                // A connected prefix letter can contain a round semantic fragment.
+                boolean[] owned = prefix || punctuation ? ink : counterStrokeOwnership(ink, bw, bh, gap);
                 int ownedCount = 0;
                 for (boolean pixel : owned) if (pixel) ownedCount++;
                 if (ownedCount == 0) continue;
@@ -130,6 +146,43 @@ final class ExpressiveWordBodyInk {
         return List.copyOf(result);
     }
 
+    private static Body vibratoDot(byte[] gray, int width, int height,
+            int left, int top, int right, int bottom, float gap) {
+        int from = left - Math.round(gap * .38f), to = right + 1;
+        int begin = bottom + Math.round(gap * .32f), end = bottom + Math.round(gap * 1.1f);
+        if (from < 0 || to >= width || top < 1 || end >= height) return null;
+        for (int x = left - 1; x <= right + 1; x++)
+            if ((gray[(bottom + 1) * width + x] & 255) < 145) return null;
+        int stemInk = 0;
+        for (int y = begin; y <= end; y++) {
+            int count = 0;
+            for (int x = from; x <= to; x++)
+                if ((gray[y * width + x] & 255) < 145) count++;
+            if (count < 2 || count > gap * .52f) return null;
+            stemInk += count;
+        }
+        int w = right - left + 3, h = bottom - top + 3;
+        boolean[] footprint = new boolean[w * h];
+        Arrays.fill(footprint, true);
+        return new Body(left - 1, top - 1, right + 1, bottom + 1, stemInk + w * h, footprint);
+    }
+    private static boolean terminalExclamation(
+            byte[] gray, int width, int left, int top, int right, int bottom) {
+        // The slanted stroke and dot must be separate dark cores even if their soft
+        // edges touch. Their joined raw footprint is what can own both glyph proposals.
+        int split = -1, stroke = 0, dot = 0;
+        for (int y = top; y <= bottom; y++) {
+            int ink = 0;
+            for (int x = left; x <= right; x++)
+                if ((gray[y * width + x] & 255) < 145) ink++;
+            if (ink == 0 && stroke > 0 && dot == 0) split = y;
+            else if (split < 0) stroke += ink;
+            else dot += ink;
+        }
+        int h = bottom - top + 1;
+        return split >= top + h * .55f && split <= bottom - 2
+                && dot >= 4 && stroke >= dot * 2 && stroke <= dot * 8;
+    }
     static boolean owns(List<Body> bodies, int[] pixels, int count, int width) {
         for (var body : bodies) {
             if (body.count < count * 2 || count < 3) continue;

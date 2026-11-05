@@ -1018,9 +1018,56 @@ final class ScoreDynamicsDetector {
         }
         // Written cresc./dim. continues across systems until the next printed level (or
         // the page boundary). Do not invent geometry-sized note durations for the ramp.
+        var dashedEnds = new HashMap<PlayingTechniqueDetector.Word, Integer>();
         if (paperProposals)
             for (var word : words) {
-                int direction = textDirection(word.text());
+                if (!PrintedCrescendoDashes.caption(word.text())) continue;
+                var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
+                if (owner == null) continue;
+                float center = (owner.top() + owner.bottom()) * .5f / height;
+                int endMeasure = -1;
+                for (int i = 0; i < measures.size(); i++) {
+                    var region = measures.get(i);
+                    if (center >= region.top() && center <= region.bottom()
+                            && (endMeasure < 0 || region.right() > measures.get(endMeasure).right()))
+                        endMeasure = i;
+                }
+                int nextMeasure = endMeasure + 1;
+                if (endMeasure < 0 || nextMeasure >= measures.size()) continue;
+                var nextRegion = measures.get(nextMeasure);
+                PlayingTechniqueDetector.Staff nextStaff = null;
+                for (var lane : staffs) {
+                    float nextCenter = (lane.top() + lane.bottom()) * .5f / height;
+                    if (lane.top() > owner.top() && lane.index() == owner.index()
+                            && lane.count() == owner.count() && nextCenter >= nextRegion.top()
+                            && nextCenter <= nextRegion.bottom()) {
+                        nextStaff = lane;
+                        break;
+                    }
+                }
+                if (nextStaff == null) continue;
+                float nextAttack = Float.POSITIVE_INFINITY;
+                for (var note : notes)
+                    if (note.measureIndex() == nextMeasure && note.staffIndex() == owner.index()
+                            && note.staffCount() == owner.count())
+                        nextAttack = Math.min(nextAttack,
+                                (nextRegion.left() + note.positionInMeasure()
+                                        * (nextRegion.right() - nextRegion.left())) * width);
+                if (!Float.isFinite(nextAttack) || !PrintedCrescendoDashes.reachesBarline(
+                        word, gray, width, height, owner.gap(),
+                        Math.round(measures.get(endMeasure).right() * width))) continue;
+                if (!PrintedCrescendoDashes.resumes(gray, width, height, nextStaff.gap(),
+                        nextAttack, nextStaff.bottom()))
+                    dashedEnds.put(word, endMeasure);
+            }
+        if (paperProposals)
+            for (var word : words) {
+                Integer printedEnd = dashedEnds.get(word);
+                int direction = printedEnd == null ? textDirection(word.text()) : 1;
+                if (printedEnd == null && direction == 1 && dashedEnds.keySet().stream().anyMatch(
+                        full -> word.left() >= full.left() && word.right() <= full.right()
+                                && word.top() >= full.top() && word.bottom() <= full.bottom()))
+                    continue;
                 if (direction == 0) continue;
                 var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
                 if (owner == null) continue;
@@ -1043,7 +1090,7 @@ final class ScoreDynamicsDetector {
                                                     * (measures.get(a.measure).right()
                                                             - measures.get(a.measure).left())))
                         a = new Slot(a.measure, c.positionInMeasure());
-                Slot end = new Slot(measures.size() - 1, 1);
+                Slot end = new Slot(printedEnd == null ? measures.size() - 1 : printedEnd, 1);
                 for (var c : result)
                     if (c.direction() == 0
                             && sameDynamicPart(c, owner, common != null)
@@ -1074,7 +1121,7 @@ final class ScoreDynamicsDetector {
                                     direction,
                                     common != null);
                     result.add(change);
-                    if (end.measure == measures.size() - 1 && end.position == 1)
+                    if (printedEnd == null && end.measure == measures.size() - 1 && end.position == 1)
                         openWords.put(change, word);
                 }
             }
@@ -1140,6 +1187,17 @@ final class ScoreDynamicsDetector {
                                                     old.positionInMeasure()
                                                             - change.positionInMeasure())
                                             < .06f) claimed = true;
+                            else if (old.direction() == change.direction()
+                                    && old.staffIndex() == change.staffIndex()
+                                    && old.staffCount() == change.staffCount()
+                                    && old.sharedStaffs() == change.sharedStaffs()
+                                    && old.measureIndex() == change.measureIndex()
+                                    && old.endMeasureIndex() == change.endMeasureIndex()
+                                    && old.positionInMeasure() < change.positionInMeasure()
+                                    && Math.abs(old.endPosition() - change.endPosition()) < .012f
+                                    && change.endPosition() > change.positionInMeasure()
+                                    && change.endMeasureIndex() == change.measureIndex())
+                                claimed = true;
                         if (!claimed) scoped.add(change);
                     }
                 }
@@ -1576,6 +1634,28 @@ final class ScoreDynamicsDetector {
         if (word.right() - word.left() > gap * 4) return word.left();
         Slot left = slot(word.left(), staff, measures, notes, width, height);
         Slot middle = slot(center, staff, measures, notes, width, height);
+        if (left != null) {
+            var collapsed = measures.get(left.measure());
+            int next = left.measure() + 1;
+            while (next < measures.size() && collapsed.equals(measures.get(next))) next++;
+            if (next > left.measure() + 1 && next < measures.size()) {
+                var entry = measures.get(next);
+                if (center < entry.left() && entry.left() - center <= gap
+                        && word.right() >= entry.left() && word.right() - entry.left() <= gap
+                        && Math.abs(entry.top() - collapsed.top()) <= staff.gap() / height) {
+                    float first = Float.POSITIVE_INFINITY;
+                    for (var note : notes)
+                        if (note.measureIndex() == next && note.staffIndex() == staff.index()
+                                && note.staffCount() == staff.count()
+                                && (note.articulations() & NoteOrnament.GRACE) == 0)
+                            first = Math.min(first, note.positionInMeasure());
+                    // The mark straddles the entry boundary after the repeated physical
+                    // multirest region. Its first sounding column owns the attack level.
+                    if (first * (entry.right() - entry.left()) <= gap * 2.5f)
+                        return entry.left() + first * (entry.right() - entry.left());
+                }
+            }
+        }
         if (left == null && middle != null) {
             var first = measures.get(middle.measure);
             // A leading italic mark can end beside the opening bar while its serif is

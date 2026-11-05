@@ -1277,11 +1277,11 @@ final class OmrScoreInterpreter {
             for (int id : pair.railHeadIds()) pairedRailHeads.add(pairedComponents.get(id));
         heads.removeAll(pairedRailHeads);
         Map<Component, AttachedTremoloInk.Mark> attachedTremolos = new HashMap<>();
+        Map<Component, AttachedTremoloInk.Mark> flaggedTremolos = new HashMap<>();
         for (Component head : heads) {
             Staff staff = nearestHeadStaff(staffs, head.centerY);
-            if (staff == null
-                    || head.maxX - head.minX + 1 < staff.gap
-                    || !hasOpenCenter(labels, gray, width, height, head, staff.gap)) continue;
+            if (staff == null || head.maxX - head.minX + 1 < staff.gap) continue;
+            boolean open = hasOpenCenter(labels, gray, width, height, head, staff.gap);
             int[] stem = attachedRawStem(gray, width, height, head, staff.gap);
             var mark =
                     stem == null
@@ -1295,7 +1295,7 @@ final class OmrScoreInterpreter {
                                     stem[1],
                                     stem[2],
                                     staff.gap);
-            if (mark == null)
+            if (mark == null && open)
                 mark =
                         AttachedTremoloInk.fadedStem(
                                 gray, width, height, head.minX, head.minY, head.maxX, head.maxY,
@@ -1312,7 +1312,15 @@ final class OmrScoreInterpreter {
                         chord = true;
                         break;
                     }
-                if (!chord) attachedTremolos.put(head, mark);
+                if (!chord && open) attachedTremolos.put(head, mark);
+                if (!chord && !open && stem != null
+                        && (stem[1] - (stem[2] > 0 ? mark.bottom() : mark.top())) * stem[2]
+                                >= staff.gap * .8f
+                        && hasCurvedFlag(labels, gray, width, height, head, staff.gap,
+                                stem[0], stem[1], stem[2] < 0)
+                        && rawDetachedFlags(gray, labels, width, height, head, staff.gap) <= 1
+                        && beamsBeyondTremolo(gray, labels, width, height, head, staff) == 0)
+                    flaggedTremolos.put(head, mark);
             }
         }
         heads.removeIf(
@@ -1326,7 +1334,18 @@ final class OmrScoreInterpreter {
                                                     && head.maxX <= mark.right()
                                                     && head.minY >= mark.top()
                                                     && head.maxY <= mark.bottom();
-                                        }));
+                                        })
+                                || flaggedTremolos.entrySet().stream().anyMatch(entry -> {
+                                    var mark = entry.getValue();
+                                    if (head == entry.getKey() || head.minX < mark.left()
+                                            || head.maxX > mark.right() || head.minY < mark.top()
+                                            || head.maxY > mark.bottom()) return false;
+                                    float gap = (mark.right() - mark.left()) * .5f;
+                                    float column = (mark.left() + mark.right()) * .5f;
+                                    if (Math.abs(head.centerX - column) > gap * .3f) return false;
+                                    int[] stem = attachedRawStem(gray, width, height, head, gap);
+                                    return stem == null || Math.abs(stem[0] - column) <= gap * .15f;
+                                }));
         Map<Component, int[]> detachedTremolos = new HashMap<>();
         for (Component head : heads) {
             if (attachedTremolos.containsKey(head)) continue;
@@ -1627,6 +1646,8 @@ final class OmrScoreInterpreter {
                 physicalStaff = new Staff(frame[0] - 4 * frame[1], frame[0], frame[1]);
                 physicalStaff.printedPhase = true;
             }
+            if (!unpitched && physicalStaff != null
+                    && paleHeaderInkHead(gray, width, height, head, physicalStaff)) continue;
             if (gray != null
                     && physicalStaff != null
                     && !roundedLedgerGraces.contains(head)
@@ -1797,6 +1818,15 @@ final class OmrScoreInterpreter {
                                 beamCount,
                                 rawCourtesy);
             int afterTransportedBeam = beamCount;
+            if (!unpitched && beamCount == 1 && !recoveredSingleBeamHeads.contains(head)
+                    && bareRuleTerminatedStem(gray, width, height, head, rhythmStaff, heads))
+                beamCount = 0;
+            if (!unpitched && beamCount == 1 && !recoveredSingleBeamHeads.contains(head)
+                    && isolatedHighStemOnStaffRules(labels, gray, width, height, head, rhythmStaff))
+                beamCount = 0;
+            if (!unpitched && beamCount == 2
+                    && oneBeamOnStaffRule(beamLabels, gray, width, height, head, rhythmStaff, heads))
+                beamCount = 1;
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, rhythmStaff, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
             if (tremolo[0] > 0)
@@ -1804,6 +1834,7 @@ final class OmrScoreInterpreter {
                         Math.max(
                                 beamCount,
                                 beamsBeyondTremolo(gray, beamLabels, width, height, head, staff));
+            if (flaggedTremolos.containsKey(head)) beamCount = 1;
             boolean finiteCapFilled = finiteCapFilledHeads.get(head) == staff;
             var admissions = new ArrayList<String>();
             PrintedValueDecision printedValue =
@@ -2222,6 +2253,9 @@ final class OmrScoreInterpreter {
                         event.withArticulations(
                                 NoteOrnament.withTremolo(
                                         event.articulations(), attachedTremolos.get(head).beams()));
+            if (flaggedTremolos.containsKey(head))
+                event = event.withArticulations(
+                        NoteOrnament.withTremolo(event.articulations(), flaggedTremolos.get(head).beams()));
             event =
                     event.withArticulations(
                             event.articulations() | recoveredArticulations.getOrDefault(head, 0));
@@ -25286,7 +25320,7 @@ final class OmrScoreInterpreter {
                 int near = Math.max(0, stemEnd - (upward ? Math.round(gap * .2f) : span));
                 int far = Math.min(height - 1, stemEnd + (upward ? span : Math.round(gap * .2f)));
                 if (adjacentTripleFlagRoots(
-                        gray, labels, width, height, bestX, near, far, staff, !smallHead))
+                        gray, labels, width, height, bestX, near, far, staff, !smallHead, upward))
                     thick = 3;
             }
             if (thick == 1
@@ -25437,9 +25471,11 @@ final class OmrScoreInterpreter {
             int near,
             int far,
             Staff staff,
-            boolean adaptive) {
+            boolean adaptive,
+            boolean upward) {
         int a = stemX + Math.max(2, Math.round(staff.gap * .12f));
-        int b = stemX + Math.max(3, Math.round(staff.gap * .28f));
+        // Down-stem flag lobes can merge at the shaft before separating to its right.
+        int b = stemX + Math.max(3, Math.round(staff.gap * (upward ? .28f : .48f)));
         int consecutive = 0;
         for (int column = a; column <= b; column++) {
             if (thickNonHeadBands(
@@ -26113,6 +26149,177 @@ final class OmrScoreInterpreter {
                         > 1) return false;
         }
         return true;
+    }
+
+    /** A small pale projection from darker lettering cannot own a head above the staff. */
+    private static boolean paleHeaderInkHead(
+            byte[] gray, int width, int height, Component head, Staff staff) {
+        if (gray == null) return false;
+        float gap = staff.gap;
+        float above = staff.top - head.centerY;
+        if (gap < 6 || gap > 64 || above < gap * .25f || above > gap
+                || head.maxX - head.minX + 1 > gap * .85f
+                || head.maxY - head.minY + 1 > gap * .65f
+                || head.area > gap * gap * .34f) return false;
+        for (int y = head.minY; y <= head.maxY; y++)
+            for (int x = head.minX; x <= head.maxX; x++)
+                if ((gray[y * width + x] & 255) < 120) return false;
+        if (attachedRawStem(gray, width, height, head, gap) != null) return false;
+
+        int left = Math.max(0, head.minX - Math.round(gap));
+        int right = Math.min(width - 1, head.maxX + Math.round(gap));
+        int top = Math.max(0, head.minY - Math.round(1.75f * gap));
+        int bottom = Math.min(height - 1, head.maxY);
+        int columns = right - left + 1, rows = bottom - top + 1;
+        boolean[] seen = new boolean[columns * rows];
+        int[] queue = new int[seen.length];
+        int size = 0;
+        for (int y = head.minY; y <= head.maxY; y++) {
+            for (int x = head.minX; x <= head.maxX; x++) {
+                if ((gray[y * width + x] & 255) >= 150) continue;
+                int index = (y - top) * columns + x - left;
+                seen[index] = true;
+                queue[size++] = index;
+            }
+        }
+        int strong = 0;
+        for (int next = 0; next < size; next++) {
+            int x = queue[next] % columns, y = queue[next] / columns;
+            if (top + y <= head.minY - gap * .75f
+                    && (gray[(top + y) * width + left + x] & 255) < 110
+                    && ++strong >= gap) return true;
+            for (int dy = -1; dy <= 1; dy++) {
+                for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx < 0 || xx >= columns || yy < 0 || yy >= rows) continue;
+                    int index = yy * columns + xx;
+                    if (seen[index] || (gray[(top + yy) * width + left + xx] & 255) >= 150)
+                        continue;
+                    seen[index] = true;
+                    queue[size++] = index;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Correct an interior second rail only when both adjacent stem intervals prove one beam. */
+    private static boolean oneBeamOnStaffRule(
+            byte[] labels, byte[] gray, int width, int height,
+            Component head, Staff staff, List<Component> heads) {
+        if (gray == null) return false;
+        float gap = staff.gap;
+        int[] stem = attachedRawStem(gray, width, height, head, gap);
+        if (stem == null) return false;
+        float phase = (stem[1] - staff.top) / gap;
+        if (phase < -.24f || phase > 4.24f || Math.abs(phase - Math.round(phase)) > .24f)
+            return false;
+        Component left = null, right = null;
+        for (Component peer : heads) {
+            float dx = peer.centerX - head.centerX;
+            if (peer == head || Math.abs(dx) < gap * .65f || Math.abs(dx) > gap * 3.3f
+                    || Math.abs(peer.centerY - head.centerY) > gap * 1.6f) continue;
+            if (dx < 0 && (left == null || peer.centerX > left.centerX)) left = peer;
+            if (dx > 0 && (right == null || peer.centerX < right.centerX)) right = peer;
+        }
+        if (left == null || right == null
+                || rawDetachedFlags(gray, labels, width, height, head, gap) != 0) return false;
+        if (detectBeamCount(labels, gray, width, height, left, staff, heads) != 1
+                || detectBeamCount(labels, gray, width, height, right, staff, heads) != 1)
+            return false;
+        int above = Math.round(gap * (stem[2] < 0 ? .3f : 1.85f));
+        int below = Math.round(gap * (stem[2] < 0 ? 1.85f : .3f));
+        int top = Math.max(0, stem[1] - above), bottom = Math.min(height - 1, stem[1] + below);
+        for (Component peer : new Component[] {left, right}) {
+            int[] neighbor = attachedRawStem(gray, width, height, peer, gap);
+            if (neighbor == null || neighbor[2] != stem[2]
+                    || Math.abs(neighbor[1] - stem[1]) > gap * .3f
+                    || Math.abs(neighbor[0] - stem[0]) < gap * 1.4f) return false;
+            for (float fraction : new float[] {.15f, .35f, .65f, .85f}) {
+                int x = stem[0] + Math.round(fraction * (neighbor[0] - stem[0]));
+                for (int threshold : new int[] {150, 185})
+                    if (thickNonHeadBandsAtThreshold(
+                            gray, labels, width, height, x, top, bottom, staff, threshold, stem[0]) != 1)
+                        return false;
+            }
+        }
+        return true;
+    }
+
+    /** A short, isolated quarter stem can terminate directly on a staff rule. */
+    /** Distinguish a high downstem crossing staff rules from an owned single beam. */
+    private static boolean isolatedHighStemOnStaffRules(
+            byte[] labels, byte[] gray, int width, int height, Component head, Staff staff) {
+        float gap = staff.gap;
+        if (gray == null || head.centerY > staff.top - gap * .85f) return false;
+        int[] stem = attachedRawStem(gray, width, height, head, gap);
+        if (stem == null || stem[2] != 1 || stem[1] - head.centerY < gap * 3
+                || stem[1] - head.centerY > gap * 4.1f
+                || hasCurvedFlag(labels, gray, width, height, head, gap, stem[0], stem[1], false))
+            return false;
+        int x = stem[0], tip = stem[1];
+        int near = Math.round(gap * .34f), far = Math.round(gap * 1.28f);
+        int top = tip - Math.round(gap * 1.5f), bottom = tip + Math.round(gap * .55f);
+        if (x - far < 0 || x + far >= width || top < 0 || bottom >= height) return false;
+        int rowLength = far - near + 1, run = 0, rules = 0;
+        for (int y = top; y <= bottom; y++) {
+            int left = 0, right = 0;
+            for (int dx = near; dx <= far; dx++) {
+                if ((gray[y * width + x - dx] & 255) < 165) left++;
+                if ((gray[y * width + x + dx] & 255) < 165) right++;
+            }
+            if (left == 0 && right == 0) {
+                run = 0;
+                continue;
+            }
+            float phase = (y - staff.top) / gap;
+            int rule = Math.round(phase);
+            if (rule < 0 || rule > 4 || Math.abs(phase - rule) > .23f
+                    || Math.min(left, right) < rowLength * .9f
+                    || ++run > Math.ceil(gap * .27f)) return false;
+            if (run == 1) rules++;
+        }
+        return rules >= 2;
+    }
+    private static boolean bareRuleTerminatedStem(
+            byte[] gray, int width, int height, Component head, Staff staff, List<Component> heads) {
+        if (gray == null) return false;
+        float gap = staff.gap;
+        int[] stem = attachedRawStem(gray, width, height, head, gap);
+        if (stem == null) return false;
+        int x = stem[0], tip = stem[1], direction = stem[2];
+        float length = (tip - head.centerY) * direction;
+        if (length < gap * 3 || length > gap * 4.5f) return false;
+        float phase = (tip - staff.top) / gap;
+        int rule = Math.round(phase);
+        if (rule < 0 || rule > 4 || Math.abs(phase - rule) > .24f) return false;
+        int inner = Math.round(gap * .4f), outer = Math.round(gap * 1.4f);
+        int from = Math.round(-gap * .32f), to = Math.round(gap * 1.65f);
+        if (x - outer < 0 || x + outer >= width
+                || tip - to < 0 || tip + to >= height) return false;
+        for (Component peer : heads) {
+            if (peer == head || Math.abs(peer.centerX - head.centerX) > gap * 4
+                    || Math.abs(peer.centerY - head.centerY) > gap * 7) continue;
+            int[] other = attachedRawStem(gray, width, height, peer, gap);
+            if (other != null && other[2] == direction && Math.abs(other[1] - tip) < gap * .65f)
+                return false;
+        }
+        int rules = 0;
+        for (int offset = from; offset <= to; offset++) {
+            int row = tip - direction * offset;
+            int left = 0, right = 0;
+            for (int dx = inner; dx <= outer; dx++) {
+                if ((gray[row * width + x - dx] & 255) < 200) left++;
+                if ((gray[row * width + x + dx] & 255) < 200) right++;
+            }
+            if (left == 0 && right == 0) continue;
+            float rowPhase = (row - staff.top) / gap;
+            int rowRule = Math.round(rowPhase);
+            if (rowRule < 0 || rowRule > 4 || Math.abs(rowPhase - rowRule) > .24f
+                    || Math.min(left, right) < (outer - inner + 1) * .9f) return false;
+            if (rowRule == rule) rules++;
+        }
+        return rules > 0 && rules <= Math.ceil(gap * .26f);
     }
 
     /** Reject a false semantic endpoint only when the longer raw shaft is bare. */
@@ -29339,6 +29546,17 @@ final class OmrScoreInterpreter {
                 || right - left + 1 < gap * 1.3f
                         && current.head.centerX - previous.head.centerX + 1 < gap * 1.8f) return false;
         float centerY = (previous.head.centerY + current.head.centerY) * .5f;
+        if (current.event.measureIndex() == previous.event.measureIndex()
+                && current.head.centerX - previous.head.centerX <= gap * 2.5f
+                && Math.abs(current.head.centerY - previous.head.centerY) <= gap * .15f
+                && ShadedCompactTieRidge.shortInterheadArc(
+                        gray, width, height, left, right, centerY, gap)) return true;
+        if (current.event.staffStep() == 1 && previous.event.staffStep() == 1
+                && current.event.measureIndex() == previous.event.measureIndex()
+                && Math.abs(current.head.centerY - previous.head.centerY) <= gap * .15f
+                && current.head.centerX - previous.head.centerX <= gap * 3.2f
+                && ShadedCompactTieRidge.belowVerifiedLocalBottomRule(gray, width, height,
+                        left, right, centerY, gap)) return true;
         if (frame != null && right - left <= gap * 6) {
             for (float overlap : new float[] {0, .3f, .6f}) {
                 int a =
@@ -29383,6 +29601,21 @@ final class OmrScoreInterpreter {
                     && hasPrintedTieArc(
                             labels, gray, width, height, left, right, centerY, gap, true, frame))
                 return true;
+            // A shaded compact tie can have one shoulder under a head and the other
+            // close to the opposing rim. Sample each asymmetry without spanning both heads.
+            if (previous.event.measureIndex() == current.event.measureIndex()
+                    && right - left + 1 < gap
+                    && current.head.centerX - previous.head.centerX <= gap * 2.5f
+                    && Math.abs(current.head.centerY - previous.head.centerY) <= gap * .25f) {
+                int rim = Math.max(1, Math.round(gap * .25f));
+                if (ShadedCompactTieRidge.proved(
+                                labels, gray, width, height,
+                                Math.round(previous.head.centerX), right + rim, centerY, gap)
+                        || ShadedCompactTieRidge.proved(
+                                labels, gray, width, height,
+                                left - rim, Math.round(current.head.centerX), centerY, gap))
+                    return true;
+            }
             // Engraved ties may begin below the heads, before their horizontal edges.
             // Recover the returning shoulders instead of testing only the flattened middle.
             int overlap = Math.round(gap * (extendedShoulders ? .85f : .6f));

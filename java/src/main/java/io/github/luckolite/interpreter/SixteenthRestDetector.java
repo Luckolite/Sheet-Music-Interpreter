@@ -3356,7 +3356,9 @@ final class SixteenthRestDetector {
                 && !whole
                 && !completeSixteenth
                 && straightShafts(
-                        gray, width, left, right, minY, maxY, line, top, gap, true, quarterBudget))
+                        gray, width, left, right, minY, maxY, line, top, gap, true, quarterBudget)
+                && (!ordinary || lowered || deepLowered || gray != ownershipGray || quarterBudget != null
+                        || sharedShaftWindow(gray, width, left, right, minY, maxY, line, top, gap)))
             return;
         if (!quarter
                 && !half
@@ -3782,6 +3784,30 @@ final class SixteenthRestDetector {
                 return;
             }
         }
+    }
+
+    /** Both accidental shafts must coexist on the same independently visible rows. */
+    private static boolean sharedShaftWindow(
+            byte[] gray, int width, int left, int right, int minY, int maxY,
+            boolean[] line, int top, float gap) {
+        int span = Math.round(gap * 1.65f);
+        int minimum = (int) Math.ceil(gap * .35f);
+        int maximum = (int) Math.floor(gap * .9f);
+        for (int start = minY; start + span <= maxY + 1; start++) {
+            for (int x = left; x + minimum <= right; x++) {
+                for (int second = x + minimum; second <= Math.min(right, x + maximum); second++) {
+                    int visible = 0, paired = 0;
+                    for (int row = start; row < start + span; row++) {
+                        if (line[row - top]) continue;
+                        visible++;
+                        if ((gray[row * width + x] & 255) < 125
+                                && (gray[row * width + second] & 255) < 125) paired++;
+                    }
+                    if (visible >= gap * .65f && paired >= visible * .9f) return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** Complete flagged-rest contour proof shared by ordinary reads and quarter conflicts. */

@@ -1011,7 +1011,7 @@ final class TripletRhythmDetector {
         result = mixedBeamedTuplets(result, measures, gray, width, height, 5, virtualStart);
         result = mixedBeamedTuplets(result, measures, gray, width, height, 7, virtualStart);
         result = boundedQuintuplets(result, measures, gray, width, height, virtualStart);
-        return beamedTuplets(
+        result = beamedTuplets(
                 beamedTuplets(
                         beamedTuplets(result, measures, gray, width, height, 7, virtualStart),
                         measures,
@@ -1026,6 +1026,7 @@ final class TripletRhythmDetector {
                 height,
                 6,
                 virtualStart);
+        return beamedTuplets(result, measures, gray, width, height, 4, virtualStart, true);
     }
 
     private static List<ScoreNoteEvent> mixedBracketPairs(
@@ -1275,6 +1276,18 @@ final class TripletRhythmDetector {
             int height,
             int divisor,
             int virtualStart) {
+        return beamedTuplets(notes, measures, gray, width, height, divisor, virtualStart, false);
+    }
+
+    private static List<ScoreNoteEvent> beamedTuplets(
+            List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures,
+            byte[] gray,
+            int width,
+            int height,
+            int divisor,
+            int virtualStart,
+            boolean rapidQuadruplets) {
         List<ScoreNoteEvent> result = new ArrayList<>(notes);
         List<Onset> groups = onsets(notes);
         for (int i = 0; i + divisor - 1 < groups.size(); i++) {
@@ -1286,7 +1299,7 @@ final class TripletRhythmDetector {
                         || first.augmentationDots() != 0
                         || first.measureIndex() < 0
                         || first.measureIndex() >= measures.size()) continue;
-                if (divisor == 4 && first.beamCount() > 2) continue;
+                if (divisor == 4 && (first.beamCount() > 2) != rapidQuadruplets) continue;
                 List<Onset> run = new ArrayList<>();
                 float minimum = Float.MAX_VALUE, maximum = 0;
                 boolean valid = true;
@@ -1391,6 +1404,11 @@ final class TripletRhythmDetector {
                                 measures);
                 if (numeral == null || insideOtherSystem(numeral, bar, measures, width, height))
                     continue;
+                if (rapidQuadruplets
+                        && (Math.abs((numeral.left() + numeral.right()) / 2f
+                                        - (x1 + lastX) / 2f) > gap
+                                || !rapidQuadrupletCloses(groups, result, i, first, virtualStart)))
+                    continue;
                 if ((divisor == 2 || divisor == 4)
                         && !beamOwnsNumeral(
                                 numeral, first, notes, bar, gray, width, height, x1, lastX, gap))
@@ -1429,7 +1447,7 @@ final class TripletRhythmDetector {
                                                 divisor == 2
                                                         ? 3
                                                         : divisor == 4
-                                                                ? (n.beamCount() == 2 ? 6 : 3)
+                                                                ? (n.beamCount() >= 2 ? 6 : 3)
                                                                 : ScoreNoteEvent
                                                                         .defaultTupletNormalNotes(
                                                                                 divisor)));
@@ -1437,6 +1455,24 @@ final class TripletRhythmDetector {
             }
         }
         return List.copyOf(result);
+    }
+
+    /** Six nominal slots are supported only by a complete staff clock and a separate final attack. */
+    private static boolean rapidQuadrupletCloses(
+            List<Onset> groups, List<ScoreNoteEvent> notes, int start, ScoreNoteEvent first,
+            int virtualStart) {
+        int last = start + 4;
+        if (last >= groups.size() || groups.get(last).indices().size() != 1) return false;
+        var terminal = notes.get(groups.get(last).indices().get(0));
+        if (!sameVoice(first, terminal) || terminal.tupletDivisor() != 1
+                || terminal.beamCount() != first.beamCount() - 1
+                || terminal.augmentationDots() != 0) return false;
+        if (last + 1 < groups.size() && notes.get(groups.get(last + 1).indices().get(0))
+                .measureIndex() == first.measureIndex()) return false;
+        double duration = staffClock(groups, notes, first, first.staffIndex(), virtualStart);
+        double adjusted = duration + 2 * ScoreNoteTiming.writtenDurationBeats(first);
+        return Double.isFinite(adjusted) && adjusted >= 1
+                && Math.abs(adjusted - Math.rint(adjusted)) < .001;
     }
 
     /** A non-binary ratio needs both printed membership and an independent complete staff clock. */

@@ -151,7 +151,9 @@ final class PolyphonicHalfRests {
                                         || hy >= bounds[0] - g * .2f && hy <= bounds[1] + g * .2f
                                         || bounds[0] < m.top() * h
                                         || bounds[1] > m.bottom() * h
-                                        || beamlet(gray, w, h, left, right, bounds[0], g, shaft))
+                                        || beamlet(gray, w, h, left, right, bounds[0], g, shaft)
+                                        || noteBeamOwnsPlate(gray, w, h, score.notes(), n, m,
+                                                hx, hy, shaft, g, left, right, bounds))
                                     continue;
                                 boolean otherHead = false;
                                 for (var peer : score.notes()) {
@@ -218,6 +220,45 @@ final class PolyphonicHalfRests {
             }
         }
         return result;
+    }
+
+    private static boolean noteBeamOwnsPlate(
+            byte[] gray, int w, int h, List<ScoreNoteEvent> notes, ScoreNoteEvent owner,
+            MeasureRegion bar, float headX, float headY, Shaft shaft, float gap,
+            int left, int right, int[] bounds) {
+        if (owner.beamCount() < 2 || shaft.direction() != 1 || shaft.left() < right - gap * .2f)
+            return false;
+        int center = (bounds[0] + bounds[1]) / 2;
+        if (!continuesToHead(gray, w, shaft, center, headY, gap)) return false;
+        for (var peer : notes) {
+            if (peer == owner || peer.measureIndex() != owner.measureIndex()
+                    || peer.staffIndex() != owner.staffIndex() || peer.staffCount() != owner.staffCount()
+                    || peer.beamCount() < 2 || peer.kind() != ScoreNoteEvent.Kind.PITCHED) continue;
+            float x = (bar.left() + peer.positionInMeasure() * (bar.right() - bar.left())) * w;
+            float y = peer.pageY() * h;
+            if (headX - x < gap || headX - x > gap * 3 || Math.abs(y - headY) > gap * 1.4f)
+                continue;
+            Shaft other = shaft(gray, w, h, x, y, gap);
+            if (other == null || other.direction() != 1 || other.right() > left + gap * .2f
+                    || !continuesToHead(gray, w, other, center, y, gap)) continue;
+            int joined = 0, length = shaft.left() - other.right() + 1;
+            for (int row = bounds[0]; row <= bounds[1]; row++)
+                if (ink(gray, w, other.right(), shaft.left(), row) >= length * .95f
+                        && ++joined >= 3) return true;
+        }
+        return false;
+    }
+
+    private static boolean continuesToHead(
+            byte[] gray, int width, Shaft shaft, int top, float headY, float gap) {
+        int bottom = Math.round(headY - gap * .45f);
+        if (bottom - top < gap) return false;
+        for (int x = shaft.left(); x <= shaft.right(); x++) {
+            int row = top;
+            while (row <= bottom && dark(gray, width, x, row)) row++;
+            if (row > bottom) return true;
+        }
+        return false;
     }
 
     static Shaft shaft(byte[] gray, int w, int h, float x, float y, float g) {

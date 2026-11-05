@@ -80,6 +80,7 @@ public final class ScoreNavigationTraversal {
     private final List<Occurrence> occurrences = new ArrayList<>();
     private Phase phase = Phase.INITIAL;
     private boolean replayRepeats = true;
+    private boolean resumeRepeatsAtCoda;
     private String codaTarget = "", enteringEdge = "source-start", skippedRepeatEdge = "";
     private double performanceBeat;
     private ScoreAnchor unresolvedCodaStart;
@@ -504,6 +505,12 @@ public final class ScoreNavigationTraversal {
                             target(CODA, requested.isEmpty() ? codaTarget : requested, mark.id());
                     if (destination != null) {
                         phase = Phase.CODA;
+                        if (resumeRepeatsAtCoda) {
+                            replayRepeats = true;
+                            for (var repeat : repeats)
+                                if (repeat.start().compareTo(destination.anchor()) >= 0)
+                                    passes.remove(repeat.id());
+                        }
                         enteringEdge = mark.id();
                         return destination.anchor();
                     }
@@ -592,6 +599,9 @@ public final class ScoreNavigationTraversal {
                 replayRepeats =
                         direction.details().afterJumpRepeats()
                                 == ScorePlaybackDirection.AfterJumpRepeats.PLAY;
+                resumeRepeatsAtCoda =
+                        coda && direction.details().afterJumpRepeats()
+                                == ScorePlaybackDirection.AfterJumpRepeats.DEFAULT;
                 passes.clear();
                 if (!replayRepeats)
                     for (var repeat : repeats) passes.put(repeat.id(), repeat.plays());

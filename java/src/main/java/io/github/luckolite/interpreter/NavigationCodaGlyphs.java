@@ -58,7 +58,7 @@ final class NavigationCodaGlyphs {
                             || w < gap
                             || w > gap * 3.5f
                             || h < gap * 1.6f
-                            || h > gap * 4
+                            || h > gap * 4.25f
                             || w / h < .65f
                             || w / h > 1.15f) continue;
                     if (!CodaGlyphInk.matches(gray, width, height, l, top + t, r, top + b, gap))

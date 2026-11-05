@@ -117,9 +117,15 @@ public final class ScoreExpressionDetector {
                             text);
             if (binding != null) printedBindings.add(binding);
         }
-        for (var word : words) {
-            if (!EnglishCharacterOcrContext.admitted(word)) continue;
-            if (coveredPedalWord(word, words)) continue;
+        for (var original : words) {
+            var coda = codaCharacterCaption(score, original, staffs, gray, width, height);
+            var word = coda == null ? original : coda.word();
+            boolean admitted = EnglishCharacterOcrContext.admitted(word);
+            boolean stackedCharacter = !admitted
+                    && EnglishCharacterOcrContext.stackedCharacter(word.text());
+            boolean intensity = !admitted && EnglishCharacterOcrContext.intensity(word.text());
+            if (!admitted && !stackedCharacter && !intensity) continue;
+            if (coveredPedalWord(word, words) || coveredVibratoWord(word, words)) continue;
             var caption = PrintedTempoCaption.from(word, score);
             String directionText = caption == null ? word.text() : caption.text();
             var directions =
@@ -163,6 +169,7 @@ public final class ScoreExpressionDetector {
                                 word.right() * width,
                                 word.top() * height,
                                 word.bottom() * height);
+            if (coda != null) staff = coda.staff();
             if (staff == null && word.right() > word.left())
                 staff =
                         PrintedDirectionWordStaff.find(
@@ -215,6 +222,33 @@ public final class ScoreExpressionDetector {
             if (closest == null && staff != null && word.right() > word.left())
                 closest =
                         closestDirectionNote(score, staff, width, height, x, word.right() * width);
+            if (word.text().strip().equalsIgnoreCase("delicately") && staff != null
+                    && word.bottom() * height <= staff.top())
+                closest = closestDirectionNote(score, staff, width, height, x, word.right() * width);
+            if (stackedCharacter && (closest == null
+                    || !ownsStackedCharacter(score, word, words, staff, closest, gray, width, height)))
+                continue;
+            if (intensity) {
+                closest = null;
+                for (var lane : staffs) {
+                    var owner = intensityOwner(score, word, lane, gray, width, height);
+                    if (owner == null) continue;
+                    if (closest != null) {
+                        closest = null;
+                        break;
+                    }
+                    closest = owner;
+                    staff = lane;
+                }
+                if (closest == null) continue;
+            }
+            if (word.text().strip().matches("(?i)vib[.]?|vibrato")) {
+                var above = highVibratoOwner(score, word, staffs, gray, width, height);
+                if (above != null) {
+                    closest = above.note();
+                    staff = above.staff();
+                }
+            }
             if (release && symbols.contains(word) && staff != null) {
                 var terminal = terminalReleaseNote(score, staff, width, height, word);
                 // Preserve an existing owner in this measure. A different measure's
@@ -361,6 +395,144 @@ public final class ScoreExpressionDetector {
                 qualifier,
                 kind == Kind.UNRESOLVED_DIRECTION ? bindingText(text) : "",
                 List.copyOf(targets));
+    }
+
+    /** A complete character caption above the unique opening attack of a real measure. */
+    private static ScoreNoteEvent intensityOwner(
+            ScorePageInterpretation score, PlayingTechniqueDetector.Word word,
+            PlayingTechniqueDetector.Staff staff, byte[] gray, int width, int height) {
+        if (staff == null || gray == null) return null;
+        float gap = staff.gap(), left = word.left() * width;
+        float clearance = staff.top() - word.bottom() * height;
+        float tall = (word.bottom() - word.top()) * height;
+        if (gap < 6 || clearance < 0 || clearance > gap * 4
+                || tall < gap * .9f || tall > gap * 3.8f
+                || !ScoreDynamicsDetector.containsInk(word, gray, width, height)) return null;
+        float staffCenter = (staff.top() + staff.bottom()) * .5f / height;
+        ScoreNoteEvent owner = null;
+        for (int m = 0; m < score.measures().size(); m++) {
+            var bar = score.measures().get(m);
+            float inset = left - bar.left() * width;
+            if (staffCenter < bar.top() || staffCenter > bar.bottom()
+                    || inset < -gap * 1.35f || inset > gap * 2) continue;
+            ScoreNoteEvent first = null;
+            for (var n : score.notes())
+                if (n.measureIndex() == m && n.staffIndex() == staff.index()
+                        && n.staffCount() == staff.count() && !n.crossStaffBeam()
+                        && (n.articulations() & NoteOrnament.GRACE) == 0
+                        && (first == null || n.positionInMeasure() < first.positionInMeasure()))
+                    first = n;
+            if (first == null) continue;
+            float head = (bar.left() + first.positionInMeasure() * (bar.right() - bar.left())) * width;
+            if (head < left || head - left > gap * 3.3f || head > word.right() * width) continue;
+            if (owner != null) return null;
+            owner = first;
+        }
+        return owner;
+    }
+
+    private record CodaCharacter(PlayingTechniqueDetector.Word word, PlayingTechniqueDetector.Staff staff) {}
+
+    /** A merged navigation OCR line can also contain a separate incoming character caption. */
+    private static CodaCharacter codaCharacterCaption(
+            ScorePageInterpretation score, PlayingTechniqueDetector.Word word,
+            List<PlayingTechniqueDetector.Staff> staffs, byte[] gray, int width, int height) {
+        if (gray == null || !word.text().strip().matches(
+                "(?i)d[.]?\\s*s[.]?\\s+al\\s+coda\\s+with\\s+power[!]"))
+            return null;
+        CodaCharacter found = null;
+        for (var direction : score.playbackDirections()) {
+            int m = direction.measureBoundary();
+            if (direction.kind() != ScorePlaybackDirection.Kind.CODA
+                    || m <= 0 || m >= score.measures().size()
+                    || score.playbackDirections().stream().noneMatch(d ->
+                            d.measureBoundary() == m
+                                    && d.kind() == ScorePlaybackDirection.Kind.DAL_SEGNO_AL_CODA))
+                continue;
+            var bar = score.measures().get(m);
+            if (bar.left() <= word.left() || bar.left() >= word.right()) continue;
+            for (var staff : staffs) {
+                float center = (staff.top() + staff.bottom()) * .5f / height;
+                if (center < bar.top() || center > bar.bottom()
+                        || word.top() * height > staff.top() - staff.gap()
+                        || word.bottom() * height > staff.top() + staff.gap() * 1.6f) continue;
+                float left = bar.left() + staff.gap() * 1.6f / width;
+                float top = Math.max(word.top(), (staff.top() - staff.gap() * 4.1f) / height);
+                float bottom = Math.min(word.bottom(), (staff.top() - staff.gap() * .8f) / height);
+                if (left >= word.right() || bottom <= top) continue;
+                var suffix = new PlayingTechniqueDetector.Word(
+                        "with power!", left, top, word.right(), bottom);
+                if (!ScoreDynamicsDetector.containsInk(suffix, gray, width, height)) continue;
+                if (found != null) return null;
+                found = new CodaCharacter(suffix, staff);
+            }
+        }
+        return found;
+    }
+    private record HighVibratoOwner(ScoreNoteEvent note, PlayingTechniqueDetector.Staff staff) {}
+
+    private static HighVibratoOwner highVibratoOwner(
+            ScorePageInterpretation score, PlayingTechniqueDetector.Word word,
+            List<PlayingTechniqueDetector.Staff> staffs, byte[] gray, int width, int height) {
+        if (gray == null || !ScoreDynamicsDetector.containsInk(word, gray, width, height)) return null;
+        HighVibratoOwner owner = null;
+        float left = word.left() * width, right = word.right() * width;
+        for (var staff : staffs) {
+            float gap = staff.gap();
+            float center = (staff.top() + staff.bottom()) * .5f / height;
+            var note = closestDirectionNote(score, staff, width, height, left, right);
+            if (note == null || note.tiedFromPrevious() || note.crossStaffBeam()) continue;
+            var bar = score.measures().get(note.measureIndex());
+            if (center < bar.top() || center > bar.bottom()) continue;
+            float headX = (bar.left() + note.positionInMeasure() * (bar.right() - bar.left())) * width;
+            float headY = note.pageY() * height;
+            float clearance = headY - word.bottom() * height;
+            if (headX < left || headX > right || staff.top() - headY < gap * 2
+                    || clearance < gap * .15f || clearance > gap * 1.35f) continue;
+            if (owner != null) return null;
+            owner = new HighVibratoOwner(note, staff);
+        }
+        return owner;
+    }
+    private static boolean coveredVibratoWord(
+            PlayingTechniqueDetector.Word word, List<PlayingTechniqueDetector.Word> words) {
+        if (!word.text().strip().matches("(?i)vib\\.?|vibrato")) return false;
+        float height = word.bottom() - word.top();
+        if (!(height > 0) || !(word.right() > word.left())) return false;
+        for (var other : words) {
+            if (!other.text().strip().matches("(?i)(?:vib\\.?|vibrato)\\s*\\(abrupt\\s+cut[- ]off\\)")
+                    || word.left() < other.left() || word.right() > other.right()) continue;
+            float overlap = Math.min(word.bottom(), other.bottom()) - Math.max(word.top(), other.top());
+            if (overlap >= .8f * height) return true;
+        }
+        return false;
+    }
+
+    private static boolean ownsStackedCharacter(
+            ScorePageInterpretation score, PlayingTechniqueDetector.Word word,
+            List<PlayingTechniqueDetector.Word> words, PlayingTechniqueDetector.Staff staff,
+            ScoreNoteEvent owner, byte[] gray, int width, int height) {
+        if (gray == null || word.bottom() * height >= staff.top()
+                || !ScoreDynamicsDetector.containsInk(word, gray, width, height)) return false;
+        PlayingTechniqueDetector.Word matched = null;
+        for (var sibling : words) {
+            if (!EnglishCharacterOcrContext.stackedSibling(sibling.text())
+                    || sibling.top() <= word.top() || sibling.bottom() <= word.bottom()
+                    || sibling.bottom() * height >= staff.top()
+                    || Math.abs(sibling.top() - word.bottom()) * height > staff.gap()
+                    || Math.abs(sibling.left() - word.left()) * width > staff.gap()
+                    || !ScoreDynamicsDetector.containsInk(sibling, gray, width, height)) continue;
+            float left = sibling.left() * width;
+            var siblingOwner = closestDirectionNote(score, staff, width, height, left, left);
+            if (siblingOwner == null)
+                siblingOwner = closestDirectionNote(score, staff, width, height,
+                        left, sibling.right() * width);
+            if (!owner.equals(siblingOwner)) continue;
+            // Native intake can report the same physical OCR line in two word lists.
+            if (matched != null && !matched.equals(sibling)) return false;
+            matched = sibling;
+        }
+        return matched != null;
     }
 
     private static ScoreNoteEvent closestDirectionNote(

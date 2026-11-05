@@ -8,9 +8,15 @@ import java.util.regex.Pattern;
 
 /** Reject explicit local prose ownership before OCR lines lose their parent context. */
 final class EnglishCharacterOcrContext {
+    static final String INTENSITY =
+            "with\\s+(?:(?:increasing|sudden)\\s+)?intensity|with\\s+energy"
+                    + "|(?:with\\s+vigor,\\s*)?gaining\\s+intensity";
+    private static final Pattern INTENSITY_CAPTION = Pattern.compile("(?:" + INTENSITY + ")[.!]?");
     private static final Pattern CHARACTER =
             Pattern.compile(
-                    "\\s*(?:flowing|triumphantly|ethereal|with\\s+driving\\s+intensity|like\\s+an\\s+echo)[.!]?\\s*");
+                    "\\s*(?:flowing|triumphantly|ethereal|with\\s+(?:driving\\s+intensity|liberation)|like\\s+an\\s+echo)[.!]?\\s*");
+    private static final Pattern STACKED_CHARACTER = Pattern.compile("with\\s+liberation[.!]?");
+    private static final Pattern STACKED_SIBLING = Pattern.compile("molto\\s+sostenut[oaie][.!]?");
     private static final Pattern PROSE =
             Pattern.compile(
                     "^(?:music\\s+by\\b|(?:composed|arranged|written|lyrics)\\s+by\\b|copyright\\b|publisher\\b|published\\s+by\\b|verse\\s+\\d+\\b|chorus\\s*[:\\d]).*",
@@ -24,7 +30,11 @@ final class EnglishCharacterOcrContext {
     }
 
     static boolean character(String s) {
-        return s != null && CHARACTER.matcher(normalized(s)).matches();
+        return s != null && (CHARACTER.matcher(normalized(s)).matches() || intensity(s));
+    }
+
+    static boolean intensity(String text) {
+        return text != null && INTENSITY_CAPTION.matcher(normalized(text)).matches();
     }
 
     static boolean admitted(PlayingTechniqueDetector.Word word) {
@@ -32,6 +42,14 @@ final class EnglishCharacterOcrContext {
                 && (!character(word.text())
                         || word.admission()
                                 == PlayingTechniqueDetector.WordAdmission.CONTEXT_QUALIFIED);
+    }
+
+    static boolean stackedCharacter(String text) {
+        return STACKED_CHARACTER.matcher(normalized(text)).matches();
+    }
+
+    static boolean stackedSibling(String text) {
+        return STACKED_SIBLING.matcher(normalized(text)).matches();
     }
 
     static boolean qualifies(OcrText text, OcrText.Block owner, OcrText.Line candidate) {

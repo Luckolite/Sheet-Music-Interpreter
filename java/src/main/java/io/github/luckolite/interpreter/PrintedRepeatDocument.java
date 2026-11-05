@@ -10,6 +10,25 @@ final class PrintedRepeatDocument {
 
     private record Witness(ScoreExpressiveEvent event, int page, int pageStart, int pageEnd) {}
 
+    /** Recover document witnesses when playback has the same contiguous page offsets. */
+    static Result validatedPlayback(
+            List<ScorePageInterpretation> pages,
+            int[] offsets,
+            List<ScorePlaybackDirection> existing,
+            int count,
+            ScoreMeterMap meter) {
+        if (pages.size() != offsets.length) return new Result(List.of(), Set.of());
+        int offset = 0;
+        for (int i = 0; i < pages.size(); i++) {
+            var page = pages.get(i);
+            if (page == null || page.measures().isEmpty() || offsets[i] != offset)
+                return new Result(List.of(), Set.of());
+            offset += page.measures().size();
+        }
+        if (offset != count) return new Result(List.of(), Set.of());
+        return validated(pages, existing, count, meter);
+    }
+
     /** Keep authored/local navigation intact; admit each recovered repeat only after joint traversal. */
     static Result validated(
             List<ScorePageInterpretation> pages,
@@ -62,12 +81,7 @@ final class PrintedRepeatDocument {
         ScorePageInterpretation previous = null;
         for (int page = 0; page < pages.size(); page++) {
             var score = pages.get(page);
-            if (previous != null
-                    && (previous.measures().isEmpty()
-                            || score.measures().isEmpty()
-                            || score.firstMeasureNumber()
-                                    != previous.firstMeasureNumber()
-                                            + previous.measures().size())) {
+            if (previous != null && !continues(previous, score)) {
                 flush(group, directions, resolved);
                 group.clear();
             }
@@ -87,6 +101,21 @@ final class PrintedRepeatDocument {
         }
         flush(group, directions, resolved);
         return new Result(List.copyOf(directions), Set.copyOf(resolved));
+    }
+
+    private static boolean continues(ScorePageInterpretation previous, ScorePageInterpretation next) {
+        if (previous.measures().isEmpty() || next.measures().isEmpty()) return false;
+        int previousNumber = previous.firstMeasureNumber();
+        int nextNumber = next.firstMeasureNumber();
+        if (previousNumber != 0 || nextNumber != 0)
+            return nextNumber == previousNumber + previous.measures().size();
+        var first = previous.clockContextSource().origin();
+        var second = next.clockContextSource().origin();
+        return first.boundDocument()
+                && second.boundDocument()
+                && first.documentSha256().equals(second.documentSha256())
+                && first.physicalPageCount() == second.physicalPageCount()
+                && first.physicalPageIndex() + 1 == second.physicalPageIndex();
     }
 
     private static boolean validEnding(Witness w) {

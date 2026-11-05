@@ -31,7 +31,7 @@ final class CodaGlyphInk {
         if (w < gap
                 || w > gap * 3.5f
                 || h < gap * 1.6f
-                || h > gap * 4
+                || h > gap * 4.25f
                 || w / (float) h < .65f
                 || w / (float) h > 1.15f
                 || (long) w * h > 65536) return false;

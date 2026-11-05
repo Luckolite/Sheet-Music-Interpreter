@@ -8,6 +8,100 @@ import java.util.Arrays;
 final class ShadedCompactTieRidge {
     private ShadedCompactTieRidge() {}
 
+    /** A miniature tie can fit entirely in the clear gap between two noteheads. */
+    static boolean shortInterheadArc(byte[] gray, int width, int height,
+            int left, int right, float centerY, float gap) {
+        if (gray == null || gray.length != (long) width * height || !Float.isFinite(centerY)
+                || !Float.isFinite(gap) || gap < 8 || left < 0 || right >= width) return false;
+        int span = right - left + 1;
+        if (span < gap * .55f || span > gap * .82f) return false;
+        int top = Math.round(centerY + gap * .24f);
+        int bottom = Math.round(centerY + gap * .69f);
+        if (top < 0 || bottom + 2 >= height) return false;
+        float[] ridge = new float[span];
+        for (int i = 0; i < span; i++) {
+            int x = left + i, total = 0, moment = 0, ink = 0, core = 0;
+            for (int y = top; y <= bottom; y++) {
+                int weight = Math.max(0, 145 - (gray[y * width + x] & 255));
+                if (weight > 0) ink++;
+                core = Math.max(core, weight);
+                total += weight;
+                moment += y * weight;
+            }
+            if (ink > Math.ceil(gap * .35f) || core < 24 || (gray[(bottom + 2) * width + x] & 255) < 155)
+                return false;
+            ridge[i] = moment / (float) total;
+            if (i > 0 && Math.abs(ridge[i] - ridge[i - 1]) > 1.6f) return false;
+        }
+        float middle = (ridge[span / 2] + ridge[(span - 1) / 2]) * .5f;
+        return middle - ridge[0] >= gap * .055f && middle - ridge[span - 1] >= gap * .055f;
+    }
+    /** Prove all five physical rules locally before testing the shared bottom rule. */
+    static boolean belowVerifiedLocalBottomRule(byte[] gray, int width, int height,
+            int left, int right, float spaceCenter, float gap) {
+        if (gray == null || gray.length != (long) width * height || !Float.isFinite(spaceCenter)
+                || !Float.isFinite(gap) || gap < 8 || left < 0 || right >= width
+                || right - left < gap || right - left > gap * 1.8f) return false;
+        int bottom = Math.round(spaceCenter + gap * .5f);
+        int measuredBottom = bottom;
+        for (int rule = 0; rule < 5; rule++) {
+            int row = Math.round(bottom - rule * gap);
+            if (row < 4 || row + 4 >= height) return false;
+            int best = 0, darkestRow = row, darkest = Integer.MAX_VALUE;
+            for (int y = row - 2; y <= row + 2; y++) {
+                int dark = 0, tone = 0;
+                for (int x = left; x <= right; x++) {
+                    int ink = gray[y * width + x] & 255;
+                    int paper = gray[(y - 2) * width + x] & 255;
+                    if (ink + 20 <= paper) dark++;
+                    tone += ink;
+                }
+                best = Math.max(best, dark);
+                if (tone < darkest) {
+                    darkest = tone;
+                    darkestRow = y;
+                }
+            }
+            if (best < (right - left + 1) * .7f) return false;
+            if (rule == 0) measuredBottom = darkestRow;
+        }
+        return belowBottomRule(gray, width, height, left, right, measuredBottom, gap);
+    }
+    /** A short tie can leave and rejoin the bottom rule below two space notes. */
+    static boolean belowBottomRule(byte[] gray, int width, int height, int left, int right,
+            float bottomRule, float gap) {
+        if (gray == null || gray.length != (long) width * height || !Float.isFinite(bottomRule)
+                || gap < 8 || left < 0 || right >= width
+                || right - left < gap || right - left > gap * 1.8f) return false;
+        int rail = Math.round(bottomRule);
+        int maxDepth = Math.round(gap * .45f);
+        int paperOffset = Math.round(gap * .65f);
+        if (rail < 1 || rail + paperOffset >= height) return false;
+        int span = right - left + 1;
+        int[] depths = new int[span];
+        int strong = 0;
+        for (int i = 0; i < span; i++) {
+            int x = left + i;
+            int background = gray[(rail + paperOffset) * width + x] & 255;
+            int line = gray[rail * width + x] & 255;
+            if (background < 100 || background > 230 || line > background - 35) return false;
+            int darkest = background - 65;
+            for (int d = 2; d <= maxDepth; d++) {
+                int pixel = gray[(rail + d) * width + x] & 255;
+                if (pixel < darkest) {
+                    darkest = pixel;
+                    depths[i] = d;
+                }
+            }
+            if (depths[i] >= gap * .22f) strong++;
+            if (i > 0 && Math.abs(depths[i] - depths[i - 1]) > 2) return false;
+        }
+        if (depths[0] > 2 || depths[span - 1] > 2 || strong < span * .35f) return false;
+        int center = depths[span / 2];
+        return center >= gap * .22f
+                && center - depths[span / 8] >= 2
+                && center - depths[span - 1 - span / 8] >= 2;
+    }
     static boolean proved(
             byte[] labels,
             byte[] gray,

@@ -128,7 +128,7 @@ final class PrintedSlurContours {
             float lower,
             List<RawBand> members) {}
 
-    private record Frames(float[] bottoms, float[] gaps) {}
+    private record Frames(float[] bottoms, float[] gaps, boolean shaded, boolean railApex) {}
 
     private PrintedSlurContours() {}
 
@@ -171,7 +171,7 @@ final class PrintedSlurContours {
             StaffPitchTrack track,
             Consumer<Rejection> audit,
             HeadEvidence heads) {
-        return findRaw(
+        Result ordinary = findRaw(
                 gray,
                 labels,
                 width,
@@ -185,6 +185,25 @@ final class PrintedSlurContours {
                 heads,
                 null,
                 8_000_000L);
+        if (ordinary.limitReached() || heads == null || gray == null || track == null
+                || left < 0 || top < 0 || right >= width || bottom >= height
+                || right <= left || bottom <= top || gray.length != (long) width * height
+                || !shadedPaper(gray, width, left, top, right, bottom)) return ordinary;
+        Result apex = findRawScoped(gray, labels, width, height, left, top, right, bottom, track,
+                null, heads, null, 0, false, true);
+        if (apex.limitReached()) return ordinary;
+        var merged = new ArrayList<>(ordinary.bows());
+        for (var bow : apex.bows()) {
+            float gap = track.at(bow.start().x())[1];
+            if (!railApexWitness(bow, gray, width, height, track, gap)
+                    || merged.stream().anyMatch(old -> old.above() == bow.above()
+                            && Math.abs(old.start().x() - bow.start().x()) <= gap * .5f
+                            && Math.abs(old.end().x() - bow.end().x()) <= gap * .5f
+                            && Math.abs(old.start().y() - bow.start().y()) <= gap * .5f
+                            && Math.abs(old.end().y() - bow.end().y()) <= gap * .5f)) continue;
+            merged.add(bow);
+        }
+        return new Result(merged, false, ordinary.shortRailBows(), ordinary.jointBows());
     }
 
     /** A small region on the outside of two independently owned beam stems. */
@@ -192,7 +211,7 @@ final class PrintedSlurContours {
             byte[] gray, int w, int h, int left, int top, int right, int bottom,
             StaffPitchTrack track) {
         return findRawScoped(gray, null, w, h, left, top, right, bottom, track,
-                null, null, null, 8_000_000L, true);
+                null, null, null, 8_000_000L, true, false);
     }
 
     static RawResult findWithRawEvidence(
@@ -235,7 +254,7 @@ final class PrintedSlurContours {
             int right, int bottom, StaffPitchTrack track, Consumer<Rejection> audit,
             HeadEvidence heads, RawSink rawSink, long shortRailAllowance) {
         return findRawScoped(gray, labels, width, height, left, top, right, bottom,
-                track, audit, heads, rawSink, shortRailAllowance, false);
+                track, audit, heads, rawSink, shortRailAllowance, false, false);
     }
 
     private static Result findRawScoped(
@@ -252,7 +271,8 @@ final class PrintedSlurContours {
             HeadEvidence heads,
             RawSink rawSink,
             long shortRailAllowance,
-            boolean compactStemWindow) {
+            boolean compactStemWindow,
+            boolean railApex) {
         if (gray == null
                 || width <= 0
                 || height <= 0
@@ -273,7 +293,8 @@ final class PrintedSlurContours {
             bottoms[x] = at[0];
             gaps[x] = at[1];
         }
-        var frames = new Frames(bottoms, gaps);
+        var frames = new Frames(bottoms, gaps, shadedPaper(gray, width, left, top, right, bottom),
+                railApex);
         var unowned = new HashMap<Integer, List<RawBand>>();
         int unownedCount = 0;
         boolean unownedLimited = false;
@@ -417,6 +438,11 @@ final class PrintedSlurContours {
             Bow bow = fit(component, audit, fittedSelections, false, compactStemWindow);
             List<Run> selected = fittedSelections == null ? null : fittedSelections.remove(bow);
             if (bow == null) continue;
+            if (frames.shaded() && (terminalRailStep(bow.points(), component.get(0).gap(), true)
+                    || terminalRailStep(bow.points(), component.get(0).gap(), false))) {
+                reject(component, "terminal-rail-step", audit);
+                continue;
+            }
             if (!capped(gray, labels, width, height, bow, track, true, heads, frames))
                 reject(component, "uncapped-start", audit);
             else if (!capped(gray, labels, width, height, bow, track, false, heads, frames))
@@ -1175,14 +1201,85 @@ final class PrintedSlurContours {
                             gap,
                             rule,
                             frames,
-                            Math.abs(y - (base - rule * gap)) <= Math.max(2, gap * .13f + .5f)))
+                            Math.abs(y - (base - rule * gap)) <= Math.max(2, gap * .13f + .5f))
+                    && !(frames.railApex() && (rule == 0 || rule == 4)
+                            && outerRailInk(gray, width, height, x, y, shade, rule, frames)))
                 return false;
+        return contrastingInk(gray, width, height, x, y, shade, gap, frames.shaded());
+    }
+
+    private static boolean shadedPaper(
+            byte[] gray, int width, int left, int top, int right, int bottom) {
+        int shaded = 0, total = 0;
+        int dx = Math.max(1, (right - left) / 32), dy = Math.max(1, (bottom - top) / 16);
+        for (int y = top + dy / 2; y <= bottom; y += dy)
+            for (int x = left + dx / 2; x <= right; x += dx) {
+                int shade = gray[y * width + x] & 255;
+                if (shade >= 150 && shade < 230) shaded++;
+                total++;
+            }
+        return shaded * 5 >= total * 3;
+    }
+
+    /** On shaded paper, the overlap can leave a darker ridge than the staff line alone. */
+    private static boolean outerRailInk(
+            byte[] gray, int width, int height, int x, int y, int shade, int rule, Frames frames) {
+        if (shade >= 100) return false;
+        float gap = frames.gaps()[x];
+        float residual = y - (frames.bottoms()[x] - rule * gap);
+        for (int direction : new int[] {-1, 1}) {
+            int supported = 0;
+            for (int sample = 0; sample < 3; sample++) {
+                int xx = x + direction * Math.round(gap * (2 + sample * .5f));
+                if (xx < 0 || xx >= width) continue;
+                int yy = Math.round(frames.bottoms()[xx] - rule * frames.gaps()[xx] + residual);
+                if (yy < 1 || yy >= height - 1) continue;
+                int at = yy * width + xx;
+                int reference = Math.min(gray[at] & 255,
+                        Math.min(gray[at - width] & 255, gray[at + width] & 255));
+                if (reference >= shade + 52) supported++;
+            }
+            if (supported < 2) return false;
+        }
+        return true;
+    }
+
+    private static boolean railApexWitness(
+            Bow bow, byte[] gray, int width, int height, StaffPitchTrack track, float gap) {
+        int side = bow.above() ? -1 : 1, rule = bow.above() ? 4 : 0;
+        Point a = bow.start(), b = bow.end();
+        if (b.x() - a.x() > 3 * gap
+                || side * (a.y() - ruleY(track, a.x(), rule)) >= -.2f * gap
+                || side * (b.y() - ruleY(track, b.x(), rule)) >= -.2f * gap) return false;
+        int run = 0, previous = -2;
+        for (Point point : bow.points()) {
+            int x = point.x(), y = Math.round(point.y());
+            if (x <= a.x() + gap * .5f || x >= b.x() - gap * .5f
+                    || y < 1 || y >= height - 1
+                    || Math.abs(y - ruleY(track, x, rule)) > gap * .18f
+                    || (gray[y * width + x] & 255) >= 90) continue;
+            run = previous + 1 == x ? run + 1 : 1;
+            previous = x;
+            if (run >= Math.max(3, Math.round(gap * .3f))) return true;
+        }
+        return false;
+    }
+
+    private static float ruleY(StaffPitchTrack track, int x, int rule) {
+        float[] frame = track.at(x);
+        return frame[0] - rule * frame[1];
+    }
+
+    private static boolean contrastingInk(
+            byte[] gray, int width, int height, int x, int y, int shade, float gap,
+            boolean shadedPaper) {
         int distance = Math.max(2, Math.round(gap * .65f));
         int paper =
                 Math.max(
                         gray[Math.max(0, y - distance) * width + x] & 255,
                         gray[Math.min(height - 1, y + distance) * width + x] & 255);
-        return paper >= shade + 20;
+        // Keep the dark ridge thin on shaded paper by excluding its antialiased fringe.
+        return paper >= shade + (shadedPaper && paper < 230 ? 42 : 20);
     }
 
     private static boolean followsRail(
@@ -1223,7 +1320,9 @@ final class PrintedSlurContours {
                 for (int dy = -1; dy <= 1; dy++)
                     if (yy + dy >= 0
                             && yy + dy < height
-                            && (gray[(yy + dy) * width + xx] & 255) <= 205) dark = true;
+                            && (gray[(yy + dy) * width + xx] & 255) <= 205
+                            && (!frames.railApex() || contrastingInk(gray, width, height, xx, yy + dy,
+                                    gray[(yy + dy) * width + xx] & 255, gap, true))) dark = true;
                 if (dark) {
                     if (side < 0) left++;
                     else right++;
@@ -1351,7 +1450,10 @@ final class PrintedSlurContours {
                     occluded = true;
                     continue;
                 }
-                if ((gray[at] & 255) <= 205) present = true;
+                int shade = gray[at] & 255;
+                if (shade <= 205 && (!frames.shaded()
+                        || contrastingInk(gray, width, height, x, yy, shade, gap, true)))
+                    present = true;
             }
             if (occluded) {
                 blank = 0;
@@ -1853,6 +1955,30 @@ final class PrintedSlurContours {
                 + shape[1] * t
                 + shape[2] * (ellipse ? Math.sqrt(Math.max(0, 1 - t * t)) : t * t)
                 + (shape.length == 4 ? shape[3] * t * Math.sqrt(Math.max(0, 1 - t * t)) : 0);
+    }
+
+    /** An abrupt switch between rails cannot supply the only returning shoulder of an arc. */
+    private static boolean terminalRailStep(List<Point> runs, float gap, boolean first) {
+        int count = runs.size(), stride = first ? 1 : -1;
+        int begin = first ? 0 : count - 1, end = first ? count - 1 : 0;
+        Point far = runs.get(end);
+        for (int offset = 1; offset <= Math.min(4, count / 8); offset++) {
+            int i = begin + offset * stride;
+            Point outer = runs.get(i - stride), inner = runs.get(i);
+            if (Math.abs(inner.x() - outer.x()) > 2
+                    || Math.abs(inner.y() - outer.y()) < gap * .45f) continue;
+            float slope = (far.y() - inner.y()) / (far.x() - inner.x());
+            boolean straight = true;
+            for (int j = i + stride; j != end; j += stride) {
+                Point run = runs.get(j);
+                if (Math.abs(run.y() - inner.y() - slope * (run.x() - inner.x())) > gap * .12f) {
+                    straight = false;
+                    break;
+                }
+            }
+            if (straight) return true;
+        }
+        return false;
     }
 
     /** A single convex asymmetric arch; no offset, threshold or span search. */

@@ -43,7 +43,8 @@ final class ScoreNavigationDetector {
         };
     }
 
-    private static boolean attachedCodaSymbol(Glyph mark, Phrase phrase, int width, int height) {
+    private static boolean attachedCodaSymbol(
+            Glyph mark, Phrase phrase, List<MeasureRegion> measures, int width, int height) {
         if (phrase.kind() != ScorePlaybackDirection.Kind.TO_CODA
                 && phrase.kind() != ScorePlaybackDirection.Kind.DAL_SEGNO_AL_CODA
                 && phrase.kind() != ScorePlaybackDirection.Kind.DA_CAPO_AL_CODA) return false;
@@ -54,6 +55,20 @@ final class ScoreNavigationDetector {
                 Math.abs((phrase.top() + phrase.bottom() - mark.top() - mark.bottom()) * .5f)
                         * height;
         float following = (mark.centerX() - phrase.right()) * width;
+        // A coda centred on the following barline has independent destination ownership.
+        for (int i = 1; i < measures.size(); i++) {
+            var before = measures.get(i - 1);
+            var after = measures.get(i);
+            if (before.top() >= after.bottom() || after.top() >= before.bottom()) continue;
+            if (mark.bottom() + lineHeight / height >= after.top()
+                    && mark.bottom() < after.bottom()
+                    && phrase.right() <= before.right()
+                    && phrase.left() >= before.left() - lineHeight / width
+                    && before.right() < mark.centerX()
+                    && after.left() >= before.right()
+                    && Math.abs(after.left() - mark.centerX()) * width <= lineHeight * .25f)
+                return false;
+        }
         return vertical <= lineHeight * .6f
                 && following >= -lineHeight * .5f
                 && following <= lineHeight * 1.3f;
@@ -82,6 +97,18 @@ final class ScoreNavigationDetector {
                             ? null
                             : new Phrase(
                                     value, word.left(), word.right(), word.top(), word.bottom());
+            // OCR can merge a complete jump and the following tempo/style text
+            // into one box, with the intervening symbol read as a wider space.
+            int separator = word.text().indexOf("  ");
+            if (longest == null && separator > 0) {
+                var prefix = kind(word.text().substring(0, separator));
+                if (prefix == ScorePlaybackDirection.Kind.DAL_SEGNO_AL_CODA
+                        || prefix == ScorePlaybackDirection.Kind.DA_CAPO_AL_CODA) {
+                    float edge = word.left()
+                            + (word.right() - word.left()) * separator / word.text().length();
+                    longest = new Phrase(prefix, word.left(), edge, word.top(), word.bottom());
+                }
+            }
             // OCR may split D.C./D.S., al, and Fine/Coda. Prefer the complete
             // phrase over its plain-jump prefix; join immediate same-line words only.
             var line = new ArrayList<PlayingTechniqueDetector.Word>();
@@ -117,7 +144,7 @@ final class ScoreNavigationDetector {
                                         .anyMatch(
                                                 phrase ->
                                                         attachedCodaSymbol(
-                                                                mark, phrase, width, height)));
+                                                                mark, phrase, measures, width, height)));
         // A token proved to be inside a longer instruction is not a second mark.
         // Do not suppress a neighboring independent sign by a loose distance rule.
         for (var phrase : phrases)

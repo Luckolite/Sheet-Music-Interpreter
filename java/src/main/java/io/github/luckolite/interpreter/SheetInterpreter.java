@@ -578,6 +578,8 @@ public final class SheetInterpreter {
                             staffs,
                             physicalPage,
                             phrasePending);
+        finalInterpretation = PrintedPassOmission.apply(
+                finalInterpretation, words, staffs, gray, width, height, physicalPage);
         finalInterpretation =
                 finalInterpretation.withClockContextSource(
                         ScoreClockContextCapture.capture(
