@@ -67,9 +67,9 @@ public class RailGapClosureSafetyOriginalTest {
                 bases[x] = local[0];
                 gaps[x] = local[1];
             }
-            var fc = nested("Frames").getDeclaredConstructor(float[].class, float[].class);
+            var fc = nested("Frames").getDeclaredConstructor(float[].class, float[].class, boolean.class, boolean.class);
             fc.setAccessible(true);
-            frames = fc.newInstance(bases, gaps);
+            frames = fc.newInstance(bases, gaps, false, false);
             evidence = PrintedSlurOwners.headEvidence(original.heads, gray, w, h, track);
             var ink =
                     PrintedSlurContours.class.getDeclaredMethod(

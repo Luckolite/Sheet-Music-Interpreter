@@ -45,9 +45,9 @@ public class ShortRailPixelCellsTest {
         float[] bottoms = new float[w], gaps = new float[w];
         Arrays.fill(bottoms, base);
         Arrays.fill(gaps, gap);
-        var frameCtor = frames.getDeclaredConstructors()[0];
+        var frameCtor = frames.getDeclaredConstructor(float[].class, float[].class, boolean.class, boolean.class);
         frameCtor.setAccessible(true);
-        Object frame = frameCtor.newInstance(bottoms, gaps);
+        Object frame = frameCtor.newInstance(bottoms, gaps, false, false);
         var track =
                 StaffPitchTrack.fromVerifiedSamples(
                         List.of(new float[] {0, base, gap}, new float[] {w - 1, base, gap}));

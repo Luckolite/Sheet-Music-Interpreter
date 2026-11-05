@@ -58,9 +58,10 @@ public class AdjacentFlagRootTest {
                         int.class,
                         int.class,
                         staff.getClass(),
+                        boolean.class,
                         boolean.class);
         method.setAccessible(true);
-        return (boolean) method.invoke(null, gray, labels, W, H, 100, 35, 85, staff, true);
+        return (boolean) method.invoke(null, gray, labels, W, H, 100, 35, 85, staff, true, true);
     }
 
     @Test

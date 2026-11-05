@@ -40,9 +40,9 @@ public class FiniteStaffBandSlurOriginalsTest {
                             .filter(c -> c.getSimpleName().equals("Frames"))
                             .findFirst()
                             .orElseThrow();
-            var ctor = type.getDeclaredConstructor(float[].class, float[].class);
+            var ctor = type.getDeclaredConstructor(float[].class, float[].class, boolean.class, boolean.class);
             ctor.setAccessible(true);
-            frames = ctor.newInstance(bases, gaps);
+            frames = ctor.newInstance(bases, gaps, false, false);
             track =
                     StaffPitchTrack.fromVerifiedSamples(
                             List.of(
