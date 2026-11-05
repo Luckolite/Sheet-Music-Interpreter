@@ -17012,5 +17012,15 @@
     "scope": "Preserve early legacy path; complete bounded unique literal opposed-pair ownership after original printed stem metadata exists, before appending extra voices. Existing mark contract delegates the same proof.",
     "validation": "Three original full Omr caller scenes plus38 relevant retained controls pass; original normal caller has1 expected ownership failure and2 refusal passes. Whole producer final qualification pending.",
     "boundary": "No model weights, wire layouts, private images, assets or library state changed. Recognition136/Guide299/audio101 retained."
+  },
+  "ordinary_composite_conversion_review": {
+    "app_commit": "ab38d822",
+    "scope": "Android SheetMusicXml RhythmWriter prefers an exact ordinary decomposition before inferred ratios. Explicit source ratios and active groups retain their rules. Render44 refreshes derived conversion output.",
+    "standalone_equivalent": "src/sheet_interpreter/musicxml.py duration_parts already uses the ordinary written vocabulary for ordinary composite spans; no Python behavior change.",
+    "original_regressions": [
+      "tests/test_musicxml_binary_tuplet_boundary.py",
+      "app/src/test/java/com/musicsheets/app/pdf/OrdinaryCompositeConversionTest.java"
+    ],
+    "runtime_boundary": "SheetMusicXml and SheetConversionState are Android engraving wrappers outside tools/native-worker/decoder-sources.txt. Decoder, Hub/page/audio workers, recognition136, Guide299/audio101, model weights and record layouts are unchanged."
   }
 }
