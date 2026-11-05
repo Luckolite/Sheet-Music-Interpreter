@@ -10134,14 +10134,14 @@
     },
     "tests/test_recognition_epoch_contract.py": {
       "standalone_path": "tests/test_recognition_epoch_contract.py",
-      "standalone_sha256": "ce7b9b25ee3e56acab30b02548edf2f112ef46433c8d390ba7e8324a954fd29e",
+      "standalone_sha256": "4fde352239d0041f2ef0cab240e05ee8617528519bb4acf9535f9a98e35a6441",
       "reviewed_sha256": "84701179970bb2b8da1db73722c5489acefda092063c5b9c6a25a7896911fc7f",
       "license": "Apache-2.0",
       "recognition110_review_note": "Recognition110 epoch contract adjustment; source-free test, no score payload.",
       "reviewed_app_commit": "5ca30bab96936f6a6444738dbbef012a904365c8",
       "reviewed_app_state": "Recognition125 qualifiedsource; installed desktop124 snapshot remains separate.",
       "recognition111_review_note": "Recognition111 contract/source change reviewed in the source111 cohort; no score payload.",
-      "standalone_normalized_sha256": "b0738934162ade09fd398e1042e44e4157c65f8102c79f2c88ca143f3f2df5df",
+      "standalone_normalized_sha256": "1d5a40cc87ea601acbc2f5e1e1dfb1ff6b5cd47ba3f53239db598ce44cddeb37",
       "scoped_reviewed_app_commit": "5ca30bab96936f6a6444738dbbef012a904365c8",
       "review_note": "Reviewed one pixel-center extent boundary comparison and original15case regressions. No model, layout, dependency, ownership, shape or resource-limit changes."
     },
