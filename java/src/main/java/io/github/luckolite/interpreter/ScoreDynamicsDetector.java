@@ -558,6 +558,7 @@ final class ScoreDynamicsDetector {
             boolean paperProposals) {
         List<ScoreDynamicChange> result = new ArrayList<>();
         var arrivalLevels = new ArrayList<PrintedHairpinArrival.Level>();
+        var openPairs = new LinkedHashMap<ScoreDynamicChange, OpenHairpinPairs.Shape>();
         List<CompleteOpposedHairpinPair.Shape> completeOpposedShapes = List.of();
         List<CompleteFaintHairpinArms.Shape> completeFaintShapes = List.of();
         Map<ScoreDynamicChange, PlayingTechniqueDetector.Word> openWords = new HashMap<>();
@@ -885,6 +886,9 @@ final class ScoreDynamicsDetector {
                         arrivalLevels,
                         ownershipGray);
             for (var shape : OpenHairpinPairs.detect(ownershipGray, width, height, staffs)) {
+                // The paired arms were traced in the space below this upper staff.
+                boolean common = shape.staff().count() == 2
+                        && shared.stream().anyMatch(pair -> pair.upper().equals(shape.staff()));
                 var proposed = new ArrayList<ScoreDynamicChange>();
                 addWithArrival(
                         proposed,
@@ -897,7 +901,7 @@ final class ScoreDynamicsDetector {
                         notes,
                         width,
                         height,
-                        false,
+                        common,
                         arrivalLevels,
                         ownershipGray);
                 for (var change : proposed) {
@@ -906,7 +910,7 @@ final class ScoreDynamicsDetector {
                     boolean retained = false;
                     for (var old : result) {
                         if (old.direction() != change.direction()
-                                || !sameDynamicPart(old, shape.staff(), false)) continue;
+                                || !sameDynamicPart(old, shape.staff(), common)) continue;
                         double c = old.measureIndex() + old.positionInMeasure();
                         double d = old.endMeasureIndex() + old.endPosition();
                         double overlap = Math.min(b, d) - Math.max(a, c);
@@ -915,7 +919,10 @@ final class ScoreDynamicsDetector {
                             break;
                         }
                     }
-                    if (!retained) result.add(change);
+                    if (!retained) {
+                        result.add(change);
+                        openPairs.put(change, shape);
+                    }
                 }
             }
             for (var shape :
@@ -1069,6 +1076,17 @@ final class ScoreDynamicsDetector {
                                 && word.top() >= full.top() && word.bottom() <= full.bottom()))
                     continue;
                 if (direction == 0) continue;
+                // The broad and tight OCR passes can return the same token with nested boxes.
+                // Keep the tighter printed onset when the boxes cover the same short word.
+                if (printedEnd == null && words.stream().anyMatch(tight ->
+                        word.text().strip().equalsIgnoreCase(tight.text().strip())
+                                && tight.left() >= word.left() && tight.right() <= word.right()
+                                && tight.top() >= word.top() && tight.bottom() <= word.bottom()
+                                && tight.right() - tight.left() >= (word.right() - word.left()) * .65f
+                                && tight.bottom() - tight.top() >= (word.bottom() - word.top()) * .5f
+                                && (tight.right() - tight.left()) * (tight.bottom() - tight.top())
+                                        < (word.right() - word.left()) * (word.bottom() - word.top()) * .85f))
+                    continue;
                 var owner = directionFloors.owner(word.top() * height, word.bottom() * height);
                 if (owner == null) continue;
                 var common =
@@ -1290,6 +1308,23 @@ final class ScoreDynamicsDetector {
                 if (!claimed) scoped.add(change);
             }
         }
+        joinOpenPairs(scoped, openPairs, staffs, measures, width, height);
+        if (paperProposals) for (var pair : openPairs.entrySet()) {
+            var change = pair.getKey();
+            if (!scoped.contains(change)) continue;
+            var shape = pair.getValue();
+            var staff = shape.staff();
+            if (change.measureIndex() == 0 && change.positionInMeasure() <= .05f
+                    && Math.abs(HairpinContinuation.leftEdge(staff, measures, height)
+                            * width - shape.left()) <= staff.gap() * 2)
+                ScoreDynamicContinuation.addHairpinEdge(events, change, true,
+                        shape.first() / staff.gap(), shape.left() / (float) width);
+            if (change.endMeasureIndex() == measures.size() - 1 && change.endPosition() >= .95f
+                    && Math.abs(HairpinContinuation.rightEdge(staff, measures, height)
+                            * width - shape.right()) <= staff.gap() * 2)
+                ScoreDynamicContinuation.addHairpinEdge(events, change, false,
+                        shape.last() / staff.gap(), shape.right() / (float) width);
+        }
         scoped.sort(
                 Comparator.comparingInt(ScoreDynamicChange::measureIndex)
                         .thenComparingDouble(ScoreDynamicChange::positionInMeasure)
@@ -1297,6 +1332,47 @@ final class ScoreDynamicsDetector {
         return new Detection(scoped, events);
     }
 
+    private static void joinOpenPairs(
+            List<ScoreDynamicChange> changes,
+            Map<ScoreDynamicChange, OpenHairpinPairs.Shape> shapes,
+            List<PlayingTechniqueDetector.Staff> staffs, List<MeasureRegion> measures,
+            int width, int height) {
+        for (var from : shapes.entrySet()) {
+            var first = from.getKey();
+            int firstIndex = changes.indexOf(first);
+            if (firstIndex < 0 || first.endPosition() < .95f) continue;
+            ScoreDynamicChange next = null;
+            for (var to : shapes.entrySet()) {
+                var second = to.getKey();
+                if (second.measureIndex() != first.endMeasureIndex() + 1
+                        || second.positionInMeasure() > .05f
+                        || !changes.contains(second)
+                        || !HairpinContinuation.followsOnNextSystem(
+                                from.getValue(), to.getValue(), staffs, measures, width, height))
+                    continue;
+                if (next != null) {
+                    next = null;
+                    break;
+                }
+                next = second;
+            }
+            if (next == null) continue;
+            double boundary = first.endMeasureIndex() + first.endPosition();
+            double resume = next.measureIndex() + next.positionInMeasure();
+            boolean interrupted = changes.stream().anyMatch(level ->
+                    level.direction() == 0 && level.staffCount() == first.staffCount()
+                            && level.staffIndex() == first.staffIndex()
+                            && level.measureIndex() + level.positionInMeasure() > boundary
+                            && level.measureIndex() + level.positionInMeasure() <= resume);
+            if (interrupted) continue;
+            changes.set(firstIndex, new ScoreDynamicChange(
+                    first.measureIndex(), first.positionInMeasure(), first.staffIndex(),
+                    first.staffCount(), next.endMeasureIndex(), next.endPosition(),
+                    first.decibels(), first.direction(), first.sharedStaffs(),
+                    first.fixedTarget(), first.sharedTiming()));
+            changes.remove(next);
+        }
+    }
     static boolean openHairpinInterior(
             byte[] gray, int width, int left, int[] upper, int[] lower, float gap) {
         int eligible = 0, open = 0;

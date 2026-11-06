@@ -203,6 +203,7 @@ final class SixteenthRestDetector {
                 || snapped == null
                 || original.size() != snapped.size()
                 || original.size() > 64) return current;
+        var rejected = new java.util.HashSet<ScoreRestEvent>();
         List<ScoreRestEvent> rests = new ArrayList<>();
         List<RestDot> dots = new ArrayList<>();
         for (int i = 0; i < original.size(); i++) {
@@ -219,7 +220,36 @@ final class SixteenthRestDetector {
                             gray, width, height, measures, List.of(frame), notes, null, counter);
             rests.addAll(found.rests());
             dots.addAll(found.dots());
+            for (var rest : found.rests()) {
+                if (rest.kind() != ScoreRestEvent.Kind.LITERAL || rest.durationBeats() != 1) continue;
+                var region = measures.get(rest.measureIndex());
+                float y = rest.pageY() * height;
+                float ownerDistance = Math.max(frame.top() - y, y - frame.bottom()) / frame.gap();
+                for (var old : current.rests()) {
+                    if (old.measureIndex() != rest.measureIndex()
+                            || old.staffCount() != rest.staffCount()
+                            || Math.abs(old.staffIndex() - rest.staffIndex()) != 1
+                            || old.kind() != rest.kind()
+                            || old.durationBeats() != rest.durationBeats()
+                            || Math.abs(old.pageHeight() - rest.pageHeight()) * height > 1
+                            || Math.abs(old.pageY() - rest.pageY()) * height > 1
+                            || Math.abs(old.positionInMeasure() - rest.positionInMeasure())
+                                    * (region.right() - region.left()) * width > 1) continue;
+                    for (var other : original) {
+                        if (other == null || other.index() != old.staffIndex()
+                                || other.count() != old.staffCount()
+                                || other.top() / height < region.top()
+                                || other.bottom() / height > region.bottom()) continue;
+                        float distance = Math.max(other.top() - y, y - other.bottom()) / other.gap();
+                        if (ownerDistance + .65f < distance) rejected.add(old);
+                    }
+                }
+            }
         }
+        if (!rejected.isEmpty())
+            current = new Detection(
+                    current.rests().stream().filter(rest -> !rejected.contains(rest)).toList(),
+                    current.dots().stream().filter(dot -> !rejected.contains(dot.rest())).toList());
         return mergeSupportedCore(current, collected(rests, dots));
     }
 
@@ -3527,6 +3557,17 @@ final class SixteenthRestDetector {
                     if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 64);
                     for (ScoreNoteEvent note : notes) {
                         if (quarterBudget != null) FaintQuarterRestInk.charge(quarterBudget, 1, 0);
+                        if (eighth && !quarter && !half && !whole && !thirtySecond
+                                && note.measureIndex() == m
+                                && note.staffCount() == staff.count()
+                                && Math.abs(note.staffIndex() - staff.index()) == 1
+                                && note.kind() == ScoreNoteEvent.Kind.PITCHED
+                                && note.visualSize() == ScoreNoteEvent.VisualSize.FULL
+                                && note.pageY() * height >= minY
+                                && note.pageY() * height <= maxY
+                                && Math.abs((region.left() + note.positionInMeasure()
+                                        * (region.right() - region.left())) - centerX) * width
+                                        <= gap * .25f) return;
                         if (note.measureIndex() == m
                                 && note.staffIndex() == staff.index()
                                 && note.staffCount() == staff.count()) {

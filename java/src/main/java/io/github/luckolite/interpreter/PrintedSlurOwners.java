@@ -255,6 +255,24 @@ final class PrintedSlurOwners {
                         height,
                         track,
                         horizontalCellRadius);
+        if (ambiguous(start))
+            start = exteriorChordCap(start, bow.start(), bow.above(), gray, width, height, track);
+        if (ambiguous(end))
+            end = exteriorChordCap(end, bow.end(), bow.above(), gray, width, height, track);
+        float gap = track.at(bow.start().x())[1];
+        if (start.isEmpty() && bow.end().x() - bow.start().x() < gap * 3.4f) {
+            var a = compactShaftCap(bow.start(), bow.above(), true, heads, gray, width, height, track);
+            var b = compactShaftCap(bow.end(), bow.above(), false, heads, gray, width, height, track);
+            if (a != null && b != null && b.x() > a.x() + gap
+                    && a.staffIndex() == b.staffIndex() && a.staffCount() == b.staffCount()
+                    && (end.isEmpty() || end.stream().allMatch(c ->
+                            c.head().staffIndex() == b.staffIndex()
+                                    && c.head().staffCount() == b.staffCount()
+                                    && Math.abs(c.head().x() - b.x()) <= gap * .18f))) {
+                start = List.of(new Candidate(a, 0));
+                end = List.of(new Candidate(b, 0));
+            }
+        }
         if (start.isEmpty()) return new Binding(Status.NO_START_OWNER, Optional.empty());
         if (end.isEmpty() && !ambiguous(start) && start.get(0).head().grace())
             end =
@@ -411,6 +429,99 @@ final class PrintedSlurOwners {
 
     private static boolean ambiguous(List<Candidate> values) {
         return values.size() > 1 && values.get(1).distance() - values.get(0).distance() < .2;
+    }
+
+    /** A curve outside an aligned chord owns its facing outer head. */
+    private static List<Candidate> exteriorChordCap(
+            List<Candidate> values, PrintedSlurContours.Point cap, boolean above,
+            byte[] gray, int width, int height, StaffPitchTrack track) {
+        float gap = track.at(cap.x())[1];
+        var first = values.get(0).head();
+        Location outer = first;
+        for (var candidate : values) {
+            if (candidate.distance() - values.get(0).distance() >= .2) break;
+            var head = candidate.head();
+            if (head.owner() == first.owner()) continue;
+            if (head.grace() || first.grace() || head.staffIndex() != first.staffIndex()
+                    || head.staffCount() != first.staffCount()
+                    || Math.abs(head.x() - first.x()) > gap * .18f
+                    || Math.abs(head.y() - first.y()) < gap * .7f
+                    || Math.abs(head.y() - first.y()) > gap * 2.5f)
+                return values;
+            if (above ? head.y() < outer.y() : head.y() > outer.y()) outer = head;
+        }
+        double clearance = (above ? outer.y() - cap.y() : cap.y() - outer.y()) / gap;
+        if (clearance < .3 || clearance > 4
+                || !headBody(gray, width, height, outer, gap)
+                || clearance > 1.65 && !shaftSupports(cap, outer, above, gray, width, height, gap,
+                        values.stream().map(Candidate::head).toList())) return values;
+        return List.of(new Candidate(outer, values.get(0).distance()));
+    }
+
+    /** Both facing shaft tips must independently surround a compact returning bow. */
+    static Location compactShaftCap(
+            PrintedSlurContours.Point cap, boolean above, boolean first,
+            List<? extends Location> heads, byte[] gray, int width, int height,
+            StaffPitchTrack track) {
+        float gap = track.at(cap.x())[1];
+        Location owner = null;
+        PairedTremoloInk.Stem owned = null;
+        for (var head : heads) {
+            if (head.grace() || Math.abs(head.x() - cap.x()) > gap * 1.5f
+                    || !headBody(gray, width, height, head, gap)) continue;
+            float side = above ? head.y() - cap.y() : cap.y() - head.y();
+            if (side < gap * 1.5f || side > gap * 7) continue;
+            var stem = PairedTremoloInk.stem(
+                    gray, width, height, head.x(), head.y(), gap, above ? 1 : -1);
+            if (stem == null || Math.abs(stem.endY() - cap.y()) > gap * .45f) continue;
+            int inward = (first ? 1 : -1) * (cap.x() - stem.x());
+            if (inward < 0 || inward > gap) continue;
+            if (owned != null && (Math.abs(owned.x() - stem.x()) > 1
+                    || Math.abs(owned.endY() - stem.endY()) > 1
+                    || Math.abs(owner.x() - head.x()) > gap * .18f)) return null;
+            if (owner == null || (above ? head.y() < owner.y() : head.y() > owner.y())) {
+                owner = head;
+                owned = stem;
+            }
+        }
+        return owner;
+    }
+
+    static Optional<Location> displacedUnisonCap(
+            PrintedSlurContours.Point cap, boolean above, List<? extends Location> heads,
+            List<? extends Location> rivals, List<ScoreNoteEvent> notes,
+            byte[] gray, int w, int h, float gap) {
+        Location found = null;
+        int direction = above ? 1 : -1;
+        for (var head : heads) {
+            var n = notes.get(head.owner());
+            if (n.kind() != ScoreNoteEvent.Kind.PITCHED || n.visualSize() != ScoreNoteEvent.VisualSize.FULL
+                    || n.stemDirection() != direction || n.beamCount() == 0 || head.grace()) continue;
+            float x = cap.x() - direction * .6f * gap;
+            float displacement = Math.abs(x - head.x());
+            float clearance = direction * (head.y() - cap.y());
+            if (x < 0 || x >= w || displacement < gap * .35f || displacement > gap * 1.4f
+                    || clearance < gap * 2 || clearance > gap * 11) continue;
+            boolean unison = false;
+            for (int i = Math.max(0, head.owner() - 6);
+                    i < Math.min(notes.size(), head.owner() + 7); i++) {
+                var other = notes.get(i);
+                if (other.measureIndex() == n.measureIndex() && other.staffIndex() == n.staffIndex()
+                        && other.staffCount() == n.staffCount() && other.kind() == n.kind()
+                        && other.positionInMeasure() == n.positionInMeasure()
+                        && other.diatonicPitchIdentity() == n.diatonicPitchIdentity()
+                        && other.unbeamedDurationBeats() == ScoreNoteEvent.DURATION_WHOLE
+                        && other.stemDirection() == 0) unison = true;
+            }
+            if (!unison) continue;
+            var printed = new GeometryHead(head.owner(), x, head.y(), head.staffIndex(), head.staffCount());
+            if (!headBody(gray, w, h, printed, gap)
+                    || !rawShaftCapSupports(cap, printed, above, gray, w, h, gap, rivals))
+                continue;
+            if (found != null) return Optional.empty();
+            found = printed;
+        }
+        return Optional.ofNullable(found);
     }
 
     /** Reuse the unchanged endpoint rule for one observed half of a system continuation. */

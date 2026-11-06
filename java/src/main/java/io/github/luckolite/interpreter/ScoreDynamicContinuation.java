@@ -76,6 +76,69 @@ public final class ScoreDynamicContinuation {
         return false;
     }
 
+    private static final String HAIRPIN_EDGE = "printed-hairpin-edge";
+
+    static void addHairpinEdge(
+            List<ScoreExpressiveEvent> events, ScoreDynamicChange change, boolean incoming,
+            double opening, float visualX) {
+        if (!Double.isFinite(opening) || opening < .4 || opening > 2) return;
+        String source = HAIRPIN_EDGE + (incoming ? ":in" : ":out");
+        events.add(new ScoreExpressiveEvent(
+                source + ":" + identity(change),
+                change.direction() > 0 ? ScoreExpressiveEvent.Kind.CRESCENDO
+                        : ScoreExpressiveEvent.Kind.DIMINUENDO,
+                Optional.empty(), Optional.empty(), ScoreExpressiveEvent.Scope.UNRESOLVED,
+                change.staffIndex(), change.staffCount(), Optional.empty(),
+                ScoreExpressiveEvent.Strength.UNSPECIFIED, Double.toString(opening),
+                List.of(new ScoreExpressiveEvent.Evidence(
+                        source, 0, visualX, change.staffIndex(), change.staffCount(), ""))));
+    }
+
+    private static double opening(
+            ScorePageInterpretation page, ScoreDynamicChange change, boolean incoming) {
+        String source = HAIRPIN_EDGE + (incoming ? ":in" : ":out");
+        String id = source + ":" + identity(change);
+        for (var e : page.expressiveEvents()) {
+            if (!id.equals(e.eventId()) || e.scope() != ScoreExpressiveEvent.Scope.UNRESOLVED
+                    || e.staffIndex() != change.staffIndex() || e.staffCount() != change.staffCount()
+                    || e.evidence().stream().noneMatch(v -> source.equals(v.sourceId()))) continue;
+            try {
+                double aperture = Double.parseDouble(e.qualifierText());
+                if (aperture >= .4 && aperture <= 2) return aperture;
+            } catch (NumberFormatException ignored) {
+                // A missing or malformed aperture cannot prove a link.
+            }
+        }
+        return Double.NaN;
+    }
+
+    private static ScoreDynamicChange incoming(
+            ScorePageInterpretation previous, ScorePageInterpretation page, ScoreDynamicChange from) {
+        if (page.measures().isEmpty() || !topology(page, from)
+                || previous.firstMeasureNumber() > 0 && page.firstMeasureNumber() > 0
+                        && page.firstMeasureNumber()
+                                != previous.firstMeasureNumber() + previous.measures().size())
+            return null;
+        double aperture = opening(previous, from, false);
+        if (!Double.isFinite(aperture)) return null;
+        ScoreDynamicChange match = null;
+        for (var candidate : page.dynamicChanges()) {
+            if (candidate.measureIndex() != 0 || candidate.positionInMeasure() > .05f
+                    || candidate.direction() != from.direction() || !samePart(candidate, from)
+                    || candidate.fixedTarget()) continue;
+            double start = opening(page, candidate, true);
+            if (!Double.isFinite(start) || Math.abs(start - aperture) > .4) continue;
+            if (match != null) return null;
+            match = candidate;
+        }
+        if (match == null) return null;
+        for (var level : page.dynamicChanges())
+            if (level.direction() == 0 && level.staffCount() == match.staffCount()
+                    && level.staffIndex() == match.staffIndex() && !after(level, match))
+                return null;
+        return match;
+    }
+
     /** Sequential page assembly; printed movement restarts remain separate continuation scopes. */
     public static List<ScoreDynamicChange> join(List<ScorePageInterpretation> pages) {
         int[] offsets = new int[pages.size()];
@@ -91,11 +154,32 @@ public final class ScoreDynamicContinuation {
         if (offsets.length != pages.size())
             throw new IllegalArgumentException("Page offset count differs");
         var result = new ArrayList<ScoreDynamicChange>();
+        var resumed = new HashSet<ScoreDynamicChange>();
         for (int p = 0; p < pages.size(); p++) {
             var page = pages.get(p);
             if (offsets[p] < 0) throw new IllegalArgumentException("Negative page offset");
             for (var change : page.dynamicChanges()) {
                 var global = change.offset(offsets[p]);
+                if (resumed.remove(global)) continue;
+                if (change.direction() != 0 && !change.fixedTarget()
+                        && change.endMeasureIndex() == page.measures().size() - 1
+                        && change.endPosition() >= .95f && p + 1 < pages.size()
+                        && offsets[p + 1] == offsets[p] + page.measures().size()
+                        && !interruptedOnPage(change, page)) {
+                    var next = incoming(page, pages.get(p + 1), change);
+                    if (next != null) {
+                        var arrival = next.offset(offsets[p + 1]);
+                        if (resumed.add(arrival)) {
+                            result.add(new ScoreDynamicChange(
+                                    global.measureIndex(), global.positionInMeasure(),
+                                    global.staffIndex(), global.staffCount(),
+                                    arrival.endMeasureIndex(), arrival.endPosition(),
+                                    global.decibels(), global.direction(), global.sharedStaffs(),
+                                    global.fixedTarget(), global.sharedTiming()));
+                            continue;
+                        }
+                    }
+                }
                 if (change.direction() != 0
                         && !change.fixedTarget()
                         && change.endMeasureIndex() == page.measures().size() - 1
@@ -247,8 +331,9 @@ public final class ScoreDynamicContinuation {
             return ScoreExpressionDetector.offsetEvidence(event, offset, page);
         if (ScoreFermataDetector.owns(event))
             return ScoreFermataDetector.offsetEvidence(event, offset, page);
-        if (!event.eventId().startsWith("lexical-dynamic:")
-                || event.evidence().stream().noneMatch(e -> e.sourceId().equals(WORD_SOURCE)))
+        if (!event.eventId().startsWith(HAIRPIN_EDGE)
+                && (!event.eventId().startsWith("lexical-dynamic:")
+                || event.evidence().stream().noneMatch(e -> e.sourceId().equals(WORD_SOURCE))))
             return event.offset(offset);
         return new ScoreExpressiveEvent(
                 "page:" + page + "/" + event.eventId(),

@@ -86,7 +86,7 @@ final class PrintedSlurRecognition {
                             width,
                             height,
                             prepared.frames(),
-                            score.notes());
+                            score.notes(), score.measures());
             var supplemented =
                     WholeStaffSlurRules.append(
                             physicalPage,
@@ -103,12 +103,12 @@ final class PrintedSlurRecognition {
                             true);
             captured = supplemented.captured();
             var result =
-                    captured.limitReached() || captured.source().candidates().isEmpty()
+                    captured.limitReached() || captured.source().candidates().isEmpty() && captured.pageEdges().isEmpty()
                             ? score
                             : score.withSlurSource(captured.source());
             return Optional.of(
                     new Result(
-                                    result,
+                                    withPageEdges(result, captured.pageEdges(), physicalPage),
                                     captured.statuses(),
                                     supplemented.unboundOwners(),
                                     supplemented.unprovedStaffs(),
@@ -188,7 +188,7 @@ final class PrintedSlurRecognition {
                         height,
                         prepared.frames(),
                         ties,
-                        score.notes());
+                        score.notes(), score.measures());
         // The bounded scanner discards all partial spans if its admission/run cap is reached.
         if (captured.limitReached())
             return new Result(
@@ -216,7 +216,7 @@ final class PrintedSlurRecognition {
         var result = recoverDynamicContact(score, captured.source(), physicalPage, gray,
                 width, height, prepared.frames());
         return new Result(
-                        result,
+                        withPageEdges(result, captured.pageEdges(), physicalPage),
                         captured.statuses(),
                         supplemented.unboundOwners(),
                         supplemented.unprovedStaffs(),
@@ -227,6 +227,20 @@ final class PrintedSlurRecognition {
                                 score, captured, gray, width, height, physicalPage));
     }
 
+    private static ScorePageInterpretation withPageEdges(
+            ScorePageInterpretation score, List<ScoreExpressiveEvent> edges, int page) {
+        if (edges.isEmpty()) return score;
+        var source = score.slurSource();
+        if (source.noteOrigins().stream().allMatch(Optional::isEmpty)) {
+            var origins = new ArrayList<Optional<ScoreSlurPages.Anchor>>();
+            for (int i = 0; i < score.notes().size(); i++)
+                origins.add(Optional.of(new ScoreSlurPages.Anchor(page, i)));
+            score = score.withSlurSource(new ScoreSlurSource(source.spans(), origins, source.candidates()));
+        }
+        var events = new ArrayList<>(score.expressiveEvents());
+        events.addAll(edges);
+        return score.withExpressiveEvents(events);
+    }
     private static ScorePageInterpretation recoverDynamicContact(
             ScorePageInterpretation score, ScoreSlurSource source, int page, byte[] gray,
             int width, int height, List<PrintedSlurPageCapture.Frame<PrintedSlurOwners.Head>> frames) {

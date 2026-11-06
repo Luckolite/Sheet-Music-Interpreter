@@ -122,7 +122,36 @@ final class HairpinContinuation {
         return List.copyOf(links);
     }
 
-    private static double leftEdge(
+    static boolean matchingOpenEnds(
+            OpenHairpinPairs.Shape outgoing, OpenHairpinPairs.Shape incoming) {
+        var first = outgoing.staff();
+        var second = incoming.staff();
+        double end = outgoing.last() / first.gap();
+        double start = incoming.first() / second.gap();
+        return outgoing.direction() == incoming.direction()
+                && first.index() == second.index()
+                && first.count() == second.count()
+                && end >= .4 && start >= .4 && Math.abs(end - start) <= .4;
+    }
+
+    static boolean followsOnNextSystem(
+            OpenHairpinPairs.Shape outgoing, OpenHairpinPairs.Shape incoming,
+            List<PlayingTechniqueDetector.Staff> staffs, List<MeasureRegion> measures,
+            int width, int height) {
+        var first = outgoing.staff();
+        var second = incoming.staff();
+        if (!matchingOpenEnds(outgoing, incoming)
+                || second.top() <= first.top() + first.gap() * 4
+                || Math.abs(rightEdge(first, measures, height) * width - outgoing.right())
+                        > first.gap() * 2
+                || Math.abs(leftEdge(second, measures, height) * width - incoming.left())
+                        > second.gap() * 2) return false;
+        for (var staff : staffs)
+            if (staff.index() == first.index() && staff.count() == first.count()
+                    && staff.top() > first.top() && staff.top() < second.top()) return false;
+        return true;
+    }
+    static double leftEdge(
             PlayingTechniqueDetector.Staff staff, List<MeasureRegion> measures, int height) {
         double result = Double.POSITIVE_INFINITY, y = (staff.top() + staff.bottom()) * .5 / height;
         for (var m : measures)
@@ -130,7 +159,7 @@ final class HairpinContinuation {
         return result;
     }
 
-    private static double rightEdge(
+    static double rightEdge(
             PlayingTechniqueDetector.Staff staff, List<MeasureRegion> measures, int height) {
         double result = Double.NEGATIVE_INFINITY, y = (staff.top() + staff.bottom()) * .5 / height;
         for (var m : measures)

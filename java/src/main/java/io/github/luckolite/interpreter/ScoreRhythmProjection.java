@@ -47,7 +47,7 @@ public final class ScoreRhythmProjection {
                         new Placement(
                                 ScoreNoteTiming.beatInMeasure(note, source, beats),
                                 ScoreNoteTiming.resolvedWrittenDurationBeats(note, source, beats),
-                                ScoreNoteTiming.hasIndependentDuration(note, source)));
+                                ScoreNoteTiming.hasIndependentDuration(note, source, beats)));
             }
         }
         return Map.copyOf(result);

@@ -1030,6 +1030,14 @@ public final class ScoreNoteTiming {
 
     /** Mixed written values at one chord onset prove parallel voices on this stave.
      * Their quarter notes may overlap the other voice's eighth-note attacks too. */
+    public static boolean hasIndependentDuration(
+            ScoreNoteEvent note, List<ScoreNoteEvent> notes, float beats) {
+        return hasIndependentDuration(note, notes)
+                || note != null && notes != null && note.staffCount() == 2 && Float.isFinite(beats)
+                        && ParallelTripletClock.provesIndependentCrossedVoices(
+                                note, measureNotes(note, notes), beats);
+    }
+
     public static boolean hasIndependentDuration(ScoreNoteEvent note, List<ScoreNoteEvent> notes) {
         if (hasIndependentSustain(note)) return true;
         if (note == null || notes == null) return false;

@@ -30,7 +30,8 @@ final class PrintedSlurPageCapture {
             ScoreSlurSource source,
             Map<PrintedSlurOwners.Status, Integer> statuses,
             boolean limitReached,
-            List<Declined> declined) {
+            List<Declined> declined,
+            List<ScoreExpressiveEvent> pageEdges) {
         Result(
                 ScoreSlurSource source,
                 Map<PrintedSlurOwners.Status, Integer> statuses,
@@ -38,10 +39,15 @@ final class PrintedSlurPageCapture {
             this(source, statuses, limitReached, List.of());
         }
 
+        Result(ScoreSlurSource source, Map<PrintedSlurOwners.Status, Integer> statuses,
+                boolean limitReached, List<Declined> declined) {
+            this(source, statuses, limitReached, declined, List.of());
+        }
         Result {
             Objects.requireNonNull(source);
             statuses = Map.copyOf(statuses);
             declined = List.copyOf(declined);
+            pageEdges = List.copyOf(pageEdges);
         }
     }
 
@@ -66,7 +72,7 @@ final class PrintedSlurPageCapture {
                 frames,
                 retainedTies,
                 false,
-                null);
+                null, List.of());
     }
 
     static Result captureGeometry(
@@ -78,7 +84,7 @@ final class PrintedSlurPageCapture {
             int height,
             List<? extends Frame<? extends PrintedSlurOwners.Location>> frames) {
         return captureInternal(
-                physicalPage, noteCount, gray, labels, width, height, frames, Set.of(), true, null);
+                physicalPage, noteCount, gray, labels, width, height, frames, Set.of(), true, null, List.of());
     }
 
     static Result capture(
@@ -101,7 +107,7 @@ final class PrintedSlurPageCapture {
                 frames,
                 retainedTies,
                 false,
-                sourceNotes);
+                sourceNotes, List.of());
     }
 
     static Result captureGeometry(
@@ -123,9 +129,25 @@ final class PrintedSlurPageCapture {
                 frames,
                 Set.of(),
                 true,
-                sourceNotes);
+                sourceNotes, List.of());
     }
 
+    static Result capture(
+            int page, int count, byte[] gray, byte[] labels, int width, int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            Set<PrintedSlurOwners.Tie> ties, List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures) {
+        return captureInternal(page, count, gray, labels, width, height, frames,
+                ties, false, notes, measures);
+    }
+
+    static Result captureGeometry(
+            int page, int count, byte[] gray, byte[] labels, int width, int height,
+            List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
+            List<ScoreNoteEvent> notes, List<MeasureRegion> measures) {
+        return captureInternal(page, count, gray, labels, width, height, frames,
+                Set.of(), true, notes, measures);
+    }
     private static Result captureInternal(
             int physicalPage,
             int noteCount,
@@ -136,7 +158,7 @@ final class PrintedSlurPageCapture {
             List<? extends Frame<? extends PrintedSlurOwners.Location>> frames,
             Set<PrintedSlurOwners.Tie> retainedTies,
             boolean geometryOnly,
-            List<ScoreNoteEvent> sourceNotes) {
+            List<ScoreNoteEvent> sourceNotes, List<MeasureRegion> measures) {
         if (physicalPage < 0
                 || noteCount < 0
                 || noteCount > ScoreSlurSource.MAX_NOTES
@@ -270,7 +292,8 @@ final class PrintedSlurPageCapture {
                         continue;
                     statuses.merge(bound.status(), 1, Integer::sum);
                     if (retainDeclined
-                            && (bound.status() == PrintedSlurOwners.Status.NO_START_OWNER
+                            && (bound.status() == PrintedSlurOwners.Status.AMBIGUOUS_START
+                                    || bound.status() == PrintedSlurOwners.Status.NO_START_OWNER
                                     || bound.status() == PrintedSlurOwners.Status.NO_END_OWNER)) {
                         if (declined.size() == 4096) {
                             declined.clear();
@@ -299,7 +322,8 @@ final class PrintedSlurPageCapture {
                     continue;
                 statuses.merge(owned.status(), 1, Integer::sum);
                 if (retainDeclined
-                        && (owned.status() == PrintedSlurOwners.Status.NO_START_OWNER
+                        && (owned.status() == PrintedSlurOwners.Status.AMBIGUOUS_START
+                                || owned.status() == PrintedSlurOwners.Status.NO_START_OWNER
                                 || owned.status() == PrintedSlurOwners.Status.NO_END_OWNER)) {
                     if (declined.size() == 4096) {
                         declined.clear();
@@ -333,10 +357,12 @@ final class PrintedSlurPageCapture {
                 }
             }
         }
+        var pageEdges = new ArrayList<ScoreExpressiveEvent>();
         if (admitJoins) {
             var joined =
                     PrintedSystemSlurJoins.join(
-                            physicalPage, pieces, frames, sourceNotes, gray, width, height);
+                            physicalPage, pieces, frames, sourceNotes, gray, width, height,
+                            8_000_000L, pageEdges, measures);
             candidates.addAll(joined);
             if (!joined.isEmpty())
                 statuses.merge(
@@ -437,7 +463,7 @@ final class PrintedSlurPageCapture {
                         List.of(new ScoreSlurPages.Page(physicalPage, noteCount))),
                 statuses,
                 false,
-                declined);
+                declined, pageEdges);
     }
 
     private static void addCompactStemBows(

@@ -1827,6 +1827,9 @@ final class OmrScoreInterpreter {
             if (!unpitched && beamCount == 2
                     && oneBeamOnStaffRule(beamLabels, gray, width, height, head, rhythmStaff, heads))
                 beamCount = 1;
+            if (!unpitched && beamCount == 0
+                    && longDownstemSingleBeam(gray, width, height, head, staff, staffs, heads))
+                beamCount = 1;
             int[] tremolo = tremoloStrokeCounts(gray, width, height, head, rhythmStaff, heads);
             beamCount = Math.max(0, beamCount - tremolo[1]);
             if (tremolo[0] > 0)
@@ -3101,6 +3104,30 @@ final class OmrScoreInterpreter {
         // Preserve the early legacy pass and finish this proof before appending extra voices.
         voicedNotes =
                 CrossStaffBeamDetector.markOpposed(voicedNotes, beamHeads, gray, width, height);
+        // A staff's opening rest does not delay an already moving voice that crosses into it.
+        for (int i = 1; i < voicedNotes.size(); i++) {
+            ScoreNoteEvent incoming = voicedNotes.get(i);
+            ScoreNoteEvent previous = voicedNotes.get(i - 1);
+            if (!incoming.crossStaffBeam() || !previous.crossStaffBeam()
+                    || incoming.leadingRestBeats() <= 0
+                    || incoming.measureIndex() != previous.measureIndex()
+                    || incoming.staffIndex() == previous.staffIndex()
+                    || incoming.stemDirection() == 0
+                    || incoming.stemDirection() != previous.stemDirection()
+                    || incoming.positionInMeasure() <= previous.positionInMeasure()) continue;
+            boolean restBeforeBridge = rests.stream().anyMatch(rest ->
+                    rest.measureIndex() == incoming.measureIndex()
+                            && rest.staffIndex() == incoming.staffIndex()
+                            && rest.staffCount() == incoming.staffCount()
+                            && rest.positionInMeasure() < previous.positionInMeasure()
+                            && Math.abs(rest.durationBeats() - incoming.leadingRestBeats()) < .001);
+            if (!restBeforeBridge) continue;
+            var a = beamHeads.get(i - 1);
+            var b = beamHeads.get(i);
+            if (CrossStaffBeamDetector.connected(gray, width, height, a.x(), a.y(),
+                    b.x(), b.y(), (a.gap() + b.gap()) / 2))
+                voicedNotes.set(i, incoming.withLeadingRest(0));
+        }
         var clockFinalHeads = new ArrayList<Component>();
         for (var printed : joined) clockFinalHeads.add(printed.head);
         // Append extra voices after the original heads, retaining all original source indices.
@@ -6549,6 +6576,22 @@ final class OmrScoreInterpreter {
                                 glyph.maxX,
                                 clefReference.top,
                                 clefReference.gap)) clef = ScoreNoteEvent.CLEF_TREBLE_OTTAVA;
+                // A reduced in-row G clef can lose its upper tip at the staff line in the
+                // label plane. Require a complete cue-sized body and the raw printed 8.
+                if (clef == ScoreNoteEvent.CLEF_UNKNOWN) {
+                    Staff printed = headerPrintedFrame(staff, glyph.centerX);
+                    float localGap = printed.gap;
+                    float bodyHeight = glyph.maxY - glyph.minY + 1;
+                    float bodyWidth = glyph.maxX - glyph.minX + 1;
+                    if (Math.abs(glyph.minY - printed.top) <= localGap * .15f
+                            && glyph.maxY >= printed.bottom + localGap * .6f
+                            && bodyHeight >= localGap * 4.7f && bodyHeight <= localGap * 6.4f
+                            && bodyWidth >= localGap * 1.65f && bodyWidth <= localGap * 2.65f
+                            && glyph.area >= localGap * localGap * 2.4f
+                            && OctaveClefDigit.above(gray, width, height, glyph.minX, glyph.minY,
+                                    glyph.maxX, printed.top, localGap))
+                        clef = ScoreNoteEvent.CLEF_TREBLE_OTTAVA;
+                }
                 if (clef != ScoreNoteEvent.CLEF_UNKNOWN) clefs.add(new ClefGlyph(glyph.maxX, clef));
             }
             // A staff rule may split the printed upper loop into SYMBOL while
@@ -23188,6 +23231,38 @@ final class OmrScoreInterpreter {
                 && budget.prepay(work, bytes);
     }
     /** Written beam recovery only; no head admission or performance voice is changed. */
+    /** A filled treble head may own a long stem ending on a bass-staff arpeggio beam. */
+    private static boolean longDownstemSingleBeam(
+            byte[] gray, int width, int height, Component head, Staff staff,
+            List<Staff> staffs, List<Component> heads) {
+        if (gray == null || staff.count != 2 || staff.index != 0) return false;
+        int next = staffs.indexOf(staff) + 1;
+        if (next <= 0 || next >= staffs.size()) return false;
+        Staff lower = staffs.get(next);
+        float gap = staff.pitchGap;
+        if (lower.index != 1 || lower.count != 2 || gap < 8
+                || lower.top - head.centerY <= gap * 5.5f
+                || lower.top - head.centerY >= gap * 12
+                || !printedFilledOval(gray, width, head, gap)) return false;
+        int blank = Math.max(1, Math.round(gap * .12f));
+        int[] end = attachedRawStem(gray, width, height, head, gap, blank, 170, 16);
+        if (end == null || end[2] != 1 || end[1] - head.centerY < gap * 12
+                || end[1] < lower.bottom + gap * .5f || end[1] > lower.bottom + gap * 4.5f) return false;
+        Component previous = null;
+        for (Component other : heads) {
+            float dx = head.centerX - other.centerX;
+            if (dx < gap * 2 || dx > gap * 6
+                    || Math.abs(other.centerY - head.centerY) > gap * 2.5f) continue;
+            if (previous == null || other.centerX > previous.centerX) previous = other;
+        }
+        if (previous == null || !printedFilledOval(gray, width, previous, gap)) return false;
+        int[] start = attachedRawStem(gray, width, height, previous, gap, blank, 170, 16);
+        return start != null && start[2] == 1
+                && start[1] >= lower.bottom + gap * .5f && start[1] <= lower.bottom + gap * 4.5f
+                && StemOwnedBeamTip.matches(gray, width, height, start, end,
+                        end[0], end[1], 1, 1, 1, gap);
+    }
+
     private static int transportedPairedBeamCount(
             byte[] gray,
             int width,
@@ -28913,6 +28988,10 @@ final class OmrScoreInterpreter {
                 int startOwner = systemTieInkOwner(labels, gray, width, height, start, otherStart, true);
                 if (startOwner == 0 || startOwner != systemTieInkOwner(
                         labels, gray, width, height, end, otherEnd, false)) continue;
+                // A chord can have a separate outer curve for each pitch on both systems.
+                if (hasOpposedSystemTieInk(labels, gray, width, height, start, otherStart, true)
+                        && hasOpposedSystemTieInk(labels, gray, width, height, end, otherEnd, false))
+                    continue;
                 int redundant = startOwner < 0 ? j : i;
                 result.set(redundant, source.get(redundant));
                 predecessors[redundant] = -1;
@@ -28921,6 +29000,19 @@ final class OmrScoreInterpreter {
         }
     }
 
+    private static boolean hasOpposedSystemTieInk(
+            byte[] labels, byte[] gray, int width, int height,
+            DetectedNote first, DetectedNote second, boolean outgoing) {
+        var upper = first.head.centerY < second.head.centerY ? first : second;
+        var lower = upper == first ? second : first;
+        var above = new SystemTieInk();
+        var below = new SystemTieInk();
+        return hasSystemEndTieArc(labels, gray, width, height, upper, outgoing, -1, above)
+                && hasSystemEndTieArc(labels, gray, width, height, lower, outgoing, 1, below)
+                && above.nearY(outgoing) < upper.head.centerY
+                && below.nearY(outgoing) > lower.head.centerY
+                && !above.overlaps(below);
+    }
     private static int systemTieInkOwner(
             byte[] labels, byte[] gray, int width, int height,
             DetectedNote first, DetectedNote second, boolean outgoing) {
@@ -29308,8 +29400,8 @@ final class OmrScoreInterpreter {
                 || before.event.followingRestBeats() > 0
                 || after.event.leadingRestBeats() > 0) return false;
         int directions =
-                tieVoiceStemDirections(gray, width, height, before.head, before.staffGap)
-                        & tieVoiceStemDirections(gray, width, height, after.head, after.staffGap);
+                tieVoiceEndpointDirections(notes, previousIndex, gray, width, height)
+                        & tieVoiceEndpointDirections(notes, currentIndex, gray, width, height);
         if (directions == 0) return false;
         boolean opposing = false;
         for (int i = previousIndex + 1; i < currentIndex; i++) {
@@ -29330,30 +29422,74 @@ final class OmrScoreInterpreter {
         return opposing;
     }
 
+    private static int tieVoiceEndpointDirections(
+            List<DetectedNote> notes, int index, byte[] gray, int width, int height) {
+        var note = notes.get(index);
+        var head = note.head;
+        float gap = note.staffGap;
+        int directions = tieVoiceStemDirections(gray, width, height, head, gap);
+        for (int i = Math.max(0, index - 7); i < Math.min(notes.size(), index + 8); i++) {
+            if (i == index) continue;
+            var sibling = notes.get(i);
+            var other = sibling.head;
+            float separation = head.centerY - other.centerY;
+            if (Math.abs(separation) < gap * .6f || Math.abs(separation) > gap * 3
+                    || sibling.event.staffIndex() != note.event.staffIndex()
+                    || sibling.event.staffCount() != note.event.staffCount()
+                    || sibling.event.kind() != ScoreNoteEvent.Kind.PITCHED
+                    || sibling.event.beamCount() != note.event.beamCount()
+                    || sibling.event.unbeamedDurationBeats() != note.event.unbeamedDurationBeats()
+                    || sibling.event.augmentationDots() != note.event.augmentationDots()
+                    || !samePrintedOnset(note, sibling)) continue;
+            int direction = separation > 0 ? 1 : -1;
+            int bit = direction < 0 ? 1 : 2;
+            if ((directions & bit) != 0) continue;
+            int a = direction < 0 ? head.maxX : head.minX;
+            int b = direction < 0 ? other.maxX : other.minX;
+            int margin = Math.round(gap * .25f);
+            int start = Math.round(other.centerY);
+            int through = Math.round(Math.abs(separation) + gap * .55f);
+            for (int x = Math.max(1, Math.max(a, b) - margin);
+                    x <= Math.min(width - 2, Math.min(a, b) + margin); x++) {
+                int distance = tieVoiceShaftDistance(gray, width, height, x, start, direction, gap);
+                if (distance >= Math.max(through, Math.round(gap * 2.3f))) {
+                    directions |= bit;
+                    break;
+                }
+            }
+        }
+        return directions;
+    }
+
     /** A shared chord column can have two shafts; the longest one does not own both voices. */
     private static int tieVoiceStemDirections(
             byte[] gray, int width, int height, Component head, float gap) {
-        int directions = 0, maxBlank = Math.max(1, Math.round(gap * .16f));
+        int directions = 0;
         for (int direction : new int[] {-1, 1}) {
             int edge = direction < 0 ? head.maxX : head.minX;
             for (int x = Math.max(1, edge - Math.round(gap * .3f));
                     x <= Math.min(width - 2, edge + Math.round(gap * .3f));
                     x++) {
-                int blank = 0, end = Math.round(head.centerY);
-                for (int d = 0; d < Math.round(gap * 4); d++) {
-                    int y = Math.round(head.centerY) + direction * d;
-                    if (y < 0 || y >= height) break;
-                    if ((gray[y * width + x] & 255) < 170) {
-                        end = y;
-                        blank = 0;
-                    } else if (++blank > maxBlank) break;
-                }
-                // Shaft lengths are measured in integer pixels, including their endpoint.
-                if (Math.abs(end - Math.round(head.centerY)) >= Math.round(gap * 2.3f))
+                if (tieVoiceShaftDistance(gray, width, height, x, Math.round(head.centerY),
+                                direction, gap) >= Math.round(gap * 2.3f))
                     directions |= direction < 0 ? 1 : 2;
             }
         }
         return directions;
+    }
+
+    private static int tieVoiceShaftDistance(
+            byte[] gray, int width, int height, int x, int start, int direction, float gap) {
+        int blank = 0, end = 0, maxBlank = Math.max(1, Math.round(gap * .16f));
+        for (int d = 0; d < Math.round(gap * 4); d++) {
+            int y = start + direction * d;
+            if (y < 0 || y >= height) break;
+            if ((gray[y * width + x] & 255) < 170) {
+                end = d;
+                blank = 0;
+            } else if (++blank > maxBlank) break;
+        }
+        return end;
     }
 
     private static boolean samePrintedOnset(DetectedNote first, DetectedNote second) {
@@ -29633,6 +29769,15 @@ final class OmrScoreInterpreter {
                             labels, gray, width, height,
                             Math.round(previous.head.centerX), Math.round(current.head.centerX),
                             centerY - gap * .125f, gap, true, frame)) return true;
+            // A held destination can put the returning curve above the normal shaft window.
+            // Keep the two head rims as endpoints and require an adjacent bar and level pitch.
+            if (previous.event.beamCount() > 0 && ScoreNoteTiming.hasIndependentSustain(current.event)
+                    && current.event.measureIndex() == previous.event.measureIndex() + 1
+                    && Math.abs(current.head.centerY - previous.head.centerY) <= gap * .12f
+                    && current.head.centerX - previous.head.centerX <= gap * 7
+                    && right - left >= gap * 3
+                    && hasPrintedTieArc(labels, gray, width, height, left, right,
+                            centerY - gap * .5f, gap, true, null)) return true;
             // Compact returning shoulders can end slightly inside the head bounds.
             // Keep the full dark-curve proof and a staff-scaled overlap limit.
             if (current.head.centerX - previous.head.centerX <= gap * 4) {

@@ -68,6 +68,14 @@ final class PrintedSystemSlurJoins {
             int w,
             int h,
             long allowance) {
+        return join(page, observed, frames, notes, gray, w, h, allowance, null, List.of());
+    }
+
+    static List<ScoreSlurPages.Span> join(
+            int page, List<Observed> observed,
+            List<? extends PrintedSlurPageCapture.Frame<? extends PrintedSlurOwners.Location>> frames,
+            List<ScoreNoteEvent> notes, byte[] gray, int w, int h, long allowance,
+            List<ScoreExpressiveEvent> pageEdges, List<MeasureRegion> measures) {
         Objects.requireNonNull(observed);
         Objects.requireNonNull(frames);
         Objects.requireNonNull(notes);
@@ -142,6 +150,16 @@ final class PrintedSystemSlurJoins {
             var b =
                     PrintedSlurOwners.capOwner(
                             bow.end(), bow.above(), false, f.heads(), gray, w, h, f.track());
+            if (a.isEmpty() && b.isEmpty() && bow.end().x() - bow.start().x() >= fi.gap() * 5
+                    && (bow.end().x() >= fi.lastX() + fi.gap() * .5f
+                            || bow.start().x() <= fi.firstX() - fi.gap() * .5f)) {
+                if (!budget.take((long) Math.ceil(f.heads().size()
+                        * (96 + fi.gap() * fi.gap() * 60)))) continue;
+                if (a.isEmpty() && b.isEmpty() && bow.end().x() >= fi.lastX() + fi.gap() * .5f)
+                    a = returningOwner(bow.start(), bow.above(), true, fi, notes, gray, w, h);
+                if (a.isEmpty() && b.isEmpty() && bow.start().x() <= fi.firstX() - fi.gap() * .5f)
+                    b = returningOwner(bow.end(), bow.above(), false, fi, notes, gray, w, h);
+            }
             if (a.isPresent() == b.isPresent()) continue;
             boolean outgoing = a.isPresent();
             var owner = outgoing ? a.orElseThrow() : b.orElseThrow();
@@ -175,7 +193,7 @@ final class PrintedSystemSlurJoins {
                                 || fa.lastMeasure() + 1 != fb.firstMeasure()
                                 || fb.row() - fa.row() < Math.max(fa.gap(), fb.gap()) * 4
                                 || a.observed().bow().above() != b.observed().bow().above()
-                                || Math.abs(a.phase() - b.phase()) > .65f) continue;
+                                || !matchingPhase(a, b, fa.gap(), fb.gap())) continue;
                         if (!budget.take(
                                         (fa.frame().heads().size()
                                                         + (long) fb.frame().heads().size())
@@ -187,13 +205,25 @@ final class PrintedSystemSlurJoins {
                         if (!edges.containsKey(fb.frame()))
                             edges.put(fb.frame(), boundaries(fb, gray, w, h, budget));
                         int[] ea = edges.get(fa.frame()), eb = edges.get(fb.frame());
-                        if (ea == null || eb == null || ea[1] < 0 || eb[0] < 0) continue;
+                        if (ea == null || eb == null) continue;
                         var end = a.observed().bow().end();
                         var start = b.observed().bow().start();
-                        if (end.x() > ea[1]
-                                || ea[1] - end.x() > fa.gap() * 2
-                                || start.x() < eb[0]
-                                || start.x() - eb[0] > fb.gap() * 12) continue;
+                        if (ea[1] >= 0) {
+                            if (end.x() > ea[1] || ea[1] - end.x() > fa.gap() * 2) continue;
+                        } else {
+                            double closing = printedMeasureEdge(fa, info.values(), notes, measures, w, h, true);
+                            if (!longFragment(a, fa.gap()) || !longFragment(b, fb.gap())
+                                    || !Double.isFinite(closing)
+                                    || Math.abs(end.x() - closing) > fa.gap() * 2) continue;
+                        }
+                        if (eb[0] >= 0) {
+                            if (start.x() < eb[0] || start.x() - eb[0] > fb.gap() * 12) continue;
+                        } else {
+                            double opening = printedMeasureEdge(fb, info.values(), notes, measures, w, h, false);
+                            if (!longFragment(a, fa.gap()) || !longFragment(b, fb.gap())
+                                    || !Double.isFinite(opening)
+                                    || Math.abs(start.x() - opening) > fb.gap() * 2) continue;
+                        }
                         pairs.add(new Pair(a, b));
                     }
         // Every competing half and pairing must have been examined before uniqueness
@@ -226,9 +256,110 @@ final class PrintedSystemSlurJoins {
                                     evidence(page, a.observed().bow(), w, h),
                                     evidence(page, b.observed().bow(), w, h))));
         }
+        if (pageEdges != null && !notes.isEmpty()) {
+            int lastMeasure = notes.stream().mapToInt(ScoreNoteEvent::measureIndex).max().orElse(-1);
+            var retained = new LinkedHashMap<String, ScoreExpressiveEvent>();
+            for (var half : halves) {
+                var fi = info.get(half.observed().frame());
+                if (!longFragment(half, fi.gap())
+                        || half.outgoing() && fi.lastMeasure() != lastMeasure
+                        || !half.outgoing() && fi.firstMeasure() != 0) continue;
+                if (!budget.take(64L + fi.frame().heads().size() * 8L)) break;
+                if (!edges.containsKey(fi.frame()))
+                    edges.put(fi.frame(), boundaries(fi, gray, w, h, budget));
+                var printed = edges.get(fi.frame());
+                var bow = half.observed().bow();
+                double edge = printed == null ? -1 : printed[half.outgoing() ? 1 : 0];
+                if (edge < 0 || !half.outgoing())
+                    edge = printedMeasureEdge(fi, info.values(), notes, measures, w, h, half.outgoing());
+                var free = half.outgoing() ? bow.end() : bow.start();
+                if (!Double.isFinite(edge) || Math.abs(free.x() - edge) > fi.gap() * 2) continue;
+                var event = PrintedPageSlurContinuation.evidence(page, half.owner().owner(),
+                        fi.staff(), fi.count(), bow.above(), half.outgoing(), half.phase(),
+                        evidence(page, bow, w, h));
+                var old = retained.putIfAbsent(event.eventId(), event);
+                if (old != null && !old.equals(event)) return List.copyOf(result);
+            }
+            if (!budget.exhausted && retained.size() <= 64) pageEdges.addAll(retained.values());
+        }
         return List.copyOf(result);
     }
 
+    private static Optional<PrintedSlurOwners.Location> returningOwner(
+            PrintedSlurContours.Point cap, boolean above, boolean first, FrameInfo info,
+            List<ScoreNoteEvent> notes, byte[] gray, int w, int h) {
+        var frame = info.frame();
+        var unison = PrintedSlurOwners.displacedUnisonCap(cap, above, frame.heads(),
+                frame.heads(), notes, gray, w, h, frame.track().at(cap.x())[1]);
+        if (unison.isPresent()) return unison;
+        return Optional.ofNullable(PrintedSlurOwners.compactShaftCap(
+                cap, above, first, frame.heads(), gray, w, h, frame.track()));
+    }
+    private static boolean longFragment(Half half, float gap) {
+        var bow = half.observed().bow();
+        return bow.end().x() - bow.start().x() >= gap * 5;
+    }
+
+    private static double printedMeasureEdge(
+            FrameInfo owner, Collection<FrameInfo> rows, List<ScoreNoteEvent> notes,
+            List<MeasureRegion> measures, int w, int h, boolean right) {
+        int index = right ? owner.lastMeasure() : owner.firstMeasure();
+        if (index >= 0 && index < measures.size()) {
+            var measure = measures.get(index);
+            float center = (owner.row() - 2 * owner.gap()) / h;
+            if (center >= measure.top() && center <= measure.bottom())
+                return (right ? measure.right() : measure.left()) * w;
+        }
+        double edge = printedMeasureEdge(owner, notes, right);
+        if (Double.isFinite(edge)) return edge;
+        for (var row : rows) {
+            if (row == owner || row.count() != owner.count()
+                    || row.firstMeasure() != owner.firstMeasure()
+                    || row.lastMeasure() != owner.lastMeasure()) continue;
+            double candidate = printedMeasureEdge(row, notes, right);
+            if (!Double.isFinite(candidate)) continue;
+            if (Double.isFinite(edge) && Math.abs(candidate - edge) > 1) return Double.NaN;
+            edge = candidate;
+        }
+        return edge;
+    }
+
+    /** Recover the opening music column from multiple anchors on a verified physical row. */
+    private static double printedMeasureEdge(FrameInfo frame, List<ScoreNoteEvent> notes, boolean right) {
+        int measure = right ? frame.lastMeasure() : frame.firstMeasure();
+        PrintedSlurOwners.Location first = null, last = null;
+        for (var head : frame.frame().heads()) {
+            if (notes.get(head.owner()).measureIndex() != measure) continue;
+            if (first == null || head.x() < first.x()) first = head;
+            if (last == null || head.x() > last.x()) last = head;
+        }
+        if (first == null || last.x() - first.x() < frame.gap() * 3) return Double.NaN;
+        double startPosition = notes.get(first.owner()).positionInMeasure();
+        double endPosition = notes.get(last.owner()).positionInMeasure();
+        if (endPosition - startPosition < .25 || startPosition > .25) return Double.NaN;
+        double width = (last.x() - first.x()) / (endPosition - startPosition);
+        double start = first.x() - startPosition * width;
+        int anchors = 0;
+        for (var head : frame.frame().heads()) {
+            var note = notes.get(head.owner());
+            if (note.measureIndex() != measure) continue;
+            if (Math.abs(head.x() - start - note.positionInMeasure() * width) > 1)
+                return Double.NaN;
+            if (head.x() > first.x() + 1 && head.x() < last.x() - 1) anchors++;
+        }
+        return anchors == 0 ? Double.NaN : start + (right ? width : 0);
+    }
+    private static boolean matchingPhase(Half a, Half b, float outgoingGap, float incomingGap) {
+        float difference = Math.abs(a.phase() - b.phase());
+        if (difference <= .65f) return true;
+        // Engravers can lift a longer slur on the next row to clear its opening notes.
+        // Short tie-shaped fragments keep the tighter phase check.
+        var outgoing = a.observed().bow();
+        var incoming = b.observed().bow();
+        return difference <= 2.2f && a.phase() * b.phase() > 0
+                && outgoing.end().x() - outgoing.start().x() >= outgoingGap * 5
+                && incoming.end().x() - incoming.start().x() >= incomingGap * 5;
+    }
     private static long capCost(Observed item, float frameGap) {
         var f = item.frame();
         long cost = 64 * 64 * 16L; // The final independently visible owner body.

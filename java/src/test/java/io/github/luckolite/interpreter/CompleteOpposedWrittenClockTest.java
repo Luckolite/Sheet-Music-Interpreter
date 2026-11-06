@@ -42,9 +42,10 @@ public class CompleteOpposedWrittenClockTest {
                         "findCompleteOpposedWrittenVoices",
                         ScoreNoteEvent.class,
                         List.class,
-                        double.class);
+                        double.class,
+                        boolean.class);
         method.setAccessible(true);
-        return method.invoke(null, notes.get(0), notes, 3d);
+        return method.invoke(null, notes.get(0), notes, 3d, false);
     }
 
     static void placements(List<ScoreNoteEvent> notes, boolean rest) {

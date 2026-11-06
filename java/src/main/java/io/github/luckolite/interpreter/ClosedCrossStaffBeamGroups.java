@@ -81,6 +81,7 @@ final class ClosedCrossStaffBeamGroups {
             var edited = new ArrayList<>(score.notes());
             for (var group : groups)
                 for (int owner : group.owners()) {
+                    if (group.source().bridges().get(0) == 1) continue;
                     var n = edited.get(owner);
                     int beams = n.beamCount();
                     float base = n.unbeamedDurationBeats();
@@ -235,6 +236,23 @@ final class ClosedCrossStaffBeamGroups {
                 float gap = pair.lower().gap();
                 var a = seed(gray, width, height, heads.get(first), gap, seedBudget);
                 var b = seed(gray, width, height, heads.get(last), gap, seedBudget);
+                boolean singleSeed = seed.bridges().stream().allMatch(mask -> mask == 1)
+                        && seed.hooks().isEmpty()
+                        && ids.stream().allMatch(owner -> notes.get(owner).beamCount() == 1);
+                if (b == null && singleSeed) {
+                    float lastX = heads.get(last).x();
+                    int next = -1;
+                    for (int i = 0; i < notes.size(); i++) {
+                        var n = notes.get(i);
+                        float x = heads.get(i).x();
+                        if (n.measureIndex() != measure || n.staffIndex() != 0
+                                || n.staffCount() != 2 || n.beamCount() != 1
+                                || n.stemDirection() != -1 || x <= lastX || x - lastX > gap * 6)
+                            continue;
+                        if (next < 0 || x < heads.get(next).x()) next = i;
+                    }
+                    if (next >= 0) b = seed(gray, width, height, heads.get(next), gap, seedBudget);
+                }
                 if (seedBudget.refused()) throw new Refusal();
                 if (a == null || b == null) continue;
                 float ax = (a.left() + a.right()) * .5f, bx = (b.left() + b.right()) * .5f;
@@ -267,6 +285,8 @@ final class ClosedCrossStaffBeamGroups {
                                     ? pair.upper()
                                     : n.staffIndex() == 1 ? pair.lower() : null;
                     if (staff == null || head.y() < systemTop || head.y() > systemBottom) continue;
+                    if (singleSeed && n.unbeamedDurationBeats() == ScoreNoteEvent.DURATION_WHOLE
+                            && coincidentVoice(notes, i, false)) continue;
                     Body body = bodies.get(i);
                     if (body == null) {
                         body = body(labels, width, height, head, work);
@@ -285,7 +305,20 @@ final class ClosedCrossStaffBeamGroups {
                                     slope,
                                     systemTop,
                                     systemBottom,
+                                    singleSeed ? pair : null,
                                     work);
+                    boolean mergedUnison = false;
+                    if (shaft == null && singleSeed && n.beamCount() == 1
+                            && n.stemDirection() == -1 && coincidentVoice(notes, i, true)
+                            && body.right() - body.left() + 1 > staff.gap() * 1.8f) {
+                        var proved = mergedUnisonShaft(gray, width, height, head, body, pair,
+                                staff.gap(), ax, a.endY(), slope, systemTop, systemBottom, work);
+                        if (proved != null) {
+                            head = proved.head();
+                            shaft = proved.shaft();
+                            mergedUnison = true;
+                        }
+                    }
                     if (shaft == null) continue;
                     // This additive repair supports only the existing quarter/eighth/16th
                     // value tuples. Contradictory retained values never acquire a clock flag.
@@ -308,7 +341,7 @@ final class ClosedCrossStaffBeamGroups {
                                     * (body.right() - body.left() + 1)
                                     * (body.bottom() - body.top() + 1));
                     if (!attach
-                            || !OmrScoreInterpreter.printedFilledComponent(
+                            || !mergedUnison && !OmrScoreInterpreter.printedFilledComponent(
                                     gray,
                                     width,
                                     height,
@@ -423,32 +456,40 @@ final class ClosedCrossStaffBeamGroups {
                 work.take(closure);
                 if (!CompleteBeamGroupInk.provesShafts(gray, width, height, stems, gap, -1))
                     continue;
-                final var actualPair = pair;
-                // Complete, centroid-bound filled head components are non-beam carriers.
-                // They cannot supply additional rails or hooks in the shaft search domain.
-                var headCarriers = new HashSet<Integer>();
-                for (var node : nodes) {
-                    work.take(node.body().pixels().size());
-                    headCarriers.addAll(node.body().pixels());
-                }
-                var geo =
-                        PrintedBeamGeometry.detect(
-                                gray,
-                                width,
-                                height,
-                                columns,
-                                (ca, cb, x, y) ->
-                                        rule(actualPair, x, y)
-                                                || headCarriers.contains(y * width + x),
-                                new PrintedBeamGeometry.Budget(Math.max(1, work.left / 16)));
-                work.take(geo.work() * 16);
-                if (geo.budgetExceeded()) throw new Refusal();
-                if (geo.groups().size() != 1 || !geo.unlinkedColumns().isEmpty()) continue;
-                var group = geo.groups().get(0);
                 var ownerOrder = nodes.stream().map(Node::owner).toList();
-                if (!group.columns().equals(ownerOrder)
-                        || group.bridges().stream().anyMatch(mask -> mask != 3)
-                        || !group.hooks().isEmpty()) continue;
+                List<Integer> bridges;
+                if (singleSeed && literalSingleRail(ownerOrder, liveBeam, notes, work)) {
+                    // The closed raw shaft proof above establishes one continuous strip.
+                    // A retained literal seed and the single-beam values corroborate the strip.
+                    bridges = Collections.nCopies(ownerOrder.size() - 1, 1);
+                } else {
+                    final var actualPair = pair;
+                    // Complete, centroid-bound filled head components are non-beam carriers.
+                    // They cannot supply additional rails or hooks in the shaft search domain.
+                    var headCarriers = new HashSet<Integer>();
+                    for (var node : nodes) {
+                        work.take(node.body().pixels().size());
+                        headCarriers.addAll(node.body().pixels());
+                    }
+                    var geo =
+                            PrintedBeamGeometry.detect(
+                                    gray,
+                                    width,
+                                    height,
+                                    columns,
+                                    (ca, cb, x, y) ->
+                                            rule(actualPair, x, y)
+                                                    || headCarriers.contains(y * width + x),
+                                    new PrintedBeamGeometry.Budget(Math.max(1, work.left / 16)));
+                    work.take(geo.work() * 16);
+                    if (geo.budgetExceeded()) throw new Refusal();
+                    if (geo.groups().size() != 1 || !geo.unlinkedColumns().isEmpty()) continue;
+                    var group = geo.groups().get(0);
+                    if (!group.columns().equals(ownerOrder)
+                            || group.bridges().stream().anyMatch(mask -> mask != 3)
+                            || !group.hooks().isEmpty()) continue;
+                    bridges = group.bridges();
+                }
                 boolean overlap = false;
                 for (var old : liveBeam.groups()) {
                     var oldIds = new HashSet<Integer>();
@@ -473,7 +514,7 @@ final class ClosedCrossStaffBeamGroups {
                         new ScoreBeamSource.Group(
                                 "closed-cross-staff:" + page + ":" + ownerOrder.get(0),
                                 sourceColumns,
-                                group.bridges(),
+                                bridges,
                                 List.of());
                 groups.add(new Group(ownerOrder, stems, pair, measure, gap, sg));
                 done.addAll(owned);
@@ -511,6 +552,78 @@ final class ClosedCrossStaffBeamGroups {
         }
     }
 
+    private static boolean coincidentVoice(
+            List<ScoreNoteEvent> notes, int owner, boolean seekWhole) {
+        var note = notes.get(owner);
+        for (int i = Math.max(0, owner - 6); i < Math.min(notes.size(), owner + 7); i++) {
+            var other = notes.get(i);
+            if (i == owner || other.measureIndex() != note.measureIndex()
+                    || other.staffIndex() != note.staffIndex()
+                    || other.staffCount() != note.staffCount() || other.kind() != note.kind()
+                    || other.positionInMeasure() != note.positionInMeasure()
+                    || other.diatonicPitchIdentity() != note.diatonicPitchIdentity()) continue;
+            if (seekWhole ? other.unbeamedDurationBeats() == ScoreNoteEvent.DURATION_WHOLE
+                            && other.stemDirection() == 0
+                    : other.beamCount() == 1 && other.stemDirection() == -1) return true;
+        }
+        return false;
+    }
+
+    private record UnisonShaft(
+            PrintedSlurOwners.Location head, PrintedBeamShafts.Shaft shaft) {}
+
+    /** A whole note and filled neighbor can be one model component at the same clock column. */
+    private static UnisonShaft mergedUnisonShaft(
+            byte[] gray, int width, int height, PrintedSlurOwners.Location head, Body union,
+            GrandStaffDynamics.Pair pair, float gap, float ax, float ay, float slope,
+            float systemTop, float systemBottom, Work work) {
+        int from = Math.max(union.left(), Math.round(head.x() - gap * 1.35f));
+        int to = Math.min(union.right(), Math.round(head.x() + gap * 1.35f));
+        UnisonShaft found = null;
+        for (int x = from; x <= to; x++) {
+            var probe = new PrintedSlurOwners.GeometryHead(
+                    head.owner(), x, head.y(), head.staffIndex(), head.staffCount());
+            var shaft = anchored(gray, width, height, probe, gap, ax, ay, slope,
+                    systemTop, systemBottom, pair, work);
+            if (shaft == null) continue;
+            float center = (shaft.left() + shaft.right()) * .5f + gap * .6f;
+            if (Math.abs(center - head.x()) < gap * .35f
+                    || Math.abs(center - head.x()) > gap * 1.35f) continue;
+            int radiusX = Math.max(2, Math.round(gap * .22f));
+            int radiusY = Math.max(2, Math.round(gap * .18f));
+            int cx = Math.round(center), cy = Math.round(head.y());
+            if (cx - radiusX < union.left() || cx + radiusX > union.right()
+                    || cy - radiusY < union.top() || cy + radiusY > union.bottom()) continue;
+            int hits = 0, cells = (2 * radiusX + 1) * (2 * radiusY + 1);
+            work.take(cells);
+            for (int dy = -radiusY; dy <= radiusY; dy++)
+                for (int dx = -radiusX; dx <= radiusX; dx++)
+                    if ((gray[(cy + dy) * width + cx + dx] & 255) < 165) hits++;
+            if (hits < cells * .9f) continue;
+            var printed = new PrintedSlurOwners.GeometryHead(
+                    head.owner(), center, head.y(), head.staffIndex(), head.staffCount());
+            if (found != null && (shaft.left() > found.shaft().right()
+                    || found.shaft().left() > shaft.right())) return null;
+            if (found == null || shaft.columns().size() > found.shaft().columns().size())
+                found = new UnisonShaft(printed, shaft);
+        }
+        return found;
+    }
+
+    private static boolean literalSingleRail(
+            List<Integer> owners, ScoreBeamSource source, List<ScoreNoteEvent> notes, Work work) {
+        var remaining = new HashSet<>(owners);
+        for (var group : source.groups()) {
+            work.take(16L + 8L * group.columns().size());
+            var members = group.columns().stream().flatMap(c -> c.members().stream())
+                    .map(ScoreBeamSource.Anchor::noteIndex).toList();
+            if (Collections.disjoint(members, owners)) continue;
+            if (!remaining.containsAll(members) || !group.hooks().isEmpty()
+                    || group.bridges().stream().anyMatch(mask -> mask != 1)) return false;
+            remaining.removeAll(members);
+        }
+        return remaining.size() < owners.size() && owners.stream().allMatch(i -> notes.get(i).beamCount() == 1);
+    }
     private static boolean rule(GrandStaffDynamics.Pair pair, int x, int y) {
         for (var s : List.of(pair.upper(), pair.lower()))
             for (int line = 0; line < 5; line++)
@@ -590,6 +703,7 @@ final class ClosedCrossStaffBeamGroups {
             float slope,
             float systemTop,
             float systemBottom,
+            GrandStaffDynamics.Pair endingRule,
             Work work) {
         int edge = Math.round(n.x() - .6f * gap),
                 first = Math.max(1, Math.round(edge - gap * .2f)),
@@ -609,6 +723,8 @@ final class ClosedCrossStaffBeamGroups {
             int misses = 0, hits = 0, total = 0, cap = start;
             for (int y = start; y < limit; y++) {
                 if ((g[y * w + x] & 255) < 165) {
+                    if (endingRule != null && misses > 0 && y > predicted
+                            && rule(endingRule, x, y)) break;
                     hits++;
                     misses = 0;
                     cap = y;

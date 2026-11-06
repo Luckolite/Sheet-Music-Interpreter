@@ -110,10 +110,10 @@ final class PrintedPhraseEndpoints {
                     double clear =
                             (observed.bow().above() ? head.y() - cap.y() : cap.y() - head.y())
                                     / gap;
-                    if (dx <= 1.1 && clear >= -.6 && clear <= 8.5) near++;
+                    if (dx <= 1.1 && clear >= -.6 && clear <= 11) near++;
                 }
                 double cells = Math.ceil(gap * .4) + 3,
-                        rows = Math.ceil(gap * 8.5) + 3,
+                        rows = Math.ceil(gap * 11) + 3,
                         body = Math.ceil(gap * 2) + 3;
                 double cost =
                         2
@@ -145,6 +145,23 @@ final class PrintedPhraseEndpoints {
                     work += (long) Math.ceil(cost);
                 }
             }
+        if (crossReady) {
+            // Charge whole-curve scans and their raw cap checks before adding any new evidence.
+            for (var group : closed.groups()) {
+                if (group.source().bridges().get(0) != 1) continue;
+                double gap = group.gap();
+                var start = group.stems().get(0);
+                var end = group.stems().get(group.stems().size() - 1);
+                double scan = (end.x() - start.x() + 1d) * (16 + Math.ceil(gap * 5));
+                double cap = (Math.ceil(gap * .4) + 3)
+                        * (Math.abs(start.headY() - start.endY())
+                                + Math.abs(end.headY() - end.endY()) + 2 * gap + 6)
+                        * (heads.size() + 1d);
+                double cost = (scan + cap) * (declines + 1);
+                if (!Double.isFinite(cost) || cost > MAX_WORK - work) return score;
+                work += (long) Math.ceil(cost);
+            }
+        }
         var ids = new HashSet<String>();
         var evidence = new HashSet<List<ScoreSlurSpan.ArcEvidence>>();
         for (var arc : score.slurSource().spans()) {
@@ -158,7 +175,8 @@ final class PrintedPhraseEndpoints {
         var additions = new ArrayList<ScoreSlurPages.Span>();
         var beamVeto = new ObservedStemBeam(score.notes(), gray, w, h);
         for (var observed : pending.declined()) {
-            var arc = terminal(observed, page, score, liveSource, gray, w, h, beamVeto);
+            var arc = unisonStart(observed, page, score, heads, staffs, gray, w, h);
+            if (arc.isEmpty()) arc = terminal(observed, page, score, liveSource, gray, w, h, beamVeto);
             if (arc.isEmpty()
                     && crossReady
                     && observed.status() == PrintedSlurOwners.Status.NO_END_OWNER
@@ -184,6 +202,26 @@ final class PrintedPhraseEndpoints {
             if (ids.add(arc.get().id()) && evidence.add(arc.get().evidence()))
                 additions.add(arc.get());
         }
+        if (crossReady) {
+            for (var group : closed.groups()) {
+                if (group.source().bridges().get(0) != 1) continue;
+                int start = group.owners().get(0);
+                int end = group.owners().get(group.owners().size() - 1);
+                if (sameSpan(score.slurSource().spans(), start, end)
+                        || sameSpan(score.slurSource().candidates(), start, end)
+                        || sameSpan(additions, start, end)) continue;
+                StaffPitchTrack track = null;
+                for (var observed : pending.declined())
+                    if (observed.frame().heads().stream().anyMatch(head -> head.owner() == start)) {
+                        track = observed.frame().track();
+                        break;
+                    }
+                var recovered = CrossStaffPhraseEndpointInk.recoverClosed(group, page, gray, w, h,
+                        heads, track);
+                if (recovered.isPresent() && ids.add(recovered.get().id())
+                        && evidence.add(recovered.get().evidence())) additions.add(recovered.get());
+            }
+        }
         if (additions.isEmpty()) return score;
         var candidates = new ArrayList<>(score.slurSource().candidates());
         candidates.addAll(additions);
@@ -200,6 +238,61 @@ final class PrintedPhraseEndpoints {
         return result.withClockContextSource(score.clockContextSource());
     }
 
+    /** Separate the stemmed attack from a coincident stemless unison using its exposed shaft. */
+    private static Optional<ScoreSlurPages.Span> unisonStart(
+            PrintedSlurPageCapture.Declined observed, int page, ScorePageInterpretation score,
+            List<? extends PrintedSlurOwners.Location> heads,
+            List<PlayingTechniqueDetector.Staff> staffs, byte[] gray, int w, int h) {
+        if (observed.status() != PrintedSlurOwners.Status.AMBIGUOUS_START
+                && observed.status() != PrintedSlurOwners.Status.NO_START_OWNER)
+            return Optional.empty();
+        var bow = observed.bow();
+        var track = observed.frame().track();
+        var end = PrintedSlurOwners.capOwner(bow.end(), bow.above(), false,
+                observed.frame().heads(), gray, w, h, track);
+        if (end.isEmpty()) return Optional.empty();
+        var b = end.get();
+        var notes = score.notes();
+        var last = notes.get(b.owner());
+        var cap = bow.start();
+        float gap = track.at(cap.x())[1];
+        var possible = PrintedSlurOwners.displacedUnisonCap(cap, bow.above(), heads, heads,
+                notes, gray, w, h, gap);
+        if (possible.isEmpty()) return Optional.empty();
+        var start = possible.get();
+        var n = notes.get(start.owner());
+        if (start.x() >= b.x() || start.staffCount() != b.staffCount()
+                || n.measureIndex() > last.measureIndex()
+                || last.measureIndex() - n.measureIndex() > 2) return Optional.empty();
+        if (start.staffIndex() != b.staffIndex()) {
+            if (!bow.above() || start.staffIndex() != 1 || b.staffIndex() != 0
+                    || b.staffCount() != 2) return Optional.empty();
+            var bar = score.measures().get(n.measureIndex());
+            var lastBar = score.measures().get(last.measureIndex());
+            if (Math.abs(bar.top() - lastBar.top()) * h > gap
+                    || Math.abs(bar.bottom() - lastBar.bottom()) * h > gap)
+                return Optional.empty();
+            boolean braced = false;
+            for (var pair : GrandStaffDynamics.bracedPairs(staffs, score.measures(), gray, w, h))
+                if (start.y() >= pair.lower().top() - gap * 3
+                        && start.y() <= pair.lower().bottom() + gap * 3
+                        && Math.abs(track.at(b.x())[0] - pair.upper().bottom()) <= gap)
+                    braced = true;
+            if (!braced) return Optional.empty();
+        }
+        return Optional.of(new ScoreSlurPages.Span(observed.id(),
+                new ScoreSlurPages.Anchor(page, start.owner()),
+                new ScoreSlurPages.Anchor(page, b.owner()),
+                bow.above() ? ScoreSlurSpan.Placement.ABOVE : ScoreSlurSpan.Placement.BELOW,
+                ScoreSlurSpan.LineType.SOLID, List.of(new ScoreSlurSpan.ArcEvidence(page,
+                        cap.x() / (float) w, cap.y() / h,
+                        bow.end().x() / (float) w, bow.end().y() / h))));
+    }
+
+    private static boolean sameSpan(List<ScoreSlurPages.Span> spans, int start, int end) {
+        return spans.stream().anyMatch(arc -> arc.start().noteIndex() == start
+                && arc.end().noteIndex() == end);
+    }
     static Optional<ScoreSlurPages.Span> terminal(
             PrintedSlurPageCapture.Declined observed,
             int page,
@@ -266,9 +359,9 @@ final class PrintedPhraseEndpoints {
                         List.of(
                                 new ScoreSlurSpan.ArcEvidence(
                                         page,
-                                        bow.start().x() / w,
+                                        bow.start().x() / (float) w,
                                         bow.start().y() / h,
-                                        bow.end().x() / w,
+                                        bow.end().x() / (float) w,
                                         bow.end().y() / h)));
         if (beamVeto.owns(bow, span, frame.heads(), frame.track()) || beamVeto.refused())
             return Optional.empty();
@@ -353,7 +446,7 @@ final class PrintedPhraseEndpoints {
                     hi = start ? inner : region.right() * width;
             if (!(lo <= cap.x() && cap.x() <= hi)) continue;
             boolean outward = start ? cap.x() <= min : cap.x() >= max;
-            if (!outward && end.size() < 2) continue;
+
             float[] local = frame.track().at(cap.x());
             float center = local[0] - 2 * local[1];
             boolean overlap = false;
@@ -387,9 +480,13 @@ final class PrintedPhraseEndpoints {
             if (chosen == null || sameOuter) continue;
             float gap = frame.track().at(cap.x())[1];
             double clear = (above ? chosen.y() - cap.y() : cap.y() - chosen.y()) / gap;
-            if (clear < -.6 || clear > 8.5) continue;
+            boolean rawShaft = !outward && end.size() == 1 && clear <= 11
+                    && PrintedSlurOwners.rawShaftCapSupports(
+                            cap, chosen, above, gray, width, height, gap, frame.heads());
+            if (clear < -.6 || clear > 8.5 && !rawShaft
+                    || !outward && end.size() < 2 && !rawShaft) continue;
             matches.put(chosen.owner(), chosen);
-            if (!outward) needsHeadEdge.add(chosen.owner());
+            if (!outward && !rawShaft) needsHeadEdge.add(chosen.owner());
         }
         if (matches.size() != 1) return Optional.empty();
         var chosen = matches.values().iterator().next();

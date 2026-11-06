@@ -6,7 +6,8 @@ import java.util.*;
 
 /** Straight horizontal cores propose pairs; unmodified source pixels must prove both arms. */
 final class OpenHairpinPairs {
-    record Shape(PlayingTechniqueDetector.Staff staff, int left, int right, int direction) {}
+    record Shape(PlayingTechniqueDetector.Staff staff, int left, int right, int direction,
+            double first, double last) {}
 
     record Core(int left, int right, int[] upper, int[] lower) {}
 
@@ -130,7 +131,11 @@ final class OpenHairpinPairs {
                         }
                     }
                     if (both < len * .95 || eligible < len * .25) continue;
-                    boolean apertureRecovered = clear < eligible * .9;
+                    // The sample count is discrete. A completely traced closing pair can
+                    // fall one column below the fractional threshold at its narrow end.
+                    boolean roundedClosingAperture = last < first && last <= gap * .15
+                            && both == len && clear == (int) (eligible * .9);
+                    boolean apertureRecovered = clear < eligible * .9 && !roundedClosingAperture;
                     if (apertureRecovered
                             && CompleteHairpinAperture.prove(
                                             gray,
@@ -144,7 +149,7 @@ final class OpenHairpinPairs {
                                             gap,
                                             apertureBudget)
                                     .isEmpty()) continue;
-                    Shape shape = new Shape(staff, left, right, last > first ? 1 : -1);
+                    Shape shape = new Shape(staff, left, right, last > first ? 1 : -1, first, last);
                     var destination = apertureRecovered ? apertureOnly : result;
                     boolean duplicate = false;
                     for (var old : destination)

@@ -154,6 +154,11 @@ public record ScoreSlurSource(
                 .toList();
     }
 
+    /** Assemble page-local arcs and any independently proved cross-page continuations. */
+    public static ScoreSlurSource joinInterpreted(List<ScorePageInterpretation> pages) {
+        return PrintedPageSlurContinuation.join(pages);
+    }
+
     /** Join original identities without rewriting physical page ownership to output page numbers. */
     public static ScoreSlurSource join(List<ScoreSlurSource> pages) {
         var spans = new LinkedHashMap<String, ScoreSlurPages.Span>();

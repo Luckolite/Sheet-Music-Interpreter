@@ -13,8 +13,10 @@ final class ParallelTripletClock {
     static Clock find(ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
         if (target == null || bar == null || !Double.isFinite(beats) || beats < 2 || beats > 4)
             return null;
-        Clock completeWritten = findCompleteOpposedWrittenVoices(target, bar, beats);
+        Clock completeWritten = findCompleteOpposedWrittenVoices(target, bar, beats, false);
         if (completeWritten != null) return completeWritten;
+        Clock crossedWritten = findCompleteOpposedWrittenVoices(target, bar, beats, true);
+        if (crossedWritten != null) return crossedWritten;
         Clock bridged = findCrossStaff(target, bar, beats);
         if (bridged != null) return bridged;
         Clock continued = findCompleteCrossStaffPhrase(target, bar, beats);
@@ -41,18 +43,35 @@ final class ParallelTripletClock {
     }
 
     /** Repeated coincident attacks corroborate independent written voice clocks. */
+    static boolean provesIndependentCrossedVoices(ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+        return findCompleteOpposedWrittenVoices(target, bar, beats, true) != null;
+    }
+
     private static Clock findCompleteOpposedWrittenVoices(
-            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats) {
+            ScoreNoteEvent target, List<ScoreNoteEvent> bar, double beats, boolean crossed) {
+        if (crossed) {
+            if (target.staffCount() != 2) return null;
+            int crossingStem = 0;
+            int crossingStaffs = 0;
+            for (var n : bar) {
+                if (!n.crossStaffBeam()) continue;
+                if (n.stemDirection() == 0 || n.staffIndex() < 0 || n.staffIndex() > 1
+                        || crossingStem != 0 && crossingStem != n.stemDirection()) return null;
+                crossingStem = n.stemDirection();
+                crossingStaffs |= 1 << n.staffIndex();
+            }
+            if (crossingStaffs != 3) return null;
+        }
         var attacks = new ArrayList<Attack>();
         var totals = new ArrayList<Double>();
         var lanes = new ArrayList<List<List<ScoreNoteEvent>>>();
         for (int direction : new int[] {-1, 1}) {
             var notes = new ArrayList<ScoreNoteEvent>();
             for (var n : bar) {
-                if (n.staffIndex() != target.staffIndex() || n.staffCount() != target.staffCount())
+                if ((!crossed && n.staffIndex() != target.staffIndex()) || n.staffCount() != target.staffCount())
                     continue;
                 if (n.stemDirection() == 0
-                        || n.crossStaffBeam()
+                        || !crossed && n.crossStaffBeam()
                         || (n.articulations() & NoteOrnament.GRACE) != 0) return null;
                 if (n.stemDirection() == direction) notes.add(n);
             }
@@ -85,7 +104,7 @@ final class ParallelTripletClock {
                 }
                 cursor += duration + silence;
             }
-            if (cursor > beats + .001) return null;
+            if (cursor > beats + .001 || crossed && Math.abs(cursor - beats) > .001) return null;
             totals.add(cursor);
         }
         if (totals.stream().noneMatch(t -> Math.abs(t - beats) < .001)) return null;

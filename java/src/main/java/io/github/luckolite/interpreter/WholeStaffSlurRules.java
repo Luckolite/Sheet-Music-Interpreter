@@ -147,7 +147,7 @@ final class WholeStaffSlurRules {
                                 width,
                                 height,
                                 additional.frames(),
-                                score.notes())
+                                score.notes(), score.measures())
                         : PrintedSlurPageCapture.capture(
                                 page,
                                 score.notes().size(),
@@ -157,7 +157,7 @@ final class WholeStaffSlurRules {
                                 height,
                                 additional.frames(),
                                 ties,
-                                score.notes());
+                                score.notes(), score.measures());
         if (observed.limitReached()) return unchanged;
         var spans = new ArrayList<>(captured.source().spans());
         var candidates = new ArrayList<>(captured.source().candidates());
@@ -192,7 +192,7 @@ final class WholeStaffSlurRules {
         for (var frame : additional.frames())
             for (var head : frame.heads()) unbound.remove(head.owner());
         return new Supplement(
-                new PrintedSlurPageCapture.Result(source, statuses, false, captured.declined()),
+                new PrintedSlurPageCapture.Result(source, statuses, false, captured.declined(), mergePageEdges(captured, observed)),
                 Set.copyOf(unbound),
                 legacy.unprovedStaffs() - (staffs.size() - additional.unprovedStaffs()));
     }
@@ -301,5 +301,16 @@ final class WholeStaffSlurRules {
                 List.of(
                         new float[] {0, unique[4], uniqueGap},
                         new float[] {p.width - 1, unique[4], uniqueGap}));
+    }
+
+    private static List<ScoreExpressiveEvent> mergePageEdges(
+            PrintedSlurPageCapture.Result first, PrintedSlurPageCapture.Result supplemental) {
+        var merged = new LinkedHashMap<String, ScoreExpressiveEvent>();
+        for (var capture : List.of(first, supplemental))
+            for (var edge : capture.pageEdges()) {
+                var prior = merged.putIfAbsent(edge.eventId(), edge);
+                if (prior != null && !prior.equals(edge)) return List.of();
+            }
+        return List.copyOf(merged.values());
     }
 }
