@@ -13,6 +13,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image, ImageOps
 from .runtime import java_executable
+from .whitening import PaperBackgroundWhitening, MODEL_SHA256 as PAPER_FIELD_SHA256, RASTER_POLICY
 
 MODEL_SHA256 = "92ab7c34c27cb704d95f0cde247b3611d1563fdf1c114b9f9817abb18a7b6a93"
 MODEL_NAME = "music_sheets_v4_float16.tflite"
@@ -116,6 +117,7 @@ class Interpreter:
         yy, xx = np.mgrid[:320, :320]
         self.edge = np.minimum.reduce([xx, yy, 319 - xx, 319 - yy]) + 1
         self.ocr = None
+        self.paper_whitening = PaperBackgroundWhitening(threads=threads)
 
     def predict(self, gray):
         if not isinstance(gray, np.ndarray) or gray.ndim != 2 or gray.dtype != np.uint8:
@@ -181,18 +183,28 @@ class Interpreter:
             from .ocr import page_annotations
             words = self.ocr.words(gray)
             annotations = dict(page_annotations(words, annotations["tabWords"]), **annotations)
+        corrected = self.paper_whitening.correct(gray)
         with tempfile.TemporaryDirectory(prefix="sheet-music-recognition-") as folder:
             page = Path(folder) / "page.page.gz"
             output = Path(folder) / "score.json"
             write_page(page, labels, gray, annotations)
             command = [java_executable(), "-Xmx1g", "-jar", str(self.jar), str(page), str(output),
                        str(numerator), str(denominator), str(key_fifths)]
+            if corrected.changed:
+                decoder_raster = Path(folder) / "decoder.gray"
+                decoder_raster.write_bytes(corrected.decoder_gray.tobytes())
+                command.extend(["--decoder-gray", str(decoder_raster)])
             if page_index is not None:
                 command.extend(["--page-index", str(page_index)])
             run = subprocess.run(command, capture_output=True, text=True)
             if run.returncode:
                 raise RuntimeError("Decoder failed: " + run.stderr.strip())
             result = json.loads(output.read_text(encoding="utf-8"))
+        result["paperWhitening"] = dict(policy=RASTER_POLICY, modelSha256=PAPER_FIELD_SHA256,
+                                       segmentationRasterSha256=corrected.raw_sha256,
+                                       annotationRasterSha256=corrected.raw_sha256,
+                                       decoderRasterSha256=corrected.decoder_sha256,
+                                       changed=corrected.changed)
         result["modelSha256"] = self.model_sha256
         result["initialMeter"] = list(meter)
         result["initialKeyFifths"] = key_fifths

@@ -67,3 +67,27 @@ The code and weights may be modified and used in commercial, closed-source produ
 under Apache-2.0. Preserve the license and applicable notices when redistributing.
 Fonts and external tools retain the licenses in
 [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+
+## Paper-field decoder correction v1
+
+`paper_field_v1.onnx` and its original checkpoint `paper_field_v1.pt` are Apache-2.0.
+This independently initialized ExtremaField model estimates smooth paper brightness
+and print contrast. It does not replace either segmentation model. Segmentation,
+tab preparation, source annotations and source clock evidence keep the original
+raster; only the geometric decoder receives the corrected grayscale. Bright clean
+pages bypass inference and retain identical bytes. Recognition revision140 separates
+new caches from prior outputs; guide299 and audio102 layouts are unchanged.
+
+Training used original procedural renderer train splits, seed11072026,1600 updates,
+batch8 and AdamW0.001. Four paired augmentations vary fold shadows, gradients,
+stains and texture without moving symbols. No commercial score pixels were used.
+Architecture, exact augmentation, export recipe, corpus manifest checksums, loss,
+weight checksums and synthetic evaluation are in `training/paper_field.py`,
+`training/export_paper_field.py` and [paper-field-lineage.json](paper-field-lineage.json).
+Export with PyTorch2.1.2 and ONNX1.17.0; exact historical retraining is not claimed.
+
+On16 untouched synthetic pages, paired pitch+duration matches improved2294→2367
+of2546; onset+pitch+duration improved1345→1574. All16 clean controls remained
+pixel-identical and10 blank/empty-staff controls yielded no notes. Strict unmatched
+counts rose40→42; a wider positional window reduced3→1, showing positional
+matching sensitivity. Real photographed/scanned score accuracy remains unverified.

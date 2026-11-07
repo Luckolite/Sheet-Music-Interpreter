@@ -149,6 +149,22 @@ public final class SheetInterpreter {
             MusicalOcr ocr,
             int physicalPage)
             throws Exception {
+        return analyze(labels, gray, width, height, annotations, ocr, physicalPage, null);
+    }
+
+    /** Original pixels retain source authority; optional decoder pixels only feed geometry. */
+    public static ScorePageInterpretation analyze(
+            byte[] labels,
+            byte[] gray,
+            int width,
+            int height,
+            Annotations annotations,
+            MusicalOcr ocr,
+            int physicalPage,
+            byte[] decoderGray)
+            throws Exception {
+        if (decoderGray != null && (gray == null || decoderGray.length != gray.length))
+            throw new IllegalArgumentException("Decoder grayscale dimensions must match source");
         if (physicalPage < -1) throw new IllegalArgumentException("Invalid physical source page");
         long pixels = (long) width * height;
         if (width <= 0
@@ -195,6 +211,9 @@ public final class SheetInterpreter {
         tabs = TabNotation.rasterRhythm(tabs, gray, width, height, tabWords);
         labels = TablatureDecoder.withoutTabs(labels, width, height, tabs, false);
         gray = TablatureDecoder.withoutTabs(gray, width, height, tabs, true);
+        byte[] annotationGray = gray;
+        if (decoderGray != null)
+            gray = TablatureDecoder.withoutTabs(decoderGray, width, height, tabs, true);
         var selectedOrigins = new SelectedMeasureOrigins();
         var geometry = NativeDecoderStages.geometry(labels, gray, width, height, selectedOrigins);
         var measures = geometry.measures();
@@ -206,8 +225,12 @@ public final class SheetInterpreter {
         if (MeasureNumberReconciler.firstMeasureNumber(measures, numbers) == 0 && ocr != null)
             for (var token :
                     ocr.supplementSystemMeasureNumbers(
-                            labels, gray, width, height, measures, annotations.measureNumbers))
-                numbers.add(token.internal());
+                            labels,
+                            annotationGray,
+                            width,
+                            height,
+                            measures,
+                            annotations.measureNumbers)) numbers.add(token.internal());
         var recognizedRests = new RecognizedMultiRestOrigins(selectedOrigins);
         var rests =
                 MultiMeasureRestDetector.detect(
@@ -230,7 +253,7 @@ public final class SheetInterpreter {
         int firstMeasureNumber = MeasureNumberReconciler.firstMeasureNumber(measures, numbers);
         if (firstMeasureNumber == 0 && ocr != null)
             firstMeasureNumber =
-                    ocr.firstSystemMeasureNumber(labels, gray, width, height, measures);
+                    ocr.firstSystemMeasureNumber(labels, annotationGray, width, height, measures);
         var clockPartSource =
                 ScorePartProducerSource.capture(
                         sourceAnnotations, tabSourceGray, width, height, measures);
@@ -262,10 +285,12 @@ public final class SheetInterpreter {
                             new PlayingTechniqueDetector.Word(
                                     token, word.left(), word.top(), word.right(), word.bottom()));
             }
-            if (ocr != null) ornamentWords.addAll(ocr.ornamentWords(gray, width, height, staffs));
+            if (ocr != null)
+                ornamentWords.addAll(ocr.ornamentWords(annotationGray, width, height, staffs));
             if (ocr != null)
                 ornamentWords.addAll(
-                        ocr.crossRowPortWords(gray, width, height, staffs, measures, notes));
+                        ocr.crossRowPortWords(
+                                annotationGray, width, height, staffs, measures, notes));
             notes =
                     PortableNoteOrnaments.apply(
                             GlyphResources.ornaments(),
@@ -284,7 +309,8 @@ public final class SheetInterpreter {
         MusicalOcr.SuddenDynamicAcquisition suddenAcquisition = null;
         if (ocr != null) {
             suddenAcquisition =
-                    ocr.acquiredDynamicsWithSuddenSource(gray, width, height, staffs, words);
+                    ocr.acquiredDynamicsWithSuddenSource(
+                            annotationGray, width, height, staffs, words);
             dynamicAcquisition = suddenAcquisition.expressionAcquisition();
             for (var word : dynamicAcquisition.words())
                 if (!dynamicEvidence.contains(word)) dynamicEvidence.add(word);
@@ -297,16 +323,24 @@ public final class SheetInterpreter {
         if (ocr != null)
             dynamicWords =
                     ocr.supplementDynamics(
-                            gray, width, height, staffs, measures, notes, dynamicWords);
+                            annotationGray, width, height, staffs, measures, notes, dynamicWords);
         if (suddenAcquisition != null)
             dynamicWords = suddenAcquisition.normalize(dynamicWords, gray, width, height);
         var techniqueWords = new java.util.ArrayList<>(words);
         if (ocr != null)
             techniqueWords.addAll(
                     ocr.contextualDirections(
-                            gray, width, height, staffs, measures, notes, dynamicWords, words));
+                            annotationGray,
+                            width,
+                            height,
+                            staffs,
+                            measures,
+                            notes,
+                            dynamicWords,
+                            words));
         if (ocr != null)
-            techniqueWords.addAll(ocr.techniques(gray, width, height, staffs, measures, notes));
+            techniqueWords.addAll(
+                    ocr.techniques(annotationGray, width, height, staffs, measures, notes));
         var articulationWords = new java.util.ArrayList<>(techniqueWords);
         for (var word : dynamicWords)
             if (!ExpressiveDirectionText.parse(word.text()).isEmpty()
@@ -318,7 +352,7 @@ public final class SheetInterpreter {
         var meterEvidence =
                 ocr == null
                         ? new MusicalOcr.MeterEvidence(List.of(), List.of())
-                        : ocr.meterEvidence(labels, gray, width, height, measures, notes);
+                        : ocr.meterEvidence(labels, annotationGray, width, height, measures, notes);
         if (ocr != null)
             for (var meter : meterEvidence.changes())
                 if (meters.stream()
@@ -336,7 +370,7 @@ public final class SheetInterpreter {
                 ScoreDynamicsDetector.detectWithEvidence(
                         dynamicWords, staffs, measures, notes, gray, width, height);
         var tempoWords = new java.util.ArrayList<>(words);
-        if (ocr != null) tempoWords.addAll(ocr.tempoWords(gray, width, height));
+        if (ocr != null) tempoWords.addAll(ocr.tempoWords(annotationGray, width, height));
         var decoded =
                 TablatureDecoder.apply(
                         new ScorePageInterpretation(
@@ -434,7 +468,7 @@ public final class SheetInterpreter {
                 ocr == null
                         ? techniqueWords
                         : ocr.expressionWords(
-                                techniqueWords, dynamicAcquisition, gray, width, height);
+                                techniqueWords, dynamicAcquisition, annotationGray, width, height);
         var withExpressions =
                 ScoreExpressionDetector.apply(
                         ScoreFermataDetector.withFermatas(
@@ -578,8 +612,9 @@ public final class SheetInterpreter {
                             staffs,
                             physicalPage,
                             phrasePending);
-        finalInterpretation = PrintedPassOmission.apply(
-                finalInterpretation, words, staffs, gray, width, height, physicalPage);
+        finalInterpretation =
+                PrintedPassOmission.apply(
+                        finalInterpretation, words, staffs, gray, width, height, physicalPage);
         finalInterpretation =
                 finalInterpretation.withClockContextSource(
                         ScoreClockContextCapture.capture(

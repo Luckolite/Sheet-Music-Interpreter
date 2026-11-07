@@ -33,4 +33,4 @@ Downloads = "https://github.com/Luckolite/Sheet-Music-Recognition/releases"
 where = ["src"]
 
 [tool.setuptools.package-data]
-sheet_music_recognition = ["interpreter.jar", "data/*.tflite", "data/LICENSE", "data/NOTICE"]
+sheet_music_recognition = ["interpreter.jar", "data/*.tflite", "data/*.onnx", "data/LICENSE", "data/NOTICE"]

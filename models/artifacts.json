@@ -23,5 +23,20 @@
     "sha256": "92ab7c34c27cb704d95f0cde247b3611d1563fdf1c114b9f9817abb18a7b6a93",
     "bytes": 3907460,
     "license": "Apache-2.0"
+  },
+  "paper_field_v1.pt": {
+    "sha256": "7e9a4b16ca5c1aeda56080c69ac5e63d7a00de56860a6d265d8bed578eb8971d",
+    "bytes": 102050,
+    "license": "Apache-2.0",
+    "architecture": "ExtremaField",
+    "role": "decoder illumination only"
+  },
+  "paper_field_v1.onnx": {
+    "sha256": "dc27aec9f1d29cc423510277992523991fbbb568770a3acf73875107476ab460",
+    "bytes": 103810,
+    "license": "Apache-2.0",
+    "architecture": "ExtremaField",
+    "role": "decoder illumination only",
+    "parent_checkpoint_sha256": "7e9a4b16ca5c1aeda56080c69ac5e63d7a00de56860a6d265d8bed578eb8971d"
   }
 }

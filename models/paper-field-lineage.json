@@ -1,0 +1,365 @@
+{
+  "architecture": "ExtremaField",
+  "initialized_from": "random seed 11072026; no segmentation weights",
+  "checkpoint": {
+    "sha256": "7e9a4b16ca5c1aeda56080c69ac5e63d7a00de56860a6d265d8bed578eb8971d",
+    "bytes": 102050,
+    "license": "Apache-2.0",
+    "architecture": "ExtremaField",
+    "role": "decoder illumination only"
+  },
+  "onnx": {
+    "sha256": "dc27aec9f1d29cc423510277992523991fbbb568770a3acf73875107476ab460",
+    "bytes": 103810,
+    "license": "Apache-2.0",
+    "architecture": "ExtremaField",
+    "role": "decoder illumination only",
+    "parent_checkpoint_sha256": "7e9a4b16ca5c1aeda56080c69ac5e63d7a00de56860a6d265d8bed578eb8971d"
+  },
+  "training": {
+    "steps": 1600,
+    "batch": 8,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "seed": 11072026,
+    "crops": "320x320 from original renderer train splits; 12% clean, otherwise four equal illumination styles",
+    "losses": "ink-weighted L1 reconstruction + paper L1 + 0.25 contrast L1 + 0.5 spatial-gradient L1",
+    "commercial_score_training": false,
+    "corpora": [
+      {
+        "name": "original",
+        "manifest_sha256": "a996100dfa84b4c16bc9ed26aeae329e0ae940333afdddea17f1f9d01eeb9483",
+        "pages": {
+          "train": 480,
+          "validation": 60,
+          "test": 60
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "broad",
+        "manifest_sha256": "5b635e6a5980f82e87dd6b803efb56e4c2325d32b62df1a07cd6d3ccdbe7d991",
+        "pages": {
+          "train": 240,
+          "validation": 32,
+          "test": 32
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "ledger",
+        "manifest_sha256": "a5cdc5000388ecb5cb878a5a25df35a7f1d3a3a82889ee1db51dfe4268441305",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "soft-staff",
+        "manifest_sha256": "b3772e694f804c8260e6d35022d6b53787cc288c72e73d261825dfee5475b5e3",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "accidental",
+        "manifest_sha256": "f195e9116a48cda6d020a3061b0cca41e506b2124a8f09a1aa91614543093d6b",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "courtesy-clef",
+        "manifest_sha256": "fa7a450f849f3b2c3f4106e4ac8c867103aab5abb3f6590d8d89bd9e7da93be1",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "rest-shape",
+        "manifest_sha256": "7307163f824568ab4068e07c1b5fa3393108ab579f38314ce766a1c6b8564019",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "clef-context",
+        "manifest_sha256": "30b62d4673a5feb402bc073d45d00a7abcf22763f2b102f58e3749491234ade7",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      },
+      {
+        "name": "hollow-head",
+        "manifest_sha256": "404463f07a95c7b3eff1419d1bab4776b895e2ed6ed74b9bd9675cfef8c0cbcd",
+        "pages": {
+          "train": 96,
+          "validation": 16,
+          "test": 16
+        },
+        "test_pixels_opened": false,
+        "third_party_score_sources": []
+      }
+    ]
+  },
+  "evaluation": {
+    "scope": "Fresh synthetic full pages; not a real-scan accuracy claim",
+    "confirmation": {
+      "fold": {
+        "raw": {
+          "truth": 793,
+          "predicted": 791,
+          "matched": 781,
+          "pitch": 781,
+          "duration": 716,
+          "both": 716,
+          "unmatched": 10,
+          "exact_f1": 0.9040404040404041
+        },
+        "prior": {
+          "truth": 793,
+          "predicted": 794,
+          "matched": 784,
+          "pitch": 784,
+          "duration": 735,
+          "both": 735,
+          "unmatched": 10,
+          "exact_f1": 0.9262759924385633
+        },
+        "classical": {
+          "truth": 793,
+          "predicted": 755,
+          "matched": 747,
+          "pitch": 747,
+          "duration": 699,
+          "both": 699,
+          "unmatched": 8,
+          "exact_f1": 0.9031007751937985
+        },
+        "field": {
+          "truth": 793,
+          "predicted": 793,
+          "matched": 784,
+          "pitch": 784,
+          "duration": 736,
+          "both": 736,
+          "unmatched": 9,
+          "exact_f1": 0.9281210592686002
+        }
+      },
+      "gradient": {
+        "raw": {
+          "truth": 713,
+          "predicted": 704,
+          "matched": 694,
+          "pitch": 694,
+          "duration": 623,
+          "both": 623,
+          "unmatched": 10,
+          "exact_f1": 0.8793225123500353
+        },
+        "prior": {
+          "truth": 713,
+          "predicted": 711,
+          "matched": 699,
+          "pitch": 699,
+          "duration": 633,
+          "both": 633,
+          "unmatched": 12,
+          "exact_f1": 0.8890449438202247
+        },
+        "classical": {
+          "truth": 713,
+          "predicted": 713,
+          "matched": 699,
+          "pitch": 699,
+          "duration": 653,
+          "both": 653,
+          "unmatched": 14,
+          "exact_f1": 0.9158485273492286
+        },
+        "field": {
+          "truth": 713,
+          "predicted": 713,
+          "matched": 701,
+          "pitch": 701,
+          "duration": 654,
+          "both": 654,
+          "unmatched": 12,
+          "exact_f1": 0.9172510518934082
+        }
+      },
+      "stain": {
+        "raw": {
+          "truth": 621,
+          "predicted": 618,
+          "matched": 604,
+          "pitch": 598,
+          "duration": 572,
+          "both": 566,
+          "unmatched": 14,
+          "exact_f1": 0.9136400322841001
+        },
+        "prior": {
+          "truth": 621,
+          "predicted": 619,
+          "matched": 605,
+          "pitch": 599,
+          "duration": 579,
+          "both": 573,
+          "unmatched": 14,
+          "exact_f1": 0.9241935483870968
+        },
+        "classical": {
+          "truth": 621,
+          "predicted": 621,
+          "matched": 607,
+          "pitch": 601,
+          "duration": 584,
+          "both": 578,
+          "unmatched": 14,
+          "exact_f1": 0.9307568438003221
+        },
+        "field": {
+          "truth": 621,
+          "predicted": 621,
+          "matched": 607,
+          "pitch": 601,
+          "duration": 585,
+          "both": 579,
+          "unmatched": 14,
+          "exact_f1": 0.9323671497584541
+        }
+      },
+      "texture": {
+        "raw": {
+          "truth": 419,
+          "predicted": 417,
+          "matched": 411,
+          "pitch": 406,
+          "duration": 394,
+          "both": 389,
+          "unmatched": 6,
+          "exact_f1": 0.930622009569378
+        },
+        "prior": {
+          "truth": 419,
+          "predicted": 417,
+          "matched": 411,
+          "pitch": 406,
+          "duration": 394,
+          "both": 389,
+          "unmatched": 6,
+          "exact_f1": 0.930622009569378
+        },
+        "classical": {
+          "truth": 419,
+          "predicted": 419,
+          "matched": 412,
+          "pitch": 412,
+          "duration": 398,
+          "both": 398,
+          "unmatched": 7,
+          "exact_f1": 0.9498806682577565
+        },
+        "field": {
+          "truth": 419,
+          "predicted": 419,
+          "matched": 412,
+          "pitch": 412,
+          "duration": 398,
+          "both": 398,
+          "unmatched": 7,
+          "exact_f1": 0.9498806682577565
+        }
+      },
+      "all": {
+        "raw": {
+          "truth": 2546,
+          "predicted": 2530,
+          "matched": 2490,
+          "pitch": 2479,
+          "duration": 2305,
+          "both": 2294,
+          "unmatched": 40,
+          "exact_f1": 0.9038613081166272
+        },
+        "prior": {
+          "truth": 2546,
+          "predicted": 2541,
+          "matched": 2499,
+          "pitch": 2488,
+          "duration": 2341,
+          "both": 2330,
+          "unmatched": 42,
+          "exact_f1": 0.9160605464910556
+        },
+        "classical": {
+          "truth": 2546,
+          "predicted": 2508,
+          "matched": 2465,
+          "pitch": 2459,
+          "duration": 2334,
+          "both": 2328,
+          "unmatched": 43,
+          "exact_f1": 0.9212504946576969
+        },
+        "field": {
+          "truth": 2546,
+          "predicted": 2546,
+          "matched": 2504,
+          "pitch": 2498,
+          "duration": 2373,
+          "both": 2367,
+          "unmatched": 42,
+          "exact_f1": 0.9296936370777691
+        }
+      }
+    },
+    "raw_correct_pitch_duration": 2294,
+    "selected_correct_pitch_duration": 2367,
+    "truth": 2546,
+    "raw_correct_onset_pitch_duration": 1345,
+    "selected_correct_onset_pitch_duration": 1574,
+    "clean_pixel_identical_pages": 16,
+    "blank_and_empty_staff_controls": 10,
+    "strict_unmatched_raw": 40,
+    "strict_unmatched_selected": 42,
+    "wider_position_window_unmatched_raw": 3,
+    "wider_position_window_unmatched_selected": 1
+  },
+  "export": {
+    "torch": "2.1.2",
+    "onnx": "1.17.0",
+    "opset": 17,
+    "architecture_source_sha256": "956dcb026f02990596bc3b6ddaee7f16efcf7e31e76fa320d0923385b3dccd8c",
+    "recipe_sha256": "14801bc4112d4025ed261a1e19d09f25aa04c7e9adec4f1abe1805038bae191f",
+    "max_field_parity_error": 6.6e-07,
+    "java_python_max_gray_error": 1
+  }
+}

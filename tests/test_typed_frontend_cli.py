@@ -45,6 +45,7 @@ class TypedFrontendCliTests(unittest.TestCase):
         self.engine.jar = Path('unused-isolated-fixture.jar')
         self.engine.model_sha256 = 'original-synthetic-no-model-used'
         self.engine.ocr = None
+        self.engine.paper_whitening = reader.PaperBackgroundWhitening()
         self.fixture = 1
         def predict(gray):
             labels = np.zeros_like(gray)

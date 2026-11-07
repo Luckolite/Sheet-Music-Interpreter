@@ -3742,10 +3742,10 @@
     },
     "GuideCacheIdentity.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/GuideCacheIdentity.java",
-      "source_sha256": "25dc0457440c315321cf6bca8bd31d5052170e84958105b8d11153c49214e11b",
-      "source_normalized_sha256": "4f2127c0ebf8e73320bdb16a5a5ac6e5e2201f90d59c249ac7d6b68cb803d83d",
+      "source_sha256": "2c492cf96d1937ff293fe17853d8678bfa2405c7439aab54e7a0ef5ba619f487",
+      "source_normalized_sha256": "2c492cf96d1937ff293fe17853d8678bfa2405c7439aab54e7a0ef5ba619f487",
       "review_note": "Shared recognition and playback-direction changes ported with standalone adapters. Redistributable synthetic regressions cover the changed ink and direction rules.",
-      "standalone_sha256": "1f657110441e29b432a8dbba2286ddc5811d04c5777d10069b87df58eff2e1b9",
+      "standalone_sha256": "20627ee81b02a6bdb2ede8f0c9f01089dd705696d2014aee71b2c3965b21e472",
       "reviewed_app_commit": "5d7dba1aad17d58d558cef9be40df4ab133096eb",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
       "license": "Apache-2.0",
@@ -3797,14 +3797,15 @@
       "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged.",
       "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes.",
       "recognition134_review": "Complete uniquely bound original head members may prove the existing opening margin. Every accepted owned meter header constrains the first head. Original procedural examples only; legacy fallback, source invalidation and strict recapture preserved.",
-      "recognition139_review_note": "Reviewed namespace-equivalent source port."
+      "recognition139_review_note": "Reviewed namespace-equivalent source port.",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
     },
     "GuideCacheIdentityTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/GuideCacheIdentityTest.java",
       "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/GuideCacheIdentityTest.java",
-      "source_sha256": "26d3f54ebd8bac3b38637e90e2e9903b33d6b292497a1a8e9b46cee420525229",
-      "source_normalized_sha256": "edde8ff2b4de3a7d28f67f9eb013a8350e52dfcd619e11bf493055aeeee77d0b",
-      "standalone_sha256": "19a40a349e6d1f80545d9123943c63b0d8ac7f77c953d99bc1256fdb5744e69c",
+      "source_sha256": "4c22a3873d0eb737a62c4684f467b54a9e60f601c557242be5cf46366d6433ad",
+      "source_normalized_sha256": "4c22a3873d0eb737a62c4684f467b54a9e60f601c557242be5cf46366d6433ad",
+      "standalone_sha256": "badf38b465699ce041be51e1bf8899ef4efb20ab7c4a8f271f9cf26c722822be",
       "license": "Apache-2.0",
       "recognition88_review_note": "Reviewed exact contextual global changes and namespace twins with original synthetic regressions. New helpers are selected explicitly by desktop decoder manifest; no models, private fixtures, schema, wire or audio changes.",
       "reviewed_app_commit": "5d7dba1aad17d58d558cef9be40df4ab133096eb",
@@ -3849,7 +3850,8 @@
       "recognition132_review": "Withdraw only elevated UP placement; restore reviewed recognition130 bow behavior. Keep genuine elevated positive assertions explicitly ignored as known unsupported; deterministic licensed-font prose negative remains active. Other131 rhythm fixes unchanged.",
       "recognition133_review": "Reviewed global ordinary-beam proof, fixed existing interior ray and continuous shaft identity. Original procedural regressions only; standalone adapters retained, no private captures, models or record-layout changes.",
       "recognition134_review": "Complete uniquely bound original head members may prove the existing opening margin. Every accepted owned meter header constrains the first head. Original procedural examples only; legacy fallback, source invalidation and strict recapture preserved.",
-      "recognition139_review_note": "Reviewed namespace-equivalent source port."
+      "recognition139_review_note": "Reviewed namespace-equivalent source port.",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
     },
     "HairpinApertureBarExtentOriginalTest.java": {
       "source_path": "app/src/test/java/com/musicsheets/app/pdf/HairpinApertureBarExtentOriginalTest.java",
@@ -8647,9 +8649,9 @@
     },
     "SheetInterpreter.java": {
       "source_path": "tools/native-worker/NativePageGuide.java",
-      "source_sha256": "b07ed4d806fbe1e4943d681de1c4a2366f60e5e7cc5bfff5845516f76883800b",
-      "source_normalized_sha256": "b07ed4d806fbe1e4943d681de1c4a2366f60e5e7cc5bfff5845516f76883800b",
-      "standalone_sha256": "16da019c5c3db07d0fe484ec9c34a33b82d8dcbe135476cb7fc0f9022e851045",
+      "source_sha256": "067d296dcd68b0fab65d6d49faed878d973ffb8333d56b69a03462bc47f1f0c2",
+      "source_normalized_sha256": "067d296dcd68b0fab65d6d49faed878d973ffb8333d56b69a03462bc47f1f0c2",
+      "standalone_sha256": "f7938c4b10b4f9dac0d68754bba15da9519c29611481cbedcf0d6de93fcf30a7",
       "license": "Apache-2.0",
       "review_note": "Shared recognition and playback-direction changes ported with standalone adapters. Redistributable synthetic regressions cover the changed ink and direction rules.",
       "reviewed_app_commit": "c54aa86d1633b88b9ffc28a7f79e65b4e7c7d5d6",
@@ -8669,7 +8671,8 @@
       "qualified_dynamic_source_adapter_review": "Retain standalone caller-owned inference, existing strip acquisition, glyph and supplement ordering. Bind source before actual OCR, normalize final dynamic words from actual crop/scale origins, and preserve exact original expression acquisition. Additive semantic adapter for native source-identity repair; no whole-wrapper copy.",
       "recognition127_clock_adapter_review": "Reviewed equivalent final lifecycle change: bind existing full clock context before PrintedBeamSource.apply; native and standalone inference/word/port adapters remain separate. No full-wrapper token-parity claim, generic clock weakening, models or layouts change.",
       "recognition134_review": "Pass original Analysis to the optional complete-member opening-layout proof; all existing platform-specific pipeline adapters retained.",
-      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts."
+      "closed_phrase_clock_review": "Same-pass complete printed beam ownership resolves remote/shared-stem phrase caps and cross-staff written clock. Asymmetric arches have independent IDs preserving old arcs. Literal unique opposed-stem single-beam partners sustain independently of faster bass attacks. Optional bounded proofs preserve legacy on refusal. One existing clock capture follows final value projection. Original procedural regressions only; no score data, observers, weights or layouts.",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
     },
     "SheetWrittenTieLinks.java": {
       "source_path": "app/src/main/java/com/musicsheets/app/pdf/SheetWrittenTieLinks.java",
@@ -9696,10 +9699,10 @@
     },
     "guide_writer.py": {
       "source_path": "tools/native-worker/guide_writer.py",
-      "source_sha256": "cf7ee54b8d5c7b5c9543c4259e5d2b28516f6b36196f7ccf326bf9396083d81e",
-      "source_normalized_sha256": "69abebd94d25b75ec1eec5054c6ec66c297729cf5716543ec87a7e28469ecbad",
+      "source_sha256": "48500c3b5b39e45d2cb8e1a38e50675d2265b89bc12701ff0f91dc3b30fdbe3e",
+      "source_normalized_sha256": "48500c3b5b39e45d2cb8e1a38e50675d2265b89bc12701ff0f91dc3b30fdbe3e",
       "review_note": "Shared recognition and playback-direction changes ported with standalone adapters. Redistributable synthetic regressions cover the changed ink and direction rules.",
-      "standalone_sha256": "db8d79beef484f903cb75c75ea05ec950b9b9cbf0f74c02bc694e6b37cdfa5c1",
+      "standalone_sha256": "694196c12d06e94c9f77321257d3f47948ecfde855c4bceeb283805a658370a7",
       "reviewed_app_commit": "5d7dba1aad17d58d558cef9be40df4ab133096eb",
       "license": "Apache-2.0",
       "scoped_reviewed_app_commit": "59008495d6250cb0790c1d2b5bd8f5952f0c9a98",
@@ -9731,7 +9734,8 @@
       "recognition127_review_note": "Opaque same-capture head/shaft/terminal-beam evidence for distant carets; exact attack/rival handling and unchanged95percent/caretlimits. Semantics-exact period/dash word-context index. Namespace-only Java port, original synthetic identity/rival/limit/oracle controls; no models or layouts changed.",
       "recognition128_review_note": "Complete-rest pickup veto is now also wired at Android ingress; native/standalone behavior retained. Original exact-source caller regressions; no score material or model changes.",
       "recognition130_review_note": "Recognition130 matches app and standalone Java cache identity; Guide299 byte layout unchanged.",
-      "recognition139_review_note": "Reviewed app fix merged with the existing standalone adapters and formatting."
+      "recognition139_review_note": "Reviewed app fix merged with the existing standalone adapters and formatting.",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
     },
     "hairpin-export.js": {
       "source_path": "app/src/youtube/assets/musescore/hairpin-export.js",
@@ -11776,6 +11780,33 @@
       "reviewed_app_commit": "5d7dba1aad17d58d558cef9be40df4ab133096eb",
       "license": "Apache-2.0",
       "recognition139_review_note": "Reviewed namespace-equivalent source port."
+    },
+    "PaperBackgroundWhitening.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/PaperBackgroundWhitening.java",
+      "source_sha256": "91b76ea0c7e99b2ae57961ef8dae815c1e22cf1e4b4a4a01e7601746fb897d80",
+      "source_normalized_sha256": "91b76ea0c7e99b2ae57961ef8dae815c1e22cf1e4b4a4a01e7601746fb897d80",
+      "standalone_path": "java/src/main/java/io/github/luckolite/interpreter/PaperBackgroundWhitening.java",
+      "standalone_sha256": "f90f8d2dedf213f615fe5efbd5f26dd1c84e5cd191145b9e1dfde7765931c13d",
+      "license": "Apache-2.0",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
+    },
+    "PaperBackgroundWhiteningTest.java": {
+      "source_path": "app/src/test/java/com/musicsheets/app/pdf/PaperBackgroundWhiteningTest.java",
+      "source_sha256": "05a5a566757ddcc5a9d5744886505d956d60f1d0e93e162c790811e8d3ea61af",
+      "source_normalized_sha256": "05a5a566757ddcc5a9d5744886505d956d60f1d0e93e162c790811e8d3ea61af",
+      "standalone_path": "java/src/test/java/io/github/luckolite/interpreter/PaperBackgroundWhiteningTest.java",
+      "standalone_sha256": "1eb9b1c906826feeed518eab78fe9494af5f930f4df0d676173c458d29a5f992",
+      "license": "Apache-2.0",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
+    },
+    "OnnxPaperFieldInference.java": {
+      "source_path": "app/src/main/java/com/musicsheets/app/pdf/OnnxPaperFieldInference.java",
+      "source_sha256": "bec3d442ecfa6538f1f061bd8ccd37bde257640a4a7d564874c3f1cb75e66fb2",
+      "source_normalized_sha256": "bec3d442ecfa6538f1f061bd8ccd37bde257640a4a7d564874c3f1cb75e66fb2",
+      "standalone_path": "optional/whitening/java/io/github/luckolite/interpreter/OnnxPaperFieldInference.java",
+      "standalone_sha256": "bcded66083c71ee53d12e350d11f2216c9ad1d5803def6bb69ef960f77117399",
+      "license": "Apache-2.0",
+      "recognition140_review_note": "Reviewed decoder-only illumination correction and namespace twins; original segmentation/OCR/annotation authority retained. Recognition140 cache invalidation, guide299/audio102 record layouts unchanged. Original synthetic regressions and model lineage only."
     }
   },
   "finite_curved_approach_review": {
@@ -17147,5 +17178,14 @@
       "guide_writer.py"
     ],
     "note": "Shared recognition and written-clock changes. Android engraving and audio wrappers remain app-specific. Original synthetic regressions only. Guide299 and model files are unchanged."
+  },
+  "paper_field_v1_review": {
+    "recognition_revision": 140,
+    "guide_layout": 299,
+    "audio_layout": 102,
+    "model": "models/paper_field_v1.onnx",
+    "lineage": "models/paper-field-lineage.json",
+    "wrapper_review": "Android OmrMeasureAnalyzer and native NativePageGuide correct only after original segmentation and tab-label preparation. Native OCR/annotations and tab source raster retain original bytes. Python reader segments and acquires annotations before correction. New model hash and raster policy checked by Hub/worker.",
+    "boundaries": "No private scores, logs, app signing material or library data included."
   }
 }

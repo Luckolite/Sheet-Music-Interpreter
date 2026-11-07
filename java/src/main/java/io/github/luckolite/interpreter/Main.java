@@ -13,14 +13,20 @@ public final class Main {
     private Main() {}
 
     public static void main(String[] args) throws Exception {
-        if (args.length != 5 && (args.length != 7 || !args[5].equals("--page-index"))) {
-            System.err.println(
-                    "Usage: java -jar interpreter.jar page.page.gz output.json numerator denominator key-fifths [--page-index zero-based-page]");
-            System.exit(2);
+        if (args.length < 5 || args.length > 9 || args.length % 2 != 1)
+            throw new IllegalArgumentException(
+                    "Expected page, output, meter, key and optional page-index/decoder-gray pairs");
+        int physicalPage = -1;
+        Path decoderRaster = null;
+        for (int i = 5; i < args.length; i += 2) {
+            if (args[i].equals("--page-index") && physicalPage == -1) {
+                physicalPage = Integer.parseInt(args[i + 1]);
+                if (physicalPage < 0 || physicalPage > 100000)
+                    throw new IllegalArgumentException("Physical source page must be 0..100000");
+            } else if (args[i].equals("--decoder-gray") && decoderRaster == null) {
+                decoderRaster = Path.of(args[i + 1]);
+            } else throw new IllegalArgumentException("Unknown or duplicate decoder option");
         }
-        int physicalPage = args.length == 7 ? Integer.parseInt(args[6]) : -1;
-        if (args.length == 7 && (physicalPage < 0 || physicalPage > 100000))
-            throw new IllegalArgumentException("Physical source page must be 0..100000");
         int numerator = Integer.parseInt(args[2]), denominator = Integer.parseInt(args[3]);
         var initialMeter = new ScoreMeterChange(0, numerator, denominator);
         int initialKey = Integer.parseInt(args[4]);
@@ -127,10 +133,26 @@ public final class Main {
         if (!tabs.isEmpty())
             tabWarnings.add(
                     "Tab pitch uses an explicit tuning header when available, otherwise standard six- or seven-string guitar tuning.");
+        byte[] decoderGray = null;
+        if (decoderRaster != null) {
+            if (Files.size(decoderRaster) != (long) width * height)
+                throw new IOException("Decoder raster length differs from source");
+            decoderGray = Files.readAllBytes(decoderRaster);
+        }
         var score =
                 ScoreTiePitchGuard.withInitialKeyContext(
-                        physicalPage < 0
-                                ? SheetInterpreter.analyze(labels, gray, width, height, annotations)
+                        decoderGray == null
+                                ? (physicalPage < 0
+                                        ? SheetInterpreter.analyze(
+                                                labels, gray, width, height, annotations)
+                                        : SheetInterpreter.analyze(
+                                                labels,
+                                                gray,
+                                                width,
+                                                height,
+                                                annotations,
+                                                null,
+                                                physicalPage))
                                 : SheetInterpreter.analyze(
                                         labels,
                                         gray,
@@ -138,7 +160,8 @@ public final class Main {
                                         height,
                                         annotations,
                                         null,
-                                        physicalPage),
+                                        physicalPage,
+                                        decoderGray),
                         initialKey);
         score = ScoreTupletMeterContext.apply(score, initialMeter);
         float[] beats = new float[score.measures().size()];
