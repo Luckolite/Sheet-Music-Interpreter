@@ -5,11 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "score-reader"
 version = "0.1.6.post1"
-description = "Experimental offline sheet-music recognition with permissively licensed weights and a standalone Java decoder"
+description = "Experimental offline optical music recognition (OMR): sheet-music images and PDFs to MusicXML, MIDI, JSON and MP3, with Python and Java"
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
 license = {text = "Apache-2.0"}
 authors = [{name = "Luckolite"}]
+keywords = ["optical music recognition", "omr", "sheet music", "music ocr", "pdf to musicxml", "sheet music to midi", "musicxml", "midi", "guitar tablature", "offline"]
 dependencies = ["numpy>=1.23.5,<2", "Pillow>=10,<13", "tensorflow==2.15.1", "rapidocr==3.9.2", "onnxruntime==1.23.2"]
 classifiers = ["Development Status :: 3 - Alpha", "Topic :: Multimedia :: Sound/Audio :: MIDI", "Programming Language :: Python :: 3", "Programming Language :: Java"]
 
@@ -24,8 +25,10 @@ score-reader = "sheet_interpreter.cli:main"
 sheet-interpreter = "sheet_interpreter.cli:main"
 
 [project.urls]
-Repository = "https://github.com/Luckolite/Score-OMR"
-Issues = "https://github.com/Luckolite/Score-OMR/issues"
+Documentation = "https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md"
+Repository = "https://github.com/Luckolite/Sheet-Music-Recognition"
+Issues = "https://github.com/Luckolite/Sheet-Music-Recognition/issues"
+Downloads = "https://github.com/Luckolite/Sheet-Music-Recognition/releases"
 
 [tool.setuptools.packages.find]
 where = ["src"]

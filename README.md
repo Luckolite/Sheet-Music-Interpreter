@@ -1,10 +1,25 @@
-# Score-OMR
+# Sheet-Music-Recognition — Optical Music Recognition
 
-Offline sheet-music recognition for images and PDFs, with downloadable model weights,
-a Java decoder and a Python interface. Exports JSON, MIDI, MP3 and MusicXML.
+Convert sheet-music images and scanned PDFs to **MusicXML, MIDI, JSON and MP3**
+with offline optical music recognition (OMR). Sheet-Music-Recognition includes downloadable
+model weights, a Java decoder and a Python API and command-line tool, published
+on PyPI as **[`score-reader`](https://pypi.org/project/score-reader/)**.
+
+[![PyPI version](https://img.shields.io/pypi/v/score-reader)](https://pypi.org/project/score-reader/)
+[![Build and test](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml/badge.svg)](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/LICENSE)
+
+[Quick start](#install-and-use) · [Documentation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md) · [Python / Java API](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) · [Model and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md) · [Downloads](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
 
 **Code and weights are Apache-2.0 licensed, including commercial and closed-source use.**
-You do not need to publish your own code. Follow the [license and notice requirements](docs/licensing.md).
+You do not need to publish your own code. Follow the [license and notice requirements](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/licensing.md).
+
+**Experimental:** recognition can miss or add notes and misread rhythms or
+symbols. Check exports against the printed score. See the
+[model evaluation and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md#evaluation-and-limitations).
+
+Previously named Score-OMR and Music Sheets Interpreter / Sheet-Music-Interpreter; the Python
+import remains `sheet_interpreter`, and the `sheet-interpreter` CLI remains an alias.
 
 ## What it supports 🎹🎸🎻🎷
 
@@ -14,15 +29,15 @@ You do not need to publish your own code. Follow the [license and notice require
 
 - Note-equals-number tempo marks, and note-equals-note metric modulations, including dotted pulses.
 
-- Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses, sf/sfz/sfp attacks and paired tremolos. See [the shared playback policy](docs/expressive-performance.md).
+- Expressive previews: rit./rall. slowing, rite/ritenuto, fermata holds, breath pauses, sf/sfz/sfp attacks and paired tremolos. See [the shared playback policy](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/expressive-performance.md).
 - Piano pedal brackets carry through to MIDI sustain, audio previews and MusicXML.
 
-- Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Labelled graphical bend arrows include quarter-tone amounts and return strokes; explicit whammy-bar arrows retain their pitch direction, and up/down strum marks order chord attacks. See [gesture evidence and limits](docs/tab-gestures.md).
+- Tuning headers, detached tab stems, partial beams, rests, dots, triplets, grace frets, tied continuations, hammer-on, pull-off, tapping, slide, bend, vibrato, and harmonic symbols. Missing tab rhythm is estimated. Labelled graphical bend arrows include quarter-tone amounts and return strokes; explicit whammy-bar arrows retain their pitch direction, and up/down strum marks order chord attacks. See [gesture evidence and limits](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/tab-gestures.md).
 
 - JSON for integration, MIDI/MP3 for preview, and MusicXML for editing with retained clefs, slurs, articulations, ornaments and grace notes.
 - Staff-owned arco, pizzicato and expression labels in MusicXML follow the first proved affected note's exported clock.
 - Absolute dynamics at retained note columns use their proved written onsets in MusicXML, including staff ownership and edited timing.
-- Explicit unpitched events and caller-selected previews: [API examples](docs/unpitched-events.md).
+- Explicit unpitched events and caller-selected previews: [API examples](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/unpitched-events.md).
 
 - MusicXML reconstructs a concert-pitch score, not the original layout or tab placement.
   Guitar effects are text annotations in MusicXML.
@@ -63,33 +78,33 @@ Use `--pages 1,2,3` to select PDF pages, `--meter 3/4` for the initial meter,
 The default meter and tempo are 4/4 and 120 BPM. Run `score-reader --help`
 for all options. The former `sheet-interpreter` command remains available as an alias.
 
-Processing runs locally. See [API and output details](docs/integration.md) for
-Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Score-OMR/releases)
+Processing runs locally. See [API and output details](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) for
+Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
 for standalone JAR and model downloads.
 
 ## Integration and model
 
 Use `Interpreter` and `write_musicxml` from Python, or `SheetInterpreter.analyze()`
-from Java. See [API examples and output format](docs/integration.md).
-An optional [native Java decoding service](docs/native-decoder.md) supports
+from Java. See [API examples and output format](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md).
+An optional [native Java decoding service](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/native-decoder.md) supports
 bounded, source-matched geometry and analysis requests from local workers.
 The Python reader runs bundled-model OCR automatically on images and scanned PDFs.
-The separate [shared Java OCR pipeline](docs/portable-ocr.md) and optional ONNX
+The separate [shared Java OCR pipeline](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/portable-ocr.md) and optional ONNX
 binding remain available for cross-platform evaluation. The optional
-[desktop ONNX segmentation adapter](docs/portable-segmentation.md) uses the pinned
+[desktop ONNX segmentation adapter](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/portable-segmentation.md) uses the pinned
 v3 conversion without changing the default Python model.
 
 The bundled v4 model comes from our own synthetic training lineage, without pretrained
-weights or commercial score scans. See the [model card](models/MODEL_CARD.md), [evaluation](models/evaluation.json),
-[training guide](training/README.md) and [source origins](docs/source-provenance.md).
+weights or commercial score scans. See the [model card](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md), [evaluation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/evaluation.json),
+[training guide](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/training/README.md) and [source origins](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/source-provenance.md).
 
 ## Development
 
 To build from source:
 
 ```sh
-git clone https://github.com/Luckolite/Score-OMR.git
-cd Score-OMR
+git clone https://github.com/Luckolite/Sheet-Music-Recognition.git
+cd Sheet-Music-Recognition
 python -m venv .venv
 ```
 
@@ -115,7 +130,7 @@ defaults to a 512 MiB heap; per-batch logs and results are saved under
 `build/test-parallel`. A failed batch makes the command fail.
 
 Bug reports and contributions are welcome. Use shareable examples and keep private logs
-and commercial scores out of public posts. See [CONTRIBUTING.md](CONTRIBUTING.md).
+and commercial scores out of public posts. See [CONTRIBUTING.md](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/CONTRIBUTING.md).
 
 ### Pickup caller integration regression
 
