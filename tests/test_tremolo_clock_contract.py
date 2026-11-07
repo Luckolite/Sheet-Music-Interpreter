@@ -3,9 +3,9 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter.tremolo_wire import encode_source, decode_source, performance_pairs
-from sheet_interpreter.tremolo_export import retained
-from sheet_interpreter.tremolo_performance import source_spans
+from sheet_music_recognition.tremolo_wire import encode_source, decode_source, performance_pairs
+from sheet_music_recognition.tremolo_export import retained
+from sheet_music_recognition.tremolo_performance import source_spans
 
 def fixture():
     origins = [dict(pageIndex=0, noteIndex=i) for i in range(3)]

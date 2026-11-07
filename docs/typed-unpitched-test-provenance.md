@@ -1,6 +1,6 @@
 # Typed unpitched Java regression provenance
 
-These tests are original scalar records, byte arrays and synthetic raster pixels authored for Music Sheets interpreter maintenance in 2026. They are offered under Apache-2.0. They contain no commercial score scans, learned masks, model files, personal libraries, device logs, credentials or signing material.
+These tests are original scalar records, byte arrays and synthetic raster pixels authored for Sheet Music Recognition maintenance in 2026. They are offered under Apache-2.0. They contain no commercial score scans, learned masks, model files, personal libraries, device logs, credentials or signing material.
 
 The portable copies adapt the Java package to `io.github.luckolite.interpreter`. Within the original typed Java overlay, existing tests retain their released source except `TablatureDecoderTest.fullyMutedStrokeKeepsItsTimeWithoutInventingPitch`: a proven muted source attack now remains an UNPITCHED event with its written duration, instead of becoming a rest.
 

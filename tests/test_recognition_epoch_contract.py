@@ -6,7 +6,7 @@ import re
 import unittest
 from unittest.mock import patch
 
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 
 class RecognitionEpochContractTest(unittest.TestCase):

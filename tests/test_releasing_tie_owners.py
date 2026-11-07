@@ -9,9 +9,9 @@ import unittest
 from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
-from sheet_interpreter.musicxml import write_musicxml
-from sheet_interpreter.performance import _perform_one
-from sheet_interpreter.tie_owners import releasing_links
+from sheet_music_recognition.musicxml import write_musicxml
+from sheet_music_recognition.performance import _perform_one
+from sheet_music_recognition.tie_owners import releasing_links
 from test_tremolo import attacks
 
 
@@ -113,7 +113,7 @@ class ReleasingTieTests(unittest.TestCase):
                                 ([note(0, 2), note(2, 1, True), note(2, 2, True)], [(0, 2), (2, 3), (2, 4)])]:
             doc = document(notes)
             before, captured = copy.deepcopy(doc), []
-            with patch('sheet_interpreter.performance._bridge', side_effect=lambda data: bridge_sound_capture(data, captured)):
+            with patch('sheet_music_recognition.performance._bridge', side_effect=lambda data: bridge_sound_capture(data, captured)):
                 _perform_one(doc['pages'], 120)
             self.assertEqual(expected, [(value['start'], value['end']) for value in captured])
             self.assertEqual(before, doc)

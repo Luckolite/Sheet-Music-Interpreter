@@ -66,7 +66,7 @@ class GlyphResourceTest(unittest.TestCase):
                 build_java.resource_snapshots(root)
 
     def test_jar_contains_verified_bytes_and_notices(self):
-        jar = ROOT / "src/sheet_interpreter/interpreter.jar"
+        jar = ROOT / "src/sheet_music_recognition/interpreter.jar"
         if not jar.is_file():
             self.skipTest("Build the standalone JAR before checking packaged resources")
         with zipfile.ZipFile(jar) as bundle:

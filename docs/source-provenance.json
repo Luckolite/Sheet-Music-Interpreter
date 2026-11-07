@@ -463,11 +463,11 @@
       }
     ],
     "python_counterparts": [
-      "src/sheet_interpreter/arpeggio_notation.py",
-      "src/sheet_interpreter/tie_owners.py",
-      "src/sheet_interpreter/musicxml.py",
-      "src/sheet_interpreter/midi.py",
-      "src/sheet_interpreter/performance.py"
+      "src/sheet_music_recognition/arpeggio_notation.py",
+      "src/sheet_music_recognition/tie_owners.py",
+      "src/sheet_music_recognition/musicxml.py",
+      "src/sheet_music_recognition/midi.py",
+      "src/sheet_music_recognition/performance.py"
     ],
     "boundary": "Only reviewed interpreter algorithms and original synthetic tests are ported. App UI, storage, sync, imported libraries, commercial scans and private recording scheduling/alignment/onset analysis remain outside the standalone package. No model weights or record layouts changed.",
     "validation_scope": "Targeted Java and Python regressions cover literal/source-record semantics; required cumulative build/test/smoke/package and live paired deployment remain separate completion gates."
@@ -9707,7 +9707,7 @@
       "reviewed_app_state": "Committed recognition130 source integration; cumulative app/Hub worker delivery pending goal completion.",
       "bow291_review_note": "Guide291 carries attack-local6/7 in existing five-field records; older requested formats refuse bows. Validate exact source attack and count bound; native imports remain top-level, standalone imports package-relative. Recognition85 matches app and Hub.",
       "cue_flag87_review_note": "Original procedural geometry only. Cue-size local glyph gap reuses unchanged own-stem and curved-flag checks. Existing scalar and wire semantics retained; no private raster/model/dependency change.",
-      "standalone_path": "src/sheet_interpreter/guide_writer.py",
+      "standalone_path": "src/sheet_music_recognition/guide_writer.py",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
       "recognition95_adapter_review": "semantic-adapter",
       "recognition96_review_note": "Reviewed recognition96: complete raw attached approach branches preserve isolated written scoop/plop through Java and standalone MusicXML; one-pixel raw head-fringe contact closes only beside strict ink inside the same independently proved head. Existing finite cap, contains and contour limits remain unchanged. Original synthetic tests only; Guide292/audio97, models and dependencies unchanged. Cached phrase-stage and derived291 consumer proof are scoped, not full native/device/render validation.",
@@ -9845,7 +9845,7 @@
     },
     "multi_rest_wire.py": {
       "source_path": "tools/native-worker/multi_rest_wire.py",
-      "standalone_path": "src/sheet_interpreter/multi_rest_wire.py",
+      "standalone_path": "src/sheet_music_recognition/multi_rest_wire.py",
       "source_sha256": "0975cd86d9da38c4cf3351fc7452dab2301b0040111ed3d0b64946421b632702",
       "source_normalized_sha256": "9351b90daf70bfcdfb3c12714d0bf24962630b10651314078ee439f5de05cf94",
       "standalone_sha256": "0975cd86d9da38c4cf3351fc7452dab2301b0040111ed3d0b64946421b632702",
@@ -9871,7 +9871,7 @@
       "review_note": "Expose bounded prefix decoding so the following source section has its own framing. Existing complete semantic decode remains strict. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published.",
       "scoped_reviewed_app_commit": "48c63effa5905c396dde62b847e064573516f047",
       "reviewed_source_state": "Accepted source130; Guide295, recognition112, audio97",
-      "standalone_path": "src/sheet_interpreter/semantic_wire.py",
+      "standalone_path": "src/sheet_music_recognition/semantic_wire.py",
       "standalone_sha256": "9383cec08d4030aeea31d22640a058b85510faca6f0b58058581db9affda0257",
       "release130_review_note": "Namespace-normalized executable tokens or Python AST are equivalent after existing flat-module/package imports.",
       "standalone_normalized_sha256": "9383cec08d4030aeea31d22640a058b85510faca6f0b58058581db9affda0257",
@@ -9886,15 +9886,15 @@
       "reviewed_source_state": "Committed and hooked source; exact paired helper tokens or Python AST verified. Final packaged app/Hub/worker/device rollout remains pending.",
       "review_note": "Original Apache-2.0 Python SLT1/SLT2 and SLP1implementation; Java/Python bytes and C#validators independently qualified. Package import adaptation only. Original procedural controls only; no private scores, library records, masks, model weights or signing material are published."
     },
-    "src/sheet_interpreter/continuous_slide_curve.py": {
+    "src/sheet_music_recognition/continuous_slide_curve.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "ba457c0d45434d04f858204ea2a5b4066e668d95370a89d529f0534523fe369f",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/cue_caption.py": {
-      "standalone_path": "src/sheet_interpreter/cue_caption.py",
+    "src/sheet_music_recognition/cue_caption.py": {
+      "standalone_path": "src/sheet_music_recognition/cue_caption.py",
       "standalone_sha256": "67eb02aec6197ad025721b0b53b873cf9a1e7bca464c130982e8129f52b69ab2",
       "reviewed_sha256": "67eb02aec6197ad025721b0b53b873cf9a1e7bca464c130982e8129f52b69ab2",
       "license": "Apache-2.0",
@@ -9902,9 +9902,9 @@
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "reviewed_app_state": "Reviewed recognition109 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/dynamic_export.py": {
+    "src/sheet_music_recognition/dynamic_export.py": {
       "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
-      "standalone_path": "src/sheet_interpreter/dynamic_export.py",
+      "standalone_path": "src/sheet_music_recognition/dynamic_export.py",
       "standalone_sha256": "56dfe48e4f1704c074e070d0dc6e5e75bab367fee3d4b9bc570e606ef813744b",
       "reviewed_sha256": "72bbaf718cff7dbc94bcf76934b84201a01f2110a27926e58d9c545c61ffbb75",
       "license": "Apache-2.0",
@@ -9914,8 +9914,8 @@
       "recognition108_review_note": "Attach uniquely owned sudden-dynamic qualifiers to the existing written clock; ambiguous claims abstain.",
       "standalone_normalized_sha256": "56dfe48e4f1704c074e070d0dc6e5e75bab367fee3d4b9bc570e606ef813744b"
     },
-    "src/sheet_interpreter/hairpin_export.py": {
-      "standalone_path": "src/sheet_interpreter/hairpin_export.py",
+    "src/sheet_music_recognition/hairpin_export.py": {
+      "standalone_path": "src/sheet_music_recognition/hairpin_export.py",
       "standalone_sha256": "b339649539c78e65d94b7d17113a96e07b4ac2d4a5e6c45bd411a6223e824638",
       "reviewed_sha256": "b339649539c78e65d94b7d17113a96e07b4ac2d4a5e6c45bd411a6223e824638",
       "license": "Apache-2.0",
@@ -9924,18 +9924,18 @@
       "reviewed_app_commit": "450d2e33150b9fb67ed4006db68efb3934fc345f",
       "reviewed_app_state": "Reviewed recognition106 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/midi.py": {
+    "src/sheet_music_recognition/midi.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "4b8b1c8467cd196567fe01b6b055bae19f117d9edc29999af1c94ff9fc186113",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/musicxml.py": {
+    "src/sheet_music_recognition/musicxml.py": {
       "origin": "Original standalone Apache-2.0 consumer/contracts; semantic app counterpart reviewed separately.",
       "reviewed_sha256": "f063ffa46f8aefa9c46ed5eb34d820db6d23bb813d2ebc74ffc9c4d18cf54383",
       "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged.",
-      "standalone_path": "src/sheet_interpreter/musicxml.py",
+      "standalone_path": "src/sheet_music_recognition/musicxml.py",
       "standalone_sha256": "fa1658532cc6f6c30479ca5b7d7fa4977f7f5e592cf611c80cbc5a2f94b52d9d",
       "license": "Apache-2.0",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged.",
@@ -9950,16 +9950,16 @@
       "recognition109_review_note": "Refresh semantic-only Python source/test hash for the reviewed Guide293/visual-cue integration.",
       "standalone_normalized_sha256": "fa1658532cc6f6c30479ca5b7d7fa4977f7f5e592cf611c80cbc5a2f94b52d9d"
     },
-    "src/sheet_interpreter/navigation.py": {
+    "src/sheet_music_recognition/navigation.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "b44cbd21d9718fb37eb036ce7cb404411bf7f1ce15ffbcbe13def2a47f97f724",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/neutral_rest_caption.py": {
+    "src/sheet_music_recognition/neutral_rest_caption.py": {
       "origin": "Original standalone Python implementation; Apache-2.0.",
-      "standalone_path": "src/sheet_interpreter/neutral_rest_caption.py",
+      "standalone_path": "src/sheet_music_recognition/neutral_rest_caption.py",
       "standalone_sha256": "01ab708c5ad0a8463eebdb15de1bec8dddc17fca55fe4997064d370d3f180ae6",
       "reviewed_sha256": "01ab708c5ad0a8463eebdb15de1bec8dddc17fca55fe4997064d370d3f180ae6",
       "license": "Apache-2.0",
@@ -9967,16 +9967,16 @@
       "reviewed_app_commit": "37907a14314f8a718a0d75f4e466488095ddb74f",
       "reviewed_app_state": "Reviewed recognition97 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/octave_shift_export.py": {
+    "src/sheet_music_recognition/octave_shift_export.py": {
       "origin": "Original standalone Python implementation; Apache-2.0, not an extracted app file.",
       "reviewed_sha256": "7611a466365a7bdc9ca05f292cf3c3cd91960b85ef43751a873f1367c1efe760",
       "reviewed_app_commit": "4f88801feec926c413046f6524d47fb8fc185819",
       "reviewed_source_state": "committed",
       "review_note": "MusicXML retains performed pitch and emits written octave displacement in final note order; grace transitions, mixed voices, independent staves and global object numbering have original source-free controls. Existing MIDI sounding pitch is unchanged."
     },
-    "src/sheet_interpreter/ornament_export.py": {
+    "src/sheet_music_recognition/ornament_export.py": {
       "origin": "Original standalone Python implementation; Apache-2.0.",
-      "standalone_path": "src/sheet_interpreter/ornament_export.py",
+      "standalone_path": "src/sheet_music_recognition/ornament_export.py",
       "standalone_sha256": "26275262da93e4f612a00397daf9ef42b3d9807cd69a20a65d3f0fb6fc865e1a",
       "reviewed_sha256": "5c4a27bcb2547c9d7b3dda1174790bfea7a30f63fef563f5719c4d2a09bdb570",
       "license": "Apache-2.0",
@@ -9985,12 +9985,12 @@
       "reviewed_app_state": "Reviewed recognition96 source committed; cumulative matched rollout deferred during active goal.",
       "standalone_normalized_sha256": "26275262da93e4f612a00397daf9ef42b3d9807cd69a20a65d3f0fb6fc865e1a"
     },
-    "src/sheet_interpreter/performance.py": {
+    "src/sheet_music_recognition/performance.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
       "reviewed_sha256": "7d4dc605c7ce994646e318fe31bc3f460e0d8a91942aaffa7ec3625670c5cc59",
       "reviewed_app_commit": "dbdc5217403ea059b9ac984a2a1c47b3b548107b",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim.",
-      "standalone_path": "src/sheet_interpreter/performance.py",
+      "standalone_path": "src/sheet_music_recognition/performance.py",
       "standalone_sha256": "ec4cd39c6d0f96fa333a43b227b5ecb07fb19bccfc1e7a9d7d60b56f7d63eca6",
       "license": "Apache-2.0",
       "recognition107_review_note": "Refresh semantic-only performance projection after 107 caller integration; no app source mapping.",
@@ -9998,37 +9998,37 @@
       "recognition109_review_note": "Refresh semantic-only Python source/test hash for the reviewed Guide293/visual-cue integration.",
       "standalone_normalized_sha256": "ec4cd39c6d0f96fa333a43b227b5ecb07fb19bccfc1e7a9d7d60b56f7d63eca6"
     },
-    "src/sheet_interpreter/rest_kinds.py": {
+    "src/sheet_music_recognition/rest_kinds.py": {
       "origin": "Original standalone Python implementation; Apache-2.0. Full-measure rest semantics aligned with the reviewed app consumers; not an extracted app file.",
       "reviewed_sha256": "d902e20c427f37893dd30134f5e6b300613107f21c0231a7e28bc87124a87f75",
       "reviewed_app_commit": "a98938bbdb719ccddfc50216ef5aa1aced11dc16",
       "review_note": "Absent rest Kind preserves legacy literal semantics; explicit FULL uses raw duration4 and actual measure span. Strict invalid/null kinds fail. Full silence retains its own voice/staff in MusicXML and does not advance moving-voice clocks. Original generated controls preserve five literal-only XML byte sequences. Tiny-span expressive inherited minimum remains0.125; no fresh OCR, PCM or phone claim."
     },
-    "src/sheet_interpreter/slide_numbering.py": {
+    "src/sheet_music_recognition/slide_numbering.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "b9091b2f9900397885835397aba084856d2d958ae9c430dce0ecc00e4a533acb",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/slide_performance.py": {
+    "src/sheet_music_recognition/slide_performance.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "57cc4d014b5560e83c560e16f5db7a621a57fad6ef6ab49e4a3820cad5e350cb",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/slur_export.py": {
+    "src/sheet_music_recognition/slur_export.py": {
       "origin": "Original standalone Python implementation; Apache-2.0.",
-      "standalone_path": "src/sheet_interpreter/slur_export.py",
+      "standalone_path": "src/sheet_music_recognition/slur_export.py",
       "standalone_sha256": "86cc4deb35ab056cfa8722ff25d926d59de46f21a33cd69c92ebd046d0865a15",
       "reviewed_sha256": "86cc4deb35ab056cfa8722ff25d926d59de46f21a33cd69c92ebd046d0865a15",
       "license": "Apache-2.0",
       "reviewed_source_state": "Reviewed recognition95 standalone consumers; see recognition95_review paired app commit.",
       "recognition95_review_note": "Reviewed recognition95: preserve positively recognized printed multi-rest identity through the score, source selections, joins, Guide292 MRG1 cache/native/Python/Hub records, MusicXML and compact layout without changing logical rest timing. Complete raw two-bulb rest recovery uses finite upper-cap ownership and a prepaid optional raster work bound. Raw-proved returning-pitch slur candidates require a same-part nonoverlapping intervening different-pitch attack; exact ties retain precedence and candidate XML endpoints must share the emitted part. Original synthetic regressions only; models, dependencies and audio97 unchanged."
     },
-    "src/sheet_interpreter/source_tempo_clock.py": {
-      "standalone_path": "src/sheet_interpreter/source_tempo_clock.py",
+    "src/sheet_music_recognition/source_tempo_clock.py": {
+      "standalone_path": "src/sheet_music_recognition/source_tempo_clock.py",
       "standalone_sha256": "3086697e9ec9febfc01067dec10f50814434c57cf6be5e8d5930298859b00c02",
       "reviewed_sha256": "3086697e9ec9febfc01067dec10f50814434c57cf6be5e8d5930298859b00c02",
       "license": "Apache-2.0",
@@ -10037,15 +10037,15 @@
       "reviewed_app_commit": "fb7ced7a50c09b01afb50a50fab945f7d30d9319",
       "reviewed_app_state": "Reviewed recognition107 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/straight_slide.py": {
+    "src/sheet_music_recognition/straight_slide.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0. Reviewed against the matching app consumer and original procedural controls, not an extracted app file.",
       "reviewed_sha256": "102a343fb86f5af16fb069b6b8797ecebc1624925936e123c221c65ea872b048",
       "reviewed_app_commit": "f0b52f27e47e3ab3fde9e2b2960a7d97a3033818",
       "reviewed_source_state": "committed",
       "review_note": "Connected straight-slide endpoint identity, elapsed-time approach curve and isolated MIDI bend state; solid MusicXML endpoints share bounded live numbers. Original source-free regressions only. App requires complete target intervals; standalone supports qualified Fine-clipped targets. No recognition or actual missing-slide correction claim."
     },
-    "src/sheet_interpreter/sudden_dynamic.py": {
-      "standalone_path": "src/sheet_interpreter/sudden_dynamic.py",
+    "src/sheet_music_recognition/sudden_dynamic.py": {
+      "standalone_path": "src/sheet_music_recognition/sudden_dynamic.py",
       "standalone_sha256": "178ed12acd641e7451ef3ad6a6e3e65965a92f697ccb691ee1175ef75b74ecc5",
       "reviewed_sha256": "178ed12acd641e7451ef3ad6a6e3e65965a92f697ccb691ee1175ef75b74ecc5",
       "license": "Apache-2.0",
@@ -10054,9 +10054,9 @@
       "reviewed_app_commit": "f57f81f1afc7516852d7f0275fbae1c03bb706dd",
       "reviewed_app_state": "Reviewed recognition108 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/technique_export.py": {
+    "src/sheet_music_recognition/technique_export.py": {
       "origin": "Original standalone implementation and adapter; Apache-2.0.",
-      "standalone_path": "src/sheet_interpreter/technique_export.py",
+      "standalone_path": "src/sheet_music_recognition/technique_export.py",
       "standalone_sha256": "aebff3026f3857276d15201333c3f392d6dd30e15a65bd236a1a76b690d9c0e1",
       "reviewed_sha256": "aebff3026f3857276d15201333c3f392d6dd30e15a65bd236a1a76b690d9c0e1",
       "license": "Apache-2.0",
@@ -10064,8 +10064,8 @@
       "reviewed_app_commit": "053bce07730823a4efa5f40248f1e0931548cc24",
       "reviewed_app_state": "Reviewed recognition99 source committed; cumulative matched rollout deferred during active goal."
     },
-    "src/sheet_interpreter/visual_size.py": {
-      "standalone_path": "src/sheet_interpreter/visual_size.py",
+    "src/sheet_music_recognition/visual_size.py": {
+      "standalone_path": "src/sheet_music_recognition/visual_size.py",
       "standalone_sha256": "69214fd6a36db3cecbe5ddf861d992df7c3c01c592df461957e5086ce935eadf",
       "reviewed_sha256": "69214fd6a36db3cecbe5ddf861d992df7c3c01c592df461957e5086ce935eadf",
       "license": "Apache-2.0",
@@ -12073,7 +12073,7 @@
         "name": "guide_writer.py",
         "app_path": "tools/native-worker/guide_writer.py",
         "app_sha256": "17a2d23e21d4cdbb9ff2e6c6dfa7cb59b4280fd1309c2c0df5d03c6b609b33e4",
-        "standalone_path": "src/sheet_interpreter/guide_writer.py",
+        "standalone_path": "src/sheet_music_recognition/guide_writer.py",
         "standalone_sha256": "aa7c595e0b87dc8c7f315c28cbfeb54053cbeae37feaee7732f382493b8f5d1a"
       }
     ]
@@ -12376,8 +12376,8 @@
       "PedalPerformance.java"
     ],
     "standalone_python_sources": [
-      "src/sheet_interpreter/performance.py",
-      "src/sheet_interpreter/musicxml.py"
+      "src/sheet_music_recognition/performance.py",
+      "src/sheet_music_recognition/musicxml.py"
     ],
     "app_only_exporter": {
       "path": "app/src/main/java/com/musicsheets/app/pdf/SheetMusicXml.java",
@@ -12840,7 +12840,7 @@
         "sha256": "43d2a1e87472ededd13c9a61c9297f3207a6fbc81c37b07eb9915b45489b3a70"
       },
       {
-        "path": "src/sheet_interpreter/navigation.py",
+        "path": "src/sheet_music_recognition/navigation.py",
         "sha256": "f0b026a63ad9a22848f25e1873554ca1572b3f391234b1090b7ec991d6202f09"
       }
     ],
@@ -12989,7 +12989,7 @@
     ],
     "reviewed_semantic_only": [
       {
-        "standalone_path": "src/sheet_interpreter/source_tempo_clock.py",
+        "standalone_path": "src/sheet_music_recognition/source_tempo_clock.py",
         "standalone_sha256": "3086697e9ec9febfc01067dec10f50814434c57cf6be5e8d5930298859b00c02"
       },
       {
@@ -12997,11 +12997,11 @@
         "standalone_sha256": "0290db44f1430525de4086eee7daac8767f7a1121edfffea1b49d506c7dea93e"
       },
       {
-        "standalone_path": "src/sheet_interpreter/musicxml.py",
+        "standalone_path": "src/sheet_music_recognition/musicxml.py",
         "standalone_sha256": "aba87bc0d195eae36c49af3f101a066b8c9723dfab0a3292a5bd326f1b417641"
       },
       {
-        "standalone_path": "src/sheet_interpreter/performance.py",
+        "standalone_path": "src/sheet_music_recognition/performance.py",
         "standalone_sha256": "7fa9e64afa28cc49afc2953cd7f0dad4fdb8d6cb043e8fb153d74bb9f9abcf26"
       }
     ],
@@ -13669,10 +13669,10 @@
       }
     ],
     "reviewed_public_semantic_paths": [
-      "src/sheet_interpreter/cue_caption.py",
-      "src/sheet_interpreter/musicxml.py",
-      "src/sheet_interpreter/performance.py",
-      "src/sheet_interpreter/visual_size.py",
+      "src/sheet_music_recognition/cue_caption.py",
+      "src/sheet_music_recognition/musicxml.py",
+      "src/sheet_music_recognition/performance.py",
+      "src/sheet_music_recognition/visual_size.py",
       "tests/test_guide283_writer.py",
       "tests/test_guide284_tab_ties.py",
       "tests/test_guide293_visual_size.py",
@@ -15900,8 +15900,8 @@
     "license": "Apache-2.0",
     "scope": "Public reader/CLI/Main adapters for the existing explicit physical-page analysis overload; app/native worker forwarding is already present.",
     "sourceFiles": [
-      "src/sheet_interpreter/reader.py",
-      "src/sheet_interpreter/cli.py",
+      "src/sheet_music_recognition/reader.py",
+      "src/sheet_music_recognition/cli.py",
       "java/src/main/java/io/github/luckolite/interpreter/Main.java"
     ],
     "originalRegressions": [
@@ -15913,7 +15913,7 @@
     "boundary": "Isolated scalar backend establishes actual bridge forwarding and serialization. Generated scale smoke separately uses real recognition; no general slur accuracy or device claim. No guide/model/audio epoch change."
   },
   "standalone_parenthesis_fragment_guard_review": {
-    "source": "src/sheet_interpreter/musicxml.py",
+    "source": "src/sheet_music_recognition/musicxml.py",
     "standalone_sha256": "fa1658532cc6f6c30479ca5b7d7fa4977f7f5e592cf611c80cbc5a2f94b52d9d",
     "original_regressions": [
       "tests/test_arpeggio_port.py",
@@ -15926,8 +15926,8 @@
     "license": "Apache-2.0",
     "scope": "Standalone staff-per-part MusicXML reconstruction adapter consumes retained decoded-note clefs; no recognition/model or app/native wire change.",
     "sourceFiles": [
-      "src/sheet_interpreter/musicxml.py",
-      "src/sheet_interpreter/clef_export.py"
+      "src/sheet_music_recognition/musicxml.py",
+      "src/sheet_music_recognition/clef_export.py"
     ],
     "originalRegression": "tests/test_musicxml_clefs.py",
     "originalControls": 10,
@@ -15943,8 +15943,8 @@
     "license": "Apache-2.0",
     "scope": "Standalone Python MusicXML exporter adapter; app Java SlurMusicXml already exports retained confirmed phrases.",
     "sourceFiles": [
-      "src/sheet_interpreter/musicxml.py",
-      "src/sheet_interpreter/slur_export.py"
+      "src/sheet_music_recognition/musicxml.py",
+      "src/sheet_music_recognition/slur_export.py"
     ],
     "originalRegression": "tests/test_musicxml_slurs.py",
     "newOriginalTests": 14,
@@ -15959,7 +15959,7 @@
   "standalone_tempo_engraving_review": {
     "license": "Apache-2.0",
     "scope": "Standalone MusicXML presentation adapter; existing app ScoreTempoMark already preserves printed pulse and above-staff placement.",
-    "sourceFile": "src/sheet_interpreter/musicxml.py",
+    "sourceFile": "src/sheet_music_recognition/musicxml.py",
     "originalRegression": "tests/test_musicxml_tempo_marks.py",
     "newOriginalControls": 8,
     "behavior": [
@@ -15978,7 +15978,7 @@
     "files": {
       "java/src/main/java/io/github/luckolite/interpreter/Main.java": "a1e69ecb69fb0e6e86d76d05548aa14923701f21e4d5d7dc750ba3d696342a1d",
       "java/src/test/java/io/github/luckolite/interpreter/MainWrittenPlacementExportTest.java": "22e34a799f0f2a25886f34e8cb4b963279ec092c475a614c593dd21ce4b32584",
-      "src/sheet_interpreter/grace_export.py": "4d9476ef465773128341e109cfedd152b8e3d3bf423fdd75e161cd6475bbb9a3",
+      "src/sheet_music_recognition/grace_export.py": "4d9476ef465773128341e109cfedd152b8e3d3bf423fdd75e161cd6475bbb9a3",
       "tests/test_musicxml_grace.py": "ce124e9f55bc009e9e0d9055cd5bae2c17a11222420a8ffd2b9e2186d341e727"
     },
     "scope": "Optional notation metadata only on grace-bearing pages; existing recognition and playback fields unchanged. Source-owned prefix/trailing groups, principal written clocks and slur order retained.",
@@ -16170,7 +16170,7 @@
     "boundary": "Labelled connected arrow and explicit strum cases only; no universal real-score or arbitrary multi-stage gesture accuracy claim. Per-head simultaneous independent strum/pitch effects remain unresolved. App-only OCR crop, exact recorded-voice playback and export wiring reviewed separately. Guide291/recognition86/audio97 require paired package/runtime verification. No model, private score, phone log, signing material or app history imported.",
     "native_pdf_chord_followup": {
       "reviewed_app_commit": "1c3c49612944d58fec8b671545ccdddb6a0e2caa",
-      "standalone_adapter": "src/sheet_interpreter/pdf_annotations.py",
+      "standalone_adapter": "src/sheet_music_recognition/pdf_annotations.py",
       "regressions": [
         "test_vertical_chord_digits_never_form_a_tall_compound_fret",
         "TabGestureMarksTest.tallPdfCompoundCannotHideSeparateChordFrets"
@@ -16992,7 +16992,7 @@
         "qualified_candidate_sha256": "465cbeead9e17454e0e10ae98408163f7971ebaff626063101223a71700f733b",
         "difference": "Only checkout CRLF versus qualified LF"
       },
-      "src/sheet_interpreter/musicxml.py": {
+      "src/sheet_music_recognition/musicxml.py": {
         "sha256": "66272a9ef49d49eefdcccd78d2843a24f6a0b65c3e051dad3256597c6868be48",
         "normalized_sha256": "22161bd41123992a522810606778f95dc5def33cc178d78f2d919d0bd6b8b1cc",
         "qualified_candidate_sha256": "22161bd41123992a522810606778f95dc5def33cc178d78f2d919d0bd6b8b1cc"
@@ -17113,7 +17113,7 @@
   "ordinary_composite_conversion_review": {
     "app_commit": "ab38d822",
     "scope": "Android SheetMusicXml RhythmWriter prefers an exact ordinary decomposition before inferred ratios. Explicit source ratios and active groups retain their rules. Render44 refreshes derived conversion output.",
-    "standalone_equivalent": "src/sheet_interpreter/musicxml.py duration_parts already uses the ordinary written vocabulary for ordinary composite spans; no Python behavior change.",
+    "standalone_equivalent": "src/sheet_music_recognition/musicxml.py duration_parts already uses the ordinary written vocabulary for ordinary composite spans; no Python behavior change.",
     "original_regressions": [
       "tests/test_musicxml_binary_tuplet_boundary.py",
       "app/src/test/java/com/musicsheets/app/pdf/OrdinaryCompositeConversionTest.java"

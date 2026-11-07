@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Original persisted-column controls, exercising the shipped performance module."""
 import unittest
-from sheet_interpreter.performance import _resolve_pedal
+from sheet_music_recognition.performance import _resolve_pedal
 
 
 class PedalGlyphColumnsTest(unittest.TestCase):

@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 import unittest
 from original_tiny_coda_probe import source
-from sheet_interpreter.slide_performance import prepare_slides,resolve_slides
-from sheet_interpreter.performance import perform_expressions
+from sheet_music_recognition.slide_performance import prepare_slides,resolve_slides
+from sheet_music_recognition.performance import perform_expressions
 
 
 class OriginalClippedSourceExpressionTests(unittest.TestCase):

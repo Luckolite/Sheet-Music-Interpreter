@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml, note_type, duration_parts, DIVISIONS
+from sheet_music_recognition.musicxml import write_musicxml, note_type, duration_parts, DIVISIONS
 
 
 def event(duration, actual=3, normal=2, midi=60, start=0):

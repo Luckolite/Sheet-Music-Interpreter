@@ -4,9 +4,9 @@
 import copy
 import unittest
 from unittest.mock import patch
-from sheet_interpreter.midi import performance_events, performed_document
-from sheet_interpreter.navigation import _project_one
-from sheet_interpreter.slide_performance import prepare_slides, resolve_slides
+from sheet_music_recognition.midi import performance_events, performed_document
+from sheet_music_recognition.navigation import _project_one
+from sheet_music_recognition.slide_performance import prepare_slides, resolve_slides
 
 
 def document():
@@ -36,7 +36,7 @@ def occurrence(identifier, first, last, performed):
 class ContinuousSlideContextTests(unittest.TestCase):
     def project(self, route):
         prepared = prepare_slides(document())
-        with patch('sheet_interpreter.navigation._route',return_value=dict(complete=True,diagnostics=[],occurrences=route)):
+        with patch('sheet_music_recognition.navigation._route',return_value=dict(complete=True,diagnostics=[],occurrences=route)):
             return resolve_slides(_project_one(prepared,120))
 
     def test_linear_real_endpoint_is_rendered_without_input_mutation(self):

@@ -4,7 +4,7 @@ import copy
 import unittest
 from unittest.mock import patch
 from test_original_slide_tremolo_conflict import document
-from sheet_interpreter.slide_performance import prepare_slides
+from sheet_music_recognition.slide_performance import prepare_slides
 
 
 def plain():
@@ -50,7 +50,7 @@ class OriginalEndpointTremoloPreflightTests(unittest.TestCase):
         self.assertEqual(p['pages'][0]['score']['tremoloSource'],d['pages'][0]['score']['tremoloSource'])
 
     def test_early_rejection_has_zero_bridge_calls(self):
-        with patch('sheet_interpreter.performance._bridge',side_effect=AssertionError('latebridge'))as bridge:
+        with patch('sheet_music_recognition.performance._bridge',side_effect=AssertionError('latebridge'))as bridge:
             with self.assertRaises(ValueError):prepare_slides(document())
             bridge.assert_not_called()
 

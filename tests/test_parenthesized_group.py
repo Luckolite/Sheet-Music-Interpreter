@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as E
-from sheet_interpreter import parenthesized_note_group as g, semantic_wire
-from sheet_interpreter.musicxml import emit_note, write_musicxml
+from sheet_music_recognition import parenthesized_note_group as g, semantic_wire
+from sheet_music_recognition.musicxml import emit_note, write_musicxml
 
 
 def document():

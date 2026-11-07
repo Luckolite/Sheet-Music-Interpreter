@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Original raster workload controls; no score content or model inference."""
 import unittest
-from sheet_interpreter.page_processing_budget import decoder_timeout_seconds
+from sheet_music_recognition.page_processing_budget import decoder_timeout_seconds
 
 
 class PageProcessingBudgetTest(unittest.TestCase):

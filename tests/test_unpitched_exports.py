@@ -5,8 +5,8 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml, DIVISIONS
-from sheet_interpreter.midi import write_midi, performance_events, UnpitchedMidiPreview
+from sheet_music_recognition.musicxml import write_musicxml, DIVISIONS
+from sheet_music_recognition.midi import write_midi, performance_events, UnpitchedMidiPreview
 
 def unpitched(start=0, duration=1, **extra):
     return dict(kind='UNPITCHED',displayStep='E',displayOctave=4,clefBottomDiatonic=30,

@@ -3,7 +3,7 @@ from test_guide293_visual_size import legacy_full_note_layout
 # SPDX-License-Identifier: Apache-2.0
 import copy, hashlib, struct, tempfile, unittest
 from pathlib import Path
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 # Original scalar bytes from both unchanged public and native legacy writers.
 LEGACY_SHA256 = {
     260: '63962cb80d25bb70302021ab13034e77a8e0b0c6ba4ece68e57489915c8de071',
@@ -85,7 +85,7 @@ class WholeRestWriterTest(unittest.TestCase):
         start = rest_start(new, 283)
         self.assertEqual(1, new[start + 32])
         self.assertEqual(4, struct.unpack_from('>d', new, start + 24)[0])
-        from sheet_interpreter import slur_wire, tremolo_wire
+        from sheet_music_recognition import slur_wire, tremolo_wire
         current = legacy_full_note_layout(wire.encode(original, 293))
         source = slur_wire.encode_source(None, len(original['notes']))
         tremolo = tremolo_wire.encode_source(None, len(original['notes']))

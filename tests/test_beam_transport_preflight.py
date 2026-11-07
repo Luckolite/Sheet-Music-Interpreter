@@ -5,7 +5,7 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
-from sheet_interpreter import beam_source, guide_writer
+from sheet_music_recognition import beam_source, guide_writer
 class BeamTransportPreflightTest(unittest.TestCase):
     def test_empty_and_detached_frames_preserve_current_body(self):
         score=dict(measures=[],notes=[],firstMeasureNumber=0,keyChanges=[],tempoChanges=[],meterChanges=[],rests=[],techniqueChanges=[],dynamicChanges=[],playbackDirections=[],expressiveEvents=[])

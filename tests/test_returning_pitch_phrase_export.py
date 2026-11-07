@@ -4,7 +4,7 @@
 import copy,tempfile,unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 from tests.test_musicxml_slurs import document,arc
 
 class ReturningPitchPhraseExportTest(unittest.TestCase):
@@ -46,7 +46,7 @@ class ReturningPitchPhraseExportTest(unittest.TestCase):
     def test_selected_owner_deletion_never_borrows_another_head(self):
         value=self.score();value['pages'][0]['score']['slurSource']['noteOrigins'][0]=None;self.assertEqual(0,self.count(value))
     def test_pending_candidate_round_trip_does_not_become_a_source_edit(self):
-        from sheet_interpreter.slur_wire import encode_source,decode_source
+        from sheet_music_recognition.slur_wire import encode_source,decode_source
         value=self.score();source=value['pages'][0]['score']['slurSource'];wire=encode_source(source,3);self.assertEqual(wire,encode_source(decode_source(wire,3),3));self.assertEqual(2,self.count(value))
     def test_scores_without_slur_metadata_keep_their_existing_export(self):
         value=self.score();value['pages'][0]['score']['slurSource']=None;self.assertEqual(0,self.count(value))

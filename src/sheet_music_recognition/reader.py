@@ -104,7 +104,7 @@ class Interpreter:
         try:
             import tensorflow as tf
         except ImportError as error:
-            raise RuntimeError("Recognition dependencies are missing. Run: pip install --upgrade score-reader") from error
+            raise RuntimeError("Recognition dependencies are missing. Run: pip install --upgrade sheet-music-recognition") from error
         self.runtime = tf.lite.Interpreter(model_path=str(path), num_threads=threads)
         self.runtime.allocate_tensors()
         self.input = self.runtime.get_input_details()[0]
@@ -181,7 +181,7 @@ class Interpreter:
             from .ocr import page_annotations
             words = self.ocr.words(gray)
             annotations = dict(page_annotations(words, annotations["tabWords"]), **annotations)
-        with tempfile.TemporaryDirectory(prefix="sheet-interpreter-") as folder:
+        with tempfile.TemporaryDirectory(prefix="sheet-music-recognition-") as folder:
             page = Path(folder) / "page.page.gz"
             output = Path(folder) / "score.json"
             write_page(page, labels, gray, annotations)

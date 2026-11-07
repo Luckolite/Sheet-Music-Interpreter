@@ -4,7 +4,7 @@
 import copy,tempfile,unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 from tests.test_musicxml_ornaments import document
 
 class IsolatedApproachExportTest(unittest.TestCase):

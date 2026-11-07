@@ -7,7 +7,7 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from test_arpeggio_port import document
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 
 class ParentPageOwnership(unittest.TestCase):
  def test_second_page_local_zero_does_not_mark_first_page(self): self.check(1)

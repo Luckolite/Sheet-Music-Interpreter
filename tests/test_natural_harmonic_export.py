@@ -6,9 +6,9 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 try:
-    from sheet_interpreter.natural_harmonic_notation import target, retained
+    from sheet_music_recognition.natural_harmonic_notation import target, retained
 except ImportError:
     import importlib.util
     spec=importlib.util.spec_from_file_location('original_target',Path(__file__).with_name('natural_harmonic_notation.py'))

@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import unittest
-from sheet_interpreter import semantic_wire
+from sheet_music_recognition import semantic_wire
 
 
 def mark(scope='UNRESOLVED', start=None, end=None):

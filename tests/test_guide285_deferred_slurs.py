@@ -3,7 +3,7 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter import slur_wire
+from sheet_music_recognition import slur_wire
 
 def source():
     return dict(noteOrigins=[dict(pageIndex=9,noteIndex=i) for i in range(3)],spans=[],candidates=[dict(

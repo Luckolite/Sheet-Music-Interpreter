@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import copy,tempfile,unittest,xml.etree.ElementTree as ET
 from pathlib import Path
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 
 
 def doc(rows,bars=2):

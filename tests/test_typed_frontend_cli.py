@@ -14,8 +14,8 @@ import xml.etree.ElementTree as ET
 
 import numpy as np
 from PIL import Image
-from sheet_interpreter import cli, reader
-from sheet_interpreter.typed_performance import unpitched_intervals
+from sheet_music_recognition import cli, reader
+from sheet_music_recognition.typed_performance import unpitched_intervals
 import test_main_typed_cli as bridge_fixture
 from test_main_typed_cli import CORE, PACKAGE, jdk
 
@@ -57,7 +57,7 @@ class TypedFrontendCliTests(unittest.TestCase):
                     PACKAGE+'.Main',*map(str,args[args.index('-jar')+2:])],**kwargs)
         return REAL_RUN(args,**kwargs)
     def invoke(self,*exports,reject=None):
-        args=['sheet-interpreter',str(self.image),'-o',str(self.output),'--annotations',str(self.annotations),*map(str,exports)]
+        args=['sheet-music-recognition',str(self.image),'-o',str(self.output),'--annotations',str(self.annotations),*map(str,exports)]
         errors=io.StringIO()
         with patch('sys.argv',args), patch.object(cli,'Interpreter',return_value=self.engine), \
              patch.object(reader,'grayscale',return_value=np.full((8,8),255,dtype=np.uint8)), \
@@ -152,8 +152,8 @@ class TypedFrontendCliTests(unittest.TestCase):
                 encoder_calls.append(args)
                 raise AssertionError('Unsupported raw U must not launch the MP3 encoder')
             return REAL_POPEN(args,*values,**options)
-        with patch('sheet_interpreter.audio.find_ffmpeg',return_value='unused-ffmpeg'), \
-             patch('sheet_interpreter.audio.subprocess.Popen',side_effect=launch):
+        with patch('sheet_music_recognition.audio.find_ffmpeg',return_value='unused-ffmpeg'), \
+             patch('sheet_music_recognition.audio.subprocess.Popen',side_effect=launch):
             value=self.invoke('--mp3',path,reject='explicit UnpitchedAudioPreview policy')
             self.assertEqual([],encoder_calls)
         self.assertEqual(b'existing-mp3',path.read_bytes())

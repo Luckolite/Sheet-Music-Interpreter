@@ -5,7 +5,7 @@ import unittest
 from unittest.mock import patch
 
 import numpy as np
-from sheet_interpreter import reader
+from sheet_music_recognition import reader
 from test_exact_white_prediction_cache import make_reader, original_prediction
 
 

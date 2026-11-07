@@ -16,7 +16,7 @@ import tempfile
 
 import unittest
 
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 
 

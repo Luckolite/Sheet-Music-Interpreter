@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 """Original final-clock records test the MIDI renderer independently of recognition."""
 import unittest
-from sheet_interpreter.midi import _performance_events_prepared
+from sheet_music_recognition.midi import _performance_events_prepared
 
 
 def event(midi, start, duration, **extra):

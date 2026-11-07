@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import unittest
-from sheet_interpreter.midi import _performance_events_prepared
+from sheet_music_recognition.midi import _performance_events_prepared
 
 
 class ContinuousSlidePedalTests(unittest.TestCase):

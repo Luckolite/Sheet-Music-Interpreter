@@ -7,9 +7,9 @@ import unittest
 import pathlib
 import tempfile
 import xml.etree.ElementTree as ET
-from sheet_interpreter.performance import perform_expressions
-from sheet_interpreter.musicxml import expression_direction, write_musicxml
-from sheet_interpreter.midi import performance_events
+from sheet_music_recognition.performance import perform_expressions
+from sheet_music_recognition.musicxml import expression_direction, write_musicxml
+from sheet_music_recognition.midi import performance_events
 
 def bits(value):
     return struct.unpack('>i',struct.pack('>f',value))[0]

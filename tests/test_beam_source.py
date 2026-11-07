@@ -6,8 +6,8 @@ import json
 import struct
 from pathlib import Path
 import unittest
-from sheet_interpreter import beam_source
-from sheet_interpreter import guide_writer
+from sheet_music_recognition import beam_source
+from sheet_music_recognition import guide_writer
 
 class SourceBeamWireOriginalTest(unittest.TestCase):
     def test_original_controls_and_exact_reencoding(self):

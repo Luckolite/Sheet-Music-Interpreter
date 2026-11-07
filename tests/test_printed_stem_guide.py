@@ -8,7 +8,7 @@ import struct
 
 import unittest
 
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 
 
@@ -109,7 +109,7 @@ class PrintedStemGuideTests(unittest.TestCase):
 
         self.assertEqual(legacy[111:],encoded[113:-57])
 
-        from sheet_interpreter import slur_wire, tremolo_wire
+        from sheet_music_recognition import slur_wire, tremolo_wire
 
         self.assertTrue(encoded.endswith(slur_wire.encode_source(None,len(score['notes'])) + b'\x00' + tremolo_wire.encode_source(None,len(score['notes'])) + struct.pack('>iii',0x4D524731,4,0)))
 

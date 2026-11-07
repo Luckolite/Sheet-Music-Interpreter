@@ -3,7 +3,7 @@
 """Original synthetic pickup framing; no source scores or retained library data."""
 import struct
 import unittest
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 def score():
     return dict(measures=[dict(left=.1, right=.9, top=.2, bottom=.3)], notes=[],

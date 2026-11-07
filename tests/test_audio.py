@@ -8,10 +8,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
-from sheet_interpreter.audio import (
+from sheet_music_recognition.audio import (
     SAMPLE_RATE, _pcm_blocks, _sample_events, find_ffmpeg, write_mp3,
 )
-from sheet_interpreter.midi import write_midi
+from sheet_music_recognition.midi import write_midi
 
 
 def score(notes=(), beats=4, tempos=()):
@@ -82,7 +82,7 @@ class AudioTest(unittest.TestCase):
         self.assertEqual(4*SAMPLE_RATE, end)
 
     def test_missing_encoder_has_actionable_error(self):
-        with patch('sheet_interpreter.audio.shutil.which', return_value=None):
+        with patch('sheet_music_recognition.audio.shutil.which', return_value=None):
             with self.assertRaisesRegex(ValueError, 'FFmpeg executable not found'):
                 find_ffmpeg('missing-encoder')
             with patch.dict('sys.modules', {'imageio_ffmpeg': None}):
@@ -92,7 +92,7 @@ class AudioTest(unittest.TestCase):
     def test_audio_extra_is_used_when_path_has_no_encoder(self):
         from types import SimpleNamespace
         bundled = SimpleNamespace(get_ffmpeg_exe=lambda: '/bundled/ffmpeg')
-        with patch('sheet_interpreter.audio.shutil.which', return_value=None), \
+        with patch('sheet_music_recognition.audio.shutil.which', return_value=None), \
              patch.dict('sys.modules', {'imageio_ffmpeg': bundled}):
             self.assertEqual('/bundled/ffmpeg', find_ffmpeg())
 
@@ -116,8 +116,8 @@ class AudioTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             target = Path(folder)/'preview.mp3'
             target.write_bytes(b'previous audio')
-            with patch('sheet_interpreter.audio.find_ffmpeg', return_value='ffmpeg'), \
-                 patch('sheet_interpreter.audio.subprocess.Popen', return_value=process):
+            with patch('sheet_music_recognition.audio.find_ffmpeg', return_value='ffmpeg'), \
+                 patch('sheet_music_recognition.audio.subprocess.Popen', return_value=process):
                 with self.assertRaisesRegex(RuntimeError, 'MP3 encoder failed'):
                     write_mp3(score([note()]), target)
             self.assertEqual(b'previous audio', target.read_bytes())

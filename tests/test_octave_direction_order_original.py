@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import unittest,xml.etree.ElementTree as E
-from sheet_interpreter.octave_shift_export import apply
+from sheet_music_recognition.octave_shift_export import apply
 class OctaveDirectionOrderOriginal(unittest.TestCase):
  def run_scene(self,shifts,voices):
   root=E.Element('score-partwise');part=E.SubElement(root,'part');m=E.SubElement(part,'measure');owned={}

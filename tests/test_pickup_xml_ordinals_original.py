@@ -4,7 +4,7 @@
 import unittest,tempfile
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 
 def page(first=0,pickup=False,empty=False,silent=False):
  return dict(events=[]if empty or silent else[dict(midi=60,startBeat=0,durationBeats=1.5,staffIndex=0),dict(midi=62,startBeat=1.5,durationBeats=1.5,staffIndex=0)],measureBeats=[]if empty else[3,6,6],score=dict(firstMeasureNumber=first,openingPickup=pickup,meterChanges=[dict(measureIndex=0,numerator=12,denominator=8)]))

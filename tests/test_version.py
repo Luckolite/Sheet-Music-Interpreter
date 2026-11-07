@@ -5,7 +5,7 @@ import re
 import unittest
 from pathlib import Path
 
-import sheet_interpreter
+import sheet_music_recognition
 
 
 class VersionTest(unittest.TestCase):
@@ -17,4 +17,4 @@ class VersionTest(unittest.TestCase):
         self.assertIsNotNone(project)
         version = re.search(r'^version\s*=\s*"([^"]+)"', project.group(1), re.MULTILINE)
         self.assertIsNotNone(version)
-        self.assertEqual(version.group(1), sheet_interpreter.__version__)
+        self.assertEqual(version.group(1), sheet_music_recognition.__version__)

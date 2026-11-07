@@ -7,7 +7,7 @@ import importlib.util
 import sys
 import unittest
 
-from sheet_interpreter import guide_writer, slur_wire
+from sheet_music_recognition import guide_writer, slur_wire
 from test_guide284_tab_ties import score as synthetic_score
 
 class LegacyEmptySlurTest(unittest.TestCase):

@@ -3,8 +3,8 @@
 """Correct dict-return harness; original two assertions and data remain unchanged."""
 import unittest
 from test_original_slide_tremolo_conflict import document
-from sheet_interpreter.slide_performance import prepare_slides, resolve_slides
-from sheet_interpreter.performance import perform_expressions
+from sheet_music_recognition.slide_performance import prepare_slides, resolve_slides
+from sheet_music_recognition.performance import perform_expressions
 
 
 class OriginalSlideTremoloConflictTests(unittest.TestCase):

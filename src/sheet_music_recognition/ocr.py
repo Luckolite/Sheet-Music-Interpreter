@@ -71,7 +71,7 @@ class LocalOcr:
         except ImportError as error:
             raise RuntimeError(
                 "Recognition dependencies are missing. Run: "
-                "pip install --upgrade score-reader"
+                "pip install --upgrade sheet-music-recognition"
             ) from error
         self.engine = RapidOCR()
 

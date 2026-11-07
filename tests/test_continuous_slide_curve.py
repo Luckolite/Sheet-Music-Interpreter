@@ -5,7 +5,7 @@ import importlib.util
 from pathlib import Path
 import unittest
 
-from sheet_interpreter.continuous_slide_curve import curve
+from sheet_music_recognition.continuous_slide_curve import curve
 
 
 def tempo(tick, micros):

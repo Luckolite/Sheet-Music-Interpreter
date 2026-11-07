@@ -6,7 +6,7 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 
 
 def arc(identity, start, end, page=9, placement='ABOVE', line='SOLID'):

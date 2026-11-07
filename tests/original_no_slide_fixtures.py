@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import json
 
-from sheet_interpreter.midi import performance_events
+from sheet_music_recognition.midi import performance_events
 
 def n(pitch, start, length, **extra):
     return dict(midi=pitch,startBeat=start,durationBeats=length,staffCount=1,staffIndex=0,

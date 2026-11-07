@@ -3,7 +3,7 @@
 import tempfile
 import unittest
 from pathlib import Path
-from sheet_interpreter.midi import write_midi
+from sheet_music_recognition.midi import write_midi
 
 
 def note(start, duration, subdivision=0, tied=False, staff=0):

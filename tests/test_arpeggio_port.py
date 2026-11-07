@@ -8,9 +8,9 @@ import struct
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.arpeggio_notation import target_indices, plan, _float32
-from sheet_interpreter.performance import _column_members, SUPPORTED
-from sheet_interpreter.musicxml import write_musicxml, emit_note
+from sheet_music_recognition.arpeggio_notation import target_indices, plan, _float32
+from sheet_music_recognition.performance import _column_members, SUPPORTED
+from sheet_music_recognition.musicxml import write_musicxml, emit_note
 
 
 def mark(position=.35):

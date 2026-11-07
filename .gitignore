@@ -4,8 +4,8 @@ __pycache__/
 *.egg-info/
 build/
 dist/
-src/sheet_interpreter/interpreter.jar
-src/sheet_interpreter/data/
+src/sheet_music_recognition/interpreter.jar
+src/sheet_music_recognition/data/
 training/runs/
 training/corpus*/
 *.log

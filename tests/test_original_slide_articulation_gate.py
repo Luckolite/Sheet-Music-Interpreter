@@ -4,8 +4,8 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter.midi import performance_events, performed_document, _performance_events_prepared
-from sheet_interpreter.slide_performance import prepare_slides
+from sheet_music_recognition.midi import performance_events, performed_document, _performance_events_prepared
+from sheet_music_recognition.slide_performance import prepare_slides
 
 
 def document(marks=4, tail=False, hold=None):

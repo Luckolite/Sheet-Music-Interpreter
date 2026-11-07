@@ -3,7 +3,7 @@
 """Original synthetic compound subdivisions; no external score data."""
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import note_type, duration_parts, DIVISIONS
+from sheet_music_recognition.musicxml import note_type, duration_parts, DIVISIONS
 
 class CompoundTupletExportTests(unittest.TestCase):
     def test_written_glyph_and_performed_clock_preserve_explicit_ratio(self):

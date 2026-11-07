@@ -3,7 +3,7 @@
 """Original synthetic end-boundary signatures; no source score data."""
 import struct
 import unittest
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 
 def score():

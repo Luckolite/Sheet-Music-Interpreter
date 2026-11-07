@@ -4,7 +4,7 @@
 import copy,tempfile,unittest,struct
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter import guide_writer as wire,musicxml
+from sheet_music_recognition import guide_writer as wire,musicxml
 def score():
  n=dict(measureIndex=0,positionInMeasure=.25,staffStep=0,staffIndex=0,staffCount=1,pageY=.4,tiedFromPrevious=False,augmentationDots=0,beamCount=0,writtenAccidental=2,unbeamedDurationBeats=1.,tupletDivisor=1,followingRestBeats=0.,articulations=0,clefBottomDiatonic=30,crossStaffBeam=False,leadingRestBeats=0.,compactOpening=False,octaveShift=0,boundaryTies=0,tupletNormalNotes=1,stemDirection=0,kind='PITCHED')
  return dict(measures=[dict(left=0.,right=1.,top=0.,bottom=1.)],notes=[n],firstMeasureNumber=1,keyChanges=[],tempoChanges=[],meterChanges=[],rests=[],techniqueChanges=[],dynamicChanges=[],playbackDirections=[],expressiveEvents=[])

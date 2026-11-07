@@ -679,7 +679,7 @@ def write_musicxml(document, path, *, meter=(4, 4), key_fifths=0, bpm=None):
     root = ET.Element('score-partwise', version='4.0')
     element(element(root, 'work'), 'work-title', document.get('inputName', 'Interpreted score'))
     identification = element(root, 'identification')
-    element(element(identification, 'encoding'), 'software', 'Music Sheets Interpreter')
+    element(element(identification, 'encoding'), 'software', 'Sheet Music Recognition')
     misc = element(identification, 'miscellaneous')
     element(misc, 'miscellaneous-field', 'Concert-pitch reconstruction; recognition and estimated timing require review.', name='interpretation')
     part_list = element(root, 'part-list')

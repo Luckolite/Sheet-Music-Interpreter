@@ -735,7 +735,7 @@ New dependencies and adapters require separate review.
   Holds require explicit boundary ownership and a proved performed-target mapping.
   It does not infer the magnitude of printed ritardando or automatically wire
   application audio and Python exports to the resulting performance clock.
-- Java `ScoreSemanticWire` and Python `sheet_interpreter.semantic_wire` encode
+- Java `ScoreSemanticWire` and Python `sheet_music_recognition.semantic_wire` encode
   and validate the two framed guide263 semantic sections (not a complete page
   guide). Both use fixed wire IDs and preserve source evidence, targets and
   cross-page endpoints. The Python helper uses only the standard library.

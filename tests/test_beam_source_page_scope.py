@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 import unittest
 try:
-    from sheet_interpreter import beam_source
+    from sheet_music_recognition import beam_source
 except ImportError:
     import beam_source
 

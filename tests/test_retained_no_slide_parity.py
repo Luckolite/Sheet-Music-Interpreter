@@ -4,7 +4,7 @@ import json
 import unittest
 from pathlib import Path
 from original_no_slide_fixtures import fixtures
-from sheet_interpreter.midi import performance_events
+from sheet_music_recognition.midi import performance_events
 class RetainedNoSlideParityTests(unittest.TestCase):
     def check_case(self,index):
         expected=json.loads((Path(__file__).parent/'fixtures/straight_slide_no_slide_baseline.json').read_text(encoding='utf-8'))[index]

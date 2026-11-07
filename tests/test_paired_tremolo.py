@@ -3,8 +3,8 @@
 # Original synthetic controls; no private score material.
 import sys, unittest, copy, tempfile, xml.etree.ElementTree as ET
 from pathlib import Path
-from sheet_interpreter import tremolo_export
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition import tremolo_export
+from sheet_music_recognition.musicxml import write_musicxml
 
 def fixture(chord=False, actual=1, normal=1):
     n=2 if chord else 1
@@ -39,8 +39,8 @@ class TremoloExportTests(unittest.TestCase):
 import unittest
 import copy
 import struct
-from sheet_interpreter.tremolo_performance import source_spans, pulse_windows
-from sheet_interpreter.midi import performed_document, performance_events
+from sheet_music_recognition.tremolo_performance import source_spans, pulse_windows
+from sheet_music_recognition.midi import performed_document, performance_events
 
 
 def document(chord=True, repeat=False, hold=False):

@@ -20,7 +20,7 @@ def chain(count):
         meterChanges=[dict(measureIndex=0,numerator=4,denominator=4)],keyChanges=[dict(measureIndex=0,fifths=0)]))])
 
 def exported(d):
-    from sheet_interpreter.musicxml import write_musicxml
+    from sheet_music_recognition.musicxml import write_musicxml
     before=copy.deepcopy(d)
     with tempfile.TemporaryDirectory() as t:
         p=Path(t)/'original.musicxml';write_musicxml(d,p,meter=(4,4),key_fifths=0)

@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml, duration_parts, DIVISIONS
+from sheet_music_recognition.musicxml import write_musicxml, duration_parts, DIVISIONS
 
 
 def event(start, duration, midi=60, **extra):
@@ -72,7 +72,7 @@ class WrittenDurationPartsTests(unittest.TestCase):
         self.assertEqual((7056,),duration_parts(7056))
 
     def test_release_symbol_stays_on_final_silent_fragment(self):
-        from sheet_interpreter.musicxml import emit_rest_gap
+        from sheet_music_recognition.musicxml import emit_rest_gap
         measure=ET.Element('measure')
         emit_rest_gap(measure,0,25200,1,[dict(kind='FERMATA',start=0,release=25200)])
         notes=measure.findall('note')
@@ -92,7 +92,7 @@ class WrittenDurationPartsTests(unittest.TestCase):
         self.assertEqual('stop',notes[2].find('notations/slur').get('type'))
 
     def test_exhaustive_exact_binary_spans_keep_duration_and_have_type(self):
-        from sheet_interpreter.musicxml import note_type
+        from sheet_music_recognition.musicxml import note_type
         for duration in range(DIVISIONS//16,8*DIVISIONS+1,DIVISIONS//16):
             parts=duration_parts(duration)
             self.assertEqual(duration,sum(parts))

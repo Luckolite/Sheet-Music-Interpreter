@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
-from sheet_interpreter.midi import write_midi
+from sheet_music_recognition.midi import write_midi
 
 
 def unresolved(expressive=False):
@@ -31,5 +31,5 @@ class NavigationAdmissionTest(unittest.TestCase):
     def test_python_refuses_legacy_complete_route_with_diagnostics(self):
         # Protocol-value control for the retained old-bridge diagnostic defense.
         route=dict(complete=True,diagnostics=[dict(code='UNSUPPORTED_MEASURE_REPEAT')],occurrences=[])
-        with patch('sheet_interpreter.navigation._route',return_value=route):
+        with patch('sheet_music_recognition.navigation._route',return_value=route):
             self.refuses_before_output(unresolved())

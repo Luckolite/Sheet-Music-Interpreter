@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import unittest
-from sheet_interpreter.ocr import page_annotations
+from sheet_music_recognition.ocr import page_annotations
 
 class SeparateOcrChannelsTest(unittest.TestCase):
     def word(self,text):return dict(text=text,left=.1,top=.1,right=.2,bottom=.2)

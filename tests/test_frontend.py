@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 import numpy as np
 from PIL import Image
-from sheet_interpreter.reader import tile_starts, grayscale, write_page
-from sheet_interpreter.midi import write_midi, variable_length
+from sheet_music_recognition.reader import tile_starts, grayscale, write_page
+from sheet_music_recognition.midi import write_midi, variable_length
 
 
 class FrontendTests(unittest.TestCase):

@@ -5,7 +5,7 @@ import copy, sys, unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from original_numbering_repro import chain, exported
-from sheet_interpreter import slide_numbering
+from sheet_music_recognition import slide_numbering
 
 
 def notation(order):

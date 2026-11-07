@@ -7,8 +7,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 import xml.etree.ElementTree as ET
-from sheet_interpreter.source_tempo_clock import onset, rhythmic_changes
-from sheet_interpreter.musicxml import write_musicxml, DIVISIONS
+from sheet_music_recognition.source_tempo_clock import onset, rhythmic_changes
+from sheet_music_recognition.musicxml import write_musicxml, DIVISIONS
 
 
 def document():
@@ -73,7 +73,7 @@ class SourceTempoClockTests(unittest.TestCase):
         self.assertEqual('yes',offset.get('sound'));self.assertEqual(before,self.doc)
 
     def test_real_performance_bridge_receives_rhythmic_owned_tempo(self):
-        from sheet_interpreter.performance import _perform_one
+        from sheet_music_recognition.performance import _perform_one
         class Captured(Exception):pass
         before=copy.deepcopy(self.page);seen=[]
         def capture(payload):
@@ -81,7 +81,7 @@ class SourceTempoClockTests(unittest.TestCase):
             index=16+8*count;numeric=struct.unpack_from('>i',payload,index)[0];self.assertEqual(1,numeric)
             m,p,rate,pulse=struct.unpack_from('>ifdd',payload,index+4);seen.append(p)
             self.assertEqual((0,.375,96,.5),(m,p,rate,pulse));raise Captured
-        with patch('sheet_interpreter.performance._bridge',side_effect=capture):
+        with patch('sheet_music_recognition.performance._bridge',side_effect=capture):
             with self.assertRaises(Captured):_perform_one([self.page],120)
         self.assertEqual([.375],seen);self.assertEqual(before,self.page)
 

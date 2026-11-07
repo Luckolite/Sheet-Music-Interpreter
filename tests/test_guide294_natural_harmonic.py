@@ -3,7 +3,7 @@
 """Guide294 exact-owner natural-harmonic wire compatibility originals."""
 import struct
 import unittest
-from sheet_interpreter import guide_writer, semantic_wire
+from sheet_music_recognition import guide_writer, semantic_wire
 
 
 def event(scope='NOTE', start='default'):

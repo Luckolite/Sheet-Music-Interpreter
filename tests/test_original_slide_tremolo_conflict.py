@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: Apache-2.0
 """Original expression/subdivision counterexample, frozen before the V3 guard."""
 import unittest
-from sheet_interpreter.slide_performance import prepare_slides, resolve_slides
-from sheet_interpreter.performance import perform_expressions
+from sheet_music_recognition.slide_performance import prepare_slides, resolve_slides
+from sheet_music_recognition.performance import perform_expressions
 
 
 def document():

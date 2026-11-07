@@ -7,9 +7,9 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.printed_tempo_spans import OPEN, resolve_pages, has_open
-from sheet_interpreter.performance import perform_expressions
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.printed_tempo_spans import OPEN, resolve_pages, has_open
+from sheet_music_recognition.performance import perform_expressions
+from sheet_music_recognition.musicxml import write_musicxml
 
 
 def document():

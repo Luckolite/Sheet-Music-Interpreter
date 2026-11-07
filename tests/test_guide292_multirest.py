@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import copy, struct, unittest
-from sheet_interpreter import guide_writer, multi_rest_wire
+from sheet_music_recognition import guide_writer, multi_rest_wire
 
 class PrintedMultiRestGuideOriginalTest(unittest.TestCase):
     def setUp(self):

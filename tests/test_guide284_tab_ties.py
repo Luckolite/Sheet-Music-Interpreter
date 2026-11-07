@@ -9,7 +9,7 @@ import struct
 
 import unittest
 
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 
 
@@ -71,7 +71,7 @@ class TypedTabTieWriterTests(unittest.TestCase):
         new = legacy_full_note_layout(legacy)
 
         self.assertEqual(revision_before, wire.RECOGNITION_REVISION)
-        from sheet_interpreter import slur_wire, tremolo_wire
+        from sheet_music_recognition import slur_wire, tremolo_wire
 
         empty = slur_wire.encode_source(None, len(original['notes']))
         tremolo = tremolo_wire.encode_source(None, len(original['notes']))

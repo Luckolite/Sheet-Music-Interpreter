@@ -8,7 +8,7 @@ import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-from sheet_interpreter.musicxml import write_musicxml, DIVISIONS
+from sheet_music_recognition.musicxml import write_musicxml, DIVISIONS
 from tests.test_full_measure_rests import document, rest
 from tests.test_expressive_performance import expression
 
@@ -115,7 +115,7 @@ class NeutralRestCaptionExportTests(unittest.TestCase):
         self.assertEqual([], export(doc).findall('.//words'))
 
     def test_literal_caption_has_no_midi_or_silent_timing_effect(self):
-        from sheet_interpreter.audio import _sample_events
+        from sheet_music_recognition.audio import _sample_events
         doc = caption_document()
         original = copy.deepcopy(doc)
         plain = copy.deepcopy(doc)

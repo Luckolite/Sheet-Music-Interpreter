@@ -6,9 +6,9 @@ import math
 import struct
 import unittest
 import numpy as np
-from sheet_interpreter.performance import perform_expressions
-from sheet_interpreter.midi import performance_events
-from sheet_interpreter.audio import _sample_events, _pcm_blocks, SAMPLE_RATE
+from sheet_music_recognition.performance import perform_expressions
+from sheet_music_recognition.midi import performance_events
+from sheet_music_recognition.audio import _sample_events, _pcm_blocks, SAMPLE_RATE
 
 
 def expression(kind, start=0, end=None, scope='SCORE', target=None, source='original-synthetic', staff=0):

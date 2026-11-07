@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as E
-from sheet_interpreter.musicxml import write_musicxml
-from sheet_interpreter import cue_caption
+from sheet_music_recognition.musicxml import write_musicxml
+from sheet_music_recognition import cue_caption
 
 def document():
     notes = [dict(measureIndex=0, positionInMeasure=p, staffIndex=0, staffCount=1,

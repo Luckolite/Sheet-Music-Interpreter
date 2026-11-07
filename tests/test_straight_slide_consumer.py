@@ -4,8 +4,8 @@
 import copy,tempfile,unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
-from sheet_interpreter.midi import performance_events
+from sheet_music_recognition.musicxml import write_musicxml
+from sheet_music_recognition.midi import performance_events
 
 def document():
     notes=[dict(measureIndex=0,positionInMeasure=x,staffStep=step,staffIndex=0,staffCount=1,pageY=.4,

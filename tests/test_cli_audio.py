@@ -6,14 +6,14 @@ import io
 import unittest
 from unittest.mock import patch
 
-from sheet_interpreter.cli import main
+from sheet_music_recognition.cli import main
 
 
 class CliAudioTest(unittest.TestCase):
     def reject(self, args, expected):
         errors = io.StringIO()
-        with patch('sys.argv', ['sheet-interpreter', *args]), \
-             patch('sheet_interpreter.cli.Interpreter') as engine, \
+        with patch('sys.argv', ['sheet-music-recognition', *args]), \
+             patch('sheet_music_recognition.cli.Interpreter') as engine, \
              contextlib.redirect_stderr(errors):
             with self.assertRaises(SystemExit) as exit_code:
                 main()
@@ -31,5 +31,5 @@ class CliAudioTest(unittest.TestCase):
         self.reject(['score.pdf', '-o', 'out.json', '--ffmpeg', 'ffmpeg'], 'requires --mp3')
 
     def test_encoder_checked_before_inference(self):
-        with patch('sheet_interpreter.audio.find_ffmpeg', side_effect=RuntimeError('Encoder unavailable')):
+        with patch('sheet_music_recognition.audio.find_ffmpeg', side_effect=RuntimeError('Encoder unavailable')):
             self.reject(['score.pdf', '-o', 'out.json', '--mp3', 'out.mp3'], 'Encoder unavailable')

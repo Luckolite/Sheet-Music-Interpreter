@@ -4,7 +4,7 @@
 import unittest
 import xml.etree.ElementTree as ET
 
-from sheet_interpreter.musicxml import duration_parts, note_type
+from sheet_music_recognition.musicxml import duration_parts, note_type
 from tests import test_musicxml_duration_parts as binary_fixture
 
 

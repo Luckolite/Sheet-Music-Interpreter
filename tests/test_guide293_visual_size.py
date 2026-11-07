@@ -4,7 +4,7 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter import guide_writer as wire
+from sheet_music_recognition import guide_writer as wire
 
 def score():
     note=dict(measureIndex=0,positionInMeasure=.2,staffStep=0,staffIndex=0,staffCount=1,

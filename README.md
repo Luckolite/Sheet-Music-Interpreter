@@ -1,15 +1,14 @@
-# Sheet-Music-Recognition — Optical Music Recognition
+# Sheet-Music-Recognition â€” Optical Music Recognition
 
 Convert sheet-music images and scanned PDFs to **MusicXML, MIDI, JSON and MP3**
 with offline optical music recognition (OMR). Sheet-Music-Recognition includes downloadable
-model weights, a Java decoder and a Python API and command-line tool, published
-on PyPI as **[`score-reader`](https://pypi.org/project/score-reader/)**.
+model weights, a Java decoder and a Python API and command-line tool, available
+as **`sheet-music-recognition`** (command) and **`sheet_music_recognition`** (Python import).
 
-[![PyPI version](https://img.shields.io/pypi/v/score-reader)](https://pypi.org/project/score-reader/)
 [![Build and test](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml/badge.svg)](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/LICENSE)
 
-[Quick start](#install-and-use) · [Documentation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md) · [Python / Java API](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) · [Model and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md) · [Downloads](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
+[Quick start](#install-and-use) Â· [Documentation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md) Â· [Python / Java API](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) Â· [Model and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md) Â· [Downloads](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
 
 **Code and weights are Apache-2.0 licensed, including commercial and closed-source use.**
 You do not need to publish your own code. Follow the [license and notice requirements](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/licensing.md).
@@ -18,10 +17,7 @@ You do not need to publish your own code. Follow the [license and notice require
 symbols. Check exports against the printed score. See the
 [model evaluation and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md#evaluation-and-limitations).
 
-Previously named Score-OMR and Music Sheets Interpreter / Sheet-Music-Interpreter; the Python
-import remains `sheet_interpreter`, and the `sheet-interpreter` CLI remains an alias.
-
-## What it supports 🎹🎸🎻🎷
+## What it supports ðŸŽ¹ðŸŽ¸ðŸŽ»ðŸŽ·
 
 - Piano, Violin, Guitar 6- and 7 string tabs, ensemble pages, and independently barred staves.
 
@@ -47,27 +43,32 @@ import remains `sheet_interpreter`, and the `sheet-interpreter` CLI remains an a
 Requires **Python 3.10 or 3.11** and **JDK 17+** on your PATH.
 
 ```sh
-python -m pip install score-reader
+git clone https://github.com/Luckolite/Sheet-Music-Recognition.git
+cd Sheet-Music-Recognition
+python -m venv .venv
 ```
 
-The package includes the recognition model and its runtime dependencies. For PDF
-input and MP3 export, install the extras:
+PyPI publication under the new name is pending. Install from source for now.
+Activate with `.venv\Scripts\Activate.ps1` on Windows or
+`source .venv/bin/activate` on macOS/Linux, then build the Java core and install
+with PDF input and MP3 export support:
 
 ```sh
-python -m pip install "score-reader[pdf,audio]"
+python scripts/build_java.py
+python -m pip install ".[pdf,audio]"
 ```
 
 ### Read a score
 
 ```sh
-score-reader score.png --output score.json --midi preview.mid --musicxml score.musicxml
+sheet-music-recognition score.png --output score.json --midi preview.mid --musicxml score.musicxml
 ```
 
 Use an image or PDF as input. JSON output is required; MIDI, MusicXML and MP3
 exports are optional. For example, with the extras installed:
 
 ```sh
-score-reader score.pdf --output score.json --mp3 preview.mp3
+sheet-music-recognition score.pdf --output score.json --mp3 preview.mp3
 ```
 
 MP3 previews use a basic synthesized tone. The audio extra supplies an FFmpeg
@@ -75,8 +76,8 @@ encoder. You can also use an existing FFmpeg installation.
 
 Use `--pages 1,2,3` to select PDF pages, `--meter 3/4` for the initial meter,
 `--bpm 90` for the initial quarter-note tempo, or `--key-fifths 2` for two sharps.
-The default meter and tempo are 4/4 and 120 BPM. Run `score-reader --help`
-for all options. The former `sheet-interpreter` command remains available as an alias.
+The default meter and tempo are 4/4 and 120 BPM. Run `sheet-music-recognition --help`
+for all options.
 
 Processing runs locally. See [API and output details](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) for
 Python/Java integration and export behavior, or [GitHub releases](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
@@ -100,23 +101,7 @@ weights or commercial score scans. See the [model card](https://github.com/Lucko
 
 ## Development
 
-To build from source:
-
-```sh
-git clone https://github.com/Luckolite/Sheet-Music-Recognition.git
-cd Sheet-Music-Recognition
-python -m venv .venv
-```
-
-Activate with `.venv\Scripts\Activate.ps1` on Windows or
-`source .venv/bin/activate` on macOS/Linux, then build and install:
-
-```sh
-python scripts/build_java.py
-python -m pip install ".[pdf,audio]"
-```
-
-Run the checks:
+Follow the source installation steps above, then run the checks:
 
 ```sh
 python scripts/test_java.py
@@ -138,7 +123,7 @@ After building the Java core, run the original numeric/content cases against the
 actual standalone pickup call:
 
 ```sh
-python scripts/check_pickup_ingress.py --public . --classpath src/sheet_interpreter/interpreter.jar --out build/pickup-ingress
+python scripts/check_pickup_ingress.py --public . --classpath src/sheet_music_recognition/interpreter.jar --out build/pickup-ingress
 ```
 
 Use a new output directory on each run. Maintainers can add `--app <app-worktree>`

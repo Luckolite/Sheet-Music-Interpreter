@@ -6,8 +6,8 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
-from sheet_interpreter.spelling_export import retained
+from sheet_music_recognition.musicxml import write_musicxml
+from sheet_music_recognition.spelling_export import retained
 
 
 def document(diatonic=29, accidental=-1, midi=61, shift=0, bottom=30):

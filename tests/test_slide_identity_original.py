@@ -8,7 +8,7 @@ import sys
 import types
 import unittest
 
-from sheet_interpreter import slide_performance as slide
+from sheet_music_recognition import slide_performance as slide
 
 def note(identity,start,duration,midi=60,visit='r',attack=True,entry=False,staff=0):
     return dict(_slideOrigins=[identity],startBeat=start,durationBeats=duration,

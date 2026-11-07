@@ -9,8 +9,8 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
-from sheet_interpreter.musicxml import DIVISIONS, write_musicxml
-from sheet_interpreter.performance import _rest_column_span, _rest_span, perform_expressions
+from sheet_music_recognition.musicxml import DIVISIONS, write_musicxml
+from sheet_music_recognition.performance import _rest_column_span, _rest_span, perform_expressions
 
 
 def rest(m=0, position=.5, staff=0, count=1, duration=4, kind='FULL_MEASURE'):

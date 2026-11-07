@@ -9,7 +9,7 @@ import tempfile
 import unittest
 import numpy as np
 from PIL import Image, ImageDraw
-from sheet_interpreter.reader import write_page
+from sheet_music_recognition.reader import write_page
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -41,7 +41,7 @@ def fixture(kind):
 class TabGestureIngressTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.jar=ROOT/'src/sheet_interpreter/interpreter.jar'
+        cls.jar=ROOT/'src/sheet_music_recognition/interpreter.jar'
         if not cls.jar.is_file():
             raise unittest.SkipTest('Build the Java core before file-ingress tests')
         cls.java=str(Path(os.environ['JAVA_HOME'])/'bin'/('java.exe' if os.name == 'nt' else 'java')) if os.environ.get('JAVA_HOME') else 'java'

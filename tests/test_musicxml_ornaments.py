@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 
 
 def document(flags, duration=1):
@@ -68,7 +68,7 @@ class MusicXmlOrnamentTests(unittest.TestCase):
             self.assertEqual([],self.export(document([beams<<16])).findall('.//ornaments'))
 
     def test_articulation_grace_and_guitar_bits_do_not_invent_ornament(self):
-        from sheet_interpreter.ornament_export import retained
+        from sheet_music_recognition.ornament_export import retained
         self.assertEqual(0,retained(document([1|(1<<15)|(1<<24)])['pages'][0],0))
         root=self.export(document([1|(1<<24)]))
         self.assertEqual([],root.findall('.//ornaments'))

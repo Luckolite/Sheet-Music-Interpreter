@@ -3,7 +3,7 @@
 """Original full Guide298 frame and downgrade controls; no score data."""
 import copy, struct, tempfile, unittest
 from pathlib import Path
-from sheet_interpreter import guide_writer, tremolo_wire, beam_source
+from sheet_music_recognition import guide_writer, tremolo_wire, beam_source
 
 def score(policy=None):
     notes=[]

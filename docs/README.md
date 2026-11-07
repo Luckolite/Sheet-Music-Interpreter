@@ -2,7 +2,7 @@
 
 Sheet-Music-Recognition is an experimental offline optical music recognition (OMR) toolkit for
 turning sheet-music images and scanned PDFs into MusicXML, MIDI, JSON and MP3.
-The Python package and primary command are named `score-reader`.
+The Python package and primary command are named `sheet-music-recognition`.
 
 ## Start here
 

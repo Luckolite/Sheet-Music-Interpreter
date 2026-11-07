@@ -6,7 +6,7 @@ from contextlib import closing
 from pathlib import Path
 import tempfile
 import unittest
-from sheet_interpreter.pdf_annotations import tab_words, tuning_header
+from sheet_music_recognition.pdf_annotations import tab_words, tuning_header
 
 
 def fixture(stream=None):

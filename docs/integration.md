@@ -66,7 +66,7 @@ of those labels.
 
 ```python
 import json
-from sheet_interpreter import write_mp3
+from sheet_music_recognition import write_mp3
 
 with open("score.json", encoding="utf-8") as source:
     document = json.load(source)

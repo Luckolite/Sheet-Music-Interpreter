@@ -3,7 +3,7 @@
 """Original canonical clocks, confirmed by the production Java timing probe."""
 import math
 import unittest
-from sheet_interpreter.arpeggio_notation import plan
+from sheet_music_recognition.arpeggio_notation import plan
 
 
 def column(preceding, start, duration):

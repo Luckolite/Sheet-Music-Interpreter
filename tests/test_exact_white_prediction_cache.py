@@ -3,7 +3,7 @@
 """Original tensors exercise cache ownership and custom-model compatibility."""
 import unittest
 import numpy as np
-from sheet_interpreter import reader
+from sheet_music_recognition import reader
 
 
 class FakeRuntime:

@@ -4,7 +4,7 @@
 import copy,tempfile,unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml,DIVISIONS
+from sheet_music_recognition.musicxml import write_musicxml,DIVISIONS
 
 def event(start,duration,staff=0):
     return dict(midi=67,startBeat=start,durationBeats=duration,staffIndex=staff)

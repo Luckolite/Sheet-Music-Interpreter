@@ -79,11 +79,11 @@ def main():
         destination.parent.mkdir(parents=True,exist_ok=True)
         destination.write_bytes(data)
     compile_sources(compiled, classes, ROOT / 'build/javac-args.txt')
-    target = ROOT / 'src/sheet_interpreter/interpreter.jar'
+    target = ROOT / 'src/sheet_music_recognition/interpreter.jar'
     subprocess.run([jdk_tool('jar'), '--create', '--file', str(target), '--main-class',
                     'io.github.luckolite.interpreter.Main', '-C', str(classes), '.',
                     '-C', str(ROOT), 'LICENSE', '-C', str(ROOT), 'NOTICE'], check=True)
-    data = ROOT / 'src/sheet_interpreter/data'
+    data = ROOT / 'src/sheet_music_recognition/data'
     data.mkdir(exist_ok=True)
     for source in (ROOT / 'models/music_sheets_v4_float16.tflite', ROOT / 'LICENSE', ROOT / 'NOTICE'):
         shutil.copyfile(source, data / source.name)

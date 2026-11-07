@@ -3,7 +3,7 @@
 import copy,tempfile,unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.musicxml import write_musicxml
 from tests.test_musicxml_slurs import document as legacy_document
 from tests.test_full_measure_rests import document as rest_document, rest
 

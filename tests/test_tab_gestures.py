@@ -4,8 +4,8 @@
 import unittest
 import xml.etree.ElementTree as ET
 from test_tremolo import attacks, note
-from sheet_interpreter import guitar_export
-from sheet_interpreter.guitar_effect import pitch_offset
+from sheet_music_recognition import guitar_export
+from sheet_music_recognition.guitar_effect import pitch_offset
 
 
 class TabGestureTests(unittest.TestCase):
@@ -74,7 +74,7 @@ class TabGestureTests(unittest.TestCase):
 
     def test_guide_keeps_new_effect_bits_in_existing_integer_field(self):
         from test_guide284_tab_ties import score
-        from sheet_interpreter.guide_writer import encode
+        from sheet_music_recognition.guide_writer import encode
         import struct
         source=score()
         plain=encode(source)

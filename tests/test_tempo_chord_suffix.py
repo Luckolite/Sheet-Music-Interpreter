@@ -1,7 +1,7 @@
 # Copyright 2026 Luckolite
 # SPDX-License-Identifier: Apache-2.0
 import unittest
-from sheet_interpreter.ocr import tempo_numbers
+from sheet_music_recognition.ocr import tempo_numbers
 
 
 class TempoChordSuffixTest(unittest.TestCase):

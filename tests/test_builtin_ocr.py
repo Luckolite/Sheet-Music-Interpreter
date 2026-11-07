@@ -11,8 +11,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from sheet_interpreter.ocr import LocalOcr, tempo_numbers, rest_count_numbers
-from sheet_interpreter.reader import grayscale, java_executable, write_page
+from sheet_music_recognition.ocr import LocalOcr, tempo_numbers, rest_count_numbers
+from sheet_music_recognition.reader import grayscale, java_executable, write_page
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,7 +70,7 @@ class BuiltinOcrTests(unittest.TestCase):
             page = Path(folder) / "scan.page.gz"
             output = Path(folder) / "score.json"
             write_page(page, np.zeros_like(gray), gray, {"words": words})
-            run = subprocess.run([java_executable(), "-jar", str(ROOT / "src/sheet_interpreter/interpreter.jar"),
+            run = subprocess.run([java_executable(), "-jar", str(ROOT / "src/sheet_music_recognition/interpreter.jar"),
                                   str(page), str(output), "4", "4", "0"],
                                  capture_output=True, text=True)
             self.assertEqual(0, run.returncode, run.stderr)

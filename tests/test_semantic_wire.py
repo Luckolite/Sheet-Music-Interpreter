@@ -4,8 +4,8 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter import semantic_wire as wire
-from sheet_interpreter import parenthesized_note_group as group
+from sheet_music_recognition import semantic_wire as wire
+from sheet_music_recognition import parenthesized_note_group as group
 
 
 def fixture():

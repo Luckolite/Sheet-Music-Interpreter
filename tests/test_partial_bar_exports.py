@@ -7,8 +7,8 @@ import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
-from sheet_interpreter.musicxml import write_musicxml, DIVISIONS
-from sheet_interpreter.midi import performance_events
+from sheet_music_recognition.musicxml import write_musicxml, DIVISIONS
+from sheet_music_recognition.midi import performance_events
 
 
 def document():

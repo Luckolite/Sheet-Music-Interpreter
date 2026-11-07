@@ -5,9 +5,9 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.boundary_ties import resolve_boundary_ties
-from sheet_interpreter.midi import write_midi
-from sheet_interpreter.musicxml import write_musicxml
+from sheet_music_recognition.boundary_ties import resolve_boundary_ties
+from sheet_music_recognition.midi import write_midi
+from sheet_music_recognition.musicxml import write_musicxml
 
 
 def document():

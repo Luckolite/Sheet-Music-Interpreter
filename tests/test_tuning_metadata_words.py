@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import unittest
 from unittest.mock import Mock
-from sheet_interpreter.pdf_annotations import tab_words, tuning_words
+from sheet_music_recognition.pdf_annotations import tab_words, tuning_words
 
 
 class TuningMetadataWordsTests(unittest.TestCase):

@@ -5,8 +5,8 @@ import copy
 import tempfile
 import unittest
 from pathlib import Path
-from sheet_interpreter.navigation import project_navigation
-from sheet_interpreter.midi import write_midi
+from sheet_music_recognition.navigation import project_navigation
+from sheet_music_recognition.midi import write_midi
 
 
 def note(beat, pitch, duration=1, tied=False):

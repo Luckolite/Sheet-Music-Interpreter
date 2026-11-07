@@ -5,7 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from sheet_interpreter.musicxml import write_musicxml, DIVISIONS
+from sheet_music_recognition.musicxml import write_musicxml, DIVISIONS
 
 
 def document():

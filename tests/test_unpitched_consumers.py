@@ -5,13 +5,13 @@ import copy
 import unittest
 from unittest.mock import patch
 import numpy as np
-from sheet_interpreter.boundary_ties import resolve_boundary_ties
-from sheet_interpreter.navigation import project_navigation
-from sheet_interpreter.performance import perform_expressions
-from sheet_interpreter.midi import performance_events, UnpitchedMidiPreview
-from sheet_interpreter.audio import (_sample_events, _pcm_blocks, SAMPLE_RATE, write_mp3,
+from sheet_music_recognition.boundary_ties import resolve_boundary_ties
+from sheet_music_recognition.navigation import project_navigation
+from sheet_music_recognition.performance import perform_expressions
+from sheet_music_recognition.midi import performance_events, UnpitchedMidiPreview
+from sheet_music_recognition.audio import (_sample_events, _pcm_blocks, SAMPLE_RATE, write_mp3,
     UnpitchedAudioPreview, UnpitchedNoiseAttack)
-from sheet_interpreter.typed_performance import unpitched_intervals
+from sheet_music_recognition.typed_performance import unpitched_intervals
 from test_expressive_performance import document as expressive_document, fermata, expression
 
 
@@ -166,7 +166,7 @@ class TypedConsumerTests(unittest.TestCase):
             _sample_events(doc, 120)
         with self.assertRaisesRegex(ValueError, 'UnpitchedMidiPreview'):
             performance_events(doc)
-        with patch('sheet_interpreter.audio.find_ffmpeg') as encoder:
+        with patch('sheet_music_recognition.audio.find_ffmpeg') as encoder:
             with self.assertRaisesRegex(ValueError, 'UnpitchedAudioPreview'):
                 write_mp3(doc, 'must-not-exist.mp3')
             encoder.assert_not_called()

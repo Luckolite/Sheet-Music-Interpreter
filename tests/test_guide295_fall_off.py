@@ -4,7 +4,7 @@
 import copy
 import struct
 import unittest
-from sheet_interpreter import guide_writer, semantic_wire
+from sheet_music_recognition import guide_writer, semantic_wire
 from test_guide294_natural_harmonic import score
 
 def event(scope='UNRESOLVED'):

@@ -3,8 +3,8 @@
 """Original valid DC/DS-to-coda fractional route, no scanned input or mock route."""
 import json
 from test_original_slide_articulation_gate import document
-from sheet_interpreter.slide_performance import prepare_slides, resolve_slides
-from sheet_interpreter.navigation import project_navigation
+from sheet_music_recognition.slide_performance import prepare_slides, resolve_slides
+from sheet_music_recognition.navigation import project_navigation
 
 
 def source():

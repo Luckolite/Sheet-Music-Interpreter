@@ -4,15 +4,15 @@
 import unittest
 from unittest.mock import patch
 from test_continuous_slide_context import document, occurrence
-from sheet_interpreter.slide_performance import prepare_slides, resolve_slides
-from sheet_interpreter.navigation import _project_one, project_navigation
+from sheet_music_recognition.slide_performance import prepare_slides, resolve_slides
+from sheet_music_recognition.navigation import _project_one, project_navigation
 
 
 class ContinuousSlideNavigationQualifiedTests(unittest.TestCase):
     def project(self, route):
         d=document()
         d['pages'][0]['score']['playbackDirections']=[dict(measureBoundary=0,kind=4)]
-        with patch('sheet_interpreter.navigation._route',return_value=dict(complete=True,diagnostics=[],occurrences=route)):
+        with patch('sheet_music_recognition.navigation._route',return_value=dict(complete=True,diagnostics=[],occurrences=route)):
             return resolve_slides(_project_one(prepare_slides(d),120))
 
     def test_reached_jump_into_target_abstains(self):

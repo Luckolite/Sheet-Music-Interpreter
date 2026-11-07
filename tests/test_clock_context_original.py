@@ -5,7 +5,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from sheet_interpreter import clock_context as wire
+from sheet_music_recognition import clock_context as wire
 
 class ClockContextOriginalTest(unittest.TestCase):
     def test_original_record_controls_and_byte_roundtrip(self):
