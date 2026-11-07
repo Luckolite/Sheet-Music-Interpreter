@@ -1,4 +1,4 @@
-# Sheet-Music-Recognition â€” Optical Music Recognition
+# Sheet-Music-Recognition — Optical Music Recognition
 
 Convert sheet-music images and scanned PDFs to **MusicXML, MIDI, JSON and MP3**
 with offline optical music recognition (OMR). Sheet-Music-Recognition includes downloadable
@@ -8,7 +8,7 @@ as **`sheet-music-recognition`** (command) and **`sheet_music_recognition`** (Py
 [![Build and test](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml/badge.svg)](https://github.com/Luckolite/Sheet-Music-Recognition/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue)](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/LICENSE)
 
-[Quick start](#install-and-use) Â· [Documentation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md) Â· [Python / Java API](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) Â· [Model and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md) Â· [Downloads](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
+[Quick start](#install-and-use) · [Documentation](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/README.md) · [Python / Java API](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/integration.md) · [Model and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md) · [Downloads](https://github.com/Luckolite/Sheet-Music-Recognition/releases)
 
 **Code and weights are Apache-2.0 licensed, including commercial and closed-source use.**
 You do not need to publish your own code. Follow the [license and notice requirements](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/docs/licensing.md).
@@ -17,7 +17,7 @@ You do not need to publish your own code. Follow the [license and notice require
 symbols. Check exports against the printed score. See the
 [model evaluation and limitations](https://github.com/Luckolite/Sheet-Music-Recognition/blob/main/models/MODEL_CARD.md#evaluation-and-limitations).
 
-## What it supports ðŸŽ¹ðŸŽ¸ðŸŽ»ðŸŽ·
+## What it supports 🎹🎸🎻🎷
 
 - Piano, Violin, Guitar 6- and 7 string tabs, ensemble pages, and independently barred staves.
 
